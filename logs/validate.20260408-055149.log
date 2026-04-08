@@ -1,0 +1,13 @@
+Mode: isolate
+Isolate: including Chap19 Chap28 Chap02
+error: expected `by`
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:189:17
+    |
+189 |                 lemma_sums_fit_subseq(a.seq@, left.seq@, 0);
+    |                 ^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 22365MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

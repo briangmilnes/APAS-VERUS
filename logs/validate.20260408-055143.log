@@ -1,0 +1,13 @@
+Mode: isolate
+Isolate: including Chap19 Chap28 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:126:13
+    |
+126 |             implies
+    |             ^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 4902MB, peak z3 RSS: 462MB, min free: 21338MB
+Sampled CPU Usage: rust_verify: 77s, z3 children: 72s

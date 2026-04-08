@@ -236,7 +236,6 @@ broadcast use {
             let prev = spec_min_prefix_sum(s, k - 1);
             let curr = spec_prefix_sum(s, k);
             if curr < prev {
-                assert(spec_prefix_sum(s, k) == spec_min_prefix_sum(s, k));
             }
         }
     }

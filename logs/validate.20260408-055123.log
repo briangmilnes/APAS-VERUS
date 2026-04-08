@@ -1,0 +1,2533 @@
+Mode: isolate
+Isolate: including Chap19 Chap28 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap28/MCSSSpec.rs:287:9
+    |
+287 |         implies
+    |         ^^^^^^^
+
+error[E0425]: cannot find value `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:136:42
+    |
+136 |                         reveal_with_fuel(spec_min_prefix_sum, 2);
+    |                                          ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:185:38
+    |
+185 |                     reveal_with_fuel(spec_min_prefix_sum, 2);
+    |                                      ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:108:38
+    |
+108 |                     reveal_with_fuel(spec_min_prefix_sum, 2);
+    |                                      ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+  --> src/Chap28/MaxContigSubSumBruteStEph.rs:61:17
+   |
+61 |                 sums_fit_i32(a.seq@),
+   |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+  --> src/Chap28/MaxContigSubSumBruteStEph.rs:65:36
+   |
+65 |                 mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
+   |                                    ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumBruteStEph.rs:104:21
+    |
+104 |                     sums_fit_i32(a.seq@),
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumBruteStEph.rs:108:36
+    |
+108 |                         #![trigger spec_range_sum(a.seq@, lo, hi)]
+    |                                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumBruteStEph.rs:110:29
+    |
+110 | ...                   spec_range_sum(a.seq@, lo, hi) <= max_sum.unwrap() as int),
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumBruteStEph.rs:112:36
+    |
+112 |                         #![trigger spec_range_sum(a.seq@, lo, hi)]
+    |                                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumBruteStEph.rs:114:29
+    |
+114 | ...                   spec_range_sum(a.seq@, lo, hi) == max_sum.unwrap() as int),
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumBruteStEph.rs:125:25
+    |
+125 |                         sums_fit_i32(a.seq@),
+    |                         ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumBruteStEph.rs:126:39
+    |
+126 |                         sum as int == spec_range_sum(a.seq@, i as int, j as int),
+    |                                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumBruteStEph.rs:130:40
+    |
+130 | ...                   #![trigger spec_range_sum(a.seq@, lo, hi)]
+    |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumBruteStEph.rs:133:33
+    |
+133 | ...                   spec_range_sum(a.seq@, lo, hi) <= max_sum.unwrap() as int),
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumBruteStEph.rs:135:40
+    |
+135 | ...                   #![trigger spec_range_sum(a.seq@, lo, hi)]
+    |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumBruteStEph.rs:138:33
+    |
+138 | ...                   spec_range_sum(a.seq@, lo, hi) == max_sum.unwrap() as int),
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_snoc` in this scope
+   --> src/Chap28/MaxContigSubSumBruteStEph.rs:142:25
+    |
+142 |                         lemma_range_sum_snoc(a.seq@, i as int, (j + 1) as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+  --> src/Chap28/MaxContigSubSumReducedStEph.rs:57:17
+   |
+57 |                 sums_fit_i32(a.seq@),
+   |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+  --> src/Chap28/MaxContigSubSumReducedStEph.rs:61:36
+   |
+61 |                 mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
+   |                                    ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+  --> src/Chap28/MaxContigSubSumReducedStEph.rs:99:21
+   |
+99 |                     sums_fit_i32(a.seq@),
+   |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedStEph.rs:103:36
+    |
+103 |                         #![trigger spec_range_sum(a.seq@, lo, hi)]
+    |                                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedStEph.rs:105:29
+    |
+105 | ...                   spec_range_sum(a.seq@, lo, hi) <= global_max.unwrap() as int),
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedStEph.rs:107:36
+    |
+107 |                         #![trigger spec_range_sum(a.seq@, lo, hi)]
+    |                                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedStEph.rs:109:29
+    |
+109 | ...                   spec_range_sum(a.seq@, lo, hi) == global_max.unwrap() as int),
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumReducedStEph.rs:120:25
+    |
+120 |                         sums_fit_i32(a.seq@),
+    |                         ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedStEph.rs:121:47
+    |
+121 |                         running_sum as int == spec_range_sum(a.seq@, i as int, j as int),
+    |                                               ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedStEph.rs:125:40
+    |
+125 | ...                   #![trigger spec_range_sum(a.seq@, lo, hi)]
+    |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedStEph.rs:128:33
+    |
+128 | ...                   spec_range_sum(a.seq@, lo, hi) <= global_max.unwrap() as int),
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedStEph.rs:130:40
+    |
+130 | ...                   #![trigger spec_range_sum(a.seq@, lo, hi)]
+    |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedStEph.rs:133:33
+    |
+133 | ...                   spec_range_sum(a.seq@, lo, hi) == global_max.unwrap() as int),
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_snoc` in this scope
+   --> src/Chap28/MaxContigSubSumReducedStEph.rs:137:25
+    |
+137 |                         lemma_range_sum_snoc(a.seq@, i as int, (j + 1) as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+  --> src/Chap28/MaxContigSubSumDivConStEph.rs:87:13
+   |
+87 |             is_mcss_of(left, m_left),
+   |             ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+  --> src/Chap28/MaxContigSubSumDivConStEph.rs:88:13
+   |
+88 |             is_mcss_of(right, m_right),
+   |             ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_max_suffix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:89:13
+    |
+ 89 |               is_max_suffix_sum(left, s_left),
+    |               ^^^^^^^^^^^^^^^^^
+...
+196 | /     fn max_suffix_sum(a: &ArraySeqStEphS<i32>) -> (mss: i32)
+197 | |         requires
+198 | |             a.seq@.len() > 0,
+199 | |             sums_fit_i32(a.seq@),
+...   |
+265 | |         running_sum - min_prefix
+266 | |     }
+    | |_____- similarly named function `max_suffix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+ 89 -             is_max_suffix_sum(left, s_left),
+ 89 +             max_suffix_sum(left, s_left),
+    |
+
+error[E0425]: cannot find function `is_max_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:90:13
+    |
+ 90 |               is_max_prefix_sum(right, p_right),
+    |               ^^^^^^^^^^^^^^^^^
+...
+272 | /     fn max_prefix_sum(a: &ArraySeqStEphS<i32>) -> (mps: i32)
+273 | |         requires
+274 | |             a.seq@.len() > 0,
+275 | |             sums_fit_i32(a.seq@),
+...   |
+308 | |         max_val
+309 | |     }
+    | |_____- similarly named function `max_prefix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+ 90 -             is_max_prefix_sum(right, p_right),
+ 90 +             max_prefix_sum(right, p_right),
+    |
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+  --> src/Chap28/MaxContigSubSumDivConStEph.rs:92:13
+   |
+92 |             is_mcss_of(s, ({
+   |             ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:108:28
+    |
+108 |                 #![trigger spec_range_sum(left, lo, hi)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:110:17
+    |
+110 |                 spec_range_sum(left, lo, hi) == m_left;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:111:13
+    |
+111 |             lemma_range_sum_subseq(s, left, 0, lo_l, hi_l);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:112:20
+    |
+112 |             assert(spec_range_sum(s, lo_l, hi_l) == m_left);
+    |                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:115:28
+    |
+115 |                 #![trigger spec_range_sum(right, lo, hi)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:117:17
+    |
+117 |                 spec_range_sum(right, lo, hi) == m_right;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:118:13
+    |
+118 |             lemma_range_sum_subseq(s, right, mid, lo_r, hi_r);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:119:20
+    |
+119 |             assert(spec_range_sum(s, mid + lo_r, mid + hi_r) == m_right);
+    |                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:122:28
+    |
+122 |                 #![trigger spec_range_sum(left, lo, left.len() as int)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:124:17
+    |
+124 |                 spec_range_sum(left, lo, left.len() as int) == s_left;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:126:28
+    |
+126 |                 #![trigger spec_range_sum(right, 0, hi)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:128:17
+    |
+128 |                 spec_range_sum(right, 0, hi) == p_right;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:129:13
+    |
+129 |             lemma_range_sum_subseq(s, left, 0, lo_s, mid);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:130:13
+    |
+130 |             lemma_range_sum_subseq(s, right, mid, 0, hi_p);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:131:13
+    |
+131 |             lemma_range_sum_split(s, lo_s, mid, mid + hi_p);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:132:20
+    |
+132 |             assert(spec_range_sum(s, lo_s, mid + hi_p) == crossing);
+    |                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:137:24
+    |
+137 |             #![trigger spec_range_sum(s, lo, hi)]
+    |                        ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:140:13
+    |
+140 |             spec_range_sum(s, lo, hi) <= max_sum
+    |             ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:143:17
+    |
+143 |                 lemma_range_sum_subseq(s, left, 0, lo, hi);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:145:17
+    |
+145 |                 lemma_range_sum_subseq(s, right, mid, lo - mid, hi - mid);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:147:17
+    |
+147 |                 lemma_range_sum_split(s, lo, mid, hi);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:148:17
+    |
+148 |                 lemma_range_sum_subseq(s, left, 0, lo, mid);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:149:17
+    |
+149 |                 lemma_range_sum_subseq(s, right, mid, 0, hi - mid);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:165:17
+    |
+165 |                 sums_fit_i32(a.seq@),
+    |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:169:36
+    |
+169 |                 mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
+    |                                    ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:199:13
+    |
+199 |             sums_fit_i32(a.seq@),
+    |             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_max_suffix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:201:13
+    |
+201 |             is_max_suffix_sum(a.seq@, mss as int),
+    |             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:212:17
+    |
+212 |                 sums_fit_i32(a.seq@),
+    |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:213:39
+    |
+213 |                   running_sum as int == spec_prefix_sum(a.seq@, i as int),
+    |                                         ^^^^^^^^^^^^^^^
+...
+272 | /     fn max_prefix_sum(a: &ArraySeqStEphS<i32>) -> (mps: i32)
+273 | |         requires
+274 | |             a.seq@.len() > 0,
+275 | |             sums_fit_i32(a.seq@),
+...   |
+308 | |         max_val
+309 | |     }
+    | |_____- similarly named function `max_prefix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+213 -                 running_sum as int == spec_prefix_sum(a.seq@, i as int),
+213 +                 running_sum as int == max_prefix_sum(a.seq@, i as int),
+    |
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:217:32
+    |
+217 |                       #![trigger spec_prefix_sum(a.seq@, j)]
+    |                                  ^^^^^^^^^^^^^^^
+...
+272 | /     fn max_prefix_sum(a: &ArraySeqStEphS<i32>) -> (mps: i32)
+273 | |         requires
+274 | |             a.seq@.len() > 0,
+275 | |             sums_fit_i32(a.seq@),
+...   |
+308 | |         max_val
+309 | |     }
+    | |_____- similarly named function `max_prefix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+217 -                     #![trigger spec_prefix_sum(a.seq@, j)]
+217 +                     #![trigger max_prefix_sum(a.seq@, j)]
+    |
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:218:67
+    |
+218 |                       0 <= j < i || j == 0 ==> min_prefix as int <= spec_prefix_sum(a.seq@, j)),
+    |                                                                     ^^^^^^^^^^^^^^^
+...
+272 | /     fn max_prefix_sum(a: &ArraySeqStEphS<i32>) -> (mps: i32)
+273 | |         requires
+274 | |             a.seq@.len() > 0,
+275 | |             sums_fit_i32(a.seq@),
+...   |
+308 | |         max_val
+309 | |     }
+    | |_____- similarly named function `max_prefix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+218 -                     0 <= j < i || j == 0 ==> min_prefix as int <= spec_prefix_sum(a.seq@, j)),
+218 +                     0 <= j < i || j == 0 ==> min_prefix as int <= max_prefix_sum(a.seq@, j)),
+    |
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:220:32
+    |
+220 |                       #![trigger spec_prefix_sum(a.seq@, j)]
+    |                                  ^^^^^^^^^^^^^^^
+...
+272 | /     fn max_prefix_sum(a: &ArraySeqStEphS<i32>) -> (mps: i32)
+273 | |         requires
+274 | |             a.seq@.len() > 0,
+275 | |             sums_fit_i32(a.seq@),
+...   |
+308 | |         max_val
+309 | |     }
+    | |_____- similarly named function `max_prefix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+220 -                     #![trigger spec_prefix_sum(a.seq@, j)]
+220 +                     #![trigger max_prefix_sum(a.seq@, j)]
+    |
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:221:66
+    |
+221 |                       0 <= j <= i && j < n && min_prefix as int == spec_prefix_sum(a.seq@, j))
+    |                                                                    ^^^^^^^^^^^^^^^
+...
+272 | /     fn max_prefix_sum(a: &ArraySeqStEphS<i32>) -> (mps: i32)
+273 | |         requires
+274 | |             a.seq@.len() > 0,
+275 | |             sums_fit_i32(a.seq@),
+...   |
+308 | |         max_val
+309 | |     }
+    | |_____- similarly named function `max_prefix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+221 -                     0 <= j <= i && j < n && min_prefix as int == spec_prefix_sum(a.seq@, j))
+221 +                     0 <= j <= i && j < n && min_prefix as int == max_prefix_sum(a.seq@, j))
+    |
+
+error[E0425]: cannot find function `lemma_range_sum_snoc` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:231:21
+    |
+231 |             proof { lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int); }
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:247:32
+    |
+247 |                       #![trigger spec_prefix_sum(a.seq@, j)]
+    |                                  ^^^^^^^^^^^^^^^
+...
+272 | /     fn max_prefix_sum(a: &ArraySeqStEphS<i32>) -> (mps: i32)
+273 | |         requires
+274 | |             a.seq@.len() > 0,
+275 | |             sums_fit_i32(a.seq@),
+...   |
+308 | |         max_val
+309 | |     }
+    | |_____- similarly named function `max_prefix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+247 -                     #![trigger spec_prefix_sum(a.seq@, j)]
+247 +                     #![trigger max_prefix_sum(a.seq@, j)]
+    |
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:248:63
+    |
+248 |                       0 <= j < n as int && min_prefix as int == spec_prefix_sum(a.seq@, j);
+    |                                                                 ^^^^^^^^^^^^^^^
+...
+272 | /     fn max_prefix_sum(a: &ArraySeqStEphS<i32>) -> (mps: i32)
+273 | |         requires
+274 | |             a.seq@.len() > 0,
+275 | |             sums_fit_i32(a.seq@),
+...   |
+308 | |         max_val
+309 | |     }
+    | |_____- similarly named function `max_prefix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+248 -                     0 <= j < n as int && min_prefix as int == spec_prefix_sum(a.seq@, j);
+248 +                     0 <= j < n as int && min_prefix as int == max_prefix_sum(a.seq@, j);
+    |
+
+error[E0425]: cannot find function `lemma_range_sum_via_prefix` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:249:17
+    |
+249 |                 lemma_range_sum_via_prefix(a.seq@, lo_w, n as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:250:24
+    |
+250 |                 assert(spec_range_sum(a.seq@, lo_w, a.seq@.len() as int) == total - min_prefix as int);
+    |                        ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:255:28
+    |
+255 |                 #![trigger spec_range_sum(a.seq@, lo, a.seq@.len() as int)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:258:17
+    |
+258 |                 spec_range_sum(a.seq@, lo, a.seq@.len() as int) <= (running_sum - min_prefix) as int
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_via_prefix` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:260:17
+    |
+260 |                 lemma_range_sum_via_prefix(a.seq@, lo, n as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:275:13
+    |
+275 |             sums_fit_i32(a.seq@),
+    |             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_max_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:277:13
+    |
+277 |             is_max_prefix_sum(a.seq@, mps as int),
+    |             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_single` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:283:17
+    |
+283 |         proof { lemma_range_sum_single(a.seq@, 0); }
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:290:17
+    |
+290 |                 sums_fit_i32(a.seq@),
+    |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:291:39
+    |
+291 |                 running_sum as int == spec_prefix_sum(a.seq@, i as int),
+    |                                       ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:293:32
+    |
+293 |                     #![trigger spec_range_sum(a.seq@, 0, j)]
+    |                                ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:294:55
+    |
+294 |                     1 <= j <= i ==> max_val as int >= spec_range_sum(a.seq@, 0, j)),
+    |                                                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:296:32
+    |
+296 |                     #![trigger spec_range_sum(a.seq@, 0, j)]
+    |                                ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:297:54
+    |
+297 |                     1 <= j <= i && max_val as int == spec_range_sum(a.seq@, 0, j)),
+    |                                                      ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_snoc` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:300:21
+    |
+300 |             proof { lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int); }
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_single` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:323:21
+    |
+323 |                     lemma_range_sum_single(a.seq@, 0);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sums_fit_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:336:17
+    |
+336 |                 lemma_sums_fit_subseq(a.seq@, left.seq@, 0);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sums_fit_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:341:17
+    |
+341 |                 lemma_sums_fit_subseq(a.seq@, right.seq@, mid as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:356:32
+    |
+356 |                     #![trigger spec_range_sum(left.seq@, lo, left.seq@.len() as int)]
+    |                                ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:358:21
+    |
+358 |                     spec_range_sum(left.seq@, lo, left.seq@.len() as int) == s_left as int;
+    |                     ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:360:32
+    |
+360 |                     #![trigger spec_range_sum(right.seq@, 0, hi)]
+    |                                ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:362:21
+    |
+362 |                     spec_range_sum(right.seq@, 0, hi) == p_right as int;
+    |                     ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:363:17
+    |
+363 |                 lemma_range_sum_subseq(a.seq@, left.seq@, 0, lo_s, mid as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:364:17
+    |
+364 |                 lemma_range_sum_subseq(a.seq@, right.seq@, mid as int, 0, hi_p);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:365:17
+    |
+365 |                 lemma_range_sum_split(a.seq@, lo_s, mid as int, mid as int + hi_p);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+  --> src/Chap28/MaxContigSubSumIterStEph.rs:87:13
+   |
+87 |             spec_range_sum(s, lo, j + 1) <= spec_max_ending_at(s, j),
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_single` in this scope
+  --> src/Chap28/MaxContigSubSumIterStEph.rs:92:13
+   |
+92 |             lemma_range_sum_single(s, 0);
+   |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_snoc` in this scope
+  --> src/Chap28/MaxContigSubSumIterStEph.rs:94:13
+   |
+94 |             lemma_range_sum_snoc(s, lo, j + 1);
+   |             ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_single` in this scope
+  --> src/Chap28/MaxContigSubSumIterStEph.rs:96:17
+   |
+96 |                 lemma_range_sum_single(s, j);
+   |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:110:28
+    |
+110 |                 #![trigger spec_range_sum(s, lo, j + 1)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:111:33
+    |
+111 |                 0 <= lo <= j && spec_range_sum(s, lo, j + 1) == spec_max_ending_at(s, j),
+    |                                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_single` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:116:13
+    |
+116 |             lemma_range_sum_single(s, 0);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:117:20
+    |
+117 |             assert(spec_range_sum(s, 0, 1) == spec_max_ending_at(s, 0));
+    |                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:124:32
+    |
+124 |                     #![trigger spec_range_sum(s, lo, j)]
+    |                                ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:125:41
+    |
+125 |                     0 <= lo <= j - 1 && spec_range_sum(s, lo, j) == spec_max_ending_at(s, j - 1);
+    |                                         ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_snoc` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:126:17
+    |
+126 |                 lemma_range_sum_snoc(s, lo_prev, j + 1);
+    |                 ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_single` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:128:17
+    |
+128 |                 lemma_range_sum_single(s, j);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:143:17
+    |
+143 |                 sums_fit_i32(a.seq@),
+    |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:147:36
+    |
+147 |                 mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
+    |                                    ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_single` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:179:17
+    |
+179 |                 lemma_range_sum_single(a.seq@, 0);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:189:21
+    |
+189 |                     sums_fit_i32(a.seq@),
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:194:36
+    |
+194 |                         #![trigger spec_range_sum(a.seq@, lo, hi)]
+    |                                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:196:29
+    |
+196 | ...                   spec_range_sum(a.seq@, lo, hi) <= global_max as int,
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:199:36
+    |
+199 |                         #![trigger spec_range_sum(a.seq@, lo, hi)]
+    |                                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:201:29
+    |
+201 | ...                   spec_range_sum(a.seq@, lo, hi) == global_max as int,
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:209:36
+    |
+209 |                         #![trigger spec_range_sum(a.seq@, lo, i as int)]
+    |                                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:211:29
+    |
+211 | ...                   spec_range_sum(a.seq@, lo, i as int) == spec_max_ending_at(a.seq@, (i - 1) as int);
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_snoc` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:212:21
+    |
+212 |                     lemma_range_sum_snoc(a.seq@, lo_witness, (i + 1) as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:229:36
+    |
+229 |                         #![trigger spec_range_sum(a.seq@, lo, hi)]
+    |                                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:232:25
+    |
+232 |                         spec_range_sum(a.seq@, lo, hi) <= if ending_max > global_max { ending_max as int } else { global_max as int }
+    |                         ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:248:40
+    |
+248 | ...                   #![trigger spec_range_sum(a.seq@, lo, (i as int) + 1)]
+    |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:250:33
+    |
+250 | ...                   spec_range_sum(a.seq@, lo, (i as int) + 1) == spec_max_ending_at(a.seq@, i as int);
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumIterStEph.rs:251:32
+    |
+251 |                         assert(spec_range_sum(a.seq@, lo_new, (i + 1) as int) == global_max as int);
+    |                                ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+  --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:60:17
+   |
+60 |                 sums_fit_i32(a.seq@),
+   |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+  --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:64:36
+   |
+64 |                 mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
+   |                                    ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:101:21
+    |
+101 |                     sums_fit_i32(a.seq@),
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:105:36
+    |
+105 |                         #![trigger spec_range_sum(a.seq@, lo, hi)]
+    |                                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:107:29
+    |
+107 | ...                   spec_range_sum(a.seq@, lo, hi) <= global_max.unwrap() as int),
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:109:36
+    |
+109 |                         #![trigger spec_range_sum(a.seq@, lo, hi)]
+    |                                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:111:29
+    |
+111 | ...                   spec_range_sum(a.seq@, lo, hi) == global_max.unwrap() as int),
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:125:25
+    |
+125 |                         sums_fit_i32(a.seq@),
+    |                         ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:126:43
+    |
+126 |                         running as int == spec_prefix_sum(a.seq@, k as int),
+    |                                           ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:127:41
+    |
+127 |                         min_p as int == spec_min_prefix_sum(a.seq@, k as int),
+    |                                         ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_snoc` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:131:25
+    |
+131 |                         lemma_range_sum_snoc(a.seq@, 0, (k + 1) as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_snoc` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:147:21
+    |
+147 |                     lemma_range_sum_snoc(a.seq@, 0, (j + 1) as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_min_prefix_sum_achieved` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:152:21
+    |
+152 |                     lemma_min_prefix_sum_achieved(a.seq@, j as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:154:36
+    |
+154 |                         #![trigger spec_prefix_sum(a.seq@, w)]
+    |                                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:156:29
+    |
+156 | ...                   spec_prefix_sum(a.seq@, w) == spec_min_prefix_sum(a.seq@, j as int);
+    |                       ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:156:59
+    |
+156 | ...                   spec_prefix_sum(a.seq@, w) == spec_min_prefix_sum(a.seq@, j as int);
+    |                                                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_via_prefix` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:157:21
+    |
+157 |                     lemma_range_sum_via_prefix(a.seq@, w, (j + 1) as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:159:25
+    |
+159 |                         spec_range_sum(a.seq@, w, (j + 1) as int));
+    |                         ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:167:36
+    |
+167 |                         #![trigger spec_range_sum(a.seq@, lo, (j + 1) as int)]
+    |                                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:170:25
+    |
+170 |                         spec_range_sum(a.seq@, lo, (j + 1) as int) <= mcsse_j as int
+    |                         ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_via_prefix` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:172:25
+    |
+172 |                         lemma_range_sum_via_prefix(a.seq@, lo, (j + 1) as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_min_prefix_sum_is_min` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:173:25
+    |
+173 |                         lemma_min_prefix_sum_is_min(a.seq@, j as int, lo);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:178:36
+    |
+178 |                         #![trigger spec_prefix_sum(a.seq@, w)]
+    |                                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:180:29
+    |
+180 | ...                   spec_prefix_sum(a.seq@, w) == spec_min_prefix_sum(a.seq@, j as int);
+    |                       ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:180:59
+    |
+180 | ...                   spec_prefix_sum(a.seq@, w) == spec_min_prefix_sum(a.seq@, j as int);
+    |                                                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_via_prefix` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:181:21
+    |
+181 |                     lemma_range_sum_via_prefix(a.seq@, witness, (j + 1) as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:182:28
+    |
+182 |                     assert(spec_range_sum(a.seq@, witness, (j + 1) as int) == mcsse_j as int);
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:191:40
+    |
+191 | ...                   #![trigger spec_range_sum(a.seq@, lo, hi)]
+    |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:194:29
+    |
+194 | ...                   spec_range_sum(a.seq@, lo, hi) <= global_max.unwrap() as int
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:200:40
+    |
+200 | ...                   assert(spec_range_sum(a.seq@, lo, hi) <= mcsse_j as int);
+    |                              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+  --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:99:13
+   |
+99 |             is_mcss_of(left, m_left),
+   |             ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_max_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:100:13
+    |
+100 |             is_max_prefix_sum(left, p_left),
+    |             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_max_suffix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:101:13
+    |
+101 |             is_max_suffix_sum(left, s_left),
+    |             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:102:23
+    |
+102 |             t_left == spec_range_sum(left, 0, left.len() as int),
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:103:13
+    |
+103 |             is_mcss_of(right, m_right),
+    |             ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_max_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:104:13
+    |
+104 |             is_max_prefix_sum(right, p_right),
+    |             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_max_suffix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:105:13
+    |
+105 |             is_max_suffix_sum(right, s_right),
+    |             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:106:24
+    |
+106 |             t_right == spec_range_sum(right, 0, right.len() as int),
+    |                        ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:114:17
+    |
+114 |                 is_mcss_of(s, m)
+    |                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_max_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:119:17
+    |
+119 |                 is_max_prefix_sum(s, p)
+    |                 ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_max_suffix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:124:17
+    |
+124 |                 is_max_suffix_sum(s, ss)
+    |                 ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:127:33
+    |
+127 |             t_left + t_right == spec_range_sum(s, 0, s.len() as int),
+    |                                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:138:9
+    |
+138 |         lemma_range_sum_subseq(s, left, 0, 0, mid);
+    |         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:139:9
+    |
+139 |         lemma_range_sum_subseq(s, right, mid, 0, n - mid);
+    |         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:140:9
+    |
+140 |         lemma_range_sum_split(s, 0, mid, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:147:28
+    |
+147 |                 #![trigger spec_range_sum(left, lo, hi)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:149:17
+    |
+149 |                 spec_range_sum(left, lo, hi) == m_left;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:150:13
+    |
+150 |             lemma_range_sum_subseq(s, left, 0, lo_l, hi_l);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:153:28
+    |
+153 |                 #![trigger spec_range_sum(right, lo, hi)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:155:17
+    |
+155 |                 spec_range_sum(right, lo, hi) == m_right;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:156:13
+    |
+156 |             lemma_range_sum_subseq(s, right, mid, lo_r, hi_r);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:159:28
+    |
+159 |                 #![trigger spec_range_sum(left, lo, left.len() as int)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:161:17
+    |
+161 |                 spec_range_sum(left, lo, left.len() as int) == s_left;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:163:28
+    |
+163 |                 #![trigger spec_range_sum(right, 0, hi)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:165:17
+    |
+165 |                 spec_range_sum(right, 0, hi) == p_right;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:166:13
+    |
+166 |             lemma_range_sum_subseq(s, left, 0, lo_s, mid);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:167:13
+    |
+167 |             lemma_range_sum_subseq(s, right, mid, 0, hi_p);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:168:13
+    |
+168 |             lemma_range_sum_split(s, lo_s, mid, mid + hi_p);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:172:24
+    |
+172 |             #![trigger spec_range_sum(s, lo, hi)]
+    |                        ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:175:13
+    |
+175 |             spec_range_sum(s, lo, hi) <= m
+    |             ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:178:17
+    |
+178 |                 lemma_range_sum_subseq(s, left, 0, lo, hi);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:180:17
+    |
+180 |                 lemma_range_sum_subseq(s, right, mid, lo - mid, hi - mid);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:182:17
+    |
+182 |                 lemma_range_sum_split(s, lo, mid, hi);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:183:17
+    |
+183 |                 lemma_range_sum_subseq(s, left, 0, lo, mid);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:184:17
+    |
+184 |                 lemma_range_sum_subseq(s, right, mid, 0, hi - mid);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:193:28
+    |
+193 |                 #![trigger spec_range_sum(left, 0, hi)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:195:17
+    |
+195 |                 spec_range_sum(left, 0, hi) == p_left;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:196:13
+    |
+196 |             lemma_range_sum_subseq(s, left, 0, 0, hi_pl);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:197:20
+    |
+197 |             assert(spec_range_sum(s, 0, hi_pl) == p);
+    |                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:201:28
+    |
+201 |                 #![trigger spec_range_sum(right, 0, hi)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:203:17
+    |
+203 |                 spec_range_sum(right, 0, hi) == p_right;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:204:13
+    |
+204 |             lemma_range_sum_subseq(s, left, 0, 0, mid);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:205:13
+    |
+205 |             lemma_range_sum_subseq(s, right, mid, 0, hi_pr);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:206:13
+    |
+206 |             lemma_range_sum_split(s, 0, mid, mid + hi_pr);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:207:20
+    |
+207 |             assert(spec_range_sum(s, 0, mid + hi_pr) == p);
+    |                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:211:24
+    |
+211 |             #![trigger spec_range_sum(s, 0, hi)]
+    |                        ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:214:13
+    |
+214 |             spec_range_sum(s, 0, hi) <= p
+    |             ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:217:17
+    |
+217 |                 lemma_range_sum_subseq(s, left, 0, 0, hi);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:219:17
+    |
+219 |                 lemma_range_sum_split(s, 0, mid, hi);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:220:17
+    |
+220 |                 lemma_range_sum_subseq(s, left, 0, 0, mid);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:221:17
+    |
+221 |                 lemma_range_sum_subseq(s, right, mid, 0, hi - mid);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:230:28
+    |
+230 |                 #![trigger spec_range_sum(right, lo, right.len() as int)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:232:17
+    |
+232 |                 spec_range_sum(right, lo, right.len() as int) == s_right;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:233:13
+    |
+233 |             lemma_range_sum_subseq(s, right, mid, lo_sr, n - mid);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:234:20
+    |
+234 |             assert(spec_range_sum(s, mid + lo_sr, n) == ss);
+    |                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:238:28
+    |
+238 |                 #![trigger spec_range_sum(left, lo, left.len() as int)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:240:17
+    |
+240 |                 spec_range_sum(left, lo, left.len() as int) == s_left;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:241:13
+    |
+241 |             lemma_range_sum_subseq(s, left, 0, lo_sl, mid);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:242:13
+    |
+242 |             lemma_range_sum_subseq(s, right, mid, 0, n - mid);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:243:13
+    |
+243 |             lemma_range_sum_split(s, lo_sl, mid, n);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:244:20
+    |
+244 |             assert(spec_range_sum(s, lo_sl, n) == ss);
+    |                    ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:248:24
+    |
+248 |             #![trigger spec_range_sum(s, lo, n)]
+    |                        ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:251:13
+    |
+251 |             spec_range_sum(s, lo, n) <= ss
+    |             ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:254:17
+    |
+254 |                 lemma_range_sum_subseq(s, right, mid, lo - mid, n - mid);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:256:17
+    |
+256 |                 lemma_range_sum_split(s, lo, mid, n);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:257:17
+    |
+257 |                 lemma_range_sum_subseq(s, left, 0, lo, mid);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:258:17
+    |
+258 |                 lemma_range_sum_subseq(s, right, mid, 0, n - mid);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:274:17
+    |
+274 |                 sums_fit_i32(a.seq@),
+    |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:278:36
+    |
+278 |                 mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
+    |                                    ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:306:13
+    |
+306 |             sums_fit_i32(a.seq@),
+    |             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:309:13
+    |
+309 |             is_mcss_of(a.seq@, mcss.0.unwrap() as int),
+    |             ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_max_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:310:13
+    |
+310 |             is_max_prefix_sum(a.seq@, mcss.1 as int),
+    |             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_max_suffix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:311:13
+    |
+311 |             is_max_suffix_sum(a.seq@, mcss.2 as int),
+    |             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:312:30
+    |
+312 |             mcss.3 as int == spec_range_sum(a.seq@, 0, a.seq@.len() as int),
+    |                              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_single` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:320:17
+    |
+320 |                 lemma_range_sum_single(a.seq@, 0);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:322:24
+    |
+322 |                 assert(spec_range_sum(a.seq@, 0, 1) == val as int);
+    |                        ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sums_fit_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:335:13
+    |
+335 |             lemma_sums_fit_subseq(a.seq@, left.seq@, 0);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sums_fit_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:340:13
+    |
+340 |             lemma_sums_fit_subseq(a.seq@, right.seq@, mid as int);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:350:28
+    |
+350 |                 #![trigger spec_range_sum(left.seq@, lo, left.seq@.len() as int)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:352:17
+    |
+352 |                 spec_range_sum(left.seq@, lo, left.seq@.len() as int) == s_left as int;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:354:28
+    |
+354 |                 #![trigger spec_range_sum(right.seq@, 0, hi)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:356:17
+    |
+356 |                 spec_range_sum(right.seq@, 0, hi) == p_right as int;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:359:13
+    |
+359 |             lemma_range_sum_subseq(a.seq@, left.seq@, 0, lo_s, mid as int);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:360:13
+    |
+360 |             lemma_range_sum_subseq(a.seq@, right.seq@, mid as int, 0, hi_p);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:361:13
+    |
+361 |             lemma_range_sum_split(a.seq@, lo_s, mid as int, mid as int + hi_p);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:364:13
+    |
+364 |             lemma_range_sum_subseq(a.seq@, left.seq@, 0, 0, mid as int);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:365:13
+    |
+365 |             lemma_range_sum_split(a.seq@, 0, mid as int, mid as int + hi_p);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:368:13
+    |
+368 |             lemma_range_sum_subseq(a.seq@, right.seq@, mid as int, 0, right.seq@.len() as int);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:369:13
+    |
+369 |             lemma_range_sum_split(a.seq@, lo_s, mid as int, n as int);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:372:13
+    |
+372 |             lemma_range_sum_split(a.seq@, 0, mid as int, n as int);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:55:13
+   |
+55 |             sums_fit_i32(s),
+   |             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:58:28
+   |
+58 |                 #![trigger spec_prefix_sum(s, hi)]
+   |                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:60:22
+   |
+60 |                 m == spec_prefix_sum(s, hi) - spec_min_prefix_sum(s, hi - 1),
+   |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:60:47
+   |
+60 |                 m == spec_prefix_sum(s, hi) - spec_min_prefix_sum(s, hi - 1),
+   |                                               ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:63:28
+   |
+63 |                 #![trigger spec_prefix_sum(s, hi)]
+   |                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:65:22
+   |
+65 |                 m >= spec_prefix_sum(s, hi) - spec_min_prefix_sum(s, hi - 1),
+   |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:65:47
+   |
+65 |                 m >= spec_prefix_sum(s, hi) - spec_min_prefix_sum(s, hi - 1),
+   |                                               ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:67:13
+   |
+67 |             is_mcss_of(s, m),
+   |             ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:71:24
+   |
+71 |             #![trigger spec_prefix_sum(s, hi)]
+   |                        ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:73:18
+   |
+73 |             m == spec_prefix_sum(s, hi) - spec_min_prefix_sum(s, hi - 1);
+   |                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:73:43
+   |
+73 |             m == spec_prefix_sum(s, hi) - spec_min_prefix_sum(s, hi - 1);
+   |                                           ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_min_prefix_sum_achieved` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:75:9
+   |
+75 |         lemma_min_prefix_sum_achieved(s, hi_w - 1);
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:77:24
+   |
+77 |             #![trigger spec_prefix_sum(s, jj)]
+   |                        ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:78:36
+   |
+78 |             0 <= jj <= hi_w - 1 && spec_prefix_sum(s, jj) == spec_min_prefix_sum(s, hi_w - 1);
+   |                                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:78:62
+   |
+78 |             0 <= jj <= hi_w - 1 && spec_prefix_sum(s, jj) == spec_min_prefix_sum(s, hi_w - 1);
+   |                                                              ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_via_prefix` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:80:9
+   |
+80 |         lemma_range_sum_via_prefix(s, lo_w, hi_w);
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:81:16
+   |
+81 |         assert(spec_range_sum(s, lo_w, hi_w) == m);
+   |                ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:85:24
+   |
+85 |             #![trigger spec_range_sum(s, lo, hi)]
+   |                        ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:88:13
+   |
+88 |             spec_range_sum(s, lo, hi) <= m
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_via_prefix` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:90:13
+   |
+90 |             lemma_range_sum_via_prefix(s, lo, hi);
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_min_prefix_sum_is_min` in this scope
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:91:13
+   |
+91 |             lemma_min_prefix_sum_is_min(s, hi - 1, lo);
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:105:17
+    |
+105 |                 sums_fit_i32(a.seq@),
+    |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:110:36
+    |
+110 |                 mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
+    |                                    ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:136:21
+    |
+136 |                     sums_fit_i32(a.seq@),
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:138:36
+    |
+138 |                     rsum as int == spec_prefix_sum(a.seq@, i as int),
+    |                                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:141:46
+    |
+141 | ...                   pv@[k] as int == spec_prefix_sum(a.seq@, k),
+    |                                        ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_snoc` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:145:21
+    |
+145 |                     lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:148:28
+    |
+148 |                     assert(spec_range_sum(a.seq@, 0, (i + 1) as int) ==
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:149:28
+    |
+149 | ...                   spec_range_sum(a.seq@, 0, i as int) + a.seq@[i as int] as int);
+    |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:168:21
+    |
+168 |                     sums_fit_i32(a.seq@),
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:172:56
+    |
+172 | ...                   ap.spec_index(k) as int == spec_prefix_sum(a.seq@, k),
+    |                                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:174:36
+    |
+174 |                     rmin as int == spec_min_prefix_sum(a.seq@, (j - 1) as int),
+    |                                    ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:177:46
+    |
+177 | ...                   mv@[k] as int == spec_min_prefix_sum(a.seq@, k),
+    |                                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:186:43
+    |
+186 |                     assert(rmin as int == spec_min_prefix_sum(a.seq@, j as int));
+    |                                           ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:202:21
+    |
+202 |                     sums_fit_i32(a.seq@),
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:207:56
+    |
+207 | ...                   ap.spec_index(k) as int == spec_prefix_sum(a.seq@, k),
+    |                                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:210:56
+    |
+210 | ...                   mp.spec_index(k) as int == spec_min_prefix_sum(a.seq@, k),
+    |                                                  ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:215:40
+    |
+215 | ...                   #![trigger spec_prefix_sum(a.seq@, hi)]
+    |                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:217:56
+    |
+217 | ...                   max_sum.unwrap() as int == spec_prefix_sum(a.seq@, hi) - spec_min_prefix_sum(a.seq@, hi - 1)
+    |                                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:217:86
+    |
+217 | ...                   max_sum.unwrap() as int == spec_prefix_sum(a.seq@, hi) - spec_min_prefix_sum(a.seq@, hi - 1)
+    |                                                                                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:220:40
+    |
+220 | ...                   #![trigger spec_prefix_sum(a.seq@, hi)]
+    |                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:222:56
+    |
+222 | ...                   max_sum.unwrap() as int >= spec_prefix_sum(a.seq@, hi) - spec_min_prefix_sum(a.seq@, hi - 1)
+    |                                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:222:86
+    |
+222 | ...                   max_sum.unwrap() as int >= spec_prefix_sum(a.seq@, hi) - spec_min_prefix_sum(a.seq@, hi - 1)
+    |                                                                                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_min_prefix_sum_achieved` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:235:21
+    |
+235 |                     lemma_min_prefix_sum_achieved(a.seq@, (idx - 1) as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:237:36
+    |
+237 |                         #![trigger spec_prefix_sum(a.seq@, jj)]
+    |                                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:238:47
+    |
+238 |                         0 <= jj <= idx - 1 && spec_prefix_sum(a.seq@, jj) == spec_min_prefix_sum(a.seq@, (idx - 1) as int);
+    |                                               ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:238:78
+    |
+238 |                         0 <= jj <= idx - 1 && spec_prefix_sum(a.seq@, jj) == spec_min_prefix_sum(a.seq@, (idx - 1) as int);
+    |                                                                              ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_via_prefix` in this scope
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:239:21
+    |
+239 |                     lemma_range_sum_via_prefix(a.seq@, lo_j, idx as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+  --> src/Chap28/MaxContigSubSumOptMtEph.rs:41:17
+   |
+41 |                 sums_fit_i32(a.seq@),
+   |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+  --> src/Chap28/MaxContigSubSumOptMtEph.rs:46:36
+   |
+46 |                 mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
+   |                                    ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+  --> src/Chap28/MaxContigSubSumOptMtEph.rs:67:21
+   |
+67 |                     sums_fit_i32(a.seq@),
+   |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptMtEph.rs:69:36
+   |
+69 |                     rsum as int == spec_prefix_sum(a.seq@, i as int),
+   |                                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptMtEph.rs:71:58
+   |
+71 |                         0 <= k <= i ==> pv@[k] as int == spec_prefix_sum(a.seq@, k),
+   |                                                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_snoc` in this scope
+  --> src/Chap28/MaxContigSubSumOptMtEph.rs:75:21
+   |
+75 |                     lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int);
+   |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptMtEph.rs:76:28
+   |
+76 |                     assert(spec_range_sum(a.seq@, 0, (i + 1) as int) ==
+   |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptMtEph.rs:77:28
+   |
+77 | ...                   spec_range_sum(a.seq@, 0, i as int) + a.seq@[i as int] as int);
+   |                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+  --> src/Chap28/MaxContigSubSumOptMtEph.rs:95:21
+   |
+95 |                     sums_fit_i32(a.seq@),
+   |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumOptMtEph.rs:98:68
+   |
+98 |                         0 <= k <= n ==> ap.spec_index(k) as int == spec_prefix_sum(a.seq@, k),
+   |                                                                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:100:36
+    |
+100 |                     rmin as int == spec_min_prefix_sum(a.seq@, (j - 1) as int),
+    |                                    ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:102:57
+    |
+102 |                         0 <= k < j ==> mv@[k] as int == spec_min_prefix_sum(a.seq@, k),
+    |                                                         ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:109:43
+    |
+109 |                     assert(rmin as int == spec_min_prefix_sum(a.seq@, j as int));
+    |                                           ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:125:21
+    |
+125 |                     sums_fit_i32(a.seq@),
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:129:68
+    |
+129 |                         0 <= k <= n ==> ap.spec_index(k) as int == spec_prefix_sum(a.seq@, k),
+    |                                                                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:131:68
+    |
+131 |                         0 <= k <= n ==> mp.spec_index(k) as int == spec_min_prefix_sum(a.seq@, k),
+    |                                                                    ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:136:40
+    |
+136 | ...                   #![trigger spec_prefix_sum(a.seq@, hi)]
+    |                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:138:56
+    |
+138 | ...                   max_sum.unwrap() as int == spec_prefix_sum(a.seq@, hi) - spec_min_prefix_sum(a.seq@, hi - 1)
+    |                                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:138:86
+    |
+138 | ...                   max_sum.unwrap() as int == spec_prefix_sum(a.seq@, hi) - spec_min_prefix_sum(a.seq@, hi - 1)
+    |                                                                                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:141:40
+    |
+141 | ...                   #![trigger spec_prefix_sum(a.seq@, hi)]
+    |                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:143:56
+    |
+143 | ...                   max_sum.unwrap() as int >= spec_prefix_sum(a.seq@, hi) - spec_min_prefix_sum(a.seq@, hi - 1)
+    |                                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:143:86
+    |
+143 | ...                   max_sum.unwrap() as int >= spec_prefix_sum(a.seq@, hi) - spec_min_prefix_sum(a.seq@, hi - 1)
+    |                                                                                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_min_prefix_sum_achieved` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:151:21
+    |
+151 |                     lemma_min_prefix_sum_achieved(a.seq@, (idx - 1) as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:153:36
+    |
+153 |                         #![trigger spec_prefix_sum(a.seq@, jj)]
+    |                                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:154:47
+    |
+154 |                         0 <= jj <= idx - 1 && spec_prefix_sum(a.seq@, jj) == spec_min_prefix_sum(a.seq@, (idx - 1) as int);
+    |                                               ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_min_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:154:78
+    |
+154 |                         0 <= jj <= idx - 1 && spec_prefix_sum(a.seq@, jj) == spec_min_prefix_sum(a.seq@, (idx - 1) as int);
+    |                                                                              ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_via_prefix` in this scope
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:155:21
+    |
+155 |                     lemma_range_sum_via_prefix(a.seq@, lo_j, idx as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+  --> src/Chap28/MaxContigSubSumDivConMtEph.rs:57:17
+   |
+57 |                 sums_fit_i32(a.seq@),
+   |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+  --> src/Chap28/MaxContigSubSumDivConMtEph.rs:62:36
+   |
+62 |                 mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
+   |                                    ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+  --> src/Chap28/MaxContigSubSumDivConMtEph.rs:86:36
+   |
+86 |         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
+   |                                    ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_max_suffix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumDivConMtEph.rs:87:17
+   |
+87 |         ensures is_max_suffix_sum(a.seq@, mss as int),
+   |                 ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+  --> src/Chap28/MaxContigSubSumDivConMtEph.rs:97:17
+   |
+97 |                 sums_fit_i32(a.seq@),
+   |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:98:39
+    |
+ 98 |                   running_sum as int == spec_prefix_sum(a.seq@, i as int),
+    |                                         ^^^^^^^^^^^^^^^
+...
+138 | /     fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> (mps: i32)
+139 | |         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
+140 | |         ensures is_max_prefix_sum(a.seq@, mps as int),
+...   |
+166 | |         max_val
+167 | |     }
+    | |_____- similarly named function `max_prefix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+ 98 -                 running_sum as int == spec_prefix_sum(a.seq@, i as int),
+ 98 +                 running_sum as int == max_prefix_sum(a.seq@, i as int),
+    |
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:100:32
+    |
+100 |                       #![trigger spec_prefix_sum(a.seq@, j)]
+    |                                  ^^^^^^^^^^^^^^^
+...
+138 | /     fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> (mps: i32)
+139 | |         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
+140 | |         ensures is_max_prefix_sum(a.seq@, mps as int),
+...   |
+166 | |         max_val
+167 | |     }
+    | |_____- similarly named function `max_prefix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+100 -                     #![trigger spec_prefix_sum(a.seq@, j)]
+100 +                     #![trigger max_prefix_sum(a.seq@, j)]
+    |
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:101:67
+    |
+101 |                       0 <= j < i || j == 0 ==> min_prefix as int <= spec_prefix_sum(a.seq@, j)),
+    |                                                                     ^^^^^^^^^^^^^^^
+...
+138 | /     fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> (mps: i32)
+139 | |         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
+140 | |         ensures is_max_prefix_sum(a.seq@, mps as int),
+...   |
+166 | |         max_val
+167 | |     }
+    | |_____- similarly named function `max_prefix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+101 -                     0 <= j < i || j == 0 ==> min_prefix as int <= spec_prefix_sum(a.seq@, j)),
+101 +                     0 <= j < i || j == 0 ==> min_prefix as int <= max_prefix_sum(a.seq@, j)),
+    |
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:103:32
+    |
+103 |                       #![trigger spec_prefix_sum(a.seq@, j)]
+    |                                  ^^^^^^^^^^^^^^^
+...
+138 | /     fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> (mps: i32)
+139 | |         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
+140 | |         ensures is_max_prefix_sum(a.seq@, mps as int),
+...   |
+166 | |         max_val
+167 | |     }
+    | |_____- similarly named function `max_prefix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+103 -                     #![trigger spec_prefix_sum(a.seq@, j)]
+103 +                     #![trigger max_prefix_sum(a.seq@, j)]
+    |
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:104:66
+    |
+104 |                       0 <= j <= i && j < n && min_prefix as int == spec_prefix_sum(a.seq@, j))
+    |                                                                    ^^^^^^^^^^^^^^^
+...
+138 | /     fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> (mps: i32)
+139 | |         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
+140 | |         ensures is_max_prefix_sum(a.seq@, mps as int),
+...   |
+166 | |         max_val
+167 | |     }
+    | |_____- similarly named function `max_prefix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+104 -                     0 <= j <= i && j < n && min_prefix as int == spec_prefix_sum(a.seq@, j))
+104 +                     0 <= j <= i && j < n && min_prefix as int == max_prefix_sum(a.seq@, j))
+    |
+
+error[E0425]: cannot find function `lemma_range_sum_snoc` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:109:21
+    |
+109 |             proof { lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int); }
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:118:32
+    |
+118 |                       #![trigger spec_prefix_sum(a.seq@, j)]
+    |                                  ^^^^^^^^^^^^^^^
+...
+138 | /     fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> (mps: i32)
+139 | |         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
+140 | |         ensures is_max_prefix_sum(a.seq@, mps as int),
+...   |
+166 | |         max_val
+167 | |     }
+    | |_____- similarly named function `max_prefix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+118 -                     #![trigger spec_prefix_sum(a.seq@, j)]
+118 +                     #![trigger max_prefix_sum(a.seq@, j)]
+    |
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:119:63
+    |
+119 |                       0 <= j < n as int && min_prefix as int == spec_prefix_sum(a.seq@, j);
+    |                                                                 ^^^^^^^^^^^^^^^
+...
+138 | /     fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> (mps: i32)
+139 | |         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
+140 | |         ensures is_max_prefix_sum(a.seq@, mps as int),
+...   |
+166 | |         max_val
+167 | |     }
+    | |_____- similarly named function `max_prefix_sum` defined here
+    |
+help: a function with a similar name exists
+    |
+119 -                     0 <= j < n as int && min_prefix as int == spec_prefix_sum(a.seq@, j);
+119 +                     0 <= j < n as int && min_prefix as int == max_prefix_sum(a.seq@, j);
+    |
+
+error[E0425]: cannot find function `lemma_range_sum_via_prefix` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:120:17
+    |
+120 |                 lemma_range_sum_via_prefix(a.seq@, lo_w, n as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:121:24
+    |
+121 |                 assert(spec_range_sum(a.seq@, lo_w, a.seq@.len() as int) == total - min_prefix as int);
+    |                        ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:124:28
+    |
+124 |                 #![trigger spec_range_sum(a.seq@, lo, a.seq@.len() as int)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:127:17
+    |
+127 |                 spec_range_sum(a.seq@, lo, a.seq@.len() as int) <= (running_sum - min_prefix) as int
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_via_prefix` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:129:17
+    |
+129 |                 lemma_range_sum_via_prefix(a.seq@, lo, n as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:139:36
+    |
+139 |         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
+    |                                    ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_max_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:140:17
+    |
+140 |         ensures is_max_prefix_sum(a.seq@, mps as int),
+    |                 ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_single` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:145:17
+    |
+145 |         proof { lemma_range_sum_single(a.seq@, 0); }
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:151:17
+    |
+151 |                 sums_fit_i32(a.seq@),
+    |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_prefix_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:152:39
+    |
+152 |                 running_sum as int == spec_prefix_sum(a.seq@, i as int),
+    |                                       ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:154:32
+    |
+154 |                     #![trigger spec_range_sum(a.seq@, 0, j)]
+    |                                ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:155:55
+    |
+155 |                     1 <= j <= i ==> max_val as int >= spec_range_sum(a.seq@, 0, j)),
+    |                                                       ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:157:32
+    |
+157 |                     #![trigger spec_range_sum(a.seq@, 0, j)]
+    |                                ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:158:54
+    |
+158 |                     1 <= j <= i && max_val as int == spec_range_sum(a.seq@, 0, j)),
+    |                                                      ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_snoc` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:161:21
+    |
+161 |             proof { lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int); }
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_single` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:177:25
+    |
+177 |                 proof { lemma_range_sum_single(a.seq@, 0); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sums_fit_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:189:17
+    |
+189 |                 lemma_sums_fit_subseq(a.seq@, left.seq@, 0);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sums_fit_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:194:17
+    |
+194 |                 lemma_sums_fit_subseq(a.seq@, right.seq@, mid as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:204:32
+    |
+204 |                     #![trigger spec_range_sum(left.seq@, lo, left.seq@.len() as int)]
+    |                                ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:206:21
+    |
+206 |                     spec_range_sum(left.seq@, lo, left.seq@.len() as int) == s_left as int;
+    |                     ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:208:32
+    |
+208 |                     #![trigger spec_range_sum(right.seq@, 0, hi)]
+    |                                ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:210:21
+    |
+210 |                     spec_range_sum(right.seq@, 0, hi) == p_right as int;
+    |                     ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:211:17
+    |
+211 |                 lemma_range_sum_subseq(a.seq@, left.seq@, 0, lo_s, mid as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:212:17
+    |
+212 |                 lemma_range_sum_subseq(a.seq@, right.seq@, mid as int, 0, hi_p);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConMtEph.rs:213:17
+    |
+213 |                 lemma_range_sum_split(a.seq@, lo_s, mid as int, mid as int + hi_p);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+  --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:63:17
+   |
+63 |                 sums_fit_i32(a.seq@),
+   |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+  --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:68:36
+   |
+68 |                 mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
+   |                                    ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `sums_fit_i32` in this scope
+  --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:92:36
+   |
+92 |         requires a.seq@.len() > 0, sums_fit_i32(a.seq@), obeys_feq_clone::<i32>(),
+   |                                    ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_mcss_of` in this scope
+  --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:95:13
+   |
+95 |             is_mcss_of(a.seq@, mcss.0.unwrap() as int),
+   |             ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_max_prefix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:96:13
+   |
+96 |             is_max_prefix_sum(a.seq@, mcss.1 as int),
+   |             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_max_suffix_sum` in this scope
+  --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:97:13
+   |
+97 |             is_max_suffix_sum(a.seq@, mcss.2 as int),
+   |             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+  --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:98:30
+   |
+98 |             mcss.3 as int == spec_range_sum(a.seq@, 0, a.seq@.len() as int),
+   |                              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_single` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:105:17
+    |
+105 |                 lemma_range_sum_single(a.seq@, 0);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:106:24
+    |
+106 |                 assert(spec_range_sum(a.seq@, 0, 1) == val as int);
+    |                        ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sums_fit_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:119:13
+    |
+119 |             lemma_sums_fit_subseq(a.seq@, left.seq@, 0);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sums_fit_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:124:13
+    |
+124 |             lemma_sums_fit_subseq(a.seq@, right.seq@, mid as int);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:132:28
+    |
+132 |                 #![trigger spec_range_sum(left.seq@, lo, left.seq@.len() as int)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:134:17
+    |
+134 |                 spec_range_sum(left.seq@, lo, left.seq@.len() as int) == s_left as int;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:136:28
+    |
+136 |                 #![trigger spec_range_sum(right.seq@, 0, hi)]
+    |                            ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_range_sum` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:138:17
+    |
+138 |                 spec_range_sum(right.seq@, 0, hi) == p_right as int;
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:139:13
+    |
+139 |             lemma_range_sum_subseq(a.seq@, left.seq@, 0, lo_s, mid as int);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:140:13
+    |
+140 |             lemma_range_sum_subseq(a.seq@, right.seq@, mid as int, 0, hi_p);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:141:13
+    |
+141 |             lemma_range_sum_split(a.seq@, lo_s, mid as int, mid as int + hi_p);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:142:13
+    |
+142 |             lemma_range_sum_subseq(a.seq@, left.seq@, 0, 0, mid as int);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:143:13
+    |
+143 |             lemma_range_sum_split(a.seq@, 0, mid as int, mid as int + hi_p);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_subseq` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:144:13
+    |
+144 |             lemma_range_sum_subseq(a.seq@, right.seq@, mid as int, 0, right.seq@.len() as int);
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:145:13
+    |
+145 |             lemma_range_sum_split(a.seq@, lo_s, mid as int, n as int);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_range_sum_split` in this scope
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:146:13
+    |
+146 |             lemma_range_sum_split(a.seq@, 0, mid as int, n as int);
+    |             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 382 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 3455MB, peak z3 RSS: 212MB, min free: 23038MB
+Sampled CPU Usage: rust_verify: 52s, z3 children: 27s

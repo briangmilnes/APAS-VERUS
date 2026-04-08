@@ -73,8 +73,6 @@ pub mod MaxContigSubSumOptMtEph {
             {
                 proof {
                     lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int);
-                    assert(spec_range_sum(a.seq@, 0, (i + 1) as int) ==
-                           spec_range_sum(a.seq@, 0, i as int) + a.seq@[i as int] as int);
                 }
                 rsum = rsum + *a.nth(i);
                 pv.push(rsum);
@@ -162,7 +160,6 @@ pub mod MaxContigSubSumOptMtEph {
                 idx = idx + 1;
             }
 
-            assert(max_sum.is_some());
             proof { lemma_prefix_opt_is_mcss(a.seq@, max_sum.unwrap() as int, n as int); }
             max_sum
         }

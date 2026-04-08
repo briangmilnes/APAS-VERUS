@@ -1,0 +1,13 @@
+Mode: isolate
+Isolate: including Chap19 Chap28 Chap02
+error: expected `,`
+   --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:123:24
+    |
+123 |             by { assert(right.spec_index(i) == a.spec_index(mid as int + i)); };
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 4830MB, peak z3 RSS: 419MB, min free: 21348MB
+Sampled CPU Usage: rust_verify: 86s, z3 children: 71s

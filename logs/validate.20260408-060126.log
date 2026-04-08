@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap19 Chap28 Chap02
+error: expected `,`
+   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:339:24
+    |
+339 |             by { assert(right.spec_index(i) == a.spec_index(mid as int + i)); };
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0432]: unresolved import `crate::Chap28::MaxContigSubSumDivConOptStEph::MaxContigSubSumDivConOptStEph::lemma_strength_combine`
+  --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:26:9
+   |
+26 |     use crate::Chap28::MaxContigSubSumDivConOptStEph::MaxContigSubSumDivConOptStEph::lemma_strength_combine;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `lemma_strength_combine` in `Chap28::MaxContigSubSumDivConOptStEph::MaxContigSubSumDivConOptStEph`
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0432`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 23961MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

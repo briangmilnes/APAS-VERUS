@@ -1,15 +1,22 @@
     Spec/   Proof/    Exec/    Rust File
 --------------------------------------------
-      35/     111/      57/       4 ReduceContractMtEph.rs
-      25/     130/      73/       3 ReduceContractStEph.rs
-      70/     164/     116/       4 ScanContractMtEph.rs
-      69/     164/     144/       3 ScanContractStEph.rs
+     130/      68/       0/       3 MCSSSpec.rs
+      16/       3/      73/       5 MaxContigSubSumBruteStEph.rs
+      21/      53/      89/      10 MaxContigSubSumDivConMtEph.rs
+      24/      40/      41/      10 MaxContigSubSumDivConOptMtEph.rs
+      61/     198/      46/       5 MaxContigSubSumDivConOptStEph.rs
+      44/     136/     111/       5 MaxContigSubSumDivConStEph.rs
+      39/      74/      61/       5 MaxContigSubSumIterStEph.rs
+       7/      17/      99/       8 MaxContigSubSumOptMtEph.rs
+      23/      53/     114/       5 MaxContigSubSumOptStEph.rs
+      15/      58/      75/       5 MaxContigSubSumReducedMcsseStEph.rs
+      15/       3/      72/       5 MaxContigSubSumReducedStEph.rs
 --------------------------------------------
     spec    proof     exec     rust
-     199/     569/     390/      14 Total
-   1,665 total lines
-4 files analyzed
-8ms
+     395/     703/     781/      66 Total
+   2,720 total lines
+11 files analyzed
+18ms
 
 Proof Lines Per Function
 ========================
@@ -17,43 +24,50 @@ Proof Lines Per Function
 By chapter:
 |   # | Chapter    |  PrfTot |  InSpec |  InExec | InProof | ExecLOC |  Prf/Ex |
 | --- | ---------- | ------- | ------- | ------- | ------- | ------- | ------- |
-|   1 | root       |     768 |       0 |     251 |     517 |     390 |    1.97 |
+|   1 | root       |   1,092 |     148 |     468 |     476 |     781 |    1.40 |
 
-1 chapters, 768 proof lines, 390 exec lines, ratio 1.97
-768 min  768 max  768.0 avg  768.0 median (proof lines)
+1 chapters, 1,092 proof lines, 781 exec lines, ratio 1.40
+1,092 min  1,092 max  1092.0 avg  1092.0 median (proof lines)
 
 By module:
 |   # | Chap       | Module                         |  PrfTot |  InSpec |  InExec | InProof | ExecLOC | Prf/Ex |
 | --- | ---------- | ------------------------------ | ------- | ------- | ------- | ------- | ------- | ------ |
-|   1 | root       | ScanContractMtEph              |     234 |       0 |      72 |     162 |     116 |   2.02 |
-|   2 | root       | ScanContractStEph              |     233 |       0 |      71 |     162 |     144 |   1.62 |
-|   3 | root       | ReduceContractStEph            |     155 |       0 |      52 |     103 |      73 |   2.12 |
-|   4 | root       | ReduceContractMtEph            |     146 |       0 |      56 |      90 |      57 |   2.56 |
+|   1 | root       | MaxContigSubSumDivConOptStEph  |     259 |       8 |      67 |     184 |      46 |   5.63 |
+|   2 | root       | MCSSSpec                       |     194 |      75 |       0 |     119 |       0 |      - |
+|   3 | root       | MaxContigSubSumDivConStEph     |     180 |       8 |      89 |      83 |     111 |   1.62 |
+|   4 | root       | MaxContigSubSumIterStEph       |     111 |      17 |      47 |      47 |      61 |   1.82 |
+|   5 | root       | MaxContigSubSumOptStEph        |      76 |       0 |      33 |      43 |     114 |   0.67 |
+|   6 | root       | MaxContigSubSumDivConMtEph     |      74 |       8 |      66 |       0 |      89 |   0.83 |
+|   7 | root       | MaxContigSubSumReducedMcsseStEph |      73 |       8 |      65 |       0 |      75 |   0.97 |
+|   8 | root       | MaxContigSubSumDivConOptMtEph  |      64 |       8 |      56 |       0 |      41 |   1.56 |
+|   9 | root       | MaxContigSubSumOptMtEph        |      24 |       0 |      24 |       0 |      99 |   0.24 |
+|  10 | root       | MaxContigSubSumBruteStEph      |      19 |       8 |      11 |       0 |      73 |   0.26 |
+|  11 | root       | MaxContigSubSumReducedStEph    |      18 |       8 |      10 |       0 |      72 |   0.25 |
 
-4 modules, 768 proof lines, 390 exec lines, ratio 1.97
-146 min  234 max  192.0 avg  194.0 median (proof lines)
+11 modules, 1,092 proof lines, 781 exec lines, ratio 1.40
+18 min  259 max  99.3 avg  74.0 median (proof lines)
 
 Per exec function (proof lines within exec fns):
-  13 exec functions total, 13 with proof lines
-  251 total proof lines in exec fns
-  7 min  45 max  19.3 avg  11.0 median
+  34 exec functions total, 32 with proof lines
+  468 total proof lines in exec fns
+  1 min  60 max  14.6 avg  6.0 median
 
 Per proof function:
-  24 proof functions
-  517 total proof lines in proof fns
-  7 min  72 max  21.5 avg  13.0 median
+  15 proof functions
+  476 total proof lines in proof fns
+  5 min  184 max  31.7 avg  15.0 median
 
 Grand total:
-  37 total functions, 37 with proof lines (100%)
-  768 total proof lines, 390 exec lines, ratio 1.97
-  7 min  72 max  20.8 avg  12.0 median (proof lines per fn)
+  66 total functions, 64 with proof lines (97%)
+  1,092 total proof lines, 781 exec lines, ratio 1.40
+  1 min  184 max  17.1 avg  8.0 median (proof lines per fn)
 
 Outliers (>= 50 proof lines):
-|   # | Chap       | Module                         | Function               |  Kind |  Lines |
-| --- | ---------- | ------------------------------ | ---------------------- | ----- | ------ |
-|   1 | root       | ReduceContractStEph            | lemma_contraction_even | proof |     72 |
-|   2 | root       | ReduceContractMtEph            | lemma_contraction_even | proof |     63 |
-|   3 | root       | ScanContractMtEph              | lemma_contraction_even | proof |     63 |
-|   4 | root       | ScanContractStEph              | lemma_contraction_even | proof |     63 |
+|   # | Chap       | Module                         | Function                         |  Kind |  Lines |
+| --- | ---------- | ------------------------------ | -------------------------------- | ----- | ------ |
+|   1 | root       | MaxContigSubSumDivConOptStEph  | lemma_strength_combine           | proof |    184 |
+|   2 | root       | MaxContigSubSumDivConStEph     | lemma_divcon_combine             | proof |     83 |
+|   3 | root       | MaxContigSubSumDivConOptStEph  | max_contig_sub_sum_aux           |  exec |     60 |
+|   4 | root       | MaxContigSubSumReducedMcsseStEph | max_contig_sub_sum_reduced_mcsse |  exec |     58 |
 
 4 functions over 50 proof lines

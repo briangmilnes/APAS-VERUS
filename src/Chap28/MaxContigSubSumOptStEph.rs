@@ -78,7 +78,6 @@ broadcast use {
             0 <= jj <= hi_w - 1 && spec_prefix_sum(s, jj) == spec_min_prefix_sum(s, hi_w - 1);
 
         lemma_range_sum_via_prefix(s, lo_w, hi_w);
-        assert(spec_range_sum(s, lo_w, hi_w) == m);
 
         // Part (b): maximal.
         assert forall|lo: int, hi: int|
@@ -145,8 +144,6 @@ broadcast use {
                     lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int);
                     // spec_prefix_sum(a.seq@, i+1) = spec_prefix_sum(a.seq@, i) + a.seq@[i]
                     // So rsum + a.seq@[i] fits in i32 (from sums_fit_i32).
-                    assert(spec_range_sum(a.seq@, 0, (i + 1) as int) ==
-                           spec_range_sum(a.seq@, 0, i as int) + a.seq@[i as int] as int);
                 }
                 rsum = rsum + *a.nth(i);
                 pv.push(rsum);
@@ -183,7 +180,6 @@ broadcast use {
                 }
                 proof {
                     reveal_with_fuel(spec_min_prefix_sum, 2);
-                    assert(rmin as int == spec_min_prefix_sum(a.seq@, j as int));
                 }
                 mv.push(rmin);
                 j = j + 1;
@@ -247,7 +243,6 @@ broadcast use {
                 idx = idx + 1;
             }
 
-            assert(max_sum.is_some());
 
             proof {
                 lemma_prefix_opt_is_mcss(a.seq@, max_sum.unwrap() as int, n as int);

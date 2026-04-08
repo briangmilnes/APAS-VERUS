@@ -118,7 +118,6 @@ pub mod MaxContigSubSumDivConMtEph {
                     #![trigger spec_prefix_sum(a.seq@, j)]
                     0 <= j < n as int && min_prefix as int == spec_prefix_sum(a.seq@, j);
                 lemma_range_sum_via_prefix(a.seq@, lo_w, n as int);
-                assert(spec_range_sum(a.seq@, lo_w, a.seq@.len() as int) == total - min_prefix as int);
             }
             assert forall|lo: int|
                 #![trigger spec_range_sum(a.seq@, lo, a.seq@.len() as int)]

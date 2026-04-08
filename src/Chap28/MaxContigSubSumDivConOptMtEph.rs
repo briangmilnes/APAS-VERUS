@@ -103,7 +103,6 @@ pub mod MaxContigSubSumDivConOptMtEph {
             let val = *a.nth(0);
             proof {
                 lemma_range_sum_single(a.seq@, 0);
-                assert(spec_range_sum(a.seq@, 0, 1) == val as int);
             }
             return (Some(val), val, val, val);
         }

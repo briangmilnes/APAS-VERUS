@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap19 Chap28 Chap02
+error: expected `by`
+   --> src/Chap28/MaxContigSubSumDivConStEph.rs:341:17
+    |
+341 |                 lemma_sums_fit_subseq(a.seq@, right.seq@, mid as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^
+
+error[E0432]: unresolved import `crate::Chap28::MaxContigSubSumDivConStEph::MaxContigSubSumDivConStEph::lemma_divcon_combine`
+  --> src/Chap28/MaxContigSubSumDivConMtEph.rs:25:9
+   |
+25 |     use crate::Chap28::MaxContigSubSumDivConStEph::MaxContigSubSumDivConStEph::lemma_divcon_combine;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `lemma_divcon_combine` in `Chap28::MaxContigSubSumDivConStEph::MaxContigSubSumDivConStEph`
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0432`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 3186MB, peak z3 RSS: 279MB, min free: 23411MB
+Sampled CPU Usage: rust_verify: 35s, z3 children: 19s
