@@ -1,0 +1,36 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02 Chap56 Chap57
+error: unexpected token, expected `;`
+   --> src/Chap57/DijkstraStEphF64.rs:257:37
+    |
+257 | ...                   implies graph@.A.contains((v, (#[trigger] it@.1[j])@.0, it@.1[j]@.1))
+    |                               ^^^^^
+
+error[E0425]: cannot find type `PQEntry` in this scope
+   --> src/Chap57/DijkstraStEphF64.rs:355:20
+    |
+355 |     impl Debug for PQEntry {
+    |                    ^^^^^^^ not found in this scope
+    |
+help: consider importing this struct
+    |
+ 31 +     use crate::Chap57::DijkstraStEphU64::DijkstraStEphU64::PQEntry;
+    |
+
+error[E0425]: cannot find type `PQEntry` in this scope
+   --> src/Chap57/DijkstraStEphF64.rs:364:22
+    |
+364 |     impl Display for PQEntry {
+    |                      ^^^^^^^ not found in this scope
+    |
+help: consider importing this struct
+    |
+ 31 +     use crate::Chap57::DijkstraStEphU64::DijkstraStEphU64::PQEntry;
+    |
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 2244MB, peak z3 RSS: 393MB, min free: 23608MB
+Sampled CPU Usage: rust_verify: 36s, z3 children: 27s

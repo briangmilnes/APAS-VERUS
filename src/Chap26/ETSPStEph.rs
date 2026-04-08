@@ -334,7 +334,7 @@ pub mod ETSPStEph {
                 let c3 = spec_targets_valid(tour@, points@);
                 let c4 = spec_edges_form_cycle(tour@);
                 assert(c1);
-// Veracity: TESTING assert                 assert(c4);
+                assert(c4);
                 assert(spec_etsp(tour@, points@) == (c1 && c2 && c3 && c4));
             }
             return tour;

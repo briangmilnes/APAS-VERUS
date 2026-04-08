@@ -178,17 +178,12 @@ pub mod DijkstraStEphU64 {
             sssp.spec_source() == source,
     {
         let n = graph.vertices().size();
-        assert(n == graph@.V.len());
-        proof { assert(obeys_feq_full_trigger::<PQEntry>()); }
 
         // Edge count for PQ size bound: total PQ inserts <= |E|.
         let arcs_ref = graph.labeled_arcs();
         proof {
-            assert(arcs_ref@.finite());
-            assert(valid_key_type::<LabEdge<usize, i128>>());
         }
         let m = arcs_ref.size();
-        assert(m as int == graph@.A.len());
 
         let mut sssp = SSSPResultStEphI64::new(n, source);
         let mut visited = SetStEph::<usize>::empty();
@@ -218,7 +213,6 @@ pub mod DijkstraStEphU64 {
         {
             // PQ size bound from budget invariant:
             // pq@.len() <= m + 1, and (m + 1) * 2 = m * 2 + 2 <= usize::MAX.
-            assert(pq@.len() * 2 <= usize::MAX as int);
             let (new_pq, min_elem) = pq.delete_min();
             pq = new_pq;
 
@@ -245,7 +239,6 @@ pub mod DijkstraStEphU64 {
                             // iter() ensures neighbors@.contains(it@.1[j]@).
                             // out_neighbors_weighed ensures neighbors@.contains(p) ==>
                             //   graph@.A.contains((v, p.0, p.1)).
-                            assert(neighbors@.contains(it@.1[j]@));
                         };
                     }
 
@@ -280,20 +273,13 @@ pub mod DijkstraStEphU64 {
                                     let u_dist = sssp.get_distance(*u);
                                     let new_dist = dist.wrapping_add((*weight) as i64);
                                     if new_dist < u_dist {
-                                        assert(pq@.len() + 1 <= usize::MAX as int);
                                         proof {
                                             // Each PQ insert uses a unique graph edge.
                                             let new_edge: (usize, usize, i128) = (v, *u, *weight);
                                             let ghost pos = (it@.0 - 1) as int;
                                             // From graph-edge invariant: it@.1[pos] yields a graph edge.
-                                            assert(graph@.A.contains((v, it@.1[pos]@.0, it@.1[pos]@.1)));
-                                            assert(graph@.A.contains(new_edge));
-                                            assert(!used_edges.contains(new_edge));
                                             let new_used = used_edges.insert(new_edge);
-                                            assert(new_used.subset_of(graph@.A));
-                                            assert(new_used.finite());
                                             vstd::set_lib::lemma_len_subset::<(usize, usize, i128)>(new_used, graph@.A);
-                                            assert(remaining_budget > 0);
                                         }
                                         pq = pq.insert(pq_entry_new(new_dist, *u));
                                         proof {
