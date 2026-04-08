@@ -34,6 +34,10 @@ pub mod BSTBBAlphaStEph {
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
     #[cfg(verus_keep_ghost)]
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{lemma_node_contains, lemma_bst_left, lemma_bst_right};
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap37::BSTSpecsAndLemmas::BSTSpecsAndLemmas::{
+        lemma_bst_insert_left, lemma_bst_insert_right,
+        lemma_bst_delete_left, lemma_bst_delete_right};
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
     //		Section 4. type definitions
@@ -323,35 +327,7 @@ pub mod BSTBBAlphaStEph {
                             value: node_val,
                             right: right,
                         }));
-                        // Veracity: NEEDED proof block
-                        proof {
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| new_left.tree_contains(x) implies
-                                #[trigger] T::le(x, node_val) && x != node_val
-                            by {
-                                if old_left.tree_contains(x) {
-                                } else {
-                                }
-                            };
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| old_right.tree_contains(x) implies
-                                #[trigger] T::le(node_val, x) && x != node_val
-                            by {};
-
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| r.tree_contains(x) ==
-                                (node.tree_contains(x) || x == value)
-                            by {
-                                // Veracity: NEEDED assert
-                                assert(r.tree_contains(x) ==
-                                    (node_val == x
-                                    || new_left.tree_contains(x)
-                                    || old_right.tree_contains(x)));
-                            };
-                        }
+                        proof { lemma_bst_insert_left(node_val, old_left, old_right, node, new_left, r, value); }
                         r
                     }
                     core::cmp::Ordering::Greater => {
@@ -361,35 +337,7 @@ pub mod BSTBBAlphaStEph {
                             value: node_val,
                             right: new_right,
                         }));
-                        // Veracity: NEEDED proof block
-                        proof {
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| old_left.tree_contains(x) implies
-                                #[trigger] T::le(x, node_val) && x != node_val
-                            by {};
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| new_right.tree_contains(x) implies
-                                #[trigger] T::le(node_val, x) && x != node_val
-                            by {
-                                if old_right.tree_contains(x) {
-                                } else {
-                                }
-                            };
-
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| r.tree_contains(x) ==
-                                (node.tree_contains(x) || x == value)
-                            by {
-                                // Veracity: NEEDED assert
-                                assert(r.tree_contains(x) ==
-                                    (node_val == x
-                                    || old_left.tree_contains(x)
-                                    || new_right.tree_contains(x)));
-                            };
-                        }
+                        proof { lemma_bst_insert_right(node_val, old_left, old_right, node, new_right, r, value); }
                         r
                     }
                     core::cmp::Ordering::Equal => {
@@ -633,34 +581,7 @@ pub mod BSTBBAlphaStEph {
                             value: node_val,
                             right: right,
                         }));
-                        // Veracity: NEEDED proof block
-                        proof {
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| new_left.tree_contains(x) implies
-                                #[trigger] T::le(x, node_val) && x != node_val
-                            by {
-                            };
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| old_right.tree_contains(x) implies
-                                #[trigger] T::le(node_val, x) && x != node_val
-                            by {};
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| r.tree_contains(x) ==
-                                (node.tree_contains(x) && x != *target)
-                            by {
-                                // Veracity: NEEDED assert
-                                assert(r.tree_contains(x) ==
-                                    (node_val == x
-                                    || new_left.tree_contains(x)
-                                    || old_right.tree_contains(x)));
-                                if x == *target && old_right.tree_contains(x) {
-                                    T::antisymmetric(*target, node_val);
-                                }
-                            };
-                        }
+                        proof { lemma_bst_delete_left(node_val, old_left, old_right, node, new_left, r, *target); }
                         r
                     }
                     core::cmp::Ordering::Greater => {
@@ -670,34 +591,7 @@ pub mod BSTBBAlphaStEph {
                             value: node_val,
                             right: new_right,
                         }));
-                        // Veracity: NEEDED proof block
-                        proof {
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| old_left.tree_contains(x) implies
-                                #[trigger] T::le(x, node_val) && x != node_val
-                            by {};
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| new_right.tree_contains(x) implies
-                                #[trigger] T::le(node_val, x) && x != node_val
-                            by {
-                            };
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| r.tree_contains(x) ==
-                                (node.tree_contains(x) && x != *target)
-                            by {
-                                // Veracity: NEEDED assert
-                                assert(r.tree_contains(x) ==
-                                    (node_val == x
-                                    || old_left.tree_contains(x)
-                                    || new_right.tree_contains(x)));
-                                if x == *target && old_left.tree_contains(x) {
-                                    T::antisymmetric(*target, node_val);
-                                }
-                            };
-                        }
+                        proof { lemma_bst_delete_right(node_val, old_left, old_right, node, new_right, r, *target); }
                         r
                     }
                     core::cmp::Ordering::Equal => {
