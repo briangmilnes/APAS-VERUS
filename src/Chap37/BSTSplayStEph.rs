@@ -149,17 +149,11 @@ pub mod BSTSplayStEph {
                         // Zig: right rotation
                         root.left = left.right.take();
                         root.update();
-                        proof {
-                            assert(root.key == root_key);
-                            assert(root.left == orig_left_right);
-                            assert(root.right == orig_root_right);
-                        }
                         left.right = Some(root);
                         left.update();
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 3);
                             reveal_with_fuel(spec_contains_link, 4);
-                            assert(left.key == left_key);
                             // BST ordering: elements in left.right (= Some(root)) > left.key.
                             assert forall|x: T| #[trigger] spec_contains_link(&left.right, x) implies
                                 (T::le(left_key, x) && x != left_key)
@@ -219,11 +213,6 @@ pub mod BSTSplayStEph {
                         }
                         root.left = left.right.take();
                         root.update();
-                        proof {
-                            assert(root.key == root_key);
-                            assert(root.left == orig_left_right);
-                            assert(root.right == orig_root_right);
-                        }
                         left.right = Some(root);
                         left.update();
                         if let Some(mut ll) = left.left.take() {
@@ -232,17 +221,11 @@ pub mod BSTSplayStEph {
                             let ghost ll_right = ll.right;
                             left.left = ll.right.take();
                             left.update();
-                            proof {
-                                assert(left.key == left_key);
-                                assert(left.left == ll_right);
-                            }
                             ll.right = Some(left);
                             ll.update();
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(spec_contains_link, 5);
-                                assert(ll.key == ll_key);
-                                assert(ll.left == ll_left);
                                 // ll_key ∈ splay result ∈ orig_left_left, so < left_key.
                                 assert(spec_contains_link(&orig_left_left, ll_key));
                                 // BST: ll.right elements > ll_key.
@@ -340,7 +323,6 @@ pub mod BSTSplayStEph {
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(spec_contains_link, 4);
-                                assert(left.key == left_key);
                                 assert forall|x: T| #[trigger] spec_contains_link(&left.right, x) implies
                                     (T::le(left_key, x) && x != left_key)
                                 by {
@@ -407,26 +389,15 @@ pub mod BSTSplayStEph {
                             }
                             left.right = lr.left.take();
                             left.update();
-                            proof {
-                                assert(left.key == left_key);
-                                assert(left.left == orig_left_left);
-                                assert(left.right == lr_left);
-                            }
                             lr.left = Some(left);
                             lr.update();
                             root.left = lr.right.take();
                             root.update();
-                            proof {
-                                assert(root.key == root_key);
-                                assert(root.left == lr_right);
-                                assert(root.right == orig_root_right);
-                            }
                             lr.right = Some(root);
                             lr.update();
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(spec_contains_link, 5);
-                                assert(lr.key == lr_key);
                                 // BST: lr.left (= Some(left)) elements < lr_key.
                                 assert forall|x: T| #[trigger] spec_contains_link(&lr.left, x) implies
                                     (T::le(x, lr_key) && x != lr_key)
@@ -510,28 +481,13 @@ pub mod BSTSplayStEph {
                                         }
                                     }
                                 };
-                                // Help solver piece together BST for lr.
-                                assert(spec_is_bst_link(&lr_left));
-                                assert(spec_is_bst_link(&lr_right));
-                                assert(spec_is_bst_link(&orig_left_left));
-                                assert(spec_is_bst_link(&orig_root_right));
-                                assert(spec_is_bst_link(&Some(left))) by {
-                                    reveal_with_fuel(spec_is_bst_link, 2);
-                                };
-                                assert(spec_is_bst_link(&Some(root))) by {
-                                    reveal_with_fuel(spec_is_bst_link, 2);
-                                };
                                 assert(spec_is_bst_link(&Some(lr))) by {
-                                    reveal_with_fuel(spec_is_bst_link, 2);
+                                    reveal_with_fuel(spec_is_bst_link, 4);
                                 };
                             }
                             lr
                         } else {
                             // orig_left_right was None. Single Zig rotation.
-                            proof {
-                                assert(root.key == root_key);
-                                assert(root.right == orig_root_right);
-                            }
                             root.left = left.right.take();
                             root.update();
                             left.right = Some(root);
@@ -539,7 +495,6 @@ pub mod BSTSplayStEph {
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(spec_contains_link, 4);
-                                assert(left.key == left_key);
                                 assert forall|x: T| #[trigger] spec_contains_link(&left.right, x) implies
                                     (T::le(left_key, x) && x != left_key)
                                 by {
@@ -626,17 +581,11 @@ pub mod BSTSplayStEph {
                         // Zag: left rotation
                         root.right = right.left.take();
                         root.update();
-                        proof {
-                            assert(root.key == root_key);
-                            assert(root.left == orig_root_left);
-                            assert(root.right == orig_right_left);
-                        }
                         right.left = Some(root);
                         right.update();
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 3);
                             reveal_with_fuel(spec_contains_link, 4);
-                            assert(right.key == right_key);
                             // BST ordering: elements in right.left (= Some(root)) < right.key.
                             assert forall|x: T| #[trigger] spec_contains_link(&right.left, x) implies
                                 (T::le(x, right_key) && x != right_key)
@@ -698,11 +647,6 @@ pub mod BSTSplayStEph {
                         }
                         root.right = right.left.take();
                         root.update();
-                        proof {
-                            assert(root.key == root_key);
-                            assert(root.left == orig_root_left);
-                            assert(root.right == orig_right_left);
-                        }
                         right.left = Some(root);
                         right.update();
                         if let Some(mut rr) = right.right.take() {
@@ -711,17 +655,11 @@ pub mod BSTSplayStEph {
                             let ghost rr_right = rr.right;
                             right.right = rr.left.take();
                             right.update();
-                            proof {
-                                assert(right.key == right_key);
-                                assert(right.right == rr_left);
-                            }
                             rr.left = Some(right);
                             rr.update();
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(spec_contains_link, 5);
-                                assert(rr.key == rr_key);
-                                assert(rr.right == rr_right);
                                 // rr_key ∈ splay result ∈ orig_right_right, so > right_key.
                                 assert(spec_contains_link(&orig_right_right, rr_key));
                                 // BST: rr.left (= Some(right)) elements < rr_key.
@@ -809,19 +747,8 @@ pub mod BSTSplayStEph {
                                         }
                                     }
                                 };
-                                // Help solver piece together BST for rr.
-                                assert(spec_is_bst_link(&rr_left));
-                                assert(spec_is_bst_link(&rr_right));
-                                assert(spec_is_bst_link(&orig_root_left));
-                                assert(spec_is_bst_link(&orig_right_right));
-                                assert(spec_is_bst_link(&Some(right))) by {
-                                    reveal_with_fuel(spec_is_bst_link, 2);
-                                };
-                                assert(spec_is_bst_link(&Some(root))) by {
-                                    reveal_with_fuel(spec_is_bst_link, 2);
-                                };
                                 assert(spec_is_bst_link(&Some(rr))) by {
-                                    reveal_with_fuel(spec_is_bst_link, 2);
+                                    reveal_with_fuel(spec_is_bst_link, 4);
                                 };
                             }
                             rr
@@ -830,7 +757,6 @@ pub mod BSTSplayStEph {
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(spec_contains_link, 4);
-                                assert(right.key == right_key);
                                 assert forall|x: T| #[trigger] spec_contains_link(&right.left, x) implies
                                     (T::le(x, right_key) && x != right_key)
                                 by {
@@ -897,26 +823,15 @@ pub mod BSTSplayStEph {
                             }
                             right.left = rl.right.take();
                             right.update();
-                            proof {
-                                assert(right.key == right_key);
-                                assert(right.left == rl_right);
-                                assert(right.right == orig_right_right);
-                            }
                             rl.right = Some(right);
                             rl.update();
                             root.right = rl.left.take();
                             root.update();
-                            proof {
-                                assert(root.key == root_key);
-                                assert(root.left == orig_root_left);
-                                assert(root.right == rl_left);
-                            }
                             rl.left = Some(root);
                             rl.update();
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(spec_contains_link, 5);
-                                assert(rl.key == rl_key);
                                 // BST: rl.right (= Some(right)) elements > rl_key.
                                 assert forall|x: T| #[trigger] spec_contains_link(&rl.right, x) implies
                                     (T::le(rl_key, x) && x != rl_key)
@@ -1007,10 +922,6 @@ pub mod BSTSplayStEph {
                             rl
                         } else {
                             // orig_right_left was None. Single Zag rotation.
-                            proof {
-                                assert(root.key == root_key);
-                                assert(root.left == orig_root_left);
-                            }
                             root.right = right.left.take();
                             root.update();
                             right.left = Some(root);
@@ -1018,7 +929,6 @@ pub mod BSTSplayStEph {
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(spec_contains_link, 4);
-                                assert(right.key == right_key);
                                 assert forall|x: T| #[trigger] spec_contains_link(&right.left, x) implies
                                     (T::le(x, right_key) && x != right_key)
                                 by {
@@ -1442,7 +1352,6 @@ pub mod BSTSplayStEph {
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(spec_contains_link, 2);
-                            // BST ordering: new elements in left satisfy BST bound.
                             assert forall|x: T| spec_contains_link(&node.left, x) implies
                                 (T::le(x, node.key) && x != node.key)
                             by {
@@ -1451,36 +1360,21 @@ pub mod BSTSplayStEph {
                                     assert(x == value);
                                 }
                             };
-                            // Decompose old(link) containment via ghost variables.
-                            assert forall|x: T| spec_contains_link(old(link), x) implies
-                                (node_key == x || spec_contains_link(&old_left, x) || spec_contains_link(&old_right, x))
-                            by {
-                                reveal_with_fuel(spec_contains_link, 2);
-                            };
-                            assert forall|x: T| (node_key == x || spec_contains_link(&old_left, x) || spec_contains_link(&old_right, x)) implies
-                                spec_contains_link(old(link), x)
-                            by {
-                                reveal_with_fuel(spec_contains_link, 2);
-                            };
-                            // Preservation.
                             assert forall|x: T| spec_contains_link(old(link), x) implies
                                 spec_contains_link(link, x)
                             by {
                                 reveal_with_fuel(spec_contains_link, 2);
-                                if node_key == x {
-                                } else if spec_contains_link(&old_left, x) {
+                                if spec_contains_link(&old_left, x) {
                                     assert(spec_contains_link(&node.left, x));
                                 }
                             };
-                            // Only adds value.
                             assert forall|x: T| spec_contains_link(link, x) implies
                                 (spec_contains_link(old(link), x) || x == value)
                             by {
                                 reveal_with_fuel(spec_contains_link, 2);
-                                if node.key == x {
-                                    assert(node_key == x);
-                                } else if spec_contains_link(&node.left, x) {
-                                    if spec_contains_link(&old_left, x) {
+                                if spec_contains_link(&node.left, x) {
+                                    if !spec_contains_link(&old_left, x) {
+                                        assert(x == value);
                                     }
                                 }
                             };
@@ -1494,7 +1388,6 @@ pub mod BSTSplayStEph {
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(spec_contains_link, 2);
-                            // BST ordering: new elements in right satisfy BST bound.
                             assert forall|x: T| spec_contains_link(&node.right, x) implies
                                 (T::le(node.key, x) && x != node.key)
                             by {
@@ -1503,36 +1396,21 @@ pub mod BSTSplayStEph {
                                     assert(x == value);
                                 }
                             };
-                            // Decompose old(link) containment.
-                            assert forall|x: T| spec_contains_link(old(link), x) implies
-                                (node_key == x || spec_contains_link(&old_left, x) || spec_contains_link(&old_right, x))
-                            by {
-                                reveal_with_fuel(spec_contains_link, 2);
-                            };
-                            assert forall|x: T| (node_key == x || spec_contains_link(&old_left, x) || spec_contains_link(&old_right, x)) implies
-                                spec_contains_link(old(link), x)
-                            by {
-                                reveal_with_fuel(spec_contains_link, 2);
-                            };
-                            // Preservation.
                             assert forall|x: T| spec_contains_link(old(link), x) implies
                                 spec_contains_link(link, x)
                             by {
                                 reveal_with_fuel(spec_contains_link, 2);
-                                if node_key == x {
-                                } else if spec_contains_link(&old_right, x) {
+                                if spec_contains_link(&old_right, x) {
                                     assert(spec_contains_link(&node.right, x));
                                 }
                             };
-                            // Only adds value.
                             assert forall|x: T| spec_contains_link(link, x) implies
                                 (spec_contains_link(old(link), x) || x == value)
                             by {
                                 reveal_with_fuel(spec_contains_link, 2);
-                                if node.key == x {
-                                    assert(node_key == x);
-                                } else if spec_contains_link(&node.right, x) {
-                                    if spec_contains_link(&old_right, x) {
+                                if spec_contains_link(&node.right, x) {
+                                    if !spec_contains_link(&old_right, x) {
+                                        assert(x == value);
                                     }
                                 }
                             };
