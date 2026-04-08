@@ -5,23 +5,42 @@
 #   file:line: warning: ...  — accepted difference
 #   file:line: error: ...    — mismatch, missing review, or unresolved DIFFERS
 #
-# Usage: scripts/check-alg-analysis.sh [ChapNN ...]
-#        scripts/check-alg-analysis.sh              (all chapters)
+# Usage: scripts/check-alg-analysis.sh [-e|--error] [-w|--warn] [ChapNN ...]
+#        scripts/check-alg-analysis.sh                   (all levels, all chapters)
+#        scripts/check-alg-analysis.sh -e                (errors only)
+#        scripts/check-alg-analysis.sh -w                (warnings only)
+#        scripts/check-alg-analysis.sh -e -w             (errors + warnings)
+#        scripts/check-alg-analysis.sh -e 37 42          (errors in Chap37 and Chap42)
 
 set -uo pipefail
 
-if [ $# -gt 0 ]; then
+SHOW_INFO=false
+SHOW_WARN=false
+SHOW_ERROR=false
+FILTER=false
+CHAPTERS=()
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -e|--error)  FILTER=true; SHOW_ERROR=true; shift ;;
+        -w|--warn)   FILTER=true; SHOW_WARN=true; shift ;;
+        *)           CHAPTERS+=("$1"); shift ;;
+    esac
+done
+
+# No filter flags → show everything
+if ! $FILTER; then
+    SHOW_INFO=true; SHOW_WARN=true; SHOW_ERROR=true
+fi
+
+if [ ${#CHAPTERS[@]} -gt 0 ]; then
     DIRS=""
-    for chap in "$@"; do
+    for chap in "${CHAPTERS[@]}"; do
         DIRS="$DIRS src/Chap${chap}"
     done
 else
     DIRS="src/Chap*"
 fi
-
-INFO=0
-WARN=0
-ERROR=0
 
 for dir in $DIRS; do
     [ -d "$dir" ] || continue
@@ -87,9 +106,21 @@ for dir in $DIRS; do
         }
         ' "$f"
     done
-done | tee /tmp/check-alg-analysis.out
+done | tee /tmp/check-alg-analysis.out | {
+    if $SHOW_INFO && $SHOW_WARN && $SHOW_ERROR; then
+        cat
+    else
+        grep -E "$(
+            parts=()
+            $SHOW_INFO  && parts+=(': info:')
+            $SHOW_WARN  && parts+=(': warning:')
+            $SHOW_ERROR && parts+=(': error:')
+            IFS='|'; echo "${parts[*]}"
+        )" || true
+    fi
+}
 
-# Summary
+# Summary (always from full output)
 awk '
 /: info:/ { info++ }
 /: warning:/ { warn++ }
