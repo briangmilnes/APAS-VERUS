@@ -1,0 +1,22 @@
+error[E0425]: cannot find value `group_set_axioms_early` in module `vstd::set`
+  --> src/Chap41/OrdKeyMap.rs:55:20
+   |
+55 |         vstd::set::group_set_axioms_early,
+   |                    ^^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> vstd/set.rs:999:0
+  ::: vstd/set.rs:1027:1
+   |
+   = note: similarly named function `group_set_axioms` defined here
+help: a function with a similar name exists
+   |
+55 -         vstd::set::group_set_axioms_early,
+55 +         vstd::set::group_set_axioms,
+   |
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 12735MB, peak z3 RSS: 303MB, min free: 11214MB
+Sampled CPU Usage: rust_verify: 133s, z3 children: 13s

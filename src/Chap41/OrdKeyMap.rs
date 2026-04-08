@@ -1163,7 +1163,7 @@ pub mod OrdKeyMap {
                     lemma_key_unique_subset(tree@, right@);
                     lemma_view_gen_subset::<K, V>(left@, tree@);
                     lemma_view_gen_subset::<K, V>(right@, tree@);
-                    lemma_reveal_view_injective::<K>();
+                    lemma_reveal_view_injective::<K>();  // Z3 diet: needed for postcondition
                 }
                 let c = k.cmp(&root_pair.0);
                 proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
@@ -1177,6 +1177,7 @@ pub mod OrdKeyMap {
                             lemma_pair_in_set_map_contains(tree@, root_pair.0@, root_pair.1@);
                             assert forall|p: Pair<K, V>| (#[trigger] left@.contains(p@))
                                 implies p.0.cmp_spec(k) == Less by {
+                                lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                 assert(p.cmp_spec(&root_pair) == Less);
                                 assert(p.0@ != root_pair.0@) by {
                                     if p.0@ == root_pair.0@ {
@@ -1190,6 +1191,7 @@ pub mod OrdKeyMap {
                             };
                             assert forall|p: Pair<K, V>| (#[trigger] right@.contains(p@))
                                 implies p.0.cmp_spec(k) == Greater by {
+                                lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                 assert(p.cmp_spec(&root_pair) == Greater);
                                 assert(p.0@ != root_pair.0@) by {
                                     if p.0@ == root_pair.0@ {
@@ -1297,6 +1299,7 @@ pub mod OrdKeyMap {
                             };
                             assert forall|p: Pair<K, V>| (#[trigger] new_right@.contains(p@))
                                 implies p.0.cmp_spec(k) == Greater by {
+                                lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                 if lr@.contains(p@) {}
                                 else if right@.contains(p@) {
                                     assert(p.cmp_spec(&root_pair) == Greater);
@@ -1533,7 +1536,7 @@ pub mod OrdKeyMap {
                     lemma_key_unique_subset(tree@, right@);
                     lemma_view_gen_subset::<K, V>(left@, tree@);
                     lemma_view_gen_subset::<K, V>(right@, tree@);
-                    lemma_reveal_view_injective::<K>();
+                    // lemma_reveal_view_injective::<K>();  // Z3 diet: try without
                 }
                 let c = Ord::cmp(k, &root_pair.0);
                 proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
@@ -1552,6 +1555,7 @@ pub mod OrdKeyMap {
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(*k, t) && t@ != k@
                                         implies TotalOrder::le(lk, t) by {
+                                        lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                         lemma_map_contains_pair_in_set(tree@, t@);
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if left@.contains((t@, tv)) {
@@ -1612,6 +1616,7 @@ pub mod OrdKeyMap {
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(*k, t) && t@ != k@
                                         implies TotalOrder::le(key, t) by {
+                                        lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                         lemma_map_contains_pair_in_set(tree@, t@);
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if left@.contains((t@, tv)) {
@@ -1648,6 +1653,7 @@ pub mod OrdKeyMap {
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(*k, t) && t@ != k@
                                         implies false by {
+                                        lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                         lemma_map_contains_pair_in_set(tree@, t@);
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if left@.contains((t@, tv)) {
@@ -1690,12 +1696,14 @@ pub mod OrdKeyMap {
                                     assert(min_pair.cmp_spec(&root_pair) == Greater);
                                     assert(min_pair.0.cmp_spec(&root_pair.0) == Greater);
                                     K::cmp_spec_greater_implies_le(min_pair.0, root_pair.0);
+                                    lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                     assert(root_pair.0 == *k);
                                     assert(key@ != k@);
                                     assert forall|t: K| #![trigger t@]
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(*k, t) && t@ != k@
                                         implies TotalOrder::le(key, t) by {
+                                        lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                         lemma_map_contains_pair_in_set(tree@, t@);
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if left@.contains((t@, tv)) {
@@ -1751,6 +1759,7 @@ pub mod OrdKeyMap {
                                     spec_pair_set_to_map(tree@).dom().contains(t@)
                                     && TotalOrder::le(*k, t) && t@ != k@
                                     implies TotalOrder::le(rk, t) by {
+                                    lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                     lemma_map_contains_pair_in_set(tree@, t@);
                                     let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                     if left@.contains((t@, tv)) {
@@ -1781,6 +1790,7 @@ pub mod OrdKeyMap {
                                 assert forall|t: K| #![trigger t@]
                                     spec_pair_set_to_map(tree@).dom().contains(t@)
                                     implies !(TotalOrder::le(*k, t) && t@ != k@) by {
+                                    lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                     lemma_map_contains_pair_in_set(tree@, t@);
                                     let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                     if left@.contains((t@, tv)) {
@@ -1861,7 +1871,7 @@ pub mod OrdKeyMap {
                     lemma_key_unique_subset(tree@, right@);
                     lemma_view_gen_subset::<K, V>(left@, tree@);
                     lemma_view_gen_subset::<K, V>(right@, tree@);
-                    lemma_reveal_view_injective::<K>();
+                    // lemma_reveal_view_injective::<K>();  // Z3 diet: try without
                 }
                 let c = Ord::cmp(k, &root_pair.0);
                 proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
@@ -1879,6 +1889,7 @@ pub mod OrdKeyMap {
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(t, *k) && t@ != k@
                                         implies TotalOrder::le(t, rk) by {
+                                        lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                         lemma_map_contains_pair_in_set(tree@, t@);
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if right@.contains((t@, tv)) {
@@ -1939,6 +1950,7 @@ pub mod OrdKeyMap {
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(t, *k) && t@ != k@
                                         implies TotalOrder::le(t, key) by {
+                                        lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                         lemma_map_contains_pair_in_set(tree@, t@);
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if right@.contains((t@, tv)) {
@@ -1975,6 +1987,7 @@ pub mod OrdKeyMap {
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(t, *k) && t@ != k@
                                         implies false by {
+                                        lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                         lemma_map_contains_pair_in_set(tree@, t@);
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if right@.contains((t@, tv)) {
@@ -2016,12 +2029,14 @@ pub mod OrdKeyMap {
                                     assert(max_pair.cmp_spec(&root_pair) == Less);
                                     assert(max_pair.0.cmp_spec(&root_pair.0) == Less);
                                     K::cmp_spec_less_implies_le(max_pair.0, root_pair.0);
+                                    lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                     assert(root_pair.0 == *k);
                                     assert(key@ != k@);
                                     assert forall|t: K| #![trigger t@]
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(t, *k) && t@ != k@
                                         implies TotalOrder::le(t, key) by {
+                                        lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                         lemma_map_contains_pair_in_set(tree@, t@);
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if right@.contains((t@, tv)) {
@@ -2076,6 +2091,7 @@ pub mod OrdKeyMap {
                                     spec_pair_set_to_map(tree@).dom().contains(t@)
                                     && TotalOrder::le(t, *k) && t@ != k@
                                     implies TotalOrder::le(t, lk) by {
+                                    lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                     lemma_map_contains_pair_in_set(tree@, t@);
                                     let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                     if left@.contains((t@, tv)) {
@@ -2106,6 +2122,7 @@ pub mod OrdKeyMap {
                                 assert forall|t: K| #![trigger t@]
                                     spec_pair_set_to_map(tree@).dom().contains(t@)
                                     implies !(TotalOrder::le(t, *k) && t@ != k@) by {
+                                    lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                     lemma_map_contains_pair_in_set(tree@, t@);
                                     let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                     if left@.contains((t@, tv)) {
@@ -2172,7 +2189,7 @@ pub mod OrdKeyMap {
         proof {
             lemma_pair_set_to_map_dom_finite(tree@);
             lemma_pair_set_to_map_len(tree@);
-            lemma_reveal_view_injective::<K>();
+            // lemma_reveal_view_injective::<K>();  // Z3 diet: try without
         }
         let ghost rank_pred = |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@;
         match tree.expose() {
@@ -2208,6 +2225,7 @@ pub mod OrdKeyMap {
                             assert(tree_dom.filter(rank_pred) =~= left_dom.filter(rank_pred)) by {
                                 assert forall|x: K::V| #[trigger] tree_dom.filter(rank_pred).contains(x)
                                     implies left_dom.filter(rank_pred).contains(x) by {
+                                    lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                                     assert(tree_dom.contains(x) && rank_pred(x));
                                     lemma_map_contains_pair_in_set(tree@, x);
                                     let xv: V::V = choose|xv: V::V| tree@.contains((x, xv));
@@ -2253,6 +2271,7 @@ pub mod OrdKeyMap {
                     },
                     Equal => {
                         proof {
+                            lemma_reveal_view_injective::<K>();  // Z3 diet: targeted
                             assert(k@ == root_pair.0@);
                             assert(*k == root_pair.0);
                             let tree_dom = spec_pair_set_to_map(tree@).dom();
@@ -2262,6 +2281,7 @@ pub mod OrdKeyMap {
                             assert(tree_dom.filter(rank_pred) =~= left_dom) by {
                                 assert forall|x: K::V| #[trigger] tree_dom.filter(rank_pred).contains(x)
                                     implies left_dom.contains(x) by {
+                                    lemma_reveal_view_injective::<K>();
                                     lemma_map_contains_pair_in_set(tree@, x);
                                     let xv: V::V = choose|xv: V::V| tree@.contains((x, xv));
                                     let t: K = choose|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@;
@@ -2342,6 +2362,7 @@ pub mod OrdKeyMap {
                                 };
                                 assert forall|x: K::V| #[trigger] left_dom.union(root_key_set).union(right_dom.filter(rank_pred)).contains(x)
                                     implies tree_dom.filter(rank_pred).contains(x) by {
+                                    lemma_reveal_view_injective::<K>();
                                     if left_dom.contains(x) {
                                         lemma_map_contains_pair_in_set(left@, x);
                                         let xv: V::V = choose|xv: V::V| left@.contains((x, xv));
@@ -2463,7 +2484,7 @@ pub mod OrdKeyMap {
         proof {
             lemma_pair_set_to_map_dom_finite(tree@);
             lemma_pair_set_to_map_len(tree@);
-            lemma_reveal_view_injective::<K>();
+            // lemma_reveal_view_injective::<K>();  // Z3 diet: try without
         }
         match tree.expose() {
             Exposed::Leaf => None,
@@ -2498,6 +2519,7 @@ pub mod OrdKeyMap {
                                 assert(tree_dom.filter(rank_pred_sel) =~= left_dom.filter(rank_pred_sel)) by {
                                     assert forall|x: K::V| #[trigger] tree_dom.filter(rank_pred_sel).contains(x)
                                         implies left_dom.filter(rank_pred_sel).contains(x) by {
+                                        lemma_reveal_view_injective::<K>();
                                         lemma_map_contains_pair_in_set(tree@, x);
                                         let xv: V::V = choose|xv: V::V| tree@.contains((x, xv));
                                         let t: K = choose|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, sel_key) && t@ != sel_key@;
@@ -2571,6 +2593,7 @@ pub mod OrdKeyMap {
                         assert(tree_dom.filter(rank_pred_root) =~= left_dom) by {
                             assert forall|x: K::V| #[trigger] tree_dom.filter(rank_pred_root).contains(x)
                                 implies left_dom.contains(x) by {
+                                lemma_reveal_view_injective::<K>();
                                 lemma_map_contains_pair_in_set(tree@, x);
                                 let xv: V::V = choose|xv: V::V| tree@.contains((x, xv));
                                 let t: K = choose|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, key) && t@ != key@;
@@ -2653,6 +2676,7 @@ pub mod OrdKeyMap {
                                     };
                                     assert forall|x: K::V| #[trigger] left_dom.union(root_key_set).union(right_dom.filter(rank_pred_sel)).contains(x)
                                         implies tree_dom.filter(rank_pred_sel).contains(x) by {
+                                        lemma_reveal_view_injective::<K>();
                                         if left_dom.contains(x) {
                                             lemma_map_contains_pair_in_set(left@, x);
                                             let xv: V::V = choose|xv: V::V| left@.contains((x, xv));
@@ -4245,12 +4269,13 @@ pub mod OrdKeyMap {
                     let key = pair.0.clone_plus();
                     reveal_param_bst_backings(&self.inner);
                     proof {
-                        lemma_reveal_view_injective::<K>();
+                        // lemma_reveal_view_injective::<K>();  // Z3 diet: try without
                         lemma_cloned_view_eq(pair.0, key);
                         lemma_pair_in_set_map_contains(self.inner@, pair.0@, pair.1@);
                         assert(key == pair.0);
                         assert forall|t: K| #[trigger] self@.dom().contains(t@)
                             implies TotalOrder::le(key, t) by {
+                            lemma_reveal_view_injective::<K>();
                             lemma_map_contains_pair_in_set(self.inner@, t@);
                             let vv: V::V = choose|vv: V::V| self.inner@.contains((t@, vv));
                             if pair.0@ == t@ {
@@ -4289,12 +4314,13 @@ pub mod OrdKeyMap {
                     let key = pair.0.clone_plus();
                     reveal_param_bst_backings(&self.inner);
                     proof {
-                        lemma_reveal_view_injective::<K>();
+                        // lemma_reveal_view_injective::<K>();  // Z3 diet: try without
                         lemma_cloned_view_eq(pair.0, key);
                         lemma_pair_in_set_map_contains(self.inner@, pair.0@, pair.1@);
                         assert(key == pair.0);
                         assert forall|t: K| #[trigger] self@.dom().contains(t@)
                             implies TotalOrder::le(t, key) by {
+                            lemma_reveal_view_injective::<K>();
                             lemma_map_contains_pair_in_set(self.inner@, t@);
                             let vv: V::V = choose|vv: V::V| self.inner@.contains((t@, vv));
                             if pair.0@ == t@ {
