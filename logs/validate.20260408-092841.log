@@ -1,0 +1,25 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap43/OrderedSetStEph.rs:919:24
+    |
+919 |                 assert(left@.subset_of(self@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+left.view().subset_of(self.view())
+|   forall |a|
+|       left.view().contains(a) ==>
+|           self.view().contains(a) 
+|               function is uninterpreted
++---
+
+verification results:: 2803 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 46s
+Sampled Memory Usage: peak rust_verify RSS: 6648MB, peak z3 RSS: 1073MB, min free: 17133MB
+Sampled CPU Usage: rust_verify: 156s, z3 children: 190s

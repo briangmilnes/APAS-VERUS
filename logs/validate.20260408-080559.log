@@ -1,0 +1,31 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:190:17
+    |
+190 |                 seq@.to_set() =~= self@,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+471 |             result
+    |             ------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetMtEph.rs:190:17
+    |
+190 |                 seq@.to_set() =~= self@,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().finite() ✔
+%return.view().to_set() =~= old(self).view() ✘
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        old(self).view().contains(%return.view().index(i)) ✔
+
+verification results:: 2803 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 46s
+Sampled Memory Usage: peak rust_verify RSS: 6426MB, peak z3 RSS: 763MB, min free: 18922MB
+Sampled CPU Usage: rust_verify: 156s, z3 children: 151s

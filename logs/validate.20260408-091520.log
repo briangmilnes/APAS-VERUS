@@ -1,0 +1,27 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap43/OrderedSetStEph.rs:864:65
+    |
+864 |                 assert forall|v: T::V| mid@.contains(v) implies self@.contains(v) by {
+    |                                                                 ^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap43/OrderedSetStEph.rs:896:32
+    |
+896 |                         assert(self@.contains(k2@));
+    |                                ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+self.view().contains(v) 
+    function is uninterpreted
+
+verification results:: 2803 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 48s
+Sampled Memory Usage: peak rust_verify RSS: 6894MB, peak z3 RSS: 862MB, min free: 16141MB
+Sampled CPU Usage: rust_verify: 169s, z3 children: 205s

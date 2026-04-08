@@ -164,18 +164,10 @@ pub mod BSTSplayStEph {
                             reveal_with_fuel(spec_is_bst_link, 3);
                             reveal_with_fuel(spec_contains_link, 4);
                             // BST ordering: elements in left.right (= Some(root)) > left.key.
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| #[trigger] spec_contains_link(&left.right, x) implies
-                                (T::le(left_key, x) && x != left_key)
-                            by {
-                                reveal_with_fuel(spec_contains_link, 3);
-                                if spec_contains_link(&orig_left_right, x) {
-                                } else if spec_contains_link(&orig_root_right, x) {
-                                    T::transitive(left_key, root_key, x);
-                                    if x == left_key { T::antisymmetric(left_key, root_key); }
-                                } else if x == root_key {
-                                }
+                            assert(spec_contains_link(&orig_root_left, left_key)) by {
+                                reveal_with_fuel(spec_contains_link, 2);
                             };
+                            lemma_zig_child_ordering(&left.right, left_key, root_key, &orig_left_right, &orig_root_right);
                             // Element preservation.
                             // Veracity: NEEDED assert
                             assert forall|x: T| spec_contains_link(&Some(orig), x) implies
@@ -234,46 +226,17 @@ pub mod BSTSplayStEph {
                                 // ll_key ∈ splay result ∈ orig_left_left, so < left_key.
                                 // Veracity: NEEDED assert
                                 assert(spec_contains_link(&orig_left_left, ll_key));
-                                // BST: ll.right elements > ll_key.
-                                // Veracity: NEEDED assert
-                                assert forall|x: T| #[trigger] spec_contains_link(&ll.right, x) implies
-                                    (T::le(ll_key, x) && x != ll_key)
-                                by {
-                                    reveal_with_fuel(spec_contains_link, 4);
-                                    if x == left_key {
-                                    } else if spec_contains_link(&ll_right, x) {
-                                    } else if spec_contains_link(&left.right, x) {
-                                        reveal_with_fuel(spec_contains_link, 3);
-                                        if x == root_key {
-                                            T::transitive(ll_key, left_key, root_key);
-                                            if x == ll_key { T::antisymmetric(ll_key, root_key); }
-                                        } else if spec_contains_link(&orig_left_right, x) {
-                                            T::transitive(ll_key, left_key, x);
-                                            if x == ll_key { T::antisymmetric(ll_key, left_key); }
-                                        } else {
-                                            T::transitive(ll_key, root_key, x);
-                                            if x == ll_key { T::antisymmetric(ll_key, root_key); }
-                                        }
-                                    }
-                                };
+                                // BST: left.right > left_key, then chain ll.right > ll_key.
+                                assert(spec_contains_link(&orig_root_left, left_key)) by {
+                                reveal_with_fuel(spec_contains_link, 2);
+                            };
+                            lemma_zig_child_ordering(&left.right, left_key, root_key, &orig_left_right, &orig_root_right);
+                                lemma_zig_child_ordering(&ll.right, ll_key, left_key, &ll_right, &left.right);
                                 // BST: left.left (= ll_right) elements < left_key.
                                 // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] spec_contains_link(&left.left, x) implies
                                     (T::le(x, left_key) && x != left_key)
                                 by {
-                                };
-                                // BST: left.right elements > left_key.
-                                // Veracity: NEEDED assert
-                                assert forall|x: T| #[trigger] spec_contains_link(&left.right, x) implies
-                                    (T::le(left_key, x) && x != left_key)
-                                by {
-                                    reveal_with_fuel(spec_contains_link, 3);
-                                    if spec_contains_link(&orig_left_right, x) {
-                                    } else if spec_contains_link(&orig_root_right, x) {
-                                        T::transitive(left_key, root_key, x);
-                                        if x == left_key { T::antisymmetric(left_key, root_key); }
-                                    } else if x == root_key {
-                                    }
                                 };
                                 // Element preservation.
                                 // Veracity: NEEDED assert
@@ -323,18 +286,10 @@ pub mod BSTSplayStEph {
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(spec_contains_link, 4);
-                                // Veracity: NEEDED assert
-                                assert forall|x: T| #[trigger] spec_contains_link(&left.right, x) implies
-                                    (T::le(left_key, x) && x != left_key)
-                                by {
-                                    reveal_with_fuel(spec_contains_link, 3);
-                                    if spec_contains_link(&orig_left_right, x) {
-                                    } else if spec_contains_link(&orig_root_right, x) {
-                                        T::transitive(left_key, root_key, x);
-                                        if x == left_key { T::antisymmetric(left_key, root_key); }
-                                    } else if x == root_key {
-                                    }
-                                };
+                                assert(spec_contains_link(&orig_root_left, left_key)) by {
+                                reveal_with_fuel(spec_contains_link, 2);
+                            };
+                            lemma_zig_child_ordering(&left.right, left_key, root_key, &orig_left_right, &orig_root_right);
                                 // Veracity: NEEDED assert
                                 assert forall|x: T| spec_contains_link(&Some(orig), x) implies
                                     spec_contains_link(&Some(left), x)
@@ -400,33 +355,9 @@ pub mod BSTSplayStEph {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(spec_contains_link, 5);
                                 // BST: lr.left (= Some(left)) elements < lr_key.
-                                // Veracity: NEEDED assert
-                                assert forall|x: T| #[trigger] spec_contains_link(&lr.left, x) implies
-                                    (T::le(x, lr_key) && x != lr_key)
-                                by {
-                                    reveal_with_fuel(spec_contains_link, 3);
-                                    if x == left_key {
-                                    } else if spec_contains_link(&orig_left_left, x) {
-                                        T::transitive(x, left_key, lr_key);
-                                        if x == lr_key { T::antisymmetric(left_key, lr_key); }
-                                    } else {
-                                        // x ∈ lr_left ⊂ orig_left_right > left_key, < lr_key from splay BST.
-                                    }
-                                };
+                                lemma_zag_child_ordering(&lr.left, left_key, lr_key, &lr_left, &orig_left_left);
                                 // BST: lr.right (= Some(root)) elements > lr_key.
-                                // Veracity: NEEDED assert
-                                assert forall|x: T| #[trigger] spec_contains_link(&lr.right, x) implies
-                                    (T::le(lr_key, x) && x != lr_key)
-                                by {
-                                    reveal_with_fuel(spec_contains_link, 3);
-                                    if x == root_key {
-                                    } else if spec_contains_link(&lr_right, x) {
-                                        // lr_right > lr_key from splay BST.
-                                    } else {
-                                        T::transitive(lr_key, root_key, x);
-                                        if x == lr_key { T::antisymmetric(lr_key, root_key); }
-                                    }
-                                };
+                                lemma_zig_child_ordering(&lr.right, lr_key, root_key, &lr_right, &orig_root_right);
                                 // BST: left.right (= lr_left) elements > left_key.
                                 // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] spec_contains_link(&left.right, x) implies
@@ -495,17 +426,10 @@ pub mod BSTSplayStEph {
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(spec_contains_link, 4);
-                                // Veracity: NEEDED assert
-                                assert forall|x: T| #[trigger] spec_contains_link(&left.right, x) implies
-                                    (T::le(left_key, x) && x != left_key)
-                                by {
-                                    reveal_with_fuel(spec_contains_link, 3);
-                                    if spec_contains_link(&orig_root_right, x) {
-                                        T::transitive(left_key, root_key, x);
-                                        if x == left_key { T::antisymmetric(left_key, root_key); }
-                                    } else if x == root_key {
-                                    }
-                                };
+                                assert(spec_contains_link(&orig_root_left, left_key)) by {
+                                reveal_with_fuel(spec_contains_link, 2);
+                            };
+                            lemma_zig_child_ordering(&left.right, left_key, root_key, &orig_left_right, &orig_root_right);
                                 // Veracity: NEEDED assert
                                 assert forall|x: T| spec_contains_link(&Some(orig), x) implies
                                     spec_contains_link(&Some(left), x)
@@ -591,18 +515,7 @@ pub mod BSTSplayStEph {
                             reveal_with_fuel(spec_is_bst_link, 3);
                             reveal_with_fuel(spec_contains_link, 4);
                             // BST ordering: elements in right.left (= Some(root)) < right.key.
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| #[trigger] spec_contains_link(&right.left, x) implies
-                                (T::le(x, right_key) && x != right_key)
-                            by {
-                                reveal_with_fuel(spec_contains_link, 3);
-                                if spec_contains_link(&orig_right_left, x) {
-                                } else if spec_contains_link(&orig_root_left, x) {
-                                    T::transitive(x, root_key, right_key);
-                                    if x == right_key { T::antisymmetric(root_key, right_key); }
-                                } else if x == root_key {
-                                }
-                            };
+                            lemma_zag_child_ordering(&right.left, root_key, right_key, &orig_right_left, &orig_root_left);
                             // BST ordering: elements in right.right > right.key (unchanged).
                             // Element preservation.
                             // Veracity: NEEDED assert
@@ -663,46 +576,14 @@ pub mod BSTSplayStEph {
                                 // rr_key ∈ splay result ∈ orig_right_right, so > right_key.
                                 // Veracity: NEEDED assert
                                 assert(spec_contains_link(&orig_right_right, rr_key));
-                                // BST: rr.left (= Some(right)) elements < rr_key.
-                                // Veracity: NEEDED assert
-                                assert forall|x: T| #[trigger] spec_contains_link(&rr.left, x) implies
-                                    (T::le(x, rr_key) && x != rr_key)
-                                by {
-                                    reveal_with_fuel(spec_contains_link, 4);
-                                    if x == right_key {
-                                    } else if spec_contains_link(&rr_left, x) {
-                                    } else if spec_contains_link(&right.left, x) {
-                                        reveal_with_fuel(spec_contains_link, 3);
-                                        if x == root_key {
-                                            T::transitive(root_key, right_key, rr_key);
-                                            if x == rr_key { T::antisymmetric(root_key, rr_key); }
-                                        } else if spec_contains_link(&orig_right_left, x) {
-                                            T::transitive(x, right_key, rr_key);
-                                            if x == rr_key { T::antisymmetric(right_key, rr_key); }
-                                        } else {
-                                            T::transitive(x, root_key, rr_key);
-                                            if x == rr_key { T::antisymmetric(root_key, rr_key); }
-                                        }
-                                    }
-                                };
+                                // BST: right.left < right_key, then chain rr.left < rr_key.
+                                lemma_zag_child_ordering(&right.left, root_key, right_key, &orig_right_left, &orig_root_left);
+                                lemma_zag_child_ordering(&rr.left, right_key, rr_key, &rr_left, &right.left);
                                 // BST: right.right (= rr_left) elements > right_key.
                                 // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] spec_contains_link(&right.right, x) implies
                                     (T::le(right_key, x) && x != right_key)
                                 by {
-                                };
-                                // BST: right.left elements < right_key.
-                                // Veracity: NEEDED assert
-                                assert forall|x: T| #[trigger] spec_contains_link(&right.left, x) implies
-                                    (T::le(x, right_key) && x != right_key)
-                                by {
-                                    reveal_with_fuel(spec_contains_link, 3);
-                                    if spec_contains_link(&orig_right_left, x) {
-                                    } else if spec_contains_link(&orig_root_left, x) {
-                                        T::transitive(x, root_key, right_key);
-                                        if x == right_key { T::antisymmetric(root_key, right_key); }
-                                    } else if x == root_key {
-                                    }
                                 };
                                 // Element preservation.
                                 // Veracity: NEEDED assert
@@ -752,18 +633,7 @@ pub mod BSTSplayStEph {
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(spec_contains_link, 4);
-                                // Veracity: NEEDED assert
-                                assert forall|x: T| #[trigger] spec_contains_link(&right.left, x) implies
-                                    (T::le(x, right_key) && x != right_key)
-                                by {
-                                    reveal_with_fuel(spec_contains_link, 3);
-                                    if spec_contains_link(&orig_right_left, x) {
-                                    } else if spec_contains_link(&orig_root_left, x) {
-                                        T::transitive(x, root_key, right_key);
-                                        if x == right_key { T::antisymmetric(root_key, right_key); }
-                                    } else if x == root_key {
-                                    }
-                                };
+                                lemma_zag_child_ordering(&right.left, root_key, right_key, &orig_right_left, &orig_root_left);
                                 // Veracity: NEEDED assert
                                 assert forall|x: T| spec_contains_link(&Some(orig), x) implies
                                     spec_contains_link(&Some(right), x)
@@ -829,33 +699,9 @@ pub mod BSTSplayStEph {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(spec_contains_link, 5);
                                 // BST: rl.right (= Some(right)) elements > rl_key.
-                                // Veracity: NEEDED assert
-                                assert forall|x: T| #[trigger] spec_contains_link(&rl.right, x) implies
-                                    (T::le(rl_key, x) && x != rl_key)
-                                by {
-                                    reveal_with_fuel(spec_contains_link, 3);
-                                    if x == right_key {
-                                    } else if spec_contains_link(&orig_right_right, x) {
-                                        T::transitive(rl_key, right_key, x);
-                                        if x == rl_key { T::antisymmetric(rl_key, right_key); }
-                                    } else {
-                                        // x ∈ rl_right ⊂ orig_right_left < right_key, > rl_key from splay BST.
-                                    }
-                                };
+                                lemma_zig_child_ordering(&rl.right, rl_key, right_key, &rl_right, &orig_right_right);
                                 // BST: rl.left (= Some(root)) elements < rl_key.
-                                // Veracity: NEEDED assert
-                                assert forall|x: T| #[trigger] spec_contains_link(&rl.left, x) implies
-                                    (T::le(x, rl_key) && x != rl_key)
-                                by {
-                                    reveal_with_fuel(spec_contains_link, 3);
-                                    if x == root_key {
-                                    } else if spec_contains_link(&rl_left, x) {
-                                        // rl_left < rl_key from splay BST.
-                                    } else {
-                                        T::transitive(x, root_key, rl_key);
-                                        if x == rl_key { T::antisymmetric(root_key, rl_key); }
-                                    }
-                                };
+                                lemma_zag_child_ordering(&rl.left, root_key, rl_key, &rl_left, &orig_root_left);
                                 // BST: right.left (= rl_right) elements < right_key.
                                 // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] spec_contains_link(&right.left, x) implies
@@ -924,17 +770,7 @@ pub mod BSTSplayStEph {
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(spec_contains_link, 4);
-                                // Veracity: NEEDED assert
-                                assert forall|x: T| #[trigger] spec_contains_link(&right.left, x) implies
-                                    (T::le(x, right_key) && x != right_key)
-                                by {
-                                    reveal_with_fuel(spec_contains_link, 3);
-                                    if spec_contains_link(&orig_root_left, x) {
-                                        T::transitive(x, root_key, right_key);
-                                        if x == right_key { T::antisymmetric(root_key, right_key); }
-                                    } else if x == root_key {
-                                    }
-                                };
+                                lemma_zag_child_ordering(&right.left, root_key, right_key, &orig_right_left, &orig_root_left);
                                 // Veracity: NEEDED assert
                                 assert forall|x: T| spec_contains_link(&Some(orig), x) implies
                                     spec_contains_link(&Some(right), x)
@@ -1108,6 +944,66 @@ pub mod BSTSplayStEph {
                 }
             }
         }
+    }
+
+    /// After a zig (right) rotation, all elements in the rotated child subtree
+    /// are strictly greater than the pivot key lo. The child decomposes into
+    /// key hi plus two subtrees; all three parts are > lo by BST ordering or
+    /// transitivity through hi.
+    proof fn lemma_zig_child_ordering<T: TotalOrder + Clone>(
+        child: &Link<T>,
+        lo: T, hi: T,
+        sub_lo: &Link<T>,
+        sub_hi: &Link<T>,
+    )
+        requires
+            T::le(lo, hi), lo != hi,
+            forall|y: T| spec_contains_link(sub_lo, y) ==> (T::le(lo, y) && y != lo),
+            forall|y: T| spec_contains_link(sub_hi, y) ==> (T::le(hi, y) && y != hi),
+            forall|y: T| spec_contains_link(child, y) ==>
+                (y == hi || spec_contains_link(sub_lo, y) || spec_contains_link(sub_hi, y)),
+        ensures
+            forall|x: T| #[trigger] spec_contains_link(child, x) ==> (T::le(lo, x) && x != lo),
+    {
+        assert forall|x: T| #[trigger] spec_contains_link(child, x) implies
+            (T::le(lo, x) && x != lo)
+        by {
+            if x == hi {
+            } else if spec_contains_link(sub_lo, x) {
+            } else {
+                T::transitive(lo, hi, x);
+                if x == lo { T::antisymmetric(lo, hi); }
+            }
+        };
+    }
+
+    /// Mirror of lemma_zig_child_ordering for zag (left) rotation: all elements
+    /// in the rotated child subtree are strictly less than the pivot key hi.
+    proof fn lemma_zag_child_ordering<T: TotalOrder + Clone>(
+        child: &Link<T>,
+        lo: T, hi: T,
+        sub_hi: &Link<T>,
+        sub_lo: &Link<T>,
+    )
+        requires
+            T::le(lo, hi), lo != hi,
+            forall|y: T| spec_contains_link(sub_hi, y) ==> (T::le(y, hi) && y != hi),
+            forall|y: T| spec_contains_link(sub_lo, y) ==> (T::le(y, lo) && y != lo),
+            forall|y: T| spec_contains_link(child, y) ==>
+                (y == lo || spec_contains_link(sub_lo, y) || spec_contains_link(sub_hi, y)),
+        ensures
+            forall|x: T| #[trigger] spec_contains_link(child, x) ==> (T::le(x, hi) && x != hi),
+    {
+        assert forall|x: T| #[trigger] spec_contains_link(child, x) implies
+            (T::le(x, hi) && x != hi)
+        by {
+            if x == lo {
+            } else if spec_contains_link(sub_hi, x) {
+            } else {
+                T::transitive(x, lo, hi);
+                if x == hi { T::antisymmetric(lo, hi); }
+            }
+        };
     }
 
     //		Section 8b. traits

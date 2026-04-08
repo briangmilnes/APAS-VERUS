@@ -1,0 +1,40 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSetStEph.rs:405:17
+    |
+405 |                 forall|x| #[trigger] old(self)@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+838 |             (left, found, right)
+    |             -------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetStEph.rs:405:113
+    |
+405 |                 forall|x| #[trigger] old(self)@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
+    |                                                                                                                 ^^^^^^^
+
+note: 
+
+self.view().finite() ✔
+old(self).view().finite() ✔
+%return.1 == old(self).view().contains(old(k).view()) ✔
+%return.0.view().finite() ✔
+%return.2.view().finite() ✔
+%return.0.view().subset_of(old(self).view()) ✔
+%return.2.view().subset_of(old(self).view()) ✔
+%return.0.view().disjoint(%return.2.view()) ✔
+!(%return.0.view().contains(old(k).view())) ✔
+!(%return.2.view().contains(old(k).view())) ✔
+forall |x|
+    old(self).view().contains(x) ==>
+        !(%return.0.view().contains(x) || %return.2.view().contains(x)) ==>
+            x == old(k).view() ✘
+
+verification results:: 2803 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 42s
+Sampled Memory Usage: peak rust_verify RSS: 5698MB, peak z3 RSS: 665MB, min free: 17793MB
+Sampled CPU Usage: rust_verify: 116s, z3 children: 112s
