@@ -26,6 +26,7 @@ pub mod AdjSeqGraphMtEph {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::*;
+    use crate::Chap52::AdjTableGraphSpecsAndLemmas::AdjTableGraphSpecsAndLemmas::*;
 
     const SEQUENTIAL_CUTOFF: usize = 1;
 
@@ -67,104 +68,8 @@ broadcast use {
     //		Section 6. spec fns
 
 
-    pub open spec fn spec_sum_of(n: int, f: spec_fn(int) -> nat) -> nat
-        decreases n
-    {
-        if n <= 0 { 0 }
-        else { f(n - 1) + spec_sum_of(n - 1, f) }
-    }
-
     //		Section 7. proof fns/broadcast groups
 
-
-    proof fn lemma_sum_of_monotone(i: int, n: int, f: spec_fn(int) -> nat)
-        requires 0 <= i <= n
-        ensures spec_sum_of(i, f) <= spec_sum_of(n, f)
-        decreases n - i
-    {
-        if i < n {
-            lemma_sum_of_monotone(i, n - 1, f);
-        }
-    }
-
-    /// Unfolding one step: spec_sum_of(i+1, f) == f(i) + spec_sum_of(i, f).
-    proof fn lemma_sum_of_unfold(i: int, f: spec_fn(int) -> nat)
-        requires i >= 0
-        ensures spec_sum_of(i + 1, f) == f(i) + spec_sum_of(i, f)
-    {
-    }
-
-    /// Sum of all-zero function is zero.
-    proof fn lemma_sum_of_all_zero(f: spec_fn(int) -> nat, n: int)
-        requires forall|i: int| 0 <= i < n ==> #[trigger] f(i) == 0nat
-        ensures spec_sum_of(n, f) == 0
-        decreases n
-    {
-        if n > 0 {
-            assert(f(n - 1) == 0nat);
-            lemma_sum_of_all_zero(f, n - 1);
-        }
-    }
-
-    /// Extensionality for spec_sum_of: identical functions yield identical sums.
-    proof fn lemma_sum_of_ext(f: spec_fn(int) -> nat, g: spec_fn(int) -> nat, n: int)
-        requires forall|i: int| 0 <= i < n ==> #[trigger] f(i) == g(i)
-        ensures spec_sum_of(n, f) == spec_sum_of(n, g)
-        decreases n
-    {
-        if n > 0 {
-            assert(f(n - 1) == g(n - 1));
-            lemma_sum_of_ext(f, g, n - 1);
-        }
-    }
-
-    /// Changing one term in the sum: the total changes by the difference.
-    proof fn lemma_sum_of_change_one(n: int, old_f: spec_fn(int) -> nat, new_f: spec_fn(int) -> nat, k: int)
-        requires
-            0 <= k < n,
-            forall|i: int| 0 <= i < n && i != k ==> #[trigger] old_f(i) == new_f(i),
-        ensures
-            spec_sum_of(n, new_f) + old_f(k) == spec_sum_of(n, old_f) + new_f(k),
-        decreases n,
-    {
-        if n > 0 {
-            if k == n - 1 {
-                lemma_sum_of_ext(old_f, new_f, n - 1);
-            } else {
-                assert(old_f(n - 1) == new_f(n - 1));
-                lemma_sum_of_change_one(n - 1, old_f, new_f, k);
-            }
-        }
-    }
-
-    /// Lower bound: the sum of nats is at least any single term.
-    proof fn lemma_sum_of_lower_bound(n: int, f: spec_fn(int) -> nat, k: int)
-        requires 0 <= k < n
-        ensures spec_sum_of(n, f) >= f(k)
-        decreases n
-    {
-        if k == n - 1 {
-        } else {
-            lemma_sum_of_lower_bound(n - 1, f, k);
-        }
-    }
-
-    /// Upper bound: if each f(i) ≤ bound, then sum ≤ n * bound.
-    proof fn lemma_sum_of_bounded(n: int, f: spec_fn(int) -> nat, bound: nat)
-        requires
-            n >= 0,
-            forall|i: int| 0 <= i < n ==> #[trigger] f(i) <= bound,
-        ensures spec_sum_of(n, f) <= (n as nat) * bound
-        decreases n
-    {
-        if n > 0 {
-            assert(f(n - 1) <= bound);
-            lemma_sum_of_bounded(n - 1, f, bound);
-            assert(spec_sum_of(n, f) <= bound + ((n - 1) as nat) * bound);
-            assert((n as nat) * bound == bound + ((n - 1) as nat) * bound) by(nonlinear_arith)
-                requires n >= 1;
-        }
-    }
 
     //		Section 8. traits
 
