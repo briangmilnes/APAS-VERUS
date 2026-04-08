@@ -434,8 +434,6 @@ pub mod BalBinTreeStEph {
                 // pre_order = v + l_pre + r_pre = (v + l_pre) + r_pre
 
                 // Seq concatenation is associative
-                assert(tree.spec_in_order() =~= (l_in + v) + r_in);
-                assert(tree.spec_pre_order() =~= (v + l_pre) + r_pre);
 
                 // Decompose each concatenation into multiset additions
                 vstd::seq_lib::lemma_multiset_commutative(l_in + v, r_in);
@@ -444,14 +442,8 @@ pub mod BalBinTreeStEph {
                 vstd::seq_lib::lemma_multiset_commutative(v, l_pre);
 
                 // Now use commutativity of Multiset::add
-                assert(tree.spec_in_order().to_multiset()
-                    =~= l_in.to_multiset().add(v.to_multiset()).add(r_in.to_multiset()));
-                assert(tree.spec_pre_order().to_multiset()
-                    =~= v.to_multiset().add(l_pre.to_multiset()).add(r_pre.to_multiset()));
 
                 // By IH + commutativity of add, these are equal
-                assert(l_in.to_multiset().add(v.to_multiset()).add(r_in.to_multiset())
-                    =~= v.to_multiset().add(l_in.to_multiset()).add(r_in.to_multiset()));
             },
         }
     }
@@ -478,23 +470,15 @@ pub mod BalBinTreeStEph {
                 // pre_order  = v + l_pre + r_pre  = (v + l_pre) + r_pre
                 // post_order = l_post + r_post + v = (l_post + r_post) + v
 
-                assert(tree.spec_pre_order() =~= (v + l_pre) + r_pre);
-                assert(tree.spec_post_order() =~= (l_post + r_post) + v);
 
                 vstd::seq_lib::lemma_multiset_commutative(v + l_pre, r_pre);
                 vstd::seq_lib::lemma_multiset_commutative(v, l_pre);
                 vstd::seq_lib::lemma_multiset_commutative(l_post + r_post, v);
                 vstd::seq_lib::lemma_multiset_commutative(l_post, r_post);
 
-                assert(tree.spec_pre_order().to_multiset()
-                    =~= v.to_multiset().add(l_pre.to_multiset()).add(r_pre.to_multiset()));
-                assert(tree.spec_post_order().to_multiset()
-                    =~= l_post.to_multiset().add(r_post.to_multiset()).add(v.to_multiset()));
 
                 // By IH: l_pre.to_multiset() =~= l_post.to_multiset() (and same for right)
                 // Multiset add is commutative and associative
-                assert(l_post.to_multiset().add(r_post.to_multiset()).add(v.to_multiset())
-                    =~= v.to_multiset().add(l_post.to_multiset()).add(r_post.to_multiset()));
             },
         }
     }

@@ -176,7 +176,6 @@ pub mod PrimTreeSeqStPer {
             } else if len == 1 {
                 let elem = self.seq[0].clone();
                 proof {
-                    assert(cloned(self.seq@[0], elem));
                     axiom_cloned_implies_eq_owned(self.seq@[0], elem);
                 }
                 PrimTreeSeqStTree::One(elem)
@@ -199,7 +198,6 @@ pub mod PrimTreeSeqStPer {
                     left_vec.push(self.seq[i].clone());
                     proof {
                         let ghost last = left_vec@[left_vec@.len() - 1 as int];
-                        assert(cloned(self.seq[i as int], last));
                         axiom_cloned_implies_eq_owned(self.seq[i as int], last);
                     }
                     i = i + 1;
@@ -219,12 +217,10 @@ pub mod PrimTreeSeqStPer {
                     right_vec.push(self.seq[i].clone());
                     proof {
                         let ghost last = right_vec@[right_vec@.len() - 1 as int];
-                        assert(cloned(self.seq[i as int], last));
                         axiom_cloned_implies_eq_owned(self.seq[i as int], last);
                     }
                     i = i + 1;
                 }
-                assert(left_vec@ + right_vec@ =~= self.seq@);
                 PrimTreeSeqStTree::Two(
                     PrimTreeSeqStS { seq: left_vec },
                     PrimTreeSeqStS { seq: right_vec },
@@ -272,7 +268,6 @@ pub mod PrimTreeSeqStPer {
                 seq.push(a.seq[i].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(a.seq[i as int], last));
                     axiom_cloned_implies_eq_owned(a.seq[i as int], last);
                 }
                 i += 1;
@@ -292,7 +287,6 @@ pub mod PrimTreeSeqStPer {
                 seq.push(b.seq[j].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(b.seq[j as int], last));
                     axiom_cloned_implies_eq_owned(b.seq[j as int], last);
                 }
                 j += 1;
@@ -320,7 +314,6 @@ pub mod PrimTreeSeqStPer {
                 seq.push(self.seq[i].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(self.seq[i as int], last));
                     axiom_cloned_implies_eq_owned(self.seq[i as int], last);
                 }
                 i += 1;
@@ -350,14 +343,12 @@ pub mod PrimTreeSeqStPer {
                     seq.push(item.clone());
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
-                        assert(cloned(item, last));
                         axiom_cloned_implies_eq_owned(item, last);
                     }
                 } else {
                     seq.push(a.seq[i].clone());
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
-                        assert(cloned(a.seq[i as int], last));
                         axiom_cloned_implies_eq_owned(a.seq[i as int], last);
                     }
                 }
@@ -423,7 +414,6 @@ pub mod PrimTreeSeqStPer {
                     assert(a.seq@[j] == a.spec_index(j));
                 }
                 broadcast use vstd::seq_lib::group_to_multiset_ensures;
-                assert(a.seq@.subrange(0, 0int) =~= Seq::<T>::empty());
             }
             while i < len
                 invariant
@@ -454,7 +444,6 @@ pub mod PrimTreeSeqStPer {
             }
             let filtered = PrimTreeSeqStS { seq };
             proof {
-                assert(a.seq@.subrange(0, a.seq@.len() as int) =~= a.seq@);
                 assert(a.seq@ =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)));
                 assert(filtered.seq@ =~= Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)));
             }
@@ -501,14 +490,11 @@ pub mod PrimTreeSeqStPer {
                     seq.push(inner.seq[j].clone());
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
-                        assert(cloned(inner.seq[j as int], last));
                         axiom_cloned_implies_eq_owned(inner.seq[j as int], last);
-                        assert(inner.seq@.take(j as int + 1) =~= inner.seq@.take(j as int).push(inner.seq@[j as int]));
                     }
                     j += 1;
                 }
                 proof {
-                    assert(inner.seq@.take(inner_len as int) =~= inner.seq@);
                     let ghost prefix = a.seq@.take(i as int).map_values(|inner: PrimTreeSeqStS<T>| inner.seq@);
                     assert(a.seq@.take(i as int + 1).map_values(|inner: PrimTreeSeqStS<T>| inner.seq@)
                         =~= prefix.push(a.seq@[i as int].seq@));
@@ -517,7 +503,6 @@ pub mod PrimTreeSeqStPer {
                 i += 1;
             }
             proof {
-                assert(a.seq@.take(outer_len as int) =~= a.seq@);
             }
             PrimTreeSeqStS { seq }
         }
@@ -975,7 +960,6 @@ pub mod PrimTreeSeqStPer {
         {
             match (self, other) {
                 (PrimTreeSeqStTree::Zero, PrimTreeSeqStTree::Zero) => {
-                    assert(self@ == other@);
                     true
                 },
                 (PrimTreeSeqStTree::One(a), PrimTreeSeqStTree::One(b)) => {

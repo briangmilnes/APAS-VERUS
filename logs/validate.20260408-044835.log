@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap23
+error: assertion failed
+   --> src/Chap23/PrimTreeSeqStPer.rs:376:80
+    |
+376 |                 assert forall|j: int| 0 <= j < a.seq@.len() implies #[trigger] f.requires((&a.seq@[j],)) by {
+    |                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+ClosureReq(f, (a.seq.view().index(j))) 
+
+verification results:: 757 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 1825MB, peak z3 RSS: 85MB, min free: 23633MB
+Sampled CPU Usage: rust_verify: 24s, z3 children: 13s

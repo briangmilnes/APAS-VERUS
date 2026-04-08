@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap23
+error: invariant not satisfied at end of loop body
+   --> src/Chap23/PrimTreeSeqStPer.rs:484:21
+    |
+484 |                     seq@ =~= a.seq@.take(i as int).map_values(|inner: PrimTreeSeqStS<T>| inner.seq@).flatten(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 757 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 5388MB, peak z3 RSS: 489MB, min free: 20724MB
+Sampled CPU Usage: rust_verify: 86s, z3 children: 75s
