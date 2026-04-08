@@ -1,0 +1,39 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:693:21
+    |
+693 | /                     #[trigger] merged@.contains_key(verts_view[j2]@) &&
+694 | |                     merged@[verts_view[j2]@] as usize == j2 by {
+    | |___________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+merged.view().dom().contains(verts_view.index(j2).view()) ✔
+clip(usize, merged.view().index(verts_view.index(j2).view())) == j2 ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met: value may be out of range of the target type (use `#[verifier::truncate]` on the cast to silence this warning)
+   --> src/Chap62/StarPartitionMtEph.rs:611:60
+    |
+611 |                     #[trigger] r@.contains_key(v1@[j]@) && r@[v1@[j]@] as usize == j,
+    |                                                            ^^^^^^^^^^^
+
+note: recommendation not met: value may be out of range of the target type (use `#[verifier::truncate]` on the cast to silence this warning)
+   --> src/Chap62/StarPartitionMtEph.rs:625:60
+    |
+625 |                     #[trigger] r@.contains_key(v2@[j]@) && r@[v2@[j]@] as usize == j,
+    |                                                            ^^^^^^^^^^^
+
+verification results:: 1339 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 5384MB, peak z3 RSS: 746MB, min free: 20890MB
+Sampled CPU Usage: rust_verify: 72s, z3 children: 73s

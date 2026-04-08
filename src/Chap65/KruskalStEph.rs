@@ -133,16 +133,6 @@ pub mod KruskalStEph {
             uf_parent_dom.contains(edges_vec_i@.1),
     {
         let j = choose|j: int| 0 <= j < pre_sort.len() && pre_sort[j] == edges_vec_i;
-        assert(j < edge_seq.len());
-        assert(pre_sort[j]@ == edge_seq[j]@);
-        assert(edges_vec_i@ == edge_seq[j]@);
-        assert(mapped_es[j] == edge_seq[j]@);
-        assert(mapped_es.contains(edge_seq[j]@));
-        assert(labeled_view.contains(edge_seq[j]@));
-        assert(graph_A.contains(edge_seq[j]@));
-        assert(graph_A.contains((edge_seq[j]@.0, edge_seq[j]@.1, edge_seq[j]@.2)));
-        assert(graph_V.contains(edge_seq[j]@.0));
-        assert(graph_V.contains(edge_seq[j]@.1));
     }
 
     /// Namespace struct for trait impl.
@@ -300,18 +290,9 @@ pub mod KruskalStEph {
             proof {
                 let new_i = i as int + 1;
                 // Prefix [0..new_i) sorted.
-                assert forall|a: int, b: int| #![trigger edges@[a], edges@[b]] 0 <= a <= b < new_i
-                    implies edges@[a].2 <= edges@[b].2
-                by {
-                    if b == i as int && a < i as int {
-                        assert(edges@[a].2 <= edges@[i as int].2);
                     }
                 };
                 // Prefix [0..new_i) ≤ suffix [new_i..n).
-                assert forall|a: int, b: int| #![trigger edges@[a], edges@[b]] 0 <= a < new_i && new_i <= b < n
-                    implies edges@[a].2 <= edges@[b].2
-                by {
-                    assert(edges@[i as int].2 <= edges@[b].2);
                     if a < i as int {
                         // Transitivity: a < i, so edges[a].2 <= edges[i].2 <= edges[b].2.
                     }
@@ -340,7 +321,6 @@ pub mod KruskalStEph {
             mst_edges.spec_setsteph_wf(),
     {
         // Trigger LabEdge broadcast axioms for SetStEph::empty precondition.
-        proof { assert(LabEdge_feq_trigger::<V, u64>()); }
 
         let mut mst_edges: SetStEph<LabEdge<V, u64>> = SetStEph::empty();
         let mut uf = UnionFindStEph::new();
@@ -369,16 +349,10 @@ pub mod KruskalStEph {
         // After while: vi >= vertex_seq.len(), so all vertex_seq elements are in UF.
         proof {
             let mapped_vs = vertex_seq@.map(|_i: int, t: V| t@);
-            assert forall|v: <V as View>::V| #[trigger] graph@.V.contains(v) implies
                 uf@.parent.contains_key(v)
             by {
                 // v in graph@.V = graph.vertices()@ <==> mapped_vs.contains(v).
-                assert(mapped_vs.contains(v));
                 let j = choose|j: int| 0 <= j < mapped_vs.len() && mapped_vs[j] == v;
-                assert(mapped_vs.len() == vertex_seq@.len());
-                assert(mapped_vs[j] == vertex_seq@[j]@);
-                assert(0 <= j && j < vertex_seq@.len());
-                assert(uf@.parent.contains_key(vertex_seq@[j]@));
             };
         }
 

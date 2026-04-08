@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap51
+error: unexpected token, expected `;`
+   --> src/Chap51/TopDownDPStEph.rs:366:21
+    |
+366 |                     pre_memo[(a, b)] as nat == #[trigger] spec_med_fn(s, t, a as nat, b as nat)
+    |                     ^^^^^^^^
+
+error[E0425]: cannot find type `TopDownDPStEphS` in this scope
+   --> src/Chap51/TopDownDPStEph.rs:436:20
+    |
+436 |     impl Debug for TopDownDPStEphS {
+    |                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `TopDownDPStEphS` in this scope
+   --> src/Chap51/TopDownDPStEph.rs:446:22
+    |
+446 |     impl Display for TopDownDPStEphS {
+    |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 5004MB, peak z3 RSS: 79MB, min free: 19077MB
+Sampled CPU Usage: rust_verify: 167s, z3 children: 169s

@@ -1,48 +1,6 @@
 Mode: isolate
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
-error: assertion failed
-   --> src/Chap37/BSTAVLStEph.rs:521:33
-    |
-521 | ...                   #[trigger] T::le(z, y_val) && z != y_val
-    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
-
-error: precondition not satisfied
-   --> src/Chap37/BSTAVLStEph.rs:524:37
-    |
-524 | ...                   T::transitive(z, x_val, y_val);
-    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    |
-   ::: src/vstdplus/total_order.rs:42:13
-    |
- 42 |             Self::le(y, z),
-    |             -------------- failed precondition
-
-error: precondition not satisfied
-   --> src/Chap37/BSTAVLStEph.rs:526:41
-    |
-526 | ...                   T::antisymmetric(x_val, y_val);
-    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    |
-   ::: src/vstdplus/total_order.rs:49:13
-    |
- 49 |             Self::le(x, y),
-    |             -------------- failed precondition
-
-note: diagnostics via expansion
-  --> src/vstdplus/total_order.rs:42:13
-   |
-42 |             Self::le(y, z),
-   |             ^^^^^^^^^^^^^^
-
-note: 
-
-z.le(x_val) ✔
-x_val.le(y_val) ✘
-    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
-
-verification results:: 1957 verified, 1 errors
-error: aborting due to 3 previous errors
-
-Elapsed: 22s
-Sampled Memory Usage: peak rust_verify RSS: 4893MB, peak z3 RSS: 475MB, min free: 21299MB
+Isolate: including Chap18 Chap19 Chap02 Chap51
+verification results:: 1432 verified, 0 errors
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 4886MB, peak z3 RSS: 543MB, min free: 21300MB
 Sampled CPU Usage: rust_verify: 91s, z3 children: 75s

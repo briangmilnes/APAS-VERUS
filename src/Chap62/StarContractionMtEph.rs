@@ -146,15 +146,11 @@ pub mod StarContractionMtEph {
         if graph.sizeE() == 0 || fuel == 0 {
             let verts = graph.vertices();
             proof {
-                assert(verts@.finite());
                 assert(verts.spec_setsteph_wf());
-                assert(verts@ == graph@.V);
             }
             let result = base(verts);
             proof {
-                assert(base.ensures((verts,), result));
                 assert(verts.spec_setsteph_wf() && base.ensures((verts,), result));
-                assert(r_inv(result));
                 assert(verts@ == graph@.V && verts.spec_setsteph_wf() && base.ensures((verts,), result));
             }
             return result;
@@ -163,7 +159,6 @@ pub mod StarContractionMtEph {
         let (centers, partition_map) = parallel_star_partition(graph, seed);
 
         // parallel_star_partition ensures spec_valid_partition_map (proven in StarPartitionMtEph).
-        assert(spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@));
 
         let quotient_graph = build_quotient_graph_parallel(graph, &centers, &partition_map);
 
@@ -173,17 +168,12 @@ pub mod StarContractionMtEph {
         let verts = graph.vertices();
         let eds = graph.edges();
         proof {
-            assert(verts@.finite());
             assert(verts.spec_setsteph_wf());
-            assert(eds@.finite());
             assert(eds.spec_setsteph_wf());
             assert(centers.spec_setsteph_wf());
-            assert(r_inv(r));
         }
         let result = expand(verts, eds, &centers, &partition_map, r);
         proof {
-            assert(expand.ensures((verts, eds, &centers, &partition_map, r), result));
-            assert(r_inv(result));
         }
         result
     }
@@ -233,10 +223,7 @@ pub mod StarContractionMtEph {
         let result = star_contract_mt_fuel(graph, seed, base, expand, fuel, Ghost(r_inv));
         proof {
             if graph@.A.is_empty() {
-                assert(graph@.A.is_empty() || fuel == 0);
                 // Callee's existential now holds; re-assert for Z3 stability.
-                assert(exists|s: &SetStEph<V>| #[trigger] s@ == graph@.V
-                    && s.spec_setsteph_wf() && base.ensures((s,), result));
             }
         }
         result
@@ -277,20 +264,13 @@ pub mod StarContractionMtEph {
                 graph@.V.contains(#[trigger] (*edges_arc).spec_index(j)@.0) &&
                 graph@.V.contains((*edges_arc).spec_index(j)@.1) by {
                 // Arc::new ensures: *edges_arc == edges_seq, so spec_index matches.
-                assert((*edges_arc).spec_index(j) == edges_seq.spec_index(j));
                 // from_vec postcondition: edges_seq.spec_index(j) == edges_vec@[j]
-                assert(edges_seq.spec_index(j) == edges_vec@[j]);
                 // to_seq postcondition: graph.E@.contains(edges_vec@[j]@)
                 assert(edges_vec@.map(|_i: int, t: Edge<V>| t@)[j] == edges_vec@[j]@);
-                assert(edges_vec@.map(|_i: int, t: Edge<V>| t@).contains(edges_vec@[j]@));
-                assert(graph.E@.contains(edges_vec@[j]@));
                 assert(graph@.A.contains(edges_vec@[j]@));
                 // spec_graphview_wf: endpoints are vertices
                 let edge_view = edges_vec@[j]@;
-                assert(graph@.V.contains(edge_view.0));
-                assert(graph@.V.contains(edge_view.1));
                 // Connect spec_index view to edges_vec view
-                assert((*edges_arc).spec_index(j)@ == edges_vec@[j]@);
             };
         }
 
@@ -301,12 +281,7 @@ pub mod StarContractionMtEph {
         let quotient = UnDirGraphMtEph { V: centers.clone(), E: quotient_edges };
         proof {
             // Finiteness: proved from spec_setsteph_wf.
-            assert(quotient@.V.finite());
-            assert(quotient@.A.finite());
             // Edge closure: from route_edges_parallel postcondition.
-            assert(forall |u: V::V, w: V::V|
-                #[trigger] quotient@.A.contains((u, w)) ==>
-                    quotient@.V.contains(u) && quotient@.V.contains(w));
         }
         quotient
     }
@@ -355,52 +330,30 @@ pub mod StarContractionMtEph {
             // Prove u and v are graph vertices so partition_map covers them.
             proof {
                 // nth ensures: *edge == (*edges).spec_index(start as int)
-                assert(*edge == (*edges).spec_index(start as int));
                 // spec_index(start)@ == (*edge)@
-                assert((*edge)@ == (*edges).spec_index(start as int)@);
                 // (*edge)@ == ((*u)@, (*v)@) from Edge<V> view
-                assert((*edge)@ == ((*u)@, (*v)@));
                 // From requires: graph_v_view.contains(spec_index(start)@.0)
-                assert((*edges).spec_index(start as int)@.0 == (*u)@);
-                assert((*edges).spec_index(start as int)@.1 == (*v)@);
                 assert(graph_v_view.contains((*edges).spec_index(start as int)@.0));
-                assert(graph_v_view.contains((*edges).spec_index(start as int)@.1));
-                assert(graph_v_view.contains((*u)@));
-                assert(graph_v_view.contains((*v)@));
                 // spec_valid_partition_map part 1: all graph vertices are in partition_map
-                assert((*partition_map)@.contains_key((*u)@));
-                assert((*partition_map)@.contains_key((*v)@));
             }
 
             let u_center = if let Some(val) = partition_map.get(u) {
                 let c = val.clone_view();
                 proof {
-                    assert(*val == (*partition_map)@[(*u)@]);
-                    assert(c@ == (*val)@);
-                    assert(c@ == (*partition_map)@[(*u)@]@);
-                    assert(centers_view.contains(c@));
                 }
                 c
             } else {
-                proof { assert(false); }
                 u.clone_view()
             };
-            proof { assert(centers_view.contains(u_center@)); }
 
             let v_center = if let Some(val) = partition_map.get(v) {
                 let c = val.clone_view();
                 proof {
-                    assert(*val == (*partition_map)@[(*v)@]);
-                    assert(c@ == (*val)@);
-                    assert(c@ == (*partition_map)@[(*v)@]@);
-                    assert(centers_view.contains(c@));
                 }
                 c
             } else {
-                proof { assert(false); }
                 v.clone_view()
             };
-            proof { assert(centers_view.contains(v_center@)); }
 
             if u_center != v_center {
                 let new_edge = if u_center < v_center {
@@ -412,11 +365,6 @@ pub mod StarContractionMtEph {
                 let _ = new_edges.insert(new_edge);
                 proof {
                     // new_edge has endpoints from {u_center, v_center} ⊆ centers_view
-                    assert(centers_view.contains(new_edge@.0));
-                    assert(centers_view.contains(new_edge@.1));
-                    assert(forall |u_v: V::V, w_v: V::V|
-                        #[trigger] new_edges@.contains((u_v, w_v)) ==>
-                            centers_view.contains(u_v) && centers_view.contains(w_v));
                 }
                 return new_edges;
             }

@@ -1,0 +1,15 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap62/StarPartitionMtEph.rs:441:17
+    |
+441 | /                 forall|s: int| 0 <= s < result@.len() ==>
+442 | |                     #[trigger] spec_valid_th_entry(result@[s], nv as nat, cf_view, vt_view, vi_view),
+    | |____________________________________________________________________________________________________^
+
+verification results:: 1339 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 3782MB, peak z3 RSS: 588MB, min free: 22464MB
+Sampled CPU Usage: rust_verify: 64s, z3 children: 69s

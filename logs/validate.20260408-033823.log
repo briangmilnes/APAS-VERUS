@@ -1,14 +1,6 @@
 Mode: isolate
-Isolate: including Chap19 Chap02
-error: invariant not satisfied at end of loop body
-   --> src/Chap19/ArraySeqStEph.rs:970:21
-    |
-970 |                     seq@ =~= a.seq@.take(i as int).map_values(|inner: ArraySeqStEphS<T>| inner.seq@).flatten(),
-    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-verification results:: 907 verified, 1 errors
-error: aborting due to 1 previous error
-
-Elapsed: 5s
-Sampled Memory Usage: peak rust_verify RSS: 4475MB, peak z3 RSS: 46MB, min free: 22010MB
-Sampled CPU Usage: rust_verify: 101s, z3 children: 118s
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+verification results:: 2534 verified, 0 errors
+Elapsed: 41s
+Sampled Memory Usage: peak rust_verify RSS: 7548MB, peak z3 RSS: 718MB, min free: 18820MB
+Sampled CPU Usage: rust_verify: 167s, z3 children: 175s

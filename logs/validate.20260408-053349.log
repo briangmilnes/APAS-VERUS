@@ -1,0 +1,33 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap62/StarPartitionMtEph.rs:694:61
+    |
+694 |                     merged@[verts_view[j2]@] as usize == j2 by {
+    |                                                             ^^
+
+error[E0432]: unresolved import `crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition`
+  --> src/Chap62/StarContractionMtEph.rs:38:9
+   |
+38 |     use crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `parallel_star_partition` in `Chap62::StarPartitionMtEph::StarPartitionMtEph`
+
+error[E0425]: cannot find type `StarPartitionMtEph` in this scope
+    --> src/Chap62/StarPartitionMtEph.rs:1801:30
+     |
+1801 |     impl std::fmt::Debug for StarPartitionMtEph {
+     |                              ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `StarPartitionMtEph` in this scope
+    --> src/Chap62/StarPartitionMtEph.rs:1807:32
+     |
+1807 |     impl std::fmt::Display for StarPartitionMtEph {
+     |                                ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 4 previous errors
+
+Some errors have detailed explanations: E0425, E0432.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 2577MB, peak z3 RSS: 65MB, min free: 23644MB
+Sampled CPU Usage: rust_verify: 48s, z3 children: 61s

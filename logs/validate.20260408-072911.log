@@ -1,0 +1,39 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: postcondition not satisfied
+   --> src/Chap62/StarPartitionStEph.rs:102:13
+    |
+102 |             spec_valid_partition_map::<V>(graph.V@, partition.0@, partition.1@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+347 |         (centers, partition_map)
+    |         ------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap62/StarPartitionStEph.rs:65:21
+    |
+ 65 |                     partition_map.contains_key(v_view)
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+102 |             spec_valid_partition_map::<V>(graph.V@, partition.0@, partition.1@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+partition.0.spec_setsteph_wf() ✔
+spec_valid_partition_map(old(graph).V.view(), partition.0.view(), partition.1.view()) ✘
+|   forall |v_view|
+|       old(graph).V.view().contains(v_view) ==>
+|           partition.1.view().dom().contains(v_view) ✘
+|               function is uninterpreted
+|   forall |v_view|
+|       partition.1.view().dom().contains(v_view) ==>
+|           partition.0.view().contains(partition.1.view().index(v_view).view()) ✔
++---
+
+verification results:: 1339 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 4979MB, peak z3 RSS: 413MB, min free: 20849MB
+Sampled CPU Usage: rust_verify: 74s, z3 children: 37s

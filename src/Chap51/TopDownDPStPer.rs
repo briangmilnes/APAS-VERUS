@@ -326,7 +326,6 @@ pub mod TopDownDPStPer {
                 by {
                     if a == i && b == j {
                     } else if pre_memo.contains_key((a, b)) {
-                        assert(pre_memo[(a, b)] as nat == self.spec_med(a as nat, b as nat));
                     }
                 };
             }

@@ -1,50 +1,6 @@
 Mode: isolate
-Isolate: including Chap18 Chap02
-error: expected `,`
-   --> src/Chap18/ArraySeqMtEphSlice.rs:988:31
-    |
-988 |                         assert(left.spec_index(i) == a.spec_index(0int + i));
-    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-error[E0425]: cannot find type `ArraySeqMtEphSliceS` in this scope
-    --> src/Chap18/ArraySeqMtEphSlice.rs:1780:50
-     |
-1780 |     impl<T: std::fmt::Debug> std::fmt::Debug for ArraySeqMtEphSliceS<T> {
-     |                                                  ^^^^^^^^^^^^^^^^^^^ not found in this scope
-
-error[E0425]: cannot find type `ArraySeqMtEphSliceS` in this scope
-    --> src/Chap18/ArraySeqMtEphSlice.rs:1788:54
-     |
-1788 |     impl<T: std::fmt::Display> std::fmt::Display for ArraySeqMtEphSliceS<T> {
-     |                                                      ^^^^^^^^^^^^^^^^^^^ not found in this scope
-
-error[E0425]: cannot find type `ArraySeqMtEphSliceIter` in this scope
-    --> src/Chap18/ArraySeqMtEphSlice.rs:1803:54
-     |
-1803 |     impl<'a, T: std::fmt::Debug> std::fmt::Debug for ArraySeqMtEphSliceIter<'a, T> {
-     |                                                      ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
-
-error[E0425]: cannot find type `ArraySeqMtEphSliceIter` in this scope
-    --> src/Chap18/ArraySeqMtEphSlice.rs:1809:39
-     |
-1809 |     impl<'a, T> std::fmt::Display for ArraySeqMtEphSliceIter<'a, T> {
-     |                                       ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
-
-error[E0425]: cannot find type `ArraySeqMtEphSliceGhostIterator` in this scope
-    --> src/Chap18/ArraySeqMtEphSlice.rs:1815:37
-     |
-1815 |     impl<'a, T> std::fmt::Debug for ArraySeqMtEphSliceGhostIterator<'a, T> {
-     |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
-
-error[E0425]: cannot find type `ArraySeqMtEphSliceGhostIterator` in this scope
-    --> src/Chap18/ArraySeqMtEphSlice.rs:1821:39
-     |
-1821 |     impl<'a, T> std::fmt::Display for ArraySeqMtEphSliceGhostIterator<'a, T> {
-     |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
-
-error: aborting due to 7 previous errors
-
-For more information about this error, try `rustc --explain E0425`.
-Elapsed: 2s
-Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 23607MB
-Sampled CPU Usage: rust_verify: 0s, z3 children: 0s
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02 Chap56 Chap57
+verification results:: 2677 verified, 0 errors
+Elapsed: 42s
+Sampled Memory Usage: peak rust_verify RSS: 7638MB, peak z3 RSS: 488MB, min free: 18232MB
+Sampled CPU Usage: rust_verify: 118s, z3 children: 96s

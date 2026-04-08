@@ -1,20 +1,46 @@
 Mode: isolate
-Isolate: including Chap19 Chap27 Chap02
-error: assertion failed
-   --> src/Chap27/ReduceContractMtEph.rs:135:20
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: postcondition not satisfied
+   --> src/Chap62/StarPartitionMtEph.rs:154:13
     |
-135 |             assert(s_tail_result == b_tail_result);
-    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+154 | /             forall|j: int| start as int <= j < end as int ==>
+155 | |                 #[trigger] flips@.contains_key(vertices@[j]@),
+    | |_____________________________________________________________^ failed this postcondition
+...
+272 |           merged
+    |           ------ at the end of the function body
 
 note: diagnostics via expansion
 
 note: 
 
-s_tail_result == b_tail_result 
+forall |j|
+    let tmp%% = old(start) in let tmp%% = j in let tmp%% = old(end) in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        flips.view().dom().contains(old(vertices).view().index(j).view()) 
 
-verification results:: 944 verified, 1 errors
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:224:52
+    |
+224 |                     #[trigger] right@.contains_key(verts_view[j]@),
+    |                                                    ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:215:53
+    |
+215 |                     #[trigger] merged@.contains_key(verts_view[j]@),
+    |                                                     ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 1339 verified, 1 errors
 error: aborting due to 1 previous error
 
-Elapsed: 6s
-Sampled Memory Usage: peak rust_verify RSS: 2281MB, peak z3 RSS: 170MB, min free: 24329MB
-Sampled CPU Usage: rust_verify: 25s, z3 children: 2s
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 4784MB, peak z3 RSS: 679MB, min free: 21514MB
+Sampled CPU Usage: rust_verify: 85s, z3 children: 67s

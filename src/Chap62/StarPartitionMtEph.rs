@@ -199,7 +199,6 @@ pub mod StarPartitionMtEph {
 
         // Merge right entries into merged using a while loop with merge_done flag
         // to capture the loop-exit fact (all entries visited).
-        proof { assert(obeys_key_model::<V>()); }
         let mut it = right.iter();
         let ghost it_seq = it@.1;
         let mut merge_done = false;
@@ -228,16 +227,6 @@ pub mod StarPartitionMtEph {
                 let ghost pre_merged = merged@;
                 merged.insert(k.clone_view(), *v);
                 proof {
-                    assert forall|j: int| start as int <= j < mid as int implies
-                        #[trigger] merged@.contains_key(verts_view[j]@) by {
-                        assert(pre_merged.contains_key(verts_view[j]@));
-                    };
-                    assert forall|idx: int| 0 <= idx < it@.0 implies
-                        #[trigger] merged@.contains_key(it_seq[idx].0@) by {
-                        if idx < it@.0 - 1 {
-                            assert(pre_merged.contains_key(it_seq[idx].0@));
-                        }
-                    };
                 }
             } else {
                 merge_done = true;
@@ -247,7 +236,6 @@ pub mod StarPartitionMtEph {
         // Post-merge: merged covers [start, end).
         proof {
             // merge_done is true; invariant gives it@.0 >= it_seq.len().
-            assert(it@.0 >= it_seq.len());
             assert forall|j: int| start as int <= j < end as int implies
                 #[trigger] merged@.contains_key(verts_view[j]@) by {
                 if j < mid as int {
@@ -257,14 +245,7 @@ pub mod StarPartitionMtEph {
                     assert(right@.contains_key(verts_view[j]@));
                     // iter ensures: exists pair in it_seq with pair.0@ == verts_view[j]@.
                     let pair = choose|pair: (V, bool)| #[trigger] it_seq.contains(pair) && pair.0@ == verts_view[j]@;
-                    assert(it_seq.contains(pair));
                     let idx = it_seq.index_of(pair);
-                    assert(0 <= idx < it_seq.len());
-                    assert(it_seq.len() <= it@.0);
-                    assert(idx < it@.0);
-                    assert(merged@.contains_key(it_seq[idx].0@));
-                    assert(it_seq[idx] == pair);
-                    assert(pair.0@ == verts_view[j]@);
                 }
             };
         }
@@ -322,11 +303,7 @@ pub mod StarPartitionMtEph {
             // Bridge: edge endpoints and Arc views.
             proof {
                 assert(edges@[start as int]@.0 == u@);
-                assert(edges@[start as int]@.1 == v@);
                 assert(coin_flips@.contains_key(u@));
-                assert(coin_flips@.contains_key(v@));
-                assert(vertex_to_index@.contains_key(u@));
-                assert(vertex_to_index@.contains_key(v@));
             }
 
             let u_heads = match cf.get(u) { Some(val) => *val, None => false };
@@ -339,20 +316,11 @@ pub mod StarPartitionMtEph {
                     result.push((uid, v.clone_view()));
                     proof {
                         // Use cf@/vi@ (which equal coin_flips@/vertex_to_index@ via arc_deref).
-                        assert(uid == vi@[u@] as usize);
                         // Find u's position in vertices.
                         let j = choose|j: int| 0 <= j < nv as int && #[trigger] vertices@[j]@ == u@;
-                        assert(vi@[vertices@[j]@] as usize == j);
-                        assert(uid < nv);
-                        assert(vertices@[uid as int]@ == u@);
                         // u is tails.
-                        assert(!cf@[u@]);
                         // v is heads; find v's position for bound.
-                        assert(vi@.contains_key(v@));
                         let j2 = choose|j2: int| 0 <= j2 < nv as int && #[trigger] vertices@[j2]@ == v@;
-                        assert(vi@[vertices@[j2]@] as usize == j2);
-                        assert((vi@[v@] as usize) < nv);
-                        assert(spec_valid_th_entry(result@[0], nv as nat, cf@, vertices@, vi@));
                     }
                 }
             } else if !v_heads && u_heads {
@@ -360,17 +328,8 @@ pub mod StarPartitionMtEph {
                     let vid = *v_idx as usize;
                     result.push((vid, u.clone_view()));
                     proof {
-                        assert(vid == vi@[v@] as usize);
                         let j = choose|j: int| 0 <= j < nv as int && #[trigger] vertices@[j]@ == v@;
-                        assert(vi@[vertices@[j]@] as usize == j);
-                        assert(vid < nv);
-                        assert(vertices@[vid as int]@ == v@);
-                        assert(!cf@[v@]);
-                        assert(vi@.contains_key(u@));
                         let j2 = choose|j2: int| 0 <= j2 < nv as int && #[trigger] vertices@[j2]@ == u@;
-                        assert(vi@[vertices@[j2]@] as usize == j2);
-                        assert((vi@[u@] as usize) < nv);
-                        assert(spec_valid_th_entry(result@[0], nv as nat, cf@, vertices@, vi@));
                     }
                 }
             }
@@ -448,8 +407,6 @@ pub mod StarPartitionMtEph {
             result.push((idx_val, head_v.clone_view()));
             proof {
                 let ghost new_s = result@.len() - 1;
-                assert(result@[new_s].0 == right@[i as int].0);
-                assert(result@[new_s].1@ == right@[i as int].1@);
                 assert(spec_valid_th_entry(right@[i as int], nv as nat, cf_view, vt_view, vi_view));
             }
             i = i + 1;
@@ -540,7 +497,6 @@ pub mod StarPartitionMtEph {
 
         // Post-merge: result covers [start, end).
         proof {
-            assert(result@.len() == (end - start) as int);
             assert forall|j: int| 0 <= j < result@.len() implies
                 #[trigger] result@[j]@ == verts_view[(start as int + j)]@ by {
                 if j < left_len {
@@ -548,12 +504,9 @@ pub mod StarPartitionMtEph {
                 } else {
                     // From right half: j >= left_len, so index into right portion.
                     let rj = j - left_len;
-                    assert(0 <= rj < right@.len());
                     // Loop invariant: result@[(left_len + rj)]@ == verts_view[(mid + rj)]@.
-                    assert(result@[(left_len + rj)]@ == verts_view[(mid as int + rj)]@);
                     // left_len + rj == j, and mid + rj == start + j.
                     assert(left_len + rj == j);
-                    assert(mid as int + rj == start as int + j);
                 }
             };
         }
@@ -681,10 +634,7 @@ pub mod StarPartitionMtEph {
                     merged@[verts_view[j2]@] as usize == j2 by {
                     let ghost j2v = verts_view[j2]@;
                     if j2v != jv {
-                        assert(pre_merged.contains_key(j2v));
-                        assert(merged@[j2v] == pre_merged[j2v]);
                     } else {
-                        assert(verts_view[j2] == verts_view[j as int]);
                         assert(false);
                     }
                 };
@@ -693,15 +643,11 @@ pub mod StarPartitionMtEph {
                     #[trigger] merged@.contains_key(verts_view[j2]@) &&
                     merged@[verts_view[j2]@] as usize == j2 by {
                     if j2 == j as int {
-                        assert(verts_view[j2]@ == jv);
                     } else {
                         let ghost j2v = verts_view[j2]@;
                         if j2v != jv {
                             assert(pre_merged.contains_key(j2v));
-                            assert(merged@[j2v] == pre_merged[j2v]);
                         } else {
-                            assert(verts_view[j2] == verts_view[j as int]);
-                            assert(false);
                         }
                     }
                 };
@@ -712,15 +658,7 @@ pub mod StarPartitionMtEph {
                     dom_witnesses[v_view] < j as int + 1 &&
                     verts_view[dom_witnesses[v_view]]@ == v_view by {
                     if v_view == jv {
-                        assert(dom_witnesses.contains_key(jv));
-                        assert(dom_witnesses[jv] == j as int);
-                        assert(start <= mid && mid <= j);
-                        assert(verts_view[j as int]@ == jv);
                     } else {
-                        assert(pre_merged.contains_key(v_view));
-                        assert(pre_dom.contains_key(v_view));
-                        assert(dom_witnesses.contains_key(v_view));
-                        assert(dom_witnesses[v_view] == pre_dom[v_view]);
                     }
                 };
             }
@@ -732,8 +670,6 @@ pub mod StarPartitionMtEph {
             assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
                 exists|j2: int| start as int <= j2 < end as int && #[trigger] verts_view[j2]@ == v_view by {
                 let w = dom_witnesses[v_view];
-                assert(start as int <= w < end as int);
-                assert(verts_view[w]@ == v_view);
             };
         }
 
@@ -797,14 +733,6 @@ pub mod StarPartitionMtEph {
                 proof {
                     let ghost tail_v = vertices@[idx as int]@;
                     let ghost head_view = head_v@;
-                    assert(sm@.contains_key(tail_v));
-                    assert(sm@[tail_v]@ == head_view);
-                    assert(coin_flips@.contains_key(tail_v));
-                    assert(!coin_flips@[tail_v]);
-                    assert(coin_flips@.contains_key(head_view));
-                    assert(coin_flips@[head_view]);
-                    assert(vertex_to_index@.contains_key(head_view));
-                    assert((vertex_to_index@[head_view] as usize) < nv);
                 }
                 return sm;
             } else {
@@ -909,30 +837,20 @@ pub mod StarPartitionMtEph {
                 let ghost tail_v = verts_view[idx as int]@;
                 let ghost head_view = head_v@;
                 // Bridge: connect destructured idx to the_view[t].0.
-                proof { assert(idx == the_view[t as int].0); }
                 merged.insert(verts[idx].clone_view(), head_v.clone_view());
                 proof {
                     // New entry properties.
-                    assert(cf@.contains_key(tail_v) && !cf@[tail_v]);
-                    assert(cf@.contains_key(head_view) && cf@[head_view]);
-                    assert(vi@.contains_key(head_view) && (vi@[head_view] as usize) < nv);
                     // Bridge: witness for t.
-                    assert(verts_view[the_view[t as int].0 as int]@ == tail_v);
                     // Key source witness for new entry.
                     assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
                         exists|s: int| start as int <= s < t as int + 1 &&
                             #[trigger] verts_view[the_view[s].0 as int]@ == v_view by {
                         if v_view == tail_v {
                             // Witness: s = t.
-                            assert(start <= t);
-                            assert(mid <= t);
-                            assert(verts_view[the_view[t as int].0 as int]@ == tail_v);
                         } else {
-                            assert(pre_merged.contains_key(v_view));
                             // Old key; old invariant provides witness in [start, t).
                             let s2 = choose|s2: int| start as int <= s2 < t as int &&
                                 #[trigger] verts_view[the_view[s2].0 as int]@ == v_view;
-                            assert(start as int <= s2 < t as int + 1);
                         }
                     };
                     // Values are heads.
@@ -940,9 +858,7 @@ pub mod StarPartitionMtEph {
                         cf@.contains_key(merged@[v_view]@) && cf@[merged@[v_view]@] &&
                         vi@.contains_key(merged@[v_view]@) && (vi@[merged@[v_view]@] as usize) < nv by {
                         if v_view == tail_v {
-                            assert(merged@[tail_v]@ == head_view);
                         } else {
-                            assert(merged@[v_view] == pre_merged[v_view]);
                         }
                     };
                     // Keys are tails.
@@ -950,7 +866,6 @@ pub mod StarPartitionMtEph {
                         cf@.contains_key(v_view) && !cf@[v_view] by {
                         if v_view == tail_v {
                         } else {
-                            assert(pre_merged.contains_key(v_view));
                         }
                     };
                 }
@@ -1032,25 +947,18 @@ pub mod StarPartitionMtEph {
                     result.push(center.clone_view());
                     proof {
                         let ghost sv = vertices@[start as int]@;
-                        assert(satellite_map@.contains_key(sv));
-                        assert(result@[0]@ == satellite_map@[sv]@);
                         // Heads preserve: satellite_map key is tails, so coin_flips[sv] is false => vacuous.
-                        assert(!coin_flips@[sv]);
                         // Modified entry points to heads.
-                        assert(coin_flips@[result@[0]@]);
                         // In vertex_to_index.
-                        assert(vertex_to_index@.contains_key(result@[0]@));
                     }
                 },
                 None => {
                     result.push(verts[start].clone_view());
                     proof {
                         let ghost sv = vertices@[start as int]@;
-                        assert(result@[0]@ == sv);
                         // Not modified, so modified-points-to-heads is vacuous.
                         // In vertex_to_index.
                         assert(vertex_to_index@.contains_key(sv));
-                        assert(vertex_to_index@[sv] as usize == start);
                     }
                 },
             }
@@ -1169,7 +1077,6 @@ pub mod StarPartitionMtEph {
 
         // Post-merge: derive complex properties from element values.
         proof {
-            assert(result@.len() == (end - start) as int);
 
             // Left half: elements match snapshot, which came from f1's result.
             // f1's ensures give us heads-preserve, modified-heads, vi properties for left_snap.
@@ -1182,13 +1089,11 @@ pub mod StarPartitionMtEph {
                  #[trigger] result@[j]@ == verts_view[(start as int + j)]@) by {
                 if j < left_len {
                     // Left half: result@[j] == left_snap[j].
-                    assert(result@[j] == left_snap[j]);
                     // left_snap has the heads-preserve property from f1.
                 } else {
                     // Right half.
                     let rj = j - left_len;
                     assert(result@[(left_len + rj)]@ == right@[rj]@);
-                    assert(start as int + j == mid as int + rj);
                     // right has heads-preserve from f2.
                 }
             };
@@ -1197,11 +1102,9 @@ pub mod StarPartitionMtEph {
                 result@[j]@ != verts_view[(start as int + j)]@ implies
                 coin_flips@.contains_key(#[trigger] result@[j]@) && coin_flips@[result@[j]@] by {
                 if j < left_len {
-                    assert(result@[j] == left_snap[j]);
                 } else {
                     let rj = j - left_len;
                     assert(result@[(left_len + rj)]@ == right@[rj]@);
-                    assert(start as int + j == mid as int + rj);
                 }
             };
             // All entries in vertex_to_index.
@@ -1209,7 +1112,6 @@ pub mod StarPartitionMtEph {
                 vertex_to_index@.contains_key(#[trigger] result@[j]@) &&
                 (vertex_to_index@[result@[j]@] as usize) < nv by {
                 if j < left_len {
-                    assert(result@[j] == left_snap[j]);
                 } else {
                     let rj = j - left_len;
                     assert(result@[(left_len + rj)]@ == right@[rj]@);
@@ -1361,63 +1263,28 @@ pub mod StarPartitionMtEph {
             proof {
                 lemma_reveal_view_injective::<V>();
                 // New entry at j.
-                assert(merged@.contains_key(jv));
-                assert(merged@[jv]@ == pv_view[j as int]@);
                 // Update domain witnesses: add jv -> j.
                 dom_witnesses = pre_dom.insert(jv, j as int);
                 // Prior left entries preserved — contains_key.
-                assert forall|j2: int| start as int <= j2 < mid as int implies
-                    #[trigger] merged@.contains_key(verts_view[j2]@) by {
-                    let ghost j2v = verts_view[j2]@;
-                    if j2v != jv {
-                        assert(pre_merged.contains_key(j2v));
-                    } else {
-                        assert(verts_view[j2] == verts_view[j as int]);
-                        assert(false);
-                    }
-                };
                 // Prior left entries preserved — correct values.
                 assert forall|j2: int| start as int <= j2 < mid as int &&
                     merged@.contains_key(verts_view[j2]@) implies
                     merged@[verts_view[j2]@]@ == #[trigger] pv_view[j2]@ by {
                     let ghost j2v = verts_view[j2]@;
                     if j2v != jv {
-                        assert(pre_merged.contains_key(j2v));
-                        assert(merged@[j2v] == pre_merged[j2v]);
                     } else {
-                        assert(verts_view[j2] == verts_view[j as int]);
-                        assert(false);
                     }
                 };
                 // Prior right entries [mid, j) preserved + new entry j — contains_key.
-                assert forall|j2: int| mid as int <= j2 < j as int + 1 implies
-                    #[trigger] merged@.contains_key(verts_view[j2]@) by {
-                    if j2 == j as int {
-                        assert(verts_view[j2]@ == jv);
-                    } else {
-                        let ghost j2v = verts_view[j2]@;
-                        if j2v != jv {
-                            assert(pre_merged.contains_key(j2v));
-                        } else {
-                            assert(verts_view[j2] == verts_view[j as int]);
-                            assert(false);
-                        }
-                    }
-                };
                 // Prior right entries [mid, j) preserved + new entry j — correct values.
                 assert forall|j2: int| mid as int <= j2 < j as int + 1 &&
                     merged@.contains_key(verts_view[j2]@) implies
                     merged@[verts_view[j2]@]@ == #[trigger] pv_view[j2]@ by {
                     if j2 == j as int {
-                        assert(verts_view[j2]@ == jv);
                     } else {
                         let ghost j2v = verts_view[j2]@;
                         if j2v != jv {
-                            assert(pre_merged.contains_key(j2v));
-                            assert(merged@[j2v] == pre_merged[j2v]);
                         } else {
-                            assert(verts_view[j2] == verts_view[j as int]);
-                            assert(false);
                         }
                     }
                 };
@@ -1429,19 +1296,8 @@ pub mod StarPartitionMtEph {
                     verts_view[dom_witnesses[v_view]]@ == v_view by {
                     if v_view == jv {
                         // New key: dom_witnesses[jv] == j.
-                        assert(dom_witnesses.contains_key(jv));
-                        assert(dom_witnesses[jv] == j as int);
-                        assert(start <= mid && mid <= j); // from invariant
-                        assert(verts_view[j as int]@ == jv);
                     } else {
                         // Old key: map insert preserves other entries.
-                        assert(pre_merged.contains_key(v_view));
-                        assert(pre_dom.contains_key(v_view));
-                        assert(dom_witnesses.contains_key(v_view));
-                        assert(dom_witnesses[v_view] == pre_dom[v_view]);
-                        assert(start as int <= pre_dom[v_view]);
-                        assert(pre_dom[v_view] < j as int);
-                        assert(verts_view[pre_dom[v_view]]@ == v_view);
                     }
                 };
             }
@@ -1453,8 +1309,6 @@ pub mod StarPartitionMtEph {
             assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
                 exists|j2: int| start as int <= j2 < end as int && #[trigger] verts_view[j2]@ == v_view by {
                 let w = dom_witnesses[v_view];
-                assert(start as int <= w < end as int);
-                assert(verts_view[w]@ == v_view);
             };
         }
 
@@ -1545,13 +1399,9 @@ pub mod StarPartitionMtEph {
                  #[trigger] result@.contains(pv_view[j]@) by {
                 if j < mid as int {
                     if pv_view[j]@ == verts_view[j]@ {
-                        assert(left@.contains(pv_view[j]@));
-                        assert(result@ == left@.union(right@));
                     }
                 } else {
                     if pv_view[j]@ == verts_view[j]@ {
-                        assert(right@.contains(pv_view[j]@));
-                        assert(result@ == left@.union(right@));
                     }
                 }
             };
@@ -1579,15 +1429,7 @@ pub mod StarPartitionMtEph {
         proof {
             // Establish spec_setsteph_wf for graph.V and graph.E so we can call to_seq().
             // valid_key_type_Edge::<V>() ==> valid_key_type::<V>() and valid_key_type::<Edge<V>>().
-            assert(obeys_key_model::<V>());
-            assert(obeys_feq_full::<V>());
-            assert(valid_key_type::<V>());
-            assert(graph@.V.finite());
             assert(graph.V.spec_setsteph_wf());
-            assert(obeys_key_model::<Edge<V>>());
-            assert(obeys_feq_full::<Edge<V>>());
-            assert(valid_key_type::<Edge<V>>());
-            assert(graph@.A.finite());
             assert(graph.E.spec_setsteph_wf());
         }
         let vertices_vec = graph.V.to_seq();
@@ -1604,11 +1446,7 @@ pub mod StarPartitionMtEph {
         proof {
             assert forall|v_view: V::V| #[trigger] graph@.V.contains(v_view) implies
                 vertex_to_index@.contains_key(v_view) by {
-                assert(vertices_vec@.map(|_i: int, t: V| t@).contains(v_view));
                 let k = vertices_vec@.map(|_i: int, t: V| t@).index_of(v_view);
-                assert(0 <= k < nv as int);
-                assert(vertices_vec@[k]@ == v_view);
-                assert(vertex_to_index@.contains_key(vertices_vec@[k]@));
             };
         }
 
@@ -1633,21 +1471,12 @@ pub mod StarPartitionMtEph {
                 vertex_to_index@.contains_key(edge_vec@[k]@.1) by {
                 let ghost mapped = edge_vec@.map(|_i: int, t: Edge<V>| t@);
                 assert(mapped[k] == edge_vec@[k]@);
-                assert(mapped.contains(edge_vec@[k]@));
                 assert(graph@.A.contains(edge_vec@[k]@));
-                assert(graph@.V.contains(edge_vec@[k]@.0));
-                assert(graph@.V.contains(edge_vec@[k]@.1));
                 // coin_flips covers all graph vertices.
                 let ghost v0 = edge_vec@[k]@.0;
-                assert(vertices_vec@.map(|_i: int, t: V| t@).contains(v0));
                 let j0 = vertices_vec@.map(|_i: int, t: V| t@).index_of(v0);
-                assert(0 <= j0 < nv as int);
-                assert(vertices_vec@[j0]@ == v0);
                 let ghost v1 = edge_vec@[k]@.1;
-                assert(vertices_vec@.map(|_i: int, t: V| t@).contains(v1));
                 let j1 = vertices_vec@.map(|_i: int, t: V| t@).index_of(v1);
-                assert(0 <= j1 < nv as int);
-                assert(vertices_vec@[j1]@ == v1);
             };
         }
         let edge_arc: Arc<Vec<Edge<V>>> = Arc::new(edge_vec);
@@ -1678,7 +1507,6 @@ pub mod StarPartitionMtEph {
         // properties in terms of coin_flips@, vertices_vec@, vertex_to_index@.
         proof {
             // Heads preserve.
-            assert(p_vec@.len() == nv as int);
             assert forall|j2: int| 0 <= j2 < nv as int implies
                 coin_flips@.contains_key(vertices_vec@[j2]@) &&
                 (coin_flips@[vertices_vec@[j2]@] ==>
@@ -1747,11 +1575,7 @@ pub mod StarPartitionMtEph {
             // Part A: all graph@.V vertices are in partition_map.
             assert forall|v_view: V::V| #[trigger] graph@.V.contains(v_view) implies
                 partition_map@.contains_key(v_view) by {
-                assert(vertices_vec@.map(|_i: int, t: V| t@).contains(v_view));
                 let k2 = vertices_vec@.map(|_i: int, t: V| t@).index_of(v_view);
-                assert(0 <= k2 < nv as int);
-                assert(vertices_vec@[k2]@ == v_view);
-                assert(partition_map@.contains_key(vertices_vec@[k2]@));
             };
 
             // Part B: all partition_map values are in centers.
@@ -1761,32 +1585,18 @@ pub mod StarPartitionMtEph {
                 let j = choose|j: int| 0 <= j < nv as int && #[trigger] vertices_vec@[j]@ == v_view;
                 // partition_map@[v_view]@ == p_vec@[j]@.
                 let ghost h = p_vec@[j]@;
-                assert(partition_map@[vertices_vec@[j]@]@ == h);
-                assert(partition_map@[v_view]@ == h);
 
                 if h == vertices_vec@[j]@ {
                     // p_vec@[j]@ == vertices_vec@[j]@, so centers@.contains(h) from D&C.
-                    assert(centers@.contains(h));
                 } else {
                     // h != vertices_vec@[j]@: from inject, h is a heads vertex.
-                    assert(coin_flips@[h]);
                     // h is in vertex_to_index (inject ensures).
-                    assert(vertex_to_index@.contains_key(h));
                     let ghost q_h = vertex_to_index@[h] as usize;
-                    assert(q_h < nv);
                     let j3 = choose|j3: int| 0 <= j3 < nv as int && #[trigger] vertices_vec@[j3]@ == h;
-                    assert(vertex_to_index@[vertices_vec@[j3]@] as usize == j3);
-                    assert(j3 as usize == q_h);
-                    assert(vertices_vec@[q_h as int]@ == h);
                     // Heads preserve at q_h: coin_flips@[h] == true => p_vec@[q_h]@ == vertices_vec@[q_h]@.
-                    assert(coin_flips@[vertices_vec@[q_h as int]@]);
-                    assert(p_vec@[q_h as int]@ == vertices_vec@[q_h as int]@);
-                    assert(p_vec@[q_h as int]@ == h);
                     // centers contains h from D&C.
                     assert(centers@.contains(p_vec@[q_h as int]@));
-                    assert(centers@.contains(h));
                 }
-                assert(centers@.contains(partition_map@[v_view]@));
             };
         }
 

@@ -289,14 +289,12 @@ pub mod TopDownDPMtPer {
 
         let ghost s = seq_s@;
         let ghost t = seq_t@;
-        assert(result as nat == spec_med_fn(s, t, i as nat, j as nat));
         let ghost pre_memo = memo@;
         proof {
             assert forall|a: usize, b: usize| #[trigger] pre_memo.contains_key((a, b))
             implies
                 pre_memo[(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
             by {
-                assert(spec_memo_correct(pre_memo, s, t));
             };
         }
         memo.insert(Pair(i, j), result);
@@ -306,7 +304,6 @@ pub mod TopDownDPMtPer {
         by {
             if a == i && b == j {
             } else if pre_memo.contains_key((a, b)) {
-                assert(pre_memo[(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat));
             }
         };
         result
@@ -363,9 +360,6 @@ pub mod TopDownDPMtPer {
                 let t1 = seq_t.clone();
                 let memo1 = clone_arc_rwlock(memo);
 
-                assert(i - 1 <= s1.spec_len());
-                assert(j <= t1.spec_len());
-                assert(s1.spec_len() + t1.spec_len() < usize::MAX);
                 assert(memo1.pred().seq_s == s1@);
                 assert(memo1.pred().seq_t == t1@);
 
@@ -373,9 +367,6 @@ pub mod TopDownDPMtPer {
                 let t2 = seq_t.clone();
                 let memo2 = clone_arc_rwlock(memo);
 
-                assert(i <= s2.spec_len());
-                assert(j - 1 <= t2.spec_len());
-                assert(s2.spec_len() + t2.spec_len() < usize::MAX);
                 assert(memo2.pred().seq_s == s2@);
                 assert(memo2.pred().seq_t == t2@);
 
@@ -431,8 +422,6 @@ pub mod TopDownDPMtPer {
                 by {
                     if a == i && b == j {
                     } else if pre_insert.contains_key((a, b)) {
-                        assert(spec_memo_correct(pre_insert, seq_s@, seq_t@));
-                        assert(pre_insert[(a, b)] as nat == spec_med_fn(seq_s@, seq_t@, a as nat, b as nat));
                     }
                 };
             }

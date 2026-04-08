@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: assertion failed
+    --> src/Chap62/StarPartitionMtEph.rs:1787:28
+     |
+1787 |                     assert(centers@.contains(h));
+     |                            ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+centers.view().contains(h) 
+    function is uninterpreted
+
+verification results:: 1339 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 4943MB, peak z3 RSS: 791MB, min free: 21303MB
+Sampled CPU Usage: rust_verify: 79s, z3 children: 72s

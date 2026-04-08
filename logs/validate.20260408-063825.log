@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: assertion failed
+    --> src/Chap62/StarPartitionMtEph.rs:1636:24
+     |
+1636 |                 assert(mapped.contains(edge_vec@[k]@));
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+mapped.contains(edge_vec.view().index(k).view())
+|   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = mapped.len() in tmp%% <= tmp%% && tmp%% < tmp%% && mapped.index(i) == edge_vec.view().index(k).view()) 
++---
+
+verification results:: 1339 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 4736MB, peak z3 RSS: 391MB, min free: 21956MB
+Sampled CPU Usage: rust_verify: 66s, z3 children: 45s
