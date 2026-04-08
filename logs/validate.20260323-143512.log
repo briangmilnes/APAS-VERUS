@@ -1,0 +1,173 @@
+error[E0276]: impl has stricter requirements than trait
+   --> src/Chap43/OrderedSetStPer.rs:454:22
+    |
+262 | /         fn first_iter(&self) -> (first: Option<T>)
+263 | |             requires self.spec_orderedsetstper_wf(),
+264 | |             ensures
+265 | |                 self@.finite(),
+266 | |                 self@.len() == 0 <==> first matches None,
+267 | |                 first matches Some(v) ==> self@.contains(v@),
+268 | |                 first matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==> TotalOrder::le(v, t);
+    | |______________________________________________________________________________________________________________- definition of `first_iter` from trait
+...
+454 |               where T: TotalOrder
+    |                        ^^^^^^^^^^ impl has extra requirement `T: vstdplus::total_order::total_order::TotalOrder`
+
+error[E0276]: impl has stricter requirements than trait
+   --> src/Chap43/OrderedSetStPer.rs:537:22
+    |
+270 | /         fn last_iter(&self) -> (last: Option<T>)
+271 | |             requires self.spec_orderedsetstper_wf(),
+272 | |             ensures
+273 | |                 self@.finite(),
+274 | |                 self@.len() == 0 <==> last matches None,
+275 | |                 last matches Some(v) ==> self@.contains(v@),
+276 | |                 last matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==> TotalOrder::le(t, v);
+    | |_____________________________________________________________________________________________________________- definition of `last_iter` from trait
+...
+537 |               where T: TotalOrder
+    |                        ^^^^^^^^^^ impl has extra requirement `T: vstdplus::total_order::total_order::TotalOrder`
+
+error[E0276]: impl has stricter requirements than trait
+   --> src/Chap43/OrderedSetStPer.rs:620:22
+    |
+278 | /         fn previous_iter(&self, k: &T) -> (predecessor: Option<T>)
+279 | |             requires self.spec_orderedsetstper_wf(),
+280 | |             ensures
+281 | |                 self@.finite(),
+282 | |                 predecessor matches Some(v) ==> self@.contains(v@),
+283 | |                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+284 | |                 predecessor matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+    | |_________________________________________________________________________________________________________________________________________________________- definition of `previous_iter` from trait
+...
+620 |               where T: TotalOrder
+    |                        ^^^^^^^^^^ impl has extra requirement `T: vstdplus::total_order::total_order::TotalOrder`
+
+error[E0276]: impl has stricter requirements than trait
+   --> src/Chap43/OrderedSetStPer.rs:733:22
+    |
+286 | /         fn next_iter(&self, k: &T) -> (successor: Option<T>)
+287 | |             requires self.spec_orderedsetstper_wf(),
+288 | |             ensures
+289 | |                 self@.finite(),
+290 | |                 successor matches Some(v) ==> self@.contains(v@),
+291 | |                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
+292 | |                 successor matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
+    | |_______________________________________________________________________________________________________________________________________________________- definition of `next_iter` from trait
+...
+733 |               where T: TotalOrder
+    |                        ^^^^^^^^^^ impl has extra requirement `T: vstdplus::total_order::total_order::TotalOrder`
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:268:90
+    |
+268 |                 first matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==> TotalOrder::le(v, t);
+    |                                                                                          ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 67 |     pub trait OrderedSetStPerTrait<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
+    |                                                 ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:276:89
+    |
+276 |                 last matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==> TotalOrder::le(t, v);
+    |                                                                                         ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 67 |     pub trait OrderedSetStPerTrait<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
+    |                                                 ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:283:49
+    |
+283 |                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+    |                                                 ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 67 |     pub trait OrderedSetStPerTrait<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
+    |                                                 ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:284:95
+    |
+284 | ...ntains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+    |                  ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 67 |     pub trait OrderedSetStPerTrait<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
+    |                                                 ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:284:133
+    |
+284 | ... t@ != k@ ==> TotalOrder::le(t, v);
+    |                  ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 67 |     pub trait OrderedSetStPerTrait<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
+    |                                                 ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:291:47
+    |
+291 |                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
+    |                                               ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 67 |     pub trait OrderedSetStPerTrait<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
+    |                                                 ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:292:93
+    |
+292 | ...ntains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
+    |                  ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 67 |     pub trait OrderedSetStPerTrait<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
+    |                                                 ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:292:131
+    |
+292 | ... t@ != k@ ==> TotalOrder::le(v, t);
+    |                  ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 67 |     pub trait OrderedSetStPerTrait<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
+    |                                                 ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+    --> src/Chap43/OrderedSetStPer.rs:1182:28
+     |
+1182 |             self.rank_iter(k)
+     |                  --------- ^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+     |                  |
+     |                  required by a bound introduced by this call
+     |
+note: required by a bound in `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerTrait::rank_iter`
+    --> src/Chap43/OrderedSetStPer.rs:321:22
+     |
+ 320 |         fn rank_iter(&self, k: &T) -> (rank: usize)
+     |            --------- required by a bound in this associated function
+ 321 |             where T: TotalOrder
+     |                      ^^^^^^^^^^ required by this bound in `OrderedSetStPerTrait::rank_iter`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+     |
+ 345 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+     |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 13 previous errors
+
+Some errors have detailed explanations: E0276, E0277.
+For more information about an error, try `rustc --explain E0276`.
+Elapsed: 15s

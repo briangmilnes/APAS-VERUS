@@ -1,20 +1,6 @@
 Mode: isolate
-Isolate: including Chap19 Chap27 Chap02
-error: assertion failed
-   --> src/Chap27/ReduceContractStEph.rs:127:20
-    |
-127 |             assert(s.fold_left(id, f) == s_tail.fold_left(b[0], f));
-    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
-
-note: diagnostics via expansion
-
-note: 
-
-s.fold_left(id, f) == s_tail.fold_left(b.index(0), f) 
-
-verification results:: 944 verified, 1 errors
-error: aborting due to 1 previous error
-
-Elapsed: 8s
-Sampled Memory Usage: peak rust_verify RSS: 2785MB, peak z3 RSS: 574MB, min free: 23469MB
-Sampled CPU Usage: rust_verify: 43s, z3 children: 26s
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+verification results:: 2280 verified, 0 errors
+Elapsed: 32s
+Sampled Memory Usage: peak rust_verify RSS: 5081MB, peak z3 RSS: 629MB, min free: 21385MB
+Sampled CPU Usage: rust_verify: 89s, z3 children: 86s

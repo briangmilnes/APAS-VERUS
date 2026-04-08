@@ -1,0 +1,58 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent5)
+error[E0432]: unresolved import `crate::vstdplus::feq::feq::obeys_feq_full_trigger`
+  --> src/Chap37/AVLTreeSeqStEph.rs:50:9
+   |
+50 |     use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `obeys_feq_full_trigger` in `vstdplus::feq::feq`
+
+error[E0432]: unresolved import `crate::vstdplus::feq::feq::obeys_feq_full`
+  --> src/Chap38/BSTParaStEph.rs:38:9
+   |
+38 |     use crate::vstdplus::feq::feq::obeys_feq_full;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `obeys_feq_full` in `vstdplus::feq::feq`
+
+error[E0432]: unresolved import `crate::vstdplus::feq::feq::obeys_feq_full`
+  --> src/Chap38/BSTParaMtEph.rs:39:9
+   |
+39 |     use crate::vstdplus::feq::feq::obeys_feq_full;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `obeys_feq_full` in `vstdplus::feq::feq`
+
+error[E0432]: unresolved import `crate::vstdplus::feq::feq::obeys_feq_fulls`
+  --> src/Chap42/TableMtEph.rs:42:5
+   |
+42 | use crate::vstdplus::feq::feq::obeys_feq_fulls;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^---------------
+   |     |                          |
+   |     |                          help: a similar name exists in the module: `obeys_feq_clone`
+   |     no `obeys_feq_fulls` in `vstdplus::feq::feq`
+
+error[E0432]: unresolved import `crate::vstdplus::feq::feq::obeys_feq_fulls`
+  --> src/Chap43/OrderedTableMtEph.rs:38:9
+   |
+38 |     use crate::vstdplus::feq::feq::obeys_feq_fulls;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^---------------
+   |         |                          |
+   |         |                          help: a similar name exists in the module: `obeys_feq_clone`
+   |         no `obeys_feq_fulls` in `vstdplus::feq::feq`
+
+error[E0432]: unresolved imports `crate::vstdplus::feq::feq::obeys_feq_fulls`, `crate::vstdplus::feq::feq::obeys_feq_full_trigger`
+  --> src/Chap43/AugOrderedTableMtEph.rs:41:33
+   |
+41 | use crate::vstdplus::feq::feq::{obeys_feq_fulls, obeys_feq_full_trigger};
+   |                                 ^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^ no `obeys_feq_full_trigger` in `vstdplus::feq::feq`
+   |                                 |
+   |                                 no `obeys_feq_fulls` in `vstdplus::feq::feq`
+   |                                 help: a similar name exists in the module: `obeys_feq_clone`
+
+error[E0432]: unresolved import `crate::vstdplus::feq::feq::obeys_feq_full_trigger`
+  --> src/Chap45/BalancedTreePQ.rs:32:5
+   |
+32 | use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `obeys_feq_full_trigger` in `vstdplus::feq::feq`
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `apas-verus` (lib) due to 7 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (lib test) due to 7 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 7s

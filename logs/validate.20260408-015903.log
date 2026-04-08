@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap41/AVLTreeSetMtEph.rs:472:24
+    |
+472 |                 assert(vals_views.to_set() =~= seq@.to_set());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+vals_views.to_set() =~= seq.view().to_set() 
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 30s
+Sampled Memory Usage: peak rust_verify RSS: 5967MB, peak z3 RSS: 892MB, min free: 20098MB
+Sampled CPU Usage: rust_verify: 126s, z3 children: 133s

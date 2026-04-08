@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1204:36
+     |
+1204 | ...                   assert(!spec_pair_set_to_map(right@).dom().contains(k@)) by {
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(spec_pair_set_to_map(right.view()).dom().contains(k.view())) 
+    function is uninterpreted
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 35s
+Sampled Memory Usage: peak rust_verify RSS: 7038MB, peak z3 RSS: 760MB, min free: 18928MB
+Sampled CPU Usage: rust_verify: 135s, z3 children: 136s

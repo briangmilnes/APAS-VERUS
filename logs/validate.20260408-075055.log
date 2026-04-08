@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1005:88
+     |
+1005 | ...                   assert forall|vv2: V::V| left@.contains((kv, vv2)) implies vv == vv2 by {
+     |                                                                                  ^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+vv == vv2 
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 31s
+Sampled Memory Usage: peak rust_verify RSS: 7034MB, peak z3 RSS: 858MB, min free: 18451MB
+Sampled CPU Usage: rust_verify: 121s, z3 children: 111s

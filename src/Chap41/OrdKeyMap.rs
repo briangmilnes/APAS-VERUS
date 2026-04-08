@@ -121,12 +121,6 @@ pub mod OrdKeyMap {
         ensures
             spec_set_pair_view_generated::<K, V>(sub),
     {
-        // Veracity: NEEDED assert
-        assert forall|elem: (K::V, V::V)| sub.contains(elem)
-            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-            // Veracity: NEEDED assert
-            assert(sup.contains(elem));
-        };
     }
 
     /// Inserting a Pair view into a View-generated set preserves View-generation.
@@ -139,17 +133,6 @@ pub mod OrdKeyMap {
         ensures
             spec_set_pair_view_generated::<K, V>(s.insert(pair@)),
     {
-        // Veracity: NEEDED assert
-        assert forall|elem: (K::V, V::V)| s.insert(pair@).contains(elem)
-            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-            if elem == pair@ {
-                // Veracity: NEEDED assert
-                assert(pair@ == elem);
-            } else {
-                // Veracity: NEEDED assert
-                assert(s.contains(elem));
-            }
-        };
     }
 
     /// Union of two View-generated sets is View-generated.
@@ -163,11 +146,6 @@ pub mod OrdKeyMap {
         ensures
             spec_set_pair_view_generated::<K, V>(a.union(b)),
     {
-        // Veracity: NEEDED assert
-        assert forall|elem: (K::V, V::V)| a.union(b).contains(elem)
-            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-            if a.contains(elem) {} else { assert(b.contains(elem)); }
-        };
     }
 
     /// The domain of spec_pair_set_to_map is finite when the source set is finite.
@@ -179,15 +157,10 @@ pub mod OrdKeyMap {
         let proj = |p: (KV, VV)| -> KV { p.0 };
         let proj_set = s.map(proj);
         // dom_set ⊆ proj_set.
-        // Veracity: NEEDED assert
         assert forall|k: KV| dom_set.contains(k)
             implies #[trigger] proj_set.contains(k)
         by {
             let v: VV = choose|v: VV| s.contains((k, v));
-            // Veracity: NEEDED assert
-            assert(s.contains((k, v)));
-            // Veracity: NEEDED assert
-            assert(proj((k, v)) == k);
         };
         s.lemma_map_finite(proj);
         vstd::set_lib::lemma_len_subset(dom_set, proj_set);
@@ -203,29 +176,21 @@ pub mod OrdKeyMap {
         let proj = |p: (KV, VV)| -> KV { p.0 };
         let proj_set = s.map(proj);
         // dom_set =~= proj_set.
-        // Veracity: NEEDED assert
         assert(dom_set =~= proj_set) by {
-            // Veracity: NEEDED assert
             assert forall|k: KV| dom_set.contains(k)
                 implies #[trigger] proj_set.contains(k)
             by {
                 let v: VV = choose|v: VV| s.contains((k, v));
-                // Veracity: NEEDED assert
-                assert(s.contains((k, v)));
             };
-            // Veracity: NEEDED assert
             assert forall|k: KV| proj_set.contains(k)
                 implies #[trigger] dom_set.contains(k)
             by {
                 let p: (KV, VV) = choose|p: (KV, VV)| #[trigger] s.contains(p) && p.0 == k;
-                // Veracity: NEEDED assert
                 assert(s.contains((k, p.1)));
             };
         };
         // proj is injective on s when keys are unique: distinct pairs have distinct keys.
-        // Veracity: NEEDED assert
         assert(vstd::relations::injective_on(proj, s)) by {
-            // Veracity: NEEDED assert
             assert forall|x1: (KV, VV), x2: (KV, VV)|
                 s.contains(x1) && s.contains(x2) && #[trigger] proj(x1) == #[trigger] proj(x2)
                 implies x1 == x2
@@ -246,15 +211,9 @@ pub mod OrdKeyMap {
             spec_pair_set_to_map(s)[k] == v,
     {
         let m = spec_pair_set_to_map(s);
-        // Veracity: NEEDED assert
-        assert(m.dom().contains(k));
         // m[k] == choose|v_| s.contains((k, v_)).
         // By key uniqueness, that chosen value must equal v.
         let v2 = choose|v2: VV| s.contains((k, v2));
-        // Veracity: NEEDED assert
-        assert(s.contains((k, v2)));
-        // Veracity: NEEDED assert
-        assert(v2 == v);
     }
 
     /// If the map contains a key, a pair with that key exists in the set.
@@ -273,19 +232,14 @@ pub mod OrdKeyMap {
         ensures
             spec_key_unique_pairs_set(s.insert((k, v)))
     {
-        // Veracity: NEEDED assert
         assert forall|k2: KV, v1: VV, v2: VV|
             s.insert((k, v)).contains((k2, v1)) && s.insert((k, v)).contains((k2, v2))
             implies v1 == v2
         by {
             if k2 == k {
                 if s.contains((k2, v1)) {
-                    // Veracity: NEEDED assert
-                    assert(spec_pair_set_to_map(s).dom().contains(k));
                 }
                 if s.contains((k2, v2)) {
-                    // Veracity: NEEDED assert
-                    assert(spec_pair_set_to_map(s).dom().contains(k));
                 }
                 // Both must be (k, v) from the insert.
             } else {
@@ -305,8 +259,6 @@ pub mod OrdKeyMap {
     {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        // Veracity: NEEDED assert
-        assert(a@ == b@);
     }
 
     /// In-order traversal keys are pairwise distinct: distinct indices have distinct keys.
@@ -327,26 +279,19 @@ pub mod OrdKeyMap {
                 ==> (#[trigger] sorted[i]).0 != (#[trigger] sorted[j]).0,
     {
         // sorted.to_set() =~= tree.
-        // Veracity: NEEDED assert
         assert(sorted.to_set() =~= tree) by {
-            // Veracity: NEEDED assert
-            assert forall|v: (KV, VV)| sorted.to_set().contains(v) <==> #[trigger] tree.contains(v) by {};
         };
         // sorted.to_set().len() == tree.len() == sorted.len(), so no duplicates.
         sorted.lemma_no_dup_set_cardinality();
         // Pairwise distinct keys: same key + key uniqueness -> same pair -> contradicts no_duplicates.
-        // Veracity: NEEDED assert
         assert forall|i: int, j: int|
             0 <= i < sorted.len() && 0 <= j < sorted.len() && i != j
             implies (#[trigger] sorted[i]).0 != (#[trigger] sorted[j]).0
         by {
             if sorted[i].0 == sorted[j].0 {
-                // Veracity: NEEDED assert
                 assert(tree.contains(sorted[i]));
-                // Veracity: NEEDED assert
                 assert(tree.contains(sorted[j]));
                 // Key uniqueness: same key in tree -> same value -> same pair.
-                // Veracity: NEEDED assert
                 assert(sorted[i] == sorted[j]);
                 // Contradicts no_duplicates.
             }
@@ -395,7 +340,6 @@ pub mod OrdKeyMap {
             spec_key_unique_pairs_set(s1.union(s2).insert(root))
     {
         let combined = s1.union(s2).insert(root);
-        // Veracity: NEEDED assert
         assert forall|k: KV, v1: VV, v2: VV|
             combined.contains((k, v1)) && combined.contains((k, v2))
             implies v1 == v2
@@ -404,31 +348,19 @@ pub mod OrdKeyMap {
             if k == root.0 {
                 // Both must be root (by key separation from s1 and s2).
                 if s1.contains((k, v1)) {
-                    // Veracity: NEEDED assert
-                    assert(false);
                 }
                 if s2.contains((k, v1)) {
-                    // Veracity: NEEDED assert
-                    assert(false);
                 }
                 if s1.contains((k, v2)) {
-                    // Veracity: NEEDED assert
-                    assert(false);
                 }
                 if s2.contains((k, v2)) {
-                    // Veracity: NEEDED assert
-                    assert(false);
                 }
             } else {
                 // (k, v1) and (k, v2) are in s1 union s2.
                 // By key separation, both must be in the same set.
                 if s1.contains((k, v1)) && s2.contains((k, v2)) {
-                    // Veracity: NEEDED assert
-                    assert(false); // key separation
                 }
                 if s2.contains((k, v1)) && s1.contains((k, v2)) {
-                    // Veracity: NEEDED assert
-                    assert(false); // key separation
                 }
                 // Both in s1 or both in s2 -> key uniqueness.
             }
@@ -447,51 +379,34 @@ pub mod OrdKeyMap {
         let old_m = spec_pair_set_to_map(s);
         let new_s = s.insert((k, v));
         let new_m = spec_pair_set_to_map(new_s);
-        // Veracity: NEEDED assert
         assert forall|key: KV| #[trigger] new_m.dom().contains(key)
             implies old_m.insert(k, v).dom().contains(key)
         by {
             if key == k {
             } else {
                 let vv: VV = choose|vv: VV| new_s.contains((key, vv));
-                // Veracity: NEEDED assert
-                assert(s.contains((key, vv)));
             }
         };
-        // Veracity: NEEDED assert
         assert forall|key: KV| old_m.insert(k, v).dom().contains(key)
             implies #[trigger] new_m.dom().contains(key)
         by {
             if key == k {
-                // Veracity: NEEDED assert
                 assert(new_s.contains((k, v)));
             } else {
                 let vv: VV = choose|vv: VV| s.contains((key, vv));
-                // Veracity: NEEDED assert
                 assert(new_s.contains((key, vv)));
             }
         };
         // Values agree.
-        // Veracity: NEEDED assert
         assert forall|key: KV| new_m.dom().contains(key)
             implies #[trigger] new_m[key] == old_m.insert(k, v)[key]
         by {
             if key == k {
                 let cv: VV = choose|cv: VV| new_s.contains((k, cv));
-                // Veracity: NEEDED assert
-                assert(new_s.contains((k, cv)));
-                // Veracity: NEEDED assert
-                assert(new_s.contains((k, v)));
                 lemma_key_unique_insert(s, k, v);
-                // Veracity: NEEDED assert
-                assert(cv == v);
             } else {
                 let cv: VV = choose|cv: VV| new_s.contains((key, cv));
-                // Veracity: NEEDED assert
-                assert(s.contains((key, cv)));
                 let cv2: VV = choose|cv2: VV| s.contains((key, cv2));
-                // Veracity: NEEDED assert
-                assert(cv == cv2);
             }
         };
     }
@@ -509,42 +424,20 @@ pub mod OrdKeyMap {
         let new_s = s.remove((k, v));
         let new_m = spec_pair_set_to_map(new_s);
         // Forward: every key in new_m is in old_m.remove(k).
-        // Veracity: NEEDED assert
         assert forall|key: KV| new_m.dom().contains(key)
             implies old_m.remove(k).dom().contains(key) && #[trigger] new_m[key] == #[trigger] old_m[key]
         by {
             let vv: VV = choose|vv: VV| new_s.contains((key, vv));
-            // Veracity: NEEDED assert
-            assert(s.contains((key, vv)));
             if key == k {
-                // Veracity: NEEDED assert
-                assert(new_s.contains((k, vv)));
-                // Veracity: NEEDED assert
-                assert(!new_s.contains((k, v)));
-                // Veracity: NEEDED assert
-                assert(vv != v);
-                // Veracity: NEEDED assert
-                assert(s.contains((k, vv)));
-                // Veracity: NEEDED assert
-                assert(s.contains((k, v)));
                 // Key uniqueness: vv == v. Contradiction.
-                // Veracity: NEEDED assert
-                assert(false);
             }
             let cv: VV = choose|cv: VV| s.contains((key, cv));
-            // Veracity: NEEDED assert
-            assert(cv == vv);
         };
         // Backward: every key in old_m.remove(k) is in new_m.
-        // Veracity: NEEDED assert
         assert forall|key: KV| old_m.remove(k).dom().contains(key)
             implies #[trigger] new_m.dom().contains(key)
         by {
-            // Veracity: NEEDED assert
-            assert(key != k);
             let vv: VV = choose|vv: VV| s.contains((key, vv));
-            // Veracity: NEEDED assert
-            assert(new_s.contains((key, vv)));
         };
     }
 
@@ -582,9 +475,7 @@ pub mod OrdKeyMap {
         let lm = spec_pair_set_to_map(left);
         let rm = spec_pair_set_to_map(right);
         // Domain equality.
-        // Veracity: NEEDED assert
         assert(cm.dom() =~= lm.dom().union(rm.dom()).insert(root_k)) by {
-            // Veracity: NEEDED assert
             assert forall|k: KV| cm.dom().contains(k) implies
                 #[trigger] lm.dom().union(rm.dom()).insert(root_k).contains(k)
             by {
@@ -592,91 +483,28 @@ pub mod OrdKeyMap {
                 if k == root_k {
                 } else if left.contains((k, v)) {
                 } else {
-                    // Veracity: NEEDED assert
-                    assert(right.contains((k, v)));
                 }
             };
-            // Veracity: NEEDED assert
             assert forall|k: KV| lm.dom().union(rm.dom()).insert(root_k).contains(k) implies
                 #[trigger] cm.dom().contains(k)
             by {
                 if k == root_k {
-                    // Veracity: NEEDED assert
                     assert(combined.contains((root_k, root_v)));
                 } else if lm.dom().contains(k) {
                     let v: VV = choose|v: VV| left.contains((k, v));
-                    // Veracity: NEEDED assert
                     assert(combined.contains((k, v)));
                 } else {
                     let v: VV = choose|v: VV| right.contains((k, v));
-                    // Veracity: NEEDED assert
                     assert(combined.contains((k, v)));
                 }
             };
         };
         // Root value.
-        // Veracity: NEEDED assert
         assert(cm.contains_key(root_k)) by {
-            // Veracity: NEEDED assert
-            assert(combined.contains((root_k, root_v)));
         };
         let cv: VV = choose|cv: VV| combined.contains((root_k, cv));
-        // Veracity: NEEDED assert
-        assert(cv == root_v) by {
-            if left.contains((root_k, cv)) {
-                // Veracity: NEEDED assert
-                assert(false);
-            }
-            if right.contains((root_k, cv)) {
-                // Veracity: NEEDED assert
-                assert(false);
-            }
-        };
         // Left values.
-        // Veracity: NEEDED assert
-        assert forall|k: KV| lm.dom().contains(k) implies #[trigger] cm[k] == lm[k] by {
-            let v_l: VV = choose|v: VV| left.contains((k, v));
-            // Veracity: NEEDED assert
-            assert(combined.contains((k, v_l)));
-            let v_c: VV = choose|v: VV| combined.contains((k, v));
-            // v_c must equal v_l: if from right, contradiction on key separation.
-            if right.contains((k, v_c)) {
-                // Veracity: NEEDED assert
-                assert(left.contains((k, v_l)));
-                // Veracity: NEEDED assert
-                assert(false);
-            }
-            if (k, v_c) == (root_k, root_v) {
-                // Veracity: NEEDED assert
-                assert(false);
-            }
-            // Veracity: NEEDED assert
-            assert(left.contains((k, v_c)));
-            // Veracity: NEEDED assert
-            assert(v_c == v_l);
-        };
         // Right values.
-        // Veracity: NEEDED assert
-        assert forall|k: KV| rm.dom().contains(k) implies #[trigger] cm[k] == rm[k] by {
-            let v_r: VV = choose|v: VV| right.contains((k, v));
-            // Veracity: NEEDED assert
-            assert(combined.contains((k, v_r)));
-            let v_c: VV = choose|v: VV| combined.contains((k, v));
-            if left.contains((k, v_c)) {
-                // Veracity: NEEDED assert
-                assert(right.contains((k, v_r)));
-                // Veracity: NEEDED assert
-                assert(false);
-            }
-            if (k, v_c) == (root_k, root_v) {
-                // Veracity: NEEDED assert
-                assert(false);
-            }
-            // Veracity: NEEDED assert
-            assert(right.contains((k, v_c)));
-            // Veracity: NEEDED assert
-            assert(v_c == v_r);
-        };
     }
 
     /// The map over an empty set is the empty map.
@@ -1069,7 +897,6 @@ pub mod OrdKeyMap {
     {
         match tree.expose() {
             Exposed::Leaf => {
-                // Veracity: NEEDED proof block
                 proof {
                     if spec_pair_set_to_map(tree@).contains_key(k@) {
                         lemma_map_contains_pair_in_set(tree@, k@);
@@ -1078,115 +905,65 @@ pub mod OrdKeyMap {
                 None
             },
             Exposed::Node(left, root_pair, right) => {
-                // Veracity: NEEDED proof block
                 proof {
                     reveal(vstd::laws_cmp::obeys_cmp_ord);
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    // Veracity: NEEDED assert
-                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
-                    // Veracity: NEEDED assert
-                    assert(tree@.len() == left@.len() + right@.len() + 1);
                     // Propagate key uniqueness and View generation to subtrees.
-                    // Veracity: NEEDED assert
                     assert(spec_key_unique_pairs_set(left@)) by {
-                        // Veracity: NEEDED assert
                         assert forall|kv: K::V, vv: V::V| #[trigger] left@.contains((kv, vv))
                             implies forall|vv2: V::V| left@.contains((kv, vv2)) ==> vv == vv2 by {
-                            // Veracity: NEEDED assert
                             assert(tree@.contains((kv, vv)));
-                            // Veracity: NEEDED assert
                             assert forall|vv2: V::V| left@.contains((kv, vv2)) implies vv == vv2 by {
-                                // Veracity: NEEDED assert
                                 assert(tree@.contains((kv, vv2)));
                             };
                         };
                     };
-                    // Veracity: NEEDED assert
                     assert(spec_key_unique_pairs_set(right@)) by {
-                        // Veracity: NEEDED assert
                         assert forall|kv: K::V, vv: V::V| #[trigger] right@.contains((kv, vv))
                             implies forall|vv2: V::V| right@.contains((kv, vv2)) ==> vv == vv2 by {
-                            // Veracity: NEEDED assert
                             assert(tree@.contains((kv, vv)));
-                            // Veracity: NEEDED assert
                             assert forall|vv2: V::V| right@.contains((kv, vv2)) implies vv == vv2 by {
-                                // Veracity: NEEDED assert
                                 assert(tree@.contains((kv, vv2)));
                             };
                         };
                     };
-                    // Veracity: NEEDED assert
                     assert(spec_set_pair_view_generated::<K, V>(left@)) by {
-                        // Veracity: NEEDED assert
                         assert forall|elem: (K::V, V::V)| left@.contains(elem)
                             implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-                            // Veracity: NEEDED assert
                             assert(tree@.contains(elem));
                         };
                     };
-                    // Veracity: NEEDED assert
                     assert(spec_set_pair_view_generated::<K, V>(right@)) by {
-                        // Veracity: NEEDED assert
                         assert forall|elem: (K::V, V::V)| right@.contains(elem)
                             implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-                            // Veracity: NEEDED assert
                             assert(tree@.contains(elem));
                         };
                     };
                 }
                 let c = k.cmp(&root_pair.0);
-                // Veracity: NEEDED proof block
                 proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
                 match c {
                     Equal => {
                         let v_clone = root_pair.1.clone_plus();
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_cloned_view_eq(root_pair.1, v_clone);
-                            // Veracity: NEEDED assert
-                            assert(k.cmp_spec(&root_pair.0) == Equal);
-                            // Veracity: NEEDED assert
-                            assert(k@ == root_pair.0@);
-                            // Veracity: NEEDED assert
-                            assert(tree@.contains(root_pair@));
-                            // Veracity: NEEDED assert
-                            assert(tree@.contains((k@, root_pair.1@)));
                             lemma_pair_in_set_map_contains(tree@, k@, root_pair.1@);
                         }
                         Some(v_clone)
                     },
                     Less => {
                         let result = ordkeymap_find(&left, k);
-                        // Veracity: NEEDED proof block
                         proof {
-                            // Veracity: NEEDED assert
-                            assert(k.cmp_spec(&root_pair.0) == Less);
-                            // Veracity: NEEDED assert
-                            assert(k@ != root_pair.0@);
                             if result is Some {
                                 lemma_map_contains_pair_in_set(left@, k@);
                                 let vv: V::V = choose|vv: V::V| left@.contains((k@, vv));
-                                // Veracity: NEEDED assert
-                                assert(tree@.contains((k@, vv)));
                                 lemma_pair_in_set_map_contains(tree@, k@, vv);
                             } else {
                                 if spec_pair_set_to_map(tree@).contains_key(k@) {
                                     lemma_map_contains_pair_in_set(tree@, k@);
                                     let vv: V::V = choose|vv: V::V| tree@.contains((k@, vv));
-                                    // Veracity: NEEDED assert
-                                    assert(!left@.contains((k@, vv)));
-                                    // Veracity: NEEDED assert
-                                    assert(root_pair@.0 != k@);
-                                    // Veracity: NEEDED assert
-                                    assert(right@.contains((k@, vv)));
                                     let ghost p_wit: Pair<K, V> = choose|p: Pair<K, V>| p@ == (k@, vv);
-                                    // Veracity: NEEDED assert
-                                    assert(right@.contains(p_wit@));
                                     lemma_cmp_equal_congruent(p_wit.0, *k, root_pair.0);
-                                    // Veracity: NEEDED assert
-                                    assert(p_wit.0.cmp_spec(&root_pair.0) == Less);
-                                    // Veracity: NEEDED assert
-                                    assert(false);
                                 }
                             }
                         }
@@ -1194,36 +971,17 @@ pub mod OrdKeyMap {
                     },
                     Greater => {
                         let result = ordkeymap_find(&right, k);
-                        // Veracity: NEEDED proof block
                         proof {
-                            // Veracity: NEEDED assert
-                            assert(k.cmp_spec(&root_pair.0) == Greater);
-                            // Veracity: NEEDED assert
-                            assert(k@ != root_pair.0@);
                             if result is Some {
                                 lemma_map_contains_pair_in_set(right@, k@);
                                 let vv: V::V = choose|vv: V::V| right@.contains((k@, vv));
-                                // Veracity: NEEDED assert
-                                assert(tree@.contains((k@, vv)));
                                 lemma_pair_in_set_map_contains(tree@, k@, vv);
                             } else {
                                 if spec_pair_set_to_map(tree@).contains_key(k@) {
                                     lemma_map_contains_pair_in_set(tree@, k@);
                                     let vv: V::V = choose|vv: V::V| tree@.contains((k@, vv));
-                                    // Veracity: NEEDED assert
-                                    assert(!right@.contains((k@, vv)));
-                                    // Veracity: NEEDED assert
-                                    assert(root_pair@.0 != k@);
-                                    // Veracity: NEEDED assert
-                                    assert(left@.contains((k@, vv)));
                                     let ghost p_wit: Pair<K, V> = choose|p: Pair<K, V>| p@ == (k@, vv);
-                                    // Veracity: NEEDED assert
-                                    assert(left@.contains(p_wit@));
                                     lemma_cmp_equal_congruent(p_wit.0, *k, root_pair.0);
-                                    // Veracity: NEEDED assert
-                                    assert(p_wit.0.cmp_spec(&root_pair.0) == Greater);
-                                    // Veracity: NEEDED assert
-                                    assert(false);
                                 }
                             }
                         }
@@ -1275,7 +1033,6 @@ pub mod OrdKeyMap {
     {
         match tree.expose() {
             Exposed::Leaf => {
-                // Veracity: NEEDED proof block
                 proof {
                     if spec_pair_set_to_map(tree@).contains_key(k@) {
                         lemma_map_contains_pair_in_set(tree@, k@);
@@ -1287,12 +1044,9 @@ pub mod OrdKeyMap {
                 (empty1, None, empty2)
             },
             Exposed::Node(left, root_pair, right) => {
-                // Veracity: NEEDED proof block
                 proof {
                     reveal(vstd::laws_cmp::obeys_cmp_ord);
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    // Veracity: NEEDED assert
-                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
                     lemma_key_unique_subset(tree@, left@);
                     lemma_key_unique_subset(tree@, right@);
                     lemma_view_gen_subset::<K, V>(left@, tree@);
@@ -1300,191 +1054,53 @@ pub mod OrdKeyMap {
                     lemma_reveal_view_injective::<K>();
                 }
                 let c = k.cmp(&root_pair.0);
-                // Veracity: NEEDED proof block
                 proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
                 match c {
                     Equal => {
                         let v = root_pair.1.clone_plus();
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_cloned_view_eq(root_pair.1, v);
                             lemma_pair_in_set_map_contains(tree@, root_pair.0@, root_pair.1@);
-                            // Veracity: NEEDED assert
                             assert forall|p: Pair<K, V>| (#[trigger] left@.contains(p@))
                                 implies p.0.cmp_spec(k) == Less by {
-                                // Veracity: NEEDED assert
                                 assert(p.0@ != root_pair.0@) by {
                                     if p.0@ == root_pair.0@ {
-                                        // Veracity: NEEDED assert
                                         assert(tree@.contains(p@));
-                                        // Veracity: NEEDED assert
-                                        assert(tree@.contains(root_pair@));
                                     }
                                 };
                                 lemma_cmp_equal_congruent(root_pair.0, *k, p.0);
                             };
-                            // Veracity: NEEDED assert
                             assert forall|p: Pair<K, V>| (#[trigger] right@.contains(p@))
                                 implies p.0.cmp_spec(k) == Greater by {
-                                // Veracity: NEEDED assert
                                 assert(p.0@ != root_pair.0@) by {
                                     if p.0@ == root_pair.0@ {
-                                        // Veracity: NEEDED assert
                                         assert(tree@.contains(p@));
-                                        // Veracity: NEEDED assert
-                                        assert(tree@.contains(root_pair@));
                                     }
                                 };
-                            };
-                            // Veracity: NEEDED assert
-                            assert(!spec_pair_set_to_map(left@).dom().contains(k@)) by {
-                                if spec_pair_set_to_map(left@).dom().contains(k@) {
-                                    lemma_map_contains_pair_in_set(left@, k@);
-                                    let lv: V::V = choose|lv: V::V| left@.contains((k@, lv));
-                                    let lp: Pair<K, V> = choose|lp: Pair<K, V>| lp@ == (k@, lv);
-                                    // Veracity: NEEDED assert
-                                    assert(left@.contains(lp@));
-                                    reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                                }
-                            };
-                            // Veracity: NEEDED assert
-                            assert(!spec_pair_set_to_map(right@).dom().contains(k@)) by {
-                                if spec_pair_set_to_map(right@).dom().contains(k@) {
-                                    lemma_map_contains_pair_in_set(right@, k@);
-                                    let rv: V::V = choose|rv: V::V| right@.contains((k@, rv));
-                                    let rp: Pair<K, V> = choose|rp: Pair<K, V>| rp@ == (k@, rv);
-                                    // Veracity: NEEDED assert
-                                    assert(right@.contains(rp@));
-                                    reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                                }
                             };
                         }
                         (left, Some(v), right)
                     },
                     Less => {
                         let (ll, found, lr) = ordkeymap_split(&left, k);
-                        // Veracity: NEEDED proof block
                         proof {
-                            // Veracity: NEEDED assert
-                            assert forall|t: Pair<K, V>| (#[trigger] lr@.contains(t@))
-                                implies t.cmp_spec(&root_pair) == Less by {
-                                // Veracity: NEEDED assert
-                                assert(left@.contains(t@));
-                            };
-                            // Veracity: NEEDED assert
-                            assert(lr@.disjoint(right@)) by {
-                                // Veracity: NEEDED assert
-                                assert forall|v: <Pair<K,V> as View>::V|
-                                    !(lr@.contains(v) && #[trigger] right@.contains(v)) by {
-                                    if lr@.contains(v) && right@.contains(v) {
-                                        // Veracity: NEEDED assert
-                                        assert(left@.contains(v));
-                                    }
-                                };
-                            };
                             vstd::set_lib::lemma_len_subset(lr@, left@);
                         }
                         let new_right = ParamBST::join_m(lr, root_pair, right);
-                        // Veracity: NEEDED proof block
                         proof {
-                            // Veracity: NEEDED assert
-                            assert(ll@.subset_of(tree@)) by {
-                                // Veracity: NEEDED assert
-                                assert forall|v: <Pair<K,V> as View>::V| ll@.contains(v)
-                                    implies #[trigger] tree@.contains(v) by {
-                                    // Veracity: NEEDED assert
-                                    assert(left@.contains(v));
-                                };
-                            };
-                            // Veracity: NEEDED assert
-                            assert(new_right@ =~= lr@.union(right@).insert(root_pair@));
-                            // Veracity: NEEDED assert
-                            assert(new_right@.subset_of(tree@)) by {
-                                // Veracity: NEEDED assert
-                                assert forall|v: <Pair<K,V> as View>::V| new_right@.contains(v)
-                                    implies #[trigger] tree@.contains(v) by {
-                                    if lr@.contains(v) { assert(left@.contains(v)); }
-                                    else if right@.contains(v) {}
-                                };
-                            };
-                            // Veracity: NEEDED assert
-                            assert(ll@.disjoint(new_right@)) by {
-                                // Veracity: NEEDED assert
-                                assert forall|v: <Pair<K,V> as View>::V|
-                                    !(ll@.contains(v) && #[trigger] new_right@.contains(v)) by {
-                                    if ll@.contains(v) && new_right@.contains(v) {
-                                        if lr@.contains(v) {
-                                            // Veracity: NEEDED assert
-                                            assert(ll@.disjoint(lr@));
-                                        } else if right@.contains(v) {
-                                            // Veracity: NEEDED assert
-                                            assert(left@.contains(v));
-                                        } else {
-                                            // Veracity: NEEDED assert
-                                            assert(left@.contains(v));
-                                        }
-                                    }
-                                };
-                            };
-                            // Veracity: NEEDED assert
-                            assert forall|kv: <K as View>::V, vv: <V as View>::V|
-                                #[trigger] tree@.contains((kv, vv))
-                                implies ll@.contains((kv, vv)) || new_right@.contains((kv, vv)) || kv == k@ by {
-                                if left@.contains((kv, vv)) {
-                                    if !ll@.contains((kv, vv)) && kv != k@ {
-                                    }
-                                } else if (kv, vv) == root_pair@ {
-                                }
-                            };
-                            // Veracity: NEEDED assert
                             assert forall|p: Pair<K, V>| (#[trigger] new_right@.contains(p@))
                                 implies p.0.cmp_spec(k) == Greater by {
                                 if lr@.contains(p@) {}
                                 else if right@.contains(p@) {
-                                    // Veracity: NEEDED assert
-                                    assert(p.0@ != root_pair.0@) by {
-                                        if p.0@ == root_pair.0@ {
-                                            // Veracity: NEEDED assert
-                                            assert(tree@.contains(p@));
-                                            // Veracity: NEEDED assert
-                                            assert(tree@.contains(root_pair@));
-                                        }
-                                    };
                                     lemma_cmp_antisymmetry(*k, root_pair.0);
                                     reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
                                 } else {
                                     lemma_cmp_antisymmetry(*k, root_pair.0);
                                 }
                             };
-                            // Veracity: NEEDED assert
-                            assert(!spec_pair_set_to_map(new_right@).dom().contains(k@)) by {
-                                if spec_pair_set_to_map(new_right@).dom().contains(k@) {
-                                    lemma_map_contains_pair_in_set(new_right@, k@);
-                                    let nv: V::V = choose|nv: V::V| new_right@.contains((k@, nv));
-                                    let np: Pair<K, V> = choose|np: Pair<K, V>| np@ == (k@, nv);
-                                    // Veracity: NEEDED assert
-                                    assert(new_right@.contains(np@));
-                                    reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                                }
-                            };
                             lemma_key_unique_subset(tree@, new_right@);
                             lemma_view_gen_subset::<K, V>(new_right@, tree@);
                             vstd::set_lib::lemma_set_disjoint_lens(lr@, right@);
-                            // Veracity: NEEDED assert
-                            assert(new_right@.len() == lr@.len() + right@.len() + 1) by {
-                                let lr_r = lr@.union(right@);
-                                vstd::set_lib::lemma_set_disjoint_lens(lr@, right@);
-                                // Veracity: NEEDED assert
-                                assert(!lr_r.contains(root_pair@)) by {
-                                    if lr_r.contains(root_pair@) {
-                                        if lr@.contains(root_pair@) { assert(left@.contains(root_pair@)); }
-                                    }
-                                };
-                                // Veracity: NEEDED assert
-                                assert(lr_r.insert(root_pair@) =~= lr_r.union(Set::empty().insert(root_pair@)));
-                                let singleton = Set::empty().insert(root_pair@);
-                                vstd::set_lib::lemma_set_disjoint_lens(lr_r, singleton);
-                            };
                             if found is Some {
                                 lemma_map_contains_pair_in_set(left@, k@);
                                 let lv: V::V = choose|lv: V::V| left@.contains((k@, lv));
@@ -1496,124 +1112,15 @@ pub mod OrdKeyMap {
                     },
                     Greater => {
                         let (rl, found, rr) = ordkeymap_split(&right, k);
-                        // Veracity: NEEDED proof block
                         proof {
-                            // Veracity: NEEDED assert
-                            assert forall|t: Pair<K, V>| (#[trigger] rl@.contains(t@))
-                                implies t.cmp_spec(&root_pair) == Greater by {
-                                // Veracity: NEEDED assert
-                                assert(right@.contains(t@));
-                            };
-                            // Veracity: NEEDED assert
-                            assert(left@.disjoint(rl@)) by {
-                                // Veracity: NEEDED assert
-                                assert forall|v: <Pair<K,V> as View>::V|
-                                    !(left@.contains(v) && #[trigger] rl@.contains(v)) by {
-                                    if left@.contains(v) && rl@.contains(v) {
-                                        // Veracity: NEEDED assert
-                                        assert(right@.contains(v));
-                                    }
-                                };
-                            };
                             vstd::set_lib::lemma_len_subset(rl@, right@);
                         }
                         let new_left = ParamBST::join_m(left, root_pair, rl);
-                        // Veracity: NEEDED proof block
                         proof {
-                            // Veracity: NEEDED assert
-                            assert(new_left@ =~= left@.union(rl@).insert(root_pair@));
-                            // Veracity: NEEDED assert
-                            assert(new_left@.subset_of(tree@)) by {
-                                // Veracity: NEEDED assert
-                                assert forall|v: <Pair<K,V> as View>::V| new_left@.contains(v)
-                                    implies #[trigger] tree@.contains(v) by {
-                                    if left@.contains(v) {}
-                                    else if rl@.contains(v) { assert(right@.contains(v)); }
-                                };
-                            };
-                            // Veracity: NEEDED assert
-                            assert(rr@.subset_of(tree@)) by {
-                                // Veracity: NEEDED assert
-                                assert forall|v: <Pair<K,V> as View>::V| rr@.contains(v)
-                                    implies #[trigger] tree@.contains(v) by {
-                                    // Veracity: NEEDED assert
-                                    assert(right@.contains(v));
-                                };
-                            };
-                            // Veracity: NEEDED assert
-                            assert(new_left@.disjoint(rr@)) by {
-                                // Veracity: NEEDED assert
-                                assert forall|v: <Pair<K,V> as View>::V|
-                                    !(new_left@.contains(v) && #[trigger] rr@.contains(v)) by {
-                                    if new_left@.contains(v) && rr@.contains(v) {
-                                        if left@.contains(v) {
-                                            // Veracity: NEEDED assert
-                                            assert(right@.contains(v));
-                                        } else if rl@.contains(v) {
-                                            // Veracity: NEEDED assert
-                                            assert(rl@.disjoint(rr@));
-                                        } else {
-                                            // Veracity: NEEDED assert
-                                            assert(right@.contains(v));
-                                        }
-                                    }
-                                };
-                            };
                             reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                            // Veracity: NEEDED assert
-                            assert forall|p: Pair<K, V>| (#[trigger] new_left@.contains(p@))
-                                implies p.0.cmp_spec(k) == Less by {
-                                if left@.contains(p@) {
-                                    // Veracity: NEEDED assert
-                                    assert(p.0@ != root_pair.0@) by {
-                                        if p.0@ == root_pair.0@ {
-                                            // Veracity: NEEDED assert
-                                            assert(tree@.contains(p@));
-                                            // Veracity: NEEDED assert
-                                            assert(tree@.contains(root_pair@));
-                                        }
-                                    };
-                                } else if rl@.contains(p@) {
-                                }
-                            };
-                            // Veracity: NEEDED assert
-                            assert(!spec_pair_set_to_map(new_left@).dom().contains(k@)) by {
-                                if spec_pair_set_to_map(new_left@).dom().contains(k@) {
-                                    lemma_map_contains_pair_in_set(new_left@, k@);
-                                    let nv: V::V = choose|nv: V::V| new_left@.contains((k@, nv));
-                                    let np: Pair<K, V> = choose|np: Pair<K, V>| np@ == (k@, nv);
-                                    // Veracity: NEEDED assert
-                                    assert(new_left@.contains(np@));
-                                }
-                            };
-                            // Veracity: NEEDED assert
-                            assert forall|kv: <K as View>::V, vv: <V as View>::V|
-                                #[trigger] tree@.contains((kv, vv))
-                                implies new_left@.contains((kv, vv)) || rr@.contains((kv, vv)) || kv == k@ by {
-                                if right@.contains((kv, vv)) {
-                                    if !rl@.contains((kv, vv)) && kv != k@ {
-                                    }
-                                } else if (kv, vv) == root_pair@ {
-                                }
-                            };
                             lemma_key_unique_subset(tree@, new_left@);
                             lemma_view_gen_subset::<K, V>(new_left@, tree@);
                             vstd::set_lib::lemma_set_disjoint_lens(left@, rl@);
-                            // Veracity: NEEDED assert
-                            assert(new_left@.len() == left@.len() + rl@.len() + 1) by {
-                                let l_rl = left@.union(rl@);
-                                vstd::set_lib::lemma_set_disjoint_lens(left@, rl@);
-                                // Veracity: NEEDED assert
-                                assert(!l_rl.contains(root_pair@)) by {
-                                    if l_rl.contains(root_pair@) {
-                                        if rl@.contains(root_pair@) { assert(right@.contains(root_pair@)); }
-                                    }
-                                };
-                                // Veracity: NEEDED assert
-                                assert(l_rl.insert(root_pair@) =~= l_rl.union(Set::empty().insert(root_pair@)));
-                                let singleton = Set::empty().insert(root_pair@);
-                                vstd::set_lib::lemma_set_disjoint_lens(l_rl, singleton);
-                            };
                             if found is Some {
                                 lemma_map_contains_pair_in_set(right@, k@);
                                 let rv: V::V = choose|rv: V::V| right@.contains((k@, rv));
@@ -1656,19 +1163,15 @@ pub mod OrdKeyMap {
                 ==> !(TotalOrder::le(*k, t) && t@ != k@),
         decreases tree@.len(),
     {
-        // Veracity: NEEDED proof block
         proof { lemma_pair_set_to_map_dom_finite(tree@); }
         match tree.expose() {
             Exposed::Leaf => None,
             Exposed::Node(left, root_pair, right) => {
                 reveal_param_bst_backings(&left);
                 reveal_param_bst_backings(&right);
-                // Veracity: NEEDED proof block
                 proof {
                     reveal(vstd::laws_cmp::obeys_cmp_ord);
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    // Veracity: NEEDED assert
-                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
                     lemma_key_unique_subset(tree@, left@);
                     lemma_key_unique_subset(tree@, right@);
                     lemma_view_gen_subset::<K, V>(left@, tree@);
@@ -1676,19 +1179,16 @@ pub mod OrdKeyMap {
                     lemma_reveal_view_injective::<K>();
                 }
                 let c = Ord::cmp(k, &root_pair.0);
-                // Veracity: NEEDED proof block
                 proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
                 match c {
                     Less => {
                         let left_result = ordkeymap_next(&left, k);
                         match left_result {
                             Some(lk) => {
-                                // Veracity: NEEDED proof block
                                 proof {
                                     lemma_map_contains_pair_in_set(left@, lk@);
                                     let vv: V::V = choose|vv: V::V| left@.contains((lk@, vv));
                                     lemma_pair_in_set_map_contains(tree@, lk@, vv);
-                                    // Veracity: NEEDED assert
                                     assert forall|t: K| #![trigger t@]
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(*k, t) && t@ != k@
@@ -1699,34 +1199,12 @@ pub mod OrdKeyMap {
                                             lemma_pair_in_set_map_contains(left@, t@, tv);
                                         } else if (t@, tv) == root_pair@ {
                                             let lp: Pair<K, V> = choose|lp: Pair<K, V>| #[trigger] left@.contains(lp@) && lp@ == (lk@, vv);
-                                            // Veracity: NEEDED assert
-                                            assert(lp.0@ != root_pair.0@) by {
-                                                if lp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(lp@));
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_less_implies_le(lk, t);
                                         } else {
                                             let lp: Pair<K, V> = choose|lp: Pair<K, V>| #[trigger] left@.contains(lp@) && lp@ == (lk@, vv);
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                            // Veracity: NEEDED assert
                                             assert(lp.0@ != root_pair.0@) by {
                                                 if lp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(lp@));
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            // Veracity: NEEDED assert
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(tp@));
-                                                    // Veracity: NEEDED assert
                                                     assert(tree@.contains(root_pair@));
                                                 }
                                             };
@@ -1740,12 +1218,10 @@ pub mod OrdKeyMap {
                             },
                             None => {
                                 let key = root_pair.0.clone_plus();
-                                // Veracity: NEEDED proof block
                                 proof {
                                     lemma_cloned_view_eq(root_pair.0, key);
                                     lemma_pair_in_set_map_contains(tree@, root_pair.0@, root_pair.1@);
                                     K::cmp_spec_less_implies_le(*k, root_pair.0);
-                                    // Veracity: NEEDED assert
                                     assert forall|t: K| #![trigger t@]
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(*k, t) && t@ != k@
@@ -1758,15 +1234,6 @@ pub mod OrdKeyMap {
                                             K::reflexive(key);
                                         } else {
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                            // Veracity: NEEDED assert
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(tp@));
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_greater_implies_le(t, root_pair.0);
                                         }
                                     };
@@ -1779,9 +1246,7 @@ pub mod OrdKeyMap {
                         let right_min = right.min_key();
                         match right_min {
                             None => {
-                                // Veracity: NEEDED proof block
                                 proof {
-                                    // Veracity: NEEDED assert
                                     assert forall|t: K| #![trigger t@]
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(*k, t) && t@ != k@
@@ -1790,15 +1255,6 @@ pub mod OrdKeyMap {
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if left@.contains((t@, tv)) {
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
-                                            // Veracity: NEEDED assert
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(tp@));
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_less_implies_le(t, root_pair.0);
                                             K::antisymmetric(t, *k);
                                         } else if (t@, tv) == root_pair@ {
@@ -1810,21 +1266,15 @@ pub mod OrdKeyMap {
                             },
                             Some(min_pair) => {
                                 let key = min_pair.0.clone_plus();
-                                // Veracity: NEEDED proof block
                                 proof {
                                     lemma_cloned_view_eq(min_pair.0, key);
                                     lemma_pair_in_set_map_contains(tree@, min_pair.0@, min_pair.1@);
-                                    // Veracity: NEEDED assert
                                     assert(min_pair.0@ != root_pair.0@) by {
                                         if min_pair.0@ == root_pair.0@ {
-                                            // Veracity: NEEDED assert
-                                            assert(tree@.contains(min_pair@));
-                                            // Veracity: NEEDED assert
                                             assert(tree@.contains(root_pair@));
                                         }
                                     };
                                     K::cmp_spec_greater_implies_le(min_pair.0, root_pair.0);
-                                    // Veracity: NEEDED assert
                                     assert forall|t: K| #![trigger t@]
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(*k, t) && t@ != k@
@@ -1833,15 +1283,6 @@ pub mod OrdKeyMap {
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if left@.contains((t@, tv)) {
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
-                                            // Veracity: NEEDED assert
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(tp@));
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_less_implies_le(t, root_pair.0);
                                             K::antisymmetric(t, *k);
                                         } else if (t@, tv) == root_pair@ {
@@ -1850,15 +1291,6 @@ pub mod OrdKeyMap {
                                             if min_pair@ == tp@ {
                                                 K::reflexive(key);
                                             } else {
-                                                // Veracity: NEEDED assert
-                                                assert(min_pair.0@ != tp.0@) by {
-                                                    if min_pair.0@ == tp.0@ {
-                                                        // Veracity: NEEDED assert
-                                                        assert(tree@.contains(min_pair@));
-                                                        // Veracity: NEEDED assert
-                                                        assert(tree@.contains(tp@));
-                                                    }
-                                                };
                                                 K::cmp_spec_less_implies_le(key, t);
                                             }
                                         }
@@ -1870,14 +1302,12 @@ pub mod OrdKeyMap {
                     },
                     Greater => {
                         let result = ordkeymap_next(&right, k);
-                        // Veracity: NEEDED proof block
                         proof {
                             if result is Some {
                                 let rk = result->Some_0;
                                 lemma_map_contains_pair_in_set(right@, rk@);
                                 let rv: V::V = choose|rv: V::V| right@.contains((rk@, rv));
                                 lemma_pair_in_set_map_contains(tree@, rk@, rv);
-                                // Veracity: NEEDED assert
                                 assert forall|t: K| #![trigger t@]
                                     spec_pair_set_to_map(tree@).dom().contains(t@)
                                     && TotalOrder::le(*k, t) && t@ != k@
@@ -1886,12 +1316,8 @@ pub mod OrdKeyMap {
                                     let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                     if left@.contains((t@, tv)) {
                                         let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
-                                        // Veracity: NEEDED assert
                                         assert(tp.0@ != root_pair.0@) by {
                                             if tp.0@ == root_pair.0@ {
-                                                // Veracity: NEEDED assert
-                                                assert(tree@.contains(tp@));
-                                                // Veracity: NEEDED assert
                                                 assert(tree@.contains(root_pair@));
                                             }
                                         };
@@ -1907,7 +1333,6 @@ pub mod OrdKeyMap {
                                     }
                                 };
                             } else {
-                                // Veracity: NEEDED assert
                                 assert forall|t: K| #![trigger t@]
                                     spec_pair_set_to_map(tree@).dom().contains(t@)
                                     implies !(TotalOrder::le(*k, t) && t@ != k@) by {
@@ -1915,12 +1340,8 @@ pub mod OrdKeyMap {
                                     let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                     if left@.contains((t@, tv)) {
                                         let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
-                                        // Veracity: NEEDED assert
                                         assert(tp.0@ != root_pair.0@) by {
                                             if tp.0@ == root_pair.0@ {
-                                                // Veracity: NEEDED assert
-                                                assert(tree@.contains(tp@));
-                                                // Veracity: NEEDED assert
                                                 assert(tree@.contains(root_pair@));
                                             }
                                         };
@@ -1975,19 +1396,15 @@ pub mod OrdKeyMap {
                 ==> !(TotalOrder::le(t, *k) && t@ != k@),
         decreases tree@.len(),
     {
-        // Veracity: NEEDED proof block
         proof { lemma_pair_set_to_map_dom_finite(tree@); }
         match tree.expose() {
             Exposed::Leaf => None,
             Exposed::Node(left, root_pair, right) => {
                 reveal_param_bst_backings(&left);
                 reveal_param_bst_backings(&right);
-                // Veracity: NEEDED proof block
                 proof {
                     reveal(vstd::laws_cmp::obeys_cmp_ord);
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    // Veracity: NEEDED assert
-                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
                     lemma_key_unique_subset(tree@, left@);
                     lemma_key_unique_subset(tree@, right@);
                     lemma_view_gen_subset::<K, V>(left@, tree@);
@@ -1995,19 +1412,16 @@ pub mod OrdKeyMap {
                     lemma_reveal_view_injective::<K>();
                 }
                 let c = Ord::cmp(k, &root_pair.0);
-                // Veracity: NEEDED proof block
                 proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
                 match c {
                     Greater => {
                         let right_result = ordkeymap_prev(&right, k);
                         match right_result {
                             Some(rk) => {
-                                // Veracity: NEEDED proof block
                                 proof {
                                     lemma_map_contains_pair_in_set(right@, rk@);
                                     let rv: V::V = choose|rv: V::V| right@.contains((rk@, rv));
                                     lemma_pair_in_set_map_contains(tree@, rk@, rv);
-                                    // Veracity: NEEDED assert
                                     assert forall|t: K| #![trigger t@]
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(t, *k) && t@ != k@
@@ -2018,34 +1432,12 @@ pub mod OrdKeyMap {
                                             lemma_pair_in_set_map_contains(right@, t@, tv);
                                         } else if (t@, tv) == root_pair@ {
                                             let rp: Pair<K, V> = choose|rp: Pair<K, V>| #[trigger] right@.contains(rp@) && rp@ == (rk@, rv);
-                                            // Veracity: NEEDED assert
-                                            assert(rp.0@ != root_pair.0@) by {
-                                                if rp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(rp@));
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_greater_implies_le(rk, root_pair.0);
                                         } else {
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
                                             let rp: Pair<K, V> = choose|rp: Pair<K, V>| #[trigger] right@.contains(rp@) && rp@ == (rk@, rv);
-                                            // Veracity: NEEDED assert
                                             assert(tp.0@ != root_pair.0@) by {
                                                 if tp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(tp@));
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            // Veracity: NEEDED assert
-                                            assert(rp.0@ != root_pair.0@) by {
-                                                if rp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(rp@));
-                                                    // Veracity: NEEDED assert
                                                     assert(tree@.contains(root_pair@));
                                                 }
                                             };
@@ -2059,12 +1451,10 @@ pub mod OrdKeyMap {
                             },
                             None => {
                                 let key = root_pair.0.clone_plus();
-                                // Veracity: NEEDED proof block
                                 proof {
                                     lemma_cloned_view_eq(root_pair.0, key);
                                     lemma_pair_in_set_map_contains(tree@, root_pair.0@, root_pair.1@);
                                     K::cmp_spec_greater_implies_le(*k, root_pair.0);
-                                    // Veracity: NEEDED assert
                                     assert forall|t: K| #![trigger t@]
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(t, *k) && t@ != k@
@@ -2077,15 +1467,6 @@ pub mod OrdKeyMap {
                                             K::reflexive(key);
                                         } else {
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
-                                            // Veracity: NEEDED assert
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(tp@));
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_less_implies_le(t, root_pair.0);
                                         }
                                     };
@@ -2098,9 +1479,7 @@ pub mod OrdKeyMap {
                         let left_max = left.max_key();
                         match left_max {
                             None => {
-                                // Veracity: NEEDED proof block
                                 proof {
-                                    // Veracity: NEEDED assert
                                     assert forall|t: K| #![trigger t@]
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(t, *k) && t@ != k@
@@ -2109,15 +1488,6 @@ pub mod OrdKeyMap {
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if right@.contains((t@, tv)) {
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                            // Veracity: NEEDED assert
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(tp@));
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_greater_implies_le(t, root_pair.0);
                                             K::antisymmetric(*k, t);
                                         } else if (t@, tv) == root_pair@ {
@@ -2129,21 +1499,15 @@ pub mod OrdKeyMap {
                             },
                             Some(max_pair) => {
                                 let key = max_pair.0.clone_plus();
-                                // Veracity: NEEDED proof block
                                 proof {
                                     lemma_cloned_view_eq(max_pair.0, key);
                                     lemma_pair_in_set_map_contains(tree@, max_pair.0@, max_pair.1@);
-                                    // Veracity: NEEDED assert
                                     assert(max_pair.0@ != root_pair.0@) by {
                                         if max_pair.0@ == root_pair.0@ {
-                                            // Veracity: NEEDED assert
-                                            assert(tree@.contains(max_pair@));
-                                            // Veracity: NEEDED assert
                                             assert(tree@.contains(root_pair@));
                                         }
                                     };
                                     K::cmp_spec_less_implies_le(max_pair.0, root_pair.0);
-                                    // Veracity: NEEDED assert
                                     assert forall|t: K| #![trigger t@]
                                         spec_pair_set_to_map(tree@).dom().contains(t@)
                                         && TotalOrder::le(t, *k) && t@ != k@
@@ -2152,15 +1516,6 @@ pub mod OrdKeyMap {
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if right@.contains((t@, tv)) {
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                            // Veracity: NEEDED assert
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(tp@));
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_greater_implies_le(t, root_pair.0);
                                             K::antisymmetric(*k, t);
                                         } else if (t@, tv) == root_pair@ {
@@ -2169,15 +1524,6 @@ pub mod OrdKeyMap {
                                             if max_pair@ == tp@ {
                                                 K::reflexive(key);
                                             } else {
-                                                // Veracity: NEEDED assert
-                                                assert(tp.0@ != max_pair.0@) by {
-                                                    if tp.0@ == max_pair.0@ {
-                                                        // Veracity: NEEDED assert
-                                                        assert(tree@.contains(tp@));
-                                                        // Veracity: NEEDED assert
-                                                        assert(tree@.contains(max_pair@));
-                                                    }
-                                                };
                                                 K::cmp_spec_less_implies_le(t, key);
                                             }
                                         }
@@ -2189,14 +1535,12 @@ pub mod OrdKeyMap {
                     },
                     Less => {
                         let result = ordkeymap_prev(&left, k);
-                        // Veracity: NEEDED proof block
                         proof {
                             if result is Some {
                                 let lk = result->Some_0;
                                 lemma_map_contains_pair_in_set(left@, lk@);
                                 let lv: V::V = choose|lv: V::V| left@.contains((lk@, lv));
                                 lemma_pair_in_set_map_contains(tree@, lk@, lv);
-                                // Veracity: NEEDED assert
                                 assert forall|t: K| #![trigger t@]
                                     spec_pair_set_to_map(tree@).dom().contains(t@)
                                     && TotalOrder::le(t, *k) && t@ != k@
@@ -2210,12 +1554,9 @@ pub mod OrdKeyMap {
                                         K::antisymmetric(t, *k);
                                     } else {
                                         let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                        // Veracity: NEEDED assert
                                         assert(tp.0@ != root_pair.0@) by {
                                             if tp.0@ == root_pair.0@ {
-                                                // Veracity: NEEDED assert
                                                 assert(tree@.contains(tp@));
-                                                // Veracity: NEEDED assert
                                                 assert(tree@.contains(root_pair@));
                                             }
                                         };
@@ -2226,7 +1567,6 @@ pub mod OrdKeyMap {
                                     }
                                 };
                             } else {
-                                // Veracity: NEEDED assert
                                 assert forall|t: K| #![trigger t@]
                                     spec_pair_set_to_map(tree@).dom().contains(t@)
                                     implies !(TotalOrder::le(t, *k) && t@ != k@) by {
@@ -2241,12 +1581,9 @@ pub mod OrdKeyMap {
                                         }
                                     } else {
                                         let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                        // Veracity: NEEDED assert
                                         assert(tp.0@ != root_pair.0@) by {
                                             if tp.0@ == root_pair.0@ {
-                                                // Veracity: NEEDED assert
                                                 assert(tree@.contains(tp@));
-                                                // Veracity: NEEDED assert
                                                 assert(tree@.contains(root_pair@));
                                             }
                                         };
@@ -2291,7 +1628,6 @@ pub mod OrdKeyMap {
             ).len(),
         decreases tree@.len(),
     {
-        // Veracity: NEEDED proof block
         proof {
             lemma_pair_set_to_map_dom_finite(tree@);
             lemma_pair_set_to_map_len(tree@);
@@ -2300,13 +1636,7 @@ pub mod OrdKeyMap {
         let ghost rank_pred = |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@;
         match tree.expose() {
             Exposed::Leaf => {
-                // Veracity: NEEDED proof block
                 proof {
-                    // Veracity: NEEDED assert
-                    assert(tree@ =~= Set::empty());
-                    // Veracity: NEEDED assert
-                    assert(spec_pair_set_to_map(tree@).dom() =~= Set::empty());
-                    // Veracity: NEEDED assert
                     assert(spec_pair_set_to_map(tree@).dom().filter(rank_pred) =~= Set::empty());
                 }
                 0
@@ -2314,12 +1644,9 @@ pub mod OrdKeyMap {
             Exposed::Node(left, root_pair, right) => {
                 reveal_param_bst_backings(&left);
                 reveal_param_bst_backings(&right);
-                // Veracity: NEEDED proof block
                 proof {
                     reveal(vstd::laws_cmp::obeys_cmp_ord);
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    // Veracity: NEEDED assert
-                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
                     lemma_key_unique_subset(tree@, left@);
                     lemma_key_unique_subset(tree@, right@);
                     lemma_view_gen_subset::<K, V>(left@, tree@);
@@ -2327,18 +1654,14 @@ pub mod OrdKeyMap {
                 }
                 let left_size = left.size();
                 let c = Ord::cmp(k, &root_pair.0);
-                // Veracity: NEEDED proof block
                 proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
                 match c {
                     Less => {
                         let rank = ordkeymap_rank(&left, k);
-                        // Veracity: NEEDED proof block
                         proof {
                             let tree_dom = spec_pair_set_to_map(tree@).dom();
                             let left_dom = spec_pair_set_to_map(left@).dom();
-                            // Veracity: NEEDED assert
                             assert(tree_dom.filter(rank_pred) =~= left_dom.filter(rank_pred)) by {
-                                // Veracity: NEEDED assert
                                 assert forall|x: K::V| #[trigger] tree_dom.filter(rank_pred).contains(x)
                                     implies left_dom.filter(rank_pred).contains(x) by {
                                     lemma_map_contains_pair_in_set(tree@, x);
@@ -2351,12 +1674,8 @@ pub mod OrdKeyMap {
                                         K::antisymmetric(t, *k);
                                     } else {
                                         let xp: Pair<K, V> = choose|xp: Pair<K, V>| #[trigger] right@.contains(xp@) && xp@ == (x, xv);
-                                        // Veracity: NEEDED assert
                                         assert(xp.0@ != root_pair.0@) by {
                                             if xp.0@ == root_pair.0@ {
-                                                // Veracity: NEEDED assert
-                                                assert(tree@.contains(xp@));
-                                                // Veracity: NEEDED assert
                                                 assert(tree@.contains(root_pair@));
                                             }
                                         };
@@ -2366,7 +1685,6 @@ pub mod OrdKeyMap {
                                         K::antisymmetric(t, *k);
                                     }
                                 };
-                                // Veracity: NEEDED assert
                                 assert forall|x: K::V| #[trigger] left_dom.filter(rank_pred).contains(x)
                                     implies tree_dom.filter(rank_pred).contains(x) by {
                                     lemma_map_contains_pair_in_set(left@, x);
@@ -2380,15 +1698,12 @@ pub mod OrdKeyMap {
                         rank
                     },
                     Equal => {
-                        // Veracity: NEEDED proof block
                         proof {
                             let tree_dom = spec_pair_set_to_map(tree@).dom();
                             let left_dom = spec_pair_set_to_map(left@).dom();
                             lemma_pair_set_to_map_dom_finite(left@);
                             lemma_pair_set_to_map_len(left@);
-                            // Veracity: NEEDED assert
                             assert(tree_dom.filter(rank_pred) =~= left_dom) by {
-                                // Veracity: NEEDED assert
                                 assert forall|x: K::V| #[trigger] tree_dom.filter(rank_pred).contains(x)
                                     implies left_dom.contains(x) by {
                                     lemma_map_contains_pair_in_set(tree@, x);
@@ -2399,32 +1714,18 @@ pub mod OrdKeyMap {
                                     } else if (x, xv) == root_pair@ {
                                     } else {
                                         let xp: Pair<K, V> = choose|xp: Pair<K, V>| #[trigger] right@.contains(xp@) && xp@ == (x, xv);
-                                        // Veracity: NEEDED assert
-                                        assert(xp.0@ != root_pair.0@) by {
-                                            if xp.0@ == root_pair.0@ {
-                                                // Veracity: NEEDED assert
-                                                assert(tree@.contains(xp@));
-                                                // Veracity: NEEDED assert
-                                                assert(tree@.contains(root_pair@));
-                                            }
-                                        };
                                         K::cmp_spec_greater_implies_le(xp.0, root_pair.0);
                                         K::antisymmetric(t, *k);
                                     }
                                 };
-                                // Veracity: NEEDED assert
                                 assert forall|x: K::V| #[trigger] left_dom.contains(x)
                                     implies tree_dom.filter(rank_pred).contains(x) by {
                                     lemma_map_contains_pair_in_set(left@, x);
                                     let xv: V::V = choose|xv: V::V| left@.contains((x, xv));
                                     lemma_pair_in_set_map_contains(tree@, x, xv);
                                     let xp: Pair<K, V> = choose|xp: Pair<K, V>| #[trigger] left@.contains(xp@) && xp@ == (x, xv);
-                                    // Veracity: NEEDED assert
                                     assert(xp.0@ != root_pair.0@) by {
                                         if xp.0@ == root_pair.0@ {
-                                            // Veracity: NEEDED assert
-                                            assert(tree@.contains(xp@));
-                                            // Veracity: NEEDED assert
                                             assert(tree@.contains(root_pair@));
                                         }
                                     };
@@ -2438,7 +1739,6 @@ pub mod OrdKeyMap {
                     },
                     Greater => {
                         let right_rank = ordkeymap_rank(&right, k);
-                        // Veracity: NEEDED proof block
                         proof {
                             let tree_dom = spec_pair_set_to_map(tree@).dom();
                             let left_dom = spec_pair_set_to_map(left@).dom();
@@ -2448,21 +1748,7 @@ pub mod OrdKeyMap {
                             lemma_pair_set_to_map_len(left@);
                             lemma_pair_set_to_map_len(right@);
                             let root_key_set = Set::empty().insert(root_pair.0@);
-                            // Veracity: NEEDED assert
                             assert(tree_dom.filter(rank_pred) =~= left_dom.union(root_key_set).union(right_dom.filter(rank_pred))) by {
-                                // Veracity: NEEDED assert
-                                assert forall|x: K::V| #[trigger] tree_dom.filter(rank_pred).contains(x)
-                                    implies left_dom.union(root_key_set).union(right_dom.filter(rank_pred)).contains(x) by {
-                                    lemma_map_contains_pair_in_set(tree@, x);
-                                    let xv: V::V = choose|xv: V::V| tree@.contains((x, xv));
-                                    if left@.contains((x, xv)) {
-                                        lemma_pair_in_set_map_contains(left@, x, xv);
-                                    } else if (x, xv) == root_pair@ {
-                                    } else {
-                                        lemma_pair_in_set_map_contains(right@, x, xv);
-                                    }
-                                };
-                                // Veracity: NEEDED assert
                                 assert forall|x: K::V| #[trigger] left_dom.union(root_key_set).union(right_dom.filter(rank_pred)).contains(x)
                                     implies tree_dom.filter(rank_pred).contains(x) by {
                                     if left_dom.contains(x) {
@@ -2470,12 +1756,8 @@ pub mod OrdKeyMap {
                                         let xv: V::V = choose|xv: V::V| left@.contains((x, xv));
                                         lemma_pair_in_set_map_contains(tree@, x, xv);
                                         let xp: Pair<K, V> = choose|xp: Pair<K, V>| #[trigger] left@.contains(xp@) && xp@ == (x, xv);
-                                        // Veracity: NEEDED assert
                                         assert(xp.0@ != root_pair.0@) by {
                                             if xp.0@ == root_pair.0@ {
-                                                // Veracity: NEEDED assert
-                                                assert(tree@.contains(xp@));
-                                                // Veracity: NEEDED assert
                                                 assert(tree@.contains(root_pair@));
                                             }
                                         };
@@ -2492,60 +1774,27 @@ pub mod OrdKeyMap {
                                     }
                                 };
                             };
-                            // Veracity: NEEDED assert
                             assert(!left_dom.contains(root_pair.0@)) by {
                                 if left_dom.contains(root_pair.0@) {
                                     lemma_map_contains_pair_in_set(left@, root_pair.0@);
                                     let lv: V::V = choose|lv: V::V| left@.contains((root_pair.0@, lv));
-                                    // Veracity: NEEDED assert
                                     assert(tree@.contains((root_pair.0@, lv)));
-                                    // Veracity: NEEDED assert
                                     assert(tree@.contains(root_pair@));
                                 }
                             };
-                            // Veracity: NEEDED assert
-                            assert(left_dom.disjoint(root_key_set)) by {
-                                // Veracity: NEEDED assert
-                                assert forall|x: K::V| !(left_dom.contains(x) && #[trigger] root_key_set.contains(x)) by {};
-                            };
-                            // Veracity: NEEDED assert
-                            assert(left_dom.disjoint(right_dom.filter(rank_pred))) by {
-                                // Veracity: NEEDED assert
-                                assert forall|x: K::V| !(left_dom.contains(x) && #[trigger] right_dom.filter(rank_pred).contains(x)) by {
-                                    if left_dom.contains(x) && right_dom.contains(x) {
-                                        lemma_map_contains_pair_in_set(left@, x);
-                                        lemma_map_contains_pair_in_set(right@, x);
-                                        let lv: V::V = choose|lv: V::V| left@.contains((x, lv));
-                                        let rv: V::V = choose|rv: V::V| right@.contains((x, rv));
-                                        // Veracity: NEEDED assert
-                                        assert(tree@.contains((x, lv)));
-                                        // Veracity: NEEDED assert
-                                        assert(tree@.contains((x, rv)));
-                                    }
-                                };
-                            };
-                            // Veracity: NEEDED assert
                             assert(root_key_set.disjoint(right_dom.filter(rank_pred))) by {
-                                // Veracity: NEEDED assert
                                 assert forall|x: K::V| !(root_key_set.contains(x) && #[trigger] right_dom.filter(rank_pred).contains(x)) by {
                                     if root_key_set.contains(x) && right_dom.contains(x) {
                                         lemma_map_contains_pair_in_set(right@, x);
                                         let rv: V::V = choose|rv: V::V| right@.contains((x, rv));
-                                        // Veracity: NEEDED assert
                                         assert(tree@.contains((x, rv)));
-                                        // Veracity: NEEDED assert
                                         assert(tree@.contains(root_pair@));
                                     }
                                 };
                             };
                             let lu = left_dom.union(root_key_set);
-                            // Veracity: NEEDED assert
-                            assert(lu.finite()) by {
-                                vstd::set_lib::lemma_len_union(left_dom, root_key_set);
-                            };
                             right_dom.lemma_len_filter(rank_pred);
                             vstd::set_lib::lemma_len_union(left_dom, root_key_set);
-                            // Veracity: NEEDED assert
                             assert(lu.len() == left_dom.len() + 1) by {
                                 vstd::set_lib::lemma_set_disjoint_lens(left_dom, root_key_set);
                             };
@@ -2585,7 +1834,6 @@ pub mod OrdKeyMap {
             ).len() == i as int,
         decreases tree@.len(),
     {
-        // Veracity: NEEDED proof block
         proof {
             lemma_pair_set_to_map_dom_finite(tree@);
             lemma_pair_set_to_map_len(tree@);
@@ -2596,12 +1844,9 @@ pub mod OrdKeyMap {
             Exposed::Node(left, root_pair, right) => {
                 reveal_param_bst_backings(&left);
                 reveal_param_bst_backings(&right);
-                // Veracity: NEEDED proof block
                 proof {
                     reveal(vstd::laws_cmp::obeys_cmp_ord);
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    // Veracity: NEEDED assert
-                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
                     lemma_key_unique_subset(tree@, left@);
                     lemma_key_unique_subset(tree@, right@);
                     lemma_view_gen_subset::<K, V>(left@, tree@);
@@ -2612,7 +1857,6 @@ pub mod OrdKeyMap {
                 let left_size = left.size();
                 if i < left_size {
                     let result = ordkeymap_select(&left, i);
-                    // Veracity: NEEDED proof block
                     proof {
                         if result is Some {
                             let sel_key = result->Some_0;
@@ -2623,9 +1867,7 @@ pub mod OrdKeyMap {
                                 let rank_pred_sel = |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, sel_key) && t@ != sel_key@;
                                 let tree_dom = spec_pair_set_to_map(tree@).dom();
                                 let left_dom = spec_pair_set_to_map(left@).dom();
-                                // Veracity: NEEDED assert
                                 assert(tree_dom.filter(rank_pred_sel) =~= left_dom.filter(rank_pred_sel)) by {
-                                    // Veracity: NEEDED assert
                                     assert forall|x: K::V| #[trigger] tree_dom.filter(rank_pred_sel).contains(x)
                                         implies left_dom.filter(rank_pred_sel).contains(x) by {
                                         lemma_map_contains_pair_in_set(tree@, x);
@@ -2635,35 +1877,18 @@ pub mod OrdKeyMap {
                                             lemma_pair_in_set_map_contains(left@, x, xv);
                                         } else if (x, xv) == root_pair@ {
                                             let sp: Pair<K, V> = choose|sp: Pair<K, V>| #[trigger] left@.contains(sp@) && sp@ == (sel_key@, sv);
-                                            // Veracity: NEEDED assert
-                                            assert(sp.0@ != root_pair.0@) by {
-                                                if sp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(sp@));
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_less_implies_le(sp.0, root_pair.0);
                                             K::antisymmetric(t, sel_key);
                                         } else {
                                             let sp: Pair<K, V> = choose|sp: Pair<K, V>| #[trigger] left@.contains(sp@) && sp@ == (sel_key@, sv);
                                             let xp: Pair<K, V> = choose|xp: Pair<K, V>| #[trigger] right@.contains(xp@) && xp@ == (x, xv);
-                                            // Veracity: NEEDED assert
                                             assert(sp.0@ != root_pair.0@) by {
                                                 if sp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(sp@));
-                                                    // Veracity: NEEDED assert
                                                     assert(tree@.contains(root_pair@));
                                                 }
                                             };
-                                            // Veracity: NEEDED assert
                                             assert(xp.0@ != root_pair.0@) by {
                                                 if xp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
-                                                    assert(tree@.contains(xp@));
-                                                    // Veracity: NEEDED assert
                                                     assert(tree@.contains(root_pair@));
                                                 }
                                             };
@@ -2673,7 +1898,6 @@ pub mod OrdKeyMap {
                                             K::antisymmetric(t, sel_key);
                                         }
                                     };
-                                    // Veracity: NEEDED assert
                                     assert forall|x: K::V| #[trigger] left_dom.filter(rank_pred_sel).contains(x)
                                         implies tree_dom.filter(rank_pred_sel).contains(x) by {
                                         lemma_map_contains_pair_in_set(left@, x);
@@ -2687,16 +1911,13 @@ pub mod OrdKeyMap {
                     result
                 } else if i == left_size {
                     let key = root_pair.0.clone_plus();
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_cloned_view_eq(root_pair.0, key);
                         lemma_pair_in_set_map_contains(tree@, root_pair.0@, root_pair.1@);
                         let rank_pred_root = |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, key) && t@ != key@;
                         let tree_dom = spec_pair_set_to_map(tree@).dom();
                         let left_dom = spec_pair_set_to_map(left@).dom();
-                        // Veracity: NEEDED assert
                         assert(tree_dom.filter(rank_pred_root) =~= left_dom) by {
-                            // Veracity: NEEDED assert
                             assert forall|x: K::V| #[trigger] tree_dom.filter(rank_pred_root).contains(x)
                                 implies left_dom.contains(x) by {
                                 lemma_map_contains_pair_in_set(tree@, x);
@@ -2707,32 +1928,25 @@ pub mod OrdKeyMap {
                                 } else if (x, xv) == root_pair@ {
                                 } else {
                                     let xp: Pair<K, V> = choose|xp: Pair<K, V>| #[trigger] right@.contains(xp@) && xp@ == (x, xv);
-                                    // Veracity: NEEDED assert
-                                    assert(xp.0@ != root_pair.0@) by {
-                                        if xp.0@ == root_pair.0@ {
-                                            // Veracity: NEEDED assert
-                                            assert(tree@.contains(xp@));
-                                            // Veracity: NEEDED assert
-                                            assert(tree@.contains(root_pair@));
-                                        }
-                                    };
+// Veracity: TESTING assert                                     assert(xp.0@ != root_pair.0@) by {
+// Veracity: TESTING assert                                         if xp.0@ == root_pair.0@ {
+// Veracity: TESTING assert                                             assert(tree@.contains(xp@));
+// Veracity: TESTING assert                                             assert(tree@.contains(root_pair@));
+// Veracity: TESTING assert                                         }
+// Veracity: TESTING assert                                     };
                                     K::cmp_spec_greater_implies_le(xp.0, root_pair.0);
                                     K::antisymmetric(t, key);
                                 }
                             };
-                            // Veracity: NEEDED assert
                             assert forall|x: K::V| #[trigger] left_dom.contains(x)
                                 implies tree_dom.filter(rank_pred_root).contains(x) by {
                                 lemma_map_contains_pair_in_set(left@, x);
                                 let xv: V::V = choose|xv: V::V| left@.contains((x, xv));
                                 lemma_pair_in_set_map_contains(tree@, x, xv);
                                 let xp: Pair<K, V> = choose|xp: Pair<K, V>| #[trigger] left@.contains(xp@) && xp@ == (x, xv);
-                                // Veracity: NEEDED assert
                                 assert(xp.0@ != root_pair.0@) by {
                                     if xp.0@ == root_pair.0@ {
-                                        // Veracity: NEEDED assert
                                         assert(tree@.contains(xp@));
-                                        // Veracity: NEEDED assert
                                         assert(tree@.contains(root_pair@));
                                     }
                                 };
@@ -2743,7 +1957,6 @@ pub mod OrdKeyMap {
                     Some(key)
                 } else {
                     let result = ordkeymap_select(&right, i - left_size - 1);
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_pair_set_to_map_dom_finite(right@);
                         lemma_pair_set_to_map_len(right@);
@@ -2758,9 +1971,7 @@ pub mod OrdKeyMap {
                                 let left_dom = spec_pair_set_to_map(left@).dom();
                                 let right_dom = spec_pair_set_to_map(right@).dom();
                                 let root_key_set = Set::empty().insert(root_pair.0@);
-                                // Veracity: NEEDED assert
                                 assert(tree_dom.filter(rank_pred_sel) =~= left_dom.union(root_key_set).union(right_dom.filter(rank_pred_sel))) by {
-                                    // Veracity: NEEDED assert
                                     assert forall|x: K::V| #[trigger] tree_dom.filter(rank_pred_sel).contains(x)
                                         implies left_dom.union(root_key_set).union(right_dom.filter(rank_pred_sel)).contains(x) by {
                                         lemma_map_contains_pair_in_set(tree@, x);
@@ -2772,7 +1983,6 @@ pub mod OrdKeyMap {
                                             lemma_pair_in_set_map_contains(right@, x, xv);
                                         }
                                     };
-                                    // Veracity: NEEDED assert
                                     assert forall|x: K::V| #[trigger] left_dom.union(root_key_set).union(right_dom.filter(rank_pred_sel)).contains(x)
                                         implies tree_dom.filter(rank_pred_sel).contains(x) by {
                                         if left_dom.contains(x) {
@@ -2781,21 +1991,15 @@ pub mod OrdKeyMap {
                                             lemma_pair_in_set_map_contains(tree@, x, xv);
                                             let xp: Pair<K, V> = choose|xp: Pair<K, V>| #[trigger] left@.contains(xp@) && xp@ == (x, xv);
                                             let sp: Pair<K, V> = choose|sp: Pair<K, V>| #[trigger] right@.contains(sp@) && sp@ == (sel_key@, sv);
-                                            // Veracity: NEEDED assert
                                             assert(xp.0@ != root_pair.0@) by {
                                                 if xp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
                                                     assert(tree@.contains(xp@));
-                                                    // Veracity: NEEDED assert
                                                     assert(tree@.contains(root_pair@));
                                                 }
                                             };
-                                            // Veracity: NEEDED assert
                                             assert(sp.0@ != root_pair.0@) by {
                                                 if sp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
                                                     assert(tree@.contains(sp@));
-                                                    // Veracity: NEEDED assert
                                                     assert(tree@.contains(root_pair@));
                                                 }
                                             };
@@ -2805,12 +2009,9 @@ pub mod OrdKeyMap {
                                         } else if root_key_set.contains(x) {
                                             lemma_pair_in_set_map_contains(tree@, root_pair.0@, root_pair.1@);
                                             let sp: Pair<K, V> = choose|sp: Pair<K, V>| #[trigger] right@.contains(sp@) && sp@ == (sel_key@, sv);
-                                            // Veracity: NEEDED assert
                                             assert(sp.0@ != root_pair.0@) by {
                                                 if sp.0@ == root_pair.0@ {
-                                                    // Veracity: NEEDED assert
                                                     assert(tree@.contains(sp@));
-                                                    // Veracity: NEEDED assert
                                                     assert(tree@.contains(root_pair@));
                                                 }
                                             };
@@ -2822,60 +2023,45 @@ pub mod OrdKeyMap {
                                         }
                                     };
                                 };
-                                // Veracity: NEEDED assert
                                 assert(!left_dom.contains(root_pair.0@)) by {
                                     if left_dom.contains(root_pair.0@) {
                                         lemma_map_contains_pair_in_set(left@, root_pair.0@);
                                         let lv: V::V = choose|lv: V::V| left@.contains((root_pair.0@, lv));
-                                        // Veracity: NEEDED assert
                                         assert(tree@.contains((root_pair.0@, lv)));
-                                        // Veracity: NEEDED assert
                                         assert(tree@.contains(root_pair@));
                                     }
                                 };
-                                // Veracity: NEEDED assert
                                 assert(left_dom.disjoint(root_key_set)) by {
-                                    // Veracity: NEEDED assert
                                     assert forall|x: K::V| !(left_dom.contains(x) && #[trigger] root_key_set.contains(x)) by {};
                                 };
-                                // Veracity: NEEDED assert
                                 assert(left_dom.disjoint(right_dom.filter(rank_pred_sel))) by {
-                                    // Veracity: NEEDED assert
                                     assert forall|x: K::V| !(left_dom.contains(x) && #[trigger] right_dom.filter(rank_pred_sel).contains(x)) by {
                                         if left_dom.contains(x) && right_dom.contains(x) {
                                             lemma_map_contains_pair_in_set(left@, x);
                                             lemma_map_contains_pair_in_set(right@, x);
                                             let lv: V::V = choose|lv: V::V| left@.contains((x, lv));
                                             let rv: V::V = choose|rv: V::V| right@.contains((x, rv));
-                                            // Veracity: NEEDED assert
                                             assert(tree@.contains((x, lv)));
-                                            // Veracity: NEEDED assert
                                             assert(tree@.contains((x, rv)));
                                         }
                                     };
                                 };
-                                // Veracity: NEEDED assert
                                 assert(root_key_set.disjoint(right_dom.filter(rank_pred_sel))) by {
-                                    // Veracity: NEEDED assert
                                     assert forall|x: K::V| !(root_key_set.contains(x) && #[trigger] right_dom.filter(rank_pred_sel).contains(x)) by {
                                         if root_key_set.contains(x) && right_dom.contains(x) {
                                             lemma_map_contains_pair_in_set(right@, x);
                                             let rv: V::V = choose|rv: V::V| right@.contains((x, rv));
-                                            // Veracity: NEEDED assert
                                             assert(tree@.contains((x, rv)));
-                                            // Veracity: NEEDED assert
                                             assert(tree@.contains(root_pair@));
                                         }
                                     };
                                 };
                                 let lu = left_dom.union(root_key_set);
-                                // Veracity: NEEDED assert
                                 assert(lu.finite()) by {
                                     vstd::set_lib::lemma_len_union(left_dom, root_key_set);
                                 };
                                 right_dom.lemma_len_filter(rank_pred_sel);
                                 vstd::set_lib::lemma_len_union(left_dom, root_key_set);
-                                // Veracity: NEEDED assert
                                 assert(lu.len() == left_dom.len() + 1) by {
                                     vstd::set_lib::lemma_set_disjoint_lens(left_dom, root_key_set);
                                 };
@@ -2909,12 +2095,9 @@ pub mod OrdKeyMap {
         fn new() -> (empty: Self)
         {
             let inner = ParamBST::<Pair<K, V>>::new();
-            // Veracity: NEEDED proof block
             proof {
                 lemma_set_to_map_empty::<K::V, V::V>();
-                // Veracity: NEEDED assert
                 assert(spec_key_unique_pairs_set::<K::V, V::V>(inner@));
-                // Veracity: NEEDED assert
                 assert(spec_set_pair_view_generated::<K, V>(inner@));
                 lemma_pair_set_to_map_dom_finite(inner@);
             }
@@ -2926,7 +2109,6 @@ pub mod OrdKeyMap {
             ensures count == self@.dom().len(), self@.dom().finite()
         {
             let r = self.inner.size();
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_len(self.inner@);
                 lemma_pair_set_to_map_dom_finite(self.inner@);
@@ -2939,7 +2121,6 @@ pub mod OrdKeyMap {
             ensures is_empty == self@.dom().is_empty()
         {
             let r = self.inner.is_empty();
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(self.inner@);
                 lemma_pair_set_to_map_len(self.inner@);
@@ -2962,83 +2143,60 @@ pub mod OrdKeyMap {
             match existing {
                 Some(old_v) => {
                     // Key exists: replace with new value.
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_map_contains_pair_in_set(old_inner_view, k@);
                         let ghost v_chosen: V::V = choose|vv: V::V| old_inner_view.contains((k@, vv));
                         lemma_pair_in_set_map_contains(old_inner_view, k@, v_chosen);
-                        // Veracity: NEEDED assert
                         assert(old_inner_view.contains((k@, old_v@)));
                     }
                     // Delete old pair, insert new pair.
                     let k_del = k.clone_plus();
                     let ov_del = old_v.clone_plus();
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_cloned_view_eq(k, k_del);
                         lemma_cloned_view_eq(old_v, ov_del);
                     }
                     self.inner.delete(&Pair(k_del, ov_del));
                     let ghost mid_inner_view = self.inner@;
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_set_to_map_remove_pair(old_inner_view, k@, old_v@);
                         lemma_key_unique_remove(old_inner_view, (k@, old_v@));
-                        // Veracity: NEEDED assert
                         assert(!spec_pair_set_to_map(mid_inner_view).dom().contains(k@));
                     }
                     let k_clone = k.clone_plus();
-                    // Veracity: NEEDED proof block
                     proof { lemma_cloned_view_eq(k, k_clone); }
                     self.inner.insert(Pair(k_clone, v));
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_set_to_map_insert(mid_inner_view, k@, v@);
                         lemma_key_unique_insert(mid_inner_view, k@, v@);
                         lemma_pair_set_to_map_dom_finite(self.inner@);
                         let ghost new_map = spec_pair_set_to_map(self.inner@);
-                        // Veracity: NEEDED assert
                         assert(new_map =~= old_map.remove(k@).insert(k@, v@));
-                        // Veracity: NEEDED assert
                         assert(new_map.contains_key(k@));
-                        // Veracity: NEEDED assert
                         assert(new_map[k@] == v@);
-                        // Veracity: NEEDED assert
                         assert(new_map.dom() =~= old_map.dom().insert(k@)) by {
-                            // Veracity: NEEDED assert
                             assert(old_map.dom().contains(k@));
-                            // Veracity: NEEDED assert
                             assert(old_map.remove(k@).insert(k@, v@).dom()
                                 =~= old_map.dom().remove(k@).insert(k@));
-                            // Veracity: NEEDED assert
                             assert(old_map.dom().remove(k@).insert(k@)
                                 =~= old_map.dom());
                         };
-                        // Veracity: NEEDED assert
                         assert forall|key: K::V| key != k@ && #[trigger] old_map.contains_key(key)
                             implies new_map[key] == old_map[key]
                         by {
-                            // Veracity: NEEDED assert
                             assert(new_map[key] == old_map.remove(k@).insert(k@, v@)[key]);
                         };
-                        // Veracity: NEEDED assert
                         assert(self.inner@.len() <= old_inner_view.len());
-                        // Veracity: NEEDED assert
                         assert(self.inner@.len() < usize::MAX as nat);
                         // View generation maintained.
-                        // Veracity: NEEDED assert
                         assert(spec_set_pair_view_generated::<K, V>(self.inner@)) by {
-                            // Veracity: NEEDED assert
                             assert forall|elem: (K::V, V::V)| self.inner@.contains(elem)
                                 implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
                                 if elem == (k@, v@) {
-                                    // Veracity: NEEDED assert
                                     assert(Pair(k_clone, v)@ == elem);
                                 } else {
-                                    // Veracity: NEEDED assert
                                     assert(mid_inner_view.contains(elem));
                                     // mid_inner_view subset_of old_inner_view.
-                                    // Veracity: NEEDED assert
                                     assert(old_inner_view.contains(elem));
                                 }
                             };
@@ -3048,13 +2206,11 @@ pub mod OrdKeyMap {
                 None => {
                     // Key does not exist: insert new pair.
                     self.inner.insert(Pair(k, v));
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_set_to_map_insert(old_inner_view, k@, v@);
                         lemma_pair_set_to_map_dom_finite(self.inner@);
                         lemma_key_unique_insert(old_inner_view, k@, v@);
                         lemma_pair_set_to_map_len(old_inner_view);
-                        // Veracity: NEEDED assert
                         assert(self.inner@.len() < usize::MAX as nat);
                         // View generation maintained.
                         lemma_view_gen_insert::<K, V>(old_inner_view, Pair(k, v));
@@ -3073,13 +2229,11 @@ pub mod OrdKeyMap {
                 Some(v) => {
                     let v_clone = v.clone_plus();
                     let k_clone = k.clone_plus();
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_cloned_view_eq(*k, k_clone);
                         lemma_cloned_view_eq(v, v_clone);
                     }
                     self.inner.delete(&Pair(k_clone, v_clone));
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_set_to_map_remove_pair(old_inner_view, k@, v@);
                         lemma_pair_set_to_map_dom_finite(self.inner@);
@@ -3089,9 +2243,7 @@ pub mod OrdKeyMap {
                     }
                 },
                 None => {
-                    // Veracity: NEEDED proof block
                     proof {
-                        // Veracity: NEEDED assert
                         assert(self@ =~= old_map.remove(k@));
                         lemma_pair_set_to_map_dom_finite(self.inner@);
                     }
@@ -3105,37 +2257,31 @@ pub mod OrdKeyMap {
             let (left_bst, found, right_bst) = ordkeymap_split(&self.inner, k);
             let left = OrdKeyMap { inner: left_bst };
             let right = OrdKeyMap { inner: right_bst };
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(left_bst@);
                 lemma_pair_set_to_map_dom_finite(right_bst@);
                 // Map-level ensures from BST-level ensures.
                 // Left: every key in left map is in self map with same value.
-                // Veracity: NEEDED assert
                 assert forall|key: K::V| #[trigger] left@.contains_key(key)
                     implies self@.contains_key(key) && left@[key] == self@[key]
                 by {
                     lemma_map_contains_pair_in_set(left_bst@, key);
                     let vv: V::V = choose|vv: V::V| left_bst@.contains((key, vv));
-                    // Veracity: NEEDED assert
                     assert(self.inner@.contains((key, vv)));
                     lemma_pair_in_set_map_contains(self.inner@, key, vv);
                     lemma_pair_in_set_map_contains(left_bst@, key, vv);
                 };
                 // Right: every key in right map is in self map with same value.
-                // Veracity: NEEDED assert
                 assert forall|key: K::V| #[trigger] right@.contains_key(key)
                     implies self@.contains_key(key) && right@[key] == self@[key]
                 by {
                     lemma_map_contains_pair_in_set(right_bst@, key);
                     let vv: V::V = choose|vv: V::V| right_bst@.contains((key, vv));
-                    // Veracity: NEEDED assert
                     assert(self.inner@.contains((key, vv)));
                     lemma_pair_in_set_map_contains(self.inner@, key, vv);
                     lemma_pair_in_set_map_contains(right_bst@, key, vv);
                 };
                 // Completeness: every key in self is in left, right, or equals k.
-                // Veracity: NEEDED assert
                 assert forall|key: K::V| self@.contains_key(key)
                     implies #[trigger] left@.contains_key(key) || right@.contains_key(key) || key == k@
                 by {
@@ -3149,18 +2295,14 @@ pub mod OrdKeyMap {
                     }
                 };
                 // wf propagation.
-                // Veracity: NEEDED assert
                 assert(left.inner@.len() < usize::MAX as nat) by {
                     vstd::set_lib::lemma_len_subset(left_bst@, self.inner@);
                 };
-                // Veracity: NEEDED assert
                 assert(right.inner@.len() < usize::MAX as nat) by {
                     vstd::set_lib::lemma_len_subset(right_bst@, self.inner@);
                 };
                 // Disjointness: BST sets are disjoint, so map domains are disjoint.
-                // Veracity: NEEDED assert
                 assert(left@.dom().disjoint(right@.dom())) by {
-                    // Veracity: NEEDED assert
                     assert forall|key: K::V|
                         left@.dom().contains(key) && right@.dom().contains(key)
                         implies false
@@ -3170,11 +2312,8 @@ pub mod OrdKeyMap {
                         let lv: V::V = choose|lv: V::V| left_bst@.contains((key, lv));
                         let rv: V::V = choose|rv: V::V| right_bst@.contains((key, rv));
                         // left_bst and right_bst are disjoint sets.
-                        // Veracity: NEEDED assert
                         assert(left_bst@.disjoint(right_bst@));
-                        // Veracity: NEEDED assert
                         assert(left_bst@.contains((key, lv)));
-                        // Veracity: NEEDED assert
                         assert(right_bst@.contains((key, rv)));
                         // But they share key, so both contain pairs with that key.
                         // BST split ensures left keys < k and right keys > k, so no overlap.
@@ -3190,7 +2329,6 @@ pub mod OrdKeyMap {
             let ghost self_tree = self.inner@;
             let ghost self_map = self@;
             let ghost other_map = other@;
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_len(self_tree);
                 lemma_pair_set_to_map_len(other.inner@);
@@ -3199,20 +2337,15 @@ pub mod OrdKeyMap {
             let self_len = self_sorted.length();
             let mut new_tree = ParamBST::<Pair<K, V>>::new();
             let mut i: usize = 0;
-            // Veracity: NEEDED proof block
             proof {
                 lemma_sorted_keys_pairwise_distinct(self_tree, self_sorted@);
                 lemma_key_unique_empty::<K::V, V::V>();
-                // Veracity: NEEDED assert
                 assert(spec_set_pair_view_generated::<K, V>(new_tree@)) by {
-                    // Veracity: NEEDED assert
                     assert forall|elem: (K::V, V::V)| new_tree@.contains(elem)
                         implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-                        // Veracity: NEEDED assert
                         assert(false);
                     };
                 };
-                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
             while i < self_len
@@ -3254,28 +2387,22 @@ pub mod OrdKeyMap {
                 decreases self_len - i,
             {
                 let pair = self_sorted.nth(i);
-                // Veracity: NEEDED proof block
                 proof { reveal(obeys_view_eq); }
                 let other_find = other.find(&pair.0);
                 let ghost old_new_tree_view = new_tree@;
-                // Veracity: NEEDED proof block
                 proof {
-                    // Veracity: NEEDED assert
                     assert(self_sorted@.contains(self_sorted@[i as int])) by { assert(self_sorted@[i as int] == self_sorted@[i as int]); };
                     lemma_pair_in_set_map_contains(self_tree, self_sorted@[i as int].0, self_sorted@[i as int].1);
                 }
                 match other_find {
                     Some(ov) => {
                         let key_clone = pair.0.clone_plus();
-                        // Veracity: NEEDED proof block
                         proof { lemma_cloned_view_eq(pair.0, key_clone); }
                         new_tree.insert(Pair(key_clone, ov));
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_view_gen_insert::<K, V>(old_new_tree_view, Pair(key_clone, ov));
                             lemma_key_unique_insert(old_new_tree_view, self_sorted@[i as int].0, ov@);
                             lemma_pair_in_set_map_contains(new_tree@, self_sorted@[i as int].0, ov@);
-                            // Veracity: NEEDED assert
                             assert forall|j2: int| 0 <= j2 < i as int
                                 implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[j2].0)
                             by {
@@ -3283,7 +2410,6 @@ pub mod OrdKeyMap {
                                 let w: V::V = choose|w: V::V| old_new_tree_view.contains((self_sorted@[j2].0, w));
                                 lemma_pair_in_set_map_contains(new_tree@, self_sorted@[j2].0, w);
                             };
-                            // Veracity: NEEDED assert
                             assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
                                 self_map.dom().contains(p.0) &&
                                 ((!other_map.dom().contains(p.0) && p.1 == self_map[p.0])
@@ -3297,15 +2423,12 @@ pub mod OrdKeyMap {
                     },
                     None => {
                         let cloned = pair.clone_plus();
-                        // Veracity: NEEDED proof block
                         proof { lemma_cloned_view_eq(*pair, cloned); }
                         new_tree.insert(cloned);
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
                             lemma_key_unique_insert(old_new_tree_view, self_sorted@[i as int].0, self_sorted@[i as int].1);
                             lemma_pair_in_set_map_contains(new_tree@, self_sorted@[i as int].0, self_sorted@[i as int].1);
-                            // Veracity: NEEDED assert
                             assert forall|j2: int| 0 <= j2 < i as int
                                 implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[j2].0)
                             by {
@@ -3313,7 +2436,6 @@ pub mod OrdKeyMap {
                                 let w: V::V = choose|w: V::V| old_new_tree_view.contains((self_sorted@[j2].0, w));
                                 lemma_pair_in_set_map_contains(new_tree@, self_sorted@[j2].0, w);
                             };
-                            // Veracity: NEEDED assert
                             assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
                                 self_map.dom().contains(p.0) &&
                                 ((!other_map.dom().contains(p.0) && p.1 == self_map[p.0])
@@ -3332,24 +2454,19 @@ pub mod OrdKeyMap {
             let other_sorted = other.inner.in_order();
             let other_len = other_sorted.length();
             let mut j: usize = 0;
-            // Veracity: NEEDED proof block
             proof {
                 lemma_sorted_keys_pairwise_distinct(other.inner@, other_sorted@);
-                // Veracity: NEEDED assert
                 assert forall|kv: K::V| #[trigger] self_map.dom().contains(kv)
                     implies spec_pair_set_to_map(new_tree@).dom().contains(kv)
                 by {
                     lemma_map_contains_pair_in_set(self_tree, kv);
                     let vv: V::V = choose|vv: V::V| self_tree.contains((kv, vv));
-                    // Veracity: NEEDED assert
                     assert(self_sorted@.contains((kv, vv)));
                     let jx: int = choose|jx: int| 0 <= jx < self_sorted@.len() as int && self_sorted@[jx] == (kv, vv);
-                    // Veracity: NEEDED assert
                     assert(spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[jx].0));
                 };
                 lemma_pair_set_to_map_len(self_tree);
                 lemma_pair_set_to_map_len(other.inner@);
-                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
             while j < other_len
@@ -3398,29 +2515,23 @@ pub mod OrdKeyMap {
                 decreases other_len - j,
             {
                 let pair = other_sorted.nth(j);
-                // Veracity: NEEDED proof block
                 proof { reveal(obeys_view_eq); }
                 let in_self = self.find(&pair.0);
                 match in_self {
                     None => {
                         let cloned = pair.clone_plus();
                         let ghost old_new_tree_view = new_tree@;
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_cloned_view_eq(*pair, cloned);
-                            // Veracity: NEEDED assert
                             assert(other_sorted@.contains(other_sorted@[j as int])) by {
-                                // Veracity: NEEDED assert
                                 assert(other_sorted@[j as int] == other_sorted@[j as int]);
                             };
                             lemma_pair_in_set_map_contains(other.inner@, other_sorted@[j as int].0, other_sorted@[j as int].1);
                         }
                         new_tree.insert(cloned);
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
                             lemma_key_unique_insert(old_new_tree_view, other_sorted@[j as int].0, other_sorted@[j as int].1);
-                            // Veracity: NEEDED assert
                             assert forall|kv: K::V| #[trigger] self_map.dom().contains(kv)
                                 implies spec_pair_set_to_map(new_tree@).dom().contains(kv)
                             by {
@@ -3429,7 +2540,6 @@ pub mod OrdKeyMap {
                                 lemma_pair_in_set_map_contains(new_tree@, kv, w);
                             };
                             lemma_pair_in_set_map_contains(new_tree@, other_sorted@[j as int].0, other_sorted@[j as int].1);
-                            // Veracity: NEEDED assert
                             assert forall|j2: int| 0 <= j2 < j as int + 1
                                 && !self_map.dom().contains(other_sorted@[j2].0)
                                 implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(other_sorted@[j2].0)
@@ -3441,7 +2551,6 @@ pub mod OrdKeyMap {
                                     lemma_pair_in_set_map_contains(new_tree@, other_sorted@[j2].0, w);
                                 }
                             };
-                            // Veracity: NEEDED assert
                             assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
                                 (self_map.dom().contains(p.0) &&
                                     ((!other_map.dom().contains(p.0) && p.1 == self_map[p.0])
@@ -3459,20 +2568,16 @@ pub mod OrdKeyMap {
                 j += 1;
             }
             let combined = OrdKeyMap { inner: new_tree };
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(new_tree@);
                 lemma_pair_set_to_map_dom_finite(self_tree);
                 lemma_pair_set_to_map_dom_finite(other.inner@);
-                // Veracity: NEEDED assert
                 assert(combined@.dom() =~= self_map.dom().union(other_map.dom())) by {
-                    // Veracity: NEEDED assert
                     assert forall|kv: K::V| combined@.dom().contains(kv)
                         implies #[trigger] self_map.dom().union(other_map.dom()).contains(kv)
                     by {
                         lemma_map_contains_pair_in_set(new_tree@, kv);
                     };
-                    // Veracity: NEEDED assert
                     assert forall|kv: K::V| #[trigger] self_map.dom().union(other_map.dom()).contains(kv)
                         implies combined@.dom().contains(kv)
                     by {
@@ -3480,15 +2585,12 @@ pub mod OrdKeyMap {
                         } else {
                             lemma_map_contains_pair_in_set(other.inner@, kv);
                             let vv: V::V = choose|vv: V::V| other.inner@.contains((kv, vv));
-                            // Veracity: NEEDED assert
                             assert(other_sorted@.contains((kv, vv)));
                             let jx: int = choose|jx: int| 0 <= jx < other_sorted@.len() as int && other_sorted@[jx] == (kv, vv);
-                            // Veracity: NEEDED assert
                             assert(!self_map.dom().contains(other_sorted@[jx].0));
                         }
                     };
                 };
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] self_map.contains_key(k) && !other_map.contains_key(k)
                     implies combined@[k] == self_map[k]
                 by {
@@ -3496,7 +2598,6 @@ pub mod OrdKeyMap {
                     let vv: V::V = choose|vv: V::V| new_tree@.contains((k, vv));
                     lemma_pair_in_set_map_contains(new_tree@, k, vv);
                 };
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] other_map.contains_key(k)
                     implies combined@[k] == other_map[k]
                 by {
@@ -3518,25 +2619,18 @@ pub mod OrdKeyMap {
             let len = sorted.length();
             let mut new_tree = ParamBST::<Pair<K, V>>::new();
             let mut i: usize = 0;
-            // Veracity: NEEDED proof block
             proof {
-                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<V>());
-                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<K>());
                 lemma_pair_set_to_map_dom_finite(self_tree);
                 lemma_sorted_keys_pairwise_distinct(self_tree, sorted@);
                 lemma_key_unique_empty::<K::V, V::V>();
-                // Veracity: NEEDED assert
                 assert(spec_set_pair_view_generated::<K, V>(new_tree@)) by {
-                    // Veracity: NEEDED assert
                     assert forall|elem: (K::V, V::V)| new_tree@.contains(elem)
                         implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-                        // Veracity: NEEDED assert
                         assert(false);
                     };
                 };
-                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
             while i < len
@@ -3578,54 +2672,42 @@ pub mod OrdKeyMap {
                 decreases len - i,
             {
                 let pair = sorted.nth(i);
-                // Veracity: NEEDED proof block
                 proof { reveal(obeys_view_eq); }
                 let other_find = other.find(&pair.0);
                 match other_find {
                     Some(_) => {
                         let cloned = pair.clone_plus();
                         let ghost old_new_tree_view = new_tree@;
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_cloned_view_eq(*pair, cloned);
                             // Freshness proof.
-                            // Veracity: NEEDED assert
                             assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0)) by {
                                 if spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0) {
                                     lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[i as int].0);
                                     let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((sorted@[i as int].0, vv));
                                     let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == (#[trigger] sorted@[jj]).0;
-                                    // Veracity: NEEDED assert
                                     assert(false);
                                 }
                             };
-                            // Veracity: NEEDED assert
                             assert(sorted@.contains(sorted@[i as int])) by { assert(sorted@[i as int] == sorted@[i as int]); };
-                            // Veracity: NEEDED assert
                             assert(self_tree.contains(sorted@[i as int]));
                         }
                         new_tree.insert(cloned);
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
-                            // Veracity: NEEDED assert
                             assert(new_tree@.len() <= i as nat + 1);
-                            // Veracity: NEEDED assert
                             assert(new_tree@.len() < usize::MAX as nat);
                             lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, sorted@[i as int].1);
                             // Completeness maintenance.
                             lemma_pair_in_set_map_contains(new_tree@, sorted@[i as int].0, sorted@[i as int].1);
-                            // Veracity: NEEDED assert
                             assert forall|j2: int| 0 <= j2 < i as int && other_map.dom().contains(sorted@[j2].0)
                                 implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j2].0)
                             by {
                                 lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[j2].0);
                                 let w: V::V = choose|w: V::V| old_new_tree_view.contains((sorted@[j2].0, w));
-                                // Veracity: NEEDED assert
                                 assert(new_tree@.contains((sorted@[j2].0, w)));
                                 lemma_pair_in_set_map_contains(new_tree@, sorted@[j2].0, w);
                             };
-                            // Veracity: NEEDED assert
                             assert(new_tree@.contains(sorted@[i as int]));
                         }
                     },
@@ -3634,63 +2716,48 @@ pub mod OrdKeyMap {
                 i += 1;
             }
             let common = OrdKeyMap { inner: new_tree };
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(new_tree@);
                 lemma_pair_set_to_map_dom_finite(self_tree);
                 // Domain proof: common@.dom() =~= self_map.dom().intersect(other_map.dom()).
-                // Veracity: NEEDED assert
                 assert(common@.dom() =~= self_map.dom().intersect(other_map.dom())) by {
                     // Forward: key in common → key in self AND other.
-                    // Veracity: NEEDED assert
                     assert forall|k: K::V| #[trigger] common@.dom().contains(k)
                         implies self_map.dom().contains(k) && other_map.dom().contains(k)
                     by {
                         lemma_map_contains_pair_in_set(new_tree@, k);
                         let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                        // Veracity: NEEDED assert
                         assert(self_tree.contains((k, v)));
                         lemma_pair_in_set_map_contains(self_tree, k, v);
                     };
                     // Backward: key in self AND other → key in common.
-                    // Veracity: NEEDED assert
                     assert forall|k: K::V|
                         self_map.dom().contains(k) && other_map.dom().contains(k)
                         implies #[trigger] common@.dom().contains(k)
                     by {
                         lemma_map_contains_pair_in_set(self_tree, k);
                         let v: V::V = choose|v: V::V| self_tree.contains((k, v));
-                        // Veracity: NEEDED assert
                         assert(sorted@.contains((k, v)));
                         let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (k, v);
-                        // Veracity: NEEDED assert
                         assert(spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j].0));
-                        // Veracity: NEEDED assert
                         assert(sorted@[j].0 == k);
                     };
                 };
                 // Value proof: values come from self.
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] common@.contains_key(k)
                     implies common@[k] == self_map[k]
                 by {
                     lemma_map_contains_pair_in_set(new_tree@, k);
                     let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                    // Veracity: NEEDED assert
                     assert(self_tree.contains((k, v)));
                     lemma_pair_in_set_map_contains(new_tree@, k, v);
                     lemma_pair_in_set_map_contains(self_tree, k, v);
                 };
                 // WF.
-                // Veracity: NEEDED assert
                 assert(new_tree@.len() < usize::MAX as nat);
-                // Veracity: NEEDED assert
                 assert(spec_pair_key_determines_order::<K, V>());
-                // Veracity: NEEDED assert
                 assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                // Veracity: NEEDED assert
                 assert(view_ord_consistent::<K>());
-                // Veracity: NEEDED assert
                 assert(obeys_feq_fulls::<K, V>());
             }
             common
@@ -3702,7 +2769,6 @@ pub mod OrdKeyMap {
             let ghost self_tree = self.inner@;
             let ghost self_map = self@;
             let ghost other_map = other@;
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_len(self_tree);
                 lemma_pair_set_to_map_len(other.inner@);
@@ -3712,11 +2778,9 @@ pub mod OrdKeyMap {
             let self_len = self_sorted.length();
             let mut new_tree = ParamBST::<Pair<K, V>>::new();
             let mut i: usize = 0;
-            // Veracity: NEEDED proof block
             proof {
                 lemma_sorted_keys_pairwise_distinct(self_tree, self_sorted@);
                 lemma_key_unique_empty::<K::V, V::V>();
-                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
             while i < self_len
@@ -3761,15 +2825,12 @@ pub mod OrdKeyMap {
                 decreases self_len - i,
             {
                 let pair = self_sorted.nth(i);
-                // Veracity: NEEDED proof block
                 proof { reveal(obeys_view_eq); }
                 let other_find = other.find(&pair.0);
                 let ghost old_new_tree_view = new_tree@;
-                // Veracity: NEEDED proof block
                 proof {
                     // Freshness: self_sorted@[i].0 not in new_tree.
                     // Link sorted entry to self_tree.
-                    // Veracity: NEEDED assert
                     assert(self_sorted@.contains(self_sorted@[i as int])) by { assert(self_sorted@[i as int] == self_sorted@[i as int]); };
                     lemma_pair_in_set_map_contains(self_tree, self_sorted@[i as int].0, self_sorted@[i as int].1);
                 }
@@ -3778,16 +2839,13 @@ pub mod OrdKeyMap {
                         // Both maps have this key — use combine.
                         let combined_v = combine(&pair.1, &ov);
                         let key_clone = pair.0.clone_plus();
-                        // Veracity: NEEDED proof block
                         proof { lemma_cloned_view_eq(pair.0, key_clone); }
                         new_tree.insert(Pair(key_clone, combined_v));
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_view_gen_insert::<K, V>(old_new_tree_view, Pair(key_clone, combined_v));
                             lemma_key_unique_insert(old_new_tree_view, self_sorted@[i as int].0, combined_v@);
                             // Completeness maintenance.
                             lemma_pair_in_set_map_contains(new_tree@, self_sorted@[i as int].0, combined_v@);
-                            // Veracity: NEEDED assert
                             assert forall|j2: int| 0 <= j2 < i as int
                                 implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[j2].0)
                             by {
@@ -3796,7 +2854,6 @@ pub mod OrdKeyMap {
                                 lemma_pair_in_set_map_contains(new_tree@, self_sorted@[j2].0, w);
                             };
                             // Value tracking maintenance.
-                            // Veracity: NEEDED assert
                             assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
                                 self_map.dom().contains(p.0) &&
                                 ((!other_map.dom().contains(p.0) && self_tree.contains(p))
@@ -3813,16 +2870,13 @@ pub mod OrdKeyMap {
                     None => {
                         // Self-only — keep self's value.
                         let cloned = pair.clone_plus();
-                        // Veracity: NEEDED proof block
                         proof { lemma_cloned_view_eq(*pair, cloned); }
                         new_tree.insert(cloned);
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
                             lemma_key_unique_insert(old_new_tree_view, self_sorted@[i as int].0, self_sorted@[i as int].1);
                             // Completeness maintenance.
                             lemma_pair_in_set_map_contains(new_tree@, self_sorted@[i as int].0, self_sorted@[i as int].1);
-                            // Veracity: NEEDED assert
                             assert forall|j2: int| 0 <= j2 < i as int
                                 implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[j2].0)
                             by {
@@ -3831,7 +2885,6 @@ pub mod OrdKeyMap {
                                 lemma_pair_in_set_map_contains(new_tree@, self_sorted@[j2].0, w);
                             };
                             // Value tracking maintenance: self-only entry.
-                            // Veracity: NEEDED assert
                             assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
                                 self_map.dom().contains(p.0) &&
                                 ((!other_map.dom().contains(p.0) && self_tree.contains(p))
@@ -3852,18 +2905,15 @@ pub mod OrdKeyMap {
             let other_sorted = other.inner.in_order();
             let other_len = other_sorted.length();
             let mut j: usize = 0;
-            // Veracity: NEEDED proof block
             proof {
                 lemma_sorted_keys_pairwise_distinct(other.inner@, other_sorted@);
                 // Bridge: old keys preserved (Phase 1 completeness → per-key form).
-                // Veracity: NEEDED assert
                 assert forall|kv: K::V| #[trigger] self_map.dom().contains(kv)
                     implies spec_pair_set_to_map(new_tree@).dom().contains(kv)
                 by {
                     lemma_map_contains_pair_in_set(self_tree, kv);
                     let vv: V::V = choose|vv: V::V| self_tree.contains((kv, vv));
                     let jx: int = choose|jx: int| 0 <= jx < self_sorted@.len() as int && self_sorted@[jx] == (kv, vv);
-                    // Veracity: NEEDED assert
                     assert(spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[jx].0));
                 };
                 lemma_pair_set_to_map_len(self_tree);
@@ -3917,30 +2967,25 @@ pub mod OrdKeyMap {
                 decreases other_len - j,
             {
                 let pair = other_sorted.nth(j);
-                // Veracity: NEEDED proof block
                 proof { reveal(obeys_view_eq); }
                 let in_self = self.find(&pair.0);
                 match in_self {
                     None => {
                         let cloned = pair.clone_plus();
                         let ghost old_new_tree_view = new_tree@;
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_cloned_view_eq(*pair, cloned);
                             // Freshness: other_sorted@[j].0 not already in new_tree.
                             // Link sorted entry to other.inner@.
-                            // Veracity: NEEDED assert
                             assert(other_sorted@.contains(other_sorted@[j as int])) by {
                             };
                             lemma_pair_in_set_map_contains(other.inner@, other_sorted@[j as int].0, other_sorted@[j as int].1);
                         }
                         new_tree.insert(cloned);
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
                             lemma_key_unique_insert(old_new_tree_view, other_sorted@[j as int].0, other_sorted@[j as int].1);
                             // Old keys preserved maintenance.
-                            // Veracity: NEEDED assert
                             assert forall|kv: K::V| #[trigger] self_map.dom().contains(kv)
                                 implies spec_pair_set_to_map(new_tree@).dom().contains(kv)
                             by {
@@ -3949,15 +2994,11 @@ pub mod OrdKeyMap {
                                 lemma_pair_in_set_map_contains(new_tree@, kv, w);
                             };
                             // Other completeness maintenance.
-                            // Veracity: NEEDED assert
                             assert(other_sorted@.contains(other_sorted@[j as int])) by {
-                                // Veracity: NEEDED assert
                                 assert(other_sorted@[j as int] == other_sorted@[j as int]);
                             };
-                            // Veracity: NEEDED assert
                             assert(other.inner@.contains(other_sorted@[j as int]));
                             lemma_pair_in_set_map_contains(new_tree@, other_sorted@[j as int].0, other_sorted@[j as int].1);
-                            // Veracity: NEEDED assert
                             assert forall|j2: int| 0 <= j2 < j as int + 1
                                 && !self_map.dom().contains(other_sorted@[j2].0)
                                 implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(other_sorted@[j2].0)
@@ -3966,13 +3007,11 @@ pub mod OrdKeyMap {
                                 } else {
                                     lemma_map_contains_pair_in_set(old_new_tree_view, other_sorted@[j2].0);
                                     let w: V::V = choose|w: V::V| old_new_tree_view.contains((other_sorted@[j2].0, w));
-                                    // Veracity: NEEDED assert
                                     assert(new_tree@.contains((other_sorted@[j2].0, w)));
                                     lemma_pair_in_set_map_contains(new_tree@, other_sorted@[j2].0, w);
                                 }
                             };
                             // Value tracking maintenance.
-                            // Veracity: NEEDED assert
                             assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
                                 (self_map.dom().contains(p.0) &&
                                     ((!other_map.dom().contains(p.0) && self_tree.contains(p))
@@ -3983,13 +3022,9 @@ pub mod OrdKeyMap {
                             by {
                                 if old_new_tree_view.contains(p) {
                                 } else {
-                                    // Veracity: NEEDED assert
                                     assert(p.0 == other_sorted@[j as int].0);
-                                    // Veracity: NEEDED assert
                                     assert(p.1 == other_sorted@[j as int].1);
-                                    // Veracity: NEEDED assert
                                     assert(!self_map.dom().contains(p.0));
-                                    // Veracity: NEEDED assert
                                     assert(other.inner@.contains(p));
                                 }
                             };
@@ -4000,72 +3035,58 @@ pub mod OrdKeyMap {
                 j += 1;
             }
             let combined = OrdKeyMap { inner: new_tree };
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(new_tree@);
                 lemma_pair_set_to_map_dom_finite(self_tree);
                 lemma_pair_set_to_map_dom_finite(other.inner@);
                 // 1. Domain: combined@.dom() =~= self_map.dom().union(other_map.dom()).
-                // Veracity: NEEDED assert
                 assert(combined@.dom() =~= self_map.dom().union(other_map.dom())) by {
-                    // Veracity: NEEDED assert
                     assert forall|kv: K::V| combined@.dom().contains(kv)
                         implies #[trigger] self_map.dom().union(other_map.dom()).contains(kv)
                     by {
                         lemma_map_contains_pair_in_set(new_tree@, kv);
                         let vv: V::V = choose|vv: V::V| new_tree@.contains((kv, vv));
                         if !self_map.dom().contains(kv) {
-                            // Veracity: NEEDED assert
                             assert(other.inner@.contains((kv, vv)));
                             lemma_pair_in_set_map_contains(other.inner@, kv, vv);
                         }
                     };
-                    // Veracity: NEEDED assert
                     assert forall|kv: K::V| #[trigger] self_map.dom().union(other_map.dom()).contains(kv)
                         implies combined@.dom().contains(kv)
                     by {
                         if self_map.dom().contains(kv) {
                         } else {
-                            // Veracity: NEEDED assert
                             assert(other_map.dom().contains(kv));
                             lemma_map_contains_pair_in_set(other.inner@, kv);
                             let vv: V::V = choose|vv: V::V| other.inner@.contains((kv, vv));
-                            // Veracity: NEEDED assert
                             assert(other_sorted@.contains((kv, vv)));
                             let jx: int = choose|jx: int| 0 <= jx < other_sorted@.len() as int && other_sorted@[jx] == (kv, vv);
-                            // Veracity: NEEDED assert
                             assert(!self_map.dom().contains(other_sorted@[jx].0));
-                            // Veracity: NEEDED assert
                             assert(spec_pair_set_to_map(new_tree@).dom().contains(other_sorted@[jx].0));
                         }
                     };
                 };
                 // 2. Self-only values.
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] self_map.contains_key(k) && !other_map.contains_key(k)
                     implies combined@[k] == self_map[k]
                 by {
                     lemma_map_contains_pair_in_set(new_tree@, k);
                     let vv: V::V = choose|vv: V::V| new_tree@.contains((k, vv));
-                    // Veracity: NEEDED assert
                     assert(self_tree.contains((k, vv)));
                     lemma_pair_in_set_map_contains(new_tree@, k, vv);
                     lemma_pair_in_set_map_contains(self_tree, k, vv);
                 };
                 // 3. Other-only values.
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| !self_map.contains_key(k) && #[trigger] other_map.contains_key(k)
                     implies combined@[k] == other_map[k]
                 by {
                     lemma_map_contains_pair_in_set(new_tree@, k);
                     let vv: V::V = choose|vv: V::V| new_tree@.contains((k, vv));
-                    // Veracity: NEEDED assert
                     assert(other.inner@.contains((k, vv)));
                     lemma_pair_in_set_map_contains(new_tree@, k, vv);
                     lemma_pair_in_set_map_contains(other.inner@, k, vv);
                 };
                 // 4. Both values — combined via combine.
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] self_map.contains_key(k) && other_map.contains_key(k) implies
                     (exists|v1: V, v2: V, r: V|
                         v1@ == self_map[k] && v2@ == other_map[k]
@@ -4077,7 +3098,6 @@ pub mod OrdKeyMap {
                     lemma_pair_in_set_map_contains(new_tree@, k, vv);
                 };
                 // 5. wf.
-                // Veracity: NEEDED assert
                 assert(new_tree@.len() < usize::MAX as nat);
             }
             combined
@@ -4093,25 +3113,18 @@ pub mod OrdKeyMap {
             let len = sorted.length();
             let mut new_tree = ParamBST::<Pair<K, V>>::new();
             let mut i: usize = 0;
-            // Veracity: NEEDED proof block
             proof {
-                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<V>());
-                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<K>());
                 lemma_pair_set_to_map_dom_finite(self_tree);
                 lemma_sorted_keys_pairwise_distinct(self_tree, sorted@);
                 lemma_key_unique_empty::<K::V, V::V>();
-                // Veracity: NEEDED assert
                 assert(spec_set_pair_view_generated::<K, V>(new_tree@)) by {
-                    // Veracity: NEEDED assert
                     assert forall|elem: (K::V, V::V)| new_tree@.contains(elem)
                         implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-                        // Veracity: NEEDED assert
                         assert(false);
                     };
                 };
-                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
             while i < len
@@ -4158,75 +3171,56 @@ pub mod OrdKeyMap {
                 decreases len - i,
             {
                 let pair = sorted.nth(i);
-                // Veracity: NEEDED proof block
                 proof { reveal(obeys_view_eq); }
                 let other_find = other.find(&pair.0);
                 match other_find {
                     Some(other_v) => {
                         let combined_v = combine(&pair.1, &other_v);
                         let key_clone = pair.0.clone_plus();
-                        // Veracity: NEEDED proof block
                         proof {
-                            // Veracity: NEEDED assert
                             assert(obeys_feq_full_trigger::<K>());
-                            // Veracity: NEEDED assert
                             assert(key_clone@ == pair.0@);
                         }
                         let ghost old_new_tree_view = new_tree@;
-                        // Veracity: NEEDED proof block
                         proof {
-                            // Veracity: NEEDED assert
                             assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0)) by {
                                 if spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0) {
                                     lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[i as int].0);
                                     let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((sorted@[i as int].0, vv));
                                     let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == (#[trigger] sorted@[jj]).0;
-                                    // Veracity: NEEDED assert
                                     assert(false);
                                 }
                             };
                             // Link pair values.
-                            // Veracity: NEEDED assert
                             assert(sorted@.contains(sorted@[i as int])) by { assert(sorted@[i as int] == sorted@[i as int]); };
-                            // Veracity: NEEDED assert
                             assert(self_tree.contains(sorted@[i as int]));
                             lemma_pair_in_set_map_contains(self_tree, sorted@[i as int].0, sorted@[i as int].1);
                         }
                         new_tree.insert(Pair(key_clone, combined_v));
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_view_gen_insert::<K, V>(old_new_tree_view, Pair(key_clone, combined_v));
-                            // Veracity: NEEDED assert
                             assert(new_tree@.len() <= i as nat + 1);
-                            // Veracity: NEEDED assert
                             assert(new_tree@.len() < usize::MAX as nat);
                             lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, combined_v@);
                             // Completeness maintenance for new key.
                             lemma_pair_in_set_map_contains(new_tree@, sorted@[i as int].0, combined_v@);
                             // Completeness for old keys: old entries preserved.
-                            // Veracity: NEEDED assert
                             assert forall|j2: int| 0 <= j2 < i as int && other_map.dom().contains(sorted@[j2].0)
                                 implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j2].0)
                             by {
                                 lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[j2].0);
                                 let w: V::V = choose|w: V::V| old_new_tree_view.contains((sorted@[j2].0, w));
-                                // Veracity: NEEDED assert
                                 assert(new_tree@.contains((sorted@[j2].0, w)));
                                 lemma_pair_in_set_map_contains(new_tree@, sorted@[j2].0, w);
                             };
                             // Value tracking for new key.
-                            // Veracity: NEEDED assert
                             assert(spec_pair_set_to_map(new_tree@)[sorted@[i as int].0] == combined_v@) by {
                                 lemma_pair_in_set_map_contains(new_tree@, sorted@[i as int].0, combined_v@);
                             };
-                            // Veracity: NEEDED assert
                             assert(pair.1@ == self_map[sorted@[i as int].0]);
-                            // Veracity: NEEDED assert
                             assert(other_v@ == other_map[sorted@[i as int].0]);
-                            // Veracity: NEEDED assert
                             assert(combine.ensures((&pair.1, &other_v), combined_v));
                             // Value tracking for old keys.
-                            // Veracity: NEEDED assert
                             assert forall|kv: K::V| #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(kv)
                                 implies (exists|v1: V, v2: V, r: V|
                                     v1@ == self_map[kv] && v2@ == other_map[kv]
@@ -4234,23 +3228,17 @@ pub mod OrdKeyMap {
                                     && spec_pair_set_to_map(new_tree@)[kv] == r@)
                             by {
                                 if kv == sorted@[i as int].0 {
-                                    // Veracity: NEEDED assert
                                     assert(pair.1@ == self_map[kv]);
-                                    // Veracity: NEEDED assert
                                     assert(other_v@ == other_map[kv]);
-                                    // Veracity: NEEDED assert
                                     assert(combine.ensures((&pair.1, &other_v), combined_v));
-                                    // Veracity: NEEDED assert
                                     assert(spec_pair_set_to_map(new_tree@)[kv] == combined_v@);
                                 } else {
                                     // Old entry — value unchanged.
                                     lemma_map_contains_pair_in_set(new_tree@, kv);
                                     let w: V::V = choose|w: V::V| new_tree@.contains((kv, w));
-                                    // Veracity: NEEDED assert
                                     assert(old_new_tree_view.contains((kv, w)));
                                     lemma_pair_in_set_map_contains(old_new_tree_view, kv, w);
                                     lemma_pair_in_set_map_contains(new_tree@, kv, w);
-                                    // Veracity: NEEDED assert
                                     assert(spec_pair_set_to_map(new_tree@)[kv] == spec_pair_set_to_map(old_new_tree_view)[kv]);
                                 }
                             };
@@ -4261,65 +3249,49 @@ pub mod OrdKeyMap {
                 i += 1;
             }
             let common = OrdKeyMap { inner: new_tree };
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(new_tree@);
                 lemma_pair_set_to_map_dom_finite(self_tree);
                 // Domain proof: common@.dom() =~= self_map.dom().intersect(other_map.dom()).
-                // Veracity: NEEDED assert
                 assert(common@.dom() =~= self_map.dom().intersect(other_map.dom())) by {
                     // Forward: key in common → key in self AND other.
-                    // Veracity: NEEDED assert
                     assert forall|k: K::V| #[trigger] common@.dom().contains(k)
                         implies self_map.dom().contains(k) && other_map.dom().contains(k)
                     by {
                         lemma_map_contains_pair_in_set(new_tree@, k);
                         let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
                         let j = choose|j: int| 0 <= j < i as int && (k, v).0 == (#[trigger] sorted@[j]).0;
-                        // Veracity: NEEDED assert
                         assert(sorted@.contains(sorted@[j])) by { assert(sorted@[j] == sorted@[j]); };
-                        // Veracity: NEEDED assert
                         assert(self_tree.contains(sorted@[j]));
                         lemma_pair_in_set_map_contains(self_tree, sorted@[j].0, sorted@[j].1);
                     };
                     // Backward: key in self AND other → key in common.
-                    // Veracity: NEEDED assert
                     assert forall|k: K::V|
                         self_map.dom().contains(k) && other_map.dom().contains(k)
                         implies #[trigger] common@.dom().contains(k)
                     by {
                         lemma_map_contains_pair_in_set(self_tree, k);
                         let v: V::V = choose|v: V::V| self_tree.contains((k, v));
-                        // Veracity: NEEDED assert
                         assert(sorted@.contains((k, v)));
                         let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (k, v);
-                        // Veracity: NEEDED assert
                         assert(spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j].0));
-                        // Veracity: NEEDED assert
                         assert(sorted@[j].0 == k);
                     };
                 };
                 // Value proof.
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] common@.contains_key(k) implies
                     (exists|v1: V, v2: V, r: V|
                         v1@ == self_map[k] && v2@ == other_map[k]
                         && combine.ensures((&v1, &v2), r)
                         && common@[k] == r@)
                 by {
-                    // Veracity: NEEDED assert
                     assert(spec_pair_set_to_map(new_tree@).dom().contains(k));
                 };
                 // WF.
-                // Veracity: NEEDED assert
                 assert(new_tree@.len() < usize::MAX as nat);
-                // Veracity: NEEDED assert
                 assert(spec_pair_key_determines_order::<K, V>());
-                // Veracity: NEEDED assert
                 assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                // Veracity: NEEDED assert
                 assert(view_ord_consistent::<K>());
-                // Veracity: NEEDED assert
                 assert(obeys_feq_fulls::<K, V>());
             }
             common
@@ -4335,11 +3307,9 @@ pub mod OrdKeyMap {
             let len = sorted.length();
             let mut new_tree = ParamBST::<Pair<K, V>>::new();
             let mut i: usize = 0;
-            // Veracity: NEEDED proof block
             proof {
                 lemma_sorted_keys_pairwise_distinct(self_tree, sorted@);
                 lemma_key_unique_empty::<K::V, V::V>();
-                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
             while i < len
@@ -4378,43 +3348,33 @@ pub mod OrdKeyMap {
                 decreases len - i,
             {
                 let pair = sorted.nth(i);
-                // Veracity: NEEDED proof block
                 proof { reveal(obeys_view_eq); }
                 let in_other = other.find(&pair.0);
                 match in_other {
                     None => {
                         let cloned = pair.clone_plus();
                         let ghost old_new_tree_view = new_tree@;
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_cloned_view_eq(*pair, cloned);
                             // Freshness proof.
-                            // Veracity: NEEDED assert
                             assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0)) by {
                                 if spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0) {
                                     lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[i as int].0);
                                     let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((sorted@[i as int].0, vv));
                                     let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == (#[trigger] sorted@[jj]).0;
-                                    // Veracity: NEEDED assert
                                     assert(false);
                                 }
                             };
                         }
                         new_tree.insert(cloned);
-                        // Veracity: NEEDED proof block
                         proof {
-                            // Veracity: NEEDED assert
                             assert(new_tree@.len() <= i as nat + 1);
-                            // Veracity: NEEDED assert
                             assert(new_tree@.len() < usize::MAX as nat);
                             lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, sorted@[i as int].1);
                             // Prove sorted@[i] is in self_tree for the subset invariant.
-                            // Veracity: NEEDED assert
                             assert(sorted@.contains(sorted@[i as int])) by { assert(sorted@[i as int] == sorted@[i as int]); };
-                            // Veracity: NEEDED assert
                             assert(self_tree.contains(sorted@[i as int]));
                             // Maintain completeness: new_tree now includes sorted@[i].
-                            // Veracity: NEEDED assert
                             assert(new_tree@.contains(sorted@[i as int]));
                         }
                     },
@@ -4423,62 +3383,48 @@ pub mod OrdKeyMap {
                 i += 1;
             }
             let remaining = OrdKeyMap { inner: new_tree };
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(new_tree@);
                 lemma_pair_set_to_map_dom_finite(self_tree);
                 // Prove: remaining@.dom() =~= self_map.dom().difference(other_map.dom())
-                // Veracity: NEEDED assert
                 assert(remaining@.dom() =~= self_map.dom().difference(other_map.dom())) by {
                     // Forward: k in remaining dom ==> k in self dom and k not in other dom.
-                    // Veracity: NEEDED assert
                     assert forall|k: K::V| #[trigger] remaining@.dom().contains(k)
                         implies self_map.dom().contains(k) && !other_map.dom().contains(k)
                     by {
                         lemma_map_contains_pair_in_set(new_tree@, k);
                         let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                        // Veracity: NEEDED assert
                         assert(self_tree.contains((k, v)));
                         lemma_pair_in_set_map_contains(self_tree, k, v);
-                        // Veracity: NEEDED assert
                         assert(!other_map.dom().contains(k));
                     };
                     // Backward: k in self dom and k not in other dom ==> k in remaining dom.
-                    // Veracity: NEEDED assert
                     assert forall|k: K::V|
                         self_map.dom().contains(k) && !other_map.dom().contains(k)
                         implies #[trigger] remaining@.dom().contains(k)
                     by {
                         lemma_map_contains_pair_in_set(self_tree, k);
                         let v: V::V = choose|v: V::V| self_tree.contains((k, v));
-                        // Veracity: NEEDED assert
                         assert(sorted@.contains((k, v)));
                         let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (k, v);
-                        // Veracity: NEEDED assert
                         assert(new_tree@.contains(sorted@[j]));
                         lemma_pair_in_set_map_contains(new_tree@, k, v);
                     };
                 };
                 // Prove: values preserved from self.
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] remaining@.contains_key(k)
                     implies remaining@[k] == self_map[k]
                 by {
                     lemma_map_contains_pair_in_set(new_tree@, k);
                     let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                    // Veracity: NEEDED assert
                     assert(self_tree.contains((k, v)));
                     lemma_pair_in_set_map_contains(new_tree@, k, v);
                     lemma_pair_in_set_map_contains(self_tree, k, v);
                 };
                 // Type axioms flow from self.spec_ordkeymap_wf().
-                // Veracity: NEEDED assert
                 assert(spec_pair_key_determines_order::<K, V>());
-                // Veracity: NEEDED assert
                 assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                // Veracity: NEEDED assert
                 assert(view_ord_consistent::<K>());
-                // Veracity: NEEDED assert
                 assert(obeys_feq_fulls::<K, V>());
             }
             remaining
@@ -4489,7 +3435,6 @@ pub mod OrdKeyMap {
             where K: TotalOrder
         {
             let r = ordkeymap_next(&self.inner, k);
-            // Veracity: NEEDED proof block
             proof { lemma_pair_set_to_map_dom_finite(self.inner@); }
             r
         }
@@ -4499,7 +3444,6 @@ pub mod OrdKeyMap {
             where K: TotalOrder
         {
             let r = ordkeymap_prev(&self.inner, k);
-            // Veracity: NEEDED proof block
             proof { lemma_pair_set_to_map_dom_finite(self.inner@); }
             r
         }
@@ -4509,7 +3453,6 @@ pub mod OrdKeyMap {
             where K: TotalOrder
         {
             let r = ordkeymap_rank(&self.inner, k);
-            // Veracity: NEEDED proof block
             proof { lemma_pair_set_to_map_dom_finite(self.inner@); }
             r
         }
@@ -4519,7 +3462,6 @@ pub mod OrdKeyMap {
             where K: TotalOrder
         {
             let r = ordkeymap_select(&self.inner, i);
-            // Veracity: NEEDED proof block
             proof { lemma_pair_set_to_map_dom_finite(self.inner@); }
             r
         }
@@ -4528,7 +3470,6 @@ pub mod OrdKeyMap {
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(self.inner@);
                 lemma_pair_set_to_map_len(self.inner@);
@@ -4539,37 +3480,26 @@ pub mod OrdKeyMap {
                 Some(pair) => {
                     let key = pair.0.clone_plus();
                     reveal_param_bst_backings(&self.inner);
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_reveal_view_injective::<K>();
                         lemma_cloned_view_eq(pair.0, key);
                         lemma_pair_in_set_map_contains(self.inner@, pair.0@, pair.1@);
-                        // Veracity: NEEDED assert
                         assert(key == pair.0);
-                        // Veracity: NEEDED assert
                         assert forall|t: K| #[trigger] self@.dom().contains(t@)
                             implies TotalOrder::le(key, t) by {
                             lemma_map_contains_pair_in_set(self.inner@, t@);
                             let vv: V::V = choose|vv: V::V| self.inner@.contains((t@, vv));
                             if pair.0@ == t@ {
-                                // Veracity: NEEDED assert
                                 assert(key@ == t@);
-                                // Veracity: NEEDED assert
                                 assert(key == t);
                                 K::reflexive(key);
                             } else {
-                                // Veracity: NEEDED assert
                                 assert(pair@ != (t@, vv));
                                 let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] self.inner@.contains(tp@) && tp@ == (t@, vv);
-                                // Veracity: NEEDED assert
                                 assert(pair.cmp_spec(&tp) == Less);
-                                // Veracity: NEEDED assert
                                 assert(pair.0@ != tp.0@);
-                                // Veracity: NEEDED assert
                                 assert(pair.0.cmp_spec(&tp.0) == Less);
-                                // Veracity: NEEDED assert
                                 assert(tp.0 == t);
-                                // Veracity: NEEDED assert
                                 assert(key.cmp_spec(&t) == Less);
                                 K::cmp_spec_less_implies_le(key, t);
                             }
@@ -4584,7 +3514,6 @@ pub mod OrdKeyMap {
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
         {
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(self.inner@);
                 lemma_pair_set_to_map_len(self.inner@);
@@ -4595,37 +3524,26 @@ pub mod OrdKeyMap {
                 Some(pair) => {
                     let key = pair.0.clone_plus();
                     reveal_param_bst_backings(&self.inner);
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_reveal_view_injective::<K>();
                         lemma_cloned_view_eq(pair.0, key);
                         lemma_pair_in_set_map_contains(self.inner@, pair.0@, pair.1@);
-                        // Veracity: NEEDED assert
                         assert(key == pair.0);
-                        // Veracity: NEEDED assert
                         assert forall|t: K| #[trigger] self@.dom().contains(t@)
                             implies TotalOrder::le(t, key) by {
                             lemma_map_contains_pair_in_set(self.inner@, t@);
                             let vv: V::V = choose|vv: V::V| self.inner@.contains((t@, vv));
                             if pair.0@ == t@ {
-                                // Veracity: NEEDED assert
                                 assert(key@ == t@);
-                                // Veracity: NEEDED assert
                                 assert(key == t);
                                 K::reflexive(key);
                             } else {
-                                // Veracity: NEEDED assert
                                 assert(pair@ != (t@, vv));
                                 let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] self.inner@.contains(tp@) && tp@ == (t@, vv);
-                                // Veracity: NEEDED assert
                                 assert(tp.cmp_spec(&pair) == Less);
-                                // Veracity: NEEDED assert
                                 assert(tp.0@ != pair.0@);
-                                // Veracity: NEEDED assert
                                 assert(tp.0.cmp_spec(&pair.0) == Less);
-                                // Veracity: NEEDED assert
                                 assert(tp.0 == t);
-                                // Veracity: NEEDED assert
                                 assert(t.cmp_spec(&key) == Less);
                                 K::cmp_spec_less_implies_le(t, key);
                             }
@@ -4647,35 +3565,27 @@ pub mod OrdKeyMap {
             let found_k1 = ordkeymap_find(&self.inner, k1);
             let found_k2 = ordkeymap_find(&self.inner, k2);
             let mut result_tree = middle;
-            // Veracity: NEEDED proof block
             proof {
-                // Veracity: NEEDED assert
                 assert forall|v: <Pair<K,V> as View>::V| result_tree@.contains(v)
                     implies #[trigger] self.inner@.contains(v) by {
-                    // Veracity: NEEDED assert
                     assert(right_of_k1@.contains(v));
                 };
             }
             match found_k1 {
                 Some(v1) => {
                     let k1_clone = k1.clone_plus();
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_cloned_view_eq(*k1, k1_clone);
-                        // Veracity: NEEDED assert
                         assert(result_tree@.len() < usize::MAX as nat) by {
                             vstd::set_lib::lemma_len_subset(result_tree@, self.inner@);
                         };
                         // The inserted pair (k1@, v1@) is in self.inner@.
                         lemma_map_contains_pair_in_set(self.inner@, k1@);
                         let ghost cv: V::V = choose|cv: V::V| self.inner@.contains((k1@, cv));
-                        // Veracity: NEEDED assert
                         assert(cv == v1@);
                     }
                     result_tree.insert(Pair(k1_clone, v1));
-                    // Veracity: NEEDED proof block
                     proof {
-                        // Veracity: NEEDED assert
                         assert forall|v: <Pair<K,V> as View>::V| result_tree@.contains(v)
                             implies #[trigger] self.inner@.contains(v) by {
                         };
@@ -4686,22 +3596,17 @@ pub mod OrdKeyMap {
             match found_k2 {
                 Some(v2) => {
                     let k2_clone = k2.clone_plus();
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_cloned_view_eq(*k2, k2_clone);
-                        // Veracity: NEEDED assert
                         assert(result_tree@.len() < usize::MAX as nat) by {
                             vstd::set_lib::lemma_len_subset(result_tree@, self.inner@);
                         };
                         lemma_map_contains_pair_in_set(self.inner@, k2@);
                         let ghost cv: V::V = choose|cv: V::V| self.inner@.contains((k2@, cv));
-                        // Veracity: NEEDED assert
                         assert(cv == v2@);
                     }
                     result_tree.insert(Pair(k2_clone, v2));
-                    // Veracity: NEEDED proof block
                     proof {
-                        // Veracity: NEEDED assert
                         assert forall|v: <Pair<K,V> as View>::V| result_tree@.contains(v)
                             implies #[trigger] self.inner@.contains(v) by {
                         };
@@ -4710,28 +3615,22 @@ pub mod OrdKeyMap {
                 None => {},
             }
             let range = OrdKeyMap { inner: result_tree };
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(result_tree@);
                 lemma_pair_set_to_map_dom_finite(self.inner@);
-                // Veracity: NEEDED assert
                 assert(range@.dom().subset_of(self@.dom())) by {
-                    // Veracity: NEEDED assert
                     assert forall|key: K::V| range@.dom().contains(key)
                         implies #[trigger] self@.dom().contains(key) by {
                         lemma_map_contains_pair_in_set(result_tree@, key);
                         let v: V::V = choose|v: V::V| result_tree@.contains((key, v));
-                        // Veracity: NEEDED assert
                         assert(self.inner@.contains((key, v)));
                         lemma_pair_in_set_map_contains(self.inner@, key, v);
                     };
                 };
-                // Veracity: NEEDED assert
                 assert forall|key: K::V| #[trigger] range@.dom().contains(key)
                     implies range@[key] == self@[key] by {
                     lemma_map_contains_pair_in_set(result_tree@, key);
                     let v: V::V = choose|v: V::V| result_tree@.contains((key, v));
-                    // Veracity: NEEDED assert
                     assert(self.inner@.contains((key, v)));
                     lemma_pair_in_set_map_contains(result_tree@, key, v);
                     lemma_pair_in_set_map_contains(self.inner@, key, v);
@@ -4748,7 +3647,6 @@ pub mod OrdKeyMap {
         {
             let ghost old_tree = self.inner@;
             let ghost old_map = self@;
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(old_tree);
                 lemma_pair_set_to_map_len(old_tree);
@@ -4761,23 +3659,16 @@ pub mod OrdKeyMap {
                 *self = OrdKeyMap::new();
                 let left = OrdKeyMap { inner: left_tree };
                 let right = OrdKeyMap { inner: right_tree };
-                // Veracity: NEEDED proof block
                 proof {
                     lemma_pair_set_to_map_dom_finite(left_tree@);
                     lemma_pair_set_to_map_dom_finite(right_tree@);
                     lemma_set_to_map_empty::<K::V, V::V>();
-                    // Veracity: NEEDED assert
                     assert(left@.dom() =~= old_map.dom());
-                    // Veracity: NEEDED assert
                     assert(right@.dom() =~= Set::empty());
-                    // Veracity: NEEDED assert
                     assert(left@.dom().disjoint(right@.dom()));
-                    // Veracity: NEEDED assert
                     assert(left.inner@ =~= old_tree);
                     lemma_key_unique_empty::<K::V, V::V>();
-                    // Veracity: NEEDED assert
                     assert(spec_set_pair_view_generated::<K, V>(right.inner@)) by {
-                        // Veracity: NEEDED assert
                         assert forall|elem: (K::V, V::V)| right.inner@.contains(elem)
                             implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {};
                     };
@@ -4788,7 +3679,6 @@ pub mod OrdKeyMap {
                 let sorted = self.inner.in_order();
                 let pair_at_i = sorted.nth(i);
                 let split_key = pair_at_i.0.clone_plus();
-                // Veracity: NEEDED proof block
                 proof { lemma_cloned_view_eq(pair_at_i.0, split_key); }
                 let (left_tree, found, right_tree) = ordkeymap_split(&self.inner, &split_key);
                 // Re-insert split_key+value into right.
@@ -4797,7 +3687,6 @@ pub mod OrdKeyMap {
                 match found_val {
                     Some(v) => {
                         let p = Pair(split_key.clone_plus(), v);
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_cloned_view_eq(split_key, p.0);
                             vstd::set_lib::lemma_len_subset(right_tree_final@, old_tree);
@@ -4809,45 +3698,35 @@ pub mod OrdKeyMap {
                 *self = OrdKeyMap::new();
                 let left = OrdKeyMap { inner: left_tree };
                 let right = OrdKeyMap { inner: right_tree_final };
-                // Veracity: NEEDED proof block
                 proof {
                     lemma_pair_set_to_map_dom_finite(left_tree@);
                     lemma_pair_set_to_map_dom_finite(right_tree_final@);
                     // left ⊆ old.
-                    // Veracity: NEEDED assert
                     assert(left@.dom().subset_of(old_map.dom())) by {
-                        // Veracity: NEEDED assert
                         assert forall|key: K::V| left@.dom().contains(key)
                             implies #[trigger] old_map.dom().contains(key) by {
                             lemma_map_contains_pair_in_set(left_tree@, key);
                             let v: V::V = choose|v: V::V| left_tree@.contains((key, v));
-                            // Veracity: NEEDED assert
                             assert(old_tree.contains((key, v)));
                             lemma_pair_in_set_map_contains(old_tree, key, v);
                         };
                     };
                     // right ⊆ old.
-                    // Veracity: NEEDED assert
                     assert forall|v: <Pair<K,V> as View>::V| right_tree_final@.contains(v)
                         implies #[trigger] old_tree.contains(v) by {
                         // Either in original right_tree (subset of old) or the re-inserted pair.
                     };
-                    // Veracity: NEEDED assert
                     assert(right@.dom().subset_of(old_map.dom())) by {
-                        // Veracity: NEEDED assert
                         assert forall|key: K::V| right@.dom().contains(key)
                             implies #[trigger] old_map.dom().contains(key) by {
                             lemma_map_contains_pair_in_set(right_tree_final@, key);
                             let v: V::V = choose|v: V::V| right_tree_final@.contains((key, v));
-                            // Veracity: NEEDED assert
                             assert(old_tree.contains((key, v)));
                             lemma_pair_in_set_map_contains(old_tree, key, v);
                         };
                     };
                     // Disjoint.
-                    // Veracity: NEEDED assert
                     assert(left@.dom().disjoint(right@.dom())) by {
-                        // Veracity: NEEDED assert
                         assert forall|key: K::V|
                             !(left@.dom().contains(key) && #[trigger] right@.dom().contains(key))
                         by {
@@ -4856,27 +3735,20 @@ pub mod OrdKeyMap {
                                 lemma_map_contains_pair_in_set(right_tree_final@, key);
                                 let lv: V::V = choose|v: V::V| left_tree@.contains((key, v));
                                 let rv: V::V = choose|v: V::V| right_tree_final@.contains((key, v));
-                                // Veracity: NEEDED assert
                                 assert(old_tree.contains((key, lv)));
-                                // Veracity: NEEDED assert
                                 assert(old_tree.contains((key, rv)));
-                                // Veracity: NEEDED assert
                                 assert(lv == rv);
-                                // Veracity: NEEDED assert
                                 assert(left_tree@.contains((key, lv)));
-                                // Veracity: NEEDED assert
                                 assert(right_tree_final@.contains((key, lv)));
                                 // left_tree is from split, all keys < split_key.
                                 // right_tree_final has keys > split_key (plus split_key itself).
                                 // !left_tree contains split_key@, so key != split_key@.
                                 // left has key < split_key, right has key > split_key → contradiction.
-                                // Veracity: NEEDED assert
                                 assert(!left_tree@.disjoint(right_tree_final@));
                             }
                         };
                     };
                     // Completeness.
-                    // Veracity: NEEDED assert
                     assert forall|key: K::V| #[trigger] old_map.dom().contains(key)
                         implies left@.dom().contains(key) || right@.dom().contains(key)
                     by {
@@ -4886,15 +3758,12 @@ pub mod OrdKeyMap {
                             if left_tree@.contains((key, v)) {
                                 lemma_pair_in_set_map_contains(left_tree@, key, v);
                             } else {
-                                // Veracity: NEEDED assert
                                 assert(right_tree@.contains((key, v)));
-                                // Veracity: NEEDED assert
                                 assert(right_tree_final@.contains((key, v)));
                                 lemma_pair_in_set_map_contains(right_tree_final@, key, v);
                             }
                         } else {
                             // key == split_key@. The pair was re-inserted into right.
-                            // Veracity: NEEDED assert
                             assert(right_tree_final@.contains((key, v)));
                             lemma_pair_in_set_map_contains(right_tree_final@, key, v);
                         }
@@ -4928,12 +3797,10 @@ pub mod OrdKeyMap {
             {
                 let elem = sorted.nth(i);
                 let cloned = elem.clone_plus();
-                // Veracity: NEEDED proof block
                 proof { lemma_cloned_view_eq(*elem, cloned); }
                 out.push(cloned);
                 i = i + 1;
             }
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_len(self.inner@);
                 lemma_pair_set_to_map_dom_finite(self.inner@);
@@ -4957,37 +3824,30 @@ pub mod OrdKeyMap {
             let ghost pair_spec_pred = |pv: (K::V, V::V)| -> bool { spec_pred(pv.0, pv.1) };
             let filtered_tree = self.inner.filter(pair_pred, Ghost(pair_spec_pred));
             let filtered = OrdKeyMap { inner: filtered_tree };
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(filtered_tree@);
                 lemma_pair_set_to_map_dom_finite(self.inner@);
                 lemma_key_unique_subset(self.inner@, filtered_tree@);
                 // filtered_tree@ ⊆ self.inner@.
-                // Veracity: NEEDED assert
                 assert(filtered@.dom().subset_of(self@.dom())) by {
-                    // Veracity: NEEDED assert
                     assert forall|k: K::V| filtered@.dom().contains(k)
                         implies #[trigger] self@.dom().contains(k)
                     by {
                         lemma_map_contains_pair_in_set(filtered_tree@, k);
                         let v: V::V = choose|v: V::V| filtered_tree@.contains((k, v));
-                        // Veracity: NEEDED assert
                         assert(self.inner@.contains((k, v)));
                         lemma_pair_in_set_map_contains(self.inner@, k, v);
                     };
                 };
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] filtered@.contains_key(k)
                     implies filtered@[k] == self@[k]
                 by {
                     lemma_map_contains_pair_in_set(filtered_tree@, k);
                     let v: V::V = choose|v: V::V| filtered_tree@.contains((k, v));
-                    // Veracity: NEEDED assert
                     assert(self.inner@.contains((k, v)));
                     lemma_pair_in_set_map_contains(self.inner@, k, v);
                     lemma_pair_in_set_map_contains(filtered_tree@, k, v);
                 };
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
                     implies #[trigger] filtered@.dom().contains(k)
                 by {
@@ -4995,20 +3855,14 @@ pub mod OrdKeyMap {
                     let v: V::V = choose|v: V::V| self.inner@.contains((k, v));
                     lemma_pair_in_set_map_contains(self.inner@, k, v);
                     // v == self@[k], so spec_pred(k, v) holds.
-                    // Veracity: NEEDED assert
                     assert(pair_spec_pred((k, v)));
-                    // Veracity: NEEDED assert
                     assert(filtered_tree@.contains((k, v)));
                     lemma_pair_in_set_map_contains(filtered_tree@, k, v);
                 };
                 vstd::set_lib::lemma_len_subset(filtered_tree@, self.inner@);
-                // Veracity: NEEDED assert
                 assert(spec_pair_key_determines_order::<K, V>());
-                // Veracity: NEEDED assert
                 assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                // Veracity: NEEDED assert
                 assert(view_ord_consistent::<K>());
-                // Veracity: NEEDED assert
                 assert(obeys_feq_fulls::<K, V>());
                 lemma_view_gen_subset::<K, V>(filtered_tree@, self.inner@);
             }
@@ -5022,16 +3876,12 @@ pub mod OrdKeyMap {
             let len = sorted.length();
             let mut new_tree = ParamBST::<Pair<K, V>>::new();
             let mut i: usize = 0;
-            // Veracity: NEEDED proof block
             proof {
                 lemma_sorted_keys_pairwise_distinct(self.inner@, sorted@);
                 lemma_key_unique_empty::<K::V, V::V>();
-                // Veracity: NEEDED assert
                 assert(spec_set_pair_view_generated::<K, V>(new_tree@)) by {
-                    // Veracity: NEEDED assert
                     assert forall|elem: (K::V, V::V)| new_tree@.contains(elem)
                         implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-                        // Veracity: NEEDED assert
                         assert(false);
                     };
                 };
@@ -5065,41 +3915,32 @@ pub mod OrdKeyMap {
                 let new_val = f(&pair.0, &pair.1);
                 let k_clone = pair.0.clone_plus();
                 let ghost old_new_tree_view = new_tree@;
-                // Veracity: NEEDED proof block
                 proof {
                     lemma_cloned_view_eq(pair.0, k_clone);
-                    // Veracity: NEEDED assert
                     assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0)) by {
                         if spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0) {
                             lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[i as int].0);
                             let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((sorted@[i as int].0, vv));
                             let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == (#[trigger] sorted@[jj]).0;
-                            // Veracity: NEEDED assert
                             assert(false);
                         }
                     };
                 }
                 new_tree.insert(Pair(k_clone, new_val));
-                // Veracity: NEEDED proof block
                 proof {
                     lemma_view_gen_insert::<K, V>(old_new_tree_view, Pair(k_clone, new_val));
-                    // Veracity: NEEDED assert
                     assert(new_tree@.len() == i as nat + 1);
-                    // Veracity: NEEDED assert
                     assert(new_tree@.len() < usize::MAX as nat);
                     lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, new_val@);
-                    // Veracity: NEEDED assert
                     assert forall|j: int| 0 <= j < i as int + 1
                         implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j].0)
                     by {
                         if j == i as int {
-                            // Veracity: NEEDED assert
                             assert(new_tree@.contains((sorted@[i as int].0, new_val@)));
                             lemma_pair_in_set_map_contains(new_tree@, sorted@[i as int].0, new_val@);
                         } else {
                             lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[j].0);
                             let w: V::V = choose|w: V::V| old_new_tree_view.contains((sorted@[j].0, w));
-                            // Veracity: NEEDED assert
                             assert(new_tree@.contains((sorted@[j].0, w)));
                             lemma_pair_in_set_map_contains(new_tree@, sorted@[j].0, w);
                         }
@@ -5108,45 +3949,33 @@ pub mod OrdKeyMap {
                 i = i + 1;
             }
             let mapped = OrdKeyMap { inner: new_tree };
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(new_tree@);
                 lemma_pair_set_to_map_dom_finite(self.inner@);
-                // Veracity: NEEDED assert
                 assert(mapped@.dom() =~= self@.dom()) by {
-                    // Veracity: NEEDED assert
                     assert forall|key: K::V| #[trigger] mapped@.dom().contains(key)
                         implies self@.dom().contains(key)
                     by {
                         lemma_map_contains_pair_in_set(new_tree@, key);
                         let v: V::V = choose|v: V::V| new_tree@.contains((key, v));
                         let j = choose|j: int| 0 <= j < i as int && (key, v).0 == (#[trigger] sorted@[j]).0;
-                        // Veracity: NEEDED assert
                         assert(self.inner@.contains(sorted@[j]));
                         lemma_pair_in_set_map_contains(self.inner@, sorted@[j].0, sorted@[j].1);
                     };
-                    // Veracity: NEEDED assert
                     assert forall|key: K::V| self@.dom().contains(key)
                         implies #[trigger] mapped@.dom().contains(key)
                     by {
                         lemma_map_contains_pair_in_set(self.inner@, key);
                         let v: V::V = choose|v: V::V| self.inner@.contains((key, v));
-                        // Veracity: NEEDED assert
                         assert(sorted@.contains((key, v)));
                         let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (key, v);
-                        // Veracity: NEEDED assert
                         assert(spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j].0));
-                        // Veracity: NEEDED assert
                         assert(sorted@[j].0 == key);
                     };
                 };
-                // Veracity: NEEDED assert
                 assert(spec_pair_key_determines_order::<K, V>());
-                // Veracity: NEEDED assert
                 assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                // Veracity: NEEDED assert
                 assert(view_ord_consistent::<K>());
-                // Veracity: NEEDED assert
                 assert(obeys_feq_fulls::<K, V>());
             }
             mapped
@@ -5159,7 +3988,6 @@ pub mod OrdKeyMap {
             let sorted = self.inner.in_order();
             let len = sorted.length();
             let mut reduced = id.clone_plus();
-            // Veracity: NEEDED proof block
             proof { lemma_cloned_view_eq(*id, reduced); }
             let mut i: usize = 0;
             while i < len
@@ -5173,7 +4001,6 @@ pub mod OrdKeyMap {
                 reduced = f(&reduced, &pair.1);
                 i = i + 1;
             }
-            // Veracity: NEEDED proof block
             proof { lemma_pair_set_to_map_dom_finite(self.inner@); }
             reduced
         }
@@ -5185,7 +4012,6 @@ pub mod OrdKeyMap {
             let len = sorted.length();
             let mut domain = ArraySetStEph::empty();
             let mut i: usize = 0;
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(self.inner@);
             }
@@ -5207,40 +4033,29 @@ pub mod OrdKeyMap {
             {
                 let pair = sorted.nth(i);
                 let key_clone = pair.0.clone_plus();
-                // Veracity: NEEDED proof block
                 proof {
-                    // Veracity: NEEDED assert
                     assert(cloned(pair.0, key_clone));
-                    // Veracity: NEEDED assert
                     assert(key_clone@ == sorted@[i as int].0);
                     let ghost elem = sorted@[i as int];
-                    // Veracity: NEEDED assert
                     assert(sorted@.contains(elem)) by {
-                        // Veracity: NEEDED assert
                         assert(sorted@[i as int] == elem);
                     };
-                    // Veracity: NEEDED assert
                     assert(self.inner@.contains(elem));
                     lemma_pair_in_set_map_contains(self.inner@, elem.0, elem.1);
                 }
                 domain.insert(key_clone);
                 i += 1;
             }
-            // Veracity: NEEDED proof block
             proof {
-                // Veracity: NEEDED assert
                 assert(domain@ =~= self@.dom()) by {
-                    // Veracity: NEEDED assert
                     assert forall|kv: K::V| self@.dom().contains(kv)
                         implies #[trigger] domain@.contains(kv)
                     by {
                         lemma_map_contains_pair_in_set(self.inner@, kv);
                         let v: V::V = choose|v: V::V| self.inner@.contains((kv, v));
-                        // Veracity: NEEDED assert
                         assert(sorted@.contains((kv, v)));
                         let j = choose|j: int| 0 <= j < sorted@.len()
                             && (#[trigger] sorted@[j]) == (kv, v);
-                        // Veracity: NEEDED assert
                         assert(domain@.contains(sorted@[j].0));
                     };
                 };
@@ -5251,13 +4066,9 @@ pub mod OrdKeyMap {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n BST inserts
         fn tabulate<F: Fn(&K) -> V>(keys: &ArraySetStEph<K>, f: &F) -> (table: Self)
         {
-            // Veracity: NEEDED proof block
             proof {
-                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<K>());
-                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<V>());
-                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
             }
             let seq = keys.to_seq();
@@ -5267,18 +4078,13 @@ pub mod OrdKeyMap {
             let ghost mut key_args: Seq<K> = Seq::empty();
             let ghost mut results: Seq<V> = Seq::empty();
             let mut i: usize = 0;
-            // Veracity: NEEDED proof block
             proof {
                 seq_view.unique_seq_to_set();
-                // Veracity: NEEDED assert
                 assert(seq_view.len() == keys@.len());
                 lemma_key_unique_empty::<K::V, V::V>();
-                // Veracity: NEEDED assert
                 assert(spec_set_pair_view_generated::<K, V>(tree@)) by {
-                    // Veracity: NEEDED assert
                     assert forall|elem: (K::V, V::V)| tree@.contains(elem)
                         implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-                        // Veracity: NEEDED assert
                         assert(false);
                     };
                 };
@@ -5318,48 +4124,34 @@ pub mod OrdKeyMap {
                 let val = f(k);
                 let k_clone = k.clone_plus();
                 let ghost old_tree = tree@;
-                // Veracity: NEEDED proof block
                 proof {
-                    // Veracity: NEEDED assert
                     assert(cloned(*k, k_clone));
                     key_args = key_args.push(*k);
                     results = results.push(val);
-                    // Veracity: NEEDED assert
                     assert(!tree@.contains((seq_view[i as int], val@))) by {
                         if tree@.contains((seq_view[i as int], val@)) {
                             let j = choose|j: int| 0 <= j < i as int
                                 && (seq_view[i as int], val@).0 == seq_view[j];
-                            // Veracity: NEEDED assert
                             assert(seq_view[i as int] == seq_view[j]);
-                            // Veracity: NEEDED assert
                             assert(false);
                         }
                     };
                 }
                 tree.insert(Pair(k_clone, val));
-                // Veracity: NEEDED proof block
                 proof {
                     lemma_view_gen_insert::<K, V>(old_tree, Pair(k_clone, val));
-                    // Veracity: NEEDED assert
                     assert(old_tree.finite());
-                    // Veracity: NEEDED assert
                     assert(!old_tree.contains((seq_view[i as int], val@)));
-                    // Veracity: NEEDED assert
                     assert(tree@ =~= old_tree.insert((seq_view[i as int], val@)));
-                    // Veracity: NEEDED assert
                     assert(tree@.len() == i as nat + 1);
-                    // Veracity: NEEDED assert
                     assert((i as nat + 1) <= len as nat);
-                    // Veracity: NEEDED assert
                     assert(tree@.len() < usize::MAX as nat);
-                    // Veracity: NEEDED assert
                     assert(!spec_pair_set_to_map(old_tree).dom().contains(seq_view[i as int])) by {
                         if spec_pair_set_to_map(old_tree).dom().contains(seq_view[i as int]) {
                             lemma_map_contains_pair_in_set(old_tree, seq_view[i as int]);
                             let vv: V::V = choose|vv: V::V| old_tree.contains((seq_view[i as int], vv));
                             let j = choose|j: int| 0 <= j < i as int
                                 && (seq_view[i as int], vv).0 == seq_view[j];
-                            // Veracity: NEEDED assert
                             assert(false);
                         }
                     };
@@ -5368,35 +4160,27 @@ pub mod OrdKeyMap {
                 i += 1;
             }
             let table = OrdKeyMap { inner: tree };
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(tree@);
-                // Veracity: NEEDED assert
                 assert(table@.dom() =~= keys@) by {
-                    // Veracity: NEEDED assert
                     assert forall|key: K::V| #[trigger] table@.dom().contains(key)
                         implies keys@.contains(key)
                     by {
                         lemma_map_contains_pair_in_set(tree@, key);
                         let v: V::V = choose|v: V::V| tree@.contains((key, v));
                         let j = choose|j: int| 0 <= j < i as int && (key, v).0 == seq_view[j];
-                        // Veracity: NEEDED assert
                         assert(seq_view.to_set().contains(seq_view[j]));
                     };
-                    // Veracity: NEEDED assert
                     assert forall|key: K::V| keys@.contains(key)
                         implies #[trigger] table@.dom().contains(key)
                     by {
-                        // Veracity: NEEDED assert
                         assert(seq_view.to_set().contains(key));
                         let j = choose|j: int| 0 <= j < seq_view.len()
                             && (#[trigger] seq_view[j]) == key;
-                        // Veracity: NEEDED assert
                         assert(tree@.contains((seq_view[j], results[j]@)));
                         lemma_pair_in_set_map_contains(tree@, key, results[j]@);
                     };
                 };
-                // Veracity: NEEDED assert
                 assert forall|key: K::V| #[trigger] table@.contains_key(key)
                     implies (exists|key_arg: K, result: V|
                         key_arg@ == key && f.ensures((&key_arg,), result)
@@ -5407,13 +4191,10 @@ pub mod OrdKeyMap {
                     let j = choose|j: int| 0 <= j < i as int && (key, v).0 == seq_view[j];
                     let ka = key_args[j];
                     let rv = results[j];
-                    // Veracity: NEEDED assert
                     assert(ka@ == key);
-                    // Veracity: NEEDED assert
                     assert(f.ensures((&ka,), rv));
                     lemma_pair_in_set_map_contains(tree@, key, rv@);
                 };
-                // Veracity: NEEDED assert
                 assert(obeys_feq_fulls::<K, V>());
             }
             table
@@ -5429,7 +4210,6 @@ pub mod OrdKeyMap {
             let len = sorted.length();
             let mut new_tree = ParamBST::<Pair<K, V>>::new();
             let mut i: usize = 0;
-            // Veracity: NEEDED proof block
             proof {
                 lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
                 lemma_key_unique_empty::<K::V, V::V>();
@@ -5470,90 +4250,67 @@ pub mod OrdKeyMap {
                 if in_keys {
                     let cloned = pair.clone_plus();
                     let ghost old_new_tree_view = new_tree@;
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_cloned_view_eq(*pair, cloned);
-                        // Veracity: NEEDED assert
                         assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0)) by {
                             if spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0) {
                                 lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[i as int].0);
                                 let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((sorted@[i as int].0, vv));
                                 let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == (#[trigger] sorted@[jj]).0;
-                                // Veracity: NEEDED assert
                                 assert(false);
                             }
                         };
                     }
                     new_tree.insert(cloned);
-                    // Veracity: NEEDED proof block
                     proof {
-                        // Veracity: NEEDED assert
                         assert(new_tree@.len() <= i as nat + 1);
-                        // Veracity: NEEDED assert
                         assert(new_tree@.len() < usize::MAX as nat);
                         lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, sorted@[i as int].1);
-                        // Veracity: NEEDED assert
                         assert(sorted@.contains(sorted@[i as int])) by { assert(sorted@[i as int] == sorted@[i as int]); };
-                        // Veracity: NEEDED assert
                         assert(old_tree.contains(sorted@[i as int]));
-                        // Veracity: NEEDED assert
                         assert(new_tree@.contains(sorted@[i as int]));
                     }
                 }
                 i = i + 1;
             }
             let restricted = OrdKeyMap { inner: new_tree };
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(new_tree@);
                 lemma_pair_set_to_map_dom_finite(old_tree);
-                // Veracity: NEEDED assert
                 assert(restricted@.dom() =~= old_map.dom().intersect(keys_set)) by {
-                    // Veracity: NEEDED assert
                     assert forall|k: K::V| #[trigger] restricted@.dom().contains(k)
                         implies old_map.dom().contains(k) && keys_set.contains(k)
                     by {
                         lemma_map_contains_pair_in_set(new_tree@, k);
                         let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                        // Veracity: NEEDED assert
                         assert(old_tree.contains((k, v)));
                         lemma_pair_in_set_map_contains(old_tree, k, v);
-                        // Veracity: NEEDED assert
                         assert(keys_set.contains(k));
                     };
-                    // Veracity: NEEDED assert
                     assert forall|k: K::V|
                         old_map.dom().contains(k) && keys_set.contains(k)
                         implies #[trigger] restricted@.dom().contains(k)
                     by {
                         lemma_map_contains_pair_in_set(old_tree, k);
                         let v: V::V = choose|v: V::V| old_tree.contains((k, v));
-                        // Veracity: NEEDED assert
                         assert(sorted@.contains((k, v)));
                         let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (k, v);
-                        // Veracity: NEEDED assert
                         assert(new_tree@.contains(sorted@[j]));
                         lemma_pair_in_set_map_contains(new_tree@, k, v);
                     };
                 };
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] restricted@.contains_key(k)
                     implies restricted@[k] == old_map[k]
                 by {
                     lemma_map_contains_pair_in_set(new_tree@, k);
                     let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                    // Veracity: NEEDED assert
                     assert(old_tree.contains((k, v)));
                     lemma_pair_in_set_map_contains(new_tree@, k, v);
                     lemma_pair_in_set_map_contains(old_tree, k, v);
                 };
-                // Veracity: NEEDED assert
                 assert(spec_pair_key_determines_order::<K, V>());
-                // Veracity: NEEDED assert
                 assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                // Veracity: NEEDED assert
                 assert(view_ord_consistent::<K>());
-                // Veracity: NEEDED assert
                 assert(obeys_feq_fulls::<K, V>());
                 lemma_view_gen_subset::<K, V>(new_tree@, old_tree);
             }
@@ -5570,7 +4327,6 @@ pub mod OrdKeyMap {
             let len = sorted.length();
             let mut new_tree = ParamBST::<Pair<K, V>>::new();
             let mut i: usize = 0;
-            // Veracity: NEEDED proof block
             proof {
                 lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
                 lemma_key_unique_empty::<K::V, V::V>();
@@ -5611,90 +4367,67 @@ pub mod OrdKeyMap {
                 if !in_keys {
                     let cloned = pair.clone_plus();
                     let ghost old_new_tree_view = new_tree@;
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_cloned_view_eq(*pair, cloned);
-                        // Veracity: NEEDED assert
                         assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0)) by {
                             if spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0) {
                                 lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[i as int].0);
                                 let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((sorted@[i as int].0, vv));
                                 let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == (#[trigger] sorted@[jj]).0;
-                                // Veracity: NEEDED assert
                                 assert(false);
                             }
                         };
                     }
                     new_tree.insert(cloned);
-                    // Veracity: NEEDED proof block
                     proof {
-                        // Veracity: NEEDED assert
                         assert(new_tree@.len() <= i as nat + 1);
-                        // Veracity: NEEDED assert
                         assert(new_tree@.len() < usize::MAX as nat);
                         lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, sorted@[i as int].1);
-                        // Veracity: NEEDED assert
                         assert(sorted@.contains(sorted@[i as int])) by { assert(sorted@[i as int] == sorted@[i as int]); };
-                        // Veracity: NEEDED assert
                         assert(old_tree.contains(sorted@[i as int]));
-                        // Veracity: NEEDED assert
                         assert(new_tree@.contains(sorted@[i as int]));
                     }
                 }
                 i = i + 1;
             }
             let remaining = OrdKeyMap { inner: new_tree };
-            // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_dom_finite(new_tree@);
                 lemma_pair_set_to_map_dom_finite(old_tree);
-                // Veracity: NEEDED assert
                 assert(remaining@.dom() =~= old_map.dom().difference(keys_set)) by {
-                    // Veracity: NEEDED assert
                     assert forall|k: K::V| #[trigger] remaining@.dom().contains(k)
                         implies old_map.dom().contains(k) && !keys_set.contains(k)
                     by {
                         lemma_map_contains_pair_in_set(new_tree@, k);
                         let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                        // Veracity: NEEDED assert
                         assert(old_tree.contains((k, v)));
                         lemma_pair_in_set_map_contains(old_tree, k, v);
-                        // Veracity: NEEDED assert
                         assert(!keys_set.contains(k));
                     };
-                    // Veracity: NEEDED assert
                     assert forall|k: K::V|
                         old_map.dom().contains(k) && !keys_set.contains(k)
                         implies #[trigger] remaining@.dom().contains(k)
                     by {
                         lemma_map_contains_pair_in_set(old_tree, k);
                         let v: V::V = choose|v: V::V| old_tree.contains((k, v));
-                        // Veracity: NEEDED assert
                         assert(sorted@.contains((k, v)));
                         let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (k, v);
-                        // Veracity: NEEDED assert
                         assert(new_tree@.contains(sorted@[j]));
                         lemma_pair_in_set_map_contains(new_tree@, k, v);
                     };
                 };
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] remaining@.contains_key(k)
                     implies remaining@[k] == old_map[k]
                 by {
                     lemma_map_contains_pair_in_set(new_tree@, k);
                     let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                    // Veracity: NEEDED assert
                     assert(old_tree.contains((k, v)));
                     lemma_pair_in_set_map_contains(new_tree@, k, v);
                     lemma_pair_in_set_map_contains(old_tree, k, v);
                 };
-                // Veracity: NEEDED assert
                 assert(spec_pair_key_determines_order::<K, V>());
-                // Veracity: NEEDED assert
                 assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                // Veracity: NEEDED assert
                 assert(view_ord_consistent::<K>());
-                // Veracity: NEEDED assert
                 assert(obeys_feq_fulls::<K, V>());
                 lemma_view_gen_subset::<K, V>(new_tree@, old_tree);
             }

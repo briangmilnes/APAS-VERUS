@@ -1,6 +1,32 @@
 Mode: isolate
-Isolate: including Chap39 Chap18 Chap02
-verification results:: 1307 verified, 0 errors
-Elapsed: 15s
-Sampled Memory Usage: peak rust_verify RSS: 2379MB, peak z3 RSS: 370MB, min free: 21635MB
-Sampled CPU Usage: rust_verify: 43s, z3 children: 37s
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: precondition not satisfied
+    --> src/Chap41/OrdKeyMap.rs:2315:45
+     |
+2315 | ...                   K::cmp_spec_greater_implies_le(xp.0, root_pair.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:78:18
+     |
+  78 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/total_order.rs:78:36
+   |
+78 |         requires a.cmp_spec(&b) == Ordering::Greater
+   |                                    ^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.cmp_spec(tmp%) == Greater
+|   !(tmp%.cmp_spec(tmp%) is Less) ✔
+|   !(tmp%.cmp_spec(tmp%) is Equal) ✘
++---
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 32s
+Sampled Memory Usage: peak rust_verify RSS: 4470MB, peak z3 RSS: 883MB, min free: 18760MB
+Sampled CPU Usage: rust_verify: 93s, z3 children: 118s

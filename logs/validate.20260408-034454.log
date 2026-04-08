@@ -1,6 +1,26 @@
 Mode: isolate
-Isolate: including Chap38 Chap18 Chap02
-verification results:: 1168 verified, 0 errors
-Elapsed: 12s
-Sampled Memory Usage: peak rust_verify RSS: 5489MB, peak z3 RSS: 438MB, min free: 20895MB
-Sampled CPU Usage: rust_verify: 71s, z3 children: 44s
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap41/ArraySetEnumMtEph.rs:524:32
+    |
+524 |                         assert(result_vec@[j] == x);
+    |                                ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap41/ArraySetEnumMtEph.rs:532:32
+    |
+532 |                         assert(seq@[k] == x);
+    |                                ^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+result_vec.view().index(j) == x 
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 29s
+Sampled Memory Usage: peak rust_verify RSS: 6702MB, peak z3 RSS: 605MB, min free: 19785MB
+Sampled CPU Usage: rust_verify: 137s, z3 children: 117s

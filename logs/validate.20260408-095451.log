@@ -1,0 +1,38 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:2101:45
+     |
+2101 | ...                   implies tree_dom.filter(rank_pred).contains(x) by {
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+    --> src/Chap41/OrdKeyMap.rs:2112:37
+     |
+2112 | ...                   K::cmp_spec_less_implies_le(xp.0, root_pair.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:73:18
+     |
+  73 |         requires a.cmp_spec(&b) == Ordering::Less
+     |                  -------------------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/total_order.rs:73:36
+   |
+73 |         requires a.cmp_spec(&b) == Ordering::Less
+   |                                    ^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.cmp_spec(tmp%) == Less
+|   !(tmp%.cmp_spec(tmp%) is Equal) ✘
+|   !(tmp%.cmp_spec(tmp%) is Greater) ✔
++---
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 36s
+Sampled Memory Usage: peak rust_verify RSS: 6712MB, peak z3 RSS: 1125MB, min free: 16616MB
+Sampled CPU Usage: rust_verify: 128s, z3 children: 144s

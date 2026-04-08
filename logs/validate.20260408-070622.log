@@ -1,6 +1,27 @@
 Mode: isolate
-Isolate: including Chap39 Chap18 Chap02
-verification results:: 1307 verified, 0 errors
-Elapsed: 16s
-Sampled Memory Usage: peak rust_verify RSS: 3475MB, peak z3 RSS: 325MB, min free: 22638MB
-Sampled CPU Usage: rust_verify: 51s, z3 children: 41s
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap41/OrdKeyMap.rs:321:24
+    |
+321 |                 assert(sorted[i] == sorted[j]);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap41/OrdKeyMap.rs:321:24
+    |
+321 |                 assert(sorted[i] == sorted[j]);
+    |                        ^^^^^^^^^
+
+note: 
+
+sorted.index(i) =~= sorted.index(j)
+|   sorted.index(i).0 =~= sorted.index(j).0 ✔
+|   sorted.index(i).1 =~= sorted.index(j).1 ✘
++---
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 5094MB, peak z3 RSS: 566MB, min free: 21117MB
+Sampled CPU Usage: rust_verify: 71s, z3 children: 51s

@@ -293,8 +293,10 @@ pub mod BSTSetTreapMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(value: T) -> (set: Self) {
             let set = Self::join_m(Self::empty(), value, Self::empty());
+            // Veracity: NEEDED proof block
             proof {
                 let empty = Set::<<T as View>::V>::empty();
+                // Veracity: NEEDED assert
                 assert(set@ =~= empty.insert(value@));
             }
             set
@@ -329,6 +331,7 @@ pub mod BSTSetTreapMtEph {
         fn insert(&mut self, value: T) {
             let ghost old_len = self@.len();
             let (left, _found, right) = self.split(&value);
+            // Veracity: NEEDED proof block
             proof {
                 // left@ and right@ partition self@.remove(value@) ⊆ self@.
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
@@ -342,9 +345,11 @@ pub mod BSTSetTreapMtEph {
             let ghost kref = *target;
             let ghost old_view = self@;
             let (left, _found, right) = self.split(target);
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
                 vstd::set_lib::lemma_len_subset(old_view.remove(kref@), old_view);
+                // Veracity: NEEDED assert
                 assert forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
                     left@.contains(s@) && right@.contains(o@) implies s.cmp_spec(&o) == Less by {
                     lemma_cmp_antisymmetry(o, kref);
@@ -421,6 +426,7 @@ pub mod BSTSetTreapMtEph {
             ensures cloned@ == self@,
         {
             let cloned = BSTSetTreapMtEph { tree: self.tree.clone() };
+            // Veracity: NEEDED proof block
             proof { assume(cloned@ == self@); } // Clone bridge: view preserved by ParamTreap::clone.
             cloned
         }

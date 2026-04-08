@@ -1,0 +1,62 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find value `x` in this scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:522:47
+    |
+522 |                     if seq@.to_set().contains(x) {
+    |                                               ^ not found in this scope
+
+error[E0425]: cannot find value `x` in this scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:523:82
+    |
+523 |                         let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == x;
+    |                                                                                  ^ not found in this scope
+
+error[E0425]: cannot find value `x` in this scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:524:50
+    |
+524 |                         assert(result_vec@[j] == x);
+    |                                                  ^ not found in this scope
+
+error[E0425]: cannot find value `x` in this scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:525:51
+    |
+525 |                         assert(collected.contains(x));
+    |                                                   ^ not found in this scope
+
+error[E0425]: cannot find value `x` in this scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:527:39
+    |
+527 |                     if self@.contains(x) {
+    |                                       ^ not found in this scope
+
+error[E0425]: cannot find value `x` in this scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:528:51
+    |
+528 |                         assert(collected.contains(x));
+    |                                                   ^ not found in this scope
+
+error[E0425]: cannot find value `x` in this scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:529:53
+    |
+529 |                         assert(result_vec@.contains(x));
+    |                                                     ^ not found in this scope
+
+error[E0425]: cannot find value `x` in this scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:531:77
+    |
+531 | ...                   0 <= k < result_vec@.len() && result_vec@[k] == x;
+    |                                                                       ^ not found in this scope
+
+error[E0425]: cannot find value `x` in this scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:532:43
+    |
+532 |                         assert(seq@[k] == x);
+    |                                           ^ not found in this scope
+
+error: aborting due to 9 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 3504MB, peak z3 RSS: 231MB, min free: 21992MB
+Sampled CPU Usage: rust_verify: 74s, z3 children: 75s

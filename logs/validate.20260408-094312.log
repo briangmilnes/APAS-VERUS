@@ -1,37 +1,32 @@
 Mode: isolate
-Isolate: including Chap39 Chap18 Chap02
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
 error: precondition not satisfied
-    --> src/Chap39/BSTTreapStEph.rs:2713:21
+    --> src/Chap41/OrdKeyMap.rs:1959:41
      |
-2713 |                     vstd::set_lib::lemma_len_subset(brv, bv);
-     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1959 | ...                   K::cmp_spec_greater_implies_le(t, root_pair.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
-    --> vstd/set_lib.rs:1099:8
+    ::: src/vstdplus/total_order.rs:78:18
      |
-     = note: failed precondition
-
-error: assertion failed
-    --> src/Chap39/BSTTreapStEph.rs:2771:72
-     |
-2771 | ...                   else { assert(brv.contains(x)); assert(bv.contains(x)); }
-     |                                                              ^^^^^^^^^^^^^^ assertion failed
+  78 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
 
 note: diagnostics via expansion
- --> vstd/set_lib.rs:1099:8
+  --> src/vstdplus/total_order.rs:78:36
+   |
+78 |         requires a.cmp_spec(&b) == Ordering::Greater
+   |                                    ^^^^^^^^^^^^^^^^^
 
 note: 
 
-bv.finite() ✔
-brv.subset_of(bv) ✘
-|   forall |a|
-|       brv.contains(a) ==>
-|           bv.contains(a) 
-|               function is uninterpreted
+t.cmp_spec(tmp%) == Greater
+|   !(t.cmp_spec(tmp%) is Less) ✔
+|   !(t.cmp_spec(tmp%) is Equal) ✘
 +---
 
-verification results:: 1306 verified, 1 errors
-error: aborting due to 2 previous errors
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
 
-Elapsed: 25s
-Sampled Memory Usage: peak rust_verify RSS: 6286MB, peak z3 RSS: 907MB, min free: 16486MB
-Sampled CPU Usage: rust_verify: 181s, z3 children: 180s
+Elapsed: 40s
+Sampled Memory Usage: peak rust_verify RSS: 6043MB, peak z3 RSS: 968MB, min free: 16428MB
+Sampled CPU Usage: rust_verify: 182s, z3 children: 180s

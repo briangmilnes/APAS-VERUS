@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1188:40
+     |
+1188 | ...                   assert(p.0@ != root_pair.0@) by {
+     |                              ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(p.0.view() == root_pair.0.view()) 
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 34s
+Sampled Memory Usage: peak rust_verify RSS: 7300MB, peak z3 RSS: 719MB, min free: 17638MB
+Sampled CPU Usage: rust_verify: 177s, z3 children: 169s

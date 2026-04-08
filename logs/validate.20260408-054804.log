@@ -1,6 +1,20 @@
 Mode: isolate
-Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
-verification results:: 1340 verified, 0 errors
-Elapsed: 20s
-Sampled Memory Usage: peak rust_verify RSS: 4883MB, peak z3 RSS: 422MB, min free: 21376MB
-Sampled CPU Usage: rust_verify: 79s, z3 children: 52s
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap41/ArraySetStEph.rs:854:33
+    |
+854 |                         implies common.elements@[j] == rv_views[j] by {
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+common.elements.view().index(j) == rv_views.index(j) 
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 4877MB, peak z3 RSS: 496MB, min free: 21395MB
+Sampled CPU Usage: rust_verify: 76s, z3 children: 51s

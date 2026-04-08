@@ -1,6 +1,33 @@
 Mode: isolate
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
-verification results:: 1958 verified, 0 errors
-Elapsed: 22s
-Sampled Memory Usage: peak rust_verify RSS: 6178MB, peak z3 RSS: 968MB, min free: 19631MB
-Sampled CPU Usage: rust_verify: 87s, z3 children: 73s
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:515:13
+    |
+515 |             tree.insert(x);
+    |             ^^^^^^^^^^^^^^
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:323:17
+    |
+323 |                 old(self).spec_bstparamteph_wf(),
+    |                 -------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap38/BSTParaMtEph.rs:323:17
+    |
+323 |                 old(self).spec_bstparamteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tree.spec_bstparamteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+tree.view().len() < UnsignedMax.Exec(usize::BITS) ✔
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 28s
+Sampled Memory Usage: peak rust_verify RSS: 6333MB, peak z3 RSS: 1010MB, min free: 19563MB
+Sampled CPU Usage: rust_verify: 97s, z3 children: 85s

@@ -1,0 +1,48 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap41/AVLTreeSetStPer.rs:532:73
+    |
+532 |                         (exists|j: int| 0 <= j < i + 1 && seq@[j] == v) by {
+    |                                                                         ^^
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:783:52
+    |
+783 |     impl<T: StT + Ord + TotalOrder> fmt::Debug for AVLTreeSetStPer<T> {
+    |                                                    ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:80:5
+    |
+ 80 |     pub struct AVLTreeSeqStPerS<T: StT> {
+    |     ----------------------------------- similarly named struct `AVLTreeSeqStPerS` defined here
+    |
+help: a struct with a similar name exists
+    |
+783 -     impl<T: StT + Ord + TotalOrder> fmt::Debug for AVLTreeSetStPer<T> {
+783 +     impl<T: StT + Ord + TotalOrder> fmt::Debug for AVLTreeSeqStPerS<T> {
+    |
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:798:54
+    |
+798 |     impl<T: StT + Ord + TotalOrder> fmt::Display for AVLTreeSetStPer<T> {
+    |                                                      ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:80:5
+    |
+ 80 |     pub struct AVLTreeSeqStPerS<T: StT> {
+    |     ----------------------------------- similarly named struct `AVLTreeSeqStPerS` defined here
+    |
+help: a struct with a similar name exists
+    |
+798 -     impl<T: StT + Ord + TotalOrder> fmt::Display for AVLTreeSetStPer<T> {
+798 +     impl<T: StT + Ord + TotalOrder> fmt::Display for AVLTreeSeqStPerS<T> {
+    |
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 5257MB, peak z3 RSS: 337MB, min free: 21472MB
+Sampled CPU Usage: rust_verify: 91s, z3 children: 52s

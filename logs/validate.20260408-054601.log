@@ -1,0 +1,40 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap41/ArraySetStEph.rs:385:17
+    |
+385 |                 common@ == self@.intersect(other@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+863 |             common
+    |             ------ at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap41/ArraySetStEph.rs:386:17
+    |
+386 |                 common.spec_arraysetsteph_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+863 |             common
+    |             ------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap41/ArraySetStEph.rs:385:17
+    |
+385 |                 common@ == self@.intersect(other@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+386 |                 common.spec_arraysetsteph_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= old(self).view().intersect(old(other).view()) ✘
+%return.spec_arraysetsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 5549MB, peak z3 RSS: 780MB, min free: 20876MB
+Sampled CPU Usage: rust_verify: 96s, z3 children: 122s

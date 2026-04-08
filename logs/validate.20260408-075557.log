@@ -1,0 +1,24 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1025:28
+     |
+1025 |                     assert(spec_set_pair_view_generated::<K, V>(right@)) by {
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_set_pair_view_generated(right.view())
+|   forall |elem|
+|       right.view().contains(elem) ==>
+|           (exists |p| p.view() == elem) 
++---
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 32s
+Sampled Memory Usage: peak rust_verify RSS: 6333MB, peak z3 RSS: 804MB, min free: 18823MB
+Sampled CPU Usage: rust_verify: 137s, z3 children: 138s

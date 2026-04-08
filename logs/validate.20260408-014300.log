@@ -1,20 +1,6 @@
 Mode: isolate
-Isolate: including Chap18 Chap19 Chap02 Chap51
-error: assertion failed
-   --> src/Chap51/TopDownDPStEph.rs:366:21
-    |
-366 |                     pre_memo[(a, b)] as nat == #[trigger] spec_med_fn(s, t, a as nat, b as nat)
-    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
-
-note: diagnostics via expansion
-
-note: 
-
-pre_memo.index((a, b)) == spec_med_fn(s, t, a, b) 
-
-verification results:: 1431 verified, 1 errors
-error: aborting due to 1 previous error
-
-Elapsed: 10s
-Sampled Memory Usage: peak rust_verify RSS: 2870MB, peak z3 RSS: 323MB, min free: 21103MB
-Sampled CPU Usage: rust_verify: 35s, z3 children: 20s
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+verification results:: 2280 verified, 0 errors
+Elapsed: 31s
+Sampled Memory Usage: peak rust_verify RSS: 4686MB, peak z3 RSS: 866MB, min free: 21105MB
+Sampled CPU Usage: rust_verify: 101s, z3 children: 118s

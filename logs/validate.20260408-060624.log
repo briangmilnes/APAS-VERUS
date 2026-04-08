@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap41/ArraySetStEph.rs:1049:33
+     |
+1049 |                         implies combined.elements@[k] == rv_views[k] by {
+     |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+combined.elements.view().index(k) == rv_views.index(k) 
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 4553MB, peak z3 RSS: 526MB, min free: 21959MB
+Sampled CPU Usage: rust_verify: 75s, z3 children: 67s

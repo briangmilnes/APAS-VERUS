@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap41/ArraySetStEph.rs:107:20
+    |
+107 |             assert(s.filter(pred) =~= seq![head].filter(pred) + tail.filter(pred));
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+s.filter(pred) =~= empty().push(head).filter(pred).add(tail.filter(pred)) 
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 30s
+Sampled Memory Usage: peak rust_verify RSS: 7019MB, peak z3 RSS: 897MB, min free: 19139MB
+Sampled CPU Usage: rust_verify: 119s, z3 children: 122s

@@ -1,6 +1,82 @@
 Mode: isolate
-Isolate: including Chap38 Chap18 Chap02
-verification results:: 1168 verified, 0 errors
-Elapsed: 10s
-Sampled Memory Usage: peak rust_verify RSS: 2458MB, peak z3 RSS: 309MB, min free: 24056MB
-Sampled CPU Usage: rust_verify: 27s, z3 children: 11s
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap41/AVLTreeSetMtPer.rs:405:17
+    |
+405 |                 by {
+    |                 ^^
+
+error[E0425]: cannot find type `AVLTreeSetMtPer` in this scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:634:68
+    |
+634 |     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Send for AVLTreeSetMtPer<T> {}
+    |                                                                    ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqMtPer.rs:83:5
+    |
+ 83 |     pub struct AVLTreeSeqMtPerS<T: StTInMtT> {
+    |     ---------------------------------------- similarly named struct `AVLTreeSeqMtPerS` defined here
+    |
+help: a struct with a similar name exists
+    |
+634 -     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Send for AVLTreeSetMtPer<T> {}
+634 +     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Send for AVLTreeSeqMtPerS<T> {}
+    |
+
+error[E0425]: cannot find type `AVLTreeSetMtPer` in this scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:635:68
+    |
+635 |     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtPer<T> {}
+    |                                                                    ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqMtPer.rs:83:5
+    |
+ 83 |     pub struct AVLTreeSeqMtPerS<T: StTInMtT> {
+    |     ---------------------------------------- similarly named struct `AVLTreeSeqMtPerS` defined here
+    |
+help: a struct with a similar name exists
+    |
+635 -     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtPer<T> {}
+635 +     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSeqMtPerS<T> {}
+    |
+
+error[E0425]: cannot find type `AVLTreeSetMtPer` in this scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:637:67
+    |
+637 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtPer<T> {
+    |                                                                   ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqMtPer.rs:83:5
+    |
+ 83 |     pub struct AVLTreeSeqMtPerS<T: StTInMtT> {
+    |     ---------------------------------------- similarly named struct `AVLTreeSeqMtPerS` defined here
+    |
+help: a struct with a similar name exists
+    |
+637 -     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtPer<T> {
+637 +     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSeqMtPerS<T> {
+    |
+
+error[E0425]: cannot find type `AVLTreeSetMtPer` in this scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:651:69
+    |
+651 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSetMtPer<T> {
+    |                                                                     ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqMtPer.rs:83:5
+    |
+ 83 |     pub struct AVLTreeSeqMtPerS<T: StTInMtT> {
+    |     ---------------------------------------- similarly named struct `AVLTreeSeqMtPerS` defined here
+    |
+help: a struct with a similar name exists
+    |
+651 -     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSetMtPer<T> {
+651 +     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSeqMtPerS<T> {
+    |
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 1379MB, peak z3 RSS: 0MB, min free: 25187MB
+Sampled CPU Usage: rust_verify: 13s, z3 children: 0s

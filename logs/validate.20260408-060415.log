@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+    --> src/Chap41/ArraySetStEph.rs:411:17
+     |
+ 411 |                 combined@ == self@.union(other@),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1097 |             combined
+     |             -------- at the end of the function body
+
+error: assertion failed
+    --> src/Chap41/ArraySetStEph.rs:1071:28
+     |
+1071 |                     assert(combined.elements@ =~= concat);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+combined.elements.view() =~= concat 
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 4224MB, peak z3 RSS: 598MB, min free: 22062MB
+Sampled CPU Usage: rust_verify: 68s, z3 children: 74s

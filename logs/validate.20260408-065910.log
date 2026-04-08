@@ -1,0 +1,39 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: precondition not satisfied
+   --> src/Chap41/OrdKeyMap.rs:220:9
+    |
+220 |         vstd::set_lib::lemma_map_size(s, proj_set, proj);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/set_lib.rs:1186:8
+    |
+    = note: failed precondition
+
+note: diagnostics via expansion
+ --> vstd/set_lib.rs:1186:8
+
+note: 
+
+s.finite() ✔
+injective_on(proj, s) ✘
+|   forall |x1, x2|
+|       s.contains(x1) && s.contains(x2) && proj(x1) == proj(x2) ==>
+|           x1 == x2
+|           |   x1.0 == x2.0 ✔
+|           |   x1.1 == x2.1 ✔
+|           +---
++---
+s.map(proj) == proj_set ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 34s
+Sampled Memory Usage: peak rust_verify RSS: 5280MB, peak z3 RSS: 1065MB, min free: 20364MB
+Sampled CPU Usage: rust_verify: 124s, z3 children: 147s

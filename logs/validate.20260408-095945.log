@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:2178:56
+     |
+2178 | ...                   assert forall|x: K::V| !(left_dom.contains(x) && #[trigger] root_key_set.contains(x)) by {};
+     |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+left_dom.contains(x) ==>
+    !(root_key_set.contains(x)) 
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 28s
+Sampled Memory Usage: peak rust_verify RSS: 4438MB, peak z3 RSS: 713MB, min free: 19296MB
+Sampled CPU Usage: rust_verify: 96s, z3 children: 133s

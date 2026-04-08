@@ -1,0 +1,30 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap41/ArraySetStEph.rs:743:33
+    |
+743 |                         implies filtered.elements@[j] == rv_views[j] by {
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+filtered.elements.view().index(j) == rv_views.index(j) 
+
+note: recommendation not met
+   --> src/Chap41/ArraySetStEph.rs:687:40
+    |
+687 | ...                   assert(next_sub[i as int] == cv);
+    |                              ^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 3729MB, peak z3 RSS: 762MB, min free: 22433MB
+Sampled CPU Usage: rust_verify: 60s, z3 children: 54s

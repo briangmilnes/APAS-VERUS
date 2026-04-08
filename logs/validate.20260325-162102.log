@@ -1,0 +1,21 @@
+error: The verifier does not yet support the following Rust feature: only variables are supported here, not general patterns
+   --> src/Chap62/StarContractionStEph.rs:326:20
+    |
+326 |             Ghost(|_: SetStEph<V>| true),
+    |                    ^
+
+error: The verifier does not yet support the following Rust feature: only variables are supported here, not general patterns
+   --> src/Chap63/ConnectivityStEph.rs:180:53
+    |
+180 |         star_contract(graph, &base, &expand, Ghost(|_: N| true))
+    |                                                     ^
+
+error: The verifier does not yet support the following Rust feature: only variables are supported here, not general patterns
+   --> src/Chap63/ConnectivityStEph.rs:241:53
+    |
+241 |         star_contract(graph, &base, &expand, Ghost(|_: (SetStEph<V>, HashMapWithViewPlus<V, V>)| true))
+    |                                                     ^
+
+error: aborting due to 3 previous errors
+
+Elapsed: 22s

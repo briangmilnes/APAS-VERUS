@@ -1,0 +1,78 @@
+error[E0599]: no method named `spec_avltreeseqstper_wf` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap43/OrderedTableMtEph.rs:677:35
+    |
+677 |             proof { assume(sorted.spec_avltreeseqstper_wf()); }
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:62:5
+    |
+ 62 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `spec_avltreeseqstper_wf` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+note: `Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerTrait` defines an item `spec_avltreeseqstper_wf`, perhaps you need to implement it
+   --> src/Chap37/AVLTreeSeqStPer.rs:229:5
+    |
+229 |     pub trait AVLTreeSeqStPerTrait<T: StT>: Sized {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: there is a method `spec_arrayseqstper_wf` with a similar name
+    |
+677 -             proof { assume(sorted.spec_avltreeseqstper_wf()); }
+677 +             proof { assume(sorted.spec_arrayseqstper_wf()); }
+    |
+
+error[E0599]: no method named `spec_seq` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap43/OrderedTableMtEph.rs:683:33
+    |
+683 |                     n == sorted.spec_seq().len(),
+    |                                 ^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:62:5
+    |
+ 62 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `spec_seq` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `spec_seq`, perhaps you need to implement one of them:
+            candidate #1: `Chap17::MathSeq::MathSeq::MathSeqSTrait`
+            candidate #2: `Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerTrait`
+            candidate #3: `Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait`
+            candidate #4: `Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerTrait`
+            candidate #5: `Chap45::BinaryHeapPQ::BinaryHeapPQ::BinaryHeapPQTrait`
+            candidate #6: `Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapNodeSpec`
+            candidate #7: `Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapPQTrait`
+            candidate #8: `Chap45::SortedListPQ::SortedListPQ::SortedListPQTrait`
+            candidate #9: `Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQTrait`
+help: there is a method `spec_len` with a similar name
+    |
+683 -                     n == sorted.spec_seq().len(),
+683 +                     n == sorted.spec_len().len(),
+    |
+
+error[E0599]: no method named `spec_avltreeseqstper_wf` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap43/OrderedTableMtEph.rs:684:28
+    |
+684 |                     sorted.spec_avltreeseqstper_wf(),
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:62:5
+    |
+ 62 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `spec_avltreeseqstper_wf` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+note: `Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerTrait` defines an item `spec_avltreeseqstper_wf`, perhaps you need to implement it
+   --> src/Chap37/AVLTreeSeqStPer.rs:229:5
+    |
+229 |     pub trait AVLTreeSeqStPerTrait<T: StT>: Sized {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: there is a method `spec_arrayseqstper_wf` with a similar name
+    |
+684 -                     sorted.spec_avltreeseqstper_wf(),
+684 +                     sorted.spec_arrayseqstper_wf(),
+    |
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 32s

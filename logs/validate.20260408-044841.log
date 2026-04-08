@@ -1,14 +1,6 @@
 Mode: isolate
-Isolate: including Chap23
-error: invariant not satisfied before loop
-   --> src/Chap23/PrimTreeSeqStPer.rs:434:21
-    |
-434 |                     forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[j],)),
-    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-verification results:: 757 verified, 1 errors
-error: aborting due to 1 previous error
-
-Elapsed: 4s
-Sampled Memory Usage: peak rust_verify RSS: 2257MB, peak z3 RSS: 39MB, min free: 24318MB
-Sampled CPU Usage: rust_verify: 18s, z3 children: 0s
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+verification results:: 2280 verified, 0 errors
+Elapsed: 34s
+Sampled Memory Usage: peak rust_verify RSS: 5625MB, peak z3 RSS: 696MB, min free: 20662MB
+Sampled CPU Usage: rust_verify: 94s, z3 children: 93s

@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap41/ArraySetEnumMtEph.rs:475:29
+    |
+475 | ...                   result_vec@.contains(x) by
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+result_vec.view().contains(x)
+|   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = result_vec.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && result_vec.view().index(i) == x) 
++---
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 4698MB, peak z3 RSS: 611MB, min free: 21413MB
+Sampled CPU Usage: rust_verify: 84s, z3 children: 64s

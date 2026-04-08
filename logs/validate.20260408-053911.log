@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap41/ArraySetStEph.rs:833:32
+    |
+833 |                         assert(next_prefix.filter(filt) =~= prefix.filter(filt).push(old_view[i as int]));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap41/ArraySetStEph.rs:840:32
+    |
+840 |                         assert(next_prefix.filter(filt) =~= prefix.filter(filt));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+next_prefix.filter(filt) =~= prefix.filter(filt).push(old_view.index(i)) 
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 5061MB, peak z3 RSS: 493MB, min free: 21424MB
+Sampled CPU Usage: rust_verify: 74s, z3 children: 54s

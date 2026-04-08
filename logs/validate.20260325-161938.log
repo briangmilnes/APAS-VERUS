@@ -1,0 +1,76 @@
+error[E0599]: no method named `iter` found for struct `vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus<Key>` in the current scope
+   --> src/Chap64/SpanTreeStEph.rs:104:48
+    |
+104 |             let it_qt = quotient_tree.elements.iter();
+    |                                                ^^^^ method not found in `HashSetWithViewPlus<Edge<V>>`
+    |
+   ::: src/vstdplus/hash_set_with_view_plus.rs:48:1
+    |
+ 48 | pub struct HashSetWithViewPlus<Key: View + Eq + Hash> {
+    | ----------------------------------------------------- method `iter` not found for this struct
+...
+ 83 |     fn iter(&self) -> (r: HashSetWithViewPlusIter<'_, Key>)
+    |        ---- the method is available for `vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus<Types::Types::Edge<V>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: the full name for the type has been written to 'lib.long-type-13707873068129288673.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: one of the expressions' fields has a method of the same name
+    |
+104 |             let it_qt = quotient_tree.elements.inner.iter();
+    |                                                ++++++
+help: trait `HashSetWithViewPlusTrait` which provides `iter` is implemented but not in scope; perhaps you want to import it
+    |
+  8 +     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
+    |
+
+error[E0599]: no method named `iter` found for struct `vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus<Key>` in the current scope
+   --> src/Chap64/SpanTreeStEph.rs:116:57
+    |
+116 |                 let mut it_oe = original_edges.elements.iter();
+    |                                                         ^^^^ method not found in `HashSetWithViewPlus<Edge<V>>`
+    |
+   ::: src/vstdplus/hash_set_with_view_plus.rs:48:1
+    |
+ 48 | pub struct HashSetWithViewPlus<Key: View + Eq + Hash> {
+    | ----------------------------------------------------- method `iter` not found for this struct
+...
+ 83 |     fn iter(&self) -> (r: HashSetWithViewPlusIter<'_, Key>)
+    |        ---- the method is available for `vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus<Types::Types::Edge<V>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: the full name for the type has been written to 'lib.long-type-13707873068129288673.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: one of the expressions' fields has a method of the same name
+    |
+116 |                 let mut it_oe = original_edges.elements.inner.iter();
+    |                                                         ++++++
+help: trait `HashSetWithViewPlusTrait` which provides `iter` is implemented but not in scope; perhaps you want to import it
+    |
+  8 +     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
+    |
+
+error[E0308]: mismatched types
+   --> src/Chap64/SpanTreeStEph.rs:133:63
+    |
+ 53 |     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (result: SetStEph<Edge<V>>)
+    |                                           - expected this type parameter
+...
+133 |                                 let _ = spanning_edges.insert(oe.clone_plus());
+    |                                                        ------ ^^^^^^^^^^^^^^^ expected `Edge<V>`, found `Edge<&V>`
+    |                                                        |
+    |                                                        arguments to this method are incorrect
+    |
+    = note: expected struct `Types::Types::Edge<_>`
+               found struct `Types::Types::Edge<&_>`
+note: method defined here
+   --> src/Chap05/SetStEph.rs:172:12
+    |
+172 |         fn insert(&mut self, x: T)           -> (inserted: bool)
+    |            ^^^^^^            -
+
+error: aborting due to 3 previous errors
+
+Some errors have detailed explanations: E0308, E0599.
+For more information about an error, try `rustc --explain E0308`.
+Elapsed: 32s

@@ -1,6 +1,39 @@
 Mode: isolate
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
-verification results:: 1958 verified, 0 errors
-Elapsed: 24s
-Sampled Memory Usage: peak rust_verify RSS: 5284MB, peak z3 RSS: 656MB, min free: 19235MB
-Sampled CPU Usage: rust_verify: 95s, z3 children: 87s
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: precondition not satisfied
+    --> src/Chap41/OrdKeyMap.rs:1048:38
+     |
+ 970 |             spec_set_pair_view_generated::<K, V>(tree@),
+     |             ------------------------------------------- failed precondition
+...
+1048 |                         let result = ordkeymap_find(&left, k);
+     |                                      ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap41/OrdKeyMap.rs:970:13
+    |
+970 |             spec_set_pair_view_generated::<K, V>(tree@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+left.spec_bstparasteph_wf() ✔
+spec_key_unique_pairs_set(left.view()) ✔
+spec_set_pair_view_generated(left.view()) ✘
+|   forall |elem|
+|       left.view().contains(elem) ==>
+|           (exists |p| p.view() == elem) 
++---
+view_ord_consistent() ✔
+obeys_feq_fulls() ✔
+obeys_cmp_spec() ✔
+spec_pair_key_determines_order() ✔
+view_ord_consistent() ✔
+obeys_cmp_spec() ✔
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 5286MB, peak z3 RSS: 518MB, min free: 19217MB
+Sampled CPU Usage: rust_verify: 96s, z3 children: 84s

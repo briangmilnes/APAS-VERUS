@@ -1,24 +1,6 @@
 Mode: isolate
-Isolate: including Chap47 Chap18 Chap02
-note: recommendation not met
-   --> src/Chap47/LinProbFlatHashTableStEph.rs:735:28
-    |
-735 |                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
-    |                            ^^^^^^^^^^^^^^^^^^^^
-    |
-   --> vstd/seq_lib.rs:492:12
-    |
-    = note: recommendation not met
-
-error: invariant not satisfied at end of loop body
-   --> src/Chap47/LinProbFlatHashTableStEph.rs:797:21
-    |
-797 |                     new_table@ =~= spec_seq_pairs_to_map(pairs@.subrange(0, j as int)),
-    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-verification results:: 1253 verified, 1 errors
-error: aborting due to 1 previous error
-
-Elapsed: 11s
-Sampled Memory Usage: peak rust_verify RSS: 3478MB, peak z3 RSS: 639MB, min free: 22931MB
-Sampled CPU Usage: rust_verify: 47s, z3 children: 37s
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+verification results:: 2280 verified, 0 errors
+Elapsed: 33s
+Sampled Memory Usage: peak rust_verify RSS: 4335MB, peak z3 RSS: 630MB, min free: 22245MB
+Sampled CPU Usage: rust_verify: 75s, z3 children: 71s
