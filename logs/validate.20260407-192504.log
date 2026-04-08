@@ -1,0 +1,25 @@
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:2879:29
+     |
+2879 |                     implies spec_pair_set_to_map(new_tree@).dom().contains(kv)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:2999:33
+     |
+2999 |                         implies combined@.dom().contains(kv)
+     |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_pair_set_to_map(new_tree.view()).dom().contains(kv) 
+    function is uninterpreted
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 3502MB, peak z3 RSS: 430MB, min free: 21577MB
+Sampled CPU Usage: rust_verify: 53s, z3 children: 80s
