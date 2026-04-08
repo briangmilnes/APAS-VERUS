@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap41/ArraySetEnumMtEph.rs:666:37
+    |
+666 | ...                   implies u64_view(self.bits@[k])[b] by
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+u64_view(self.bits.view().index(k)).index(b) 
+    function is uninterpreted
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 32s
+Sampled Memory Usage: peak rust_verify RSS: 7753MB, peak z3 RSS: 1153MB, min free: 18185MB
+Sampled CPU Usage: rust_verify: 154s, z3 children: 177s

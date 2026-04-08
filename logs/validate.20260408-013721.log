@@ -1,0 +1,33 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:256:13
+    |
+256 |               tree@ =~= vals@.map_values(|t: T| t@).to_set(),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+260 | /         if n == 0 {
+261 | |             let tree = ParamBST::<T>::new();
+262 | |             proof {
+...   |
+370 | |             result
+371 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetMtEph.rs:256:13
+    |
+256 |             tree@ =~= vals@.map_values(|t: T| t@).to_set(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tree.view().finite() ✔
+tree.view() =~= old(vals).view().map_values((|t| t.view())).to_set() ✘
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 4440MB, peak z3 RSS: 892MB, min free: 21167MB
+Sampled CPU Usage: rust_verify: 86s, z3 children: 104s

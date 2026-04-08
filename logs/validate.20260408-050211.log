@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap41/ArraySetStEph.rs:343:73
+    |
+343 |             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_arraysetsteph_wf();
+    |                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+518 |             ArraySetStEph { elements }
+    |             -------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap41/ArraySetStEph.rs:343:73
+    |
+343 |             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_arraysetsteph_wf();
+    |                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= empty().insert(old(x).view()) ✔
+%return.spec_arraysetsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 29s
+Sampled Memory Usage: peak rust_verify RSS: 4672MB, peak z3 RSS: 830MB, min free: 21322MB
+Sampled CPU Usage: rust_verify: 90s, z3 children: 101s

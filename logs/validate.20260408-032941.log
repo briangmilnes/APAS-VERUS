@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap41/ArraySetEnumMtEph.rs:148:17
+    |
+148 |           ensures Set::new(|i: usize| (i as int) < n as int).finite()
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+151 | /         if n == 0 {
+152 | |             assert(Set::new(|i: usize| (i as int) < 0int) =~= Set::<usize>::empty());
+153 | |         } else {
+154 | |             lemma_bounded_usize_set_finite((n - 1) as usize);
+...   |
+158 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+new((|i| i < old(n))).finite() 
+    function is uninterpreted
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 30s
+Sampled Memory Usage: peak rust_verify RSS: 6165MB, peak z3 RSS: 554MB, min free: 20198MB
+Sampled CPU Usage: rust_verify: 125s, z3 children: 99s

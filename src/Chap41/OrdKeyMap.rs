@@ -121,10 +121,6 @@ pub mod OrdKeyMap {
         ensures
             spec_set_pair_view_generated::<K, V>(sub),
     {
-        assert forall|elem: (K::V, V::V)| sub.contains(elem)
-            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-            assert(sup.contains(elem));
-        };
     }
 
     /// Inserting a Pair view into a View-generated set preserves View-generation.
@@ -137,14 +133,6 @@ pub mod OrdKeyMap {
         ensures
             spec_set_pair_view_generated::<K, V>(s.insert(pair@)),
     {
-        assert forall|elem: (K::V, V::V)| s.insert(pair@).contains(elem)
-            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-            if elem == pair@ {
-                assert(pair@ == elem);
-            } else {
-                assert(s.contains(elem));
-            }
-        };
     }
 
     /// Union of two View-generated sets is View-generated.
@@ -158,10 +146,6 @@ pub mod OrdKeyMap {
         ensures
             spec_set_pair_view_generated::<K, V>(a.union(b)),
     {
-        assert forall|elem: (K::V, V::V)| a.union(b).contains(elem)
-            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-            if a.contains(elem) {} else { assert(b.contains(elem)); }
-        };
     }
 
     /// The domain of spec_pair_set_to_map is finite when the source set is finite.
@@ -177,8 +161,6 @@ pub mod OrdKeyMap {
             implies #[trigger] proj_set.contains(k)
         by {
             let v: VV = choose|v: VV| s.contains((k, v));
-            assert(s.contains((k, v)));
-            assert(proj((k, v)) == k);
         };
         s.lemma_map_finite(proj);
         vstd::set_lib::lemma_len_subset(dom_set, proj_set);
@@ -199,7 +181,6 @@ pub mod OrdKeyMap {
                 implies #[trigger] proj_set.contains(k)
             by {
                 let v: VV = choose|v: VV| s.contains((k, v));
-                assert(s.contains((k, v)));
             };
             assert forall|k: KV| proj_set.contains(k)
                 implies #[trigger] dom_set.contains(k)
@@ -230,12 +211,9 @@ pub mod OrdKeyMap {
             spec_pair_set_to_map(s)[k] == v,
     {
         let m = spec_pair_set_to_map(s);
-        assert(m.dom().contains(k));
         // m[k] == choose|v_| s.contains((k, v_)).
         // By key uniqueness, that chosen value must equal v.
         let v2 = choose|v2: VV| s.contains((k, v2));
-        assert(s.contains((k, v2)));
-        assert(v2 == v);
     }
 
     /// If the map contains a key, a pair with that key exists in the set.
@@ -260,10 +238,8 @@ pub mod OrdKeyMap {
         by {
             if k2 == k {
                 if s.contains((k2, v1)) {
-                    assert(spec_pair_set_to_map(s).dom().contains(k));
                 }
                 if s.contains((k2, v2)) {
-                    assert(spec_pair_set_to_map(s).dom().contains(k));
                 }
                 // Both must be (k, v) from the insert.
             } else {
@@ -283,7 +259,6 @@ pub mod OrdKeyMap {
     {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        assert(a@ == b@);
     }
 
     /// In-order traversal keys are pairwise distinct: distinct indices have distinct keys.
@@ -305,7 +280,6 @@ pub mod OrdKeyMap {
     {
         // sorted.to_set() =~= tree.
         assert(sorted.to_set() =~= tree) by {
-            assert forall|v: (KV, VV)| sorted.to_set().contains(v) <==> #[trigger] tree.contains(v) by {};
         };
         // sorted.to_set().len() == tree.len() == sorted.len(), so no duplicates.
         sorted.lemma_no_dup_set_cardinality();
@@ -374,25 +348,19 @@ pub mod OrdKeyMap {
             if k == root.0 {
                 // Both must be root (by key separation from s1 and s2).
                 if s1.contains((k, v1)) {
-                    assert(false);
                 }
                 if s2.contains((k, v1)) {
-                    assert(false);
                 }
                 if s1.contains((k, v2)) {
-                    assert(false);
                 }
                 if s2.contains((k, v2)) {
-                    assert(false);
                 }
             } else {
                 // (k, v1) and (k, v2) are in s1 union s2.
                 // By key separation, both must be in the same set.
                 if s1.contains((k, v1)) && s2.contains((k, v2)) {
-                    assert(false); // key separation
                 }
                 if s2.contains((k, v1)) && s1.contains((k, v2)) {
-                    assert(false); // key separation
                 }
                 // Both in s1 or both in s2 -> key uniqueness.
             }
@@ -417,7 +385,6 @@ pub mod OrdKeyMap {
             if key == k {
             } else {
                 let vv: VV = choose|vv: VV| new_s.contains((key, vv));
-                assert(s.contains((key, vv)));
             }
         };
         assert forall|key: KV| old_m.insert(k, v).dom().contains(key)
@@ -436,15 +403,10 @@ pub mod OrdKeyMap {
         by {
             if key == k {
                 let cv: VV = choose|cv: VV| new_s.contains((k, cv));
-                assert(new_s.contains((k, cv)));
-                assert(new_s.contains((k, v)));
                 lemma_key_unique_insert(s, k, v);
-                assert(cv == v);
             } else {
                 let cv: VV = choose|cv: VV| new_s.contains((key, cv));
-                assert(s.contains((key, cv)));
                 let cv2: VV = choose|cv2: VV| s.contains((key, cv2));
-                assert(cv == cv2);
             }
         };
     }
@@ -466,26 +428,16 @@ pub mod OrdKeyMap {
             implies old_m.remove(k).dom().contains(key) && #[trigger] new_m[key] == #[trigger] old_m[key]
         by {
             let vv: VV = choose|vv: VV| new_s.contains((key, vv));
-            assert(s.contains((key, vv)));
             if key == k {
-                assert(new_s.contains((k, vv)));
-                assert(!new_s.contains((k, v)));
-                assert(vv != v);
-                assert(s.contains((k, vv)));
-                assert(s.contains((k, v)));
                 // Key uniqueness: vv == v. Contradiction.
-                assert(false);
             }
             let cv: VV = choose|cv: VV| s.contains((key, cv));
-            assert(cv == vv);
         };
         // Backward: every key in old_m.remove(k) is in new_m.
         assert forall|key: KV| old_m.remove(k).dom().contains(key)
             implies #[trigger] new_m.dom().contains(key)
         by {
-            assert(key != k);
             let vv: VV = choose|vv: VV| s.contains((key, vv));
-            assert(new_s.contains((key, vv)));
         };
     }
 
@@ -531,7 +483,6 @@ pub mod OrdKeyMap {
                 if k == root_k {
                 } else if left.contains((k, v)) {
                 } else {
-                    assert(right.contains((k, v)));
                 }
             };
             assert forall|k: KV| lm.dom().union(rm.dom()).insert(root_k).contains(k) implies
@@ -550,48 +501,10 @@ pub mod OrdKeyMap {
         };
         // Root value.
         assert(cm.contains_key(root_k)) by {
-            assert(combined.contains((root_k, root_v)));
         };
         let cv: VV = choose|cv: VV| combined.contains((root_k, cv));
-        assert(cv == root_v) by {
-            if left.contains((root_k, cv)) {
-                assert(false);
-            }
-            if right.contains((root_k, cv)) {
-                assert(false);
-            }
-        };
         // Left values.
-        assert forall|k: KV| lm.dom().contains(k) implies #[trigger] cm[k] == lm[k] by {
-            let v_l: VV = choose|v: VV| left.contains((k, v));
-            assert(combined.contains((k, v_l)));
-            let v_c: VV = choose|v: VV| combined.contains((k, v));
-            // v_c must equal v_l: if from right, contradiction on key separation.
-            if right.contains((k, v_c)) {
-                assert(left.contains((k, v_l)));
-                assert(false);
-            }
-            if (k, v_c) == (root_k, root_v) {
-                assert(false);
-            }
-            assert(left.contains((k, v_c)));
-            assert(v_c == v_l);
-        };
         // Right values.
-        assert forall|k: KV| rm.dom().contains(k) implies #[trigger] cm[k] == rm[k] by {
-            let v_r: VV = choose|v: VV| right.contains((k, v));
-            assert(combined.contains((k, v_r)));
-            let v_c: VV = choose|v: VV| combined.contains((k, v));
-            if left.contains((k, v_c)) {
-                assert(right.contains((k, v_r)));
-                assert(false);
-            }
-            if (k, v_c) == (root_k, root_v) {
-                assert(false);
-            }
-            assert(right.contains((k, v_c)));
-            assert(v_c == v_r);
-        };
     }
 
     /// The map over an empty set is the empty map.
@@ -995,8 +908,6 @@ pub mod OrdKeyMap {
                 proof {
                     reveal(vstd::laws_cmp::obeys_cmp_ord);
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
-                    assert(tree@.len() == left@.len() + right@.len() + 1);
                     // Propagate key uniqueness and View generation to subtrees.
                     assert(spec_key_unique_pairs_set(left@)) by {
                         assert forall|kv: K::V, vv: V::V| #[trigger] left@.contains((kv, vv))
@@ -1036,10 +947,6 @@ pub mod OrdKeyMap {
                         let v_clone = root_pair.1.clone_plus();
                         proof {
                             lemma_cloned_view_eq(root_pair.1, v_clone);
-                            assert(k.cmp_spec(&root_pair.0) == Equal);
-                            assert(k@ == root_pair.0@);
-                            assert(tree@.contains(root_pair@));
-                            assert(tree@.contains((k@, root_pair.1@)));
                             lemma_pair_in_set_map_contains(tree@, k@, root_pair.1@);
                         }
                         Some(v_clone)
@@ -1047,25 +954,16 @@ pub mod OrdKeyMap {
                     Less => {
                         let result = ordkeymap_find(&left, k);
                         proof {
-                            assert(k.cmp_spec(&root_pair.0) == Less);
-                            assert(k@ != root_pair.0@);
                             if result is Some {
                                 lemma_map_contains_pair_in_set(left@, k@);
                                 let vv: V::V = choose|vv: V::V| left@.contains((k@, vv));
-                                assert(tree@.contains((k@, vv)));
                                 lemma_pair_in_set_map_contains(tree@, k@, vv);
                             } else {
                                 if spec_pair_set_to_map(tree@).contains_key(k@) {
                                     lemma_map_contains_pair_in_set(tree@, k@);
                                     let vv: V::V = choose|vv: V::V| tree@.contains((k@, vv));
-                                    assert(!left@.contains((k@, vv)));
-                                    assert(root_pair@.0 != k@);
-                                    assert(right@.contains((k@, vv)));
                                     let ghost p_wit: Pair<K, V> = choose|p: Pair<K, V>| p@ == (k@, vv);
-                                    assert(right@.contains(p_wit@));
                                     lemma_cmp_equal_congruent(p_wit.0, *k, root_pair.0);
-                                    assert(p_wit.0.cmp_spec(&root_pair.0) == Less);
-                                    assert(false);
                                 }
                             }
                         }
@@ -1074,25 +972,16 @@ pub mod OrdKeyMap {
                     Greater => {
                         let result = ordkeymap_find(&right, k);
                         proof {
-                            assert(k.cmp_spec(&root_pair.0) == Greater);
-                            assert(k@ != root_pair.0@);
                             if result is Some {
                                 lemma_map_contains_pair_in_set(right@, k@);
                                 let vv: V::V = choose|vv: V::V| right@.contains((k@, vv));
-                                assert(tree@.contains((k@, vv)));
                                 lemma_pair_in_set_map_contains(tree@, k@, vv);
                             } else {
                                 if spec_pair_set_to_map(tree@).contains_key(k@) {
                                     lemma_map_contains_pair_in_set(tree@, k@);
                                     let vv: V::V = choose|vv: V::V| tree@.contains((k@, vv));
-                                    assert(!right@.contains((k@, vv)));
-                                    assert(root_pair@.0 != k@);
-                                    assert(left@.contains((k@, vv)));
                                     let ghost p_wit: Pair<K, V> = choose|p: Pair<K, V>| p@ == (k@, vv);
-                                    assert(left@.contains(p_wit@));
                                     lemma_cmp_equal_congruent(p_wit.0, *k, root_pair.0);
-                                    assert(p_wit.0.cmp_spec(&root_pair.0) == Greater);
-                                    assert(false);
                                 }
                             }
                         }
@@ -1158,7 +1047,6 @@ pub mod OrdKeyMap {
                 proof {
                     reveal(vstd::laws_cmp::obeys_cmp_ord);
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
                     lemma_key_unique_subset(tree@, left@);
                     lemma_key_unique_subset(tree@, right@);
                     lemma_view_gen_subset::<K, V>(left@, tree@);
@@ -1178,7 +1066,6 @@ pub mod OrdKeyMap {
                                 assert(p.0@ != root_pair.0@) by {
                                     if p.0@ == root_pair.0@ {
                                         assert(tree@.contains(p@));
-                                        assert(tree@.contains(root_pair@));
                                     }
                                 };
                                 lemma_cmp_equal_congruent(root_pair.0, *k, p.0);
@@ -1188,27 +1075,8 @@ pub mod OrdKeyMap {
                                 assert(p.0@ != root_pair.0@) by {
                                     if p.0@ == root_pair.0@ {
                                         assert(tree@.contains(p@));
-                                        assert(tree@.contains(root_pair@));
                                     }
                                 };
-                            };
-                            assert(!spec_pair_set_to_map(left@).dom().contains(k@)) by {
-                                if spec_pair_set_to_map(left@).dom().contains(k@) {
-                                    lemma_map_contains_pair_in_set(left@, k@);
-                                    let lv: V::V = choose|lv: V::V| left@.contains((k@, lv));
-                                    let lp: Pair<K, V> = choose|lp: Pair<K, V>| lp@ == (k@, lv);
-                                    assert(left@.contains(lp@));
-                                    reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                                }
-                            };
-                            assert(!spec_pair_set_to_map(right@).dom().contains(k@)) by {
-                                if spec_pair_set_to_map(right@).dom().contains(k@) {
-                                    lemma_map_contains_pair_in_set(right@, k@);
-                                    let rv: V::V = choose|rv: V::V| right@.contains((k@, rv));
-                                    let rp: Pair<K, V> = choose|rp: Pair<K, V>| rp@ == (k@, rv);
-                                    assert(right@.contains(rp@));
-                                    reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                                }
                             };
                         }
                         (left, Some(v), right)
@@ -1216,99 +1084,23 @@ pub mod OrdKeyMap {
                     Less => {
                         let (ll, found, lr) = ordkeymap_split(&left, k);
                         proof {
-                            assert forall|t: Pair<K, V>| (#[trigger] lr@.contains(t@))
-                                implies t.cmp_spec(&root_pair) == Less by {
-                                assert(left@.contains(t@));
-                            };
-                            assert(lr@.disjoint(right@)) by {
-                                assert forall|v: <Pair<K,V> as View>::V|
-                                    !(lr@.contains(v) && #[trigger] right@.contains(v)) by {
-                                    if lr@.contains(v) && right@.contains(v) {
-                                        assert(left@.contains(v));
-                                    }
-                                };
-                            };
                             vstd::set_lib::lemma_len_subset(lr@, left@);
                         }
                         let new_right = ParamBST::join_m(lr, root_pair, right);
                         proof {
-                            assert(ll@.subset_of(tree@)) by {
-                                assert forall|v: <Pair<K,V> as View>::V| ll@.contains(v)
-                                    implies #[trigger] tree@.contains(v) by {
-                                    assert(left@.contains(v));
-                                };
-                            };
-                            assert(new_right@ =~= lr@.union(right@).insert(root_pair@));
-                            assert(new_right@.subset_of(tree@)) by {
-                                assert forall|v: <Pair<K,V> as View>::V| new_right@.contains(v)
-                                    implies #[trigger] tree@.contains(v) by {
-                                    if lr@.contains(v) { assert(left@.contains(v)); }
-                                    else if right@.contains(v) {}
-                                };
-                            };
-                            assert(ll@.disjoint(new_right@)) by {
-                                assert forall|v: <Pair<K,V> as View>::V|
-                                    !(ll@.contains(v) && #[trigger] new_right@.contains(v)) by {
-                                    if ll@.contains(v) && new_right@.contains(v) {
-                                        if lr@.contains(v) {
-                                            assert(ll@.disjoint(lr@));
-                                        } else if right@.contains(v) {
-                                            assert(left@.contains(v));
-                                        } else {
-                                            assert(left@.contains(v));
-                                        }
-                                    }
-                                };
-                            };
-                            assert forall|kv: <K as View>::V, vv: <V as View>::V|
-                                #[trigger] tree@.contains((kv, vv))
-                                implies ll@.contains((kv, vv)) || new_right@.contains((kv, vv)) || kv == k@ by {
-                                if left@.contains((kv, vv)) {
-                                    if !ll@.contains((kv, vv)) && kv != k@ {
-                                    }
-                                } else if (kv, vv) == root_pair@ {
-                                }
-                            };
                             assert forall|p: Pair<K, V>| (#[trigger] new_right@.contains(p@))
                                 implies p.0.cmp_spec(k) == Greater by {
                                 if lr@.contains(p@) {}
                                 else if right@.contains(p@) {
-                                    assert(p.0@ != root_pair.0@) by {
-                                        if p.0@ == root_pair.0@ {
-                                            assert(tree@.contains(p@));
-                                            assert(tree@.contains(root_pair@));
-                                        }
-                                    };
                                     lemma_cmp_antisymmetry(*k, root_pair.0);
                                     reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
                                 } else {
                                     lemma_cmp_antisymmetry(*k, root_pair.0);
                                 }
                             };
-                            assert(!spec_pair_set_to_map(new_right@).dom().contains(k@)) by {
-                                if spec_pair_set_to_map(new_right@).dom().contains(k@) {
-                                    lemma_map_contains_pair_in_set(new_right@, k@);
-                                    let nv: V::V = choose|nv: V::V| new_right@.contains((k@, nv));
-                                    let np: Pair<K, V> = choose|np: Pair<K, V>| np@ == (k@, nv);
-                                    assert(new_right@.contains(np@));
-                                    reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                                }
-                            };
                             lemma_key_unique_subset(tree@, new_right@);
                             lemma_view_gen_subset::<K, V>(new_right@, tree@);
                             vstd::set_lib::lemma_set_disjoint_lens(lr@, right@);
-                            assert(new_right@.len() == lr@.len() + right@.len() + 1) by {
-                                let lr_r = lr@.union(right@);
-                                vstd::set_lib::lemma_set_disjoint_lens(lr@, right@);
-                                assert(!lr_r.contains(root_pair@)) by {
-                                    if lr_r.contains(root_pair@) {
-                                        if lr@.contains(root_pair@) { assert(left@.contains(root_pair@)); }
-                                    }
-                                };
-                                assert(lr_r.insert(root_pair@) =~= lr_r.union(Set::empty().insert(root_pair@)));
-                                let singleton = Set::empty().insert(root_pair@);
-                                vstd::set_lib::lemma_set_disjoint_lens(lr_r, singleton);
-                            };
                             if found is Some {
                                 lemma_map_contains_pair_in_set(left@, k@);
                                 let lv: V::V = choose|lv: V::V| left@.contains((k@, lv));
@@ -1321,95 +1113,14 @@ pub mod OrdKeyMap {
                     Greater => {
                         let (rl, found, rr) = ordkeymap_split(&right, k);
                         proof {
-                            assert forall|t: Pair<K, V>| (#[trigger] rl@.contains(t@))
-                                implies t.cmp_spec(&root_pair) == Greater by {
-                                assert(right@.contains(t@));
-                            };
-                            assert(left@.disjoint(rl@)) by {
-                                assert forall|v: <Pair<K,V> as View>::V|
-                                    !(left@.contains(v) && #[trigger] rl@.contains(v)) by {
-                                    if left@.contains(v) && rl@.contains(v) {
-                                        assert(right@.contains(v));
-                                    }
-                                };
-                            };
                             vstd::set_lib::lemma_len_subset(rl@, right@);
                         }
                         let new_left = ParamBST::join_m(left, root_pair, rl);
                         proof {
-                            assert(new_left@ =~= left@.union(rl@).insert(root_pair@));
-                            assert(new_left@.subset_of(tree@)) by {
-                                assert forall|v: <Pair<K,V> as View>::V| new_left@.contains(v)
-                                    implies #[trigger] tree@.contains(v) by {
-                                    if left@.contains(v) {}
-                                    else if rl@.contains(v) { assert(right@.contains(v)); }
-                                };
-                            };
-                            assert(rr@.subset_of(tree@)) by {
-                                assert forall|v: <Pair<K,V> as View>::V| rr@.contains(v)
-                                    implies #[trigger] tree@.contains(v) by {
-                                    assert(right@.contains(v));
-                                };
-                            };
-                            assert(new_left@.disjoint(rr@)) by {
-                                assert forall|v: <Pair<K,V> as View>::V|
-                                    !(new_left@.contains(v) && #[trigger] rr@.contains(v)) by {
-                                    if new_left@.contains(v) && rr@.contains(v) {
-                                        if left@.contains(v) {
-                                            assert(right@.contains(v));
-                                        } else if rl@.contains(v) {
-                                            assert(rl@.disjoint(rr@));
-                                        } else {
-                                            assert(right@.contains(v));
-                                        }
-                                    }
-                                };
-                            };
                             reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                            assert forall|p: Pair<K, V>| (#[trigger] new_left@.contains(p@))
-                                implies p.0.cmp_spec(k) == Less by {
-                                if left@.contains(p@) {
-                                    assert(p.0@ != root_pair.0@) by {
-                                        if p.0@ == root_pair.0@ {
-                                            assert(tree@.contains(p@));
-                                            assert(tree@.contains(root_pair@));
-                                        }
-                                    };
-                                } else if rl@.contains(p@) {
-                                }
-                            };
-                            assert(!spec_pair_set_to_map(new_left@).dom().contains(k@)) by {
-                                if spec_pair_set_to_map(new_left@).dom().contains(k@) {
-                                    lemma_map_contains_pair_in_set(new_left@, k@);
-                                    let nv: V::V = choose|nv: V::V| new_left@.contains((k@, nv));
-                                    let np: Pair<K, V> = choose|np: Pair<K, V>| np@ == (k@, nv);
-                                    assert(new_left@.contains(np@));
-                                }
-                            };
-                            assert forall|kv: <K as View>::V, vv: <V as View>::V|
-                                #[trigger] tree@.contains((kv, vv))
-                                implies new_left@.contains((kv, vv)) || rr@.contains((kv, vv)) || kv == k@ by {
-                                if right@.contains((kv, vv)) {
-                                    if !rl@.contains((kv, vv)) && kv != k@ {
-                                    }
-                                } else if (kv, vv) == root_pair@ {
-                                }
-                            };
                             lemma_key_unique_subset(tree@, new_left@);
                             lemma_view_gen_subset::<K, V>(new_left@, tree@);
                             vstd::set_lib::lemma_set_disjoint_lens(left@, rl@);
-                            assert(new_left@.len() == left@.len() + rl@.len() + 1) by {
-                                let l_rl = left@.union(rl@);
-                                vstd::set_lib::lemma_set_disjoint_lens(left@, rl@);
-                                assert(!l_rl.contains(root_pair@)) by {
-                                    if l_rl.contains(root_pair@) {
-                                        if rl@.contains(root_pair@) { assert(right@.contains(root_pair@)); }
-                                    }
-                                };
-                                assert(l_rl.insert(root_pair@) =~= l_rl.union(Set::empty().insert(root_pair@)));
-                                let singleton = Set::empty().insert(root_pair@);
-                                vstd::set_lib::lemma_set_disjoint_lens(l_rl, singleton);
-                            };
                             if found is Some {
                                 lemma_map_contains_pair_in_set(right@, k@);
                                 let rv: V::V = choose|rv: V::V| right@.contains((k@, rv));
@@ -1461,7 +1172,6 @@ pub mod OrdKeyMap {
                 proof {
                     reveal(vstd::laws_cmp::obeys_cmp_ord);
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
                     lemma_key_unique_subset(tree@, left@);
                     lemma_key_unique_subset(tree@, right@);
                     lemma_view_gen_subset::<K, V>(left@, tree@);
@@ -1489,25 +1199,12 @@ pub mod OrdKeyMap {
                                             lemma_pair_in_set_map_contains(left@, t@, tv);
                                         } else if (t@, tv) == root_pair@ {
                                             let lp: Pair<K, V> = choose|lp: Pair<K, V>| #[trigger] left@.contains(lp@) && lp@ == (lk@, vv);
-                                            assert(lp.0@ != root_pair.0@) by {
-                                                if lp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(lp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_less_implies_le(lk, t);
                                         } else {
                                             let lp: Pair<K, V> = choose|lp: Pair<K, V>| #[trigger] left@.contains(lp@) && lp@ == (lk@, vv);
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
                                             assert(lp.0@ != root_pair.0@) by {
                                                 if lp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(lp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
                                                     assert(tree@.contains(root_pair@));
                                                 }
                                             };
@@ -1537,12 +1234,6 @@ pub mod OrdKeyMap {
                                             K::reflexive(key);
                                         } else {
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_greater_implies_le(t, root_pair.0);
                                         }
                                     };
@@ -1564,12 +1255,6 @@ pub mod OrdKeyMap {
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if left@.contains((t@, tv)) {
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_less_implies_le(t, root_pair.0);
                                             K::antisymmetric(t, *k);
                                         } else if (t@, tv) == root_pair@ {
@@ -1586,7 +1271,6 @@ pub mod OrdKeyMap {
                                     lemma_pair_in_set_map_contains(tree@, min_pair.0@, min_pair.1@);
                                     assert(min_pair.0@ != root_pair.0@) by {
                                         if min_pair.0@ == root_pair.0@ {
-                                            assert(tree@.contains(min_pair@));
                                             assert(tree@.contains(root_pair@));
                                         }
                                     };
@@ -1599,12 +1283,6 @@ pub mod OrdKeyMap {
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if left@.contains((t@, tv)) {
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_less_implies_le(t, root_pair.0);
                                             K::antisymmetric(t, *k);
                                         } else if (t@, tv) == root_pair@ {
@@ -1613,12 +1291,6 @@ pub mod OrdKeyMap {
                                             if min_pair@ == tp@ {
                                                 K::reflexive(key);
                                             } else {
-                                                assert(min_pair.0@ != tp.0@) by {
-                                                    if min_pair.0@ == tp.0@ {
-                                                        assert(tree@.contains(min_pair@));
-                                                        assert(tree@.contains(tp@));
-                                                    }
-                                                };
                                                 K::cmp_spec_less_implies_le(key, t);
                                             }
                                         }
@@ -1646,7 +1318,6 @@ pub mod OrdKeyMap {
                                         let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
                                         assert(tp.0@ != root_pair.0@) by {
                                             if tp.0@ == root_pair.0@ {
-                                                assert(tree@.contains(tp@));
                                                 assert(tree@.contains(root_pair@));
                                             }
                                         };
@@ -1671,7 +1342,6 @@ pub mod OrdKeyMap {
                                         let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
                                         assert(tp.0@ != root_pair.0@) by {
                                             if tp.0@ == root_pair.0@ {
-                                                assert(tree@.contains(tp@));
                                                 assert(tree@.contains(root_pair@));
                                             }
                                         };
@@ -1735,7 +1405,6 @@ pub mod OrdKeyMap {
                 proof {
                     reveal(vstd::laws_cmp::obeys_cmp_ord);
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
                     lemma_key_unique_subset(tree@, left@);
                     lemma_key_unique_subset(tree@, right@);
                     lemma_view_gen_subset::<K, V>(left@, tree@);
@@ -1763,25 +1432,12 @@ pub mod OrdKeyMap {
                                             lemma_pair_in_set_map_contains(right@, t@, tv);
                                         } else if (t@, tv) == root_pair@ {
                                             let rp: Pair<K, V> = choose|rp: Pair<K, V>| #[trigger] right@.contains(rp@) && rp@ == (rk@, rv);
-                                            assert(rp.0@ != root_pair.0@) by {
-                                                if rp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(rp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_greater_implies_le(rk, root_pair.0);
                                         } else {
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
                                             let rp: Pair<K, V> = choose|rp: Pair<K, V>| #[trigger] right@.contains(rp@) && rp@ == (rk@, rv);
                                             assert(tp.0@ != root_pair.0@) by {
                                                 if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            assert(rp.0@ != root_pair.0@) by {
-                                                if rp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(rp@));
                                                     assert(tree@.contains(root_pair@));
                                                 }
                                             };
@@ -1811,12 +1467,6 @@ pub mod OrdKeyMap {
                                             K::reflexive(key);
                                         } else {
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_less_implies_le(t, root_pair.0);
                                         }
                                     };
@@ -1838,12 +1488,6 @@ pub mod OrdKeyMap {
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if right@.contains((t@, tv)) {
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_greater_implies_le(t, root_pair.0);
                                             K::antisymmetric(*k, t);
                                         } else if (t@, tv) == root_pair@ {
@@ -1860,7 +1504,6 @@ pub mod OrdKeyMap {
                                     lemma_pair_in_set_map_contains(tree@, max_pair.0@, max_pair.1@);
                                     assert(max_pair.0@ != root_pair.0@) by {
                                         if max_pair.0@ == root_pair.0@ {
-                                            assert(tree@.contains(max_pair@));
                                             assert(tree@.contains(root_pair@));
                                         }
                                     };
@@ -1873,12 +1516,6 @@ pub mod OrdKeyMap {
                                         let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
                                         if right@.contains((t@, tv)) {
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_greater_implies_le(t, root_pair.0);
                                             K::antisymmetric(*k, t);
                                         } else if (t@, tv) == root_pair@ {
@@ -1887,12 +1524,6 @@ pub mod OrdKeyMap {
                                             if max_pair@ == tp@ {
                                                 K::reflexive(key);
                                             } else {
-                                                assert(tp.0@ != max_pair.0@) by {
-                                                    if tp.0@ == max_pair.0@ {
-                                                        assert(tree@.contains(tp@));
-                                                        assert(tree@.contains(max_pair@));
-                                                    }
-                                                };
                                                 K::cmp_spec_less_implies_le(t, key);
                                             }
                                         }
@@ -2006,8 +1637,6 @@ pub mod OrdKeyMap {
         match tree.expose() {
             Exposed::Leaf => {
                 proof {
-                    assert(tree@ =~= Set::empty());
-                    assert(spec_pair_set_to_map(tree@).dom() =~= Set::empty());
                     assert(spec_pair_set_to_map(tree@).dom().filter(rank_pred) =~= Set::empty());
                 }
                 0
@@ -2018,7 +1647,6 @@ pub mod OrdKeyMap {
                 proof {
                     reveal(vstd::laws_cmp::obeys_cmp_ord);
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
                     lemma_key_unique_subset(tree@, left@);
                     lemma_key_unique_subset(tree@, right@);
                     lemma_view_gen_subset::<K, V>(left@, tree@);
@@ -2048,7 +1676,6 @@ pub mod OrdKeyMap {
                                         let xp: Pair<K, V> = choose|xp: Pair<K, V>| #[trigger] right@.contains(xp@) && xp@ == (x, xv);
                                         assert(xp.0@ != root_pair.0@) by {
                                             if xp.0@ == root_pair.0@ {
-                                                assert(tree@.contains(xp@));
                                                 assert(tree@.contains(root_pair@));
                                             }
                                         };
@@ -2087,12 +1714,6 @@ pub mod OrdKeyMap {
                                     } else if (x, xv) == root_pair@ {
                                     } else {
                                         let xp: Pair<K, V> = choose|xp: Pair<K, V>| #[trigger] right@.contains(xp@) && xp@ == (x, xv);
-                                        assert(xp.0@ != root_pair.0@) by {
-                                            if xp.0@ == root_pair.0@ {
-                                                assert(tree@.contains(xp@));
-                                                assert(tree@.contains(root_pair@));
-                                            }
-                                        };
                                         K::cmp_spec_greater_implies_le(xp.0, root_pair.0);
                                         K::antisymmetric(t, *k);
                                     }
@@ -2105,7 +1726,6 @@ pub mod OrdKeyMap {
                                     let xp: Pair<K, V> = choose|xp: Pair<K, V>| #[trigger] left@.contains(xp@) && xp@ == (x, xv);
                                     assert(xp.0@ != root_pair.0@) by {
                                         if xp.0@ == root_pair.0@ {
-                                            assert(tree@.contains(xp@));
                                             assert(tree@.contains(root_pair@));
                                         }
                                     };
@@ -2129,17 +1749,6 @@ pub mod OrdKeyMap {
                             lemma_pair_set_to_map_len(right@);
                             let root_key_set = Set::empty().insert(root_pair.0@);
                             assert(tree_dom.filter(rank_pred) =~= left_dom.union(root_key_set).union(right_dom.filter(rank_pred))) by {
-                                assert forall|x: K::V| #[trigger] tree_dom.filter(rank_pred).contains(x)
-                                    implies left_dom.union(root_key_set).union(right_dom.filter(rank_pred)).contains(x) by {
-                                    lemma_map_contains_pair_in_set(tree@, x);
-                                    let xv: V::V = choose|xv: V::V| tree@.contains((x, xv));
-                                    if left@.contains((x, xv)) {
-                                        lemma_pair_in_set_map_contains(left@, x, xv);
-                                    } else if (x, xv) == root_pair@ {
-                                    } else {
-                                        lemma_pair_in_set_map_contains(right@, x, xv);
-                                    }
-                                };
                                 assert forall|x: K::V| #[trigger] left_dom.union(root_key_set).union(right_dom.filter(rank_pred)).contains(x)
                                     implies tree_dom.filter(rank_pred).contains(x) by {
                                     if left_dom.contains(x) {
@@ -2149,7 +1758,6 @@ pub mod OrdKeyMap {
                                         let xp: Pair<K, V> = choose|xp: Pair<K, V>| #[trigger] left@.contains(xp@) && xp@ == (x, xv);
                                         assert(xp.0@ != root_pair.0@) by {
                                             if xp.0@ == root_pair.0@ {
-                                                assert(tree@.contains(xp@));
                                                 assert(tree@.contains(root_pair@));
                                             }
                                         };
@@ -2174,21 +1782,6 @@ pub mod OrdKeyMap {
                                     assert(tree@.contains(root_pair@));
                                 }
                             };
-                            assert(left_dom.disjoint(root_key_set)) by {
-                                assert forall|x: K::V| !(left_dom.contains(x) && #[trigger] root_key_set.contains(x)) by {};
-                            };
-                            assert(left_dom.disjoint(right_dom.filter(rank_pred))) by {
-                                assert forall|x: K::V| !(left_dom.contains(x) && #[trigger] right_dom.filter(rank_pred).contains(x)) by {
-                                    if left_dom.contains(x) && right_dom.contains(x) {
-                                        lemma_map_contains_pair_in_set(left@, x);
-                                        lemma_map_contains_pair_in_set(right@, x);
-                                        let lv: V::V = choose|lv: V::V| left@.contains((x, lv));
-                                        let rv: V::V = choose|rv: V::V| right@.contains((x, rv));
-                                        assert(tree@.contains((x, lv)));
-                                        assert(tree@.contains((x, rv)));
-                                    }
-                                };
-                            };
                             assert(root_key_set.disjoint(right_dom.filter(rank_pred))) by {
                                 assert forall|x: K::V| !(root_key_set.contains(x) && #[trigger] right_dom.filter(rank_pred).contains(x)) by {
                                     if root_key_set.contains(x) && right_dom.contains(x) {
@@ -2200,9 +1793,6 @@ pub mod OrdKeyMap {
                                 };
                             };
                             let lu = left_dom.union(root_key_set);
-                            assert(lu.finite()) by {
-                                vstd::set_lib::lemma_len_union(left_dom, root_key_set);
-                            };
                             right_dom.lemma_len_filter(rank_pred);
                             vstd::set_lib::lemma_len_union(left_dom, root_key_set);
                             assert(lu.len() == left_dom.len() + 1) by {
@@ -2257,7 +1847,6 @@ pub mod OrdKeyMap {
                 proof {
                     reveal(vstd::laws_cmp::obeys_cmp_ord);
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
                     lemma_key_unique_subset(tree@, left@);
                     lemma_key_unique_subset(tree@, right@);
                     lemma_view_gen_subset::<K, V>(left@, tree@);
@@ -2288,12 +1877,6 @@ pub mod OrdKeyMap {
                                             lemma_pair_in_set_map_contains(left@, x, xv);
                                         } else if (x, xv) == root_pair@ {
                                             let sp: Pair<K, V> = choose|sp: Pair<K, V>| #[trigger] left@.contains(sp@) && sp@ == (sel_key@, sv);
-                                            assert(sp.0@ != root_pair.0@) by {
-                                                if sp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(sp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
                                             K::cmp_spec_less_implies_le(sp.0, root_pair.0);
                                             K::antisymmetric(t, sel_key);
                                         } else {
@@ -2301,13 +1884,11 @@ pub mod OrdKeyMap {
                                             let xp: Pair<K, V> = choose|xp: Pair<K, V>| #[trigger] right@.contains(xp@) && xp@ == (x, xv);
                                             assert(sp.0@ != root_pair.0@) by {
                                                 if sp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(sp@));
                                                     assert(tree@.contains(root_pair@));
                                                 }
                                             };
                                             assert(xp.0@ != root_pair.0@) by {
                                                 if xp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(xp@));
                                                     assert(tree@.contains(root_pair@));
                                                 }
                                             };
@@ -2347,12 +1928,12 @@ pub mod OrdKeyMap {
                                 } else if (x, xv) == root_pair@ {
                                 } else {
                                     let xp: Pair<K, V> = choose|xp: Pair<K, V>| #[trigger] right@.contains(xp@) && xp@ == (x, xv);
-                                    assert(xp.0@ != root_pair.0@) by {
-                                        if xp.0@ == root_pair.0@ {
-                                            assert(tree@.contains(xp@));
-                                            assert(tree@.contains(root_pair@));
-                                        }
-                                    };
+// Veracity: TESTING assert                                     assert(xp.0@ != root_pair.0@) by {
+// Veracity: TESTING assert                                         if xp.0@ == root_pair.0@ {
+// Veracity: TESTING assert                                             assert(tree@.contains(xp@));
+// Veracity: TESTING assert                                             assert(tree@.contains(root_pair@));
+// Veracity: TESTING assert                                         }
+// Veracity: TESTING assert                                     };
                                     K::cmp_spec_greater_implies_le(xp.0, root_pair.0);
                                     K::antisymmetric(t, key);
                                 }

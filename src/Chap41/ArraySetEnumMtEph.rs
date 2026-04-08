@@ -360,12 +360,9 @@ broadcast use {
                     if (i as int) < u as int {
                         let word_idx = i as int / 64;
                         let bit_idx = i as int % 64;
-                        assert(0 <= word_idx < word_count as int);
-                        assert(result.bits@[word_idx] == 0u64);
                         zero_bit_false(bit_idx as u64);
                     }
                 }
-                assert(result@ =~= Set::<usize>::empty());
             }
             result
         }
@@ -391,21 +388,15 @@ broadcast use {
                 let bit_idx = (i % 64) as u64;
                 if get_bit64_macro!(self.bits[word_idx], bit_idx) {
                     proof {
-                        assert(self@.contains(i));
-                        assert(!partial_set.contains(i));
                         partial_set = partial_set.insert(i);
                     }
                     count = count + 1;
                 } else {
                     proof {
-                        assert(!self@.contains(i));
                     }
                 }
                 proof {
-                    assert(partial_set =~= Set::new(|j: usize|
-                        (j as int) < (i + 1) as int && self@.contains(j)));
                     let range_set = Set::new(|j: usize| (j as int) < (i + 1) as int);
-                    assert(partial_set.subset_of(range_set));
                     lemma_bounded_usize_set_finite((i + 1) as usize);
                 }
             }
@@ -449,8 +440,6 @@ broadcast use {
                 let bit_idx = (i % 64) as u64;
                 if get_bit64_macro!(self.bits[word_idx], bit_idx) {
                     proof {
-                        assert(self@.contains(i));
-                        assert(!collected.contains(i));
                     }
                     let ghost old_collected = collected;
                     let old_len = result_vec.len();
@@ -467,7 +456,6 @@ broadcast use {
                             (#[trigger] result_vec@[k]) < (#[trigger] result_vec@[l]) by
                         {
                             if l == old_len as int {
-                                assert(result_vec@[k] == old_view[k]);
                             }
                         }
                         // Coverage: collected elements are in vec.
@@ -477,28 +465,18 @@ broadcast use {
                             if x == i {
                                 assert(result_vec@[old_len as int] == i);
                             } else {
-                                assert(old_collected.contains(x));
-                                assert(old_view.contains(x));
                                 let k = choose|k: int|
                                     0 <= k < old_view.len() && old_view[k] == x;
-                                assert(result_vec@[k] == old_view[k]);
                                 assert(result_vec@[k] == x);
                             }
                         }
                         // Ghost set update.
-                        assert(collected =~= Set::new(|j: usize|
-                            (j as int) < (i + 1) as int && self@.contains(j)));
                         let range_set = Set::new(|j: usize| (j as int) < (i + 1) as int);
-                        assert(collected.subset_of(range_set));
                         lemma_bounded_usize_set_finite((i + 1) as usize);
                     }
                 } else {
                     proof {
-                        assert(!self@.contains(i));
-                        assert(collected =~= Set::new(|j: usize|
-                            (j as int) < (i + 1) as int && self@.contains(j)));
                         let range_set = Set::new(|j: usize| (j as int) < (i + 1) as int);
-                        assert(collected.subset_of(range_set));
                         lemma_bounded_usize_set_finite((i + 1) as usize);
                     }
                 }
@@ -506,7 +484,6 @@ broadcast use {
 
             let seq = ArraySeqMtEphS::from_vec(result_vec);
             proof {
-                assert(collected =~= self@);
                 // seq@ is result_vec@ mapped through view (identity for usize).
                 assert(seq@ =~= result_vec@) by {
                     assert forall|k: int| 0 <= k < result_vec@.len() implies
@@ -521,15 +498,11 @@ broadcast use {
                 {
                     if seq@.to_set().contains(x) {
                         let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == x;
-                        assert(result_vec@[j] == x);
-                        assert(collected.contains(x));
                     }
                     if self@.contains(x) {
                         assert(collected.contains(x));
-                        assert(result_vec@.contains(x));
                         let k = choose|k: int|
                             0 <= k < result_vec@.len() && result_vec@[k] == x;
-                        assert(seq@[k] == x);
                     }
                 }
             }
@@ -630,7 +603,6 @@ broadcast use {
                     0 <= k < word_count as int && 0 <= b < 64 && u64_view(new_bits@[k])[b]
                     implies u64_view(self.bits@[k])[b] by
                 {
-                    assert(new_bits@[k] == 0u64);
                     zero_bit_false(b as u64);
                 }
             }
@@ -671,11 +643,9 @@ broadcast use {
                                 } else {
                                     // Other bits in same word: preserved by set_bit64_proof.
                                     assert(u64_view(new_word)[b] == u64_view(old_word)[b]);
-                                    assert(old_new_bits[k] == old_word);
                                 }
                             } else {
                                 // Different word: unchanged by Vec::set.
-                                assert(new_bits@[k] == old_new_bits[k]);
                             }
                         }
                     }
@@ -691,11 +661,8 @@ broadcast use {
                     if (elem as int) < self.universe_size as int {
                         let k = elem as int / 64;
                         let b = elem as int % 64;
-                        assert(0 <= k < word_count as int);
-                        assert(0 <= b < 64);
                     }
                 }
-                assert(filtered@.subset_of(self@));
                 lemma_view_finite(filtered.bits@, self.universe_size);
             }
             filtered
@@ -740,13 +707,8 @@ broadcast use {
                     if (elem as int) < self.universe_size as int {
                         let k = elem as int / 64;
                         let j = elem as int % 64;
-                        assert(0 <= k < n as int);
-                        assert(0 <= j < 64);
-                        assert(u64_view(common.bits@[k])[j] ==
-                            (u64_view(self.bits@[k])[j] && u64_view(other.bits@[k])[j]));
                     }
                 }
-                assert(common@ =~= self@.intersect(other@));
                 lemma_view_finite(common.bits@, self.universe_size);
             }
             common
@@ -791,13 +753,8 @@ broadcast use {
                     if (elem as int) < self.universe_size as int {
                         let k = elem as int / 64;
                         let j = elem as int % 64;
-                        assert(0 <= k < n as int);
-                        assert(0 <= j < 64);
-                        assert(u64_view(remaining.bits@[k])[j] ==
-                            (u64_view(self.bits@[k])[j] && !u64_view(other.bits@[k])[j]));
                     }
                 }
-                assert(remaining@ =~= self@.difference(other@));
                 lemma_view_finite(remaining.bits@, self.universe_size);
             }
             remaining
@@ -842,13 +799,8 @@ broadcast use {
                     if (elem as int) < self.universe_size as int {
                         let k = elem as int / 64;
                         let j = elem as int % 64;
-                        assert(0 <= k < n as int);
-                        assert(0 <= j < 64);
-                        assert(u64_view(combined.bits@[k])[j] ==
-                            (u64_view(self.bits@[k])[j] || u64_view(other.bits@[k])[j]));
                     }
                 }
-                assert(combined@ =~= self@.union(other@));
                 lemma_view_finite(combined.bits@, self.universe_size);
             }
             combined
@@ -896,7 +848,6 @@ broadcast use {
                                 if elem == x {
                                     // Deleted bit
                                 } else {
-                                    assert(ej != bit_idx as int);
                                     // Different bit in same word
                                 }
                             } else {
@@ -904,13 +855,11 @@ broadcast use {
                             }
                         }
                     }
-                    assert(self@ =~= old(self)@.remove(x));
                     lemma_view_finite(self.bits@, self.universe_size);
                 }
             } else {
                 // x not in set (x >= universe_size), so remove(x) is identity.
                 proof {
-                    assert(self@ =~= old(self)@.remove(x));
                     lemma_view_finite(self.bits@, self.universe_size);
                 }
             }
@@ -943,16 +892,13 @@ broadcast use {
                             let ek = elem as int / 64;
                             let ej = elem as int % 64;
                             if ek == word_idx as int {
-                                assert(ej != bit_idx as int);
                             }
                         }
                     }
-                    assert(self@ =~= old(self)@.insert(x));
                     lemma_view_finite(self.bits@, self.universe_size);
                 }
             } else {
                 proof {
-                    assert(self@ =~= old(self)@);
                     lemma_view_finite(self.bits@, self.universe_size);
                 }
             }

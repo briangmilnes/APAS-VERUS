@@ -1,0 +1,749 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap41/ArraySetStEph.rs:556:73
+    |
+556 |                         (exists|j: int| 0 <= j < i + 1 && seq@[j] == v) by {
+    |                                                                         ^^
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap41/OrdKeyMap.rs:914:36
+    |
+914 |         fn domain(&self) -> (keys: ArraySetStEph<K>)
+    |                                    ^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:71:5
+    |
+ 71 |     pub struct ArraySeqStEphS<T> {
+    |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+    |
+help: a struct with a similar name exists
+    |
+914 -         fn domain(&self) -> (keys: ArraySetStEph<K>)
+914 +         fn domain(&self) -> (keys: ArraySeqStEphS<K>)
+    |
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap41/OrdKeyMap.rs:919:44
+    |
+919 |         fn tabulate<F: Fn(&K) -> V>(keys: &ArraySetStEph<K>, f: &F) -> (table: Self)
+    |                                            ^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:71:5
+    |
+ 71 |     pub struct ArraySeqStEphS<T> {
+    |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+    |
+help: a struct with a similar name exists
+    |
+919 -         fn tabulate<F: Fn(&K) -> V>(keys: &ArraySetStEph<K>, f: &F) -> (table: Self)
+919 +         fn tabulate<F: Fn(&K) -> V>(keys: &ArraySeqStEphS<K>, f: &F) -> (table: Self)
+    |
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap41/OrdKeyMap.rs:941:35
+    |
+941 |         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
+    |                                   ^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:71:5
+    |
+ 71 |     pub struct ArraySeqStEphS<T> {
+    |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+    |
+help: a struct with a similar name exists
+    |
+941 -         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
+941 +         fn restrict(&self, keys: &ArraySeqStEphS<K>) -> (restricted: Self)
+    |
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap41/OrdKeyMap.rs:950:35
+    |
+950 |         fn subtract(&self, keys: &ArraySetStEph<K>) -> (remaining: Self)
+    |                                   ^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:71:5
+    |
+ 71 |     pub struct ArraySeqStEphS<T> {
+    |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+    |
+help: a struct with a similar name exists
+    |
+950 -         fn subtract(&self, keys: &ArraySetStEph<K>) -> (remaining: Self)
+950 +         fn subtract(&self, keys: &ArraySeqStEphS<K>) -> (remaining: Self)
+    |
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+    --> src/Chap41/OrdKeyMap.rs:4428:36
+     |
+4428 |         fn domain(&self) -> (keys: ArraySetStEph<K>)
+     |                                    ^^^^^^^^^^^^^
+     |
+    ::: src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+help: a struct with a similar name exists
+     |
+4428 -         fn domain(&self) -> (keys: ArraySetStEph<K>)
+4428 +         fn domain(&self) -> (keys: ArraySeqStEphS<K>)
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+    --> src/Chap41/OrdKeyMap.rs:4486:44
+     |
+4486 |         fn tabulate<F: Fn(&K) -> V>(keys: &ArraySetStEph<K>, f: &F) -> (table: Self)
+     |                                            ^^^^^^^^^^^^^
+     |
+    ::: src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+help: a struct with a similar name exists
+     |
+4486 -         fn tabulate<F: Fn(&K) -> V>(keys: &ArraySetStEph<K>, f: &F) -> (table: Self)
+4486 +         fn tabulate<F: Fn(&K) -> V>(keys: &ArraySeqStEphS<K>, f: &F) -> (table: Self)
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+    --> src/Chap41/OrdKeyMap.rs:4623:35
+     |
+4623 |         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
+     |                                   ^^^^^^^^^^^^^
+     |
+    ::: src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+help: a struct with a similar name exists
+     |
+4623 -         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
+4623 +         fn restrict(&self, keys: &ArraySeqStEphS<K>) -> (restricted: Self)
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+    --> src/Chap41/OrdKeyMap.rs:4740:35
+     |
+4740 |         fn subtract(&self, keys: &ArraySetStEph<K>) -> (remaining: Self)
+     |                                   ^^^^^^^^^^^^^
+     |
+    ::: src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+help: a struct with a similar name exists
+     |
+4740 -         fn subtract(&self, keys: &ArraySetStEph<K>) -> (remaining: Self)
+4740 +         fn subtract(&self, keys: &ArraySeqStEphS<K>) -> (remaining: Self)
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+    --> src/Chap41/ArraySetStEph.rs:1331:39
+     |
+1331 |     impl<T: StT + Ord> fmt::Debug for ArraySetStEph<T> {
+     |                                       ^^^^^^^^^^^^^
+     |
+    ::: src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+help: a struct with a similar name exists
+     |
+1331 -     impl<T: StT + Ord> fmt::Debug for ArraySetStEph<T> {
+1331 +     impl<T: StT + Ord> fmt::Debug for ArraySeqStEphS<T> {
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+    --> src/Chap41/ArraySetStEph.rs:1342:41
+     |
+1342 |     impl<T: StT + Ord> fmt::Display for ArraySetStEph<T> {
+     |                                         ^^^^^^^^^^^^^
+     |
+    ::: src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+help: a struct with a similar name exists
+     |
+1342 -     impl<T: StT + Ord> fmt::Display for ArraySetStEph<T> {
+1342 +     impl<T: StT + Ord> fmt::Display for ArraySeqStEphS<T> {
+     |
+
+error[E0405]: cannot find trait `ArraySetStEphTrait` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:151:5
+     |
+ 151 |     pub trait ArraySeqStEphTrait<T>: Sized {
+     |     -------------------------------------- similarly named trait `ArraySeqStEphTrait` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:34:23
+     |
+  34 |         let set_abc = ArraySetStEphLit!['a', 'b', 'c'];
+     |                       -------------------------------- in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                                                                                               ^^^^^^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a trait with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphTrait<_> >::empty();
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:34:23
+     |
+  34 |         let set_abc = ArraySetStEphLit!['a', 'b', 'c'];
+     |                       -------------------------------- in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                             ^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a struct with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphS<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |
+
+error[E0405]: cannot find trait `ArraySetStEphTrait` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:151:5
+     |
+ 151 |     pub trait ArraySeqStEphTrait<T>: Sized {
+     |     -------------------------------------- similarly named trait `ArraySeqStEphTrait` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:41:24
+     |
+  41 |         let set_nums = ArraySetStEphLit![4i32, 11i32, 2i32, 6i32];
+     |                        ------------------------------------------ in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                                                                                               ^^^^^^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a trait with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphTrait<_> >::empty();
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:41:24
+     |
+  41 |         let set_nums = ArraySetStEphLit![4i32, 11i32, 2i32, 6i32];
+     |                        ------------------------------------------ in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                             ^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a struct with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphS<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |
+
+error[E0405]: cannot find trait `ArraySetStEphTrait` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:151:5
+     |
+ 151 |     pub trait ArraySeqStEphTrait<T>: Sized {
+     |     -------------------------------------- similarly named trait `ArraySeqStEphTrait` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:53:26
+     |
+  53 |         let set_search = ArraySetStEphLit![6i32, 2i32, 9i32, 11i32, 8i32];
+     |                          ------------------------------------------------ in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                                                                                               ^^^^^^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a trait with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphTrait<_> >::empty();
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:53:26
+     |
+  53 |         let set_search = ArraySetStEphLit![6i32, 2i32, 9i32, 11i32, 8i32];
+     |                          ------------------------------------------------ in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                             ^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a struct with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphS<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |
+
+error[E0405]: cannot find trait `ArraySetStEphTrait` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:151:5
+     |
+ 151 |     pub trait ArraySeqStEphTrait<T>: Sized {
+     |     -------------------------------------- similarly named trait `ArraySeqStEphTrait` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:59:20
+     |
+  59 |         let set1 = ArraySetStEphLit![2i32, 7i32, 8i32, 11i32];
+     |                    ------------------------------------------ in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                                                                                               ^^^^^^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a trait with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphTrait<_> >::empty();
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:59:20
+     |
+  59 |         let set1 = ArraySetStEphLit![2i32, 7i32, 8i32, 11i32];
+     |                    ------------------------------------------ in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                             ^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a struct with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphS<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |
+
+error[E0405]: cannot find trait `ArraySetStEphTrait` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:151:5
+     |
+ 151 |     pub trait ArraySeqStEphTrait<T>: Sized {
+     |     -------------------------------------- similarly named trait `ArraySeqStEphTrait` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:60:20
+     |
+  60 |         let set2 = ArraySetStEphLit![7i32, 9i32, 11i32, 14i32, 17i32];
+     |                    -------------------------------------------------- in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                                                                                               ^^^^^^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a trait with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphTrait<_> >::empty();
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:60:20
+     |
+  60 |         let set2 = ArraySetStEphLit![7i32, 9i32, 11i32, 14i32, 17i32];
+     |                    -------------------------------------------------- in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                             ^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a struct with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphS<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |
+
+error[E0405]: cannot find trait `ArraySetStEphTrait` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:151:5
+     |
+ 151 |     pub trait ArraySeqStEphTrait<T>: Sized {
+     |     -------------------------------------- similarly named trait `ArraySeqStEphTrait` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:68:28
+     |
+  68 |         let set_from_seq = ArraySetStEphLit![2i32, 7i32, 8i32, 11i32];
+     |                            ------------------------------------------ in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                                                                                               ^^^^^^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a trait with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphTrait<_> >::empty();
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:68:28
+     |
+  68 |         let set_from_seq = ArraySetStEphLit![2i32, 7i32, 8i32, 11i32];
+     |                            ------------------------------------------ in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                             ^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a struct with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphS<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |
+
+error[E0405]: cannot find trait `ArraySetStEphTrait` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:151:5
+     |
+ 151 |     pub trait ArraySeqStEphTrait<T>: Sized {
+     |     -------------------------------------- similarly named trait `ArraySeqStEphTrait` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:129:26
+     |
+ 129 |         let set_result = ArraySetStEphLit![2i32, 7i32, 8i32, 11i32];
+     |                          ------------------------------------------ in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                                                                                               ^^^^^^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a trait with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphTrait<_> >::empty();
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:129:26
+     |
+ 129 |         let set_result = ArraySetStEphLit![2i32, 7i32, 8i32, 11i32];
+     |                          ------------------------------------------ in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                             ^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a struct with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphS<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |
+
+error[E0405]: cannot find trait `ArraySetStEphTrait` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:151:5
+     |
+ 151 |     pub trait ArraySeqStEphTrait<T>: Sized {
+     |     -------------------------------------- similarly named trait `ArraySeqStEphTrait` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:154:20
+     |
+ 154 |         let set1 = ArraySetStEphLit![1i32, 2i32, 3i32, 4i32, 5i32];
+     |                    ----------------------------------------------- in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                                                                                               ^^^^^^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a trait with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphTrait<_> >::empty();
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:154:20
+     |
+ 154 |         let set1 = ArraySetStEphLit![1i32, 2i32, 3i32, 4i32, 5i32];
+     |                    ----------------------------------------------- in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                             ^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a struct with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphS<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |
+
+error[E0405]: cannot find trait `ArraySetStEphTrait` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:151:5
+     |
+ 151 |     pub trait ArraySeqStEphTrait<T>: Sized {
+     |     -------------------------------------- similarly named trait `ArraySeqStEphTrait` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:155:20
+     |
+ 155 |         let set2 = ArraySetStEphLit![4i32, 5i32, 6i32, 7i32, 8i32];
+     |                    ----------------------------------------------- in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                                                                                               ^^^^^^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a trait with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphTrait<_> >::empty();
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:155:20
+     |
+ 155 |         let set2 = ArraySetStEphLit![4i32, 5i32, 6i32, 7i32, 8i32];
+     |                    ----------------------------------------------- in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                             ^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a struct with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphS<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |
+
+error[E0405]: cannot find trait `ArraySetStEphTrait` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:151:5
+     |
+ 151 |     pub trait ArraySeqStEphTrait<T>: Sized {
+     |     -------------------------------------- similarly named trait `ArraySeqStEphTrait` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:173:30
+     |
+ 173 |         let mut set_delete = ArraySetStEphLit![1i32, 2i32, 3i32, 4i32, 5i32];
+     |                              ----------------------------------------------- in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                                                                                               ^^^^^^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a trait with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphTrait<_> >::empty();
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:173:30
+     |
+ 173 |         let mut set_delete = ArraySetStEphLit![1i32, 2i32, 3i32, 4i32, 5i32];
+     |                              ----------------------------------------------- in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                             ^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a struct with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphS<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |
+
+error[E0405]: cannot find trait `ArraySetStEphTrait` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:151:5
+     |
+ 151 |     pub trait ArraySeqStEphTrait<T>: Sized {
+     |     -------------------------------------- similarly named trait `ArraySeqStEphTrait` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:180:30
+     |
+ 180 |         let mut set_insert = ArraySetStEphLit![1i32, 2i32, 4i32, 5i32];
+     |                              ----------------------------------------- in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                                                                                               ^^^^^^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a trait with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:143
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphTrait<_> >::empty();
+     |
+
+error[E0425]: cannot find type `ArraySetStEph` in module `$crate::Chap41::ArraySetStEph::ArraySetStEph`
+    --> src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- similarly named struct `ArraySeqStEphS` defined here
+     |
+    ::: src/Chap41/Example41_3.rs:180:30
+     |
+ 180 |         let mut set_insert = ArraySetStEphLit![1i32, 2i32, 4i32, 5i32];
+     |                              ----------------------------------------- in this macro invocation
+     |
+    ::: src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 |             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |                                                                             ^^^^^^^^^^^^^
+     |
+     = note: this error originates in the macro `ArraySetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: a struct with a similar name exists
+    -->  src/Chap41/ArraySetStEph.rs:1323:77
+     |
+1323 -             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+1323 +             let mut __set = < $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySeqStEphS<_> as $crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait<_> >::empty();
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySetStEph`
+    --> src/Chap41/OrdKeyMap.rs:4432:30
+     |
+4432 |             let mut domain = ArraySetStEph::empty();
+     |                              ^^^^^^^^^^^^^ use of undeclared type `ArraySetStEph`
+     |
+help: a struct with a similar name exists
+     |
+4432 -             let mut domain = ArraySetStEph::empty();
+4432 +             let mut domain = ArraySeqStEphS::empty();
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySetStEph`
+   --> src/Chap41/Example41_3.rs:137:19
+    |
+137 |         let s2  = ArraySetStEph::singleton(2i32);
+    |                   ^^^^^^^^^^^^^ use of undeclared type `ArraySetStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySetStEph`
+   --> src/Chap41/Example41_3.rs:138:19
+    |
+138 |         let s7  = ArraySetStEph::singleton(7i32);
+    |                   ^^^^^^^^^^^^^ use of undeclared type `ArraySetStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySetStEph`
+   --> src/Chap41/Example41_3.rs:139:19
+    |
+139 |         let s8  = ArraySetStEph::singleton(8i32);
+    |                   ^^^^^^^^^^^^^ use of undeclared type `ArraySetStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySetStEph`
+   --> src/Chap41/Example41_3.rs:140:19
+    |
+140 |         let s11 = ArraySetStEph::singleton(11i32);
+    |                   ^^^^^^^^^^^^^ use of undeclared type `ArraySetStEph`
+
+error: aborting due to 38 previous errors
+
+Some errors have detailed explanations: E0405, E0425, E0433.
+For more information about an error, try `rustc --explain E0405`.
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 4025MB, peak z3 RSS: 617MB, min free: 22242MB
+Sampled CPU Usage: rust_verify: 55s, z3 children: 23s

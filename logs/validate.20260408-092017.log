@@ -1,0 +1,60 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+    --> src/Chap41/OrdKeyMap.rs:1450:13
+     |
+1450 | /             successor is None ==> forall|t: K| #![trigger t@]
+1451 | |                 spec_pair_set_to_map(tree@).dom().contains(t@)
+1452 | |                 ==> !(TotalOrder::le(*k, t) && t@ != k@),
+     | |________________________________________________________^ failed this postcondition
+...
+1456 | /         match tree.expose() {
+1457 | |             Exposed::Leaf => None,
+1458 | |             Exposed::Node(left, root_pair, right) => {
+1459 | |                 reveal_param_bst_backings(&left);
+...    |
+1699 | |         }
+     | |_________- at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap41/OrdKeyMap.rs:1452:48
+     |
+1452 |                 ==> !(TotalOrder::le(*k, t) && t@ != k@),
+     |                                                ^^^^^^^^
+
+note: 
+
+spec_pair_set_to_map(old(tree).view()).dom().finite() ✔
+let tmp%% = successor;
+    tmp%% is Some && true ==>
+        let nk = tmp%%.0;
+            spec_pair_set_to_map(old(tree).view()).dom().contains(nk.view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = successor;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            old(k).le(v) ✔
+            !(v.view() == old(k).view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = successor;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            forall |t|
+                spec_pair_set_to_map(old(tree).view()).dom().contains(t.view()) && old(k).le(t) && !(t.view() == old(k).view()) ==>
+                    v.le(t) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+successor is None ==>
+    forall |t|
+        spec_pair_set_to_map(old(tree).view()).dom().contains(t.view()) ==>
+            old(k).le(t) ==>
+                t.view() == old(k).view() ✘
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 33s
+Sampled Memory Usage: peak rust_verify RSS: 6869MB, peak z3 RSS: 1040MB, min free: 16976MB
+Sampled CPU Usage: rust_verify: 144s, z3 children: 162s

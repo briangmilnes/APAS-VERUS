@@ -1,0 +1,48 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap41/OrdKeyMap.rs:508:13
+    |
+494 |       proof fn lemma_set_to_map_union_root<KV, VV>(
+    |  ___________-
+495 | |         left: Set<(KV, VV)>, right: Set<(KV, VV)>, root_k: KV, root_v: VV,
+496 | |     )
+    | |_____- at the end of the function body
+...
+508 | /             ({
+509 | |                 let combined = left.union(right).insert((root_k, root_v));
+510 | |                 let combined_map = spec_pair_set_to_map(combined);
+511 | |                 let left_map = spec_pair_set_to_map(left);
+...   |
+518 | |                 &&& combined_map.contains_key(root_k) && combined_map[root_k] == root_v
+519 | |             })
+    | |______________^ failed this postcondition
+
+note: diagnostics via expansion
+   --> src/Chap41/OrdKeyMap.rs:513:21
+    |
+513 |                 &&& combined_map.dom() =~= left_map.dom().union(right_map.dom()).insert(root_k)
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+let combined = old(left).union(old(right)).insert((old(root_k), old(root_v)));
+    let combined_map = spec_pair_set_to_map(combined);
+        let left_map = spec_pair_set_to_map(old(left));
+            let right_map = spec_pair_set_to_map(old(right));
+                combined_map.dom() =~= left_map.dom().union(right_map.dom()).insert(old(root_k)) ✘
+                forall |k|
+                    left_map.dom().contains(k) ==>
+                        combined_map.index(k) == left_map.index(k) ✔
+                forall |k|
+                    right_map.dom().contains(k) ==>
+                        combined_map.index(k) == right_map.index(k) ✔
+                combined_map.dom().contains(old(root_k)) ✔
+                combined_map.index(old(root_k)) == old(root_v) ✔
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 32s
+Sampled Memory Usage: peak rust_verify RSS: 4958MB, peak z3 RSS: 1018MB, min free: 20147MB
+Sampled CPU Usage: rust_verify: 96s, z3 children: 111s

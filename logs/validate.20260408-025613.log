@@ -1,0 +1,23 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:160:13
+    |
+155 |     proof fn lemma_map_view_feq_implies_ext_eq_per<T: View + Eq + Clone>(a: Seq<T>, b: Seq<T>)
+    |           ------------------------------------------------------------------------------------ at the end of the function body
+...
+160 |             a =~= b,
+    |             ^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+old(a) =~= old(b) 
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 33s
+Sampled Memory Usage: peak rust_verify RSS: 7149MB, peak z3 RSS: 1079MB, min free: 19572MB
+Sampled CPU Usage: rust_verify: 137s, z3 children: 178s

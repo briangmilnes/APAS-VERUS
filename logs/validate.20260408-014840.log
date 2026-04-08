@@ -1,0 +1,78 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:110:17
+    |
+110 |                 seq.spec_avltreeseqsteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+417 |             seq
+    |             --- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:392:23
+    |
+392 |             let seq = AVLTreeSeqStEphS::from_vec(out);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:878:17
+    |
+878 |                 obeys_feq_full::<T>(),
+    |                 --------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:50:13
+    |
+ 50 |         &&& feq_reflexive::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^
+ 51 |         &&& feq_symmetric::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^
+ 52 |         &&& feq_transitive::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^
+...
+ 77 |         &&& obeys_feq_properties::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 78 |         &&& obeys_feq_view::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:878:17
+    |
+878 |                 obeys_feq_full::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_full() ✘
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+out.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 30s
+Sampled Memory Usage: peak rust_verify RSS: 7125MB, peak z3 RSS: 743MB, min free: 19083MB
+Sampled CPU Usage: rust_verify: 115s, z3 children: 97s

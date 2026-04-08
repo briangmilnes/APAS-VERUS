@@ -1,0 +1,37 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+    --> src/Chap41/OrdKeyMap.rs:1995:13
+     |
+1995 | /             rank as int == spec_pair_set_to_map(tree@).dom().filter(
+1996 | |                 |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@
+1997 | |             ).len(),
+     | |___________________^ failed this postcondition
+...
+2006 | /         match tree.expose() {
+2007 | |             Exposed::Leaf => {
+2008 | |                 proof {
+...    |
+2219 | |         }
+     | |_________- at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap41/OrdKeyMap.rs:1995:13
+     |
+1995 | /             rank as int == spec_pair_set_to_map(tree@).dom().filter(
+1996 | |                 |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@
+1997 | |             ).len(),
+     | |___________________^
+
+note: 
+
+spec_pair_set_to_map(old(tree).view()).dom().finite() ✔
+rank <= spec_pair_set_to_map(old(tree).view()).dom().len() ✔
+rank == spec_pair_set_to_map(old(tree).view()).dom().filter((|x| (exists |t| ))).len() ✘
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 34s
+Sampled Memory Usage: peak rust_verify RSS: 6977MB, peak z3 RSS: 919MB, min free: 16426MB
+Sampled CPU Usage: rust_verify: 193s, z3 children: 214s

@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap41/OrdKeyMap.rs:259:21
+    |
+259 |             implies v1 == v2
+    |                     ^^
+
+error[E0425]: cannot find type `OrdKeyMap` in this scope
+    --> src/Chap41/OrdKeyMap.rs:4873:84
+     |
+4873 |     impl<K: StT + Ord + std::fmt::Debug, V: StT + Ord + std::fmt::Debug> Debug for OrdKeyMap<K, V> {
+     |                                                                                    ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrdKeyMap` in this scope
+    --> src/Chap41/OrdKeyMap.rs:4879:90
+     |
+4879 |     impl<K: StT + Ord + std::fmt::Display, V: StT + Ord + std::fmt::Display> Display for OrdKeyMap<K, V> {
+     |                                                                                          ^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 1857MB, peak z3 RSS: 362MB, min free: 24366MB
+Sampled CPU Usage: rust_verify: 27s, z3 children: 16s

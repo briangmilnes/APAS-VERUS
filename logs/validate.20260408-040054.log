@@ -1,0 +1,32 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find value `elem` in this scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:891:29
+    |
+891 |                         if (elem as int) < self.universe_size as int {
+    |                             ^^^^ not found in this scope
+
+error[E0425]: cannot find value `elem` in this scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:892:38
+    |
+892 | ...                   let ek = elem as int / 64;
+    |                                ^^^^ not found in this scope
+
+error[E0425]: cannot find value `elem` in this scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:893:38
+    |
+893 | ...                   let ej = elem as int % 64;
+    |                                ^^^^ not found in this scope
+
+error[E0425]: cannot find value `elem` in this scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:896:36
+    |
+896 | ...                   if elem == x {
+    |                          ^^^^ not found in this scope
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 5405MB, peak z3 RSS: 830MB, min free: 20755MB
+Sampled CPU Usage: rust_verify: 117s, z3 children: 111s

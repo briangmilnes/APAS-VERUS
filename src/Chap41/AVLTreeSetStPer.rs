@@ -112,14 +112,6 @@ broadcast use {
             Some(node) => {
                 lemma_inorder_values_maps_to_views_per::<T>(&node.left);
                 lemma_inorder_values_maps_to_views_per::<T>(&node.right);
-                assert(
-                    (spec_inorder_values_per(node.left)
-                        + seq![node.value]
-                        + spec_inorder_values_per(node.right))
-                    .map_values(|t: T| t@) =~=
-                        spec_inorder_values_per(node.left).map_values(|t: T| t@)
-                        + seq![node.value].map_values(|t: T| t@)
-                        + spec_inorder_values_per(node.right).map_values(|t: T| t@));
             }
         }
     }
@@ -137,13 +129,10 @@ broadcast use {
         assert forall|i: int, j: int| 0 <= i < j < new_s.len()
             implies #[trigger] TotalOrder::le(new_s[i], new_s[j]) by {
             if j < s.len() as int {
-                assert(TotalOrder::le(s[i], s[j]));
             } else {
                 if i == s.len() as int - 1 {
-                    assert(s[i] == s[s.len() as int - 1]);
                 } else {
                     let last_idx = s.len() as int - 1;
-                    assert(TotalOrder::le(s[i], s[last_idx]));
                     T::transitive(s[i], s[last_idx], v);
                 }
             }
@@ -160,16 +149,10 @@ broadcast use {
             a =~= b,
     {
         lemma_reveal_view_injective::<T>();
-        assert(a.map_values(|t: T| t@).len() == a.len());
         assert(b.map_values(|t: T| t@).len() == b.len());
-        assert(a.len() == b.len());
         assert forall|k: int| 0 <= k < a.len()
             implies #[trigger] a[k] == b[k] by {
-            assert(0 <= k && k < b.len());
-            assert(a.map_values(|t: T| t@)[k] == a[k]@);
-            assert(b.map_values(|t: T| t@)[k] == b[k]@);
             assert(a.map_values(|t: T| t@)[k] == b.map_values(|t: T| t@)[k]);
-            assert(a[k]@ == b[k]@);
         };
     }
 
@@ -183,11 +166,6 @@ broadcast use {
             spec_seq_sorted_per(s.subrange(lo, hi)),
     {
         let sub = s.subrange(lo, hi);
-        assert forall|i: int, j: int| 0 <= i < j < sub.len()
-            implies #[trigger] TotalOrder::le(sub[i], sub[j]) by {
-            assert(sub[i] == s[lo + i]);
-            assert(sub[j] == s[lo + j]);
-        };
     }
 
     //		Section 8. traits
@@ -458,20 +436,7 @@ broadcast use {
             let in_ord = self.tree.in_order();
             let result = AVLTreeSeqStPerS::from_vec(in_ord.seq);
             proof {
-                assert(result@.len() == in_ord@.len());
-                assert forall|i: int| 0 <= i < result@.len()
-                    implies #[trigger] result@[i] == in_ord@[i] by {};
                 assert(result@ =~= in_ord@);
-                assert forall|v: <T as View>::V| #[trigger] result@.to_set().contains(v)
-                    implies self@.contains(v) by {
-                    assert(result@.contains(v));
-                };
-                assert forall|v: <T as View>::V| self@.contains(v)
-                    implies #[trigger] result@.to_set().contains(v) by {
-                    let j = choose|j: int| 0 <= j < in_ord@.len() && in_ord@[j] == v;
-                    assert(result@[j] == in_ord@[j]);
-                };
-                assert(result@.to_set() =~= self@);
             }
             result
         }
@@ -479,21 +444,18 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             AVLTreeSetStPer { tree: ParamBST::new() }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(x: T) -> (tree: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             AVLTreeSetStPer { tree: ParamBST::singleton(x) }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut constructed = Self::empty();
             let n = seq.length();
             let mut i: usize = 0;
@@ -521,12 +483,6 @@ broadcast use {
                 let ghost old_view = constructed@;
                 constructed = constructed.insert(elem);
                 proof {
-                    assert forall|j: int| 0 <= j < i + 1
-                        implies #[trigger] constructed@.contains(seq@[j]) by {
-                        if j < i as int {
-                            assert(old_view.contains(seq@[j]));
-                        }
-                    };
                     assert forall|v: <T as View>::V|
                         #[trigger] constructed@.contains(v) implies
                         (exists|j: int| 0 <= j < i + 1 && seq@[j] == v) by {
@@ -534,25 +490,12 @@ broadcast use {
                             assert(v == seq@[i as int]);
                         } else {
                             let j = choose|j: int| 0 <= j < i && seq@[j] == v;
-                            assert(j < i + 1);
                         }
                     };
                 }
                 i += 1;
             }
             proof {
-                assert forall|v: <T as View>::V|
-                    #[trigger] constructed@.contains(v) == seq@.to_set().contains(v) by {
-                    if constructed@.contains(v) {
-                        let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == v;
-                        assert(seq@.contains(v));
-                    }
-                    if seq@.to_set().contains(v) {
-                        assert(seq@.contains(v));
-                        let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == v;
-                        assert(constructed@.contains(seq@[j]));
-                    }
-                };
             }
             constructed
         }
@@ -603,7 +546,6 @@ broadcast use {
         {
             let common_tree = self.tree.intersect(&other.tree);
             proof {
-                assert(common_tree@ =~= self@.intersect(other@));
                 vstd::set_lib::lemma_len_intersect::<T::V>(self@, other@);
             }
             AVLTreeSetStPer { tree: common_tree }
@@ -615,7 +557,6 @@ broadcast use {
         {
             let combined_tree = self.tree.union(&other.tree);
             proof {
-                assert(combined_tree@ =~= self@.union(other@));
                 vstd::set_lib::lemma_len_union::<T::V>(self@, other@);
             }
             AVLTreeSetStPer { tree: combined_tree }
@@ -627,7 +568,6 @@ broadcast use {
         {
             let remaining_tree = self.tree.difference(&other.tree);
             proof {
-                assert(remaining_tree@ =~= self@.difference(other@));
                 vstd::set_lib::lemma_len_difference::<T::V>(self@, other@);
             }
             AVLTreeSetStPer { tree: remaining_tree }
@@ -713,11 +653,7 @@ broadcast use {
         fn clone_wf(&self) -> (cloned: Self) {
             let r = AVLTreeSetStPer { tree: self.tree.clone() };
             proof {
-                assert(r.tree@ == self.tree@);
-                assert(obeys_feq_full_trigger::<T>());
-                assert(r.tree@.finite());
                 assert(r.tree.spec_bstparasteph_wf());
-                assert(r@.len() < usize::MAX as nat);
             }
             r
         }

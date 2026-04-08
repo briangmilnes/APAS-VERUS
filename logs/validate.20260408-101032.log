@@ -1,0 +1,32 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: precondition not satisfied
+    --> src/Chap41/OrdKeyMap.rs:2314:45
+     |
+2314 | ...                   K::cmp_spec_less_implies_le(sp.0, root_pair.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:73:18
+     |
+  73 |         requires a.cmp_spec(&b) == Ordering::Less
+     |                  -------------------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/total_order.rs:73:36
+   |
+73 |         requires a.cmp_spec(&b) == Ordering::Less
+   |                                    ^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.cmp_spec(tmp%) == Less
+|   !(tmp%.cmp_spec(tmp%) is Equal) ✘
+|   !(tmp%.cmp_spec(tmp%) is Greater) ✔
++---
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 25s
+Sampled Memory Usage: peak rust_verify RSS: 3498MB, peak z3 RSS: 415MB, min free: 20472MB
+Sampled CPU Usage: rust_verify: 53s, z3 children: 47s

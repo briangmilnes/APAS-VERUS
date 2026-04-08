@@ -1,0 +1,49 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap41/ArraySetStEph.rs:752:36
+    |
+752 | ...                   assert(rv_views.to_set().contains(e));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap41/ArraySetStEph.rs:761:24
+    |
+761 |                 assert(filtered.elements@.no_duplicates());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap41/ArraySetStEph.rs:766:32
+    |
+766 |                         assert(rv_views.to_set().contains(v));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap41/ArraySetStEph.rs:774:40
+    |
+774 |                     implies #[trigger] filtered@.contains(v) by {
+    |                                        ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+rv_views.to_set().contains(e) 
+    function is uninterpreted
+
+note: recommendation not met
+   --> src/Chap41/ArraySetStEph.rs:687:40
+    |
+687 | ...                   assert(next_sub[i as int] == cv);
+    |                              ^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 4774MB, peak z3 RSS: 1890MB, min free: 20686MB
+Sampled CPU Usage: rust_verify: 72s, z3 children: 54s

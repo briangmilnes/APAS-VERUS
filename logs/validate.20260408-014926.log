@@ -1,0 +1,150 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap41/AVLTreeSetMtEph.rs:399:17
+    |
+399 |                 by {
+    |                 ^^
+
+error[E0425]: cannot find type `AVLTreeSetMtEph` in this scope
+   --> src/Chap41/AVLTreeSetMtEph.rs:686:68
+    |
+686 |     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Send for AVLTreeSetMtEph<T> {}
+    |                                                                    ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:89:5
+    |
+ 89 |     pub struct AVLTreeSeqStEphS<T: StT> {
+    |     ----------------------------------- similarly named struct `AVLTreeSeqStEphS` defined here
+    |
+help: a struct with a similar name exists
+    |
+686 -     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Send for AVLTreeSetMtEph<T> {}
+686 +     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Send for AVLTreeSeqStEphS<T> {}
+    |
+
+error[E0425]: cannot find type `AVLTreeSetMtEph` in this scope
+   --> src/Chap41/AVLTreeSetMtEph.rs:687:68
+    |
+687 |     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtEph<T> {}
+    |                                                                    ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:89:5
+    |
+ 89 |     pub struct AVLTreeSeqStEphS<T: StT> {
+    |     ----------------------------------- similarly named struct `AVLTreeSeqStEphS` defined here
+    |
+help: a struct with a similar name exists
+    |
+687 -     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtEph<T> {}
+687 +     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSeqStEphS<T> {}
+    |
+
+error[E0425]: cannot find type `AVLTreeSetMtEphIter` in this scope
+   --> src/Chap41/AVLTreeSetMtEph.rs:689:67
+    |
+689 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtEphIter<T> {
+    |                                                                   ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:89:5
+    |
+ 89 |     pub struct AVLTreeSeqStEphS<T: StT> {
+    |     ----------------------------------- similarly named struct `AVLTreeSeqStEphS` defined here
+    |
+help: a struct with a similar name exists
+    |
+689 -     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtEphIter<T> {
+689 +     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSeqStEphS<T> {
+    |
+
+error[E0425]: cannot find type `AVLTreeSetMtEphIter` in this scope
+   --> src/Chap41/AVLTreeSetMtEph.rs:695:69
+    |
+695 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSetMtEphIter<T> {
+    |                                                                     ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:89:5
+    |
+ 89 |     pub struct AVLTreeSeqStEphS<T: StT> {
+    |     ----------------------------------- similarly named struct `AVLTreeSeqStEphS` defined here
+    |
+help: a struct with a similar name exists
+    |
+695 -     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSetMtEphIter<T> {
+695 +     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSeqStEphS<T> {
+    |
+
+error[E0425]: cannot find type `AVLTreeSetMtEphGhostIter` in this scope
+    --> src/Chap41/AVLTreeSetMtEph.rs:701:67
+     |
+ 701 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtEphGhostIter<T> {
+     |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStEph.rs:1287:5
+     |
+1287 |     pub struct AVLTreeSeqStEphGhostIterator<'a, T: StT> {
+     |     --------------------------------------------------- similarly named struct `AVLTreeSeqStEphGhostIterator` defined here
+     |
+help: a struct with a similar name exists
+     |
+ 701 -     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtEphGhostIter<T> {
+ 701 +     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSeqStEphGhostIterator<T> {
+     |
+
+error[E0425]: cannot find type `AVLTreeSetMtEphGhostIter` in this scope
+    --> src/Chap41/AVLTreeSetMtEph.rs:707:69
+     |
+ 707 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSetMtEphGhostIter<T> {
+     |                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStEph.rs:1287:5
+     |
+1287 |     pub struct AVLTreeSeqStEphGhostIterator<'a, T: StT> {
+     |     --------------------------------------------------- similarly named struct `AVLTreeSeqStEphGhostIterator` defined here
+     |
+help: a struct with a similar name exists
+     |
+ 707 -     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSetMtEphGhostIter<T> {
+ 707 +     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSeqStEphGhostIterator<T> {
+     |
+
+error[E0425]: cannot find type `AVLTreeSetMtEph` in this scope
+   --> src/Chap41/AVLTreeSetMtEph.rs:713:67
+    |
+713 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtEph<T> {
+    |                                                                   ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:89:5
+    |
+ 89 |     pub struct AVLTreeSeqStEphS<T: StT> {
+    |     ----------------------------------- similarly named struct `AVLTreeSeqStEphS` defined here
+    |
+help: a struct with a similar name exists
+    |
+713 -     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtEph<T> {
+713 +     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSeqStEphS<T> {
+    |
+
+error[E0425]: cannot find type `AVLTreeSetMtEph` in this scope
+   --> src/Chap41/AVLTreeSetMtEph.rs:727:69
+    |
+727 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSetMtEph<T> {
+    |                                                                     ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:89:5
+    |
+ 89 |     pub struct AVLTreeSeqStEphS<T: StT> {
+    |     ----------------------------------- similarly named struct `AVLTreeSeqStEphS` defined here
+    |
+help: a struct with a similar name exists
+    |
+727 -     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSetMtEph<T> {
+727 +     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSeqStEphS<T> {
+    |
+
+error: aborting due to 9 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 5177MB, peak z3 RSS: 0MB, min free: 20312MB
+Sampled CPU Usage: rust_verify: 124s, z3 children: 117s

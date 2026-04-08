@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap41/AVLTreeSetStPer.rs:172:20
+    |
+172 |             assert(a[k]@ == b[k]@);
+    |                    ^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+a.index(k).view() == b.index(k).view() 
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 28s
+Sampled Memory Usage: peak rust_verify RSS: 6779MB, peak z3 RSS: 980MB, min free: 19695MB
+Sampled CPU Usage: rust_verify: 141s, z3 children: 167s

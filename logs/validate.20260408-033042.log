@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap41/ArraySetEnumMtEph.rs:368:24
+    |
+368 |                 assert(result@ =~= Set::<usize>::empty());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+result.view() =~= empty() 
+    datatype is opaque here
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 37s
+Sampled Memory Usage: peak rust_verify RSS: 6044MB, peak z3 RSS: 1067MB, min free: 20008MB
+Sampled CPU Usage: rust_verify: 128s, z3 children: 165s

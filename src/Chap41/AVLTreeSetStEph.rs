@@ -133,8 +133,6 @@ broadcast use {
                 let rv_right = spec_inorder_values(node.right);
                 let mid: Seq<T> = seq![node.value];
                 let full = lv + mid + rv_right;
-                assert(full.map_values(|t: T| t@) =~=
-                    lv.map_values(|t: T| t@) + mid.map_values(|t: T| t@) + rv_right.map_values(|t: T| t@));
             }
         }
     }
@@ -160,15 +158,10 @@ broadcast use {
         assert forall|i: int, j: int| 0 <= i < j < new_s.len()
             implies #[trigger] TotalOrder::le(new_s[i], new_s[j]) by {
             if j < s.len() as int {
-                assert(new_s[i] == s[i]);
-                assert(new_s[j] == s[j]);
             } else {
-                assert(new_s[j] == v);
-                assert(new_s[i] == s[i]);
                 if s.len() == 0 {
                 } else if i == s.len() as int - 1 {
                 } else {
-                    assert(TotalOrder::le(s[i], s[s.len() - 1]));
                     T::transitive(s[i], s[s.len() - 1], v);
                 }
             }
@@ -184,11 +177,6 @@ broadcast use {
             spec_seq_sorted(s.subrange(lo, hi)),
     {
         let sub = s.subrange(lo, hi);
-        assert forall|i: int, j: int| 0 <= i < j < sub.len()
-            implies #[trigger] TotalOrder::le(sub[i], sub[j]) by {
-            assert(sub[i] == s[lo + i]);
-            assert(sub[j] == s[lo + j]);
-        };
     }
 
     //		Section 8. traits
@@ -544,23 +532,8 @@ broadcast use {
                 // from_vec ensures: result@ =~= in_ord.seq@.map_values(|t: T| t@)
                 // ArraySeqStPerS view: in_ord@ == in_ord.seq@.map(|_i, t: T| t@)
                 // map_values(f) = map(|_i, a| f(a)), so result@ =~= in_ord@
-                assert(result@.len() == in_ord@.len());
-                assert forall|i: int| 0 <= i < result@.len()
-                    implies #[trigger] result@[i] == in_ord@[i] by {};
                 assert(result@ =~= in_ord@);
                 // Now bridge: result@.to_set() =~= self@ via in_ord membership
-                assert forall|v: <T as View>::V| #[trigger] result@.to_set().contains(v)
-                    implies self@.contains(v) by {
-                    assert(result@.contains(v));
-                    // result@ =~= in_ord@ so in_ord@.contains(v)
-                };
-                assert forall|v: <T as View>::V| self@.contains(v)
-                    implies #[trigger] result@.to_set().contains(v) by {
-                    // self@.contains(v) ==> in_ord@.contains(v) from in_order ensures
-                    let j = choose|j: int| 0 <= j < in_ord@.len() && in_ord@[j] == v;
-                    assert(result@[j] == in_ord@[j]);
-                };
-                assert(result@.to_set() =~= self@);
             }
             result
         }
@@ -568,21 +541,18 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             AVLTreeSetStEph { tree: ParamBST::new() }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(x: T) -> (tree: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             AVLTreeSetStEph { tree: ParamBST::singleton(x) }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut constructed = Self::empty();
             let n = seq.length();
             let mut i: usize = 0;
@@ -609,12 +579,6 @@ broadcast use {
                 let ghost old_view = constructed@;
                 constructed.insert(elem);
                 proof {
-                    assert forall|j: int| 0 <= j < i + 1
-                        implies #[trigger] constructed@.contains(seq@[j]) by {
-                        if j < i as int {
-                            assert(old_view.contains(seq@[j]));
-                        }
-                    };
                     assert forall|v: <T as View>::V|
                         #[trigger] constructed@.contains(v) implies
                         (exists|j: int| 0 <= j < i + 1 && seq@[j] == v) by {
@@ -622,25 +586,12 @@ broadcast use {
                             assert(v == seq@[i as int]);
                         } else {
                             let j = choose|j: int| 0 <= j < i && seq@[j] == v;
-                            assert(j < i + 1);
                         }
                     };
                 }
                 i += 1;
             }
             proof {
-                assert forall|v: <T as View>::V|
-                    #[trigger] constructed@.contains(v) == seq@.to_set().contains(v) by {
-                    if constructed@.contains(v) {
-                        let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == v;
-                        assert(seq@.contains(v));
-                    }
-                    if seq@.to_set().contains(v) {
-                        assert(seq@.contains(v));
-                        let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == v;
-                        assert(constructed@.contains(seq@[j]));
-                    }
-                };
             }
             constructed
         }
@@ -687,7 +638,6 @@ broadcast use {
         {
             let common_tree = self.tree.intersect(&other.tree);
             proof {
-                assert(common_tree@ =~= self@.intersect(other@));
                 vstd::set_lib::lemma_len_intersect::<T::V>(self@, other@);
             }
             AVLTreeSetStEph { tree: common_tree }
@@ -699,7 +649,6 @@ broadcast use {
         {
             let combined_tree = self.tree.union(&other.tree);
             proof {
-                assert(combined_tree@ =~= self@.union(other@));
                 vstd::set_lib::lemma_len_union::<T::V>(self@, other@);
             }
             AVLTreeSetStEph { tree: combined_tree }
@@ -711,7 +660,6 @@ broadcast use {
         {
             let remaining_tree = self.tree.difference(&other.tree);
             proof {
-                assert(remaining_tree@ =~= self@.difference(other@));
                 vstd::set_lib::lemma_len_difference::<T::V>(self@, other@);
             }
             AVLTreeSetStEph { tree: remaining_tree }
@@ -831,11 +779,7 @@ broadcast use {
         fn clone_wf(&self) -> (cloned: Self) {
             let r = AVLTreeSetStEph { tree: self.tree.clone() };
             proof {
-                assert(r.tree@ == self.tree@);
-                assert(obeys_feq_full_trigger::<T>());
-                assert(r.tree@.finite());
                 assert(r.tree.spec_bstparasteph_wf());
-                assert(r@.len() < usize::MAX as nat);
             }
             r
         }

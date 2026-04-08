@@ -1,0 +1,68 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap41/ArraySetStEph.rs:641:21
+    |
+641 |                     rv_views.no_duplicates(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap41/ArraySetStEph.rs:676:25
+    |
+130 |             !s.contains(x),
+    |             -------------- failed precondition
+...
+676 |                         lemma_push_preserves_no_dups(rv_views.drop_last(), cv);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap41/ArraySetStEph.rs:130:14
+    |
+130 |             !s.contains(x),
+    |              ^^^^^^^^^^^^^
+
+note: 
+
+tmp%.no_duplicates() ✔
+!(tmp%.contains(cv)) ✘
+|   forall |i|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+|           !(tmp%.index(i) == cv) 
++---
+
+note: recommendation not met
+   --> src/Chap41/ArraySetStEph.rs:684:40
+    |
+684 | ...                   assert(next_sub[m] == rv_views[j]);
+    |                              ^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap41/ArraySetStEph.rs:687:40
+    |
+687 | ...                   assert(next_sub[i as int] == cv);
+    |                              ^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap41/ArraySetStEph.rs:724:36
+    |
+724 | ...                   assert(next_sub[m] == rv_views[j]);
+    |                              ^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 4541MB, peak z3 RSS: 591MB, min free: 22033MB
+Sampled CPU Usage: rust_verify: 68s, z3 children: 63s

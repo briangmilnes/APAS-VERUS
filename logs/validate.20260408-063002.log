@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap41/ArraySetStEph.rs:1219:28
+     |
+1219 |                     assert(self.elements@ =~= rv_views) by {
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+self.elements.view() =~= rv_views 
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 5256MB, peak z3 RSS: 543MB, min free: 20929MB
+Sampled CPU Usage: rust_verify: 80s, z3 children: 63s

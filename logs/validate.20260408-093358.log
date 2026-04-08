@@ -1,0 +1,46 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+    --> src/Chap41/OrdKeyMap.rs:1720:13
+     |
+1720 |               predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1730 | /         match tree.expose() {
+1731 | |             Exposed::Leaf => None,
+1732 | |             Exposed::Node(left, root_pair, right) => {
+1733 | |                 reveal_param_bst_backings(&left);
+...    |
+1973 | |         }
+     | |_________- at the end of the function body
+
+error: precondition not satisfied
+    --> src/Chap41/OrdKeyMap.rs:1867:37
+     |
+1867 | ...                   K::cmp_spec_less_implies_le(max_pair.0, root_pair.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:73:18
+     |
+  73 |         requires a.cmp_spec(&b) == Ordering::Less
+     |                  -------------------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/total_order.rs:73:36
+   |
+73 |         requires a.cmp_spec(&b) == Ordering::Less
+   |                                    ^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.cmp_spec(tmp%) == Less
+|   !(tmp%.cmp_spec(tmp%) is Equal) ✘
+|   !(tmp%.cmp_spec(tmp%) is Greater) ✔
++---
+
+verification results:: 2279 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 36s
+Sampled Memory Usage: peak rust_verify RSS: 6693MB, peak z3 RSS: 812MB, min free: 17198MB
+Sampled CPU Usage: rust_verify: 178s, z3 children: 209s
