@@ -1,0 +1,28 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: precondition not satisfied
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:662:29
+    |
+662 |   ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:216:13
+    |
+216 | /             forall |j: int| 0 <= j < table.len()
+217 | |                 ==> !#[trigger] table[j].spec_entry_to_map().dom().contains(key),
+    | |________________________________________________________________________________- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        !(tmp%.index(j).spec_entry_to_map().dom().contains(key)) 
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 4566MB, peak z3 RSS: 562MB, min free: 21563MB
+Sampled CPU Usage: rust_verify: 61s, z3 children: 55s

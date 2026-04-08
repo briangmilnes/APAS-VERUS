@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:160:13
+    |
+152 | /     pub proof fn lemma_table_to_map_push_empty<Key, Value, Entry: EntryTrait<Key, Value>>(
+153 | |         table: Seq<Entry>,
+154 | |         entry: Entry,
+155 | |     )
+    | |_____- at the end of the function body
+...
+160 |               spec_table_to_map(table.push(entry)) == Map::<Key, Value>::empty(),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+spec_table_to_map(old(table).push(old(entry))) =~= empty() 
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 4140MB, peak z3 RSS: 541MB, min free: 22054MB
+Sampled CPU Usage: rust_verify: 66s, z3 children: 54s

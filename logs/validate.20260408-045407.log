@@ -1,0 +1,36 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:484:17
+    |
+484 | /                 exists |s: int| #[trigger] spec_other_slots_preserved(
+485 | |                     old(table).table@, table.table@, s);
+    | |_______________________________________________________^ failed this postcondition
+    |
+   ::: src/Chap47/LinProbFlatHashTableStEph.rs:305:29
+    |
+305 |   ...                   return;
+    |                         ------ at this exit
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:484:17
+    |
+484 | /                 exists |s: int| #[trigger] spec_other_slots_preserved(
+485 | |                     old(table).table@, table.table@, s);
+    | |_______________________________________________________^
+
+note: 
+
+table.view() =~= old(table).view().insert(old(key), old(value)) ✔
+spec_parahashtablesteph_wf(table) ✔
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+table.num_elements <= old(table).num_elements + 1 ✔
+(exists |s| spec_other_slots_preserved(old(table).table.view(), table.table.view(), s)) ✘
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 4031MB, peak z3 RSS: 685MB, min free: 21766MB
+Sampled CPU Usage: rust_verify: 65s, z3 children: 52s

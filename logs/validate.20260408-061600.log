@@ -1,0 +1,92 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: precondition not satisfied
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:610:34
+    |
+610 |                         let eq = feq(&k, &key);
+    |                                  ^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:289:18
+    |
+289 |         requires obeys_feq_full::<T>()
+    |                  --------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:616:33
+    |
+616 | ...                   lemma_reveal_view_injective::<Key>();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:114:18
+    |
+114 |         requires obeys_feq_view_injective::<T>(),
+    |                  ------------------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/feq.rs:50:13
+   |
+50 |         &&& feq_reflexive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+51 |         &&& feq_symmetric::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+52 |         &&& feq_transitive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+...
+77 |         &&& obeys_feq_properties::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+78 |         &&& obeys_feq_view::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_full()
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:806:29
+    |
+806 |                   let s_wit = choose |s: int| #![trigger old(table).table@[s]]
+    |  _____________________________^
+807 | |                     0 <= s < old(table).table@.len() && old(table).table@[s] is Empty;
+    | |_____________________________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:808:24
+    |
+808 |                 assert(table.table@[s_wit] is Empty);
+    |                        ^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 4322MB, peak z3 RSS: 719MB, min free: 21981MB
+Sampled CPU Usage: rust_verify: 61s, z3 children: 60s

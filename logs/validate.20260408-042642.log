@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:492:24
+    |
+492 |                 assert(false);
+    |                        ^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+false 
+
+verification results:: 1254 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 3501MB, peak z3 RSS: 621MB, min free: 22703MB
+Sampled CPU Usage: rust_verify: 63s, z3 children: 63s

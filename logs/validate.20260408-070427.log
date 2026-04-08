@@ -1,0 +1,60 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: expected delimiter
+   --> src/Chap47/VecChainedHashTableStEph.rs:249:34
+    |
+249 |                         implies !#[trigger] old_table[j].spec_entry_to_map().dom().contains(key) by {}
+    |                                  ^
+
+error[E0425]: cannot find type `VecChainedHashTableStEph` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:623:30
+    |
+623 |       impl std::fmt::Debug for VecChainedHashTableStEph {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ChainedHashTable.rs:165:9
+    |
+165 | / ...   pub trait ChainedHashTable<Key: StT, Value: StT, Entry: EntryTrait<Key, Value>, Metrics: Default, H: Fn(&Key, ...
+166 | | ...       ParaHashTableStEphTrait<Key, Value, Entry, Metrics, H>
+167 | | ...   {
+168 | | ...       /// Computes the hash index for a key.
+...   |
+176 | | ...               index as nat == (table.spec_hash@)(*key) % (table.current_size as nat);
+177 | | ...   }
+    | |_______- similarly named trait `ChainedHashTable` defined here
+    |
+help: a trait with a similar name exists
+    |
+623 -     impl std::fmt::Debug for VecChainedHashTableStEph {
+623 +     impl std::fmt::Debug for ChainedHashTable {
+    |
+
+error[E0425]: cannot find type `VecChainedHashTableStEph` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:629:32
+    |
+629 |       impl std::fmt::Display for VecChainedHashTableStEph {
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ChainedHashTable.rs:165:9
+    |
+165 | / ...   pub trait ChainedHashTable<Key: StT, Value: StT, Entry: EntryTrait<Key, Value>, Metrics: Default, H: Fn(&Key, ...
+166 | | ...       ParaHashTableStEphTrait<Key, Value, Entry, Metrics, H>
+167 | | ...   {
+168 | | ...       /// Computes the hash index for a key.
+...   |
+176 | | ...               index as nat == (table.spec_hash@)(*key) % (table.current_size as nat);
+177 | | ...   }
+    | |_______- similarly named trait `ChainedHashTable` defined here
+    |
+help: a trait with a similar name exists
+    |
+629 -     impl std::fmt::Display for VecChainedHashTableStEph {
+629 +     impl std::fmt::Display for ChainedHashTable {
+    |
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 2490MB, peak z3 RSS: 0MB, min free: 22053MB
+Sampled CPU Usage: rust_verify: 45s, z3 children: 55s

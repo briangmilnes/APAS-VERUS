@@ -1,0 +1,39 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:509:17
+    |
+509 |                 deleted == old(table)@.dom().contains(*key),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/LinkedListChainedHashTableStEph.rs:452:17
+    |
+452 |                 deleted
+    |                 ------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:509:28
+    |
+509 |                 deleted == old(table)@.dom().contains(*key),
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == old(table).view().dom().contains(old(key)) ✘
+|   %return ==>
+|       old(table).view().dom().contains(old(key)) ✘
+|           function is uninterpreted
+|   old(table).view().dom().contains(old(key)) ==>
+|       %return ✔
++---
+table.view() =~= old(table).view().remove(old(key)) ✔
+spec_parahashtablesteph_wf(table) ✔
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 2961MB, peak z3 RSS: 452MB, min free: 23145MB
+Sampled CPU Usage: rust_verify: 38s, z3 children: 30s

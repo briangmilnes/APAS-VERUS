@@ -160,12 +160,10 @@ pub mod ParaHashTableStEph {
             spec_table_to_map(table.push(entry)) == Map::<Key, Value>::empty(),
     {
         assert(table.push(entry).drop_last() == table);
-        assert(table.push(entry).last() == entry);
         // spec_table_to_map(table.push(entry))
         //   = spec_table_to_map(table).union_prefer_right(entry.spec_entry_to_map())
         //   = Map::empty().union_prefer_right(Map::empty())
         //   = Map::empty()
-        assert(Map::<Key, Value>::empty().union_prefer_right(Map::<Key, Value>::empty()) =~= Map::<Key, Value>::empty());
     }
 
     /// If the new entry's map contains key, so does spec_table_to_map after the update.
@@ -186,24 +184,10 @@ pub mod ParaHashTableStEph {
         if index == table.len() - 1 {
             // Updated element is the last: union_prefer_right includes its domain.
             assert(updated.drop_last() == table.drop_last());
-            assert(updated.last() == new_entry);
-            assert(spec_table_to_map(updated) ==
-                spec_table_to_map(table.drop_last()).union_prefer_right(
-                    new_entry.spec_entry_to_map()));
-            assert(spec_table_to_map(updated).dom() =~=
-                spec_table_to_map(table.drop_last()).dom().union(
-                    new_entry.spec_entry_to_map().dom()));
         } else {
             // Updated element is before last: recurse on drop_last.
             assert(updated.drop_last() == table.drop_last().update(index, new_entry));
-            assert(updated.last() == table.last());
             lemma_table_to_map_update_contains(table.drop_last(), index, new_entry, key);
-            assert(spec_table_to_map(updated) ==
-                spec_table_to_map(table.drop_last().update(index, new_entry)).union_prefer_right(
-                    table.last().spec_entry_to_map()));
-            assert(spec_table_to_map(updated).dom() =~=
-                spec_table_to_map(table.drop_last().update(index, new_entry)).dom().union(
-                    table.last().spec_entry_to_map().dom()));
         }
     }
 
@@ -220,14 +204,7 @@ pub mod ParaHashTableStEph {
         decreases table.len(),
     {
         if table.len() > 0 {
-            assert forall |j: int| 0 <= j < table.drop_last().len()
-                implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
-                assert(table.drop_last()[j] == table[j]);
-            }
             lemma_table_to_map_not_contains::<Key, Value, Entry>(table.drop_last(), key);
-            assert(spec_table_to_map(table).dom() =~=
-                spec_table_to_map(table.drop_last()).dom().union(
-                    table.last().spec_entry_to_map().dom()));
         }
     }
 
@@ -253,35 +230,24 @@ pub mod ParaHashTableStEph {
         let updated = table.update(index, new_entry);
         if index == table.len() - 1 {
             assert(updated.drop_last() =~= table.drop_last());
-            assert(updated.last() == new_entry);
             // key is not in any entry in drop_last (all have j != index).
-            assert forall |j: int| 0 <= j < table.drop_last().len()
-                implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
-                assert(table.drop_last()[j] == table[j]);
-            }
             lemma_table_to_map_not_contains::<Key, Value, Entry>(table.drop_last(), key);
             // rest.union_prefer_right(old_map.insert(key, value))
             //   =~= rest.union_prefer_right(old_map).insert(key, value)
             // when key not in rest.
-            assert(spec_table_to_map(updated) =~= spec_table_to_map(table).insert(key, value));
         } else {
             assert(updated.drop_last() =~= table.drop_last().update(index, new_entry));
-            assert(updated.last() == table.last());
             // Precondition for recursive call: key not in entries j != index of drop_last.
             assert forall |j: int| 0 <= j < table.drop_last().len() && j != index
                 implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
-                assert(table.drop_last()[j] == table[j]);
             }
             // Entry at index in drop_last matches table.
-            assert(table.drop_last()[index] == table[index]);
             lemma_table_to_map_update_insert::<Key, Value, Entry>(
                 table.drop_last(), index, new_entry, key, value);
             // key not in last entry's map.
-            assert(!table.last().spec_entry_to_map().dom().contains(key));
             // rest.insert(key, value).union_prefer_right(last_map)
             //   =~= rest.union_prefer_right(last_map).insert(key, value)
             // when key not in last_map.
-            assert(spec_table_to_map(updated) =~= spec_table_to_map(table).insert(key, value));
         }
     }
 
@@ -306,25 +272,14 @@ pub mod ParaHashTableStEph {
         let updated = table.update(index, new_entry);
         if index == table.len() - 1 {
             assert(updated.drop_last() =~= table.drop_last());
-            assert(updated.last() == new_entry);
-            assert forall |j: int| 0 <= j < table.drop_last().len()
-                implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
-                assert(table.drop_last()[j] == table[j]);
-            }
             lemma_table_to_map_not_contains::<Key, Value, Entry>(table.drop_last(), key);
-            assert(spec_table_to_map(updated) =~= spec_table_to_map(table).remove(key));
         } else {
             assert(updated.drop_last() =~= table.drop_last().update(index, new_entry));
-            assert(updated.last() == table.last());
             assert forall |j: int| 0 <= j < table.drop_last().len() && j != index
                 implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
-                assert(table.drop_last()[j] == table[j]);
             }
-            assert(table.drop_last()[index] == table[index]);
             lemma_table_to_map_update_remove::<Key, Value, Entry>(
                 table.drop_last(), index, new_entry, key);
-            assert(!table.last().spec_entry_to_map().dom().contains(key));
-            assert(spec_table_to_map(updated) =~= spec_table_to_map(table).remove(key));
         }
     }
 
@@ -346,17 +301,10 @@ pub mod ParaHashTableStEph {
         decreases table.len(),
     {
         if index == table.len() - 1 {
-            assert forall |j: int| 0 <= j < table.drop_last().len()
-                implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
-                assert(table.drop_last()[j] == table[j]);
-            }
             lemma_table_to_map_not_contains::<Key, Value, Entry>(table.drop_last(), key);
         } else {
-            assert(!table.last().spec_entry_to_map().dom().contains(key));
-            assert(table.drop_last()[index] == table[index]);
             assert forall |j: int| 0 <= j < table.drop_last().len() && j != index
                 implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
-                assert(table.drop_last()[j] == table[j]);
             }
             lemma_table_to_map_unique_entry_value::<Key, Value, Entry>(table.drop_last(), index, key);
         }
@@ -444,7 +392,6 @@ pub mod ParaHashTableStEph {
                 table_vec.push(Entry::new());
                 proof {
                     lemma_table_to_map_push_empty::<Key, Value, Entry>(old_view, table_vec@.last());
-                    assert(table_vec@ == old_view.push(table_vec@.last()));
                 }
                 i += 1;
             }

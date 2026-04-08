@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:142:13
+    |
+142 |               spec_count_empties(new_table) >= spec_count_empties(old_table) - 1,
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+145 | /         if old_table.len() == 1 {
+146 | | // Veracity: UNNEEDED assert             assert(old_table.drop_last().len() == 0);
+147 | | // Veracity: TESTING assert             assert(spec_count_empties::<Key, Value>(old_table.drop_last()) == 0);
+148 | |             assert(new_table.drop_last().len() == 0);
+...   |
+166 | |                 old_table.drop_last(), new_table.drop_last(), s);
+167 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+spec_count_empties(old(new_table)) >= spec_count_empties(old(old_table)) - 1 
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 4673MB, peak z3 RSS: 252MB, min free: 21816MB
+Sampled CPU Usage: rust_verify: 90s, z3 children: 94s

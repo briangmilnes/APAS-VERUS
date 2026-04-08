@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: expected delimiter
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:320:42
+    |
+320 | ...                   implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {}
+    |                                ^
+
+error[E0425]: cannot find type `LinkedListChainedHashTableStEph` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:623:30
+    |
+623 |     impl std::fmt::Debug for LinkedListChainedHashTableStEph {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListChainedHashTableStEph` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:629:32
+    |
+629 |     impl std::fmt::Display for LinkedListChainedHashTableStEph {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 2728MB, peak z3 RSS: 352MB, min free: 22066MB
+Sampled CPU Usage: rust_verify: 35s, z3 children: 19s

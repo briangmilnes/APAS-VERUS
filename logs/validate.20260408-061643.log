@@ -1,0 +1,56 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: precondition not satisfied
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:626:33
+    |
+626 | / ...                   lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+627 | | ...                       old_table_seq, slot as int, new_entry, key, value);
+    | |____________________________________________________________________________^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:245:13
+    |
+245 |               new_entry.spec_entry_to_map() == table[index].spec_entry_to_map().insert(key, value),
+    |               ------------------------------------------------------------------------------------ failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:245:13
+    |
+245 |             new_entry.spec_entry_to_map() == table[index].spec_entry_to_map().insert(key, value),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+let tmp%% = 0;
+    let tmp%% = slot;
+        let tmp%% = old_table_seq.len();
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+new_entry.spec_entry_to_map() == old_table_seq.index(slot).spec_entry_to_map().insert(key, value) ✘
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = old_table_seq.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == slot) ==>
+        !(old_table_seq.index(j).spec_entry_to_map().dom().contains(key)) ✔
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:806:29
+    |
+806 |                   let s_wit = choose |s: int| #![trigger old(table).table@[s]]
+    |  _____________________________^
+807 | |                     0 <= s < old(table).table@.len() && old(table).table@[s] is Empty;
+    | |_____________________________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:808:24
+    |
+808 |                 assert(table.table@[s_wit] is Empty);
+    |                        ^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 3832MB, peak z3 RSS: 224MB, min free: 22943MB
+Sampled CPU Usage: rust_verify: 59s, z3 children: 47s

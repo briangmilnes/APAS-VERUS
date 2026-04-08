@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:463:16
+    |
+463 |         assert(probes.contains(s));
+    |                ^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+probes.contains(s)
+|   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = probes.len() in tmp%% <= tmp%% && tmp%% < tmp%% && probes.index(i) == s) 
++---
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 4413MB, peak z3 RSS: 421MB, min free: 22259MB
+Sampled CPU Usage: rust_verify: 64s, z3 children: 52s

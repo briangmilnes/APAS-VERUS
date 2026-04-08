@@ -1,0 +1,53 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:554:17
+    |
+554 |                 resized@ == table@,
+    |                 ^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/LinkedListChainedHashTableStEph.rs:604:17
+    |
+604 |                 new_table
+    |                 --------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:554:17
+    |
+554 |                 resized@ == table@,
+    |                 ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= old(table).view() ✘
+%return.current_size == old(new_size) ✔
+%return.table.view().len() == old(new_size) ✔
+spec_parahashtablesteph_wf(%return) ✔
+%return.spec_hash =~= old(table).spec_hash ✔
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:503:36
+    |
+503 | ...                   assert(chain_sub_next.drop_last() =~= chain_sub);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:516:32
+    |
+516 |                         assert(sub_next.drop_last()
+    |                                ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 3090MB, peak z3 RSS: 317MB, min free: 23208MB
+Sampled CPU Usage: rust_verify: 33s, z3 children: 18s

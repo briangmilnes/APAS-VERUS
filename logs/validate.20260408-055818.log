@@ -1,0 +1,23 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:568:17
+    |
+568 |         ensures c == *x,
+    |                 ^^^^^^^ failed this postcondition
+...
+572 |         c
+    |         - at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+c == old(x) 
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 4324MB, peak z3 RSS: 414MB, min free: 22186MB
+Sampled CPU Usage: rust_verify: 71s, z3 children: 55s

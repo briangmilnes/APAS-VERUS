@@ -1,16 +1,20 @@
     Spec/   Proof/    Exec/    Rust File
 --------------------------------------------
-      83/      31/     146/      44 GraphSearchMtPer.rs
-      81/      28/     149/      44 GraphSearchStEph.rs
-      81/      36/     146/      44 GraphSearchStPer.rs
-     141/     150/     276/      28 PQMinStEph.rs
-     118/     136/     244/      30 PQMinStPer.rs
+      40/      84/       1/       5 ChainedHashTable.rs
+      68/     485/     305/      22 DoubleHashFlatHashTableStEph.rs
+      36/       1/      41/      19 FlatHashTable.rs
+      60/     455/     258/      21 LinProbFlatHashTableStEph.rs
+      16/     175/     328/      21 LinkedListChainedHashTableStEph.rs
+     176/     164/      56/      40 ParaHashTableStEph.rs
+     103/     757/     272/      24 QuadProbFlatHashTableStEph.rs
+      69/     354/     324/      48 StructChainedHashTable.rs
+      17/     177/     325/      20 VecChainedHashTableStEph.rs
 --------------------------------------------
     spec    proof     exec     rust
-     504/     381/     961/     190 Total
-   2,644 total lines
-5 files analyzed
-14ms
+     585/   2,652/   1,910/     220 Total
+   6,464 total lines
+9 files analyzed
+43ms
 
 Proof Lines Per Function
 ========================
@@ -18,42 +22,64 @@ Proof Lines Per Function
 By chapter:
 |   # | Chapter    |  PrfTot |  InSpec |  InExec | InProof | ExecLOC |  Prf/Ex |
 | --- | ---------- | ------- | ------- | ------- | ------- | ------- | ------- |
-|   1 | root       |     903 |      14 |     889 |       0 |     961 |    0.94 |
+|   1 | root       |   3,198 |     221 |   2,098 |     879 |   1,910 |    1.67 |
 
-1 chapters, 903 proof lines, 961 exec lines, ratio 0.94
-903 min  903 max  903.0 avg  903.0 median (proof lines)
+1 chapters, 3,198 proof lines, 1,910 exec lines, ratio 1.67
+3,198 min  3,198 max  3198.0 avg  3198.0 median (proof lines)
 
 By module:
 |   # | Chap       | Module                         |  PrfTot |  InSpec |  InExec | InProof | ExecLOC | Prf/Ex |
 | --- | ---------- | ------------------------------ | ------- | ------- | ------- | ------- | ------- | ------ |
-|   1 | root       | PQMinStEph                     |     300 |       7 |     293 |       0 |     276 |   1.09 |
-|   2 | root       | PQMinStPer                     |     251 |       7 |     244 |       0 |     244 |   1.03 |
-|   3 | root       | GraphSearchMtPer               |     120 |       0 |     120 |       0 |     146 |   0.82 |
-|   4 | root       | GraphSearchStPer               |     117 |       0 |     117 |       0 |     146 |   0.80 |
-|   5 | root       | GraphSearchStEph               |     115 |       0 |     115 |       0 |     149 |   0.77 |
+|   1 | root       | QuadProbFlatHashTableStEph     |     854 |      46 |     417 |     391 |     272 |   3.14 |
+|   2 | root       | DoubleHashFlatHashTableStEph   |     547 |      40 |     422 |      85 |     305 |   1.79 |
+|   3 | root       | LinProbFlatHashTableStEph      |     509 |      38 |     389 |      82 |     258 |   1.97 |
+|   4 | root       | StructChainedHashTable         |     414 |      30 |     383 |       1 |     324 |   1.28 |
+|   5 | root       | ParaHashTableStEph             |     328 |      48 |      81 |     199 |      56 |   5.86 |
+|   6 | root       | VecChainedHashTableStEph       |     194 |       3 |     190 |       1 |     325 |   0.60 |
+|   7 | root       | LinkedListChainedHashTableStEph |     191 |       3 |     187 |       1 |     328 |   0.58 |
+|   8 | root       | ChainedHashTable               |     124 |       0 |       5 |     119 |       1 | 124.00 |
+|   9 | root       | FlatHashTable                  |      37 |      13 |      24 |       0 |      41 |   0.90 |
 
-5 modules, 903 proof lines, 961 exec lines, ratio 0.94
-115 min  300 max  180.6 avg  120.0 median (proof lines)
+9 modules, 3,198 proof lines, 1,910 exec lines, ratio 1.67
+37 min  854 max  355.3 avg  328.0 median (proof lines)
 
 Per exec function (proof lines within exec fns):
-  60 exec functions total, 39 with proof lines
-  889 total proof lines in exec fns
-  4 min  136 max  22.8 avg  11.0 median
+  82 exec functions total, 62 with proof lines
+  2,098 total proof lines in exec fns
+  1 min  211 max  33.8 avg  8.5 median
 
 Per proof function:
-  0 proof functions
+  32 proof functions
+  879 total proof lines in proof fns
+  1 min  95 max  27.5 avg  18.5 median
 
 Grand total:
-  66 total functions, 43 with proof lines (65%)
-  903 total proof lines, 961 exec lines, ratio 0.94
-  3 min  136 max  21.0 avg  11.0 median (proof lines per fn)
+  156 total functions, 134 with proof lines (86%)
+  3,198 total proof lines, 1,910 exec lines, ratio 1.67
+  1 min  211 max  23.9 avg  7.0 median (proof lines per fn)
 
 Outliers (>= 50 proof lines):
-|   # | Chap       | Module                         | Function     |  Kind |  Lines |
-| --- | ---------- | ------------------------------ | ------------ | ----- | ------ |
-|   1 | root       | PQMinStEph                     | pq_explore   |  exec |    136 |
-|   2 | root       | PQMinStPer                     | pq_explore   |  exec |    117 |
-|   3 | root       | PQMinStEph                     | pq_min_multi |  exec |     70 |
-|   4 | root       | PQMinStPer                     | pq_min_multi |  exec |     51 |
+|   # | Chap       | Module                         | Function                         |  Kind |  Lines |
+| --- | ---------- | ------------------------------ | -------------------------------- | ----- | ------ |
+|   1 | root       | StructChainedHashTable         | resize                           |  exec |    211 |
+|   2 | root       | QuadProbFlatHashTableStEph     | insert                           |  exec |    179 |
+|   3 | root       | DoubleHashFlatHashTableStEph   | insert                           |  exec |    174 |
+|   4 | root       | LinProbFlatHashTableStEph      | insert                           |  exec |    163 |
+|   5 | root       | QuadProbFlatHashTableStEph     | delete                           |  exec |    113 |
+|   6 | root       | DoubleHashFlatHashTableStEph   | delete                           |  exec |    110 |
+|   7 | root       | LinProbFlatHashTableStEph      | delete                           |  exec |    101 |
+|   8 | root       | QuadProbFlatHashTableStEph     | lemma_odd_factor_pow2            | proof |     95 |
+|   9 | root       | QuadProbFlatHashTableStEph     | lemma_empty_slot_reachable       | proof |     85 |
+|  10 | root       | QuadProbFlatHashTableStEph     | lemma_triangular_injective       | proof |     83 |
+|  11 | root       | DoubleHashFlatHashTableStEph   | lookup                           |  exec |     73 |
+|  12 | root       | QuadProbFlatHashTableStEph     | lookup                           |  exec |     68 |
+|  13 | root       | LinProbFlatHashTableStEph      | resize                           |  exec |     64 |
+|  14 | root       | VecChainedHashTableStEph       | delete                           |  exec |     62 |
+|  15 | root       | LinProbFlatHashTableStEph      | lookup                           |  exec |     61 |
+|  16 | root       | DoubleHashFlatHashTableStEph   | resize                           |  exec |     60 |
+|  17 | root       | LinkedListChainedHashTableStEph | delete                           |  exec |     59 |
+|  18 | root       | QuadProbFlatHashTableStEph     | resize                           |  exec |     57 |
+|  19 | root       | ParaHashTableStEph             | lemma_table_to_map_update_insert | proof |     51 |
+|  20 | root       | LinkedListChainedHashTableStEph | resize                           |  exec |     50 |
 
-4 functions over 50 proof lines
+20 functions over 50 proof lines

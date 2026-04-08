@@ -1,0 +1,74 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: precondition not satisfied
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:251:34
+    |
+251 |                         let eq = feq(&k, &key);
+    |                                  ^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:289:18
+    |
+289 |         requires obeys_feq_full::<T>()
+    |                  --------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:257:33
+    |
+257 | ...                   lemma_reveal_view_injective::<Key>();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:114:18
+    |
+114 |         requires obeys_feq_view_injective::<T>(),
+    |                  ------------------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/feq.rs:50:13
+   |
+50 |         &&& feq_reflexive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+51 |         &&& feq_symmetric::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+52 |         &&& feq_transitive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+...
+77 |         &&& obeys_feq_properties::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+78 |         &&& obeys_feq_view::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_full()
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 4770MB, peak z3 RSS: 777MB, min free: 21423MB
+Sampled CPU Usage: rust_verify: 84s, z3 children: 81s
