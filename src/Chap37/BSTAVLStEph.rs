@@ -31,7 +31,8 @@ pub mod BSTAVLStEph {
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
     #[cfg(verus_keep_ghost)]
-    use crate::Chap37::BSTSpecsAndLemmas::BSTSpecsAndLemmas::{lemma_bst_deep, lemma_max_plus_one};
+    use crate::Chap37::BSTSpecsAndLemmas::BSTSpecsAndLemmas::{lemma_bst_deep, lemma_max_plus_one,
+        lemma_bst_insert_left, lemma_bst_insert_right};
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
     //		Section 4. type definitions
@@ -736,37 +737,9 @@ pub mod BSTAVLStEph {
                             value: node_val,
                             right: right,
                         }));
-                        // Veracity: NEEDED proof block
                         proof {
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| new_left.tree_contains(x) implies
-                                #[trigger] T::le(x, node_val) && x != node_val
-                            by {
-                                if old_left.tree_contains(x) {
-                                } else {
-                                }
-                            };
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| old_right.tree_contains(x) implies
-                                #[trigger] T::le(node_val, x) && x != node_val
-                            by {};
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| r.tree_contains(x) ==
-                                (node.tree_contains(x) || x == value)
-                            by {
-                                // Veracity: NEEDED assert
-                                assert(r.tree_contains(x) ==
-                                    (node_val == x
-                                    || new_left.tree_contains(x)
-                                    || old_right.tree_contains(x)));
-                            };
-
+                            lemma_bst_insert_left(node_val, old_left, old_right, node, new_left, r, value);
                             lemma_max_plus_one(old_left.spec_height(), old_right.spec_height());
-
-
                         }
                         r.rebalance()
                     }
@@ -777,37 +750,9 @@ pub mod BSTAVLStEph {
                             value: node_val,
                             right: new_right,
                         }));
-                        // Veracity: NEEDED proof block
                         proof {
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| old_left.tree_contains(x) implies
-                                #[trigger] T::le(x, node_val) && x != node_val
-                            by {};
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| new_right.tree_contains(x) implies
-                                #[trigger] T::le(node_val, x) && x != node_val
-                            by {
-                                if old_right.tree_contains(x) {
-                                } else {
-                                }
-                            };
-
-                            // Veracity: NEEDED assert
-                            assert forall|x: T| r.tree_contains(x) ==
-                                (node.tree_contains(x) || x == value)
-                            by {
-                                // Veracity: NEEDED assert
-                                assert(r.tree_contains(x) ==
-                                    (node_val == x
-                                    || old_left.tree_contains(x)
-                                    || new_right.tree_contains(x)));
-                            };
-
+                            lemma_bst_insert_right(node_val, old_left, old_right, node, new_right, r, value);
                             lemma_max_plus_one(old_left.spec_height(), old_right.spec_height());
-
-
                         }
                         r.rebalance()
                     }
@@ -824,9 +769,6 @@ pub mod BSTAVLStEph {
                                 (node.tree_contains(x) || x == value)
                             by {
                             };
-                        }
-                        // Veracity: NEEDED proof block
-                        proof {
                         }
                         r
                     }
