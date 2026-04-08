@@ -67,9 +67,6 @@ pub mod OrderStatSelectStPer {
         ensures total_ordering(spec_leq::<T>())
     {
         let leq = spec_leq::<T>();
-        assert(reflexive(leq)) by {
-            assert forall|x: T| #[trigger] leq(x, x) by { T::reflexive(x); }
-        };
         assert(antisymmetric(leq)) by {
             assert forall|x: T, y: T|
                 #[trigger] leq(x, y) && #[trigger] leq(y, x) implies x == y by
@@ -140,9 +137,7 @@ pub mod OrderStatSelectStPer {
             proof {
                 lemma_total_ordering::<T>();
                 s.lemma_sort_by_ensures(leq);
-                assert(sorted_by(s, leq));
                 vstd::seq_lib::lemma_sorted_unique(s, s.sort_by(leq), leq);
-                assert(k as int == 0);
             }
             return Some(elem);
         }
@@ -187,14 +182,11 @@ pub mod OrderStatSelectStPer {
             proof {
                 assert(s.subrange(0, (i + 1) as int) =~=
                     s.subrange(0, i as int).push(s[i as int]));
-                assert(elem == s[i as int]);
             }
 
             match TotalOrder::cmp(&elem, &pivot) {
                 core::cmp::Ordering::Less => {
                     proof {
-                        assert(T::le(elem, pivot));
-                        assert(elem != pivot);
                     }
                     left.push(elem);
                 },
@@ -233,49 +225,30 @@ pub mod OrderStatSelectStPer {
             s.lemma_sort_by_ensures(leq);
 
             // Multiset equality from sort_by.
-            assert(left@.to_multiset() =~= sorted_left.to_multiset());
-            assert(right@.to_multiset() =~= sorted_right.to_multiset());
-            assert(s.to_multiset() =~= s.sort_by(leq).to_multiset());
 
             // Trigger to_multiset_len broadcast for each sequence.
-            assert(left@.to_multiset().len() == left@.len());
-            assert(sorted_left.to_multiset().len() == sorted_left.len());
-            assert(right@.to_multiset().len() == right@.len());
-            assert(sorted_right.to_multiset().len() == sorted_right.len());
-            assert(s.to_multiset().len() == s.len());
             assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
 
             // Length preservation: sort_by doesn't change length.
-            assert(sorted_left.len() == left@.len());
-            assert(sorted_right.len() == right@.len());
-            assert(s.sort_by(leq).len() == s.len());
-            assert(left@.len() + right@.len() + equals_seq.len() == n);
-            assert(candidate.len() == n);
 
             // sorted_left has same elements as left: all < pivot.
             assert forall|j: int| 0 <= j < sorted_left.len() implies
                 T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
             {
-                assert(sorted_left.to_multiset().count(sorted_left[j]) > 0);
                 assert(left@.to_multiset().count(sorted_left[j]) > 0);
-                assert(left@.contains(sorted_left[j]));
                 let idx = choose|idx: int|
                     0 <= idx < left@.len() && left@[idx] == sorted_left[j];
                 assert(T::le(sorted_left[j], pivot));
-                assert(sorted_left[j] != pivot);
             };
 
             // sorted_right has same elements as right: all > pivot.
             assert forall|j: int| 0 <= j < sorted_right.len() implies
                 T::le(pivot, #[trigger] sorted_right[j]) && sorted_right[j] != pivot by
             {
-                assert(sorted_right.to_multiset().count(sorted_right[j]) > 0);
                 assert(right@.to_multiset().count(sorted_right[j]) > 0);
-                assert(right@.contains(sorted_right[j]));
                 let idx = choose|idx: int|
                     0 <= idx < right@.len() && right@[idx] == sorted_right[j];
                 assert(T::le(pivot, sorted_right[j]));
-                assert(sorted_right[j] != pivot);
             };
 
             // The three-part concatenation is sorted because left < pivot == equals < right.
@@ -290,20 +263,16 @@ pub mod OrderStatSelectStPer {
                         // Both in sorted_left — already sorted.
                     } else if ai < ll && bi < ll + el {
                         // a in sorted_left (< pivot), b in equals (== pivot).
-                        assert(candidate[bi] == pivot);
                     } else if ai < ll && bi >= ll + el {
                         // a in sorted_left (< pivot), b in sorted_right (> pivot).
                         T::transitive(candidate[ai], pivot, candidate[bi]);
                     } else if ai >= ll && ai < ll + el && bi >= ll && bi < ll + el {
                         // Both in equals (== pivot).
-                        assert(candidate[ai] == pivot && candidate[bi] == pivot);
                         T::reflexive(pivot);
                     } else if ai >= ll && ai < ll + el && bi >= ll + el {
                         // a in equals (== pivot), b in sorted_right (> pivot).
-                        assert(candidate[ai] == pivot);
                     } else {
                         // Both in sorted_right — already sorted.
-                        assert(ai >= ll + el && bi >= ll + el);
                     }
                 };
             };
@@ -312,14 +281,6 @@ pub mod OrderStatSelectStPer {
             vstd::seq_lib::lemma_multiset_commutative(sorted_left, equals_seq);
             vstd::seq_lib::lemma_multiset_commutative(
                 sorted_left + equals_seq, sorted_right);
-            assert(candidate.to_multiset() =~=
-                sorted_left.to_multiset().add(
-                    equals_seq.to_multiset()).add(
-                    sorted_right.to_multiset()));
-            assert(candidate.to_multiset() =~=
-                left@.to_multiset().add(
-                    equals_seq.to_multiset()).add(
-                    right@.to_multiset()));
             assert(candidate.to_multiset() =~= s.to_multiset());
 
             // By uniqueness of sorting: sort(s) == candidate.
@@ -327,15 +288,11 @@ pub mod OrderStatSelectStPer {
                 s.sort_by(leq), candidate, leq);
 
             // Key fact for all branches: sort(s) and candidate agree element-wise.
-            assert(s.sort_by(leq) =~= candidate);
         }
 
         if k < left_count {
             let left_a = ArraySeqStPerS { seq: left };
             proof {
-                assert((k as int) < sorted_left.len());
-                assert((k as int) < candidate.len());
-                assert(candidate[k as int] == sorted_left[k as int]);
                 let left_a_view = Seq::new(
                     left_a.spec_len(), |j: int| left_a.spec_index(j));
                 assert(left_a_view =~= left@);
@@ -343,27 +300,14 @@ pub mod OrderStatSelectStPer {
             select_inner(&left_a, k)
         } else if k < n - right_count {
             proof {
-                assert(n - right_count == left_count + equals_seq.len());
-                assert(left_count == sorted_left.len());
-                assert(k as int >= sorted_left.len());
-                assert((k as int) < sorted_left.len() + equals_seq.len());
-                assert((k as int) < candidate.len());
-                assert(candidate[k as int] == pivot);
             }
             Some(pivot)
         } else {
             let right_a = ArraySeqStPerS { seq: right };
             let new_k = k - (n - right_count);
             proof {
-                assert(n - right_count == left_count + equals_seq.len());
-                assert(left_count == sorted_left.len());
                 let ll = sorted_left.len();
                 let el = equals_seq.len();
-                assert(new_k as int == k as int - ll - el);
-                assert(new_k as int >= 0);
-                assert((new_k as int) < sorted_right.len());
-                assert((k as int) < candidate.len());
-                assert(candidate[k as int] == sorted_right[new_k as int]);
                 let right_a_view = Seq::new(
                     right_a.spec_len(), |j: int| right_a.spec_index(j));
                 assert(right_a_view =~= right@);
