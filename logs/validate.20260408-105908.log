@@ -1,0 +1,125 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: assertion failed
+   --> src/Chap37/BSTSplayMtEph.rs:553:37
+    |
+553 | ...                   (TotalOrder::le(left_key, x) && x != left_key)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1060:37
+     |
+1060 | ...                   (TotalOrder::le(x, right_key) && x != right_key)
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+left_key.le(x) ✔
+!(x == left_key) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: precondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:387:17
+    |
+387 |           proof { lemma_bool_array_set_view(ancestors, old(ancestors)@, vertex as int, true); }
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap55/TopoSortStEph.rs:192:13
+    |
+192 | /             forall|i: int| 0 <= i < old_view.len() && i != vertex
+193 | |                 ==> #[trigger] a.spec_index(i) == old_view[i],
+    | |_____________________________________________________________- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:625:13
+    |
+625 |               lemma_bool_array_set_view(ancestors, pre_set_view, vertex as int, false);
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap55/TopoSortStEph.rs:192:13
+    |
+192 | /             forall|i: int| 0 <= i < old_view.len() && i != vertex
+193 | |                 ==> #[trigger] a.spec_index(i) == old_view[i],
+    | |_____________________________________________________________- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap55/TopoSortStEph.rs:193:21
+    |
+193 |                 ==> #[trigger] a.spec_index(i) == old_view[i],
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ancestors.view().len() == tmp%.len() ✔
+let tmp%% = 0;
+    let tmp%% = vertex;
+        let tmp%% = ancestors.view().len();
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+ancestors.spec_index(vertex) == true ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == vertex) ==>
+        ancestors.spec_index(i) == tmp%.index(i) ✘
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:472:48
+    |
+472 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:331:44
+    |
+331 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: automatically chose triggers for this expression:
+   --> src/Chap55/TopoSortStEph.rs:198:9
+    |
+198 |         assert forall|j: int| 0 <= j < a@.len()
+    |         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap55/TopoSortStEph.rs:199:21
+    |
+199 |             implies a@[j] == old_view.update(vertex, val)[j] by {
+    |                     ^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap55/TopoSortStEph.rs:198:9
+    |
+198 |         assert forall|j: int| 0 <= j < a@.len()
+    |         ^^^^^^
+
+verification results:: 2394 verified, 2 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 23s
+Sampled Memory Usage: peak rust_verify RSS: 2004MB, peak z3 RSS: 392MB, min free: 20682MB
+Sampled CPU Usage: rust_verify: 37s, z3 children: 49s

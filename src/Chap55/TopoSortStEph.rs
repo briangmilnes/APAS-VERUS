@@ -171,10 +171,34 @@ broadcast use {
 
 
     /// Bridge: for ArraySeqStEphS<bool>, view index equals spec_index.
-    proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<bool>)
+    pub proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<bool>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
     {
         assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
+    }
+
+    /// Collapses the forall bridge after `a.set(vertex, val)` into one call.
+    /// Proves `a@ =~= old_view.update(vertex, val)` from the set ensures.
+    pub proof fn lemma_bool_array_set_view(
+        a: &ArraySeqStEphS<bool>,
+        old_view: Seq<bool>,
+        vertex: int,
+        val: bool,
+    )
+        requires
+            a@.len() == old_view.len(),
+            0 <= vertex < a@.len(),
+            a.spec_index(vertex) == val,
+            forall|i: int| 0 <= i < old_view.len() && i != vertex
+                ==> #[trigger] a.spec_index(i) == old_view[i],
+        ensures
+            a@ =~= old_view.update(vertex, val),
+    {
+        lemma_bool_view_eq_spec_index(a);
+        assert forall|j: int| 0 <= j < a@.len()
+            implies #[trigger] a@[j] == old_view.update(vertex, val)[j] by {
+            assert(a@[j] == a.spec_index(j));
+        };
     }
 
     /// Bridge: for ArraySeqStEphS<usize>, view index equals spec_index.
@@ -507,16 +531,7 @@ broadcast use {
         }
 
         // Establish visited@ == old(visited)@.update(vertex, true).
-        proof { lemma_bool_view_eq_spec_index(visited); }
-        assert forall|j: int| 0 <= j < visited@.len()
-            implies #[trigger] visited@[j] == old(visited)@.update(vertex as int, true)[j] by {
-            assert(visited@[j] == visited.spec_index(j));
-            if j == vertex as int {
-                assert(visited.spec_index(j) == true);
-            } else {
-                assert(visited.spec_index(j) == old(visited).spec_index(j));
-            }
-        };
+        proof { lemma_bool_array_set_view(visited, old(visited)@, vertex as int, true); }
         assert(visited@ =~= old(visited)@.update(vertex as int, true));
 
         assert(vertex < graph.spec_len());
@@ -795,16 +810,7 @@ broadcast use {
         }
 
         // Establish visited@ after both sets.
-        proof { lemma_bool_view_eq_spec_index(visited); }
-        assert forall|j: int| 0 <= j < visited@.len()
-            implies #[trigger] visited@[j] == old(visited)@.update(vertex as int, true)[j] by {
-            assert(visited@[j] == visited.spec_index(j));
-            if j == vertex as int {
-                assert(visited.spec_index(j) == true);
-            } else {
-                assert(visited.spec_index(j) == old(visited).spec_index(j));
-            }
-        };
+        proof { lemma_bool_array_set_view(visited, old(visited)@, vertex as int, true); }
         assert(visited@ =~= old(visited)@.update(vertex as int, true));
 
         assert(vertex < graph.spec_len());
