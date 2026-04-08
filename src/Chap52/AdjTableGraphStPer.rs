@@ -33,7 +33,7 @@ pub mod AdjTableGraphStPer {
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::Chap52::AdjTableGraphSpecsAndLemmas::AdjTableGraphSpecsAndLemmas::*;
     #[cfg(verus_keep_ghost)]
-    use crate::Chap42::TableStEph::TableStEph::spec_entries_to_map as steph_entries_to_map;
+    use crate::Chap42::TableSpecsAndLemmas::TableSpecsAndLemmas::spec_entries_to_map as steph_entries_to_map;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesWf;
     #[cfg(verus_keep_ghost)]
@@ -92,7 +92,7 @@ broadcast use {
     proof fn lemma_keys_no_dups_eq<KV, VV>(entries: Seq<(KV, VV)>)
         ensures
             spec_keys_no_dups(entries)
-            == crate::Chap42::TableStEph::TableStEph::spec_keys_no_dups(entries)
+            == crate::Chap42::TableSpecsAndLemmas::TableSpecsAndLemmas::spec_keys_no_dups(entries)
     {}
 
     /// Connect sequential entry sum to recursive map sum (StPer version).

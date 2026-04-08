@@ -19,7 +19,8 @@ pub mod AdjTableGraphSpecsAndLemmas {
     //		Section 2. imports
 
     use vstd::prelude::*;
-    use crate::Chap42::TableStEph::TableStEph::{
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap42::TableSpecsAndLemmas::TableSpecsAndLemmas::{
         spec_entries_to_map, spec_keys_no_dups,
         lemma_entries_to_map_finite, lemma_entries_to_map_no_key,
         lemma_entries_to_map_get, lemma_entries_to_map_contains_key,
