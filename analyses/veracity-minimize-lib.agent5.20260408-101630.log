@@ -1,0 +1,1263 @@
+Verus Library Minimizer
+=======================
+This minimizer is only possible due to the phenomenal speed of verification
+in Verus. Thanks Verus team!
+
+Logging to: /home/milnes/projects/APAS-VERUS-agent5/analyses/veracity-minimize-lib.20260408-101630.log
+
+Arguments:
+  -c, --codebase:     /home/milnes/projects/APAS-VERUS-agent5
+  -l, --library:      /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus
+  -F, --file:         (all files)
+  -n, --dry-run:      false
+  -b, --broadcasts:   false
+  -L, --lib-broadcasts: false
+  -N, --max-lemmas:   all
+  -a, --asserts:      true
+  -A, --max-asserts:  all
+  -p, --proof-blocks: false
+  -P, --max-proof-blocks: all
+  -e, --exclude:      (none)
+  -f, --fail-fast:    false
+  --danger:           false
+  --no-lib-min:       true
+  --project:          APAS
+  --chapter:          Chap52
+
+Mode: APAS isolate Chap52 (estimated 10-30s per iteration)
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPORTANT: No code will be harmed in the improving of your codebase!
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Codebase is in git and committed. Proceeding safely.
+
+Veracity will repeatedly comment things in and out using // Veracity: lines
+to test and improve your use of vstd. All changes are reversible comments.
+You will need to review each // Veracity: line and decide what to keep.
+
+Phases:
+  Phase 0:  Strip existing Veracity markers (if any)
+  Phase 1:  Analyze and verify codebase
+  Phase 2:  Analyze library structure (lemmas, modules, call sites, spec fns)
+  Phase 3:  Discover vstd broadcast groups from verus installation
+  Phase 4:  Estimate time for testing
+  Phase 5:  Apply broadcast groups to library (-L flag)
+  Phase 6:  Apply broadcast groups to codebase (-b flag)
+  Phase 7:  Test lemma dependence on vstd (can vstd prove it alone?)
+  Phase 8:  Test lemma necessity (can codebase verify without it?)
+  Phase 9:  Test library asserts (can we remove any?)
+  Phase 10: Test codebase asserts (can we remove any?)
+  Phase 11: Test admits (can we remove any? -m flag)
+  Phase 12: Test proof {} blocks (-p flag)
+  Phase 13: Test types (are they used? -t flag)
+  Phase 14: Analyze and verify final codebase
+
+Comment markers inserted:
+  // Veracity: added broadcast group  - Phase 5/6: Inserted broadcast use block
+  // Veracity: DEPENDENT              - Phase 7: Lemma proven by vstd broadcast groups
+  // Veracity: INDEPENDENT            - Phase 7: Lemma provides unique proof logic
+  // Veracity: USED                   - Phase 8: Lemma required, restored after test
+  // Veracity: UNUSED                 - Phase 8: Lemma not needed, left commented out
+  // Veracity: UNNEEDED assert        - Phase 9/10: Assert not needed, left commented
+  // Veracity: UNNEEDED admit         - Phase 11: Admit not needed, left commented
+  // Veracity: UNNEEDED proof block   - Phase 12: Proof block not needed, left commented
+  // Veracity: TYPE USED              - Phase 13: Type is used (verified by removal test)
+  // Veracity: TYPE UNUSED            - Phase 13: Type not used, left commented out
+  // Veracity: UNNEEDED               - Phase 8: Call site not needed, left commented
+
+═══════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 0: Stripping existing Veracity markers
+═══════════════════════════════════════════════════════════════
+
+  Found 7 existing Veracity markers
+  Cleaning up for fresh analysis...
+  ✓ Removed 6 markers
+
+═══════════════════════════════════════════════════════════════
+Phase 1: Analyzing and verifying codebase
+═══════════════════════════════════════════════════════════════
+
+  Initial LOC (comments not counted):
+    Spec:       0
+    Proof:      0
+    Exec:       0
+    Total:      0
+
+  Verifying...
+  ✓ Verification passed in 41.2s. Continuing.
+
+Phase 2: Analyzing library structure...
+  Scanning library for proof functions (lemmas)...
+  Found 305 proof functions
+  In 13 modules
+  Checking which library modules are used in codebase...
+  13 modules used in codebase
+  0 modules NOT used in codebase
+  Scanning for lemma call sites...
+  703 call sites in library
+  14215 call sites in codebase (outside library)
+  Scanning library for spec functions...
+  Found 160 spec functions
+  56 spec functions without explicit calls (excluding type variants where any is used)
+
+Phase 3: Discovering vstd broadcast groups...
+  vstd source: /home/milnes/projects/verus/source/vstd
+  Found 49 broadcast groups
+
+Phase 4: Estimating time...
+  Time per verification:           41.2s
+  Lemmas to test:                  305
+  Est. lib asserts to test:        ~260
+  Est. codebase asserts to test:   ~140
+
+  Estimation formula:
+    Phase 5/6: verification_time × num_files
+    Phase 7:   verification_time × num_lemmas (empty body test)
+    Phase 8:   verification_time × num_lemmas (comment out test)
+    Phase 9/10: verification_time × num_asserts (comment out test)
+
+  Phase 1 (verify codebase):       41.2s (done)
+  Phase 2 (analyze library):       ~0s (no verification)
+  Phase 3 (discover broadcasts):   ~0s (no verification)
+  Phase 4 (estimate time):         ~0s (no verification)
+  Phase 5 (library broadcasts):    skipped (no -L flag)
+  Phase 6 (codebase broadcasts):   skipped (no -b flag)
+  Phase 7 (dependence test):       ~3h 29m 27s (41.2s × 305 lemmas)
+  Phase 8 (necessity test):        ~3h 29m 27s (41.2s × 305 lemmas)
+  Phase 9 (library asserts):       ~0.0s (41.2s × ~260 asserts)
+  Phase 10 (codebase asserts):     ~1h 36m 8s (41.2s × ~140 asserts)
+  ─────────────────────────────────────────
+  TOTAL ESTIMATED TIME:            ~8h 35m 43s
+
+Phase 5: Library broadcast groups...
+  Analyzing library for broadcast group recommendations...
+
+  VecQueue.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  feq.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  float.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  hash_map_with_view_plus.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  hash_set_with_view_plus.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  multiset.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  seq.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  seq_set.rs:
+    In use:
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set_lib::group_set_lib_default
+
+  No new broadcast groups recommended for library.
+  Skipped (use -L flag to add broadcast groups)
+
+Phase 6: Codebase broadcast groups...
+  Analyzing broadcast groups per file...
+
+  src/Chap03/InsertionSortStEph.rs:
+    In use:
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap05/KleeneStPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap05/MappingStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap05/RelationStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap05/SetMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap05/SetStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap06/DirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/DirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/LabDirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/LabDirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/LabUnDirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/LabUnDirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/UnDirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/UnDirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/WeightedDirGraphStEphF64.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI128.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI16.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI32.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI64.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI8.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphIsize.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU128.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU16.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU32.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU64.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU8.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphUsize.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap17/MathSeq.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/ArraySeq.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::multiset::group_multiset_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::seq_lib::group_filter_ensures
+
+  src/Chap18/ArraySeqMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap18/ArraySeqMtEphSlice.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::std_specs::slice::group_slice_axioms
+      ✓ vstd::slice::group_slice_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/ArraySeqMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap18/ArraySeqStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/ArraySeqStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/LinkedListStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/LinkedListStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap19/ArraySeqMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap19/ArraySeqMtEphSlice.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::std_specs::slice::group_slice_axioms
+      ✓ vstd::slice::group_slice_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap19/ArraySeqStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap19/ArraySeqStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap21/Algorithm21_1.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap21/Algorithm21_2.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::arithmetic::power::group_pow_properties
+
+  src/Chap21/Algorithm21_5.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Algorithm21_6.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Exercise21_5.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap21/Exercise21_7.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Exercise21_8.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Problem21_1.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Problem21_3.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Problem21_4.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap23/BalBinTreeStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap23/PrimTreeSeqStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/DivConReduceMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/DivConReduceStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap26/ETSPMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/ETSPStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/MergeSortMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap26/MergeSortStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap26/ScanDCMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/ScanDCStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ReduceContractMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ReduceContractStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ScanContractMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ScanContractStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MCSSSpec.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumDivConOptStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumDivConStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumIterStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumOptStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap35/OrderStatSelectMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap35/OrderStatSelectMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap35/OrderStatSelectStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap35/OrderStatSelectStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap36/QuickSortMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap36/QuickSortMtEphSlice.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap36/QuickSortStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap37/AVLTreeSeqMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap37/AVLTreeSeqStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap37/AVLTreeSeqStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap38/BSTParaMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_properties
+
+  src/Chap38/BSTParaStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTParaTreapMtEph.rs:
+    In use:
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTTreapMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTTreapStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_properties
+
+  src/Chap40/BSTKeyValueStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::map_lib::group_map_union
+
+  src/Chap41/AVLTreeSetMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/AVLTreeSetMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/AVLTreeSetStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap41/AVLTreeSetStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap41/ArraySetEnumMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/ArraySetStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/Example41_3.rs:
+    In use:
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap41/OrdKeyMap.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap42/TableMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap42/TableStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap42/TableStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap43/AugOrderedTableMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/AugOrderedTableStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/AugOrderedTableStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/OrderedSetMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap43/OrderedSetStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap43/OrderedSetStPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap43/OrderedTableMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/OrderedTableMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/OrderedTableStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap43/OrderedTableStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap45/BalancedTreePQ.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap45/BinaryHeapPQ.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap45/HeapsortExample.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap45/LeftistHeapPQ.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap45/SortedListPQ.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap45/UnsortedListPQ.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap49/MinEditDistMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/MinEditDistMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/MinEditDistStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/MinEditDistStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap50/MatrixChainMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/MatrixChainMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/MatrixChainStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/MatrixChainStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/OptBinSearchTreeMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap50/OptBinSearchTreeMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap50/OptBinSearchTreeStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap50/OptBinSearchTreeStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap51/TopDownDPMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap51/TopDownDPMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap51/TopDownDPStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap51/TopDownDPStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap52/AdjMatrixGraphMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjMatrixGraphMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjMatrixGraphStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjMatrixGraphStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjTableGraphMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/AdjTableGraphStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/AdjTableGraphStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/EdgeSetGraphMtPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/EdgeSetGraphStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/EdgeSetGraphStPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap54/BFSMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vecdeque::group_vec_dequeue_axioms
+
+  src/Chap54/BFSStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vecdeque::group_vec_dequeue_axioms
+
+  src/Chap54/BFSStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vecdeque::group_vec_dequeue_axioms
+
+  src/Chap55/CycleDetectStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/CycleDetectStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/DFSStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/DFSStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/SCCStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap55/SCCStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap55/TopoSortStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap56/SSSPResultStPerF64.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap57/StackStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap66/BoruvkaMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap66/BoruvkaStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/ParaPairs.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Types.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/standards/table_of_contents_standard.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+═══════════════════════════════════════════════════════════════
+Phase 7: Skipped (--no-lib-min)
+═══════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 8: Skipped (--no-lib-min)
+═══════════════════════════════════════════════════════════════
+
+
+Phase 9: Skipped (use -a flag to enable assert minimization)
+
+═══════════════════════════════════════════════════════════════
+Phase 10: Testing codebase asserts
+═══════════════════════════════════════════════════════════════
+
+For each assert: comment out, verify. NEEDED=restored, UNNEEDED=left commented.
+
+Found 733 asserts in codebase, testing 733
+
+[1/733] assert L129 in lemma_count_true_all_false (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 1m 3s (incremental +17.5s)]
+[2/733] assert L141 in lemma_sum_of_all_zero (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 54.1s (incremental +8.3s)]
+[3/733] assert L153 in lemma_count_true_ext (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 43.8s (incremental -2.1s)]
+[4/733] assert L171 in lemma_count_true_set_true (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 41.4s (incremental -4.5s)]
+[5/733] assert L190 in lemma_count_true_set_false (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 43.6s (incremental -2.3s)]
+[6/733] assert L203 in lemma_sum_of_ext (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 41.5s (incremental -4.3s)]
+[7/733] assert L221 in lemma_sum_of_change_one (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 41.4s (incremental -4.4s)]
+[8/733] assert L248 in lemma_sum_of_bounded (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 43.6s (incremental -2.2s)]
+[9/733] assert L250 in lemma_sum_of_bounded (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 41.5s (incremental -4.3s)]
+[10/733] assert L251 in lemma_sum_of_bounded (src/Chap52/AdjMatrixGraphMtEph.rs)... NEEDED (restored) [initial 45.9s -> now 8.5s (incremental ~0s)]
+[11/733] assert L432 in new (src/Chap52/AdjMatrixGraphMtEph.rs)... NEEDED (restored) [initial 45.9s -> now 33.2s (incremental ~0s)]
+[12/733] assert L434 in new (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 41.5s (incremental -4.3s)]
+[13/733] assert L489 in from_matrix (src/Chap52/AdjMatrixGraphMtEph.rs)... NEEDED (restored) [initial 45.9s -> now 35.3s (incremental ~0s)]
+[14/733] assert L492 in from_matrix (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 41.5s (incremental -4.4s)]
+[15/733] assert L540 in out_neighbors (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 39.3s (incremental -6.5s)]
+[16/733] assert L547 in out_neighbors (src/Chap52/AdjMatrixGraphMtEph.rs)... NEEDED (restored) [initial 45.9s -> now 8.5s (incremental ~0s)]
+[17/733] assert L550 in out_neighbors (src/Chap52/AdjMatrixGraphMtEph.rs)... NEEDED (restored) [initial 45.9s -> now 8.6s (incremental ~0s)]
+[18/733] assert L555 in out_neighbors (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 39.4s (incremental -6.5s)]
+[19/733] assert L557 in out_neighbors (src/Chap52/AdjMatrixGraphMtEph.rs)... NEEDED (restored) [initial 45.9s -> now 33.2s (incremental ~0s)]
+[20/733] assert L566 in out_neighbors (src/Chap52/AdjMatrixGraphMtEph.rs)... NEEDED (restored) [initial 45.9s -> now 8.5s (incremental ~0s)]
+[21/733] assert L570 in out_neighbors (src/Chap52/AdjMatrixGraphMtEph.rs)... NEEDED (restored) [initial 45.9s -> now 33.3s (incremental ~0s)]
+[22/733] assert L669 in set_edge (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 39.3s (incremental -6.5s)]
+[23/733] assert L675 in set_edge (src/Chap52/AdjMatrixGraphMtEph.rs)... NEEDED (restored) [initial 45.9s -> now 33.2s (incremental ~0s)]
+[24/733] assert L679 in set_edge (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 39.3s (incremental -6.5s)]
+[25/733] assert L686 in set_edge (src/Chap52/AdjMatrixGraphMtEph.rs)... NEEDED (restored) [initial 45.9s -> now 33.3s (incremental ~0s)]
+[26/733] assert L690 in set_edge (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 37.3s (incremental -8.6s)]
+[27/733] assert L696 in set_edge (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 37.2s (incremental -8.7s)]
+[28/733] assert L700 in set_edge (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 39.3s (incremental -6.5s)]
+[29/733] assert L704 in set_edge (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 37.3s (incremental -8.5s)]
+[30/733] assert L708 in set_edge (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 39.3s (incremental -6.6s)]
+[31/733] assert L741 in complement (src/Chap52/AdjMatrixGraphMtEph.rs)... NEEDED (restored) [initial 45.9s -> now 31.1s (incremental ~0s)]
+[32/733] assert L790 in complement (src/Chap52/AdjMatrixGraphMtEph.rs)... NEEDED (restored) [initial 45.9s -> now 31.2s (incremental ~0s)]
+[33/733] assert L793 in complement (src/Chap52/AdjMatrixGraphMtEph.rs)... UNNEEDED (commented) [initial 45.9s -> now 39.4s (incremental -6.5s)]
+[34/733] assert L134 in lemma_count_true_all_false (src/Chap52/AdjMatrixGraphMtPer.rs)... UNNEEDED (commented) [initial 45.9s -> now 37.3s (incremental -8.6s)]
+[35/733] assert L146 in lemma_sum_of_all_zero (src/Chap52/AdjMatrixGraphMtPer.rs)... UNNEEDED (commented) [initial 45.9s -> now 39.5s (incremental -6.4s)]
+[36/733] assert L158 in lemma_count_true_ext (src/Chap52/AdjMatrixGraphMtPer.rs)... UNNEEDED (commented) [initial 45.9s -> now 41.3s (incremental -4.5s)]
+[37/733] assert L176 in lemma_count_true_set_true (src/Chap52/AdjMatrixGraphMtPer.rs)... UNNEEDED (commented) [initial 45.9s -> now 41.5s (incremental -4.4s)]
+[38/733] assert L195 in lemma_count_true_set_false (src/Chap52/AdjMatrixGraphMtPer.rs)... 

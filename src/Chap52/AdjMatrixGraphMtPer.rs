@@ -131,7 +131,6 @@ broadcast use {
         decreases n
     {
         if n > 0 {
-            assert(!f(n - 1));
             lemma_count_true_all_false(f, n - 1);
         }
     }
@@ -143,7 +142,6 @@ broadcast use {
         decreases n
     {
         if n > 0 {
-            assert(f(n - 1) == 0nat);
             lemma_sum_of_all_zero(f, n - 1);
         }
     }
@@ -155,7 +153,6 @@ broadcast use {
         decreases n
     {
         if n > 0 {
-            assert(f(n - 1) == g(n - 1));
             lemma_count_true_ext(f, g, n - 1);
         }
     }
@@ -173,7 +170,6 @@ broadcast use {
             if k == n - 1 {
                 lemma_count_true_ext(f, g, n - 1);
             } else {
-                assert(f(n - 1) == g(n - 1));
                 lemma_count_true_set_true(f, g, k, n - 1);
             }
         }
@@ -192,7 +188,7 @@ broadcast use {
             if k == n - 1 {
                 lemma_count_true_ext(f, g, n - 1);
             } else {
-                assert(f(n - 1) == g(n - 1));
+assert(f(n - 1) == g(n - 1));
                 lemma_count_true_set_false(f, g, k, n - 1);
             }
         }
