@@ -44,7 +44,6 @@ pub mod ReduceContractStEph {
 
     /// Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f))
     /// when (f, id) is a monoid.
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     proof fn lemma_fold_left_monoid<T>(s: Seq<T>, x: T, f: spec_fn(T, T) -> T, id: T)
         requires spec_monoid(f, id),
@@ -60,7 +59,6 @@ pub mod ReduceContractStEph {
     }
 
     /// Helper: fold_left of a 2-element sequence equals f(a, b) under a monoid.
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     proof fn lemma_fold_left_pair<T>(a: T, b: T, f: spec_fn(T, T) -> T, id: T)
         requires spec_monoid(f, id),
@@ -74,7 +72,6 @@ pub mod ReduceContractStEph {
     }
 
     /// Helper: fold_left of a 1-element sequence equals f(id, a) = a.
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     proof fn lemma_fold_left_singleton<T>(a: T, f: spec_fn(T, T) -> T, id: T)
         requires spec_monoid(f, id),
@@ -85,7 +82,6 @@ pub mod ReduceContractStEph {
 
     /// Contraction lemma: for an even-length sequence, folding the original equals
     /// folding the contracted (pairwise-combined) sequence under a monoid.
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     pub proof fn lemma_contraction_even<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T)
         requires

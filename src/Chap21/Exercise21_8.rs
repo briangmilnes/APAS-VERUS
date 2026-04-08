@@ -57,7 +57,6 @@ pub mod Exercise21_8 {
 
 
     // Lemma: if divisor count is 0 in [from, to), then no element in that range divides n.
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     proof fn lemma_zero_count_means_no_divisors(n: int, from: int, to: int)
         requires
@@ -81,7 +80,6 @@ pub mod Exercise21_8 {
     }
 
     // Lemma: if no element in [from, to) divides n, then divisor count is 0.
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     proof fn lemma_no_divisors_means_zero_count(n: int, from: int, to: int)
         requires
@@ -98,7 +96,6 @@ pub mod Exercise21_8 {
     }
 
     // Lemma: spec_divisor_count is non-negative.
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     proof fn lemma_divisor_count_nonneg(n: int, from: int, to: int)
         ensures spec_divisor_count(n, from, to) >= 0,

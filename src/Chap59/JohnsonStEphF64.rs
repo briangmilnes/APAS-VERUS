@@ -82,7 +82,6 @@ pub mod JohnsonStEphF64 {
 
     /// Adjust reweighted distance back to original weights.
     /// d(u,v) = d'(u,v) - h(u) + h(v), using float arithmetic directly.
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
     // veracity: no_requires
     fn adjust_distance(d_prime: WrappedF64, h_u: WrappedF64, h_v: WrappedF64) -> (adjusted: WrappedF64)
@@ -96,7 +95,6 @@ pub mod JohnsonStEphF64 {
     }
 
     /// Reweight edge: new_weight = weight + h(u) - h(v).
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
     // veracity: no_requires
     fn reweight_edge(weight: WrappedF64, h_u: WrappedF64, h_v: WrappedF64) -> (reweighted: WrappedF64)
@@ -106,7 +104,6 @@ pub mod JohnsonStEphF64 {
     }
 
     /// Build a vertex set {0, ..., max_val} and track its cardinality.
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(max_val), Span O(max_val).
     fn build_vertex_set(max_val: usize) -> (vertices: SetStEph<usize>)
         requires
@@ -145,7 +142,6 @@ pub mod JohnsonStEphF64 {
 
     /// Add dummy source vertex n with zero-weight edges to all vertices.
     /// Returns augmented graph with n+1 vertices.
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m).
     fn add_dummy_source(
         graph: &WeightedDirGraphStEphF64<usize>,
@@ -332,7 +328,6 @@ pub mod JohnsonStEphF64 {
     }
 
     /// Create all-unreachable result for negative cycle detection.
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2).
     fn create_negative_cycle_result(n: usize) -> (neg_cycle_apsp: AllPairsResultStEphF64)
         requires n < usize::MAX,

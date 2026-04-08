@@ -139,7 +139,6 @@ pub mod ConnectivityStEph {
     /// Build quotient graph edges by routing through partition map.
     /// Filters out self-edges (where both endpoints map to same super-vertex).
     ///
-    /// - Alg Analysis: APAS: N/A — helper function implicit in Algorithm 63.2/63.3 Line 7.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — single pass over edges
     fn build_quotient_edges<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,

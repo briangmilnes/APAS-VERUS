@@ -42,7 +42,6 @@ pub mod HFSchedulerMtEph {
     /// - The configured parallelism level. None means use the number of CPUs minus one, minimum one.
     static PARALLELISM: RwLock<Option<usize>> = RwLock::new(None);
 
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — reads config, creates mutex/condvar.
     fn init_pool() -> PoolState {
         let n = PARALLELISM.read().unwrap();
@@ -60,7 +59,6 @@ pub mod HFSchedulerMtEph {
 
     static POOL: LazyLock<PoolState> = LazyLock::new(init_pool);
 
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — lock, check, unlock.
     fn try_acquire() -> bool {
         let mut available = POOL.available_tasks.lock().unwrap();
@@ -72,7 +70,6 @@ pub mod HFSchedulerMtEph {
         }
     }
 
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — waits on condvar.
     fn acquire() {
         let mut available = POOL.available_tasks.lock().unwrap();
@@ -82,7 +79,6 @@ pub mod HFSchedulerMtEph {
         *available -= 1;
     }
 
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — lock, increment, notify, unlock.
     fn release() {
         let mut available = POOL.available_tasks.lock().unwrap();
@@ -109,7 +105,6 @@ pub mod HFSchedulerMtEph {
     }
 
     /// Set parallelism level. Must be called before any parallel operations.
-    /// - Alg Analysis: APAS: N/A (scheduler config)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     #[verifier::external_body] // accept hole
     pub fn set_parallelism(n: usize) {
@@ -119,7 +114,6 @@ pub mod HFSchedulerMtEph {
     /// - Help-first fork-join: spawns fb in a new thread only if capacity available.
     /// - If no capacity, runs both closures sequentially (help-first strategy).
     /// - Prevents deadlock from nested joins.
-    /// - Alg Analysis: APAS: N/A (scheduler primitive; cost = closure cost)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(W_fa + W_fb), Span O(max(S_fa, S_fb)) when parallel; else O(W_fa + W_fb)
     #[verifier::external_body] // accept hole
     pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
@@ -146,7 +140,6 @@ pub mod HFSchedulerMtEph {
 
     /// - Unconditional fork-join: always spawns fb in a new thread.
     /// - Runs fa in the current thread, waits for fb to complete, returns both results.
-    /// - Alg Analysis: APAS: N/A (scheduler primitive; cost = closure cost)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(W_fa + W_fb), Span O(max(S_fa, S_fb))
     #[verifier::external_body] // accept hole
     pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
@@ -177,7 +170,6 @@ pub mod HFSchedulerMtEph {
     /// - Help-first spawn: spawns in new thread if capacity available.
     /// - If no capacity, runs locally (help-first) and returns completed state.
     /// - Never blocks, never deadlocks.
-    /// - Alg Analysis: APAS: N/A (scheduler primitive; cost = closure cost)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(W_f), Span O(S_f)
     #[verifier::external_body] // accept hole
     pub fn spawn<T, F>(f: F) -> (task: TaskState<T>)
@@ -199,7 +191,6 @@ pub mod HFSchedulerMtEph {
     }
 
     /// Wait for a spawned task to complete. Releases capacity.
-    /// - Alg Analysis: APAS: N/A (scheduler primitive)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(S_task) — blocks until task completes
     #[verifier::external_body] // accept hole
     pub fn wait<T: Send + 'static>(task: TaskState<T>) -> (task_result: T)

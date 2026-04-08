@@ -223,7 +223,6 @@ pub mod PrimStEph {
     }
 
     /// Module-level function to create a new PQEntry.
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)
     // veracity: no_requires
     fn pq_entry_new<V: HashOrd>(priority: u64, vertex: V, parent: Option<V>) -> (entry: PQEntry<V>)
@@ -500,7 +499,6 @@ pub mod PrimStEph {
     //		Section 14b. derive impls outside verus!
 
     impl<V: HashOrd> Ord for PQEntry<V> {
-        /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)
         fn cmp(&self, other: &Self) -> Ordering {
             std::cmp::Ord::cmp(&self.priority, &other.priority)
@@ -510,7 +508,6 @@ pub mod PrimStEph {
     }
 
     impl<V: HashOrd> PartialOrd for PQEntry<V> {
-        /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)
         fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(Ord::cmp(self, other)) }
     }

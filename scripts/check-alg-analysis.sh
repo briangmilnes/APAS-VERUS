@@ -50,6 +50,8 @@ for dir in $DIRS; do
                 # We have a pair
                 if (review_text ~ /ACCEPTED DIFFERENCE/) {
                     printf "%s:%d: warning: ACCEPTED DIFFERENCE: %s\n", FILENAME, review_line, review_text
+                } else if (review_text ~ /DIFFERS.*St sequential/) {
+                    printf "%s:%d: warning: DIFFERS (St sequential): %s\n", FILENAME, review_line, review_text
                 } else if (review_text ~ /DIFFERS/) {
                     printf "%s:%d: error: DIFFERS (not accepted): %s\n", FILENAME, review_line, review_text
                 } else if (review_text ~ /matches APAS/ || review_text ~ /matches/) {

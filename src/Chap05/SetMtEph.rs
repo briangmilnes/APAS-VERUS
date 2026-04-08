@@ -165,7 +165,6 @@ verus!
                 forall |j: int| 0 <= j < it@.1.len() ==> self@.contains(#[trigger] it@.1[j]@),
                 iter_invariant(&it);
 
-        /// - Alg Analysis: APAS: N/A — conversion utility, not in prose.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, clones each element.
         fn to_seq(&self) -> (seq: Vec<T>)
             requires self.spec_setmteph_wf()
@@ -235,7 +234,6 @@ verus!
                 s2.spec_setmteph_wf(),
             ensures intersection.spec_setmteph_wf(), intersection@ == self@.intersect(s2@);
 
-        /// - Alg Analysis: APAS: N/A — internal helper for cartesian_product.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s2|), Span O(|s2|) — sequential loop, creates one pair per element.
         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)
             requires
@@ -258,7 +256,6 @@ verus!
                 spec_setmteph_wf_generic(&product),
                 forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv));
 
-        /// - Alg Analysis: APAS: N/A — internal helper for partition.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) size check each.
         fn all_nonempty(parts: &SetMtEph<SetMtEph<T>>) -> (all_nonempty: bool)
             requires
@@ -267,7 +264,6 @@ verus!
             ensures
                 all_nonempty <==> forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0;
 
-        /// - Alg Analysis: APAS: N/A — internal helper for partition.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) membership check each.
         fn partition_on_elt(x: &T, parts: &SetMtEph<SetMtEph<T>>) -> (partition_on_elt: bool)
             requires

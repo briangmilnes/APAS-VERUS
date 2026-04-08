@@ -1626,7 +1626,6 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
         /// - Set the element at `index` to `item` in place.
-        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
@@ -1650,7 +1649,6 @@ pub mod ArraySeqMtEph {
             ensures *nth_elem == self.spec_index(index as int);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
-        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length).
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
@@ -1678,7 +1676,6 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
 
         /// - Create sequence from Vec.
-        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
@@ -1880,7 +1877,6 @@ pub mod ArraySeqMtEph {
 
 
     /// Acquire the lock, apply updates, release. Preserves the lock invariant.
-    /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|updates|), Span O(|updates|).
     fn apply_ninject_updates<T: StTInMtT>(
         lock: Arc<RwLock<Vec<T>, ArraySeqMtEphInv<T>>>,

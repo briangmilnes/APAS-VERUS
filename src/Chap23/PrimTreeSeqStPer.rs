@@ -106,7 +106,6 @@ pub mod PrimTreeSeqStPer {
 
     impl<T> PrimTreeSeqStS<T> {
         /// Returns a borrow iterator over the sequence elements.
-        /// - Alg Analysis: APAS: N/A — Verus-specific iterator scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — wraps slice::Iter.
         pub fn iter(&self) -> (it: PrimTreeSeqStIter<'_, T>)
             ensures
@@ -547,7 +546,6 @@ pub mod PrimTreeSeqStPer {
     impl<T> std::iter::IntoIterator for PrimTreeSeqStS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
-        /// - Alg Analysis: APAS: N/A — iterator scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — consumes Vec into IntoIter.
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
@@ -613,7 +611,6 @@ pub mod PrimTreeSeqStPer {
     impl<'a, T> std::iter::Iterator for PrimTreeSeqStIter<'a, T> {
         type Item = &'a T;
 
-        /// - Alg Analysis: APAS: N/A — iterator scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — delegates to slice::Iter::next.
         fn next(&mut self) -> (next: Option<&'a T>)
             ensures ({
@@ -682,7 +679,6 @@ pub mod PrimTreeSeqStPer {
     impl<'a, T> std::iter::IntoIterator for &'a PrimTreeSeqStS<T> {
         type Item = &'a T;
         type IntoIter = PrimTreeSeqStIter<'a, T>;
-        /// - Alg Analysis: APAS: N/A — iterator scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — wraps slice::Iter.
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
@@ -735,7 +731,6 @@ pub mod PrimTreeSeqStPer {
                 single.spec_index(0) == value;
 
         /// Constructs a sequence from the provided vector.
-        /// - Alg Analysis: APAS: N/A — not in prose, Vec-specific constructor.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — wraps existing Vec.
         fn from_vec(vec: Vec<T>) -> (seq: Self)
             ensures
@@ -904,14 +899,12 @@ pub mod PrimTreeSeqStPer {
                 flattened.seq@ =~= a.seq@.map_values(|inner: PrimTreeSeqStS<T>| inner.seq@).flatten();
 
         /// Borrows the inner slice.
-        /// - Alg Analysis: APAS: N/A — utility method, not in prose.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn as_slice(&self) -> (slice: &[T])
             requires self.spec_primtreeseqstper_wf(),
             ensures slice@ =~= self@;
 
         /// Unwraps into the inner Vec.
-        /// - Alg Analysis: APAS: N/A — utility method, not in prose.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn into_vec(self) -> (vec: Vec<T>)
             requires self.spec_primtreeseqstper_wf(),
@@ -929,7 +922,6 @@ pub mod PrimTreeSeqStPer {
 
 
     impl<T: Clone> Clone for PrimTreeSeqStS<T> {
-        /// - Alg Analysis: APAS: N/A — derive scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — clones inner Vec.
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
@@ -942,7 +934,6 @@ pub mod PrimTreeSeqStPer {
     }
 
     impl<T: PartialEq + View> PartialEq for PrimTreeSeqStS<T> {
-        /// - Alg Analysis: APAS: N/A — derive scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — delegates to Vec::eq.
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
@@ -966,7 +957,6 @@ pub mod PrimTreeSeqStPer {
     }
 
     impl<T: Clone> Clone for PrimTreeSeqStTree<T> {
-        /// - Alg Analysis: APAS: N/A — derive scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — clones variant contents.
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
@@ -983,7 +973,6 @@ pub mod PrimTreeSeqStPer {
     }
 
     impl<T: PartialEq + View> PartialEq for PrimTreeSeqStTree<T> {
-        /// - Alg Analysis: APAS: N/A — derive scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — compares variant contents.
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)

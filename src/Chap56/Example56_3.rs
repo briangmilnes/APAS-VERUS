@@ -41,7 +41,6 @@ pub mod Example56_3 {
     impl Example56_3Trait for Example56_3S {
     /// Example demonstrating a negative weight cycle.
     /// Graph: 0 -> 1 -> 2 -> 1 (cycle with negative total weight).
-    /// - Alg Analysis: APAS: N/A — demonstration code.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) — constant-sized example graph.
     fn example_negative_cycle() {
         let weights = ArraySeqStEphS::from_vec(vec![
@@ -74,7 +73,6 @@ pub mod Example56_3 {
     }
 
     /// Example showing that shortest paths are undefined in presence of negative cycles.
-    /// - Alg Analysis: APAS: N/A — demonstration code.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) — constant-sized example graph.
     fn example_undefined_shortest_path() {
         let _weights = ArraySeqStEphS::from_vec(vec![

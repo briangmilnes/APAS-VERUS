@@ -93,7 +93,6 @@ pub mod MinEditDistStEph {
         spec fn spec_target_len(&self) -> nat;
 
         /// Create new minimum edit distance solver.
-        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- allocate empty structures.
         fn new() -> (empty: Self)
         where
@@ -102,7 +101,6 @@ pub mod MinEditDistStEph {
             ensures empty.spec_source_len() == 0, empty.spec_target_len() == 0;
 
         /// Create from source and target sequences.
-        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequences into struct.
         fn from_sequences(source: ArraySeqStEphS<T>, target: ArraySeqStEphS<T>) -> (edit_dist: Self)
             ensures
@@ -119,19 +117,16 @@ pub mod MinEditDistStEph {
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Get the source sequence.
-        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return reference.
         fn source(&self) -> (s: &ArraySeqStEphS<T>)
             ensures s.spec_len() == self.spec_source_len();
 
         /// Get the target sequence.
-        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return reference.
         fn target(&self) -> (t: &ArraySeqStEphS<T>)
             ensures t.spec_len() == self.spec_target_len();
 
         /// Set element in source sequence.
-        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- array set O(1) plus memo clear O(n).
         fn set_source(&mut self, index: usize, value: T)
             requires index < old(self).spec_source_len(),
@@ -140,7 +135,6 @@ pub mod MinEditDistStEph {
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Set element in target sequence.
-        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- array set O(1) plus memo clear O(n).
         fn set_target(&mut self, index: usize, value: T)
             requires index < old(self).spec_target_len(),
@@ -149,7 +143,6 @@ pub mod MinEditDistStEph {
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Clear memoization table.
-        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clear hash map.
         fn clear_memo(&mut self)
             ensures
@@ -157,7 +150,6 @@ pub mod MinEditDistStEph {
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Get memoization table size.
-        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length.
         fn memo_size(&self) -> (count: usize);
     }
@@ -301,12 +293,10 @@ pub mod MinEditDistStEph {
     /// Trait for methods returning &mut (not supported inside verus!).
     pub trait MinEditDistStEphMutTrait<T: StT> {
         /// Get mutable source sequence (ephemeral allows mutation).
-        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return mutable reference.
         fn source_mut(&mut self) -> &mut ArraySeqStEphS<T>;
 
         /// Get mutable target sequence (ephemeral allows mutation).
-        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return mutable reference.
         fn target_mut(&mut self) -> &mut ArraySeqStEphS<T>;
     }

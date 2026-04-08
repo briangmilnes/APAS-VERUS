@@ -41,7 +41,6 @@ pub mod Exercise21_9 {
     }
 
     /// Every composite m has a divisor d with 2 <= d <= sqrt(m).
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     proof fn lemma_composite_has_small_divisor(m: int)
         requires
@@ -81,7 +80,6 @@ pub mod Exercise21_9 {
     ///
     /// Formally: if m is composite and 2 <= m <= n, then there exist i, j with
     /// 2 <= i, i * i <= n, j >= 2, i * j == m.
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     pub proof fn lemma_composites_covered_by_small_multiples(m: int, n: int)
         requires

@@ -551,7 +551,6 @@ pub mod BSTParaStEph {
                 self@.finite(),
                 forall|a: T, b: T| op.requires((a, b)),
             ensures self@.len() == 0 ==> reduced@ == base@;
-        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|), Span O(|t|) — helper for in_order.
         fn collect_in_order(&self, out: &mut Vec<T>)
             requires

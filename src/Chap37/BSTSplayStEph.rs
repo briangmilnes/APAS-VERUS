@@ -65,7 +65,6 @@ pub mod BSTSplayStEph {
         open spec fn spec_right(self) -> Link<T> { self.right }
         open spec fn spec_node_size(self) -> nat { self.size as nat }
 
-    /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-time allocation.
     // veracity: no_requires
     fn new_node(key: T) -> (node: Node<T>)
@@ -1119,7 +1118,6 @@ pub mod BSTSplayStEph {
         spec fn spec_right(self) -> Link<T>;
         spec fn spec_node_size(self) -> nat;
 
-        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-time allocation.
         // veracity: no_requires
         fn new_node(key: T) -> (node: Node<T>)
@@ -1287,7 +1285,6 @@ pub mod BSTSplayStEph {
         open spec fn link_pre_order(&self) -> Seq<T> { spec_pre_order_link(self) }
         open spec fn link_is_some(&self) -> bool { self.is_some() }
 
-    /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — cached size field.
     // veracity: no_requires
     fn size_link(&self) -> (size: usize)

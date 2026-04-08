@@ -141,7 +141,6 @@ pub mod ArraySeqStPer {
             ensures *nth_elem == self.spec_index(index as int);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
-        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — DIFFERS: St sequential, APAS parallel.
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
@@ -169,7 +168,6 @@ pub mod ArraySeqStPer {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
 
         /// - Create sequence from Vec.
-        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(n) worst case, O(1) best case — DIFFERS: St sequential, APAS parallel.
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures

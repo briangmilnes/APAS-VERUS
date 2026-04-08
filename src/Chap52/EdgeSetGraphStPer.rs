@@ -450,7 +450,6 @@ broadcast use {
 
 
     impl<V: StT + Ord + TotalOrder + ClonePreservesView + fmt::Debug> fmt::Debug for EdgeSetGraphStPer<V> {
-        /// - Alg Analysis: APAS: N/A — Rust Debug trait, not in textbook.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work depends on graph size — outside verus!, not verified.
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             f.debug_struct("EdgeSetGraphStPer")

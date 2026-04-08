@@ -328,7 +328,6 @@ pub mod ParaHashTableStEph {
     pub trait EntryTrait<Key, Value> : Sized {
         /// Abstract map view of this entry's key-value content.
         spec fn spec_entry_to_map(&self) -> Map<Key, Value>;
-        /// - Alg Analysis: APAS: N/A — inner table interface, cost depends on implementation.
         /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — abstract trait method.
         fn new() -> (entry: Self)
             ensures entry.spec_entry_to_map() == Map::<Key, Value>::empty();
@@ -473,7 +472,6 @@ pub mod ParaHashTableStEph {
                 table.current_size == old(table).current_size;
 
         /// Accessor for metrics field.
-        /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
             requires Self::spec_parahashtablesteph_wf(table),
@@ -501,7 +499,6 @@ pub mod ParaHashTableStEph {
         /// - Alg Analysis: APAS (Ch47 ref): Work O(n + m + m'), Span O(n + m + m') where n is number of elements,
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m + m'), Span O(n + m + m') where n is number of elements,
         ///   m is old size, m' is new size.
-        /// - Alg Analysis: APAS (Ch47 ref): N/A
         /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — abstract trait method; cost depends on implementation.
         fn resize(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> (resized: HashTable<Key, Value, Entry, Metrics, H>)
             requires

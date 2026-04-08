@@ -343,7 +343,6 @@ pub mod ArraySeq {
               forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value; 
 
         /// - Set the element at `index` to `item` in place.
-        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
@@ -531,7 +530,6 @@ pub mod ArraySeq {
                     scanned.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
-        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(1).
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
@@ -544,7 +542,6 @@ pub mod ArraySeq {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
         /// - Remove the element at `index`, shifting subsequent elements left.
-        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1).
         fn remove(&mut self, index: usize) -> (element: T)
             requires
@@ -556,7 +553,6 @@ pub mod ArraySeq {
                 forall|j: int| #![trigger self.spec_index(j)] index <= j < self.spec_len() ==> self.spec_index(j) == old(self).spec_index(j + 1);
 
         /// - Insert `element` at `index`, shifting subsequent elements right.
-        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1).
         fn insert(&mut self, index: usize, element: T)
             requires
@@ -568,7 +564,6 @@ pub mod ArraySeq {
                 forall|j: int| #![trigger self.spec_index(j)] index < j < self.spec_len() ==> self.spec_index(j) == old(self).spec_index(j - 1);
 
         /// - Create sequence from Vec.
-        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures

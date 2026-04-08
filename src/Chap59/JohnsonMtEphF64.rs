@@ -92,7 +92,6 @@ pub mod JohnsonMtEphF64 {
     /// Adjust reweighted distance back to original weights.
     /// d(u,v) = d'(u,v) - h(u) + h(v), using float arithmetic directly.
     ///
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
     // veracity: no_requires
     fn adjust_distance(d_prime: WrappedF64, h_u: WrappedF64, h_v: WrappedF64) -> (adjusted: WrappedF64)
@@ -159,7 +158,6 @@ pub mod JohnsonMtEphF64 {
 
     /// Parallel Dijkstra execution using recursive divide-and-conquer with ParaPair!
     ///
-    /// - Alg Analysis: APAS: N/A — internal helper, not named in prose.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k * m log n), Span O(m log n) where k = end - start.
     fn parallel_dijkstra_all(
         graph: &WeightedDirGraphStEphF64<usize>,
@@ -277,7 +275,6 @@ pub mod JohnsonMtEphF64 {
 
     /// Add dummy source vertex s with zero-weight edges to all vertices in G.
     ///
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — iterates over vertices and edges.
     fn add_dummy_source(graph: &WeightedDirGraphStEphF64<usize>, n: usize) -> (augmented_and_idx: (WeightedDirGraphStEphF64<usize>, usize))
         requires
@@ -473,7 +470,6 @@ pub mod JohnsonMtEphF64 {
 
     /// Create result for negative cycle case.
     ///
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — builds n x n distance and predecessor matrices.
     fn create_negative_cycle_result(n: usize) -> (neg_cycle_apsp: AllPairsResultStEphF64)
         requires
