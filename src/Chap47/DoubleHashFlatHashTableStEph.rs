@@ -303,9 +303,7 @@ pub mod DoubleHashFlatHashTableStEph {
                                 assert(spec_flat_has_key(old_table_seq[slot as int], key));
                                 assert forall |j: int| 0 <= j < old_table_seq.len() && j != slot as int
                                     implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
-                                    if spec_flat_has_key(old_table_seq[j], key) {
-                                        assert(spec_flat_has_key(old_table_seq[slot as int], key));
-                                    }
+                                    if spec_flat_has_key(old_table_seq[j], key) {}
                                 }
                                 let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
                                 assert(new_entry.spec_entry_to_map() =~= Map::<Key, Value>::empty().insert(key, value));
@@ -319,23 +317,9 @@ pub mod DoubleHashFlatHashTableStEph {
                                     && #[trigger] spec_flat_has_key(table.table@[i], k)
                                     implies !#[trigger] spec_flat_has_key(table.table@[j], k) by {
                                     if i == slot as int {
-                                        assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
-                                        if k == key && j != slot as int {
-                                            assert(table.table@[j] == old_table_seq[j]);
-                                            assert(!spec_flat_has_key(old_table_seq[j], key));
-                                        }
-                                    } else {
-                                        assert(table.table@[i] == old_table_seq[i]);
-                                        assert(spec_flat_has_key(old_table_seq[i], k));
-                                        if j != slot as int {
-                                            assert(table.table@[j] == old_table_seq[j]);
-                                        } else {
-                                            assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
-                                            if k == key {
-                                                assert(spec_flat_has_key(old_table_seq[slot as int], key));
-                                                assert(i != slot as int);
-                                            }
-                                        }
+                                        if k == key && j != slot as int {}
+                                    } else if j == slot as int {
+                                        if k == key {}
                                     }
                                 }
                                 // Wf: probe chain (Occupied→Occupied).
@@ -352,16 +336,9 @@ pub mod DoubleHashFlatHashTableStEph {
                                                 ==> !(#[trigger] table.table@[(hk + j * s) % m as int] is Empty)
                                     }) by {
                                     if i == slot as int {
-                                        assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
-                                        if k == key {
-                                            assert(spec_flat_has_key(old_table_seq[slot as int], key));
-                                        }
-                                    } else {
-                                        assert(table.table@[i] == old_table_seq[i]);
-                                        assert(spec_flat_has_key(old_table_seq[i], k));
+                                        if k == key {}
                                     }
                                     let hk = (table.spec_hash@)(k) as int % m as int;
-                                    // Non-Empty preserved at every position.
                                     assert forall |pos: int| 0 <= pos < m as int
                                         && !(old_table_seq[pos] is Empty)
                                         implies !(#[trigger] table.table@[pos] is Empty) by {
@@ -371,7 +348,6 @@ pub mod DoubleHashFlatHashTableStEph {
                                         }
                                     }
                                 }
-                                // One-slot modification witness for trait ensures.
                                 assert(spec_other_slots_preserved(
                                     old(table).table@, table.table@, slot as int));
                             }
@@ -390,16 +366,13 @@ pub mod DoubleHashFlatHashTableStEph {
                             table.num_elements = table.num_elements + 1;
                         }
                         proof {
-                            assert(old_table_seq[slot as int] is Empty);
                             assert forall |j: int| 0 <= j < old_table_seq.len()
                                 implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
-                                if spec_flat_has_key(old_table_seq[j], key) {
-                                }
+                                if spec_flat_has_key(old_table_seq[j], key) {}
                             }
                             lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(old_table_seq, key);
                             let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
                             assert(new_entry.spec_entry_to_map() =~= Map::<Key, Value>::empty().insert(key, value));
-                            assert(old_table_seq[slot as int].spec_entry_to_map() =~= Map::<Key, Value>::empty());
                             assert(new_entry.spec_entry_to_map() =~=
                                 old_table_seq[slot as int].spec_entry_to_map().insert(key, value));
                             lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
@@ -410,22 +383,18 @@ pub mod DoubleHashFlatHashTableStEph {
                                 && #[trigger] spec_flat_has_key(table.table@[i], k)
                                 implies !#[trigger] spec_flat_has_key(table.table@[j], k) by {
                                 if i == slot as int {
-                                    assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
                                     if k == key && j != slot as int {
                                         assert(table.table@[j] == old_table_seq[j]);
                                         assert(!old_table_seq[j].spec_entry_to_map().dom().contains(key));
-                                        if spec_flat_has_key(old_table_seq[j], key) {
-                                        }
+                                        if spec_flat_has_key(old_table_seq[j], key) {}
                                     }
                                 } else {
                                     assert(table.table@[i] == old_table_seq[i]);
                                     assert(spec_flat_has_key(old_table_seq[i], k));
                                     if j == slot as int {
-                                        assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
                                         if k == key {
                                             assert(!old_table_seq[i].spec_entry_to_map().dom().contains(key));
-                                            if spec_flat_has_key(old_table_seq[i], key) {
-                                            }
+                                            if spec_flat_has_key(old_table_seq[i], key) {}
                                         }
                                     } else {
                                         assert(table.table@[j] == old_table_seq[j]);
@@ -447,23 +416,17 @@ pub mod DoubleHashFlatHashTableStEph {
                                 }) by {
                                 let hk = (table.spec_hash@)(k) as int % m as int;
                                 if i == slot as int {
-                                    assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
                                     if k == key {
-                                        assert(hk == h as int);
-                                        // step == spec_second_hash(key, m): witness n = attempt.
-                                        assert(spec_second_hash(key, m as nat) as int == step as int);
                                         assert forall |j: int| 0 <= j < attempt as int
                                             implies !(#[trigger] table.table@[(h as int + j * step as int) % m as int] is Empty) by {
                                             let pos = (h as int + j * step as int) % m as int;
                                             if pos == slot as int {
+                                            } else {
+                                                assert(table.table@[pos] == old_table_seq[pos]);
                                             }
-                                            assert(table.table@[pos] == old_table_seq[pos]);
                                         }
                                     }
                                 } else {
-                                    assert(table.table@[i] == old_table_seq[i]);
-                                    assert(spec_flat_has_key(old_table_seq[i], k));
-                                    // Non-Empty preserved at every position.
                                     assert forall |pos: int| 0 <= pos < m as int
                                         && !(old_table_seq[pos] is Empty)
                                         implies !(#[trigger] table.table@[pos] is Empty) by {
@@ -474,7 +437,6 @@ pub mod DoubleHashFlatHashTableStEph {
                                     }
                                 }
                             }
-                            // One-slot modification witness for trait ensures.
                             assert(old_table_seq =~= old(table).table@);
                             assert(spec_other_slots_preserved(
                                 old(table).table@, table.table@, slot as int));

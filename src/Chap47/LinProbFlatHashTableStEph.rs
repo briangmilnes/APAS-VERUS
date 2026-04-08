@@ -338,12 +338,19 @@ pub mod LinProbFlatHashTableStEph {
                                 if i == slot as int {
                                     if k == key && j != slot as int {
                                         assert(table.table@[j] == old_table_seq[j]);
+                                        assert(!old_table_seq[j].spec_entry_to_map().dom().contains(key));
                                         if spec_flat_has_key(old_table_seq[j], key) {}
                                     }
-                                } else if j == slot as int {
-                                    if k == key {
-                                        assert(table.table@[i] == old_table_seq[i]);
-                                        if spec_flat_has_key(old_table_seq[i], key) {}
+                                } else {
+                                    assert(table.table@[i] == old_table_seq[i]);
+                                    assert(spec_flat_has_key(old_table_seq[i], k));
+                                    if j == slot as int {
+                                        if k == key {
+                                            assert(!old_table_seq[i].spec_entry_to_map().dom().contains(key));
+                                            if spec_flat_has_key(old_table_seq[i], key) {}
+                                        }
+                                    } else {
+                                        assert(table.table@[j] == old_table_seq[j]);
                                     }
                                 }
                             }
