@@ -378,7 +378,7 @@ pub mod BSTRBMtEph {
 
     // veracity: no_requires
     /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn update<T: StTInMtT + Ord + TotalOrder>(node: &mut Node<T>)
         ensures
             node.left == old(node).left,
@@ -1213,7 +1213,7 @@ pub mod BSTRBMtEph {
             ensures h as nat == self@.spec_height();
 
         /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn find(&self, target: &T) -> (found: Option<T>)
             requires self.spec_bstrbmteph_wf(),
             ensures

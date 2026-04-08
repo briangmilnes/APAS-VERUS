@@ -100,7 +100,7 @@ pub mod ConnectivityMtEph {
     /// Delegates to count_components_hof which implements the same algorithm via star_contract_mt.
     ///
     /// - Alg Analysis: APAS (Ch63 Ex 63.3): Work O((n+m) lg n), Span O(lg² n) (edge-set, parallel)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — matches APAS; parallel star contraction
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n); parallel star contraction
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt
     ///
     /// Arguments:
@@ -124,7 +124,7 @@ pub mod ConnectivityMtEph {
     /// Delegates to connected_components_hof which implements the same algorithm via star_contract_mt.
     ///
     /// - Alg Analysis: APAS (Ch63 Ex 63.4): Work O((n+m) lg n), Span O(lg² n) (edge-set, parallel)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — matches APAS; parallel star contraction
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n); parallel star contraction
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(n lg n) — delegates to star_contract_mt
     ///
     /// Arguments:
@@ -189,7 +189,7 @@ pub mod ConnectivityMtEph {
     /// Exercise 63.1: Count Components using star_contract_mt higher-order function
     ///
     /// - Alg Analysis: APAS (Ch63 Alg 63.2): Work O((n+m) lg n), Span O(lg^2 n) (parallel)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — matches APAS; parallel star contraction
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n); parallel star contraction
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt (inherits merge bottleneck)
     pub fn count_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> (count: usize)
         requires
@@ -210,7 +210,7 @@ pub mod ConnectivityMtEph {
     /// Exercise 63.2: Connected Components using star_contract_mt higher-order function
     ///
     /// - Alg Analysis: APAS (Ch63 Alg 63.3): Work O((n+m) lg n), Span O(lg^2 n) (parallel)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — matches APAS; parallel star contraction
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n); parallel star contraction
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(n lg n) — delegates to star_contract_mt (inherits compose bottleneck)
     pub fn connected_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,

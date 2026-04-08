@@ -95,7 +95,7 @@ broadcast use {
                     self@.len() > 0 ==> min_elem.unwrap()@ == self@[0];
 
             /// - Alg Analysis: APAS (Ch45 cost table, balanced trees): Work O(lg n), Span O(lg n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
             fn insert(&self, element: T) -> (pq: Self)
                 requires
                     self.spec_balancedtreepq_wf(),
@@ -106,7 +106,7 @@ broadcast use {
                     pq@.to_multiset() =~= self@.to_multiset().insert(element@);
 
             /// - Alg Analysis: APAS (Ch45 cost table, balanced trees): Work O(lg n), Span O(lg n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires self.spec_balancedtreepq_wf(),
                 ensures
@@ -117,7 +117,7 @@ broadcast use {
                     min_and_rest.0.spec_balancedtreepq_wf();
 
             /// - Alg Analysis: APAS (Ch45 cost table, balanced trees): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) — matches APAS: tree union
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)): tree union
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     self.spec_balancedtreepq_wf(),
@@ -126,7 +126,7 @@ broadcast use {
                 ensures pq@.len() == self@.len() + other@.len(), pq.spec_balancedtreepq_wf();
 
             /// - Alg Analysis: APAS (Ch45 cost table, balanced trees): Work O(n lg n), Span O(n lg n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — matches APAS: sequential inserts
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n): sequential inserts
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> (pq: Self)
                 requires seq.spec_avltreeseqstper_wf(),
                 ensures pq@.len() == seq@.len(), pq.spec_balancedtreepq_wf();
@@ -263,7 +263,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; constant-time empty construction.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); constant-time empty construction.
             fn empty() -> Self {
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::empty(),
@@ -271,7 +271,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; constant-time singleton construction.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); constant-time singleton construction.
             fn singleton(element: T) -> Self {
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::singleton(element),

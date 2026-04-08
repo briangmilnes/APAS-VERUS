@@ -164,7 +164,7 @@ pub mod MinEditDistMtPer {
 
     /// Recursive memoized parallel minimum edit distance solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(|S|×|T|), Span O(|S|+|T|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|×|T|), Span O(|S|+|T|) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|×|T|), Span O(|S|+|T|)
     fn min_edit_distance_rec<T: MtVal>(
         source: &ArraySeqMtPerS<T>,
         target: &ArraySeqMtPerS<T>,

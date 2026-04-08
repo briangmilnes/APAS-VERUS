@@ -168,14 +168,14 @@ pub mod ArraySeqStPer {
 
         /// - Definition 18.1 (length). Return the number of elements.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn length(&self) -> (len: usize)
             ensures len as int == self.spec_len();
 
         /// - Algorithm 19.11 (Function nth). Return a reference to the element at `index`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.spec_len()
             ensures *nth_elem == self.spec_index(index as int);
@@ -219,13 +219,13 @@ pub mod ArraySeqStPer {
 
         /// - Algorithm 19.1 (empty). empty = tabulate (lambda i.i) 0.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_arrayseqstper_wf(), empty_seq.spec_len() == 0;
 
         /// - Algorithm 19.2 (singleton). singleton x = tabulate (lambda i.x) 1.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(item: T) -> (singleton: Self)
             where T: Clone + Eq
             requires obeys_feq_clone::<T>()
@@ -300,19 +300,19 @@ pub mod ArraySeqStPer {
 
         /// - Algorithm 19.7 (isEmpty). isEmpty a = (|a| = 0).
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool)
             ensures empty <==> self.spec_len() == 0;
 
         /// - Algorithm 19.7 (isSingleton). isSingleton a = (|a| = 1).
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.spec_len() == 1;
 
         /// - Algorithm 19.8 (iterate). Left fold over the sequence (iterative).
         /// - Alg Analysis: APAS (Ch19 Alg 19.8): iterate (iterative form)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|)
         fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
@@ -334,7 +334,7 @@ pub mod ArraySeqStPer {
 
         /// - Algorithm 19.9 (reduce). Combine elements (iterative).
         /// - Alg Analysis: APAS (Ch19 Alg 19.9): reduce (iterative form)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|)
         fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
             requires
@@ -406,7 +406,7 @@ pub mod ArraySeqStPer {
 
         /// - Algorithm 19.5 (deflate). deflate f x = if (f x) then ⟨x⟩ else ⟨⟩.
         /// - Alg Analysis: APAS (Ch19 Alg 19.5): deflate (part of filter)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn deflate<F: Fn(&T) -> bool>(pred: &F, x: &T) -> (deflated: Self)
             where T: Clone + Eq
             requires

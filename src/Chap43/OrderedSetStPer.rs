@@ -126,43 +126,43 @@ broadcast use {
 
         // Base set operations (ADT 41.1) - delegated
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
             requires self.spec_orderedsetstper_wf(),
             ensures count == self@.len(), self@.finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_orderedsetstper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(x: T) -> (tree: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_orderedsetstper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn find(&self, x: &T) -> (found: bool)
             requires self.spec_orderedsetstper_wf(),
             ensures found == self@.contains(x@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn insert(&self, x: T) -> (updated: Self)
             requires
                 self.spec_orderedsetstper_wf(),
                 self@.len() + 1 < usize::MAX as nat,
             ensures updated@ == self@.insert(x@), updated.spec_orderedsetstper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn delete(&self, x: &T) -> (updated: Self)
             requires self.spec_orderedsetstper_wf(),
             ensures updated@ == self@.remove(x@), updated.spec_orderedsetstper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
@@ -175,12 +175,12 @@ broadcast use {
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
             ensures filtered@.subset_of(self@), filtered.spec_orderedsetstper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(m log(n/m + 1))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         fn intersection(&self, other: &Self) -> (common: Self)
             requires self.spec_orderedsetstper_wf(), other.spec_orderedsetstper_wf(),
             ensures common@ == self@.intersect(other@), common.spec_orderedsetstper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(m log(n/m + 1))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_orderedsetstper_wf(),
@@ -188,12 +188,12 @@ broadcast use {
                 self@.len() + other@.len() < usize::MAX as nat,
             ensures combined@ == self@.union(other@), combined.spec_orderedsetstper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(m log(n/m + 1))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires self.spec_orderedsetstper_wf(), other.spec_orderedsetstper_wf(),
             ensures remaining@ == self@.difference(other@), remaining.spec_orderedsetstper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
             requires self.spec_orderedsetstper_wf(),
             ensures
@@ -202,7 +202,7 @@ broadcast use {
                 seq@.to_set() =~= self@,
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
             requires
                 seq.spec_avltreeseqstper_wf(),
@@ -213,7 +213,7 @@ broadcast use {
 
         // Ordering operations (ADT 43.1) — postconditions in cmp_spec style.
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn first(&self) -> (first: Option<T>)
             requires self.spec_orderedsetstper_wf(),
             ensures
@@ -223,7 +223,7 @@ broadcast use {
                 first matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==>
                     v.cmp_spec(&t) == Less || v@ == t@;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn last(&self) -> (last: Option<T>)
             requires self.spec_orderedsetstper_wf(),
             ensures
@@ -233,7 +233,7 @@ broadcast use {
                 last matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==>
                     t.cmp_spec(&v) == Less || v@ == t@;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
             requires self.spec_orderedsetstper_wf(),
             ensures
@@ -244,7 +244,7 @@ broadcast use {
                     #[trigger] self@.contains(t@) && t.cmp_spec(k) == Less ==>
                     t.cmp_spec(&v) == Less || v@ == t@;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn next(&self, k: &T) -> (successor: Option<T>)
             requires self.spec_orderedsetstper_wf(),
             ensures
@@ -255,7 +255,7 @@ broadcast use {
                     #[trigger] self@.contains(t@) && t.cmp_spec(k) == Greater ==>
                     v.cmp_spec(&t) == Less || v@ == t@;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn split(&self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
             requires
@@ -273,7 +273,7 @@ broadcast use {
                 !split.2@.contains(k@),
                 forall|x| #[trigger] self@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn join(left: &Self, right: &Self) -> (joined: Self)
             requires
                 left.spec_orderedsetstper_wf(),
@@ -281,7 +281,7 @@ broadcast use {
                 left@.len() + right@.len() < usize::MAX as nat,
             ensures joined@ == left@.union(right@), joined@.finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
             requires
                 self.spec_orderedsetstper_wf(),
@@ -291,14 +291,14 @@ broadcast use {
                 range@.finite(),
                 range@.subset_of(self@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn rank(&self, k: &T) -> (rank: usize)
             requires self.spec_orderedsetstper_wf(),
             ensures
                 self@.finite(),
                 rank <= self@.len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn select(&self, i: usize) -> (selected: Option<T>)
             requires self.spec_orderedsetstper_wf(),
             ensures
@@ -306,7 +306,7 @@ broadcast use {
                 i >= self@.len() ==> selected matches None,
                 selected matches Some(v) ==> self@.contains(v@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn split_rank(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             requires

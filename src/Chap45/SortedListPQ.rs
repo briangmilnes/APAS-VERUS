@@ -113,7 +113,7 @@ broadcast use {
                     self@.len() > 0 ==> min_elem.unwrap()@ == self@[0];
 
             /// - Alg Analysis: APAS (Ch45 cost table): Work O(n), Span O(n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS: scan for sorted position + copy
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n): scan for sorted position + copy
             fn insert(&self, element: T) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -140,7 +140,7 @@ broadcast use {
                     Self::spec_sorted(min_and_rest.0.spec_seq());
 
             /// - Alg Analysis: APAS (Ch45 cost table): Work O(m + n), Span O(m + n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m + n), Span O(m + n) — matches APAS: sorted merge
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m + n), Span O(m + n): sorted merge
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -153,7 +153,7 @@ broadcast use {
                     Self::spec_sorted(pq.spec_seq());
 
             /// - Alg Analysis: APAS (Ch45 cost table): Work O(n lg n), Span O(n lg n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — matches APAS: sequential inserts
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n): sequential inserts
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
@@ -279,7 +279,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; constant-time empty construction.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); constant-time empty construction.
             fn empty() -> (pq: Self) {
                 let pq = SortedListPQ {
                     elements: ArraySeqStPerS::empty(),
@@ -295,7 +295,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; constant-time singleton construction.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); constant-time singleton construction.
             fn singleton(element: T) -> (pq: Self) {
                 let pq = SortedListPQ {
                     elements: ArraySeqStPerS::singleton(element),
@@ -309,7 +309,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; head of sorted list.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); head of sorted list.
             fn find_min(&self) -> (min_elem: Option<&T>) {
                 if self.elements.length() == 0 {
                     None
@@ -319,7 +319,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n), Span O(n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS; linear scan for position, then rebuild.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n); linear scan for position, then rebuild.
             fn insert(&self, element: T) -> (pq: Self) {
                 let n = self.elements.length();
 
@@ -559,7 +559,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(m+n), Span O(m+n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m+n), Span O(m+n) — matches APAS; merge two sorted sequences.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m+n), Span O(m+n); merge two sorted sequences.
             fn meld(&self, other: &Self) -> (pq: Self) {
                 let n = self.elements.length();
                 let m = other.elements.length();

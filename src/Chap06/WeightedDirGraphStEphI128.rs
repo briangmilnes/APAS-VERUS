@@ -183,7 +183,7 @@ verus!
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_weighed_edge(&mut self, from: V, to: V, weight: i128) { 
             self.add_labeled_arc(from, to, weight); 
         }

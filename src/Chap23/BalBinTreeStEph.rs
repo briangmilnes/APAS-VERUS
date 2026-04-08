@@ -80,7 +80,7 @@ pub mod BalBinTreeStEph {
         spec fn spec_is_leaf(self) -> bool;
 
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(1), Span O(1).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn leaf() -> (l: Self)
             ensures l.spec_balbintreesteph_wf(),
                     l.spec_size() == 0,
@@ -90,7 +90,7 @@ pub mod BalBinTreeStEph {
                     l.spec_post_order() == Seq::<T>::empty();
 
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(1), Span O(1).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn node(left: Self, value: T, right: Self) -> (n: Self)
             ensures n.spec_balbintreesteph_wf(),
                     n.spec_size() == 1 + left.spec_size() + right.spec_size(),
@@ -101,7 +101,7 @@ pub mod BalBinTreeStEph {
                     n.spec_post_order() == left.spec_post_order() + right.spec_post_order() + seq![value];
 
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(1), Span O(1).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_leaf(&self) -> (b: bool)
             requires self.spec_balbintreesteph_wf(),
             ensures b == (self.spec_size() == 0);

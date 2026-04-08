@@ -180,7 +180,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS CS 41.4
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) CS 41.4
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
             requires self.spec_avltreesetstper_wf(),
@@ -204,7 +204,7 @@ broadcast use {
                 empty.spec_avltreesetstper_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS CS 41.4
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) CS 41.4
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (tree: Self)
             ensures
@@ -283,7 +283,7 @@ broadcast use {
                 combined.spec_avltreesetstper_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(1), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS CS 41.4
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) CS 41.4
         fn find(&self, x: &T) -> (found: bool)
             requires
                 self.spec_avltreesetstper_wf(),
@@ -292,7 +292,7 @@ broadcast use {
             ensures found == self@.contains(x@);
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS CS 41.4
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) CS 41.4
         fn delete(&self, x: &T) -> (updated: Self)
             requires
                 self.spec_avltreesetstper_wf(),
@@ -303,7 +303,7 @@ broadcast use {
                 updated.spec_avltreesetstper_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS CS 41.4
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) CS 41.4
         fn insert(&self, x: T) -> (updated: Self)
             requires
                 self.spec_avltreesetstper_wf(),

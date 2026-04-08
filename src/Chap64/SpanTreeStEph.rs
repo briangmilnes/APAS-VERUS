@@ -73,7 +73,7 @@ pub mod SpanTreeStEph {
     /// Exercise 64.2: Spanning Tree via Star Contraction.
     ///
     /// - Alg Analysis: APAS (Ch64 Ex 64.2): Work O((n+m) lg n), Span O((n+m) lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS.
     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (tree_edges: SetStEph<Edge<V>>)
         requires

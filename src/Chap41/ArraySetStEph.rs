@@ -235,7 +235,7 @@ pub mod ArraySetStEph {
                 seq@.to_set() =~= self@;
 
         /// - Alg Analysis: APAS: no cost spec (unordered array set)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1)
         fn empty() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_arraysetsteph_wf();
 

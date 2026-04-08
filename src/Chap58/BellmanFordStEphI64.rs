@@ -55,7 +55,7 @@ pub mod BellmanFordStEphI64 {
         /// Bellman-Ford single-source shortest path algorithm.
         /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm lg n), Span O(n lg n)
         /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm), Span O(n lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(nm), Span O(nm) — matches APAS seq-based; n rounds, O(m) per round with array seqs
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(nm), Span O(nm) seq-based; n rounds, O(m) per round with array seqs
         fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
             -> (sssp: Result<SSSPResultStEphI64, BellmanFordError>)
             requires
@@ -189,7 +189,7 @@ pub mod BellmanFordStEphI64 {
     ///
     /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm lg n), Span O(n lg n)
     /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm), Span O(n lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(nm), Span O(nm) — matches APAS seq-based; n rounds, O(m) per round with array seqs
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(nm), Span O(nm) seq-based; n rounds, O(m) per round with array seqs
     pub fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
         -> (sssp: Result<SSSPResultStEphI64, BellmanFordError>)
         requires

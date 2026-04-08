@@ -262,12 +262,12 @@ broadcast use {
         spec fn spec_orderedtablestper_find_pre(&self) -> bool;
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
             requires self.spec_orderedtablestper_wf(),
             ensures count == self@.dom().len(), self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (table: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
@@ -277,7 +277,7 @@ broadcast use {
                 view_ord_consistent::<K>(),
             ensures table@ == Map::<K::V, V::V>::empty(), table.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(k: K, v: V) -> (table: Self)
             requires
                 obeys_feq_clone::<Pair<K, V>>(),
@@ -288,7 +288,7 @@ broadcast use {
                 view_ord_consistent::<K>(),
             ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn find(&self, k: &K) -> (found: Option<V>)
             requires self.spec_orderedtablestper_find_pre(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
             ensures
@@ -297,7 +297,7 @@ broadcast use {
                     None => !self@.contains_key(k@),
                 };
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn insert(&self, k: K, v: V) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
@@ -321,7 +321,7 @@ broadcast use {
                 forall|k2: K::V| k2 != k@ && #[trigger] self@.contains_key(k2) ==> table@[k2] == self@[k2],
                 table.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn delete(&self, k: &K) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
@@ -340,12 +340,12 @@ broadcast use {
                 forall|k2: K::V| k2 != k@ && #[trigger] self@.contains_key(k2) ==> table@[k2] == self@[k2],
                 table.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn domain(&self) -> (keys: ArraySetStEph<K>)
             requires self.spec_orderedtablestper_wf(), obeys_feq_clone::<K>()
             ensures keys@ =~= self@.dom(), self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (table: Self)
             requires
                 keys.spec_arraysetsteph_wf(),
@@ -365,7 +365,7 @@ broadcast use {
                         key_arg@ == k && f.ensures((&key_arg,), result)
                         && table@[k] == result@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), forall|v: &V| f.requires((v,)),
             ensures
@@ -377,7 +377,7 @@ broadcast use {
                         && table@[k] == result@),
                 table.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter<F: Fn(&K, &V) -> bool>(&self, f: F, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
@@ -390,7 +390,7 @@ broadcast use {
                     ==> #[trigger] table@.dom().contains(k),
                 table.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
@@ -406,7 +406,7 @@ broadcast use {
                         && table@[k] == r@),
                 table.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
@@ -427,7 +427,7 @@ broadcast use {
                         && table@[k] == r@),
                 table.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         fn difference(&self, other: &Self) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), other.spec_orderedtablestper_wf(), obeys_view_eq::<K>(),
             ensures
@@ -435,7 +435,7 @@ broadcast use {
                 forall|k: K::V| #[trigger] table@.contains_key(k) ==> table@[k] == self@[k],
                 table.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self)
             requires self.spec_orderedtablestper_wf(),
             ensures
@@ -443,7 +443,7 @@ broadcast use {
                 forall|k: K::V| #[trigger] table@.contains_key(k) ==> table@[k] == self@[k],
                 table.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self)
             requires self.spec_orderedtablestper_wf(),
             ensures
@@ -451,12 +451,12 @@ broadcast use {
                 forall|k: K::V| #[trigger] table@.contains_key(k) ==> table@[k] == self@[k],
                 table.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
             requires self.spec_orderedtablestper_wf(),
             ensures self@.dom().finite(), sorted_entries.spec_avltreeseqstper_wf(), sorted_entries@.len() == self@.dom().len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn first_key(&self) -> (key: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
@@ -466,7 +466,7 @@ broadcast use {
                 key matches Some(k) ==> self@.dom().contains(k@),
                 key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn last_key(&self) -> (key: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
@@ -476,7 +476,7 @@ broadcast use {
                 key matches Some(k) ==> self@.dom().contains(k@),
                 key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn previous_key(&self, k: &K) -> (key: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
@@ -486,7 +486,7 @@ broadcast use {
                 key matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 key matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn next_key(&self, k: &K) -> (key: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
@@ -496,7 +496,7 @@ broadcast use {
                 key matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 key matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))
             where Self: Sized
             requires
@@ -515,7 +515,7 @@ broadcast use {
                 parts.0.spec_orderedtablestper_wf(),
                 parts.2.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         fn join_key(left: &Self, right: &Self) -> (table: Self)
             requires
                 left.spec_orderedtablestper_wf(),
@@ -536,7 +536,7 @@ broadcast use {
                 forall|key| #[trigger] table@.dom().contains(key) ==> table@[key] == self@[key],
                 table.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             requires
@@ -547,7 +547,7 @@ broadcast use {
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn select_key(&self, i: usize) -> (key: Option<K>)
             where K: TotalOrder
             requires
@@ -559,7 +559,7 @@ broadcast use {
                 key matches Some(k) ==> self@.dom().contains(k@),
                 key matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))
             where Self: Sized
             requires

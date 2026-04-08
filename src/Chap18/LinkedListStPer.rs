@@ -85,8 +85,7 @@ pub mod LinkedListStPer {
 
 
     /// Definition 18.7 (iterate). Left fold: spec_iterate(s, f, x) = f(...f(f(x, s[0]), s[1])..., s[n-1]).
-    /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A (spec only; no runtime cost). — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A (spec only; no runtime cost).
     pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
         s.fold_left(start_x, f)
     }
@@ -102,7 +101,6 @@ pub mod LinkedListStPer {
         spec fn spec_index(&self, i: int) -> T
             recommends i < self.spec_len();
 
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: St sequential, APAS parallel.
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
@@ -114,7 +112,6 @@ pub mod LinkedListStPer {
                 new_seq.spec_len() == length as int,
                 forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
         fn length(&self) -> (len: usize)
             ensures len as int == self.spec_len();
@@ -139,7 +136,6 @@ pub mod LinkedListStPer {
                 subseq.spec_len() == length as int,
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: St sequential, APAS parallel.
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
@@ -151,12 +147,10 @@ pub mod LinkedListStPer {
     /// Redefinable trait - may be overridden with better algorithms in later chapters.
     pub trait LinkedListStPerRedefinableTrait<T>: LinkedListStPerBaseTrait<T> {
 
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
         fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_linkedliststper_wf(), empty_seq.spec_len() == 0;
 
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
         fn singleton(item: T) -> (singleton: Self)
             ensures
@@ -165,7 +159,7 @@ pub mod LinkedListStPer {
                 singleton.spec_index(0) == item;
 
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(Sigma W(f)), Span O(Sigma S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS (both sequential)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) (both sequential)
         fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> (tab_seq: LinkedListStPerS<T>)
             requires
                 n <= usize::MAX,
@@ -175,7 +169,7 @@ pub mod LinkedListStPer {
                 forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < n ==> f.ensures((i as usize,), tab_seq.seq@[i]);
 
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(Sigma W(f)), Span O(Sigma S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS (both sequential)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) (both sequential)
         fn map<U: Clone, F: Fn(&T) -> U>(a: &LinkedListStPerS<T>, f: &F) -> (mapped: LinkedListStPerS<U>)
             requires
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
@@ -199,7 +193,7 @@ pub mod LinkedListStPer {
         /// - The multiset postcondition captures predicate satisfaction, provenance,
         ///   and completeness in a single statement.
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(Sigma W(f)), Span O(Sigma S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS (both sequential)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) (both sequential)
         fn filter<F: Fn(&T) -> bool>(a: &LinkedListStPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
             where T: Clone + Eq
             requires
@@ -217,7 +211,6 @@ pub mod LinkedListStPer {
                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(Σ|a_i|) — DIFFERS: St sequential, APAS parallel.
         fn flatten(a: &LinkedListStPerS<LinkedListStPerS<T>>) -> (flattened: LinkedListStPerS<T>)
             where T: Clone + Eq
@@ -239,17 +232,14 @@ pub mod LinkedListStPer {
                 updated.spec_index(index as int) == item,
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
 
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
         fn is_empty(&self) -> (empty: bool)
             ensures empty <==> self.spec_len() == 0;
 
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
         fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.spec_len() == 1;
 
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — DIFFERS: St sequential, APAS parallel.
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             requires
@@ -259,7 +249,7 @@ pub mod LinkedListStPer {
                 accumulated == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);
 
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(Sigma W(f)), Span O(Sigma S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS (both sequential)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) (both sequential)
         fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
             requires
@@ -271,7 +261,7 @@ pub mod LinkedListStPer {
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
 
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(|a|), Span O(|a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (LinkedListStPerS<T>, T))
             where T: Clone + Eq
             requires
@@ -747,8 +737,7 @@ pub mod LinkedListStPer {
         {}
 
         /// Returns an iterator over the list elements.
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         pub fn iter(&self) -> (it: LinkedListStPerIter<'_, T>)
             ensures
                 it@.0 == 0,
@@ -779,8 +768,7 @@ pub mod LinkedListStPer {
     impl<'a, T> std::iter::Iterator for LinkedListStPerIter<'a, T> {
         type Item = &'a T;
 
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         // Relies on vstd's assume_specification for slice::Iter::next.
         fn next(&mut self) -> (next: Option<&'a T>)
             ensures ({
@@ -857,16 +845,14 @@ pub mod LinkedListStPer {
     impl<'a, T> std::iter::IntoIterator for &'a LinkedListStPerS<T> {
         type Item = &'a T;
         type IntoIter = LinkedListStPerIter<'a, T>;
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn into_iter(self) -> Self::IntoIter { LinkedListStPerIter { inner: self.seq.iter() } }
     }
 
     impl<T> std::iter::IntoIterator for LinkedListStPerS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
@@ -881,8 +867,7 @@ pub mod LinkedListStPer {
 
 
     impl<T: Clone + View> Clone for LinkedListStPerS<T> {
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1). — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1).
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -896,8 +881,7 @@ pub mod LinkedListStPer {
     impl<T: Eq + View> Eq for LinkedListStPerS<T> {}
 
     impl<T: PartialEq + View> PartialEq for LinkedListStPerS<T> {
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1). — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1).
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {

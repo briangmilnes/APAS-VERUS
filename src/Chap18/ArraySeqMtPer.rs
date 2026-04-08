@@ -122,8 +122,7 @@ pub mod ArraySeqMtPer {
             recommends i < self.spec_len();
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length). — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length).
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -136,21 +135,21 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.1 (length). Return the number of elements.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn length(&self) -> (len: usize)
             ensures len as int == self.spec_len();
 
         /// - Algorithm 19.11 (Function nth). Return a reference to the element at `index`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.spec_len()
             ensures *nth_elem == self.spec_index(index as int);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length). — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length).
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -178,7 +177,7 @@ pub mod ArraySeqMtPer {
 
         /// - Create sequence from Vec.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1). — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_arrayseqmtper_wf(),
@@ -191,13 +190,13 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.1 (empty). Construct the empty sequence.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_arrayseqmtper_wf(), empty_seq.spec_len() == 0;
 
         /// - Definition 18.1 (singleton). Construct a singleton sequence containing `item`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(item: T) -> (singleton: Self)
             ensures
                 singleton.spec_arrayseqmtper_wf(),
@@ -274,19 +273,19 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.5 (isEmpty). true iff the sequence has length zero.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool)
             ensures empty <==> self.spec_len() == 0;
 
         /// - Definition 18.5 (isSingleton). true iff the sequence has length one.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.spec_len() == 1;
 
         /// - Definition 18.7 (iterate). Fold with accumulator `seed`.
         /// - Alg Analysis: APAS (Ch20 CS 20.3): Work O(1 + Sigma W(f)), Span O(1 + Sigma S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS (iterate is sequential)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) (iterate is sequential)
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
@@ -903,8 +902,7 @@ pub mod ArraySeqMtPer {
         }
 
         /// - Parallel map. Transform each element via `f` using fork-join.
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|). — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|).
         pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtPerS<T>,
             f: F,
@@ -1141,8 +1139,7 @@ pub mod ArraySeqMtPer {
         }
 
         /// - Parallel filter. Keep elements satisfying `pred` using fork-join.
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|). — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|).
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtPerS<T>,
             pred: F,
@@ -1239,8 +1236,7 @@ pub mod ArraySeqMtPer {
         }
 
         /// - Parallel reduce. Combine elements using associative `f` and identity `id` via fork-join.
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|). — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|).
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtPerS<T>,
             f: F,

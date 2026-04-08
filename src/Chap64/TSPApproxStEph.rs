@@ -130,7 +130,7 @@ pub mod TSPApproxStEph {
     /// Returns a sequence of vertices visited.
     ///
     /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n), Span O(n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) — DFS is inherently sequential.
     ///
     /// Arguments:
@@ -267,7 +267,7 @@ pub mod TSPApproxStEph {
     /// Result is a Hamiltonian cycle (visits each vertex exactly once).
     ///
     /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n), Span O(n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) — agrees with APAS.
     ///
     /// Arguments:
@@ -316,7 +316,7 @@ pub mod TSPApproxStEph {
     /// Sums the weights of edges in the tour.
     ///
     /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n), Span O(n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) — agrees with APAS.
     pub fn tour_weight<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
@@ -399,7 +399,7 @@ pub mod TSPApproxStEph {
     /// 4. Result has weight <= 2 * w(T)
     ///
     /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n+m), Span O(n+m)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
     /// - Claude-Opus-4.6: Work O(n+m), Span O(n+m) — agrees with APAS.
     ///
     /// Arguments:

@@ -486,17 +486,17 @@ assert(s_prefix[j] == sources[j]);
         spec fn spec_stored_value(&self, key: K::V) -> V;
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
             requires self.spec_tablemteph_wf()
             ensures count == self@.dom().len();
         /// - APAS Cost Spec 42.5: Work 1, Span 1
         /// - Alg Analysis: APAS (Ch42 ref): Work O(1), Span O(1) -- agrees with APAS.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- agrees with APAS. — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- agrees with APAS.
         fn empty() -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_tablemteph_wf();
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(key: K, value: V) -> (tree: Self)
             requires obeys_feq_clone::<Pair<K, V>>()
             ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@), tree.spec_tablemteph_wf();

@@ -245,14 +245,14 @@ pub mod ArraySeqMtEph {
 
         /// - Definition 18.1 (length). Return the number of elements.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn length(&self) -> (len: usize)
             ensures len as int == self.spec_len();
 
         /// - Algorithm 19.11 (Function nth). Return a reference to the element at `index`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.spec_len()
             ensures *nth_elem == self.spec_index(index as int);
@@ -296,13 +296,13 @@ pub mod ArraySeqMtEph {
 
         /// - Algorithm 19.1 (empty). empty = tabulate (lambda i.i) 0.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_arrayseqmteph_wf(), empty_seq.spec_len() == 0;
 
         /// - Algorithm 19.2 (singleton). singleton x = tabulate (lambda i.x) 1.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(item: T) -> (singleton: Self)
             where T: Clone + Eq
             requires obeys_feq_clone::<T>()
@@ -392,13 +392,13 @@ pub mod ArraySeqMtEph {
 
         /// - Algorithm 19.7 (isEmpty). isEmpty a = (|a| = 0).
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool)
             ensures empty <==> self.spec_len() == 0;
 
         /// - Algorithm 19.7 (isSingleton). isSingleton a = (|a| = 1).
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.spec_len() == 1;
 
@@ -414,7 +414,7 @@ pub mod ArraySeqMtEph {
 
         /// - Algorithm 19.8 (iterate). iterate f x a = if |a|=0 then x else iterate f (f(x,a[0])) a[1..|a|-1].
         /// - Alg Analysis: APAS (Ch20 CS 20.3): Work O(1 + Sigma W(f)), Span O(1 + Sigma S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f)), Span O(Sigma S(f)) — matches APAS (inherently sequential)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f)), Span O(Sigma S(f)) (inherently sequential)
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             where T: Clone + Eq
             requires
@@ -438,7 +438,7 @@ pub mod ArraySeqMtEph {
 
         /// - Algorithm 19.9 (reduce). reduce f id a = if |a|=0 then id else if |a|=1 then a[0] else f(reduce f id b, reduce f id c).
         /// - Alg Analysis: APAS (Ch20 CS 20.4): Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f)), Span O(lg |a| * max S(f)) — matches APAS: D&C fork-join via reduce_par
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f)), Span O(lg |a| * max S(f)): D&C fork-join via reduce_par
         fn reduce<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone + Eq + Send + Sync + 'static
             requires

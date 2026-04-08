@@ -274,19 +274,19 @@ pub mod BSTTreapStEph {
             ensures preordered.spec_len() == self.spec_pre_order().len();
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new_node(key: T, priority: u64) -> (n: Node<T>)
             ensures
                 Self::spec_link_size_wf(&Some(Box::new(n))),
                 n.size == 1;
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size_link(link: &Link<T>) -> (sz: usize)
             ensures sz as nat == Self::spec_size_link(link);
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn update_size(node: &mut Box<Node<T>>)
             requires 1 + Self::spec_size_link(&old(node).left) + Self::spec_size_link(&old(node).right) <= usize::MAX as nat,
             ensures
@@ -399,12 +399,12 @@ pub mod BSTTreapStEph {
         spec fn spec_parambsttreapsteph_wf(&self) -> bool;
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn param_new() -> (tree: Self)
             ensures tree@.finite(), tree@.len() == 0, tree.spec_parambsttreapsteph_wf();
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(key: T) -> (tree: Self)
             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent_st::<T>(),
             ensures
@@ -413,7 +413,7 @@ pub mod BSTTreapStEph {
                 tree.spec_parambsttreapsteph_wf();
 
         /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn expose(&self) -> (exposed: ExposedTreap<T>)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -437,7 +437,7 @@ pub mod BSTTreapStEph {
                 );
 
         /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
         fn join_mid(exposed: ExposedTreap<T>) -> (tree: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -460,19 +460,19 @@ pub mod BSTTreapStEph {
                 exposed matches ExposedTreap::Node(l, k, r) ==> tree@ =~= l@.union(r@).insert(k@);
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn param_size(&self) -> (count: usize)
             requires self.spec_parambsttreapsteph_wf(),
             ensures self@.finite(), count == self@.len();
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn param_is_empty(&self) -> (empty: bool)
             requires self.spec_parambsttreapsteph_wf(),
             ensures self@.finite(), empty == (self@.len() == 0);
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn param_insert(&mut self, key: T)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent_st::<T>(),
@@ -484,7 +484,7 @@ pub mod BSTTreapStEph {
                 self.spec_parambsttreapsteph_wf();
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn param_delete(&mut self, key: &T)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -497,7 +497,7 @@ pub mod BSTTreapStEph {
                 self.spec_parambsttreapsteph_wf();
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn param_find(&self, key: &T) -> (found: Option<T>)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -508,7 +508,7 @@ pub mod BSTTreapStEph {
                 found is None ==> !self@.contains(key@);
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn param_split(&self, key: &T) -> (parts: (Self, bool, Self))
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -527,7 +527,7 @@ pub mod BSTTreapStEph {
                 parts.2.spec_parambsttreapsteph_wf();
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         fn param_join_pair(&self, other: Self) -> (joined: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -622,7 +622,7 @@ pub mod BSTTreapStEph {
             ensures true;
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(|t|), Span O(|t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|), Span O(|t|) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|), Span O(|t|)
         fn param_in_order(&self) -> (ordered: ArraySeqStPerS<T>)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -837,7 +837,7 @@ pub mod BSTTreapStEph {
         }
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new_node(key: T, priority: u64) -> (n: Node<T>) {
             let n = Node {
                 key,
@@ -854,7 +854,7 @@ pub mod BSTTreapStEph {
         }
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size_link(link: &Link<T>) -> (sz: usize) {
             match link.as_ref() {
                 None => 0,
@@ -863,7 +863,7 @@ pub mod BSTTreapStEph {
         }
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn update_size(node: &mut Box<Node<T>>) {
             let l = Self::size_link(&node.left);
             let r = Self::size_link(&node.right);
@@ -2115,7 +2115,7 @@ pub mod BSTTreapStEph {
 
     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
     /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
     fn join_with_priority_st<T: StT + Ord + IsLtTransitive>(
         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
     ) -> (joined: BSTTreapStEph<T>)
@@ -2358,7 +2358,7 @@ pub mod BSTTreapStEph {
     }
 
     /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
     ) -> (joined: BSTTreapStEph<T>)

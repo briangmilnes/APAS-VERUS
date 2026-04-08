@@ -157,7 +157,7 @@ pub mod BSTRBStEph {
                 self.spec_root().tree_is_bst(),
             ensures found == self.spec_root().tree_contains(*target);
         /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn find(&self, target: &T) -> (found: Option<&T>)
             requires
                 self.spec_bstrbsteph_wf(),
@@ -207,7 +207,6 @@ pub mod BSTRBStEph {
             ensures
                 found.is_some() == (*self).tree_contains(*target),
                 found.is_some() ==> *found.unwrap() == *target;
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
         fn min_node(&self) -> (min: Option<&T>)
             requires (*self).tree_is_bst(),
@@ -215,7 +214,6 @@ pub mod BSTRBStEph {
                 self.spec_size() == 0 ==> min.is_none(),
                 self.spec_size() > 0 ==> min.is_some(),
                 min.is_some() ==> (*self).tree_contains(*min.unwrap());
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
         fn max_node(&self) -> (max: Option<&T>)
             requires (*self).tree_is_bst(),
@@ -607,7 +605,6 @@ pub mod BSTRBStEph {
         }
     }
 
-    /// - Alg Analysis: APAS: (no cost stated)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
     fn min_node(&self) -> (min: Option<&T>)
         decreases self.spec_size(),
@@ -624,7 +621,6 @@ pub mod BSTRBStEph {
         }
     }
 
-    /// - Alg Analysis: APAS: (no cost stated)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
     fn max_node(&self) -> (max: Option<&T>)
         decreases self.spec_size(),
@@ -653,19 +649,16 @@ pub mod BSTRBStEph {
             BSTRBStEph { root: BalBinTree::Leaf }
         }
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to BalBinTree::size.
         fn size(&self) -> (n: usize) {
             self.root.size()
         }
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — leaf check.
         fn is_empty(&self) -> (b: bool) {
             self.root.is_leaf()
         }
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to BalBinTree::height.
         fn height(&self) -> (h: usize) {
             self.root.height()

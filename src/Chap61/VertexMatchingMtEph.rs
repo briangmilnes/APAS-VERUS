@@ -71,7 +71,7 @@ pub mod VertexMatchingMtEph {
     /// - All edges incident on its endpoints flipped tails (false)
     ///
     /// - Alg Analysis: APAS (Ch61 Alg 61.4): Work O(|E|), Span O(lg |V|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |V|) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |V|)
     /// - Claude-Opus-4.6: Work Θ(|E|^2), Span Θ(|E|) — coin flip phase is sequential (RNG),
     ///   edge selection scans all edges per candidate via should_select_edge
     ///
@@ -109,7 +109,7 @@ pub mod VertexMatchingMtEph {
     /// Phase 1: Flip coins for all edges
     ///
     /// - Alg Analysis: APAS (Ch61 Alg 61.4): Work O(|E|), Span O(1) — each coin is independent
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(1) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(1)
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — RNG is sequential, no actual parallelism
     fn flip_coins_parallel<V: StT + MtT + Hash + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
@@ -142,7 +142,7 @@ pub mod VertexMatchingMtEph {
     /// Phase 2: Select edges in parallel where coin is heads and adjacent edges are tails
     ///
     /// - Alg Analysis: APAS (Ch61 Alg 61.4): Work O(|E|), Span O(lg |V|) — each edge checks only incident edges
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |V|) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |V|)
     /// - Claude-Opus-4.6: Work Θ(|E|^2), Span Θ(lg |E| + |E|) — should_select_edge scans all |E| edges
     #[verifier::external_body]
     fn select_edges_parallel<V: StT + MtT + Hash + 'static>(
@@ -226,7 +226,7 @@ pub mod VertexMatchingMtEph {
     /// Edge is selected if its coin is heads and all adjacent edges have tails
     ///
     /// - Alg Analysis: APAS (Ch61 Alg 61.4): Work O(degree(u) + degree(v)), Span O(degree(u) + degree(v)) — checks only incident edges
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(degree(u) + degree(v)), Span O(degree(u) + degree(v)) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(degree(u) + degree(v)), Span O(degree(u) + degree(v))
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — iterates all edges, not just incident ones
     fn should_select_edge<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,

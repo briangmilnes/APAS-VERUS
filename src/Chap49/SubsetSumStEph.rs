@@ -84,7 +84,7 @@ pub mod SubsetSumStEph {
 
         /// Create new subset sum solver.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- allocate empty structures. — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- allocate empty structures.
         fn new() -> (empty: Self)
         where
             T: Default
@@ -93,7 +93,7 @@ pub mod SubsetSumStEph {
 
         /// Create from multiset.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move multiset into struct. — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move multiset into struct.
         fn from_multiset(multiset: ArraySeqStEphS<T>) -> (subset_sum: Self)
             ensures subset_sum.spec_multiset_len() == multiset.spec_len();
 
@@ -107,7 +107,7 @@ pub mod SubsetSumStEph {
 
         /// Get the multiset.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return reference. — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return reference.
         fn multiset(&self) -> (ms: &ArraySeqStEphS<T>)
             ensures ms.spec_len() == self.spec_multiset_len();
 
@@ -120,13 +120,13 @@ pub mod SubsetSumStEph {
 
         /// Clear memoization table.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clear hash map. — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clear hash map.
         fn clear_memo(&mut self)
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
         /// Get memoization table size.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length. — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length.
         fn memo_size(&self) -> (count: usize);
     }
 
@@ -248,7 +248,7 @@ pub mod SubsetSumStEph {
     pub trait SubsetSumStEphMutTrait<T: StT> {
         /// Get mutable multiset (ephemeral allows mutation).
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return mutable reference. — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return mutable reference.
         fn multiset_mut(&mut self) -> &mut ArraySeqStEphS<T>;
     }
 

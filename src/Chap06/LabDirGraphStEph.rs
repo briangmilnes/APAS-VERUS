@@ -101,7 +101,7 @@ verus!
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (g: Self)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
@@ -124,12 +124,12 @@ verus!
                 g@.A =~= labeled_arcs@;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn labeled_arcs(&self) -> (a: &SetStEph<LabEdge<V, L>>)
             ensures a@ =~= self@.A;
 
@@ -140,13 +140,13 @@ verus!
             ensures arcs@.finite(), arcs@ == self.spec_arcs();
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_vertex(&mut self, v: V)
             requires valid_key_type_LabEdge::<V, L>()
             ensures self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_labeled_arc(&mut self, from: V, to: V, label: L)
             requires valid_key_type_LabEdge::<V, L>()
             ensures 

@@ -309,7 +309,7 @@ pub mod KruskalStEph {
     /// Algorithm 65.2: Kruskal's MST Algorithm.
     ///
     /// - Alg Analysis: APAS (Ch65 Alg 65.2): Work O(m lg n), Span O(m lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n)
     /// - Claude-Opus-4.6: Work O(m lg m), Span O(m lg m) — sorting dominates.
     #[verifier::rlimit(50)]
     pub fn kruskal_mst<V: HashOrd>(
@@ -396,7 +396,6 @@ pub mod KruskalStEph {
     }
 
     /// Compute total MST weight.
-    /// - Alg Analysis: APAS: (no cost stated) — utility function
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
     /// Overflow-safe: skips edges that would cause u64 overflow (never triggers for MST weights).
@@ -430,7 +429,6 @@ pub mod KruskalStEph {
 
     /// Verify MST has correct number of edges.
     /// A valid MST of n vertices should have n-1 edges.
-    /// - Alg Analysis: APAS: (no cost stated) — validation utility
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     pub fn verify_mst_size<V: HashOrd>(

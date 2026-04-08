@@ -604,7 +604,7 @@ broadcast use {
                     self.spec_size() > 0 ==> forall|e: T| self@.count(e) > 0 ==>
                         #[trigger] TotalOrder::le(*min_elem.unwrap(), e);
             /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(lg n), Span O(lg n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS: meld with singleton
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n): meld with singleton
             fn insert(&self, element: T) -> (pq: Self)
                 requires
                     self.spec_leftistheappq_wf(),
@@ -614,7 +614,7 @@ broadcast use {
                     pq.spec_size() == self.spec_size() + 1,
                     pq@ =~= self@.insert(element);
             /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(lg n), Span O(lg n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS: meld children
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n): meld children
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires
                     self.spec_leftistheappq_wf(),
@@ -630,7 +630,7 @@ broadcast use {
                     self.spec_size() > 0 ==> forall|e: T| self@.count(e) > 0 ==>
                         #[trigger] TotalOrder::le(min_and_rest.1.unwrap(), e);
             /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(lg m + lg n), Span O(lg m + lg n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg m + lg n), Span O(lg m + lg n) — matches APAS
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg m + lg n), Span O(lg m + lg n)
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     self.spec_leftistheappq_wf(),
@@ -764,14 +764,14 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; constant-time Leaf construction.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); constant-time Leaf construction.
             fn empty() -> (pq: Self) {
                 let pq = LeftistHeapPQ { root: LeftistHeapNode::Leaf };
                 pq
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; constant-time Node construction.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); constant-time Node construction.
             fn singleton(element: T) -> (pq: Self) {
                 let pq = LeftistHeapPQ {
                     root: LeftistHeapNode::Node {
@@ -793,7 +793,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; root access by heap property.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); root access by heap property.
             fn find_min(&self) -> (min_elem: Option<&T>) {
                 match &self.root {
                     LeftistHeapNode::Leaf => {
@@ -821,7 +821,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS; singleton then meld along right spines.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n); singleton then meld along right spines.
             fn insert(&self, element: T) -> (pq: Self) {
                 let singleton = Self::singleton(element);
                 let pq = self.meld(&singleton);
@@ -837,7 +837,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS; remove root, meld children.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n); remove root, meld children.
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
                 match &self.root {
                     LeftistHeapNode::Leaf => (self.clone(), None),
@@ -892,7 +892,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log m + log n), Span O(log m + log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log m + log n), Span O(log m + log n) — matches APAS; recursive meld along right spines.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log m + log n), Span O(log m + log n); recursive meld along right spines.
             fn meld(&self, other: &Self) -> (pq: Self) {
                 let pq = LeftistHeapPQ {
                     root: LeftistHeapNode::meld_nodes(self.root.clone(), other.root.clone()),

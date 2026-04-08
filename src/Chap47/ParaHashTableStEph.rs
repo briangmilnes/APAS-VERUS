@@ -333,15 +333,15 @@ pub mod ParaHashTableStEph {
         fn new() -> (entry: Self)
             ensures entry.spec_entry_to_map() == Map::<Key, Value>::empty();
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected
         fn insert(&mut self, key: Key, value: Value)
             ensures self.spec_entry_to_map().dom().contains(key);
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
         /// - Alg Analysis: APAS (Ch47 Alg 47.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected
         fn lookup(&self, key: &Key) -> (found: Option<Value>);
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1 + α) expected, Span O(1 + α) expected — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1 + α) expected, Span O(1 + α) expected
         fn delete(&mut self, key: &Key) -> (deleted: bool)
             ensures !deleted ==> self.spec_entry_to_map() == old(self).spec_entry_to_map();
         /// Element-wise clone that avoids Verus tuple-Clone limitation.
@@ -427,7 +427,7 @@ pub mod ParaHashTableStEph {
 
         /// Inserts a key-value pair into the hash table.
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected
         fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
             requires
                 Self::spec_parahashtablesteph_wf(old(table)),
@@ -447,7 +447,7 @@ pub mod ParaHashTableStEph {
         /// Looks up a key in the hash table, returning its value if found.
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
         /// - Alg Analysis: APAS (Ch47 Alg 47.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected
         fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)
             requires
                 Self::spec_parahashtablesteph_wf(table),
@@ -459,7 +459,7 @@ pub mod ParaHashTableStEph {
 
         /// Deletes a key from the hash table if it exists.
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1 + α) expected, Span O(1 + α) expected — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1 + α) expected, Span O(1 + α) expected
         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
             requires
                 Self::spec_parahashtablesteph_wf(old(table)),
@@ -499,7 +499,7 @@ pub mod ParaHashTableStEph {
         /// Resizes the hash table to a new size and rehashes all entries.
         /// Clones the stored hash function for the new table.
         /// - Alg Analysis: APAS (Ch47 ref): Work O(n + m + m'), Span O(n + m + m') where n is number of elements,
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m + m'), Span O(n + m + m') where n is number of elements, — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m + m'), Span O(n + m + m') where n is number of elements,
         ///   m is old size, m' is new size.
         /// - Alg Analysis: APAS (Ch47 ref): N/A
         /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — abstract trait method; cost depends on implementation.

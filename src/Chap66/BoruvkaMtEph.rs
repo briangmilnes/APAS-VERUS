@@ -108,7 +108,7 @@ pub mod BoruvkaMtEph {
         /// Parallel Borůvka's MST algorithm.
         /// APAS: Work O(m log n), Span O(log² n)
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n) — matches APAS: O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
         fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             vertices_vec: Vec<V>,
             edges_vec: Vec<LabeledEdge<V>>,
@@ -127,7 +127,7 @@ pub mod BoruvkaMtEph {
         /// Parallel Borůvka's MST with random seed.
         /// APAS: Work O(m log n), Span O(log² n)
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n) — matches APAS: O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
         fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + Copy + 'static>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
@@ -494,7 +494,7 @@ pub mod BoruvkaMtEph {
     /// Uses parallel reduce over edges via ParaPair!.
     ///
     /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m), Span O(log m)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(log m) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(log m)
     /// - Claude-Opus-4.6: Work O(m), Span O(log m) — agrees with APAS; parallel divide-and-conquer via ParaPair!.
     pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
@@ -603,7 +603,7 @@ pub mod BoruvkaMtEph {
     /// All operations parallelized via ParaPair! divide-and-conquer.
     ///
     /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(n), Span O(log n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
     /// - Claude-Opus-4.6: Work O(n), Span O(log n) — coin flips, filter, and remaining all O(log n) via ParaPair!.
     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices_vec: Vec<V>,
@@ -767,7 +767,7 @@ pub mod BoruvkaMtEph {
     /// All per-round operations parallelized via ParaPair!.
     ///
     /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n) — matches APAS: O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
     #[verifier::exec_allows_no_decreases_clause]
     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices_vec: Vec<V>,
@@ -999,7 +999,7 @@ pub mod BoruvkaMtEph {
     /// Wrapper that converts sets to vecs and delegates to `boruvka_mst_mt`.
     ///
     /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n) — matches APAS: O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: &SetStEph<V>,
         edges: &SetStEph<LabeledEdge<V>>,

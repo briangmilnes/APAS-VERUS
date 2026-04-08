@@ -97,7 +97,7 @@ pub mod DocumentIndex {
             ensures di.spec_documentindex_wf();
 
         /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn find(&self, word: &Word) -> (found: DocumentSet)
             requires
                 self.spec_documentindex_wf(),
@@ -154,14 +154,13 @@ pub mod DocumentIndex {
             requires docs.spec_avltreesetstper_wf()
             ensures count == docs@.len();
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential iteration over AVL tree sequence
         fn to_seq(docs: &DocumentSet) -> (seq: ArraySeqStPerS<DocumentId>)
             requires docs.spec_avltreesetstper_wf()
             ensures seq.spec_arrayseqstper_wf();
 
         /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (di: Self)
             ensures di.spec_documentindex_wf();
 
@@ -456,13 +455,13 @@ pub mod DocumentIndex {
         spec fn spec_index_wf(&self) -> bool;
 
         /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new(index: &'a DocumentIndex) -> (qb: Self)
             requires spec_documentindex_wf(index)
             ensures qb.spec_index_wf();
 
         /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn find(&self, word: &Word) -> (found: DocumentSet)
             requires
                 self.spec_index_wf(),
@@ -474,7 +473,7 @@ pub mod DocumentIndex {
         ;
 
         /// - Alg Analysis: APAS: N/A — delegates to DocumentIndex::query_and.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(1 + n/m)), Span O(m log(1 + n/m)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
         fn and(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (combined: DocumentSet)
             requires
                 docs_a.spec_avltreesetstper_wf(),
@@ -487,7 +486,7 @@ pub mod DocumentIndex {
         ;
 
         /// - Alg Analysis: APAS: N/A — delegates to DocumentIndex::query_or.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(1 + n/m)), Span O(m log(1 + n/m)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
         fn or(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (combined: DocumentSet)
             requires
                 docs_a.spec_avltreesetstper_wf(),
@@ -501,7 +500,7 @@ pub mod DocumentIndex {
         ;
 
         /// - Alg Analysis: APAS: N/A — delegates to DocumentIndex::query_and_not.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(1 + n/m)), Span O(m log(1 + n/m)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
         fn and_not(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (remaining: DocumentSet)
             requires
                 docs_a.spec_avltreesetstper_wf(),
@@ -514,7 +513,7 @@ pub mod DocumentIndex {
         ;
 
         /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work dominated by 4 finds + 3 set operations — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work dominated by 4 finds + 3 set operations
         fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (found: DocumentSet)
             requires
                 self.spec_index_wf(),
@@ -581,7 +580,6 @@ pub mod DocumentIndex {
     // 10. free functions
 
     /// Tokenization: splits content into lowercase ASCII words.
-    /// - Alg Analysis: APAS: (no cost stated — tokens is a helper assumed O(m) where m = string length)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — sequential character iteration
     // veracity: no_requires
     pub fn tokens(content: &Contents) -> (words: ArraySeqStPerS<Word>)

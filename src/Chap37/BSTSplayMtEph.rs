@@ -201,7 +201,7 @@ pub mod BSTSplayMtEph {
 
         // veracity: no_requires
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn update(node: &mut Node<T>)
             ensures
                 node.left == old(node).left,
@@ -358,7 +358,7 @@ pub mod BSTSplayMtEph {
 
     // veracity: no_requires
     /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn update(node: &mut Node<T>)
     {
         let ls = Self::size_link(&node.left);
@@ -1907,7 +1907,7 @@ pub mod BSTSplayMtEph {
             ensures h as nat == link_height(self@);
 
         /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn find(&self, target: &T) -> (found: Option<T>)
             requires self.spec_bstsplaymteph_wf(),
             ensures

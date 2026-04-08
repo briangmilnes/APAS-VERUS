@@ -363,7 +363,7 @@ pub mod BSTParaStEph {
         fn new() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparasteph_wf();
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(key: T) -> (tree: Self)
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(key@),
@@ -423,7 +423,7 @@ pub mod BSTParaStEph {
         fn is_empty(&self) -> (empty: bool)
             ensures empty == (self@.len() == 0), self@.finite();
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg |t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn insert(&mut self, key: T)
             requires
                 old(self).spec_bstparasteph_wf(),
@@ -434,7 +434,7 @@ pub mod BSTParaStEph {
                 self.spec_bstparasteph_wf(),
                 self@ =~= old(self)@.insert(key@);
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg |t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn delete(&mut self, key: &T)
             requires
                 old(self).spec_bstparasteph_wf(),
@@ -445,14 +445,14 @@ pub mod BSTParaStEph {
                 self.spec_bstparasteph_wf(),
                 self@ =~= old(self)@.remove(key@);
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg |t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn find(&self, key: &T) -> (found: Option<T>)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures found.is_some() <==> self@.contains(key@);
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg |t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn split(&self, key: &T) -> (parts: (Self, bool, Self))
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -490,7 +490,7 @@ pub mod BSTParaStEph {
                 maximum.is_some() ==> forall|t: T| (#[trigger] self@.contains(t@)) ==>
                     t.cmp_spec(&maximum.unwrap()) == Less || maximum.unwrap()@ == t@;
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
         fn join_pair(&self, other: Self) -> (joined: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),

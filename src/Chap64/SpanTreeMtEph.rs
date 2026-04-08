@@ -76,7 +76,7 @@ pub mod SpanTreeMtEph {
     /// Exercise 64.2: Spanning Tree via Star Contraction (Parallel).
     ///
     /// - Alg Analysis: APAS (Ch64 Ex 64.2): Work O((n+m) lg n), Span O(lg² n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — expand closure
     ///   is sequential; parallelism comes from star_contract_mt framework.
     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(

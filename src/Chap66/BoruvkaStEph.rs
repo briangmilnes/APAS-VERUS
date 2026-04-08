@@ -171,7 +171,7 @@ pub mod BoruvkaStEph {
         /// Borůvka's MST with random seed.
         /// APAS: Work O(m log n), Span O(m log n)
         /// - Alg Analysis: APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^3 n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^3 n)
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — DIFFERS: sequential, span = work
         fn boruvka_mst_with_seed<V: HashOrd + Copy>(

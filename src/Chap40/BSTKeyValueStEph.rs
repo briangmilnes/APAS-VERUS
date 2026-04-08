@@ -175,27 +175,27 @@ pub mod BSTKeyValueStEph {
         spec fn spec_max_key(&self) -> Option<K>;
 
         /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
             ensures
                 empty.spec_size() == 0,
                 empty@ == Map::<K, V>::empty(),
                 empty.spec_bstkeyvaluesteph_wf();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
             ensures count as nat == self.spec_size();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == (self.spec_size() == 0);
         /// - Alg Analysis: APAS (Ch40 ref): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> (height: usize)
             requires self.spec_height() < usize::MAX as nat,
             ensures height as nat == self.spec_height();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, O(n) worst
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn insert(&mut self, key: K, value: V, priority: u64)
             requires
                 old(self).spec_size() < usize::MAX,
@@ -207,7 +207,7 @@ pub mod BSTKeyValueStEph {
                 self.spec_size() <= old(self).spec_size() + 1,
                 self.spec_bstkeyvaluesteph_wf();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS; filter + rebuild
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n); filter + rebuild
         fn delete(&mut self, key: &K)
             requires old(self).spec_bstkeyvaluesteph_wf(),
             ensures
@@ -215,36 +215,36 @@ pub mod BSTKeyValueStEph {
                 self.spec_size() <= old(self).spec_size(),
                 self.spec_bstkeyvaluesteph_wf();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, O(n) worst
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn find(&self, key: &K) -> (found: Option<&V>)
             requires self.spec_bstkeyvaluesteph_wf(),
             ensures
                 found is Some <==> self@.contains_key(*key),
                 found is Some ==> *found.unwrap() == self@[*key];
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, O(n) worst
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn contains(&self, key: &K) -> (contains: bool)
             requires self.spec_bstkeyvaluesteph_wf(),
             ensures contains == self@.contains_key(*key);
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, O(n) worst
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn get(&self, key: &K) -> (value: Option<&V>)
             requires self.spec_bstkeyvaluesteph_wf(),
             ensures
                 value is Some <==> self@.contains_key(*key),
                 value is Some ==> *value.unwrap() == self@[*key];
         /// - Alg Analysis: APAS (Ch40 ref): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn keys(&self) -> (keys: ArraySeqStPerS<K>)
             requires self.spec_bstkeyvaluesteph_wf(),
             ensures keys.spec_len() == self.spec_size();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn values(&self) -> (values: ArraySeqStPerS<V>)
             requires self.spec_bstkeyvaluesteph_wf(),
             ensures values.spec_len() == self.spec_size();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected
         fn minimum_key(&self) -> (minimum: Option<&K>)
             requires self.spec_bstkeyvaluesteph_wf(),
             ensures
@@ -256,7 +256,7 @@ pub mod BSTKeyValueStEph {
                     _ => false,
                 };
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected
         fn maximum_key(&self) -> (maximum: Option<&K>)
             requires self.spec_bstkeyvaluesteph_wf(),
             ensures

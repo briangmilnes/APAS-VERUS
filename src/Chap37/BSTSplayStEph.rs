@@ -79,7 +79,7 @@ pub mod BSTSplayStEph {
     }
 
     /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     // veracity: no_requires
     fn update(&mut self)
     {
@@ -1130,7 +1130,7 @@ pub mod BSTSplayStEph {
                 node.right is None;
 
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         // veracity: no_requires
         fn update(&mut self)
             ensures
@@ -1241,7 +1241,7 @@ pub mod BSTSplayStEph {
                 self.spec_contains(value),
                 forall|x: T| old(self).spec_contains(x) ==> self.spec_contains(x);
         /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn find(&self, target: &T) -> (found: Option<&T>)
             requires self.spec_bstsplaysteph_wf(),
             ensures
@@ -1300,7 +1300,6 @@ pub mod BSTSplayStEph {
         }
     }
 
-    /// - Alg Analysis: APAS: (no cost stated)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive tree traversal.
     fn height_link(&self) -> (height: usize)
         decreases *self,
@@ -1480,7 +1479,6 @@ pub mod BSTSplayStEph {
         }
     }
 
-    /// - Alg Analysis: APAS: (no cost stated)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
     fn min_link(&self) -> (min: Option<&T>)
         decreases *self,
@@ -1535,7 +1533,6 @@ pub mod BSTSplayStEph {
         }
     }
 
-    /// - Alg Analysis: APAS: (no cost stated)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
     fn max_link(&self) -> (max: Option<&T>)
         decreases *self,
@@ -1633,11 +1630,9 @@ pub mod BSTSplayStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — cached size field.
         fn size(&self) -> (n: usize) { self.root.size_link() }
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — compares cached size.
         fn is_empty(&self) -> (b: bool) { self.size() == 0 }
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive tree traversal.
         fn height(&self) -> (h: usize) {
             self.root.height_link()
@@ -1655,7 +1650,6 @@ pub mod BSTSplayStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — delegates to find.
         fn contains(&self, target: &T) -> (found: bool) { self.find(target).is_some() }
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
         fn minimum(&self) -> (min: Option<&T>) {
             // Veracity: NEEDED proof block
@@ -1675,7 +1669,6 @@ pub mod BSTSplayStEph {
             min
         }
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
         fn maximum(&self) -> (max: Option<&T>) {
             // Veracity: NEEDED proof block

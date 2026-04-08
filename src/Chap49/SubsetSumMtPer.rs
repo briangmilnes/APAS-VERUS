@@ -154,7 +154,7 @@ pub mod SubsetSumMtPer {
 
     /// Recursive memoized parallel subset sum solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(k×|S|), Span O(|S|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k×|S|), Span O(|S|) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k×|S|), Span O(|S|)
     fn subset_sum_rec<T: MtVal + Into<i32> + Copy>(
         multiset: &ArraySeqMtPerS<T>,
         memo: &Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>,

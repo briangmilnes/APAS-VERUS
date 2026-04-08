@@ -124,7 +124,7 @@ pub mod BSTBBAlphaStEph {
                 self.spec_root().tree_is_bst(),
             ensures found == self.spec_root().tree_contains(*target);
         /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn find(&self, target: &T) -> (found: Option<&T>)
             requires
                 self.spec_bstbbalphasteph_wf(),
@@ -189,7 +189,6 @@ pub mod BSTBBAlphaStEph {
                 found.is_some() == (*self).tree_contains(*target),
                 found.is_some() ==> *found.unwrap() == *target,
             ;
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
         fn min_node(&self) -> (min: Option<&T>)
             requires (*self).tree_is_bst(),
@@ -198,7 +197,6 @@ pub mod BSTBBAlphaStEph {
                 (*self).spec_size() > 0 ==> min.is_some(),
                 min.is_some() ==> (*self).tree_contains(*min.unwrap()),
             ;
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
         fn max_node(&self) -> (max: Option<&T>)
             requires (*self).tree_is_bst(),
@@ -208,7 +206,6 @@ pub mod BSTBBAlphaStEph {
                 max.is_some() ==> (*self).tree_contains(*max.unwrap()),
             ;
         /// Remove and return the minimum element from a non-empty BST subtree.
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
         fn delete_min_node(self) -> (pair: (Self, T))
             requires
@@ -248,19 +245,16 @@ pub mod BSTBBAlphaStEph {
             BSTBBAlphaStEph { root: BalBinTree::Leaf }
         }
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive tree traversal.
         fn size(&self) -> (n: usize) {
             self.root.size()
         }
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — leaf check.
         fn is_empty(&self) -> (b: bool) {
             self.root.is_leaf()
         }
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive tree traversal.
         fn height(&self) -> (h: usize) {
             self.root.height()
@@ -290,13 +284,11 @@ pub mod BSTBBAlphaStEph {
             BSTBBAlphaStEph { root: self.root.delete_node(target) }
         }
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
         fn minimum(&self) -> (min: Option<&T>) {
             self.root.min_node()
         }
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
         fn maximum(&self) -> (max: Option<&T>) {
             self.root.max_node()

@@ -91,7 +91,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS CS 41.4
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) CS 41.4
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
             requires self.spec_avltreesetmteph_wf(),
@@ -118,7 +118,7 @@ broadcast use {
                 empty.spec_avltreesetmteph_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS CS 41.4
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) CS 41.4
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (tree: Self)
             ensures
@@ -161,7 +161,7 @@ broadcast use {
                     ==> #[trigger] filtered@.contains(v);
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(lg² n) — matches APAS; parallel D&C via BSTParaMtEph
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(lg² n); parallel D&C via BSTParaMtEph
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
@@ -174,7 +174,7 @@ broadcast use {
                 common.spec_avltreesetmteph_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(lg² n) — matches APAS; parallel D&C via BSTParaMtEph
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(lg² n); parallel D&C via BSTParaMtEph
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
@@ -187,7 +187,7 @@ broadcast use {
                 remaining.spec_avltreesetmteph_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(lg² n) — matches APAS; parallel D&C via BSTParaMtEph
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(lg² n); parallel D&C via BSTParaMtEph
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn union(&self, other: &Self) -> (combined: Self)
             requires
@@ -201,7 +201,7 @@ broadcast use {
                 combined.spec_avltreesetmteph_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(1), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS CS 41.4
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) CS 41.4
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T) -> (found: bool)
             requires
@@ -211,7 +211,7 @@ broadcast use {
             ensures found == self@.contains(x@);
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS CS 41.4
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) CS 41.4
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn delete(&mut self, x: &T)
             requires
@@ -224,7 +224,7 @@ broadcast use {
                 self.spec_avltreesetmteph_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS CS 41.4
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) CS 41.4
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&mut self, x: T)
             requires
@@ -244,7 +244,7 @@ broadcast use {
 
 
     /// Parallel D&C set construction from Vec: split in half, recurse via join(), union.
-    /// Work O(n lg n), Span O(lg^2 n) — matches APAS Ex 41.3 parallel fromSeq.
+    /// Work O(n lg n), Span O(lg^2 n) Ex 41.3 parallel fromSeq.
     fn from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)
         requires
             obeys_feq_full_trigger::<T>(),

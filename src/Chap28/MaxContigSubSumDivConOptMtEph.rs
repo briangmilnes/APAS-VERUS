@@ -56,7 +56,7 @@ pub mod MaxContigSubSumDivConOptMtEph {
         /// Compute MCSS using parallel strengthened D&C (Algorithm 28.19).
         /// Returns None for empty sequence (representing -infinity).
         /// - Alg Analysis: APAS (Ch28 Alg 28.19): Work O(n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n)
         /// - Claude-Opus-4.6 (verified): Work Θ(n log n), Span Θ(n)
         fn max_contig_sub_sum_divcon_opt_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)
             requires

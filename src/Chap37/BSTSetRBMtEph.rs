@@ -74,7 +74,7 @@ pub mod BSTSetRBMtEph {
             requires self.spec_bstsetrbmteph_wf()
             ensures true;
         /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn find(&self, value: &T) -> (found: Option<T>)
             requires self.spec_bstsetrbmteph_wf()
             ensures true;

@@ -186,7 +186,7 @@ broadcast use {
         spec fn spec_universe_size(&self) -> usize;
 
         /// - Alg Analysis: APAS (Ch41 ref): Work O(u/w), Span O(u/w) -- allocates u/64 words.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u/w), Span O(u/w) -- allocates u/64 words. — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u/w), Span O(u/w) -- allocates u/64 words.
         fn new(u: usize) -> (empty: Self)
             ensures
                 empty@ == Set::<usize>::empty(),
@@ -211,7 +211,7 @@ broadcast use {
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
 
         /// - Alg Analysis: APAS (Ch41 ref): Work O(u/w), Span O(u/w) -- same as new.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u/w), Span O(u/w) -- same as new. — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u/w), Span O(u/w) -- same as new.
         fn empty(u: usize) -> (empty: Self)
             ensures
                 empty@ == Set::<usize>::empty(),
@@ -289,7 +289,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(1), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS CS 41.3
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) CS 41.3
         fn find(&self, x: usize) -> (found: bool)
             requires self.spec_arraysetenummteph_wf(),
             ensures found == self@.contains(x);

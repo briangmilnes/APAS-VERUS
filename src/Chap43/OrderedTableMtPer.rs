@@ -108,14 +108,14 @@ pub mod OrderedTableMtPer {
         spec fn spec_orderedtablemtper_wf(&self) -> bool;
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- acquires read lock, delegates to StPer.size
         fn size(&self) -> (count: usize)
             requires self.spec_orderedtablemtper_wf(),
             ensures count == self@.dom().len(), self@.dom().finite();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- constructs empty StPer + RwLock
         fn empty() -> (empty: Self)
             requires
@@ -127,7 +127,7 @@ pub mod OrderedTableMtPer {
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_orderedtablemtper_wf();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps StPer.singleton + RwLock
         fn singleton(k: K, v: V) -> (tree: Self)
             requires
@@ -140,7 +140,7 @@ pub mod OrderedTableMtPer {
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree.spec_orderedtablemtper_wf();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.find (linear scan)
         fn find(&self, k: &K) -> (found: Option<V>)
             ensures
@@ -150,7 +150,7 @@ pub mod OrderedTableMtPer {
                 };
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.insert (linear dup check)
         fn insert(&self, k: K, v: V) -> (updated: Self)
             requires self@.dom().len() + 1 < usize::MAX as nat,
@@ -169,7 +169,7 @@ pub mod OrderedTableMtPer {
                 updated.spec_orderedtablemtper_wf();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.delete (linear scan)
         fn delete(&self, k: &K) -> (updated: Self)
             ensures
@@ -185,14 +185,14 @@ pub mod OrderedTableMtPer {
                 updated.spec_orderedtablemtper_wf();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.domain
         fn domain(&self) -> (domain: OrderedSetMtEph<K>)
             requires self.spec_orderedtablemtper_wf(), obeys_feq_clone::<K>()
             ensures self@.dom().finite();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.map
         fn map<G: Fn(&V) -> V + Send + Sync + 'static>(
             &self, f: G, Ghost(f_spec): Ghost<spec_fn(V::V) -> V::V>,
@@ -206,14 +206,14 @@ pub mod OrderedTableMtPer {
                 mapped.spec_orderedtablemtper_wf();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.filter
         fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (filtered: Self)
             requires forall|p: &Pair<K, V>| f.requires((p,))
             ensures filtered@.dom().finite();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + first)
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
@@ -225,7 +225,7 @@ pub mod OrderedTableMtPer {
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + last)
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
@@ -237,7 +237,7 @@ pub mod OrderedTableMtPer {
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + scan)
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
@@ -249,7 +249,7 @@ pub mod OrderedTableMtPer {
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + scan)
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
@@ -261,7 +261,7 @@ pub mod OrderedTableMtPer {
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + partition)
         fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
@@ -269,7 +269,7 @@ pub mod OrderedTableMtPer {
             ensures self@.dom().finite();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- acquires lock, delegates to StPer.join_key (union)
         fn join_key(&self, other: &Self) -> (joined: Self)
             requires
@@ -281,14 +281,14 @@ pub mod OrderedTableMtPer {
             ensures joined@.dom().finite();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n + m), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + m), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + m), Span O(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + filter)
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             requires self.spec_orderedtablemtper_wf()
             ensures range@.dom().finite();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + count)
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
@@ -299,7 +299,7 @@ pub mod OrderedTableMtPer {
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + index)
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
@@ -311,7 +311,7 @@ pub mod OrderedTableMtPer {
                 selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + partition)
         fn split_rank_key(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized

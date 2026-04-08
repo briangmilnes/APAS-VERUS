@@ -77,7 +77,6 @@ broadcast use {
 
         spec fn spec_source(&self) -> usize;
 
-        /// - Alg Analysis: APAS: (no cost stated) — data structure scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — initializes distance and predecessor arrays.
         fn new(n: usize, source: usize) -> (empty: Self)
@@ -88,7 +87,6 @@ broadcast use {
                 empty.spec_predecessors().len() == n,
                 empty.spec_source() == source;
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — array index lookup.
         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
@@ -97,7 +95,6 @@ broadcast use {
                 v >= self.spec_distances().len() ==> dist@ == UNREACHABLE_SPEC(),
                 v < self.spec_distances().len() ==> dist == self.spec_distances()[v as int];
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — array index update (persistent: returns new struct).
         fn set_distance(self, v: usize, dist: WrappedF64) -> (updated: Self)
@@ -110,7 +107,6 @@ broadcast use {
                 updated.spec_predecessors() == self.spec_predecessors(),
                 updated.spec_source() == self.spec_source();
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — array index lookup.
         fn get_predecessor(&self, v: usize) -> (predecessor: Option<usize>)
@@ -120,7 +116,6 @@ broadcast use {
                 v < self.spec_predecessors().len() && self.spec_predecessors()[v as int] == NO_PREDECESSOR ==> predecessor is None,
                 v < self.spec_predecessors().len() && self.spec_predecessors()[v as int] != NO_PREDECESSOR ==> predecessor == Some(self.spec_predecessors()[v as int]);
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — array index update (persistent: returns new struct).
         fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self)
@@ -133,7 +128,6 @@ broadcast use {
                 updated.spec_distances() == self.spec_distances(),
                 updated.spec_source() == self.spec_source();
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — comparison with sentinel.
         fn is_reachable(&self, v: usize) -> (reachable: bool)
@@ -142,7 +136,6 @@ broadcast use {
                 v >= self.spec_distances().len() ==> !reachable,
                 v < self.spec_distances().len() ==> reachable == self.spec_distances()[v as int].spec_is_finite();
 
-        /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — predecessor chain traversal + reversal.
         fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)

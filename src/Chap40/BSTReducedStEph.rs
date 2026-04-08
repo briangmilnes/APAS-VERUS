@@ -229,27 +229,27 @@ pub mod BSTReducedStEph {
         spec fn spec_height(&self) -> nat;
 
         /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
             ensures
                 empty.spec_size() == 0,
                 empty.spec_bstreducedsteph_wf(),
                 empty@ == Map::<K, V>::empty();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
             ensures count as nat == self.spec_size();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == (self.spec_size() == 0);
         /// - Alg Analysis: APAS (Ch40 ref): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> (height: usize)
             requires self.spec_height() < usize::MAX as nat,
             ensures height as nat == self.spec_height();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, O(n) worst
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn insert(&mut self, key: K, value: V, priority: u64)
             requires
                 old(self).spec_size() + 1 <= usize::MAX as nat,
@@ -262,7 +262,7 @@ pub mod BSTReducedStEph {
                 self.spec_size() <= old(self).spec_size() + 1,
                 self.spec_size() >= old(self).spec_size();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected — matches APAS; rotation-based
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected; rotation-based
         fn delete(&mut self, key: &K)
             requires
                 old(self).spec_bstreducedsteph_wf(),
@@ -273,7 +273,7 @@ pub mod BSTReducedStEph {
                 self.spec_bstreducedsteph_wf(),
                 self.spec_size() <= old(self).spec_size();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, O(n) worst
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn find(&self, key: &K) -> (found: Option<&V>)
             requires
                 self.spec_bstreducedsteph_wf(),
@@ -283,7 +283,7 @@ pub mod BSTReducedStEph {
                 found is Some <==> self@.contains_key(*key),
                 found is Some ==> *found.unwrap() == self@[*key];
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, O(n) worst
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn contains(&self, key: &K) -> (contains: bool)
             requires
                 self.spec_bstreducedsteph_wf(),
@@ -291,7 +291,7 @@ pub mod BSTReducedStEph {
                 forall |a: K, b: K| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures contains == self@.contains_key(*key);
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, O(n) worst
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn get(&self, key: &K) -> (value: Option<&V>)
             requires
                 self.spec_bstreducedsteph_wf(),
@@ -301,36 +301,36 @@ pub mod BSTReducedStEph {
                 value is Some <==> self@.contains_key(*key),
                 value is Some ==> *value.unwrap() == self@[*key];
         /// - Alg Analysis: APAS (Ch40 ref): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn keys(&self) -> (keys: ArraySeqStPerS<K>)
             requires self.spec_bstreducedsteph_wf(),
             ensures keys.spec_len() == self.spec_size();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn values(&self) -> (values: ArraySeqStPerS<V>)
             requires self.spec_bstreducedsteph_wf(),
             ensures values.spec_len() == self.spec_size();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected
         fn minimum_key(&self) -> (minimum: Option<&K>)
             requires self.spec_bstreducedsteph_wf(),
             ensures
                 self.spec_size() == 0 ==> minimum is None,
                 self.spec_size() > 0 ==> minimum is Some;
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected
         fn maximum_key(&self) -> (maximum: Option<&K>)
             requires self.spec_bstreducedsteph_wf(),
             ensures
                 self.spec_size() == 0 ==> maximum is None,
                 self.spec_size() > 0 ==> maximum is Some;
         /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1) — reads augmented field at root
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn reduced_value(&self) -> (reduced: R)
             requires self.spec_bstreducedsteph_wf(),
             ensures self.spec_size() == 0 ==> reduced == Op::spec_identity();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n), Span O(log n) — range query on augmented BST
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn range_reduce(&self, low: &K, high: &K) -> (reduced: R)
             requires self.spec_bstreducedsteph_wf(),
             ensures self.spec_size() == 0 ==> reduced == Op::spec_identity();
@@ -341,11 +341,11 @@ pub mod BSTReducedStEph {
         fn size_link(link: &Link<K, V, R>) -> (count: usize)
             ensures count as nat == Lnk::spec_size_link(link);
         /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1) — reads augmented reduced value
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn reduced_value_link(link: &Link<K, V, R>) -> (reduced: R)
             ensures link.is_none() ==> reduced == Op::spec_identity();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1) — recomputes size and reduced value from children
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn update_node(node: &mut Node<K, V, R>)
             requires
                 1 + Lnk::spec_size_link(&old(node).left) + Lnk::spec_size_link(&old(node).right) <= usize::MAX as nat,
@@ -360,7 +360,7 @@ pub mod BSTReducedStEph {
                 node.left == old(node).left,
                 node.right == old(node).right;
         /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1) — corresponds to APAS makeNode with reduced values
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn make_node(
             key: K, value: V, priority: u64,
             left: Link<K, V, R>, right: Link<K, V, R>,
@@ -373,7 +373,7 @@ pub mod BSTReducedStEph {
                 Lnk::spec_size_link(&reduced) == 1 + Lnk::spec_size_link(&left) + Lnk::spec_size_link(&right),
                 Lnk::spec_link_size_wf(&reduced);
         /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn rotate_left(link: &mut Link<K, V, R>)
             requires
                 Lnk::spec_size_link(old(link)) <= usize::MAX as nat,
@@ -392,7 +392,7 @@ pub mod BSTReducedStEph {
                         == std::cmp::Ordering::Greater
                 );
         /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn rotate_right(link: &mut Link<K, V, R>)
             requires
                 Lnk::spec_size_link(old(link)) <= usize::MAX as nat,
@@ -411,7 +411,7 @@ pub mod BSTReducedStEph {
                         == std::cmp::Ordering::Less
                 );
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected
         fn insert_link(link: &mut Link<K, V, R>, key: K, value: V, priority: u64)
             requires
                 Lnk::spec_size_link(old(link)) + 1 <= usize::MAX as nat,
@@ -505,7 +505,7 @@ pub mod BSTReducedStEph {
                 Lnk::spec_size_link(&height) == (end - start) as nat,
             decreases end - start;
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n), Span O(log n) — range query on augmented BST
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn range_reduce_link(link: &Link<K, V, R>, low: &K, high: &K) -> (reduced: R)
             ensures link.is_none() ==> reduced == Op::spec_identity(),
             decreases *link;
