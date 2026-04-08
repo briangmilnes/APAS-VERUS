@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap37/BSTSplayStEph.rs:1655:71
+     |
+1655 |                     assert forall|x: T| self.spec_contains(x) implies T::le(*min.unwrap(), x) by {
+     |                                                                       ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+min.0.le(x) 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 6884MB, peak z3 RSS: 839MB, min free: 13836MB
+Sampled CPU Usage: rust_verify: 188s, z3 children: 194s

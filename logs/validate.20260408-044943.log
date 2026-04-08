@@ -1,6 +1,43 @@
 Mode: isolate
+<<<<<<< HEAD
 Isolate: including Chap23
 verification results:: 758 verified, 0 errors
 Elapsed: 4s
 Sampled Memory Usage: peak rust_verify RSS: 1980MB, peak z3 RSS: 77MB, min free: 24714MB
 Sampled CPU Usage: rust_verify: 19s, z3 children: 3s
+=======
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:274:17
+    |
+274 |                   self.spec_size() == old(self).spec_size();
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+589 | /         if let Some(mut node) = self.take() {
+590 | |             let ghost node_key = node.key;
+591 | |             let ghost orig_left = node.left;
+592 | |             let ghost orig_right = node.right;
+...   |
+644 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTRBMtEph.rs:274:17
+    |
+274 |                 self.spec_size() == old(self).spec_size();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_bst() ✔
+forall |z|
+    self.spec_contains(z) == old(self).spec_contains(z) ✔
+self.spec_size() == old(self).spec_size() ✘
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 5187MB, peak z3 RSS: 641MB, min free: 20931MB
+Sampled CPU Usage: rust_verify: 81s, z3 children: 67s
+>>>>>>> agent4/ready

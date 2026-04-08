@@ -1,6 +1,36 @@
 Mode: isolate
+<<<<<<< HEAD
 Isolate: including Chap06 Chap05 Chap02
 verification results:: 1112 verified, 0 errors
 Elapsed: 18s
 Sampled Memory Usage: peak rust_verify RSS: 4513MB, peak z3 RSS: 416MB, min free: 20942MB
 Sampled CPU Usage: rust_verify: 61s, z3 children: 46s
+=======
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap37/AVLTreeSeqMtPer.rs:524:13
+    |
+524 |             spec_inorder(link) =~= a@.map_values(|t: T| t@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+554 |         Some(node)
+    |         ---------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeqMtPer.rs:524:13
+    |
+524 |             spec_inorder(link) =~= a@.map_values(|t: T| t@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_avltreeseqmtper_wf(link) ✔
+spec_inorder(link) =~= old(a).view().map_values((|t| t.view())) ✘
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 4444MB, peak z3 RSS: 449MB, min free: 21059MB
+Sampled CPU Usage: rust_verify: 59s, z3 children: 42s
+>>>>>>> agent4/ready

@@ -1,0 +1,37 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/AVLTreeSeq.rs:892:20
+    |
+892 |             assert(spec_avltreeseq_wf::<T>(root));
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeq.rs:135:17
+    |
+135 |                 spec_avltreeseq_wf(node.left)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_avltreeseq_wf(root)
+|   let tmp%% = root;
+|       tmp%% is None ==>
+|           true ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               spec_avltreeseq_wf(node.left) ✘
+|                   reached fuel limit for recursion
+|               spec_avltreeseq_wf(node.right) ✔
+|               node.left_size == spec_avltreeseq_cached_size(node.left) ✔
+|               node.right_size == spec_avltreeseq_cached_size(node.right) ✔
+|               node.height == clip(nat, 1 + spec_avltreeseq_nat_max(spec_avltreeseq_cached_height(node.left), spec_avltreeseq_cached_height(node.right))) ✔
+|               1 + node.left_size + node.right_size < UnsignedMax.Exec(usize::BITS) ✔
++---
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 3197MB, peak z3 RSS: 391MB, min free: 22223MB
+Sampled CPU Usage: rust_verify: 49s, z3 children: 47s

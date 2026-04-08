@@ -1,0 +1,218 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap37/BSTSplayMtEph.rs:408:72
+    |
+408 |                         (TotalOrder::le(x, left_key) && x != left_key) by {};
+    |                                                                        ^^
+
+error[E0425]: cannot find type `Node` in this scope
+    --> src/Chap37/BSTSplayMtEph.rs:2264:62
+     |
+2264 |     impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for Node<T> {
+     |                                                              ^^^^ not found in this scope
+     |
+help: consider importing one of these structs
+     |
+  37 +     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::Node;
+     |
+  37 +     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::Node;
+     |
+  37 +     use crate::Chap37::BSTRBMtEph::BSTRBMtEph::Node;
+     |
+  37 +     use crate::Chap37::BSTSplayStEph::BSTSplayStEph::Node;
+     |
+
+error[E0425]: cannot find type `Node` in this scope
+    --> src/Chap37/BSTSplayMtEph.rs:2273:64
+     |
+2273 |     impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Display for Node<T> {
+     |                                                                ^^^^ not found in this scope
+     |
+help: consider importing one of these structs
+     |
+  37 +     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::Node;
+     |
+  37 +     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::Node;
+     |
+  37 +     use crate::Chap37::BSTRBMtEph::BSTRBMtEph::Node;
+     |
+  37 +     use crate::Chap37::BSTSplayStEph::BSTSplayStEph::Node;
+     |
+
+error[E0425]: cannot find type `BSTSplayMtEphInv` in this scope
+    --> src/Chap37/BSTSplayMtEph.rs:2281:30
+     |
+2281 |     impl std::fmt::Debug for BSTSplayMtEphInv {
+     |                              ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTSplayMtEphInv` in this scope
+    --> src/Chap37/BSTSplayMtEph.rs:2287:32
+     |
+2287 |     impl std::fmt::Display for BSTSplayMtEphInv {
+     |                                ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTSplayMtEph` in this scope
+    --> src/Chap37/BSTSplayMtEph.rs:2295:62
+     |
+2295 |     impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for BSTSplayMtEph<T> {
+     |                                                              ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTSplayMtEph` in this scope
+    --> src/Chap37/BSTSplayMtEph.rs:2301:74
+     |
+2301 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> std::fmt::Display for BSTSplayMtEph<T> {
+     |                                                                          ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTSplayMtEph` in this scope
+  --> src/Chap37/BSTSetSplayMtEph.rs:43:19
+   |
+43 |         pub tree: BSTSplayMtEph<T>,
+   |                   ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTSplayMtEph` in this scope
+   --> src/Chap37/BSTSetSplayMtEph.rs:143:38
+    |
+ 42 |     pub struct BSTSetSplayMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |     ----------------------------------------------------------- similarly named struct `BSTSetSplayMtEph` defined here
+...
+143 |         fn as_tree(&self) -> (tree: &BSTSplayMtEph<T>)
+    |                                      ^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+143 |         fn as_tree(&self) -> (tree: &BSTSetSplayMtEph<T>)
+    |                                          +++
+
+error[E0425]: cannot find type `BSTSplayMtEph` in this scope
+   --> src/Chap37/BSTSetSplayMtEph.rs:154:30
+    |
+ 42 |     pub struct BSTSetSplayMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |     ----------------------------------------------------------- similarly named struct `BSTSetSplayMtEph` defined here
+...
+154 |         fn values_vec(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
+    |                              ^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+154 |         fn values_vec(tree: &BSTSetSplayMtEph<T>) -> (values: Vec<T>)
+    |                                  +++
+
+error[E0425]: cannot find type `BSTSplayMtEph` in this scope
+   --> src/Chap37/BSTSetSplayMtEph.rs:159:55
+    |
+ 42 |     pub struct BSTSetSplayMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |     ----------------------------------------------------------- similarly named struct `BSTSetSplayMtEph` defined here
+...
+159 |         fn rebuild_from_vec(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
+    |                                                       ^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+159 |         fn rebuild_from_vec(values: Vec<T>) -> (tree: BSTSetSplayMtEph<T>)
+    |                                                           +++
+
+error[E0425]: cannot find type `BSTSplayMtEph` in this scope
+   --> src/Chap37/BSTSetSplayMtEph.rs:177:26
+    |
+ 42 |     pub struct BSTSetSplayMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |     ----------------------------------------------------------- similarly named struct `BSTSetSplayMtEph` defined here
+...
+177 |     fn values_vec(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
+    |                          ^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+177 |     fn values_vec(tree: &BSTSetSplayMtEph<T>) -> (values: Vec<T>)
+    |                              +++
+
+error[E0425]: cannot find type `BSTSplayMtEph` in this scope
+   --> src/Chap37/BSTSetSplayMtEph.rs:197:51
+    |
+ 42 |     pub struct BSTSetSplayMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |     ----------------------------------------------------------- similarly named struct `BSTSetSplayMtEph` defined here
+...
+197 |     fn rebuild_from_vec(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
+    |                                                   ^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+197 |     fn rebuild_from_vec(values: Vec<T>) -> (tree: BSTSetSplayMtEph<T>)
+    |                                                       +++
+
+error[E0425]: cannot find type `BSTSplayMtEph` in this scope
+   --> src/Chap37/BSTSetSplayMtEph.rs:552:31
+    |
+ 42 |     pub struct BSTSetSplayMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |     ----------------------------------------------------------- similarly named struct `BSTSetSplayMtEph` defined here
+...
+552 |         fn as_tree(&self) -> &BSTSplayMtEph<T> { &self.tree }
+    |                               ^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+552 |         fn as_tree(&self) -> &BSTSetSplayMtEph<T> { &self.tree }
+    |                                   +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTSplayMtEph`
+   --> src/Chap37/BSTSetSplayMtEph.rs:199:24
+    |
+199 |         let mut tree = BSTSplayMtEph::new();
+    |                        ^^^^^^^^^^^^^ use of undeclared type `BSTSplayMtEph`
+    |
+help: a struct with a similar name exists
+    |
+199 |         let mut tree = BSTSetSplayMtEph::new();
+    |                            +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTSplayMtEph`
+   --> src/Chap37/BSTSetSplayMtEph.rs:238:23
+    |
+238 |                 tree: BSTSplayMtEph::new(),
+    |                       ^^^^^^^^^^^^^ use of undeclared type `BSTSplayMtEph`
+    |
+help: a struct with a similar name exists
+    |
+238 |                 tree: BSTSetSplayMtEph::new(),
+    |                           +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTSplayMtEph`
+   --> src/Chap37/BSTSetSplayMtEph.rs:244:28
+    |
+244 |             let mut tree = BSTSplayMtEph::new();
+    |                            ^^^^^^^^^^^^^ use of undeclared type `BSTSplayMtEph`
+    |
+help: a struct with a similar name exists
+    |
+244 |             let mut tree = BSTSetSplayMtEph::new();
+    |                                +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTSplayMtEph`
+   --> src/Chap37/BSTSetSplayMtEph.rs:438:28
+    |
+438 |             let mut tree = BSTSplayMtEph::new();
+    |                            ^^^^^^^^^^^^^ use of undeclared type `BSTSplayMtEph`
+    |
+help: a struct with a similar name exists
+    |
+438 |             let mut tree = BSTSetSplayMtEph::new();
+    |                                +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTSplayMtEph`
+   --> src/Chap37/BSTSetSplayMtEph.rs:470:28
+    |
+470 |             let mut tree = BSTSplayMtEph::new();
+    |                            ^^^^^^^^^^^^^ use of undeclared type `BSTSplayMtEph`
+    |
+help: a struct with a similar name exists
+    |
+470 |             let mut tree = BSTSetSplayMtEph::new();
+    |                                +++
+
+error: aborting due to 19 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 3098MB, peak z3 RSS: 55MB, min free: 22729MB
+Sampled CPU Usage: rust_verify: 46s, z3 children: 30s

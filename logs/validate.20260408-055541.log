@@ -1,4 +1,5 @@
 Mode: isolate
+<<<<<<< HEAD
 Isolate: including Chap19 Chap28 Chap02
 error: unexpected token, expected `;`
    --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:213:9
@@ -18,3 +19,10 @@ For more information about this error, try `rustc --explain E0432`.
 Elapsed: 1s
 Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 25568MB
 Sampled CPU Usage: rust_verify: 0s, z3 children: 0s
+=======
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+verification results:: 1958 verified, 0 errors
+Elapsed: 25s
+Sampled Memory Usage: peak rust_verify RSS: 6243MB, peak z3 RSS: 904MB, min free: 19715MB
+Sampled CPU Usage: rust_verify: 124s, z3 children: 152s
+>>>>>>> agent4/ready

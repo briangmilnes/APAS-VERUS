@@ -270,7 +270,6 @@ pub mod BSTRBStEph {
                             };
 
                             assert(old_left.tree_contains(x_val));
-                            assert(x_val != y_val);
 
                             assert(right_sub.tree_is_bst());
 
@@ -279,7 +278,6 @@ pub mod BSTRBStEph {
                             by {
                                 if old_lr.tree_contains(z) {
                                 } else if z == y_val {
-                                    assert(x_val != y_val);
                                 } else if old_r.tree_contains(z) {
                                     T::transitive(x_val, y_val, z);
                                     if z == x_val {
@@ -291,17 +289,9 @@ pub mod BSTRBStEph {
                             assert forall|z: T| r.tree_contains(z) ==
                                 tree_ghost.tree_contains(z)
                             by {
-                                assert(r.tree_contains(z) ==
-                                    (x_val == z
-                                    || old_ll.tree_contains(z)
-                                    || right_sub.tree_contains(z)));
                                 assert(right_sub.tree_contains(z) ==
                                     (y_val == z
                                     || old_lr.tree_contains(z)
-                                    || old_r.tree_contains(z)));
-                                assert(tree_ghost.tree_contains(z) ==
-                                    (y_val == z
-                                    || old_left.tree_contains(z)
                                     || old_r.tree_contains(z)));
                                 assert(old_left.tree_contains(z) ==
                                     (x_val == z
@@ -364,10 +354,8 @@ pub mod BSTRBStEph {
                             };
 
                             assert(old_right.tree_contains(y_val));
-                            assert(x_val != y_val);
 
                             assert(left_sub.tree_is_bst());
-                            assert(old_rr.tree_is_bst());
 
                             assert forall|z: T| (#[trigger] old_rr.tree_contains(z)) implies
                                 T::le(y_val, z) && z != y_val
@@ -383,7 +371,6 @@ pub mod BSTRBStEph {
                                         T::antisymmetric(x_val, y_val);
                                     }
                                 } else if z == x_val {
-                                    assert(x_val != y_val);
                                 } else if old_rl.tree_contains(z) {
                                 }
                             };
@@ -391,24 +378,15 @@ pub mod BSTRBStEph {
                             assert forall|z: T| r.tree_contains(z) ==
                                 tree_ghost.tree_contains(z)
                             by {
-                                assert(r.tree_contains(z) ==
-                                    (y_val == z
-                                    || left_sub.tree_contains(z)
-                                    || old_rr.tree_contains(z)));
                                 assert(left_sub.tree_contains(z) ==
                                     (x_val == z
                                     || old_l.tree_contains(z)
                                     || old_rl.tree_contains(z)));
-                                assert(tree_ghost.tree_contains(z) ==
-                                    (x_val == z
-                                    || old_l.tree_contains(z)
-                                    || old_right.tree_contains(z)));
                                 assert(old_right.tree_contains(z) ==
                                     (y_val == z
                                     || old_rl.tree_contains(z)
                                     || old_rr.tree_contains(z)));
                             };
-                            assert(r.tree_is_bst());
                         }
                         r
                     }
@@ -453,15 +431,12 @@ pub mod BSTRBStEph {
                             right: right,
                         }));
                         proof {
-                            assert(new_left.tree_is_bst());
-                            assert(old_right.tree_is_bst());
 
                             assert forall|x: T| new_left.tree_contains(x) implies
                                 #[trigger] T::le(x, node_val) && x != node_val
                             by {
                                 if old_left.tree_contains(x) {
                                 } else {
-                                    assert(x == value);
                                 }
                             };
 
@@ -476,10 +451,6 @@ pub mod BSTRBStEph {
                                     (node_val == x
                                     || new_left.tree_contains(x)
                                     || old_right.tree_contains(x)));
-                                assert(node.tree_contains(x) ==
-                                    (node_val == x
-                                    || old_left.tree_contains(x)
-                                    || old_right.tree_contains(x)));
                             };
                         }
                         r
@@ -492,8 +463,6 @@ pub mod BSTRBStEph {
                             right: new_right,
                         }));
                         proof {
-                            assert(old_left.tree_is_bst());
-                            assert(new_right.tree_is_bst());
 
                             assert forall|x: T| old_left.tree_contains(x) implies
                                 #[trigger] T::le(x, node_val) && x != node_val
@@ -504,7 +473,6 @@ pub mod BSTRBStEph {
                             by {
                                 if old_right.tree_contains(x) {
                                 } else {
-                                    assert(x == value);
                                 }
                             };
 
@@ -515,10 +483,6 @@ pub mod BSTRBStEph {
                                     (node_val == x
                                     || old_left.tree_contains(x)
                                     || new_right.tree_contains(x)));
-                                assert(node.tree_contains(x) ==
-                                    (node_val == x
-                                    || old_left.tree_contains(x)
-                                    || old_right.tree_contains(x)));
                             };
                         }
                         r
@@ -533,15 +497,6 @@ pub mod BSTRBStEph {
                             assert forall|x: T| r.tree_contains(x) ==
                                 (node.tree_contains(x) || x == value)
                             by {
-                                assert(r.tree_contains(x) ==
-                                    (node_val == x
-                                    || old_left.tree_contains(x)
-                                    || old_right.tree_contains(x)));
-                                assert(node.tree_contains(x) ==
-                                    (node_val == x
-                                    || old_left.tree_contains(x)
-                                    || old_right.tree_contains(x)));
-                                assert(value == node_val);
                             };
                         }
                         r

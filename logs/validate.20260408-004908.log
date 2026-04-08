@@ -1,0 +1,41 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:208:17
+    |
+208 |                   balanced.avl_balanced_spec(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+460 | /         match self {
+461 | |             BalBinTree::Node(inner) => {
+462 | |                 let lh = inner.left.height();
+463 | |                 let rh = inner.right.height();
+...   |
+691 | |             BalBinTree::Leaf => { proof { assert(false); } BalBinTree::Leaf }
+692 | |         }
+    | |_________- at the end of the function body
+
+error: assertion failed
+   --> src/Chap37/BSTAVLMtEph.rs:512:60
+    |
+512 | ...                   assert(lrl_h as int >= r_h as int - 1) by {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTAVLMtEph.rs:519:60
+    |
+519 | ...                   assert(lrr_h as int >= r_h as int - 1) by {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+lrl_h >= r_h - 1 
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 2234MB, peak z3 RSS: 455MB, min free: 24260MB
+Sampled CPU Usage: rust_verify: 22s, z3 children: 30s

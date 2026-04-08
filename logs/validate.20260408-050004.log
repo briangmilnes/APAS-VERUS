@@ -1,0 +1,40 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:295:17
+    |
+295 |                   found.is_some() <==> self.spec_contains(*target),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+874 | /         match self {
+875 | |             | None => None,
+876 | |             | Some(node) => {
+877 | |                 match TotalOrder::cmp(target, &node.key) {
+...   |
+901 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTRBMtEph.rs:295:17
+    |
+295 |                 found.is_some() <==> self.spec_contains(*target),
+    |                 ^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return is Some == old(self).spec_contains(old(target)) ✘
+|   %return is Some ==>
+|       old(self).spec_contains(old(target)) ✘
+|           trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   old(self).spec_contains(old(target)) ==>
+|       %return is Some ✘
++---
+%return is Some ==>
+    %return.0 == old(target) ✔
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 4316MB, peak z3 RSS: 616MB, min free: 22208MB
+Sampled CPU Usage: rust_verify: 84s, z3 children: 86s

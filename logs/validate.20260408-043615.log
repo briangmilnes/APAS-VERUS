@@ -1,0 +1,214 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap37/BSTRBMtEph.rs:473:21
+    |
+473 |                     by {
+    |                     ^^
+
+error[E0425]: cannot find type `Color` in this scope
+    --> src/Chap37/BSTRBMtEph.rs:1544:30
+     |
+1544 |     impl std::fmt::Debug for Color {
+     |                              ^^^^^ not found in this scope
+
+error[E0425]: cannot find type `Color` in this scope
+    --> src/Chap37/BSTRBMtEph.rs:1553:32
+     |
+1553 |     impl std::fmt::Display for Color {
+     |                                ^^^^^ not found in this scope
+
+error[E0425]: cannot find type `Node` in this scope
+    --> src/Chap37/BSTRBMtEph.rs:1561:62
+     |
+1561 |     impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for Node<T> {
+     |                                                              ^^^^ not found in this scope
+     |
+help: consider importing one of these structs
+     |
+  37 +     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::Node;
+     |
+  37 +     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::Node;
+     |
+  37 +     use crate::Chap37::BSTSplayMtEph::BSTSplayMtEph::Node;
+     |
+  37 +     use crate::Chap37::BSTSplayStEph::BSTSplayStEph::Node;
+     |
+
+error[E0425]: cannot find type `Node` in this scope
+    --> src/Chap37/BSTRBMtEph.rs:1571:64
+     |
+1571 |     impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Display for Node<T> {
+     |                                                                ^^^^ not found in this scope
+     |
+help: consider importing one of these structs
+     |
+  37 +     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::Node;
+     |
+  37 +     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::Node;
+     |
+  37 +     use crate::Chap37::BSTSplayMtEph::BSTSplayMtEph::Node;
+     |
+  37 +     use crate::Chap37::BSTSplayStEph::BSTSplayStEph::Node;
+     |
+
+error[E0425]: cannot find type `BSTRBMtEphInv` in this scope
+    --> src/Chap37/BSTRBMtEph.rs:1579:30
+     |
+1579 |     impl std::fmt::Debug for BSTRBMtEphInv {
+     |                              ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTRBMtEphInv` in this scope
+    --> src/Chap37/BSTRBMtEph.rs:1585:32
+     |
+1585 |     impl std::fmt::Display for BSTRBMtEphInv {
+     |                                ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTRBMtEph` in this scope
+    --> src/Chap37/BSTRBMtEph.rs:1593:62
+     |
+1593 |     impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for BSTRBMtEph<T> {
+     |                                                              ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTRBMtEph` in this scope
+    --> src/Chap37/BSTRBMtEph.rs:1599:64
+     |
+1599 |     impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Display for BSTRBMtEph<T> {
+     |                                                                ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTRBMtEph` in this scope
+  --> src/Chap37/BSTSetRBMtEph.rs:42:19
+   |
+42 |         pub tree: BSTRBMtEph<T>,
+   |                   ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTRBMtEph` in this scope
+   --> src/Chap37/BSTSetRBMtEph.rs:142:38
+    |
+ 41 |     pub struct BSTSetRBMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |     -------------------------------------------------------- similarly named struct `BSTSetRBMtEph` defined here
+...
+142 |         fn as_tree(&self) -> (tree: &BSTRBMtEph<T>)
+    |                                      ^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+142 |         fn as_tree(&self) -> (tree: &BSTSetRBMtEph<T>)
+    |                                         +++
+
+error[E0425]: cannot find type `BSTRBMtEph` in this scope
+   --> src/Chap37/BSTSetRBMtEph.rs:158:58
+    |
+ 41 |     pub struct BSTSetRBMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |     -------------------------------------------------------- similarly named struct `BSTSetRBMtEph` defined here
+...
+158 |     fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTRBMtEph<T>) -> (values: Vec<T>)
+    |                                                          ^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+158 |     fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTSetRBMtEph<T>) -> (values: Vec<T>)
+    |                                                             +++
+
+error[E0425]: cannot find type `BSTRBMtEph` in this scope
+   --> src/Chap37/BSTSetRBMtEph.rs:180:83
+    |
+ 41 |     pub struct BSTSetRBMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |     -------------------------------------------------------- similarly named struct `BSTSetRBMtEph` defined here
+...
+180 |     fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (tree: BSTRBMtEph<T>)
+    |                                                                                   ^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+180 |     fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (tree: BSTSetRBMtEph<T>)
+    |                                                                                      +++
+
+error[E0425]: cannot find type `BSTRBMtEph` in this scope
+   --> src/Chap37/BSTSetRBMtEph.rs:529:31
+    |
+ 41 |     pub struct BSTSetRBMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |     -------------------------------------------------------- similarly named struct `BSTSetRBMtEph` defined here
+...
+529 |         fn as_tree(&self) -> &BSTRBMtEph<T> { &self.tree }
+    |                               ^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+529 |         fn as_tree(&self) -> &BSTSetRBMtEph<T> { &self.tree }
+    |                                  +++
+
+error[E0433]: failed to resolve: use of undeclared type `Color`
+    --> src/Chap37/BSTRBMtEph.rs:1547:17
+     |
+1547 |                 Color::Red => write!(f, "Red"),
+     |                 ^^^^^ use of undeclared type `Color`
+
+error[E0433]: failed to resolve: use of undeclared type `Color`
+    --> src/Chap37/BSTRBMtEph.rs:1548:17
+     |
+1548 |                 Color::Black => write!(f, "Black"),
+     |                 ^^^^^ use of undeclared type `Color`
+
+error[E0433]: failed to resolve: use of undeclared type `BSTRBMtEph`
+   --> src/Chap37/BSTSetRBMtEph.rs:183:24
+    |
+183 |         let mut tree = BSTRBMtEph::new();
+    |                        ^^^^^^^^^^ use of undeclared type `BSTRBMtEph`
+    |
+help: a struct with a similar name exists
+    |
+183 |         let mut tree = BSTSetRBMtEph::new();
+    |                           +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTRBMtEph`
+   --> src/Chap37/BSTSetRBMtEph.rs:215:23
+    |
+215 |                 tree: BSTRBMtEph::new(),
+    |                       ^^^^^^^^^^ use of undeclared type `BSTRBMtEph`
+    |
+help: a struct with a similar name exists
+    |
+215 |                 tree: BSTSetRBMtEph::new(),
+    |                          +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTRBMtEph`
+   --> src/Chap37/BSTSetRBMtEph.rs:221:28
+    |
+221 |             let mut tree = BSTRBMtEph::new();
+    |                            ^^^^^^^^^^ use of undeclared type `BSTRBMtEph`
+    |
+help: a struct with a similar name exists
+    |
+221 |             let mut tree = BSTSetRBMtEph::new();
+    |                               +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTRBMtEph`
+   --> src/Chap37/BSTSetRBMtEph.rs:415:28
+    |
+415 |             let mut tree = BSTRBMtEph::new();
+    |                            ^^^^^^^^^^ use of undeclared type `BSTRBMtEph`
+    |
+help: a struct with a similar name exists
+    |
+415 |             let mut tree = BSTSetRBMtEph::new();
+    |                               +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTRBMtEph`
+   --> src/Chap37/BSTSetRBMtEph.rs:447:28
+    |
+447 |             let mut tree = BSTRBMtEph::new();
+    |                            ^^^^^^^^^^ use of undeclared type `BSTRBMtEph`
+    |
+help: a struct with a similar name exists
+    |
+447 |             let mut tree = BSTSetRBMtEph::new();
+    |                               +++
+
+error: aborting due to 21 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 4051MB, peak z3 RSS: 358MB, min free: 22060MB
+Sampled CPU Usage: rust_verify: 58s, z3 children: 35s

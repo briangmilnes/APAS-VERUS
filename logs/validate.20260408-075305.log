@@ -1,0 +1,60 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/BSTSplayStEph.rs:383:40
+    |
+383 | ...                   assert(spec_contains_link(&orig_root_left, lr_key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap37/BSTSplayStEph.rs:1020:21
+     |
+1020 |             None => false,
+     |                     ^^^^^
+...
+1024 |                 || spec_contains_link(&node.right, value),
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_contains_link(orig_root_left, lr_key)
+|   let tmp%% = orig_root_left;
+|       tmp%% is None ==>
+|           false ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               !(node.key == lr_key || spec_contains_link(node.left, lr_key)) ==>
+|                   spec_contains_link(node.right, lr_key)
+|                   |   let tmp%% = node.right;
+|                   |       tmp%% is None ==>
+|                   |           false ✔
+|                   |       !(tmp%% is None) ==>
+|                   |           let node = tmp%%.0;
+|                   |               !(node.key == lr_key || spec_contains_link(node.left, lr_key)) ==>
+|                   |                   spec_contains_link(node.right, lr_key)
+|                   |                   |   let tmp%% = node.right;
+|                   |                   |       tmp%% is None ==>
+|                   |                   |           false ✘
+|                   |                   |       !(tmp%% is None) ==>
+|                   |                   |           let node = tmp%%.0;
+|                   |                   |               !(node.key == lr_key || spec_contains_link(node.left, lr_key)) ==>
+|                   |                   |                   spec_contains_link(node.right, lr_key)
+|                   |                   |                   |   let tmp%% = node.right;
+|                   |                   |                   |       tmp%% is None ==>
+|                   |                   |                   |           false ✘
+|                   |                   |                   |       !(tmp%% is None) ==>
+|                   |                   |                   |           let node = tmp%%.0;
+|                   |                   |                   |               !(node.key == lr_key || spec_contains_link(node.left, lr_key)) ==>
+|                   |                   |                   |                   spec_contains_link(node.right, lr_key) ✘
+|                   |                   |                   |                       reached fuel limit for recursion
+|                   |                   |                   +---
+|                   |                   +---
+|                   +---
++---
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 5019MB, peak z3 RSS: 521MB, min free: 20990MB
+Sampled CPU Usage: rust_verify: 96s, z3 children: 82s

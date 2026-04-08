@@ -1,4 +1,5 @@
 Mode: isolate
+<<<<<<< HEAD
 Isolate: including Chap18 Chap02
 error: invariant not satisfied at end of loop body
    --> src/Chap18/LinkedListStEph.rs:493:21
@@ -12,3 +13,10 @@ error: aborting due to 1 previous error
 Elapsed: 9s
 Sampled Memory Usage: peak rust_verify RSS: 5992MB, peak z3 RSS: 320MB, min free: 20610MB
 Sampled CPU Usage: rust_verify: 130s, z3 children: 112s
+=======
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+verification results:: 1958 verified, 0 errors
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 6117MB, peak z3 RSS: 376MB, min free: 20503MB
+Sampled CPU Usage: rust_verify: 132s, z3 children: 114s
+>>>>>>> agent4/ready

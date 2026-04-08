@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/AVLTreeSeq.rs:893:20
+    |
+893 |             assert(spec_avltreeseq_inorder::<T>(root) =~= seq![item_view]);
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_avltreeseq_inorder(root) =~= empty().push(item_view) 
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 3374MB, peak z3 RSS: 734MB, min free: 21991MB
+Sampled CPU Usage: rust_verify: 46s, z3 children: 59s

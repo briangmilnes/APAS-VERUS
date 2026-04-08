@@ -1,4 +1,5 @@
 Mode: isolate
+<<<<<<< HEAD
 Isolate: including Chap18 Chap02
 error: unexpected token, expected `;`
     --> src/Chap18/ArraySeqMtEph.rs:1232:21
@@ -60,3 +61,10 @@ For more information about this error, try `rustc --explain E0425`.
 Elapsed: 1s
 Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 23961MB
 Sampled CPU Usage: rust_verify: 0s, z3 children: 0s
+=======
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+verification results:: 1958 verified, 0 errors
+Elapsed: 30s
+Sampled Memory Usage: peak rust_verify RSS: 8779MB, peak z3 RSS: 1077MB, min free: 16448MB
+Sampled CPU Usage: rust_verify: 187s, z3 children: 211s
+>>>>>>> agent4/ready

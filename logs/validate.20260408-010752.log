@@ -1,4 +1,5 @@
 Mode: isolate
+<<<<<<< HEAD
 Isolate: including Chap18 Chap02
 error: postcondition not satisfied
     --> src/Chap18/ArraySeqMtEphSlice.rs:953:17
@@ -27,3 +28,10 @@ error: aborting due to 1 previous error
 Elapsed: 9s
 Sampled Memory Usage: peak rust_verify RSS: 6823MB, peak z3 RSS: 730MB, min free: 18685MB
 Sampled CPU Usage: rust_verify: 125s, z3 children: 83s
+=======
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+verification results:: 1958 verified, 0 errors
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 6823MB, peak z3 RSS: 725MB, min free: 18700MB
+Sampled CPU Usage: rust_verify: 125s, z3 children: 82s
+>>>>>>> agent4/ready

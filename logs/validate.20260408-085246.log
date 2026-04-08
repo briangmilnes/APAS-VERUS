@@ -1,0 +1,31 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: precondition not satisfied
+    --> src/Chap37/BSTSplayStEph.rs:1570:33
+     |
+1570 | ...                   T::transitive(x, node.key, *max.unwrap());
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:41:13
+     |
+  41 |             Self::le(x, y),
+     |             -------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/total_order.rs:41:13
+   |
+41 |             Self::le(x, y),
+   |             ^^^^^^^^^^^^^^
+
+note: 
+
+x.le(tmp%) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+tmp%.le(tmp%) ✔
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 32s
+Sampled Memory Usage: peak rust_verify RSS: 5887MB, peak z3 RSS: 782MB, min free: 14852MB
+Sampled CPU Usage: rust_verify: 154s, z3 children: 140s

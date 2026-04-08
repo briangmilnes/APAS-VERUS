@@ -1,4 +1,5 @@
 Mode: isolate
+<<<<<<< HEAD
 Isolate: including Chap06 Chap05 Chap02
 error: unexpected token, expected `;`
    --> src/Chap06/WeightedDirGraphStEphI128.rs:279:146
@@ -11,3 +12,10 @@ error: aborting due to 1 previous error
 Elapsed: 2s
 Sampled Memory Usage: peak rust_verify RSS: 476MB, peak z3 RSS: 0MB, min free: 24970MB
 Sampled CPU Usage: rust_verify: 5s, z3 children: 0s
+=======
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+verification results:: 1958 verified, 0 errors
+Elapsed: 22s
+Sampled Memory Usage: peak rust_verify RSS: 2776MB, peak z3 RSS: 395MB, min free: 22791MB
+Sampled CPU Usage: rust_verify: 40s, z3 children: 39s
+>>>>>>> agent4/ready

@@ -1,4 +1,5 @@
 Mode: isolate
+<<<<<<< HEAD
 Isolate: including Chap18 Chap02
 error: precondition not satisfied
    --> src/Chap18/ArraySeqMtPer.rs:949:37
@@ -28,3 +29,10 @@ error: aborting due to 1 previous error
 Elapsed: 8s
 Sampled Memory Usage: peak rust_verify RSS: 1554MB, peak z3 RSS: 256MB, min free: 21955MB
 Sampled CPU Usage: rust_verify: 19s, z3 children: 3s
+=======
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+verification results:: 1958 verified, 0 errors
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 3336MB, peak z3 RSS: 660MB, min free: 21998MB
+Sampled CPU Usage: rust_verify: 55s, z3 children: 44s
+>>>>>>> agent4/ready

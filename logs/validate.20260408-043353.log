@@ -1,4 +1,5 @@
 Mode: isolate
+<<<<<<< HEAD
 Isolate: including Chap18 Chap19 Chap21 Chap02
 error[E0425]: cannot find value `i` in this scope
    --> src/Chap21/Exercise21_8.rs:284:38
@@ -30,3 +31,10 @@ For more information about this error, try `rustc --explain E0425`.
 Elapsed: 3s
 Sampled Memory Usage: peak rust_verify RSS: 1565MB, peak z3 RSS: 256MB, min free: 24630MB
 Sampled CPU Usage: rust_verify: 20s, z3 children: 10s
+=======
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+verification results:: 1958 verified, 0 errors
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 5280MB, peak z3 RSS: 1363MB, min free: 20533MB
+Sampled CPU Usage: rust_verify: 112s, z3 children: 143s
+>>>>>>> agent4/ready

@@ -1,0 +1,28 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap37/AVLTreeSeqStPer.rs:590:13
+    |
+590 |             spec_inorder(link) =~= a@.map_values(|t: T| t@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+630 |         Some(node)
+    |         ---------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeqStPer.rs:590:13
+    |
+590 |             spec_inorder(link) =~= a@.map_values(|t: T| t@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_avltreeseqstper_wf(link) ✔
+spec_inorder(link) =~= old(a).view().map_values((|t| t.view())) ✘
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1395MB, peak z3 RSS: 298MB, min free: 25204MB
+Sampled CPU Usage: rust_verify: 22s, z3 children: 34s

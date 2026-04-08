@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap37/BSTBBAlphaStEph.rs:598:25
+    |
+598 |                         by {
+    |                         ^^
+
+error[E0425]: cannot find type `BSTBBAlphaStEph` in this scope
+   --> src/Chap37/BSTBBAlphaStEph.rs:829:50
+    |
+829 |     impl<T: std::fmt::Debug> std::fmt::Debug for BSTBBAlphaStEph<T> {
+    |                                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTBBAlphaStEph` in this scope
+   --> src/Chap37/BSTBBAlphaStEph.rs:837:72
+    |
+837 |     impl<T: std::fmt::Debug + std::fmt::Display> std::fmt::Display for BSTBBAlphaStEph<T> {
+    |                                                                        ^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 5289MB, peak z3 RSS: 765MB, min free: 20986MB
+Sampled CPU Usage: rust_verify: 94s, z3 children: 60s

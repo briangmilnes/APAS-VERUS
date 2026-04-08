@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap37/AVLTreeSeqMtPer.rs:330:17
+    |
+330 |                 tree.spec_avltreeseqmtper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+795 |             tree
+    |             ---- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeqMtPer.rs:330:17
+    |
+330 |                 tree.spec_avltreeseqmtper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.spec_avltreeseqmtper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+%return.spec_seq() =~= old(values).view().map_values((|t| t.view())) ✔
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 4865MB, peak z3 RSS: 826MB, min free: 20326MB
+Sampled CPU Usage: rust_verify: 69s, z3 children: 67s

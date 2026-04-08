@@ -133,15 +133,12 @@ pub mod BSTSplayStEph {
                     assert forall|x: T| spec_contains_link(&orig_left_right, x) implies
                         (T::le(left_key, x) && x != left_key) by {};
                     // left_key ∈ orig_root_left, so left_key < root_key.
-                    assert(spec_contains_link(&orig_root_left, left_key));
                     // Elements in orig_left_right are in orig_root_left, so < root_key.
                     assert forall|x: T| spec_contains_link(&orig_left_right, x) implies
                         (T::le(x, root_key) && x != root_key) by {
-                        assert(spec_contains_link(&orig_root_left, x));
                     };
                     assert forall|x: T| spec_contains_link(&orig_left_left, x) implies
                         (T::le(x, root_key) && x != root_key) by {
-                        assert(spec_contains_link(&orig_root_left, x));
                     };
                 }
                 match TotalOrder::cmp(target,&left.key) {
@@ -177,9 +174,7 @@ pub mod BSTSplayStEph {
                                     reveal_with_fuel(spec_contains_link, 2);
                                     if x == left_key {
                                     } else if spec_contains_link(&orig_left_left, x) {
-                                        assert(spec_contains_link(&left.left, x));
                                     } else {
-                                        assert(spec_contains_link(&orig_left_right, x));
                                     }
                                 }
                             };
@@ -188,18 +183,12 @@ pub mod BSTSplayStEph {
                             by {
                                 reveal_with_fuel(spec_contains_link, 3);
                                 if x == left_key {
-                                    assert(spec_contains_link(&orig_root_left, left_key));
                                 } else if spec_contains_link(&left.left, x) {
-                                    assert(spec_contains_link(&orig_left_left, x));
-                                    assert(spec_contains_link(&orig_root_left, x));
                                 } else {
-                                    assert(spec_contains_link(&left.right, x));
                                     reveal_with_fuel(spec_contains_link, 2);
                                     if x == root_key {
                                     } else if spec_contains_link(&orig_left_right, x) {
-                                        assert(spec_contains_link(&orig_root_left, x));
                                     } else {
-                                        assert(spec_contains_link(&orig_root_right, x));
                                     }
                                 }
                             };
@@ -244,7 +233,6 @@ pub mod BSTSplayStEph {
                                             T::transitive(ll_key, left_key, x);
                                             if x == ll_key { T::antisymmetric(ll_key, left_key); }
                                         } else {
-                                            assert(spec_contains_link(&orig_root_right, x));
                                             T::transitive(ll_key, root_key, x);
                                             if x == ll_key { T::antisymmetric(ll_key, root_key); }
                                         }
@@ -254,7 +242,6 @@ pub mod BSTSplayStEph {
                                 assert forall|x: T| #[trigger] spec_contains_link(&left.left, x) implies
                                     (T::le(x, left_key) && x != left_key)
                                 by {
-                                    assert(spec_contains_link(&orig_left_left, x));
                                 };
                                 // BST: left.right elements > left_key.
                                 assert forall|x: T| #[trigger] spec_contains_link(&left.right, x) implies
@@ -280,7 +267,6 @@ pub mod BSTSplayStEph {
                                         if x == left_key {
                                         } else if spec_contains_link(&orig_left_left, x) {
                                         } else {
-                                            assert(spec_contains_link(&orig_left_right, x));
                                         }
                                     }
                                 };
@@ -289,32 +275,21 @@ pub mod BSTSplayStEph {
                                 by {
                                     reveal_with_fuel(spec_contains_link, 5);
                                     if x == ll_key {
-                                        assert(spec_contains_link(&orig_left_left, ll_key));
-                                        assert(spec_contains_link(&orig_root_left, ll_key));
                                     } else if spec_contains_link(&ll_left, x) {
                                         assert(spec_contains_link(&orig_left_left, x));
-                                        assert(spec_contains_link(&orig_root_left, x));
                                     } else {
-                                        assert(spec_contains_link(&ll.right, x));
                                         reveal_with_fuel(spec_contains_link, 3);
                                         if x == left_key {
-                                            assert(spec_contains_link(&orig_root_left, left_key));
                                         } else if spec_contains_link(&ll_right, x) {
                                             assert(spec_contains_link(&orig_left_left, x));
-                                            assert(spec_contains_link(&orig_root_left, x));
                                         } else {
                                             reveal_with_fuel(spec_contains_link, 2);
                                             if x == root_key {
                                             } else if spec_contains_link(&orig_left_right, x) {
-                                                assert(spec_contains_link(&orig_root_left, x));
                                             } else {
-                                                assert(spec_contains_link(&orig_root_right, x));
                                             }
                                         }
                                     }
-                                };
-                                assert(spec_is_bst_link(&Some(ll))) by {
-                                    reveal_with_fuel(spec_is_bst_link, 4);
                                 };
                             }
                             ll
@@ -349,19 +324,13 @@ pub mod BSTSplayStEph {
                                 by {
                                     reveal_with_fuel(spec_contains_link, 3);
                                     if x == left_key {
-                                        assert(spec_contains_link(&orig_root_left, left_key));
                                     } else {
                                         reveal_with_fuel(spec_contains_link, 2);
                                         if x == root_key {
                                         } else if spec_contains_link(&orig_left_right, x) {
-                                            assert(spec_contains_link(&orig_root_left, x));
                                         } else {
-                                            assert(spec_contains_link(&orig_root_right, x));
                                         }
                                     }
-                                };
-                                assert(spec_is_bst_link(&Some(left))) by {
-                                    reveal_with_fuel(spec_is_bst_link, 4);
                                 };
                             }
                             left
@@ -380,7 +349,6 @@ pub mod BSTSplayStEph {
                             // lr is splay of orig_left_right. BST, same elements.
                             proof {
                                 assert(spec_contains_link(&orig_left_right, lr_key));
-                                assert(spec_contains_link(&orig_root_left, lr_key));
                                 // Capture splay BST ordering while lr is intact.
                                 assert forall|x: T| spec_contains_link(&lr_left, x) implies
                                     (T::le(x, lr_key) && x != lr_key) by {};
@@ -420,7 +388,6 @@ pub mod BSTSplayStEph {
                                     } else if spec_contains_link(&lr_right, x) {
                                         // lr_right > lr_key from splay BST.
                                     } else {
-                                        assert(spec_contains_link(&orig_root_right, x));
                                         T::transitive(lr_key, root_key, x);
                                         if x == lr_key { T::antisymmetric(lr_key, root_key); }
                                     }
@@ -429,14 +396,12 @@ pub mod BSTSplayStEph {
                                 assert forall|x: T| #[trigger] spec_contains_link(&left.right, x) implies
                                     (T::le(left_key, x) && x != left_key)
                                 by {
-                                    assert(spec_contains_link(&orig_left_right, x));
                                 };
                                 // BST: root.left (= lr_right) elements < root_key.
                                 assert forall|x: T| #[trigger] spec_contains_link(&root.left, x) implies
                                     (T::le(x, root_key) && x != root_key)
                                 by {
                                     assert(spec_contains_link(&orig_left_right, x));
-                                    assert(spec_contains_link(&orig_root_left, x));
                                 };
                                 // Element preservation.
                                 assert forall|x: T| spec_contains_link(&Some(orig), x) implies
@@ -459,30 +424,21 @@ pub mod BSTSplayStEph {
                                 by {
                                     reveal_with_fuel(spec_contains_link, 5);
                                     if x == lr_key {
-                                        assert(spec_contains_link(&orig_root_left, lr_key));
                                     } else if spec_contains_link(&lr.left, x) {
                                         reveal_with_fuel(spec_contains_link, 3);
                                         if x == left_key {
-                                            assert(spec_contains_link(&orig_root_left, left_key));
                                         } else if spec_contains_link(&orig_left_left, x) {
-                                            assert(spec_contains_link(&orig_root_left, x));
                                         } else {
                                             assert(spec_contains_link(&orig_left_right, x));
-                                            assert(spec_contains_link(&orig_root_left, x));
                                         }
                                     } else {
                                         reveal_with_fuel(spec_contains_link, 3);
                                         if x == root_key {
                                         } else if spec_contains_link(&lr_right, x) {
                                             assert(spec_contains_link(&orig_left_right, x));
-                                            assert(spec_contains_link(&orig_root_left, x));
                                         } else {
-                                            assert(spec_contains_link(&orig_root_right, x));
                                         }
                                     }
-                                };
-                                assert(spec_is_bst_link(&Some(lr))) by {
-                                    reveal_with_fuel(spec_is_bst_link, 4);
                                 };
                             }
                             lr
@@ -520,20 +476,13 @@ pub mod BSTSplayStEph {
                                 by {
                                     reveal_with_fuel(spec_contains_link, 3);
                                     if x == left_key {
-                                        assert(spec_contains_link(&orig_root_left, left_key));
                                     } else if spec_contains_link(&left.left, x) {
-                                        assert(spec_contains_link(&orig_left_left, x));
-                                        assert(spec_contains_link(&orig_root_left, x));
                                     } else {
                                         reveal_with_fuel(spec_contains_link, 2);
                                         if x == root_key {
                                         } else {
-                                            assert(spec_contains_link(&orig_root_right, x));
                                         }
                                     }
-                                };
-                                assert(spec_is_bst_link(&Some(left))) by {
-                                    reveal_with_fuel(spec_is_bst_link, 4);
                                 };
                             }
                             left
@@ -569,11 +518,9 @@ pub mod BSTSplayStEph {
                     // Elements in orig_right_left are in orig_root_right, so > root_key.
                     assert forall|x: T| spec_contains_link(&orig_right_left, x) implies
                         (T::le(root_key, x) && x != root_key) by {
-                        assert(spec_contains_link(&orig_root_right, x));
                     };
                     assert forall|x: T| spec_contains_link(&orig_right_right, x) implies
                         (T::le(root_key, x) && x != root_key) by {
-                        assert(spec_contains_link(&orig_root_right, x));
                     };
                 }
                 match TotalOrder::cmp(target,&right.key) {
@@ -611,8 +558,6 @@ pub mod BSTSplayStEph {
                                     if x == right_key {
                                     } else if spec_contains_link(&orig_right_left, x) {
                                     } else {
-                                        assert(spec_contains_link(&orig_right_right, x));
-                                        assert(spec_contains_link(&right.right, x));
                                     }
                                 }
                             };
@@ -621,19 +566,13 @@ pub mod BSTSplayStEph {
                             by {
                                 reveal_with_fuel(spec_contains_link, 3);
                                 if x == right_key {
-                                    assert(spec_contains_link(&orig_root_right, right_key));
                                 } else if spec_contains_link(&right.right, x) {
-                                    assert(spec_contains_link(&orig_right_right, x));
-                                    assert(spec_contains_link(&orig_root_right, x));
                                 } else {
                                     // x in right.left = Some(root with left=orig_root_left, right=orig_right_left)
-                                    assert(spec_contains_link(&right.left, x));
                                     reveal_with_fuel(spec_contains_link, 2);
                                     if x == root_key {
                                     } else if spec_contains_link(&orig_root_left, x) {
                                     } else {
-                                        assert(spec_contains_link(&orig_right_left, x));
-                                        assert(spec_contains_link(&orig_root_right, x));
                                     }
                                 }
                             };
@@ -678,7 +617,6 @@ pub mod BSTSplayStEph {
                                             T::transitive(x, right_key, rr_key);
                                             if x == rr_key { T::antisymmetric(right_key, rr_key); }
                                         } else {
-                                            assert(spec_contains_link(&orig_root_left, x));
                                             T::transitive(x, root_key, rr_key);
                                             if x == rr_key { T::antisymmetric(root_key, rr_key); }
                                         }
@@ -688,7 +626,6 @@ pub mod BSTSplayStEph {
                                 assert forall|x: T| #[trigger] spec_contains_link(&right.right, x) implies
                                     (T::le(right_key, x) && x != right_key)
                                 by {
-                                    assert(spec_contains_link(&orig_right_right, x));
                                 };
                                 // BST: right.left elements < right_key.
                                 assert forall|x: T| #[trigger] spec_contains_link(&right.left, x) implies
@@ -714,7 +651,6 @@ pub mod BSTSplayStEph {
                                         if x == right_key {
                                         } else if spec_contains_link(&orig_right_right, x) {
                                         } else {
-                                            assert(spec_contains_link(&orig_right_left, x));
                                         }
                                     }
                                 };
@@ -723,32 +659,21 @@ pub mod BSTSplayStEph {
                                 by {
                                     reveal_with_fuel(spec_contains_link, 5);
                                     if x == rr_key {
-                                        assert(spec_contains_link(&orig_right_right, rr_key));
-                                        assert(spec_contains_link(&orig_root_right, rr_key));
                                     } else if spec_contains_link(&rr_right, x) {
                                         assert(spec_contains_link(&orig_right_right, x));
-                                        assert(spec_contains_link(&orig_root_right, x));
                                     } else {
-                                        assert(spec_contains_link(&rr.left, x));
                                         reveal_with_fuel(spec_contains_link, 3);
                                         if x == right_key {
-                                            assert(spec_contains_link(&orig_root_right, right_key));
                                         } else if spec_contains_link(&rr_left, x) {
                                             assert(spec_contains_link(&orig_right_right, x));
-                                            assert(spec_contains_link(&orig_root_right, x));
                                         } else {
                                             reveal_with_fuel(spec_contains_link, 2);
                                             if x == root_key {
                                             } else if spec_contains_link(&orig_right_left, x) {
-                                                assert(spec_contains_link(&orig_root_right, x));
                                             } else {
-                                                assert(spec_contains_link(&orig_root_left, x));
                                             }
                                         }
                                     }
-                                };
-                                assert(spec_is_bst_link(&Some(rr))) by {
-                                    reveal_with_fuel(spec_is_bst_link, 4);
                                 };
                             }
                             rr
@@ -783,19 +708,13 @@ pub mod BSTSplayStEph {
                                 by {
                                     reveal_with_fuel(spec_contains_link, 3);
                                     if x == right_key {
-                                        assert(spec_contains_link(&orig_root_right, right_key));
                                     } else {
                                         reveal_with_fuel(spec_contains_link, 2);
                                         if x == root_key {
                                         } else if spec_contains_link(&orig_right_left, x) {
-                                            assert(spec_contains_link(&orig_root_right, x));
                                         } else {
-                                            assert(spec_contains_link(&orig_root_left, x));
                                         }
                                     }
-                                };
-                                assert(spec_is_bst_link(&Some(right))) by {
-                                    reveal_with_fuel(spec_is_bst_link, 4);
                                 };
                             }
                             right
@@ -814,7 +733,6 @@ pub mod BSTSplayStEph {
                             // rl is splay of orig_right_left. BST, same elements.
                             proof {
                                 assert(spec_contains_link(&orig_right_left, rl_key));
-                                assert(spec_contains_link(&orig_root_right, rl_key));
                                 // Capture splay BST ordering while rl is intact.
                                 assert forall|x: T| spec_contains_link(&rl_left, x) implies
                                     (T::le(x, rl_key) && x != rl_key) by {};
@@ -854,7 +772,6 @@ pub mod BSTSplayStEph {
                                     } else if spec_contains_link(&rl_left, x) {
                                         // rl_left < rl_key from splay BST.
                                     } else {
-                                        assert(spec_contains_link(&orig_root_left, x));
                                         T::transitive(x, root_key, rl_key);
                                         if x == rl_key { T::antisymmetric(root_key, rl_key); }
                                     }
@@ -863,14 +780,12 @@ pub mod BSTSplayStEph {
                                 assert forall|x: T| #[trigger] spec_contains_link(&right.left, x) implies
                                     (T::le(x, right_key) && x != right_key)
                                 by {
-                                    assert(spec_contains_link(&orig_right_left, x));
                                 };
                                 // BST: root.right (= rl_left) elements > root_key.
                                 assert forall|x: T| #[trigger] spec_contains_link(&root.right, x) implies
                                     (T::le(root_key, x) && x != root_key)
                                 by {
                                     assert(spec_contains_link(&orig_right_left, x));
-                                    assert(spec_contains_link(&orig_root_right, x));
                                 };
                                 // Element preservation.
                                 assert forall|x: T| spec_contains_link(&Some(orig), x) implies
@@ -893,30 +808,21 @@ pub mod BSTSplayStEph {
                                 by {
                                     reveal_with_fuel(spec_contains_link, 5);
                                     if x == rl_key {
-                                        assert(spec_contains_link(&orig_root_right, rl_key));
                                     } else if spec_contains_link(&rl.right, x) {
                                         reveal_with_fuel(spec_contains_link, 3);
                                         if x == right_key {
-                                            assert(spec_contains_link(&orig_root_right, right_key));
                                         } else if spec_contains_link(&orig_right_right, x) {
-                                            assert(spec_contains_link(&orig_root_right, x));
                                         } else {
                                             assert(spec_contains_link(&orig_right_left, x));
-                                            assert(spec_contains_link(&orig_root_right, x));
                                         }
                                     } else {
                                         reveal_with_fuel(spec_contains_link, 3);
                                         if x == root_key {
                                         } else if spec_contains_link(&rl_left, x) {
                                             assert(spec_contains_link(&orig_right_left, x));
-                                            assert(spec_contains_link(&orig_root_right, x));
                                         } else {
-                                            assert(spec_contains_link(&orig_root_left, x));
                                         }
                                     }
-                                };
-                                assert(spec_is_bst_link(&Some(rl))) by {
-                                    reveal_with_fuel(spec_is_bst_link, 4);
                                 };
                             }
                             rl
@@ -954,20 +860,13 @@ pub mod BSTSplayStEph {
                                 by {
                                     reveal_with_fuel(spec_contains_link, 3);
                                     if x == right_key {
-                                        assert(spec_contains_link(&orig_root_right, right_key));
                                     } else if spec_contains_link(&right.right, x) {
-                                        assert(spec_contains_link(&orig_right_right, x));
-                                        assert(spec_contains_link(&orig_root_right, x));
                                     } else {
                                         reveal_with_fuel(spec_contains_link, 2);
                                         if x == root_key {
                                         } else {
-                                            assert(spec_contains_link(&orig_root_left, x));
                                         }
                                     }
-                                };
-                                assert(spec_is_bst_link(&Some(right))) by {
-                                    reveal_with_fuel(spec_is_bst_link, 4);
                                 };
                             }
                             right
@@ -1357,7 +1256,6 @@ pub mod BSTSplayStEph {
                             by {
                                 if spec_contains_link(&old_left, x) {
                                 } else {
-                                    assert(x == value);
                                 }
                             };
                             assert forall|x: T| spec_contains_link(old(link), x) implies
@@ -1365,7 +1263,6 @@ pub mod BSTSplayStEph {
                             by {
                                 reveal_with_fuel(spec_contains_link, 2);
                                 if spec_contains_link(&old_left, x) {
-                                    assert(spec_contains_link(&node.left, x));
                                 }
                             };
                             assert forall|x: T| spec_contains_link(link, x) implies
@@ -1374,7 +1271,6 @@ pub mod BSTSplayStEph {
                                 reveal_with_fuel(spec_contains_link, 2);
                                 if spec_contains_link(&node.left, x) {
                                     if !spec_contains_link(&old_left, x) {
-                                        assert(x == value);
                                     }
                                 }
                             };
@@ -1393,7 +1289,6 @@ pub mod BSTSplayStEph {
                             by {
                                 if spec_contains_link(&old_right, x) {
                                 } else {
-                                    assert(x == value);
                                 }
                             };
                             assert forall|x: T| spec_contains_link(old(link), x) implies
@@ -1401,7 +1296,6 @@ pub mod BSTSplayStEph {
                             by {
                                 reveal_with_fuel(spec_contains_link, 2);
                                 if spec_contains_link(&old_right, x) {
-                                    assert(spec_contains_link(&node.right, x));
                                 }
                             };
                             assert forall|x: T| spec_contains_link(link, x) implies
@@ -1410,7 +1304,6 @@ pub mod BSTSplayStEph {
                                 reveal_with_fuel(spec_contains_link, 2);
                                 if spec_contains_link(&node.right, x) {
                                     if !spec_contains_link(&old_right, x) {
-                                        assert(x == value);
                                     }
                                 }
                             };
@@ -1508,8 +1401,6 @@ pub mod BSTSplayStEph {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(spec_contains_link, 2);
                         // Bridge from trait spec fn to free spec fn.
-                        assert(node.left.link_contains(*min.unwrap()) == spec_contains_link(&node.left, *min.unwrap()));
-                        assert(spec_contains_link(&node.left, *min.unwrap()));
                         assert forall|x: T| #[trigger] spec_contains_link(self, x) implies T::le(*min.unwrap(), x) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(spec_contains_link, 2);
@@ -1557,8 +1448,6 @@ pub mod BSTSplayStEph {
                     proof {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(spec_contains_link, 2);
-                        assert(node.right.link_contains(*max.unwrap()) == spec_contains_link(&node.right, *max.unwrap()));
-                        assert(spec_contains_link(&node.right, *max.unwrap()));
                         assert forall|x: T| #[trigger] spec_contains_link(self, x) implies T::le(x, *max.unwrap()) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(spec_contains_link, 2);

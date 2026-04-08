@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/BSTAVLStEph.rs:750:49
+    |
+750 |   ...                   assert forall|x: T| intermediate.tree_contains(x) ==
+    |  ___________________________________________^
+751 | | ...                       tree_ghost.tree_contains(x)
+    | |_____________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+intermediate.tree_contains(x) == tree_ghost.tree_contains(x) 
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 5725MB, peak z3 RSS: 422MB, min free: 21032MB
+Sampled CPU Usage: rust_verify: 98s, z3 children: 66s

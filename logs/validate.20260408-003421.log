@@ -1,0 +1,38 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/BSTAVLMtEph.rs:103:32
+    |
+103 |                         assert(rnode.left.tree_is_bst());
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTAVLMtEph.rs:104:32
+    |
+104 |                         assert(rnode.right.tree_is_bst());
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTPlainStEph.rs:272:43
+    |
+272 |                 BalBinTree::Node(node) => BSTSpecFns::tree_is_bst(*node),
+    |                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+rnode.left.tree_is_bst()
+|   let tmp%% = rnode.left;
+|       tmp%% is Leaf ==>
+|           true ✔
+|       !(tmp%% is Leaf) ==>
+|           let node = tmp%%.0;
+|               node.tree_is_bst() ✘
+|                   reached fuel limit for recursion
++---
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1946MB, peak z3 RSS: 396MB, min free: 24809MB
+Sampled CPU Usage: rust_verify: 26s, z3 children: 30s

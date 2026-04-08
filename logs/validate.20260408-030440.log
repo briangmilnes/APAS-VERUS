@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/BSTBBAlphaStEph.rs:552:40
+    |
+552 | ...                   #[trigger] T::le(node_val, x)
+    |                                  ^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+node_val.le(x) 
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 4731MB, peak z3 RSS: 712MB, min free: 21451MB
+Sampled CPU Usage: rust_verify: 98s, z3 children: 97s

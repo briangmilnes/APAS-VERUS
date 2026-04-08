@@ -1,6 +1,34 @@
 Mode: isolate
+<<<<<<< HEAD
 Isolate: including Chap18 Chap19 Chap21 Chap02
 verification results:: 1359 verified, 0 errors
 Elapsed: 12s
 Sampled Memory Usage: peak rust_verify RSS: 3010MB, peak z3 RSS: 337MB, min free: 23328MB
 Sampled CPU Usage: rust_verify: 39s, z3 children: 22s
+=======
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:472:25
+    |
+472 |                         (TotalOrder::le(z, x_key) && z != x_key)
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+z.le(x_key) ✔
+!(z == x_key) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 3039MB, peak z3 RSS: 470MB, min free: 23275MB
+Sampled CPU Usage: rust_verify: 41s, z3 children: 34s
+>>>>>>> agent4/ready

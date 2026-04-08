@@ -1,4 +1,5 @@
 Mode: isolate
+<<<<<<< HEAD
 Isolate: including Chap06 Chap05 Chap02
 error: invariant not satisfied at end of loop body
    --> src/Chap06/WeightedDirGraphStEphU8.rs:353:21
@@ -12,3 +13,10 @@ error: aborting due to 1 previous error
 Elapsed: 10s
 Sampled Memory Usage: peak rust_verify RSS: 2857MB, peak z3 RSS: 373MB, min free: 23769MB
 Sampled CPU Usage: rust_verify: 31s, z3 children: 17s
+=======
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+verification results:: 1958 verified, 0 errors
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 2400MB, peak z3 RSS: 392MB, min free: 24352MB
+Sampled CPU Usage: rust_verify: 24s, z3 children: 32s
+>>>>>>> agent4/ready
