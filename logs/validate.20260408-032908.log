@@ -1,0 +1,33 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1588:55
+     |
+1588 |                       0 <= i < right.len as int implies {
+     |  _______________________________________________________^
+1589 | |                     let inner = (*right.data)@[right.start as int + i];
+1590 | |                     &&& inner.start + inner.len <= (*inner.data)@.len()
+1591 | |                     &&& inner.start + inner.len <= usize::MAX
+1592 | |                 } by {
+     | |_________________^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1590:25
+     |
+1590 |                     &&& inner.start + inner.len <= (*inner.data)@.len()
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1591 |                     &&& inner.start + inner.len <= usize::MAX
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+let inner = right.data.view().index(right.start + i);
+    inner.start + inner.len <= inner.data.view().len() ✘
+    inner.start + inner.len <= UnsignedMax.Exec(usize::BITS) ✘
+
+verification results:: 907 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 3858MB, peak z3 RSS: 299MB, min free: 22838MB
+Sampled CPU Usage: rust_verify: 62s, z3 children: 46s

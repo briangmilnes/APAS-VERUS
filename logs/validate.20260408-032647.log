@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1035:25
+     |
+1035 |                         #[trigger] right_backing[i] == s.subrange(mid as int, len as int)[i]
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+right_backing.index(i) == s.subrange(mid, len).index(i) 
+
+verification results:: 907 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 3123MB, peak z3 RSS: 86MB, min free: 22272MB
+Sampled CPU Usage: rust_verify: 53s, z3 children: 51s

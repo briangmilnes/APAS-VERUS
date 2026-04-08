@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap19/ArraySeqStEph.rs:893:21
+    |
+893 |                     acc == a.seq@.take(i as int).fold_left(id, spec_f),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap19/ArraySeqStEph.rs:894:21
+    |
+894 | /                     forall|k: int| #![trigger seq@[k]] 0 <= k < seq@.len() ==>
+895 | |                         seq@[k] == a.seq@.take(k + 1).fold_left(id, spec_f),
+    | |___________________________________________________________________________^
+
+verification results:: 907 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 7329MB, peak z3 RSS: 627MB, min free: 19483MB
+Sampled CPU Usage: rust_verify: 146s, z3 children: 136s

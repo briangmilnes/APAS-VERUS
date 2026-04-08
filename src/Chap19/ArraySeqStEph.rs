@@ -120,7 +120,6 @@ pub mod ArraySeqStEph {
             lemma_flatten_bounded_by_outer_len::<T>(prefix);
             prefix.lemma_flatten_push(ss.last());
             assert(ss =~= prefix.push(ss.last()));
-            assert(ss.flatten() =~= prefix.flatten() + ss.last());
         }
     }
 
@@ -138,7 +137,6 @@ pub mod ArraySeqStEph {
             lemma_flatten_all_satisfy::<T>(prefix, p);
             prefix.lemma_flatten_push(last);
             assert(ss =~= prefix.push(last));
-            assert(ss.flatten() =~= prefix.flatten() + last);
         }
     }
 
@@ -495,7 +493,6 @@ pub mod ArraySeqStEph {
                 seq.push(self.seq[i].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(self.seq[i as int], last));
                     axiom_cloned_implies_eq_owned(self.seq[i as int], last);
                 }
                 i += 1;
@@ -523,7 +520,6 @@ pub mod ArraySeqStEph {
                 seq.push(a.seq[i].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(a.seq[i as int], last));
                     axiom_cloned_implies_eq_owned(a.seq[i as int], last);
                 }
                 i += 1;
@@ -567,7 +563,6 @@ pub mod ArraySeqStEph {
                 {
                     let r = item.clone();
                     proof {
-                        assert(cloned(item, r));
                         axiom_cloned_implies_eq_owned(item, r);
                     }
                     r
@@ -597,14 +592,12 @@ pub mod ArraySeqStEph {
                     if i < a_len {
                         let r = a.seq[i].clone();
                         proof {
-                            assert(cloned(a.seq@[i as int], r));
                             axiom_cloned_implies_eq_owned(a.seq@[i as int], r);
                         }
                         r
                     } else {
                         let r = b.seq[i - a_len].clone();
                         proof {
-                            assert(cloned(b.seq@[(i - a_len) as int], r));
                             axiom_cloned_implies_eq_owned(b.seq@[(i - a_len) as int], r);
                         }
                         r
@@ -637,8 +630,6 @@ pub mod ArraySeqStEph {
             let filtered = Self::flatten(&deflated);
             proof {
                 let ghost ss = deflated.seq@.map_values(|inner: ArraySeqStEphS<T>| inner.seq@);
-                assert(ss.len() == a.seq@.len());
-                assert(forall|i: int| #![trigger ss[i]] 0 <= i < ss.len() ==> ss[i].len() <= 1);
                 lemma_flatten_bounded_by_outer_len::<T>(ss);
 
                 // Every element in every inner seq satisfies pred.
@@ -647,20 +638,14 @@ pub mod ArraySeqStEph {
                     0 <= j < ss.len() && 0 <= k < ss[j].len()
                     implies p(ss[j][k])
                 by {
-                    assert(ss[j] =~= deflated.seq@[j].seq@);
-                    assert(deflated.seq@[j].seq@.len() <= 1);
-                    assert(deflated.seq@[j].seq@.len() == 1);
-                    assert(deflated.seq@[j].seq@[0] == a.seq@[j]);
                 };
                 lemma_flatten_all_satisfy::<T>(ss, p);
 
                 // Connect flatten length to spec_filter_len via the 0-or-1 lemma.
                 let ghost s_view = Seq::new(a.seq@.len(), |i: int| a.seq@[i]);
-                assert(s_view =~= a.seq@);
                 assert forall|i: int| #![trigger ss[i]] 0 <= i < a.seq@.len()
                     implies (ss[i].len() == 1 <==> spec_pred(a.seq@[i]))
                 by {
-                    assert(ss[i] =~= deflated.seq@[i].seq@);
                 };
                 lemma_flatten_01_eq_spec_filter_len(a.seq@, ss, spec_pred);
 
@@ -669,7 +654,6 @@ pub mod ArraySeqStEph {
                     0 <= i < a.seq@.len() && ss[i].len() == 1
                     implies ss[i][0] == a.seq@[i]
                 by {
-                    assert(ss[i] =~= deflated.seq@[i].seq@);
                 };
                 lemma_flatten_01_multiset_eq_filter(a.seq@, ss, spec_pred);
 
@@ -716,7 +700,6 @@ pub mod ArraySeqStEph {
                 result_vec.push(elem);
                 k += 1;
             }
-            assert(result_vec@ =~= s);
 
             let mut i: usize = ulen;
             while i > 0
@@ -743,15 +726,12 @@ pub mod ArraySeqStEph {
                 }
                 proof {
                     let ghost sub = u.subrange(i as int, ulen as int);
-                    assert(sub.len() > 0);
-                    assert(sub[0] == u[i as int]);
                     assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
                     reveal(spec_inject);
                 }
             }
 
             proof {
-                assert(u.subrange(0, ulen as int) =~= u);
             }
             let injected = ArraySeqStEphS { seq: result_vec };
             proof {
@@ -760,13 +740,6 @@ pub mod ArraySeqStEph {
                         Seq::new(a.spec_len(), |j: int| a.spec_index(j))[i] == a.seq@[i]
                     by {
                         a.lemma_spec_index(i);
-                    };
-                }
-                assert(Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)) =~= result_vec@) by {
-                    assert forall|i: int| 0 <= i < injected.spec_len() implies
-                        Seq::new(injected.spec_len(), |j: int| injected.spec_index(j))[i] == result_vec@[i]
-                    by {
-                        injected.lemma_spec_index(i);
                     };
                 }
             }
@@ -801,20 +774,16 @@ pub mod ArraySeqStEph {
                 decreases len - i,
             {
                 proof {
-                    assert(a.seq@.take(i as int + 1) =~= a.seq@.take(i as int).push(a.seq@[i as int]));
                 }
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     let ghost t = a.seq@.take(i as int + 1);
-                    assert(t.len() > 0);
                     assert(t.drop_last() =~= a.seq@.take(i as int));
-                    assert(t.last() == a.seq@[i as int]);
                     reveal(Seq::fold_left);
                 }
                 i += 1;
             }
             proof {
-                assert(a.seq@.take(len as int) =~= a.seq@);
             }
             acc
         }
@@ -846,20 +815,16 @@ pub mod ArraySeqStEph {
                 decreases len - i,
             {
                 proof {
-                    assert(a.seq@.take(i as int + 1) =~= a.seq@.take(i as int).push(a.seq@[i as int]));
                 }
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     let ghost t = a.seq@.take(i as int + 1);
-                    assert(t.len() > 0);
                     assert(t.drop_last() =~= a.seq@.take(i as int));
-                    assert(t.last() == a.seq@[i as int]);
                     reveal(Seq::fold_left);
                 }
                 i += 1;
             }
             proof {
-                assert(a.seq@.take(len as int) =~= a.seq@);
             }
             acc
         }
@@ -896,21 +861,17 @@ pub mod ArraySeqStEph {
                 decreases len - i,
             {
                 proof {
-                    assert(a.seq@.take(i as int + 1) =~= a.seq@.take(i as int).push(a.seq@[i as int]));
                 }
                 seq.push(f(&acc, &a.seq[i]));
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     let ghost t = a.seq@.take(i as int + 1);
-                    assert(t.len() > 0);
                     assert(t.drop_last() =~= a.seq@.take(i as int));
-                    assert(t.last() == a.seq@[i as int]);
                     reveal(Seq::fold_left);
                 }
                 i += 1;
             }
             proof {
-                assert(a.seq@.take(len as int) =~= a.seq@);
             }
             (ArraySeqStEphS { seq }, acc)
         }
@@ -987,14 +948,11 @@ pub mod ArraySeqStEph {
                     seq.push(inner.seq[j].clone());
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
-                        assert(cloned(inner.seq[j as int], last));
                         axiom_cloned_implies_eq_owned(inner.seq[j as int], last);
-                        assert(inner.seq@.take(j as int + 1) =~= inner.seq@.take(j as int).push(inner.seq@[j as int]));
                     }
                     j += 1;
                 }
                 proof {
-                    assert(inner.seq@.take(inner_len as int) =~= inner.seq@);
                     let ghost prefix = a.seq@.take(i as int).map_values(|inner: ArraySeqStEphS<T>| inner.seq@);
                     assert(a.seq@.take(i as int + 1).map_values(|inner: ArraySeqStEphS<T>| inner.seq@)
                         =~= prefix.push(a.seq@[i as int].seq@));
@@ -1003,7 +961,6 @@ pub mod ArraySeqStEph {
                 i += 1;
             }
             proof {
-                assert(a.seq@.take(outer_len as int) =~= a.seq@);
             }
             ArraySeqStEphS { seq }
         }
@@ -1016,7 +973,6 @@ pub mod ArraySeqStEph {
             if pred(x) {
                 let elem = x.clone();
                 proof {
-                    assert(cloned(*x, elem));
                     axiom_cloned_implies_eq_owned(*x, elem);
                 }
                 Self::singleton(elem)

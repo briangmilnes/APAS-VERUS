@@ -1,0 +1,30 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:865:24
+    |
+865 |                 assert(result_vec@ =~= spec_inject(s, u));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+result_vec.view() =~= spec_inject(s, u) 
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:858:28
+    |
+858 |                     assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
+    |                            ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:510:12
+    |
+    = note: recommendation not met
+
+verification results:: 907 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 2662MB, peak z3 RSS: 360MB, min free: 23798MB
+Sampled CPU Usage: rust_verify: 32s, z3 children: 11s

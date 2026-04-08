@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap19/ArraySeqStEph.rs:648:29
+    |
+648 |                     implies p(ss[j][k])
+    |                             ^
+
+error[E0425]: cannot find type `ArraySeqStEphS` in this scope
+    --> src/Chap19/ArraySeqStEph.rs:1228:30
+     |
+1228 |     impl<T: Debug> Debug for ArraySeqStEphS<T> {
+     |                              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphS` in this scope
+    --> src/Chap19/ArraySeqStEph.rs:1234:34
+     |
+1234 |     impl<T: Display> Display for ArraySeqStEphS<T> {
+     |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphIter` in this scope
+    --> src/Chap19/ArraySeqStEph.rs:1245:34
+     |
+1245 |     impl<'a, T: Debug> Debug for ArraySeqStEphIter<'a, T> {
+     |                                  ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphIter` in this scope
+    --> src/Chap19/ArraySeqStEph.rs:1251:29
+     |
+1251 |     impl<'a, T> Display for ArraySeqStEphIter<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphGhostIterator` in this scope
+    --> src/Chap19/ArraySeqStEph.rs:1257:27
+     |
+1257 |     impl<'a, T> Debug for ArraySeqStEphGhostIterator<'a, T> {
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphGhostIterator` in this scope
+    --> src/Chap19/ArraySeqStEph.rs:1263:29
+     |
+1263 |     impl<'a, T> Display for ArraySeqStEphGhostIterator<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 21105MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap19/ArraySeqStPer.rs:638:17
+    |
+638 |                 by {
+    |                 ^^
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap19/ArraySeqStPer.rs:1236:30
+     |
+1236 |     impl<T: Debug> Debug for ArraySeqStPerS<T> {
+     |                              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap19/ArraySeqStPer.rs:1242:34
+     |
+1242 |     impl<T: Display> Display for ArraySeqStPerS<T> {
+     |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerIter` in this scope
+    --> src/Chap19/ArraySeqStPer.rs:1253:34
+     |
+1253 |     impl<'a, T: Debug> Debug for ArraySeqStPerIter<'a, T> {
+     |                                  ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerIter` in this scope
+    --> src/Chap19/ArraySeqStPer.rs:1259:29
+     |
+1259 |     impl<'a, T> Display for ArraySeqStPerIter<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerGhostIterator` in this scope
+    --> src/Chap19/ArraySeqStPer.rs:1265:27
+     |
+1265 |     impl<'a, T> Debug for ArraySeqStPerGhostIterator<'a, T> {
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerGhostIterator` in this scope
+    --> src/Chap19/ArraySeqStPer.rs:1271:29
+     |
+1271 |     impl<'a, T> Display for ArraySeqStPerGhostIterator<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 2667MB, peak z3 RSS: 396MB, min free: 22053MB
+Sampled CPU Usage: rust_verify: 35s, z3 children: 10s

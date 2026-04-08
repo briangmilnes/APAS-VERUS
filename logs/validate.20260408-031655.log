@@ -1,0 +1,31 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: precondition not satisfied
+    --> src/Chap19/ArraySeqMtEph.rs:1398:23
+     |
+1362 |                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
+     |                 -------------------------------------------------------------------------------- failed precondition
+...
+1398 |                     { Self::filter_par(&left_seq, p1) },
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+    --> src/Chap19/ArraySeqMtEph.rs:1362:69
+     |
+1362 |                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
+     |                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_clone() ✔
+left_seq.seq.view().len() <= UnsignedMax.Exec(usize::BITS) ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = left_seq.seq.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        ClosureReq(p1, (left_seq.seq.view().index(i))) ✘
+
+verification results:: 907 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 6947MB, peak z3 RSS: 818MB, min free: 19273MB
+Sampled CPU Usage: rust_verify: 145s, z3 children: 142s

@@ -1,0 +1,47 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: postcondition not satisfied
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1343:21
+     |
+1343 |               ensures ({
+     |  _____________________^
+1344 | |                 let a_fn = |i: int| a.spec_index(i);
+1345 | |                 &&& scanned.0@.len() == a.spec_len()
+1346 | |                 &&& forall|i: int| #![trigger scanned.0@[i]] 0 <= i < a.spec_len() ==>
+1347 | |                         scanned.0@[i] == spec_prefix_fold(a_fn, spec_f, id, i + 1)
+1348 | |                 &&& scanned.1 == spec_prefix_fold(a_fn, spec_f, id, a.spec_len() as int)
+1349 | |             }),
+     | |______________^ failed this postcondition
+...
+1354 | /             if len == 1 {
+1355 | |                 let elem = a.nth_cloned(0);
+1356 | |                 let elem2 = elem.clone_plus();
+1357 | |                 proof {
+...    |
+1502 | |                 (result_vec, total)
+1503 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1347:25
+     |
+1347 |                         scanned.0@[i] == spec_prefix_fold(a_fn, spec_f, id, i + 1)
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1348 |                 &&& scanned.1 == spec_prefix_fold(a_fn, spec_f, id, a.spec_len() as int)
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+let a_fn = (|i| old(a).spec_index(i));
+    scanned.0.view().len() == old(a).spec_len() ✔
+    forall |i|
+        let tmp%% = 0 in let tmp%% = i in let tmp%% = old(a).spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+            scanned.0.view().index(i) == spec_prefix_fold(a_fn, old(spec_f), old(id), i + 1) ✘
+    scanned.1 == spec_prefix_fold(a_fn, old(spec_f), old(id), old(a).spec_len()) ✘
+
+verification results:: 907 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 3068MB, peak z3 RSS: 565MB, min free: 21838MB
+Sampled CPU Usage: rust_verify: 50s, z3 children: 37s

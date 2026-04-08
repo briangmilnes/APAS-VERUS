@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: postcondition not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:285:17
+    |
+285 |                   spec_prefix_fold(seq_fn, spec_f, id, n) == s.take(n).fold_left(id, spec_f),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+289 | /             if n > 0 {
+290 | |                 lemma_prefix_fold_eq_fold_left(s, seq_fn, spec_f, id, n - 1);
+291 | | // Veracity: TESTING assert                 assert(s.take(n).drop_last() =~= s.take(n - 1));
+292 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+spec_prefix_fold(old(seq_fn), old(spec_f), old(id), old(n)) == old(s).subrange(0, old(n)).fold_left(old(id), old(spec_f)) 
+
+verification results:: 907 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 2874MB, peak z3 RSS: 133MB, min free: 23659MB
+Sampled CPU Usage: rust_verify: 46s, z3 children: 37s

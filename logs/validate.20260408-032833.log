@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: postcondition not satisfied
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1535:13
+     |
+1535 |               flattened@.len() == spec_sum_inner_lens(a),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1539 | /         if len == 0 {
+1540 | |             Vec::new()
+1541 | |         } else if len == 1 {
+1542 | |             let backing: &Vec<ArraySeqMtEphSliceS<T>> = arc_deref(&a.data);
+...    |
+1636 | |             left_v
+1637 | |         }
+     | |_________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+flattened.view().len() == spec_sum_inner_lens(old(a)) 
+
+verification results:: 907 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 4072MB, peak z3 RSS: 86MB, min free: 22549MB
+Sampled CPU Usage: rust_verify: 40s, z3 children: 4s

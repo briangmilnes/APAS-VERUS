@@ -1,0 +1,56 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: precondition not satisfied
+    --> src/Chap19/ArraySeqMtEph.rs:1605:37
+     |
+1605 |                 let (left, right) = join(fa, fb);
+     |                                     ^^^^^^^^^^^^
+     |
+    ::: src/Chap02/HFSchedulerMtEph.rs:133:13
+     |
+ 133 |             fb.requires(()),
+     |             --------------- failed precondition
+
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEph.rs:1614:36
+     |
+1614 | ...                   assert(right_view[j] == a_view[mid as int + j]);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap02/HFSchedulerMtEph.rs:133:13
+    |
+133 |             fb.requires(()),
+    |             ^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(fa, ()) ✔
+ClosureReq(fb, ()) ✘
+
+note: recommendation not met
+    --> src/Chap19/ArraySeqMtEph.rs:1588:113
+     |
+1588 |                         forall|i: int| #![trigger r.seq@[i]] 0 <= i < left_len ==> f1.ensures((&left_view[i],), r.seq@[i]),
+     |                                                                                                                 ^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap19/ArraySeqMtEph.rs:1600:115
+     |
+1600 |                         forall|i: int| #![trigger r.seq@[i]] 0 <= i < right_len ==> f2.ensures((&right_view[i],), r.seq@[i]),
+     |                                                                                                                   ^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+verification results:: 907 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 3465MB, peak z3 RSS: 380MB, min free: 22542MB
+Sampled CPU Usage: rust_verify: 52s, z3 children: 37s

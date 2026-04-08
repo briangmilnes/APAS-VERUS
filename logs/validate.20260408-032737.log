@@ -1,0 +1,52 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1316:36
+     |
+1316 |                         #[trigger] f.ensures(((start as int + j) as usize,), left_v@[j])
+     |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+ClosureEns(f, (clip(usize, start + j)), left_v.view().index(j)) 
+
+note: recommendation not met: value may be out of range of the target type (use `#[verifier::truncate]` on the cast to silence this warning)
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1308:44
+     |
+1308 | ...                   ==> f.ensures(((right_start as int + j) as usize,), right_v@[j]),
+     |                                      ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: value may be out of range of the target type (use `#[verifier::truncate]` on the cast to silence this warning)
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1302:44
+     |
+1302 | ...                   ==> f.ensures(((start as int + j) as usize,), left_v@[j]),
+     |                                      ^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1271:94
+     |
+1271 | ...                   0 <= i < left_len ==> f1.ensures(((start as int + i) as usize,), r@[i]),
+     |                                                                                        ^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1285:101
+     |
+1285 | ...                   0 <= i < right_len ==> f2.ensures(((right_start as int + i) as usize,), r@[i]),
+     |                                                                                               ^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+verification results:: 907 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 1854MB, peak z3 RSS: 86MB, min free: 21134MB
+Sampled CPU Usage: rust_verify: 19s, z3 children: 4s

@@ -1,0 +1,32 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: assertion failed
+   --> src/Chap19/ArraySeqStPer.rs:774:24
+    |
+774 |                   assert(spec_inject(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), updates@)
+    |  ________________________^
+775 | |                     =~= spec_inject(a.seq@, updates@));
+    | |_____________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_inject(new(a.spec_len(), (|i| a.spec_index(i))), updates.view()) =~= spec_inject(a.seq.view(), updates.view()) 
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqStPer.rs:749:28
+    |
+749 |                     assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
+    |                            ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:510:12
+    |
+    = note: recommendation not met
+
+verification results:: 907 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 3690MB, peak z3 RSS: 627MB, min free: 22722MB
+Sampled CPU Usage: rust_verify: 53s, z3 children: 36s

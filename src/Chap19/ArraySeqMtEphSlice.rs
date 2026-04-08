@@ -212,13 +212,11 @@ pub mod ArraySeqMtEphSlice {
                 s.lemma_fold_left_split(id, f, n);
                 s.lemma_fold_left_split(x, f, n);
 
-                assert(tail =~= seq![a_last]);
                 reveal_with_fuel(Seq::fold_left, 2);
                 let lid = s1.fold_left(id, f);
                 let lx = s1.fold_left(x, f);
                 lemma_monoid_fold_left(s1, f, id, x);
 
-                assert(f(x, f(lid, a_last)) == f(f(x, lid), a_last));
             }
         }
 
@@ -267,10 +265,7 @@ pub mod ArraySeqMtEphSlice {
                 let left = spec_prefix_fold(a_fn, spec_f, id, m);
                 let right_prev = spec_prefix_fold(|j: int| a_fn(m + j), spec_f, id, k - 1);
                 let elem = a_fn(m + k - 1);
-                assert(spec_prefix_fold(a_fn, spec_f, id, m + k) == spec_f(spec_f(left, right_prev), elem));
                 // shifted_a(k-1) == a_fn(m + (k-1)) == a_fn(m + k - 1) == elem
-                assert((|j: int| a_fn(m + j))(k - 1) == elem);
-                assert(spec_prefix_fold(|j: int| a_fn(m + j), spec_f, id, k) == spec_f(right_prev, elem));
             }
         }
 
@@ -780,13 +775,11 @@ pub mod ArraySeqMtEphSlice {
                 assert forall|i: int| #![trigger result.spec_index(i)]
                     0 <= i < a.spec_len() implies result.spec_index(i) == a.spec_index(i)
                 by {
-                    assert(result.spec_index(i) == v@[i]);
                 }
                 assert forall|i: int| #![trigger b.spec_index(i)]
                     0 <= i < b.spec_len() implies
                     result.spec_index(a.spec_len() as int + i) == b.spec_index(i)
                 by {
-                    assert(result.spec_index(a.spec_len() as int + i) == v@[a_len as int + i]);
                 }
             }
             result
@@ -824,7 +817,6 @@ pub mod ArraySeqMtEphSlice {
                 k = k + 1;
             }
             proof {
-                assert(result_vec@ =~= s);
             }
 
             // Apply updates from end to front (matches spec_inject recursion).
@@ -853,8 +845,6 @@ pub mod ArraySeqMtEphSlice {
                 }
                 proof {
                     let ghost sub = u.subrange(i as int, ulen as int);
-                    assert(sub.len() > 0);
-                    assert(sub[0] == u[i as int]);
                     assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
                     reveal(spec_inject);
                 }
@@ -862,11 +852,9 @@ pub mod ArraySeqMtEphSlice {
 
             proof {
                 assert(u.subrange(0, ulen as int) =~= u);
-                assert(result_vec@ =~= spec_inject(s, u));
             }
             let injected = Self::from_vec(result_vec);
             proof {
-                assert(Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)) =~= result_vec@);
             }
             injected
         }
@@ -878,7 +866,6 @@ pub mod ArraySeqMtEphSlice {
                 let s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
                 let r = Seq::new(injected.spec_len(), |i: int| injected.spec_index(i));
                 let u = updates@;
-                assert(r =~= spec_inject(s, u));
                 lemma_spec_inject_len(s, u);
                 assert forall|i: int| 0 <= i < s.len() implies {
                     r[i] == s[i]
@@ -893,8 +880,6 @@ pub mod ArraySeqMtEphSlice {
 
         fn iter(&self) -> (it: ArraySeqMtEphSliceIter<'_, T>) {
             let sl: &[T] = arc_vec_as_slice(&self.data, self.start, self.len);
-            assert(sl@.len() == self.len);
-            assert(sl@ == self.spec_backing_seq());
             ArraySeqMtEphSliceIter { inner: sl.iter() }
         }
 
@@ -905,7 +890,6 @@ pub mod ArraySeqMtEphSlice {
             let len = self.length();
             if len == 0 {
                 proof {
-                    assert(self.spec_backing_seq() =~= Seq::<T>::empty());
                     reveal(Seq::fold_left);
                 }
                 id
@@ -936,12 +920,6 @@ pub mod ArraySeqMtEphSlice {
             let ghost v_view = v@;
             let tab = Self::from_vec(v);
             proof {
-                assert forall|i: int| 0 <= i < length implies
-                    #[trigger] f.ensures((i as usize,), tab.spec_index(i))
-                by {
-                    assert(tab.spec_index(i) == v_view[i]);
-                    assert(f.ensures((i as usize,), v_view[i]));
-                }
             }
             tab
         }
@@ -953,7 +931,6 @@ pub mod ArraySeqMtEphSlice {
             let len = self.length();
             if len == 0 {
                 proof {
-                    assert(self.spec_backing_seq() =~= Seq::<T>::empty());
                     reveal(Seq::fold_left);
                 }
                 (Self::empty(), id)
@@ -998,9 +975,7 @@ pub mod ArraySeqMtEphSlice {
                 let elem = a.nth_cloned(0);
                 proof {
                     let s = a.spec_backing_seq();
-                    assert(s =~= seq![a.spec_index(0)]);
                     reveal_with_fuel(Seq::fold_left, 2);
-                    assert(spec_f(id, s[0]) == s[0]);
                 }
                 elem
             } else {
@@ -1025,19 +1000,14 @@ pub mod ArraySeqMtEphSlice {
                     assert forall|i: int| 0 <= i < mid implies
                         #[trigger] left_backing[i] == s.subrange(0, mid as int)[i]
                     by {
-                        assert(left.spec_index(i) == a.spec_index(0int + i));
                         assert(left_backing[i] == left.spec_index(i));
-                        assert(s[i] == a.spec_index(i));
                     }
                     assert(left_backing =~= s.subrange(0, mid as int));
                     // right_backing[i] == right.spec_index(i) == a.spec_index(mid+i) == s[mid+i]
                     assert forall|i: int| 0 <= i < (len - mid) as int implies
                         #[trigger] right_backing[i] == s.subrange(mid as int, len as int)[i]
                     by {
-                        assert(right.spec_index(i) == a.spec_index(mid as int + i));
                         assert(right_backing[i] == right.spec_index(i));
-                        assert(s.subrange(mid as int, len as int)[i] == s[mid as int + i]);
-                        assert(s[mid as int + i] == a.spec_index(mid as int + i));
                     }
                     assert(right_backing =~= s.subrange(mid as int, len as int));
                 }
@@ -1316,11 +1286,9 @@ pub mod ArraySeqMtEphSlice {
                         #[trigger] f.ensures(((start as int + j) as usize,), left_v@[j])
                     by {
                         if j < left_len as int {
-                            assert(f.ensures(((start as int + j) as usize,), left_v@[j]));
                         } else {
                             let k = j - left_len as int;
                             assert(left_v@[left_len as int + k] == right_v@[k]);
-                            assert(f.ensures(((right_start as int + k) as usize,), right_v@[k]));
                         }
                     }
                 }
@@ -1358,10 +1326,8 @@ pub mod ArraySeqMtEphSlice {
                     axiom_cloned_implies_eq_owned(elem, elem2);
                     // spec_prefix_fold(a_fn, f, id, 1) = f(prefix_fold(a_fn, f, id, 0), a_fn(0)) = f(id, a[0]) = a[0].
                     // Unfold one step: n=1 > 0 so prefix_fold(1) = f(prefix_fold(0), a_fn(0)) = f(id, a[0]).
-                    assert(spec_prefix_fold(a_fn, spec_f, id, 0int) == id);
                     assert(spec_prefix_fold(a_fn, spec_f, id, 1int)
                         == spec_f(spec_prefix_fold(a_fn, spec_f, id, 0int), a_fn(0int)));
-                    assert(a_fn(0int) == a.spec_index(0));
                 }
                 let mut v: Vec<T> = Vec::with_capacity(1);
                 v.push(elem);
@@ -1549,9 +1515,7 @@ pub mod ArraySeqMtEphSlice {
                 let rest = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
                     data: a.data, start: (a.start + 1) as usize, len: 0usize,
                 };
-                assert(spec_sum_inner_lens(&rest) == 0nat);
                 assert(spec_sum_inner_lens(a) == inner.len as nat + spec_sum_inner_lens(&rest));
-                assert(v@.len() == inner.spec_len());
             }
             v
         } else {
@@ -1579,8 +1543,6 @@ pub mod ArraySeqMtEphSlice {
                     &&& inner.start + inner.len <= (*inner.data)@.len()
                     &&& inner.start + inner.len <= usize::MAX
                 } by {
-                    assert((*left.data)@[left.start as int + i]
-                        == (*a.data)@[a.start as int + i]);
                 }
                 assert(spec_nested_wf(&left));
 
@@ -1746,8 +1708,6 @@ pub mod ArraySeqMtEphSlice {
                 iter_invariant(&it),
         {
             let sl: &[T] = arc_vec_as_slice(&self.data, self.start, self.len);
-            assert(sl@.len() == self.len);
-            assert(sl@ == self.spec_backing_seq());
             ArraySeqMtEphSliceIter { inner: sl.iter() }
         }
     }
