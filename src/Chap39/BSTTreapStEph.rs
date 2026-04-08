@@ -754,7 +754,6 @@ pub mod BSTTreapStEph {
                     Self::lemma_size_wf_child_bounded(link);
                     Self::lemma_height_le_size(&node.left);
                     Self::lemma_height_le_size(&node.right);
-                    assert(Self::spec_height_link(link) <= Self::spec_size_link(link));
                 }
             }
         }
@@ -765,10 +764,6 @@ pub mod BSTTreapStEph {
             match link {
                 None => {},
                 Some(node) => {
-                    assert(node.size as nat == 1 + Self::spec_size_link(&node.left) + Self::spec_size_link(&node.right));
-                    assert(Self::spec_size_link(&node.left) < node.size as nat);
-                    assert(Self::spec_size_link(&node.right) < node.size as nat);
-                    assert(node.size as nat == Self::spec_size_link(link));
                 }
             }
         }
@@ -897,18 +892,14 @@ pub mod BSTTreapStEph {
                         assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies xk.is_lt(&k) by {
                             Self::lemma_contains_left(&y, k);
                         };
-                        assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies k.is_lt(&yk) by {};
                     }
                 }
 
                 x.right = y.left.take();
-                assert(1 + x_left_sz + y_left_sz + 1 + y_right_sz <= usize::MAX as nat);
                 Self::update_size(&mut x);
 
                 proof {
                     if bst_input {
-                        assert(Self::spec_bst_link(&x.left));
-                        assert(Self::spec_bst_link(&x.right));
                         assert(Self::spec_bst_link(&Some(x)));
                     }
                 }
@@ -920,21 +911,16 @@ pub mod BSTTreapStEph {
                     reveal_with_fuel(spec_contains_link, 3);
                     if bst_input {
                         Self::lemma_bst_decompose(&orig_right);
-                        assert(Self::spec_bst_link(&y.right));
                         Self::lemma_contains_root(&y);
                         Self::lemma_contains_root(&y);
                         assert(spec_contains_link(&orig_right, yk));
-                        assert(xk.is_lt(&yk));
-                        assert(x.right == b);
                         assert forall |k: T| #[trigger] spec_contains_link(&y.left, k) implies k.is_lt(&yk) by {
                             if spec_contains_link(&x.left, k) {
                                 T::is_lt_transitive(k, xk, yk);
                             }
                             if spec_contains_link(&x.right, k) {
-                                assert(spec_contains_link(&b, k));
                             }
                         };
-                        assert(Self::spec_bst_link(&Some(y)));
                     }
                 }
                 y
@@ -967,18 +953,14 @@ pub mod BSTTreapStEph {
                         assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies k.is_lt(&xk) by {
                             Self::lemma_contains_right(&y, k);
                         };
-                        assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies yk.is_lt(&k) by {};
                     }
                 }
 
                 x.left = y.right.take();
-                assert(1 + y_left_sz + x_right_sz + 1 + y_right_sz <= usize::MAX as nat);
                 Self::update_size(&mut x);
 
                 proof {
                     if bst_input {
-                        assert(Self::spec_bst_link(&x.right));
-                        assert(Self::spec_bst_link(&x.left));
                         assert(Self::spec_bst_link(&Some(x)));
                     }
                 }
@@ -990,20 +972,15 @@ pub mod BSTTreapStEph {
                     reveal_with_fuel(spec_contains_link, 3);
                     if bst_input {
                         Self::lemma_bst_decompose(&orig_left);
-                        assert(Self::spec_bst_link(&y.left));
                         Self::lemma_contains_root(&y);
                         assert(spec_contains_link(&orig_left, yk));
-                        assert(yk.is_lt(&xk));
-                        assert(x.left == b);
                         assert forall |k: T| #[trigger] spec_contains_link(&y.right, k) implies yk.is_lt(&k) by {
                             if spec_contains_link(&x.right, k) {
                                 T::is_lt_transitive(yk, xk, k);
                             }
                             if spec_contains_link(&x.left, k) {
-                                assert(spec_contains_link(&b, k));
                             }
                         };
-                        assert(Self::spec_bst_link(&Some(y)));
                     }
                 }
                 y
@@ -1046,10 +1023,6 @@ pub mod BSTTreapStEph {
                     proof {
                         Self::lemma_height_le_size(&node.left);
                         Self::lemma_height_le_size(&node.right);
-                        assert(lh as nat == Self::spec_height_link(&node.left));
-                        assert(rh as nat == Self::spec_height_link(&node.right));
-                        assert(m as nat <= Self::spec_size_link(&node.left) || m as nat <= Self::spec_size_link(&node.right));
-                        assert(m < usize::MAX);
                     }
                     1 + m
                 }
@@ -1086,24 +1059,8 @@ pub mod BSTTreapStEph {
                             Self::lemma_wf_assemble_node(&node);
                             // Inserted value is in the left subtree, hence in the tree.
                             Self::lemma_contains_left(&node, value);
-                            assert forall |k: T| #[trigger] spec_contains_link(&link, k)
-                                implies spec_contains_link(&Some(node), k) by {
-                                if spec_contains_link(&node.left, k) { Self::lemma_contains_left(&node, k); }
-                                if spec_contains_link(&node.right, k) { Self::lemma_contains_right(&node, k); }
-                            };
-                            assert forall |k: T| #[trigger] spec_contains_link(&Some(node), k)
-                                implies (spec_contains_link(&link, k) || k == value) by {};
                             if Self::spec_bst_link(&link) {
                                 Self::lemma_bst_decompose(&link);
-                                assert(node.key == orig_key);
-                                assert forall |k: T| #[trigger] spec_contains_link(&node.left, k)
-                                    implies k.is_lt(&node.key) by {
-                                    if spec_contains_link(&orig_left, k) {
-                                    } else {
-                                        assert(value.is_lt(&node.key));
-                                    }
-                                };
-                                assert(Self::spec_bst_link(&Some(node)));
                             }
                         }
                         let needs_rotate = match &node.left {
@@ -1115,7 +1072,6 @@ pub mod BSTTreapStEph {
                             let rotated = Self::rotate_right(node);
                             proof {
                                 // Rotation preserves containment; value was in pre_rotate.
-                                assert(spec_contains_link(&Some(rotated), value));
                             }
                             Some(rotated)
                         } else { Some(node) }
@@ -1126,24 +1082,8 @@ pub mod BSTTreapStEph {
                             Self::lemma_wf_assemble_node(&node);
                             // Inserted value is in the right subtree, hence in the tree.
                             Self::lemma_contains_right(&node, value);
-                            assert forall |k: T| #[trigger] spec_contains_link(&link, k)
-                                implies spec_contains_link(&Some(node), k) by {
-                                if spec_contains_link(&node.left, k) { Self::lemma_contains_left(&node, k); }
-                                if spec_contains_link(&node.right, k) { Self::lemma_contains_right(&node, k); }
-                            };
-                            assert forall |k: T| #[trigger] spec_contains_link(&Some(node), k)
-                                implies (spec_contains_link(&link, k) || k == value) by {};
                             if Self::spec_bst_link(&link) {
                                 Self::lemma_bst_decompose(&link);
-                                assert(node.key == orig_key);
-                                assert forall |k: T| #[trigger] spec_contains_link(&node.right, k)
-                                    implies node.key.is_lt(&k) by {
-                                    if spec_contains_link(&orig_right, k) {
-                                    } else {
-                                        assert(node.key.is_lt(&value));
-                                    }
-                                };
-                                assert(Self::spec_bst_link(&Some(node)));
                             }
                         }
                         let needs_rotate = match &node.right {
@@ -1154,7 +1094,6 @@ pub mod BSTTreapStEph {
                             let ghost pre_rotate = node;
                             let rotated = Self::rotate_left(node);
                             proof {
-                                assert(spec_contains_link(&Some(rotated), value));
                             }
                             Some(rotated)
                         } else { Some(node) }
@@ -1195,18 +1134,8 @@ pub mod BSTTreapStEph {
                         Self::update_size(&mut node);
                         proof {
                             Self::lemma_wf_assemble_node(&node);
-                            assert forall |k: T| #[trigger] spec_contains_link(&Some(node), k)
-                                implies spec_contains_link(&link, k) by {
-                                if spec_contains_link(&node.left, k) {
-                                    assert(spec_contains_link(&orig_left, k));
-                                }
-                            };
                             if Self::spec_bst_link(&link) {
                                 Self::lemma_bst_decompose(&link);
-                                assert forall |k: T| #[trigger] spec_contains_link(&node.left, k)
-                                    implies k.is_lt(&node.key) by {
-                                    assert(spec_contains_link(&orig_left, k));
-                                };
                             }
                         }
                         Some(node)
@@ -1216,18 +1145,8 @@ pub mod BSTTreapStEph {
                         Self::update_size(&mut node);
                         proof {
                             Self::lemma_wf_assemble_node(&node);
-                            assert forall |k: T| #[trigger] spec_contains_link(&Some(node), k)
-                                implies spec_contains_link(&link, k) by {
-                                if spec_contains_link(&node.right, k) {
-                                    assert(spec_contains_link(&orig_right, k));
-                                }
-                            };
                             if Self::spec_bst_link(&link) {
                                 Self::lemma_bst_decompose(&link);
-                                assert forall |k: T| #[trigger] spec_contains_link(&node.right, k)
-                                    implies node.key.is_lt(&k) by {
-                                    assert(spec_contains_link(&orig_right, k));
-                                };
                             }
                         }
                         Some(node)
@@ -1268,36 +1187,15 @@ pub mod BSTTreapStEph {
                                         by {};
                                     if Self::spec_bst_link(&link) {
                                         Self::lemma_bst_decompose(&Some(rotated));
-                                        assert(Self::spec_bst_link(&rot_left));
-                                        assert(Self::spec_bst_link(&rot_right));
-                                        assert forall |k: T| #[trigger] spec_contains_link(&rot_left, k)
-                                            implies k.is_lt(&rot_key) by {};
-                                        assert forall |k: T| #[trigger] spec_contains_link(&rot_right, k)
-                                            implies rot_key.is_lt(&k) by {};
                                     }
                                 }
                                 assert(Self::spec_link_size_wf(&Some(rotated)));
                                 assert(Self::spec_link_size_wf(&rotated.right));
-                                assert(Self::spec_size_link(&rotated.right) < Self::spec_size_link(&link));
                                 rotated.right = Self::delete_link(rotated.right.take(), target);
                                 Self::update_size(&mut rotated);
                                 proof {
                                     Self::lemma_wf_assemble_node(&rotated);
-                                    assert forall |k: T| #[trigger] spec_contains_link(&Some(rotated), k)
-                                        implies spec_contains_link(&link, k) by {
-                                        if spec_contains_link(&rotated.right, k) {
-                                            assert(spec_contains_link(&rot_right, k));
-                                        }
-                                        if spec_contains_link(&rotated.left, k) {
-                                            assert(spec_contains_link(&rot_left, k));
-                                        }
-                                    };
                                     if Self::spec_bst_link(&link) {
-                                        assert forall |k: T| #[trigger] spec_contains_link(&rotated.right, k)
-                                            implies rotated.key.is_lt(&k) by {
-                                            assert(spec_contains_link(&rot_right, k));
-                                        };
-                                        assert(Self::spec_bst_link(&Some(rotated)));
                                     }
                                 }
                                 Some(rotated)
@@ -1313,36 +1211,15 @@ pub mod BSTTreapStEph {
                                         by {};
                                     if Self::spec_bst_link(&link) {
                                         Self::lemma_bst_decompose(&Some(rotated));
-                                        assert(Self::spec_bst_link(&rot_left));
-                                        assert(Self::spec_bst_link(&rot_right));
-                                        assert forall |k: T| #[trigger] spec_contains_link(&rot_left, k)
-                                            implies k.is_lt(&rot_key) by {};
-                                        assert forall |k: T| #[trigger] spec_contains_link(&rot_right, k)
-                                            implies rot_key.is_lt(&k) by {};
                                     }
                                 }
                                 assert(Self::spec_link_size_wf(&Some(rotated)));
                                 assert(Self::spec_link_size_wf(&rotated.left));
-                                assert(Self::spec_size_link(&rotated.left) < Self::spec_size_link(&link));
                                 rotated.left = Self::delete_link(rotated.left.take(), target);
                                 Self::update_size(&mut rotated);
                                 proof {
                                     Self::lemma_wf_assemble_node(&rotated);
-                                    assert forall |k: T| #[trigger] spec_contains_link(&Some(rotated), k)
-                                        implies spec_contains_link(&link, k) by {
-                                        if spec_contains_link(&rotated.left, k) {
-                                            assert(spec_contains_link(&rot_left, k));
-                                        }
-                                        if spec_contains_link(&rotated.right, k) {
-                                            assert(spec_contains_link(&rot_right, k));
-                                        }
-                                    };
                                     if Self::spec_bst_link(&link) {
-                                        assert forall |k: T| #[trigger] spec_contains_link(&rotated.left, k)
-                                            implies k.is_lt(&rotated.key) by {
-                                            assert(spec_contains_link(&rot_left, k));
-                                        };
-                                        assert(Self::spec_bst_link(&Some(rotated)));
                                     }
                                 }
                                 Some(rotated)
@@ -1375,10 +1252,6 @@ pub mod BSTTreapStEph {
                                 if spec_contains_link(&node.right, *target) {
                                     T::is_lt_transitive(*target, node.key, *target);
                                 }
-                                assert(!spec_contains_link(&node.right, *target));
-                                assert(node.key != *target);
-                                assert(spec_contains_link(&node.left, *target));
-                                assert(r.is_some());
                             }
                         }
                         r
@@ -1393,9 +1266,6 @@ pub mod BSTTreapStEph {
                             T::is_lt_irreflexive(*target);
                             if spec_contains_link(link, *target) {
                                 assert(!spec_contains_link(&node.left, *target));
-                                assert(node.key != *target);
-                                assert(spec_contains_link(&node.right, *target));
-                                assert(r.is_some());
                             }
                         }
                         r
@@ -1404,7 +1274,6 @@ pub mod BSTTreapStEph {
                         proof {
                             T::is_lt_antisymmetric(*target, node.key);
                             Self::lemma_contains_root(node);
-                            assert(spec_contains_link(link, *target));
                         }
                         Some(&node.key)
                     }
@@ -1545,10 +1414,7 @@ pub mod BSTTreapStEph {
             let ghost kv = key@;
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                assert(left@.union(right@) =~= old_view.remove(kv));
-                assert(old_view.remove(kv).subset_of(old_view));
                 vstd::set_lib::lemma_len_subset(old_view.remove(kv), old_view);
-                assert(left@.len() + right@.len() < usize::MAX as nat);
             }
             let priority = priority_for_st(&key);
             let new_tree = join_with_priority_st(left, key, priority, right);
@@ -1564,10 +1430,7 @@ pub mod BSTTreapStEph {
             let (left, _, right) = split_inner_st(cloned, key);
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                assert(left@.union(right@) =~= old_view.remove(kref@));
-                assert(old_view.remove(kref@).subset_of(old_view));
                 vstd::set_lib::lemma_len_subset(old_view.remove(kref@), old_view);
-                assert(left@.len() + right@.len() < usize::MAX as nat);
                 assert forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
                     left@.contains(s@) && right@.contains(o@) implies s.cmp_spec(&o) == Less by {
                     lemma_cmp_antisymmetry_st(o, kref);
@@ -1590,14 +1453,10 @@ pub mod BSTTreapStEph {
                     proof {
                         reveal(vstd::laws_cmp::obeys_cmp_ord);
                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                        assert(!left@.union(right@).contains(root_key@));
-                        assert(self@.len() == left@.len() + right@.len() + 1);
                     }
                     match key.cmp(&root_key) {
                         | Equal => {
                             proof {
-                                assert(root_key@ == key@);
-                                assert(self@.contains(root_key@));
                             }
                             Some(root_key)
                         }
@@ -1606,13 +1465,9 @@ pub mod BSTTreapStEph {
                             proof {
                                 match &result {
                                     Some(v) => {
-                                        assert(left@.contains(v@));
-                                        assert(self@.contains(v@));
                                     }
                                     None => {
-                                        assert(!left@.contains(key@));
                                         // key < root_key, so key@ ≠ root_key@.
-                                        assert(key.cmp_spec(&root_key) == Less);
                                         // If key@ were in right@, then root_key < key (from ordering),
                                         // contradicting key < root_key.
                                         assert forall|t: T| #[trigger] right@.contains(t@) implies
@@ -1620,13 +1475,8 @@ pub mod BSTTreapStEph {
                                         // key@ ∉ right@ (if it were, key > root_key, contradiction).
                                         if right@.contains(key@) {
                                             let ghost tk = choose|t: T| #[trigger] t@ == key@ && right@.contains(t@);
-                                            assert(tk.cmp_spec(&root_key) == Greater);
                                             lemma_cmp_equal_congruent_st(*key, tk, root_key);
-                                            assert(false);
                                         }
-                                        assert(!right@.contains(key@));
-                                        assert(key@ != root_key@);
-                                        assert(!self@.contains(key@));
                                     }
                                 }
                             }
@@ -1637,21 +1487,12 @@ pub mod BSTTreapStEph {
                             proof {
                                 match &result {
                                     Some(v) => {
-                                        assert(right@.contains(v@));
-                                        assert(self@.contains(v@));
                                     }
                                     None => {
-                                        assert(!right@.contains(key@));
-                                        assert(key.cmp_spec(&root_key) == Greater);
                                         if left@.contains(key@) {
                                             let ghost tk = choose|t: T| #[trigger] t@ == key@ && left@.contains(t@);
-                                            assert(tk.cmp_spec(&root_key) == Less);
                                             lemma_cmp_equal_congruent_st(*key, tk, root_key);
-                                            assert(false);
                                         }
-                                        assert(!left@.contains(key@));
-                                        assert(key@ != root_key@);
-                                        assert(!self@.contains(key@));
                                     }
                                 }
                             }
@@ -1874,7 +1715,6 @@ pub mod BSTTreapStEph {
     {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        assert(a@ == b@);
     }
 
     /// Right congruence: Equal(b,c) implies any a compares the same way to b and c.
@@ -1887,7 +1727,6 @@ pub mod BSTTreapStEph {
     {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        assert(b@ == c@);
     }
 
     /// After join(lr, key, right), every element is greater than lk.
@@ -1917,7 +1756,6 @@ pub mod BSTTreapStEph {
                 lemma_cmp_transitivity_st(lk, key, t);
                 lemma_cmp_antisymmetry_less_st(lk, t);
             } else {
-                assert(t@ == key@);
                 lemma_cmp_equal_congruent_right_st(lk, t, key);
                 lemma_cmp_antisymmetry_less_st(lk, t);
             }
@@ -1944,14 +1782,12 @@ pub mod BSTTreapStEph {
         ensures
             forall|t: T| (#[trigger] joined_v.contains(t@)) ==> t.cmp_spec(&rk) == Less,
     {
-        assert(rk.cmp_spec(&key) == Greater);
         assert forall|t: T| (#[trigger] joined_v.contains(t@)) implies t.cmp_spec(&rk) == Less by {
             if left_v.contains(t@) {
                 lemma_cmp_antisymmetry_st(rk, key);
                 lemma_cmp_transitivity_st(t, key, rk);
             } else if rlv.contains(t@) {
             } else {
-                assert(t@ == key@);
                 lemma_cmp_antisymmetry_st(rk, key);
                 lemma_cmp_equal_congruent_st(t, key, rk);
             }
@@ -1975,11 +1811,9 @@ pub mod BSTTreapStEph {
                 let lv = spec_set_view_link(&node.left);
                 let rv = spec_set_view_link(&node.right);
                 if kv == x {
-                    assert(node.key@ == x);
                 } else if lv.contains(x) {
                     lemma_wf_view_inhabited_st::<T>(&node.left, x);
                 } else {
-                    assert(rv.contains(x));
                     lemma_wf_view_inhabited_st::<T>(&node.right, x);
                 }
             }
@@ -2030,7 +1864,6 @@ pub mod BSTTreapStEph {
                 let rv = spec_set_view_link(&node.right);
                 let kv = node.key@;
                 vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
-                assert(!lv.union(rv).contains(kv));
             }
         }
     }
@@ -2124,7 +1957,6 @@ pub mod BSTTreapStEph {
         let size = 1 + ls + rs;
         proof {
             vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-            assert(!left@.union(right@).contains(key@));
         }
         BSTTreapStEph {
             root: Some(Box::new(Node {
@@ -2224,26 +2056,14 @@ pub mod BSTTreapStEph {
                     let ghost llv = ll@;
                     proof {
                         // lr ⊆ left, so lr < key and lr.disjoint(right).
-                        assert(lrv.subset_of(ll@.union(lr@).insert(lkv)));
                         vstd::set_lib::lemma_len_subset(lrv, ll@.union(lr@).insert(lkv));
-                        assert(!lrv.contains(key@));
-                        assert(lrv.disjoint(right@));
-                        assert(lrv.len() + right@.len() < usize::MAX as nat);
-                        assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&key) == Less by {
-                            assert(ll@.union(lr@).insert(lkv).contains(t@));
-                        }
                     }
                     let merged_right = join_with_priority_st(lr, key, priority, right);
                     proof {
                         lemma_joined_right_gt_lk_st(lrv, right@, key, merged_right@, lk, ll@.union(lrv).insert(lkv));
-                        assert(!llv.contains(lkv));
-                        assert(!merged_right@.contains(lkv));
-                        assert(llv.disjoint(merged_right@));
                         vstd::set_lib::lemma_set_disjoint_lens(llv, lrv);
                         vstd::set_lib::lemma_set_disjoint_lens(lrv, right@);
-                        assert(merged_right@.len() == lrv.len() + right@.len() + 1);
                         vstd::set_lib::lemma_len_subset(llv, ll@.union(lr@).insert(lkv));
-                        assert(llv.len() + merged_right@.len() < usize::MAX as nat);
                     }
                     make_node_treap_st(ll, lk, lp, merged_right)
                 }
@@ -2256,27 +2076,14 @@ pub mod BSTTreapStEph {
                     let ghost rlv = rl@;
                     let ghost rrv = rr@;
                     proof {
-                        assert(rlv.subset_of(rl@.union(rr@).insert(rkv)));
                         vstd::set_lib::lemma_len_subset(rlv, rl@.union(rr@).insert(rkv));
-                        assert(!rlv.contains(key@));
-                        assert(left@.disjoint(rlv));
-                        assert(left@.len() + rlv.len() < usize::MAX as nat);
-                        assert forall|t: T| (#[trigger] rlv.contains(t@)) implies t.cmp_spec(&key) == Greater by {
-                            assert(rl@.union(rr@).insert(rkv).contains(t@));
-                        }
                     }
                     let merged_left = join_with_priority_st(left, key, priority, rl);
                     proof {
-                        assert(rl@.union(rr@).insert(rkv).contains(rkv));
                         lemma_joined_left_lt_rk_st(left@, rlv, key, merged_left@, rk, rl@.union(rr@).insert(rkv));
-                        assert(!rrv.contains(rkv));
-                        assert(!merged_left@.contains(rkv));
-                        assert(merged_left@.disjoint(rrv));
                         vstd::set_lib::lemma_set_disjoint_lens(left@, rlv);
                         vstd::set_lib::lemma_set_disjoint_lens(rlv, rrv);
-                        assert(merged_left@.len() == left@.len() + rlv.len() + 1);
                         vstd::set_lib::lemma_len_subset(rrv, rl@.union(rr@).insert(rkv));
-                        assert(merged_left@.len() + rrv.len() < usize::MAX as nat);
                     }
                     make_node_treap_st(merged_left, rk, rp, rr)
                 }
@@ -2311,7 +2118,6 @@ pub mod BSTTreapStEph {
             | Some((left, root_key, root_pri, right)) => {
                 proof {
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(!left@.union(right@).contains(root_key@));
                 }
                 let ghost rk = root_key;
                 let ghost kval = *key;
@@ -2327,43 +2133,28 @@ pub mod BSTTreapStEph {
                             assert forall|x| lrv.contains(x) implies lv.contains(x) by {
                                 assert(llv.union(lrv).contains(x));
                             };
-                            assert(lrv.subset_of(lv));
                             assert forall|x| llv.contains(x) implies lv.contains(x) by {
                                 assert(llv.union(lrv).contains(x));
                             };
-                            assert(llv.subset_of(lv));
                             vstd::set_lib::lemma_len_subset(lrv, lv);
-                            assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&root_key) == Less by {
-                                assert(lv.contains(t@));
-                            };
-                            assert(lrv.disjoint(rv));
-                            assert(lrv.len() + rv.len() < usize::MAX as nat);
                         }
                         let rebuilt = join_with_priority_st(lr, root_key, root_pri, right);
                         proof {
                             reveal(vstd::laws_cmp::obeys_cmp_ord);
                             reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                            assert(rebuilt@ =~= lrv.union(rv).insert(rkv));
                             // key < root_key, all rv elements > root_key, so key ∉ rv.
-                            assert(kval.cmp_spec(&rk) == Less);
                             if rv.contains(key@) {
                                 let ghost t = choose|t: T| t@ == key@ && #[trigger] rv.contains(t@);
-                                assert(t.cmp_spec(&rk) == Greater);
                                 lemma_cmp_equal_congruent_st(kval, t, rk);
-                                assert(false);
                             }
-                            assert(!rv.contains(key@));
                             assert forall|x| #[trigger] (llv.union(rebuilt@)).contains(x)
                                 <==> tree@.remove(key@).contains(x) by {
                                 if llv.contains(x) {
-                                    assert(llv.union(lrv).contains(x));
                                 }
                                 if lv.contains(x) && x != key@ {
-                                    assert(lv.remove(key@).contains(x));
                                     assert(llv.union(lrv).contains(x));
                                 }
                             };
-                            assert(llv.union(rebuilt@) =~= tree@.remove(key@));
                             assert forall|t: T| (#[trigger] rebuilt@.contains(t@)) implies
                                 t.cmp_spec(key) == Greater by {
                                 if lrv.contains(t@) {
@@ -2372,11 +2163,9 @@ pub mod BSTTreapStEph {
                                     lemma_cmp_antisymmetry_st(t, rk);
                                     lemma_cmp_transitivity_st(kval, rk, t);
                                 } else {
-                                    assert(t@ == rkv);
                                     lemma_cmp_eq_subst_st(kval, rk, t);
                                 }
                             };
-                            assert(llv.disjoint(rebuilt@));
                         }
                         (ll, found, rebuilt)
                     }
@@ -2391,43 +2180,28 @@ pub mod BSTTreapStEph {
                             assert forall|x| rlv.contains(x) implies rv.contains(x) by {
                                 assert(rlv.union(rrv).contains(x));
                             };
-                            assert(rlv.subset_of(rv));
                             assert forall|x| rrv.contains(x) implies rv.contains(x) by {
                                 assert(rlv.union(rrv).contains(x));
                             };
-                            assert(rrv.subset_of(rv));
                             vstd::set_lib::lemma_len_subset(rlv, rv);
-                            assert forall|t: T| (#[trigger] rlv.contains(t@)) implies t.cmp_spec(&root_key) == Greater by {
-                                assert(rv.contains(t@));
-                            };
-                            assert(lv.disjoint(rlv));
-                            assert(lv.len() + rlv.len() < usize::MAX as nat);
                         }
                         let rebuilt = join_with_priority_st(left, root_key, root_pri, rl);
                         proof {
                             reveal(vstd::laws_cmp::obeys_cmp_ord);
                             reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                            assert(rebuilt@ =~= lv.union(rlv).insert(rkv));
                             // key > root_key, all lv elements < root_key, so key ∉ lv.
-                            assert(kval.cmp_spec(&rk) == Greater);
                             if lv.contains(key@) {
                                 let ghost t = choose|t: T| t@ == key@ && #[trigger] lv.contains(t@);
-                                assert(t.cmp_spec(&rk) == Less);
                                 lemma_cmp_equal_congruent_st(kval, t, rk);
-                                assert(false);
                             }
-                            assert(!lv.contains(key@));
                             assert forall|x| #[trigger] (rebuilt@.union(rrv)).contains(x)
                                 <==> tree@.remove(key@).contains(x) by {
                                 if rrv.contains(x) {
-                                    assert(rlv.union(rrv).contains(x));
                                 }
                                 if rv.contains(x) && x != key@ {
-                                    assert(rv.remove(key@).contains(x));
                                     assert(rlv.union(rrv).contains(x));
                                 }
                             };
-                            assert(rebuilt@.union(rrv) =~= tree@.remove(key@));
                             assert forall|t: T| (#[trigger] rebuilt@.contains(t@)) implies
                                 t.cmp_spec(key) == Less by {
                                 if rlv.contains(t@) {
@@ -2436,12 +2210,10 @@ pub mod BSTTreapStEph {
                                     lemma_cmp_antisymmetry_st(kval, rk);
                                     lemma_cmp_transitivity_st(t, rk, kval);
                                 } else {
-                                    assert(t@ == rkv);
                                     lemma_cmp_antisymmetry_st(kval, rk);
                                     lemma_cmp_equal_congruent_st(t, rk, kval);
                                 }
                             };
-                            assert(rebuilt@.disjoint(rrv));
                         }
                         (rebuilt, found, rr)
                     }
@@ -2450,7 +2222,6 @@ pub mod BSTTreapStEph {
                             reveal(vstd::laws_cmp::obeys_cmp_ord);
                             reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
                             // key.cmp_spec(&root_key) == Equal, so kval@ == rk@.
-                            assert(kval.cmp_spec(&rk) == Equal);
                             assert forall|t: T| (#[trigger] left@.contains(t@)) implies
                                 t.cmp_spec(key) == Less by {
                                 lemma_cmp_equal_congruent_right_st(t, kval, rk);
@@ -2492,19 +2263,6 @@ pub mod BSTTreapStEph {
             // St analog of type_invariant witness accessibility.
             lemma_wf_view_all_inhabited_st::<T>(&left.root);
             // Derive lv.disjoint(rv) from strict ordering + inhabitedness.
-            assert(lv.disjoint(rv)) by {
-                assert forall|x: T::V| !(lv.contains(x) && rv.contains(x)) by {
-                    if lv.contains(x) && rv.contains(x) {
-                        let ghost t = choose|t: T| #[trigger] t@ == x;
-                        assert(lv.contains(t@));
-                        assert(rv.contains(t@));
-                        assert(t.cmp_spec(&t) == Less);
-                        reveal(vstd::laws_cmp::obeys_cmp_ord);
-                        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                        assert(t.cmp_spec(&t) == Equal);
-                    }
-                };
-            };
         }
         match expose_to_parts_st(right) {
             | None => left,
@@ -2513,24 +2271,11 @@ pub mod BSTTreapStEph {
                 let ghost rlv = r_left@;
                 let ghost rrv = r_right@;
                 proof {
-                    assert(rv =~= rlv.union(rrv).insert(rkv));
-                    assert(rv.contains(rkv));
-                    assert(rlv.subset_of(rv)) by {
-                        assert forall|x: T::V| #[trigger] rlv.contains(x) implies rv.contains(x) by {
-                            assert((rlv.union(rrv).insert(rkv)).contains(x));
-                        };
-                    };
-                    assert(rrv.subset_of(rv)) by {
-                        assert forall|x: T::V| #[trigger] rrv.contains(x) implies rv.contains(x) by {
-                            assert((rlv.union(rrv).insert(rkv)).contains(x));
-                        };
-                    };
                     assert forall|l: T| #[trigger] lv.contains(l@) implies l@ != rkv by {
                         reveal(vstd::laws_cmp::obeys_cmp_ord);
                         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
                         assert(rv.contains(r_key@));
                     };
-                    assert(!lv.contains(rkv));
                     assert forall|s: T, o: T| #![trigger lv.contains(s@), rlv.contains(o@)]
                         lv.contains(s@) && rlv.contains(o@) implies s.cmp_spec(&o) == Less by {
                         assert(rlv.subset_of(rv));
@@ -2542,23 +2287,12 @@ pub mod BSTTreapStEph {
                     vstd::set_lib::lemma_len_subset(rlv, rv);
                     vstd::set_lib::lemma_len_subset(rrv, rv);
                     vstd::set_lib::lemma_set_disjoint_lens(rlv, rrv);
-                    assert(rlv.len() + rrv.len() < rv.len());
-                    assert(lv.len() + rlv.len() < usize::MAX as nat);
-                    assert(lv.len() + rrv.len() < usize::MAX as nat);
                     // Ordering facts while exec vars are live.
-                    assert forall|t: T| #[trigger] rlv.contains(t@) implies t.cmp_spec(&r_key) == Less by {
-                        assert(r_left@.contains(t@));
-                    };
-                    assert forall|t: T| #[trigger] rrv.contains(t@) implies t.cmp_spec(&r_key) == Greater by {
-                        assert(r_right@.contains(t@));
-                    };
                 }
                 let (split_left, _, split_right) = split_inner_st(left, &r_key);
                 let ghost slv = split_left@;
                 let ghost srv = split_right@;
                 proof {
-                    assert(slv.union(srv) =~= lv.remove(rkv));
-                    assert(lv.remove(rkv) =~= lv);
                     assert(slv.subset_of(lv)) by {
                         assert forall|x: T::V| #[trigger] slv.contains(x) implies lv.contains(x) by {
                             assert(slv.union(srv).contains(x));
@@ -2571,23 +2305,11 @@ pub mod BSTTreapStEph {
                     };
                     vstd::set_lib::lemma_len_subset(slv, lv);
                     vstd::set_lib::lemma_len_subset(srv, lv);
-                    assert(slv.len() + rlv.len() < usize::MAX as nat);
-                    assert(srv.len() + rrv.len() < usize::MAX as nat);
                     assert forall|s: T, o: T| #![trigger slv.contains(s@), rlv.contains(o@)]
                         slv.contains(s@) && rlv.contains(o@) implies s.cmp_spec(&o) == Less by {
-                        assert(slv.subset_of(lv));
-                        assert(rlv.subset_of(rv));
                     };
                     assert forall|s: T, o: T| #![trigger srv.contains(s@), rrv.contains(o@)]
                         srv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {
-                        assert(srv.subset_of(lv));
-                        assert(rrv.subset_of(rv));
-                    };
-                    assert forall|t: T| #[trigger] slv.contains(t@) implies t.cmp_spec(&r_key) == Less by {
-                        assert(split_left@.contains(t@));
-                    };
-                    assert forall|t: T| #[trigger] srv.contains(t@) implies t.cmp_spec(&r_key) == Greater by {
-                        assert(split_right@.contains(t@));
                     };
                 }
                 let combined_left = join_pair_inner_st(split_left, r_left);
@@ -2595,66 +2317,15 @@ pub mod BSTTreapStEph {
                 let ghost clv = combined_left@;
                 let ghost crv = combined_right@;
                 proof {
-                    assert(clv =~= slv.union(rlv));
-                    assert(crv =~= srv.union(rrv));
-                    assert(!slv.contains(rkv));
-                    assert(!rlv.contains(rkv));
-                    assert(!clv.contains(rkv));
-                    assert(!srv.contains(rkv));
-                    assert(!rrv.contains(rkv));
-                    assert(!crv.contains(rkv));
-                    assert(clv == slv.union(rlv));
-                    assert(crv == srv.union(rrv));
-                    assert forall|t: T| #[trigger] clv.contains(t@) implies t.cmp_spec(&r_key) == Less by {
-                        assert(slv.union(rlv).contains(t@));
-                        if slv.contains(t@) { }
-                        else { assert(rlv.contains(t@)); }
-                    };
-                    assert forall|t: T| #[trigger] crv.contains(t@) implies t.cmp_spec(&r_key) == Greater by {
-                        assert(srv.union(rrv).contains(t@));
-                        if srv.contains(t@) { }
-                        else { assert(rrv.contains(t@)); }
-                    };
                     // slv ⊆ lv, rlv ⊆ rv, lv.disjoint(rv) → slv.disjoint(rlv).
-                    assert(slv.disjoint(rlv)) by {
-                        assert forall|x: T::V| !(slv.contains(x) && rlv.contains(x)) by {
-                            if slv.contains(x) && rlv.contains(x) {
-                                assert(lv.contains(x) && rv.contains(x));
-                            }
-                        };
-                    };
                     // srv ⊆ lv, rrv ⊆ rv, lv.disjoint(rv) → srv.disjoint(rrv).
-                    assert(srv.disjoint(rrv)) by {
-                        assert forall|x: T::V| !(srv.contains(x) && rrv.contains(x)) by {
-                            if srv.contains(x) && rrv.contains(x) {
-                                assert(lv.contains(x) && rv.contains(x));
-                            }
-                        };
-                    };
                     // clv < r_key < crv → clv.disjoint(crv).
-                    assert(clv.disjoint(crv)) by {
-                        assert forall|x: T::V| !(clv.contains(x) && crv.contains(x)) by {
-                            if clv.contains(x) && crv.contains(x) {
-                                lemma_wf_view_inhabited_st::<T>(&combined_left.root, x);
-                                let ghost tl = choose|t: T| #[trigger] t@ == x && clv.contains(t@);
-                                assert(tl.cmp_spec(&r_key) == Less);
-                                assert(crv.contains(tl@));
-                                assert(tl.cmp_spec(&r_key) == Greater);
-                                assert(false);
-                            }
-                        };
-                    };
                     vstd::set_lib::lemma_set_disjoint_lens(slv, rlv);
                     vstd::set_lib::lemma_set_disjoint_lens(srv, rrv);
                     vstd::set_lib::lemma_set_disjoint_lens(slv, srv);
                     vstd::set_lib::lemma_set_disjoint_lens(rlv, rrv);
                     assert(slv.union(srv) =~= lv);
-                    assert(rlv.union(rrv).insert(rkv) =~= rv);
-                    assert(rlv.len() + rrv.len() < rv.len());
                     vstd::set_lib::lemma_set_disjoint_lens(clv, crv);
-                    assert(clv.len() + crv.len() < lv.len() + rv.len());
-                    assert(clv.len() + crv.len() < usize::MAX as nat);
-                    assert(clv.union(crv).insert(rkv) =~= lv.union(rv));
                 }
                 join_with_priority_st(combined_left, r_key, rp, combined_right)
             }
@@ -2685,13 +2356,8 @@ pub mod BSTTreapStEph {
                 let ghost av = al@.union(ar@).insert(akv);
                 let ghost bv = b@;
                 proof {
-                    assert(alv.subset_of(av));
-                    assert(arv.subset_of(av));
                     vstd::set_lib::lemma_len_subset(alv, av);
                     vstd::set_lib::lemma_len_subset(arv, av);
-                    assert(!alv.contains(akv));
-                    assert(!arv.contains(akv));
-                    assert(alv.disjoint(arv));
                 }
                 let (bl, _, br) = split_inner_st(b, &ak);
                 let ghost blv = bl@;
@@ -2699,52 +2365,22 @@ pub mod BSTTreapStEph {
                 proof {
                     assert(blv.subset_of(bv)) by {
                         assert forall|x: T::V| #[trigger] blv.contains(x) implies bv.contains(x) by {
-                            assert(blv.union(brv).contains(x));
                             assert(bv.remove(akv).contains(x));
                         };
                     };
                     assert(brv.subset_of(bv)) by {
                         assert forall|x: T::V| #[trigger] brv.contains(x) implies bv.contains(x) by {
-                            assert(blv.union(brv).contains(x));
                             assert(bv.remove(akv).contains(x));
                         };
                     };
                     vstd::set_lib::lemma_len_subset(blv, bv);
                     vstd::set_lib::lemma_len_subset(brv, bv);
-                    assert(!blv.contains(akv));
-                    assert(!brv.contains(akv));
-                    assert(alv.len() + blv.len() < av.len() + bv.len());
-                    assert(arv.len() + brv.len() < av.len() + bv.len());
-                    assert forall|t: T| #[trigger] alv.contains(t@) implies t.cmp_spec(&ak) == Less by {
-                        assert(al@.contains(t@));
-                    };
-                    assert forall|t: T| #[trigger] arv.contains(t@) implies t.cmp_spec(&ak) == Greater by {
-                        assert(ar@.contains(t@));
-                    };
-                    assert forall|t: T| #[trigger] blv.contains(t@) implies t.cmp_spec(&ak) == Less by {
-                        assert(bl@.contains(t@));
-                    };
-                    assert forall|t: T| #[trigger] brv.contains(t@) implies t.cmp_spec(&ak) == Greater by {
-                        assert(br@.contains(t@));
-                    };
-                    assert(av == alv.union(arv).insert(akv));
-                    assert(blv.union(brv) == bv.remove(akv));
                 }
                 let left_union = union_inner_st(al, bl);
                 let right_union = union_inner_st(ar, br);
                 proof {
                     let luv = left_union@;
                     let ruv = right_union@;
-                    assert(luv == alv.union(blv));
-                    assert(ruv == arv.union(brv));
-                    assert forall|t: T| #[trigger] luv.contains(t@) implies t.cmp_spec(&ak) == Less by {
-                        assert(alv.union(blv).contains(t@));
-                    };
-                    assert forall|t: T| #[trigger] ruv.contains(t@) implies t.cmp_spec(&ak) == Greater by {
-                        assert(arv.union(brv).contains(t@));
-                    };
-                    assert(!luv.contains(akv));
-                    assert(!ruv.contains(akv));
                     assert(luv.disjoint(ruv)) by {
                         assert forall|x: T::V| !(luv.contains(x) && ruv.contains(x)) by {
                             if luv.contains(x) && ruv.contains(x) {
@@ -2752,29 +2388,12 @@ pub mod BSTTreapStEph {
                                 reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
                                 lemma_wf_view_inhabited_st::<T>(&left_union.root, x);
                                 let ghost tl = choose|t: T| #[trigger] t@ == x && luv.contains(t@);
-                                assert(ruv.contains(tl@));
-                                assert(tl.cmp_spec(&ak) == Less);
-                                assert(tl.cmp_spec(&ak) == Greater);
-                                assert(false);
                             }
                         };
                     };
                     vstd::set_lib::lemma_set_disjoint_lens(luv, ruv);
-                    assert(luv.union(ruv).subset_of(av.union(bv))) by {
-                        assert forall|x: T::V| #[trigger] luv.union(ruv).contains(x) implies av.union(bv).contains(x) by {
-                            if luv.contains(x) {
-                                if alv.contains(x) { assert(av.contains(x)); }
-                                else { assert(blv.contains(x)); assert(bv.contains(x)); }
-                            } else {
-                                assert(ruv.contains(x));
-                                if arv.contains(x) { assert(av.contains(x)); }
-                                else { assert(brv.contains(x)); assert(bv.contains(x)); }
-                            }
-                        };
-                    };
                     vstd::set_lib::lemma_len_subset(luv.union(ruv), av.union(bv));
                     vstd::set_lib::lemma_len_union(av, bv);
-                    assert(left_union@.len() + right_union@.len() < usize::MAX as nat);
                     assert(luv.union(ruv).insert(akv) == av.union(bv)) by {
                         assert forall|x: T::V| #[trigger] luv.union(ruv).insert(akv).contains(x)
                             <==> av.union(bv).contains(x) by {
@@ -2782,30 +2401,14 @@ pub mod BSTTreapStEph {
                                 if x == akv { assert(av.contains(akv)); }
                                 else if luv.contains(x) {
                                     if alv.contains(x) { assert(av.contains(x)); }
-                                    else { assert(blv.contains(x)); assert(bv.contains(x)); }
                                 } else {
-                                    assert(ruv.contains(x));
                                     if arv.contains(x) { assert(av.contains(x)); }
-                                    else { assert(brv.contains(x)); assert(bv.contains(x)); }
                                 }
                             }
                             if av.union(bv).contains(x) && !luv.union(ruv).insert(akv).contains(x) {
-                                assert(x != akv);
-                                assert(!luv.contains(x));
-                                assert(!ruv.contains(x));
-                                assert(!alv.contains(x));
-                                assert(!blv.contains(x));
-                                assert(!arv.contains(x));
-                                assert(!brv.contains(x));
                                 if av.contains(x) {
-                                    assert(alv.union(arv).insert(akv).contains(x));
-                                    assert(false);
                                 } else {
-                                    assert(bv.contains(x));
-                                    assert(!(blv.union(brv)).contains(x));
-                                    assert(!bv.remove(akv).contains(x));
                                     assert(bv.remove(akv).contains(x));
-                                    assert(false);
                                 }
                             }
                         };
@@ -2840,8 +2443,6 @@ pub mod BSTTreapStEph {
                 let ghost av = al@.union(ar@).insert(akv);
                 let ghost bv = b@;
                 proof {
-                    assert(alv.subset_of(av));
-                    assert(arv.subset_of(av));
                     vstd::set_lib::lemma_len_subset(alv, av);
                     vstd::set_lib::lemma_len_subset(arv, av);
                 }
@@ -2855,24 +2456,6 @@ pub mod BSTTreapStEph {
                     lemma_wf_view_all_inhabited_st::<T>(&ar.root);
                     lemma_wf_view_all_inhabited_st::<T>(&bl.root);
                     lemma_wf_view_all_inhabited_st::<T>(&br.root);
-                    assert(blv.subset_of(bv)) by {
-                        assert forall|x: T::V| blv.contains(x) implies bv.contains(x) by {
-                            assert(blv.union(brv).contains(x));
-                            assert(bv.remove(akv).contains(x));
-                        };
-                    };
-                    assert(brv.subset_of(bv)) by {
-                        assert forall|x: T::V| brv.contains(x) implies bv.contains(x) by {
-                            assert(blv.union(brv).contains(x));
-                            assert(bv.remove(akv).contains(x));
-                        };
-                    };
-                    assert forall|t: T| #[trigger] alv.contains(t@) implies t.cmp_spec(&ak) == Less by {
-                        assert(al@.contains(t@));
-                    };
-                    assert forall|t: T| #[trigger] arv.contains(t@) implies t.cmp_spec(&ak) == Greater by {
-                        assert(ar@.contains(t@));
-                    };
                 }
                 let left_res = intersect_inner_st(al, bl);
                 let right_res = intersect_inner_st(ar, br);
@@ -2883,30 +2466,12 @@ pub mod BSTTreapStEph {
                         lrv.union(rrv).union(if found { Set::<<T as View>::V>::empty().insert(akv) }
                                            else { Set::<<T as View>::V>::empty() }).contains(x) by {
                         if av.intersect(bv).contains(x) {
-                            assert(av.contains(x) && bv.contains(x));
                             if x == akv {
-                                assert(found);
                             } else if alv.contains(x) {
                                 assert(blv.union(brv).contains(x)) by {
                                     assert(bv.remove(akv).contains(x));
                                 };
-                                assert(blv.contains(x)) by {
-                                    if brv.contains(x) {
-                                        reveal(vstd::laws_cmp::obeys_cmp_ord);
-                                        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                                        let ghost t_x = choose|t: T| #[trigger] t@ == x && alv.contains(t@);
-                                        let ghost t_br = choose|t: T| #[trigger] t@ == x && brv.contains(t@);
-                                        view_ord_consistent_st::<T>();
-                                        assert(t_x.cmp_spec(&t_br) == Equal);
-                                        lemma_cmp_equal_congruent_st(t_x, t_br, ak);
-                                        assert(false);
-                                    }
-                                };
                             } else {
-                                assert(arv.contains(x));
-                                assert(blv.union(brv).contains(x)) by {
-                                    assert(bv.remove(akv).contains(x));
-                                };
                                 assert(brv.contains(x)) by {
                                     if blv.contains(x) {
                                         reveal(vstd::laws_cmp::obeys_cmp_ord);
@@ -2914,43 +2479,21 @@ pub mod BSTTreapStEph {
                                         let ghost t_x = choose|t: T| #[trigger] t@ == x && arv.contains(t@);
                                         let ghost t_bl = choose|t: T| #[trigger] t@ == x && blv.contains(t@);
                                         view_ord_consistent_st::<T>();
-                                        assert(t_x.cmp_spec(&t_bl) == Equal);
                                         lemma_cmp_equal_congruent_right_st(t_bl, t_x, ak);
-                                        assert(false);
                                     }
                                 };
                             }
                         } else {
                             if lrv.contains(x) {
-                                assert(alv.contains(x) && blv.contains(x));
-                                assert(av.contains(x) && bv.contains(x));
                             } else if rrv.contains(x) {
-                                assert(arv.contains(x) && brv.contains(x));
-                                assert(av.contains(x) && bv.contains(x));
                             } else if found && x == akv {
-                                assert(av.contains(akv) && bv.contains(akv));
                             }
                         }
                     };
-                    assert(av.intersect(bv) =~= lrv.union(rrv).union(
-                        if found { Set::<<T as View>::V>::empty().insert(akv) }
-                        else { Set::<<T as View>::V>::empty() }));
-                    assert(lrv.subset_of(alv));
-                    assert(rrv.subset_of(arv));
-                    assert forall|t: T| #[trigger] lrv.contains(t@) implies t.cmp_spec(&ak) == Less by {
-                        assert(alv.contains(t@));
-                    };
-                    assert forall|t: T| #[trigger] rrv.contains(t@) implies t.cmp_spec(&ak) == Greater by {
-                        assert(arv.contains(t@));
-                    };
-                    assert(!lrv.contains(akv));
-                    assert(!rrv.contains(akv));
-                    assert(lrv.disjoint(rrv));
                     assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)]
                         lrv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {
                         if lrv.contains(s@) && rrv.contains(o@) {
-                            assert(s.cmp_spec(&ak) == Less);
-                            assert(o.cmp_spec(&ak) == Greater);
+// Veracity: TESTING assert                             assert(o.cmp_spec(&ak) == Greater);
                             lemma_cmp_antisymmetry_st(o, ak);
                             lemma_cmp_transitivity_st(s, ak, o);
                         }

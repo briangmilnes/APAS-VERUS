@@ -1,0 +1,34 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:658:46
+    |
+658 |   ...                   assert forall|x| #[trigger] (llv.union(rebuilt@)).contains(x)
+    |  ________________________________________^
+659 | | ...                       <==> tree@.remove(key@).contains(x) by {
+    | |_____________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap39/BSTParaTreapMtEph.rs:658:46
+    |
+658 | ...                   assert forall|x| #[trigger] (llv.union(rebuilt@)).contains(x)
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+659 | ...                       <==> tree@.remove(key@).contains(x) by {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+llv.union(rebuilt.view()).contains(x) == tree.view().remove(key.view()).contains(x)
+|   llv.union(rebuilt.view()).contains(x) ==>
+|       tree.view().remove(key.view()).contains(x) ✘
+|           function is uninterpreted
+|   tree.view().remove(key.view()).contains(x) ==>
+|       llv.union(rebuilt.view()).contains(x) ✘
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 4654MB, peak z3 RSS: 486MB, min free: 22048MB
+Sampled CPU Usage: rust_verify: 65s, z3 children: 38s

@@ -1,0 +1,31 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:811:28
+    |
+811 |                     assert(slv.subset_of(left@));
+    |                            ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:812:28
+    |
+812 |                     assert(srv.subset_of(left@));
+    |                            ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+slv.subset_of(left.view())
+|   forall |a|
+|       slv.contains(a) ==>
+|           left.view().contains(a) 
+|               function is uninterpreted
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 5741MB, peak z3 RSS: 909MB, min free: 20483MB
+Sampled CPU Usage: rust_verify: 94s, z3 children: 88s

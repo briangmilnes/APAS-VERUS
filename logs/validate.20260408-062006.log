@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+    --> src/Chap39/BSTParaTreapMtEph.rs:1043:28
+     |
+1043 |                     assert(luv.union(ruv).insert(akv) == a@.union(b@)) by {
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+luv.union(ruv).insert(akv) =~= a.view().union(b.view()) 
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 5312MB, peak z3 RSS: 815MB, min free: 20915MB
+Sampled CPU Usage: rust_verify: 108s, z3 children: 123s

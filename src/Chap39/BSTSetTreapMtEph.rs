@@ -295,9 +295,6 @@ pub mod BSTSetTreapMtEph {
             let set = Self::join_m(Self::empty(), value, Self::empty());
             proof {
                 let empty = Set::<<T as View>::V>::empty();
-                assert(empty.finite());
-                assert(empty.len() == 0);
-                assert(!empty.contains(value@));
                 assert(set@ =~= empty.insert(value@));
             }
             set
@@ -336,7 +333,6 @@ pub mod BSTSetTreapMtEph {
                 // left@ and right@ partition self@.remove(value@) ⊆ self@.
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
                 vstd::set_lib::lemma_len_subset(left@.union(right@), self@);
-                assert(left@.len() + right@.len() < usize::MAX as nat);
             }
             *self = Self::join_m(left, value, right);
         }
@@ -348,14 +344,9 @@ pub mod BSTSetTreapMtEph {
             let (left, _found, right) = self.split(target);
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                assert(left@.union(right@) =~= old_view.remove(kref@));
-                assert(old_view.remove(kref@).subset_of(old_view));
                 vstd::set_lib::lemma_len_subset(old_view.remove(kref@), old_view);
-                assert(left@.len() + right@.len() < usize::MAX as nat);
                 assert forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
                     left@.contains(s@) && right@.contains(o@) implies s.cmp_spec(&o) == Less by {
-                    assert(s.cmp_spec(target) == Less);    // from split ensures on left
-                    assert(o.cmp_spec(target) == Greater); // from split ensures on right
                     lemma_cmp_antisymmetry(o, kref);
                     lemma_cmp_transitivity(s, kref, o);
                 };

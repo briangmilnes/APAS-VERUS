@@ -1,0 +1,34 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2420:46
+     |
+2420 |   ...                   assert forall|x| #[trigger] (rebuilt@.union(rrv)).contains(x)
+     |  ________________________________________^
+2421 | | ...                       <==> tree@.remove(key@).contains(x) by {
+     | |_____________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:2420:46
+     |
+2420 | ...                   assert forall|x| #[trigger] (rebuilt@.union(rrv)).contains(x)
+     |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2421 | ...                       <==> tree@.remove(key@).contains(x) by {
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+rebuilt.view().union(rrv).contains(x) == tree.view().remove(key.view()).contains(x)
+|   rebuilt.view().union(rrv).contains(x) ==>
+|       tree.view().remove(key.view()).contains(x) ✘
+|           function is uninterpreted
+|   tree.view().remove(key.view()).contains(x) ==>
+|       rebuilt.view().union(rrv).contains(x) ✘
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 5095MB, peak z3 RSS: 512MB, min free: 18366MB
+Sampled CPU Usage: rust_verify: 131s, z3 children: 112s

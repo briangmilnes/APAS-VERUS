@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+    --> src/Chap39/BSTParaTreapMtEph.rs:1155:40
+     |
+1155 | ...                   assert(brv.contains(x)) by {
+     |                              ^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+brv.contains(x) 
+    function is uninterpreted
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 5313MB, peak z3 RSS: 800MB, min free: 21004MB
+Sampled CPU Usage: rust_verify: 111s, z3 children: 125s

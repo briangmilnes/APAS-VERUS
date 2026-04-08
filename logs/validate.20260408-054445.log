@@ -1,0 +1,25 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:739:36
+    |
+739 | ...                   assert(rebuilt@.disjoint(rrv));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+rebuilt.view().disjoint(rrv)
+|   forall |a|
+|       rebuilt.view().contains(a) ==>
+|           !(rrv.contains(a)) 
+|               function is uninterpreted
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 3685MB, peak z3 RSS: 409MB, min free: 22646MB
+Sampled CPU Usage: rust_verify: 56s, z3 children: 35s

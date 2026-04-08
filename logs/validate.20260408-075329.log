@@ -1,0 +1,44 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1397:40
+     |
+1397 | ...                   assert(spec_contains_link(&node.right, *target));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:1778:21
+     |
+1778 |             None => false,
+     |                     ^^^^^
+...
+1782 |                     || spec_contains_link(&node.right, target)
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_contains_link(node.right, target)
+|   let tmp%% = node.right;
+|       tmp%% is None ==>
+|           false ✘
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               !(node.key == target || spec_contains_link(node.left, target)) ==>
+|                   spec_contains_link(node.right, target)
+|                   |   let tmp%% = node.right;
+|                   |       tmp%% is None ==>
+|                   |           false ✘
+|                   |       !(tmp%% is None) ==>
+|                   |           let node = tmp%%.0;
+|                   |               !(node.key == target || spec_contains_link(node.left, target)) ==>
+|                   |                   spec_contains_link(node.right, target) ✘
+|                   |                       reached fuel limit for recursion
+|                   +---
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 7124MB, peak z3 RSS: 1051MB, min free: 17962MB
+Sampled CPU Usage: rust_verify: 134s, z3 children: 150s

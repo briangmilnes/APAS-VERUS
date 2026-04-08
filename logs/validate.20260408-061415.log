@@ -1,0 +1,37 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: precondition not satisfied
+   --> src/Chap39/BSTParaTreapMtEph.rs:987:21
+    |
+987 |                     vstd::set_lib::lemma_len_subset(blv, b@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/set_lib.rs:1099:8
+    |
+    = note: failed precondition
+
+error: assertion failed
+    --> src/Chap39/BSTParaTreapMtEph.rs:1032:94
+     |
+1032 |                         assert forall|x: T::V| #[trigger] luv.union(ruv).contains(x) implies a@.union(b@).contains(x) by {
+     |                                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+ --> vstd/set_lib.rs:1099:8
+
+note: 
+
+tmp%.finite() ✔
+blv.subset_of(tmp%) ✘
+|   forall |a|
+|       blv.contains(a) ==>
+|           tmp%.contains(a) 
+|               function is uninterpreted
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 3835MB, peak z3 RSS: 754MB, min free: 22379MB
+Sampled CPU Usage: rust_verify: 63s, z3 children: 62s

@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap39/BSTSetTreapMtEph.rs:356:63
+    |
+356 |                     left@.contains(s@) && right@.contains(o@) implies s.cmp_spec(&o) == Less by {
+    |                                                               ^^^^^^^
+
+error[E0425]: cannot find type `BSTSetTreapMtEph` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:457:69
+    |
+457 |     impl<T: MtKey + ClonePreservesView + fmt::Debug> fmt::Debug for BSTSetTreapMtEph<T> {
+    |                                                                     ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTSetTreapMtEph` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:463:58
+    |
+463 |     impl<T: MtKey + ClonePreservesView> fmt::Display for BSTSetTreapMtEph<T> {
+    |                                                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 4407MB, peak z3 RSS: 279MB, min free: 22024MB
+Sampled CPU Usage: rust_verify: 89s, z3 children: 105s

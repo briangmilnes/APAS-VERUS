@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+    --> src/Chap39/BSTParaTreapMtEph.rs:1060:44
+     |
+1060 | ...                   assert(false);
+     |                              ^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+false 
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 4117MB, peak z3 RSS: 679MB, min free: 22388MB
+Sampled CPU Usage: rust_verify: 73s, z3 children: 72s

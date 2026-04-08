@@ -1,0 +1,32 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2926:40
+     |
+2926 | ...                   assert(av.contains(x) && bv.contains(x));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2929:40
+     |
+2929 | ...                   assert(av.contains(x) && bv.contains(x));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:2926:58
+     |
+2926 | ...                   assert(av.contains(x) && bv.contains(x));
+     |                                                ^^^^^^^^^^^^^^
+
+note: 
+
+av.contains(x) ✔
+bv.contains(x) ✘
+    function is uninterpreted
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 4077MB, peak z3 RSS: 291MB, min free: 20221MB
+Sampled CPU Usage: rust_verify: 86s, z3 children: 93s

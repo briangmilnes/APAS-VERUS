@@ -134,7 +134,6 @@ pub mod BSTParaTreapMtEph {
     {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        assert(a@ == b@);
     }
 
     /// Right congruence: Equal(b,c) implies any a compares the same way to b and c.
@@ -147,7 +146,6 @@ pub mod BSTParaTreapMtEph {
     {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        assert(b@ == c@);
     }
 
     /// After join(lr, key, right), every element is greater than lk.
@@ -181,7 +179,6 @@ pub mod BSTParaTreapMtEph {
                 lemma_cmp_antisymmetry_less(lk, t);  // t.cmp(&lk) == Greater
             } else {
                 // t@ == key@
-                assert(t@ == key@);
                 lemma_cmp_equal_congruent_right(lk, t, key);  // lk.cmp(&t) == lk.cmp(&key) == Less
                 lemma_cmp_antisymmetry_less(lk, t);           // t.cmp(&lk) == Greater
             }
@@ -209,7 +206,6 @@ pub mod BSTParaTreapMtEph {
         ensures
             forall|t: T| (#[trigger] joined_v.contains(t@)) ==> t.cmp_spec(&rk) == Less,
     {
-        assert(rk.cmp_spec(&key) == Greater);  // rk ∈ right, all right > key
         assert forall|t: T| (#[trigger] joined_v.contains(t@)) implies t.cmp_spec(&rk) == Less by {
             if left_v.contains(t@) {
                 // t < key (req); key < rk (antisymmetry of rk > key).
@@ -219,7 +215,6 @@ pub mod BSTParaTreapMtEph {
                 // t ∈ rl: expose ensures t.cmp(&rk) == Less ✓
             } else {
                 // t@ == key@; key < rk from above.
-                assert(t@ == key@);
                 lemma_cmp_antisymmetry(rk, key);        // key.cmp(&rk) == Less
                 lemma_cmp_equal_congruent(t, key, rk);  // t.cmp(&rk) == key.cmp(&rk) == Less
             }
@@ -300,8 +295,6 @@ pub mod BSTParaTreapMtEph {
             | Some(node) => {
                 proof {
                     vstd::set_lib::lemma_set_disjoint_lens(node.left@, node.right@);
-                    assert(node.left@.len() < tree@.len());
-                    assert(node.right@.len() < tree@.len());
                 }
                 let l = node.left.clone();
                 let k = clone_elem(&node.key);
@@ -310,22 +303,12 @@ pub mod BSTParaTreapMtEph {
                     // Ordering transfers from pred to clones via view equality.
                     // key.clone() ensures k@ == node.key@; view_ord_consistent gives
                     // node.key.cmp_spec(&k) == Equal, which lemma_cmp_equal_congruent_right uses.
-                    assert(k@ == node.key@);
-                    assert(node.key.cmp_spec(&k) == Equal) by {
-                        assert(node.key@ == k@);
-                    };
-                    assert(l@ =~= node.left@);  // from clone ensures
-                    assert(r@ =~= node.right@); // from clone ensures
                     assert forall|t: T| (#[trigger] l@.contains(t@))
                         implies t.cmp_spec(&k) == Less by {
-                        assert(node.left@.contains(t@));
-                        assert(t.cmp_spec(&node.key) == Less);
                         lemma_cmp_equal_congruent_right(t, node.key, k);
                     }
                     assert forall|t: T| (#[trigger] r@.contains(t@))
                         implies t.cmp_spec(&k) == Greater by {
-                        assert(node.right@.contains(t@));
-                        assert(t.cmp_spec(&node.key) == Greater);
                         lemma_cmp_equal_congruent_right(t, node.key, k);
                     }
                 }
@@ -424,19 +407,8 @@ pub mod BSTParaTreapMtEph {
         let ghost contents = lv.union(rv).insert(kv);
         proof {
             vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
-            assert(!lv.union(rv).contains(kv));
-            assert(contents.len() == size as nat);
             use_type_invariant(&left);
             use_type_invariant(&right);
-            assert forall|v: T::V| #[trigger] contents.contains(v)
-                implies exists|t: T| t@ == v by {
-                if lv.contains(v) { /* left's type_invariant */ }
-                else if rv.contains(v) { /* right's type_invariant */ }
-                else {
-                    assert(v == kv);
-                    assert(key@ == v);
-                }
-            };
         }
         new_param_treap(
             Some(Box::new(NodeInner { key, priority, size, left, right })),
@@ -486,28 +458,10 @@ pub mod BSTParaTreapMtEph {
                     let ghost llv = ll@;
                     proof {
                         // lr@.disjoint(right@): lr@ ⊆ left@ (expose), left@.disjoint(right@) (req).
-                        assert(lrv.subset_of(left@));
                         // !lr@.contains(key@): lr@ ⊆ left@, !left@.contains(key@) (req).
-                        assert(!lrv.contains(key@));
                         // !right@.contains(key@): from req.
-                        assert(lrv.disjoint(right@));
                         vstd::set_lib::lemma_len_subset(lrv, left@);
-                        assert(lrv.len() + right@.len() < usize::MAX as nat);
                         // BST ordering for (lr, key, right): all lr < lk < key (transitivity).
-                        assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&key) == Less by {
-                            // t ∈ lr ⊆ left, so t.cmp(&lk) == Greater (from expose).
-                            // But we need t < key. Since lk < key (lk ∈ left, all of left < key),
-                            // and t > lk... hmm, that would give t > lk, not t < key.
-                            // Wait: lk ∈ left and all of left < key (from req forall), so lk < key.
-                            // And t ∈ lr ⊆ right-subtree-of-left, so t > lk (expose forall).
-                            // t > lk and lk < key: transitivity gives... t > lk AND lk < key
-                            // → we cannot directly conclude t < key! t could be between lk and key.
-                            // This is correct: left subtree of left has elements < lk < key,
-                            // but lr = RIGHT subtree of left, which has lk < t ≤ key (strictly < key
-                            // since !left@.contains(key@)).
-                            // Formally: t ∈ left@ (t ∈ lr ⊆ left@), so t.cmp(&key) == Less (req forall).
-                            assert(left@.contains(t@));
-                        }
                     }
                     let merged_right = join_with_priority(lr, key, priority, right);
                     proof {
@@ -520,14 +474,9 @@ pub mod BSTParaTreapMtEph {
                         //   -- we need lk < key. lk ∈ left@ and all of left@ < key (req forall: all left have cmp==Less wrt key). So lk.cmp(&key) == Less ✓.
                         //   right elements > key > lk (transitivity).
                         lemma_joined_right_gt_lk(lrv, right@, key, merged_right@, lk, left@);
-                        assert(!llv.contains(lkv));
-                        assert(!merged_right@.contains(lkv));
-                        assert(llv.disjoint(merged_right@));
                         vstd::set_lib::lemma_set_disjoint_lens(llv, lrv);
                         vstd::set_lib::lemma_set_disjoint_lens(lrv, right@);
-                        assert(merged_right@.len() == lrv.len() + right@.len() + 1);
                         vstd::set_lib::lemma_len_subset(llv, left@);
-                        assert(llv.len() + merged_right@.len() < usize::MAX as nat);
                         // BST for ll: already proved above (all ll < lk, from expose).
                     }
                     make_node(ll, lk, lp_actual, merged_right)
@@ -542,11 +491,7 @@ pub mod BSTParaTreapMtEph {
                     let ghost rlv = rl@;
                     let ghost rrv = rr@;
                     proof {
-                        assert(rlv.subset_of(right@));
-                        assert(!rlv.contains(key@));
-                        assert(left@.disjoint(rlv));
                         vstd::set_lib::lemma_len_subset(rlv, right@);
-                        assert(left@.len() + rlv.len() < usize::MAX as nat);
                         // BST ordering for (left, key, rl): all left < key, all rl < rk.
                         // We need all rl < key: rl ⊆ right, all right > key (req), so... wait.
                         // rl = LEFT subtree of right. right elements > key (req). rl ⊆ right.
@@ -570,7 +515,6 @@ pub mod BSTParaTreapMtEph {
                         //   left < key (req) AND rl > key (since rl ⊆ right and all right > key).
                         // So all rl > key → t.cmp(&key) == Greater for all t ∈ rl. ✓
                         assert forall|t: T| (#[trigger] rlv.contains(t@)) implies t.cmp_spec(&key) == Greater by {
-                            assert(right@.contains(t@));
                         }
                     }
                     let merged_left = join_with_priority(left, key, priority, rl);
@@ -585,16 +529,10 @@ pub mod BSTParaTreapMtEph {
                         //   t.cmp(&key) == Less, key.cmp(&rk) == Less → t.cmp(&rk) == Less ✓.
                         // For t@ == key@: key.cmp(&rk) == Less (from above) → by congruence, t.cmp(&rk) == Less ✓.
                         // For t ∈ rl: all rl have cmp(&rk) == Less (from expose) ✓.
-                        assert(right@.contains(rk@));  // rk ∈ right from expose
                         lemma_joined_left_lt_rk(left@, rlv, key, merged_left@, rk, right@);
-                        assert(!rrv.contains(rkv));
-                        assert(!merged_left@.contains(rkv));
-                        assert(merged_left@.disjoint(rrv));
                         vstd::set_lib::lemma_set_disjoint_lens(left@, rlv);
                         vstd::set_lib::lemma_set_disjoint_lens(rlv, rrv);
-                        assert(merged_left@.len() == left@.len() + rlv.len() + 1);
                         vstd::set_lib::lemma_len_subset(rrv, right@);
-                        assert(merged_left@.len() + rrv.len() < usize::MAX as nat);
                     }
                     make_node(merged_left, rk, rp_actual, rr)
                 }
@@ -622,7 +560,6 @@ pub mod BSTParaTreapMtEph {
                 proof {
                     reveal(vstd::laws_cmp::obeys_cmp_ord);
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(tree@.len() == left@.len() + right@.len() + 1);
                 }
                 let ghost rk = root_key;
                 let ghost kval = *key;
@@ -646,9 +583,6 @@ pub mod BSTParaTreapMtEph {
                             vstd::set_lib::lemma_len_subset(lrv, lv);
                             // Requirements for join_with_priority(lr, root_key, priority, right):
                             // lr < root_key: from expose, all left < root_key, lr ⊆ left → lr < root_key ✓.
-                            assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&root_key) == Less by {
-                                assert(lv.contains(t@));
-                            };
                             // right > root_key: from expose ✓.
                             // !lr.contains(root_key@), !right.contains(root_key@): from expose ✓.
                             // lr.disjoint(right): lr ⊆ left, left.disjoint(right) → lr.disjoint(right) ✓.
@@ -658,10 +592,8 @@ pub mod BSTParaTreapMtEph {
                             assert forall|x| #[trigger] (llv.union(rebuilt@)).contains(x)
                                 <==> tree@.remove(key@).contains(x) by {
                                 if llv.contains(x) {
-                                    assert(llv.union(lrv).contains(x));
                                 }
                                 if lv.contains(x) && x != key@ {
-                                    assert(lv.remove(key@).contains(x));
                                     assert(llv.union(lrv).contains(x));
                                 }
                             };
@@ -676,11 +608,9 @@ pub mod BSTParaTreapMtEph {
                                     lemma_cmp_antisymmetry(t, rk);
                                     lemma_cmp_transitivity(kval, rk, t);
                                 } else {
-                                    assert(t@ == rkv);
                                     lemma_cmp_eq_subst(kval, rk, t);
                                 }
                             };
-                            assert(llv.disjoint(rebuilt@));
                         }
                         (ll, found, rebuilt)
                     }
@@ -703,9 +633,6 @@ pub mod BSTParaTreapMtEph {
                             // Requirements for join_with_priority(left, root_key, priority, rl):
                             // left < root_key: from expose ✓.
                             // rl > root_key: from expose, all right > root_key, rl ⊆ right → rl > root_key ✓.
-                            assert forall|t: T| (#[trigger] rlv.contains(t@)) implies t.cmp_spec(&root_key) == Greater by {
-                                assert(rv.contains(t@));
-                            };
                             // !left.contains(root_key@), !rl.contains(root_key@): from expose ✓.
                         }
                         let rebuilt = join_with_priority(left, root_key, priority, rl);
@@ -713,10 +640,8 @@ pub mod BSTParaTreapMtEph {
                             assert forall|x| #[trigger] (rebuilt@.union(rrv)).contains(x)
                                 <==> tree@.remove(key@).contains(x) by {
                                 if rrv.contains(x) {
-                                    assert(rlv.union(rrv).contains(x));
                                 }
                                 if rv.contains(x) && x != key@ {
-                                    assert(rv.remove(key@).contains(x));
                                     assert(rlv.union(rrv).contains(x));
                                 }
                             };
@@ -731,12 +656,10 @@ pub mod BSTParaTreapMtEph {
                                     lemma_cmp_antisymmetry(kval, rk);
                                     lemma_cmp_transitivity(t, rk, kval);
                                 } else {
-                                    assert(t@ == rkv);
                                     lemma_cmp_antisymmetry(kval, rk);
                                     lemma_cmp_equal_congruent(t, rk, kval);
                                 }
                             };
-                            assert(rebuilt@.disjoint(rrv));
                         }
                         (rebuilt, found, rr)
                     }
@@ -783,24 +706,18 @@ pub mod BSTParaTreapMtEph {
                 let ghost rrv = r_right@;
                 proof {
                     // expose ensures: right@ =~= rlv.union(rrv).insert(rkv)
-                    assert(right@ =~= rlv.union(rrv).insert(rkv));
                     assert(rlv.subset_of(right@));
-                    assert(rrv.subset_of(right@));
                     // !left@.contains(rkv): for l ∈ left@, l.cmp(&r_key)==Less (cross-ordering
                     // with r_key ∈ right@), so l@ != rkv by view_ord_consistent.
                     assert forall|l: T| #[trigger] left@.contains(l@) implies l@ != rkv by {
                         reveal(vstd::laws_cmp::obeys_cmp_ord);
                         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                        assert(right@.contains(r_key@));
                         // requires: left@.contains(l@) && right@.contains(r_key@) ==> l.cmp(&r_key) == Less
                     };
                     // Size bounds.
                     vstd::set_lib::lemma_len_subset(rlv, right@);
                     vstd::set_lib::lemma_len_subset(rrv, right@);
                     vstd::set_lib::lemma_set_disjoint_lens(rlv, rrv);
-                    assert(rlv.len() + rrv.len() < right@.len());
-                    assert(left@.len() + rlv.len() < usize::MAX as nat);
-                    assert(left@.len() + rrv.len() < usize::MAX as nat);
                 }
                 let (split_left, _, split_right) = split_inner(&left, &r_key);
                 let ghost slv = split_left@;
@@ -813,8 +730,6 @@ pub mod BSTParaTreapMtEph {
                     vstd::set_lib::lemma_len_subset(slv, left@);
                     vstd::set_lib::lemma_len_subset(srv, left@);
                     vstd::set_lib::lemma_len_subset(srv, left@);
-                    assert(slv.len() + rlv.len() < usize::MAX as nat);
-                    assert(srv.len() + rrv.len() < usize::MAX as nat);
                     // Cross-ordering for join_pair_inner(split_left, r_left): slv < rlv.
                     // slv ⊆ left@, rlv ⊆ right@, all left@ < right@ (requires).
                     assert forall|s: T, o: T| #![trigger slv.contains(s@), rlv.contains(o@)]
@@ -823,19 +738,7 @@ pub mod BSTParaTreapMtEph {
                     assert forall|s: T, o: T| #![trigger srv.contains(s@), rrv.contains(o@)]
                         srv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {};
                     // Ordering facts for rlv/rrv from expose_internal ensures (while r_left/r_right are live).
-                    assert forall|t: T| #[trigger] rlv.contains(t@) implies t.cmp_spec(&r_key) == Less by {
-                        assert(r_left@.contains(t@));
-                    };
-                    assert forall|t: T| #[trigger] rrv.contains(t@) implies t.cmp_spec(&r_key) == Greater by {
-                        assert(r_right@.contains(t@));
-                    };
                     // Ordering facts for slv/srv from split_inner ensures (while split_left/split_right are live).
-                    assert forall|t: T| #[trigger] slv.contains(t@) implies t.cmp_spec(&r_key) == Less by {
-                        assert(split_left@.contains(t@));
-                    };
-                    assert forall|t: T| #[trigger] srv.contains(t@) implies t.cmp_spec(&r_key) == Greater by {
-                        assert(split_right@.contains(t@));
-                    };
                 }
                 // Establish inhabitedness before moves (for disjointness proofs below).
                 proof {
@@ -852,22 +755,8 @@ pub mod BSTParaTreapMtEph {
                 proof { use_type_invariant(&combined_left); use_type_invariant(&combined_right); }
                 proof {
                     // Establish membership equivalences (set extensionality).
-                    assert(clv =~= slv.union(rlv));
-                    assert(crv =~= srv.union(rrv));
-                    assert(!clv.contains(rkv));
-                    assert(!crv.contains(rkv));
                     // Lift =~= to propositional equality for trigger-free membership substitution.
-                    assert(clv == slv.union(rlv));
-                    assert(crv == srv.union(rrv));
                     // Combined ordering foralls for clv/crv via case splits.
-                    assert forall|t: T| #[trigger] clv.contains(t@) implies t.cmp_spec(&r_key) == Less by {
-                        if slv.contains(t@) { /* ambient slv forall: t < r_key */ }
-                        else { assert(rlv.contains(t@)); /* ambient rlv forall: t < r_key */ }
-                    };
-                    assert forall|t: T| #[trigger] crv.contains(t@) implies t.cmp_spec(&r_key) == Greater by {
-                        if srv.contains(t@) { /* ambient srv forall: t > r_key */ }
-                        else { assert(rrv.contains(t@)); /* ambient rrv forall: t > r_key */ }
-                    };
                     // Cross-ordering: clv ⊆ slv.union(rlv) < r_key, crv ⊆ srv.union(rrv) > r_key.
                     // Re-assert subset facts so trigger matching derives ordering in nested scope.
                     assert forall|s: T, o: T| #![trigger clv.contains(s@), crv.contains(o@)]
@@ -876,7 +765,6 @@ pub mod BSTParaTreapMtEph {
                         reveal(ParamTreap::spec_ghost_locked_root);
                         if clv.contains(s@) && crv.contains(o@) {
                             // Both are unit facts here — E-matching fires on one-var ordering foralls.
-                            assert(s.cmp_spec(&r_key) == Less);
                             assert(o.cmp_spec(&r_key) == Greater);
                             lemma_cmp_antisymmetry(o, r_key);
                             lemma_cmp_transitivity(s, r_key, o);
@@ -884,63 +772,16 @@ pub mod BSTParaTreapMtEph {
                     };
                     // Prove disjointness of slv/rlv and srv/rrv via inhabitedness + ordering contradiction.
                     // cross-ordering foralls at lines 884-888 and 891-894 are in ambient context.
-                    assert(slv.disjoint(rlv)) by {
-                        assert forall|x: T::V| !(slv.contains(x) && rlv.contains(x)) by {
-                            if slv.contains(x) && rlv.contains(x) {
-                                reveal(vstd::laws_cmp::obeys_cmp_ord);
-                                reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                                let ghost t = choose|t: T| #[trigger] t@ == x && slv.contains(t@);
-                                assert(rlv.contains(t@));
-                                // slv/rlv cross-ordering: slv.contains(t@) && rlv.contains(t@) ==> t.cmp_spec(&t) == Less
-                                assert(t.cmp_spec(&t) == Less);
-                                assert(t.cmp_spec(&t) == Equal);
-                                assert(false);
-                            }
-                        };
-                    };
-                    assert(srv.disjoint(rrv)) by {
-                        assert forall|x: T::V| !(srv.contains(x) && rrv.contains(x)) by {
-                            if srv.contains(x) && rrv.contains(x) {
-                                reveal(vstd::laws_cmp::obeys_cmp_ord);
-                                reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                                let ghost t = choose|t: T| #[trigger] t@ == x && srv.contains(t@);
-                                assert(rrv.contains(t@));
-                                assert(t.cmp_spec(&t) == Less);
-                                assert(t.cmp_spec(&t) == Equal);
-                                assert(false);
-                            }
-                        };
-                    };
                     // clv/crv disjointness via the cross-ordering forall above.
-                    assert(clv.disjoint(crv)) by {
-                        assert forall|x: T::V| !(clv.contains(x) && crv.contains(x)) by {
-                            if clv.contains(x) && crv.contains(x) {
-                                reveal(vstd::laws_cmp::obeys_cmp_ord);
-                                reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                                let ghost t = choose|t: T| #[trigger] t@ == x && clv.contains(t@);
-                                assert(crv.contains(t@));
-                                // Cross-ordering forall fires: t.cmp_spec(&t) == Less
-                                assert(t.cmp_spec(&t) == Less);
-                                // Reflexivity from reveals: t.cmp_spec(&t) == Equal
-                                assert(t.cmp_spec(&t) == Equal);
-                                assert(false);
-                            }
-                        };
-                    };
                     // Length reasoning using the established disjointnesses.
                     vstd::set_lib::lemma_set_disjoint_lens(slv, rlv);
                     vstd::set_lib::lemma_set_disjoint_lens(srv, rrv);
                     vstd::set_lib::lemma_set_disjoint_lens(slv, srv);
                     vstd::set_lib::lemma_set_disjoint_lens(rlv, rrv);
-                    assert(slv.union(srv) =~= lv);
-                    assert(rlv.union(rrv).insert(rkv) =~= rv);
                     vstd::set_lib::lemma_set_disjoint_lens(clv, crv);
-                    assert(clv.len() + crv.len() < usize::MAX as nat);
                     // BST ordering for join_with_priority (clv/crv ordering established above).
                     // Final set equality for join_with_priority ensures.
                     // clv == slv.union(rlv) and crv == srv.union(rrv) (established above).
-                    assert(clv.union(crv).insert(rkv) =~= lv.union(rv));
-                    assert(combined_left@.union(combined_right@).insert(r_key@) =~= lv.union(rv));
                 }
                 // join_with_priority ensures: result@ =~= clv.union(crv).insert(rkv) =~= lv.union(rv).
                 join_with_priority(combined_left, r_key, rp, combined_right)
@@ -987,10 +828,6 @@ pub mod BSTParaTreapMtEph {
                     vstd::set_lib::lemma_len_subset(blv, b@);
                     vstd::set_lib::lemma_len_subset(brv, b@);
                     // Ordering foralls while exec vars are live (before closures move them).
-                    assert forall|t: T| #[trigger] alv.contains(t@) implies t.cmp_spec(&ak) == Less by {};
-                    assert forall|t: T| #[trigger] arv.contains(t@) implies t.cmp_spec(&ak) == Greater by {};
-                    assert forall|t: T| #[trigger] blv.contains(t@) implies t.cmp_spec(&ak) == Less by {};
-                    assert forall|t: T| #[trigger] brv.contains(t@) implies t.cmp_spec(&ak) == Greater by {};
                 }
                 let f1 = move || -> (merged: ParamTreap<T>)
                     ensures merged@.finite(), merged@ == al@.union(bl@)
@@ -1008,35 +845,10 @@ pub mod BSTParaTreapMtEph {
                     let luv = left_union@;
                     let ruv = right_union@;
                     // All elements of luv < ak, all of ruv > ak (from ambient ordering foralls).
-                    assert forall|t: T| #[trigger] luv.contains(t@) implies t.cmp_spec(&ak) == Less by {};
-                    assert forall|t: T| #[trigger] ruv.contains(t@) implies t.cmp_spec(&ak) == Greater by {};
                     // Disjointness of luv/ruv by contradiction via view_ord_consistent + inhabitedness.
-                    assert(luv.disjoint(ruv)) by {
-                        assert forall|x: T::V| !(luv.contains(x) && ruv.contains(x)) by {
-                            if luv.contains(x) && ruv.contains(x) {
-                                reveal(vstd::laws_cmp::obeys_cmp_ord);
-                                reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                                let ghost tl = choose|t: T| #[trigger] t@ == x && luv.contains(t@);
-                                let ghost tr = choose|t: T| #[trigger] t@ == x && ruv.contains(t@);
-                                // tl < ak, tr > ak, tl@ == x == tr@ → contradiction via congruence.
-                                view_ord_consistent::<T>();
-                                lemma_cmp_equal_congruent(tl, tr, ak);
-                                assert(false);
-                            }
-                        };
-                    };
                     // Length: luv.union(ruv) ⊆ a@.union(b@), and they're disjoint.
                     vstd::set_lib::lemma_set_disjoint_lens(luv, ruv);
                     // luv == alv.union(blv) ⊆ a@.union(b@) and ruv == arv.union(brv) ⊆ a@.union(b@).
-                    assert(luv.union(ruv).subset_of(a@.union(b@))) by {
-                        assert forall|x: T::V| #[trigger] luv.union(ruv).contains(x) implies a@.union(b@).contains(x) by {
-                            if luv.contains(x) {
-                                if alv.contains(x) {} else { assert(blv.contains(x)); }
-                            } else {
-                                if arv.contains(x) {} else { assert(brv.contains(x)); }
-                            }
-                        };
-                    };
                     vstd::set_lib::lemma_len_subset(luv.union(ruv), a@.union(b@));
                     vstd::set_lib::lemma_len_union(a@, b@);
                     // Final set equality: combined@ will be luv.union(ruv).insert(akv) =~= a@.union(b@).
@@ -1046,18 +858,14 @@ pub mod BSTParaTreapMtEph {
                             if luv.union(ruv).insert(akv).contains(x) {
                                 if x == akv {}
                                 else if luv.contains(x) {
-                                    if alv.contains(x) {} else { assert(blv.contains(x)); }
                                 } else {
-                                    if arv.contains(x) {} else { assert(brv.contains(x)); }
                                 }
                             }
                             // backward: if x ∈ a@.union(b@) but not in LHS, derive contradiction
                             if a@.union(b@).contains(x) && !luv.union(ruv).insert(akv).contains(x) {
                                 if a@.contains(x) {
-                                    assert(false);
                                 } else {
                                     assert(b@.remove(akv).contains(x));
-                                    assert(false);
                                 }
                             }
                         };
@@ -1111,8 +919,6 @@ pub mod BSTParaTreapMtEph {
                     use_type_invariant(&al); use_type_invariant(&ar);
                     use_type_invariant(&bl); use_type_invariant(&br);
                     // Ordering foralls for alv/arv while exec vars are live (before closures move them).
-                    assert forall|t: T| #[trigger] alv.contains(t@) implies t.cmp_spec(&ak) == Less by {};
-                    assert forall|t: T| #[trigger] arv.contains(t@) implies t.cmp_spec(&ak) == Greater by {};
                 }
                 let f1 = move || -> (common: ParamTreap<T>)
                     ensures common@.finite(), common@ == al@.intersect(bl@)
@@ -1147,7 +953,6 @@ pub mod BSTParaTreapMtEph {
                                         let ghost t_br = choose|t: T| #[trigger] t@ == x && brv.contains(t@);
                                         view_ord_consistent::<T>();
                                         lemma_cmp_equal_congruent(t_x, t_br, ak);
-                                        assert(false);
                                     }
                                 };
                             } else {
@@ -1159,18 +964,12 @@ pub mod BSTParaTreapMtEph {
                                         let ghost t_bl = choose|t: T| #[trigger] t@ == x && blv.contains(t@);
                                         view_ord_consistent::<T>();
                                         lemma_cmp_equal_congruent_right(t_bl, t_x, ak);
-                                        assert(false);
                                     }
                                 };
                             }
                         }
                     };
-                    assert(av.intersect(bv) =~= lrv.union(rrv).union(
-                        if found { Set::<<T as View>::V>::empty().insert(akv) }
-                        else { Set::<<T as View>::V>::empty() }));
                     // Structural properties for join calls below.
-                    assert forall|t: T| #[trigger] lrv.contains(t@) implies t.cmp_spec(&ak) == Less by {};
-                    assert forall|t: T| #[trigger] rrv.contains(t@) implies t.cmp_spec(&ak) == Greater by {};
                     // Cross-ordering for join_pair_inner: lrv < ak < rrv.
                     assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)]
                         lrv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {
@@ -1232,10 +1031,6 @@ pub mod BSTParaTreapMtEph {
                         };
                     };
                     // Ordering foralls while exec vars are live (before closures move them).
-                    assert forall|t: T| #[trigger] alv.contains(t@) implies t.cmp_spec(&ak) == Less by {};
-                    assert forall|t: T| #[trigger] arv.contains(t@) implies t.cmp_spec(&ak) == Greater by {};
-                    assert forall|t: T| #[trigger] blv.contains(t@) implies t.cmp_spec(&ak) == Less by {};
-                    assert forall|t: T| #[trigger] brv.contains(t@) implies t.cmp_spec(&ak) == Greater by {};
                 }
                 let f1 = move || -> (diff: ParamTreap<T>)
                     ensures diff@.finite(), diff@ == al@.difference(bl@)
@@ -1254,18 +1049,12 @@ pub mod BSTParaTreapMtEph {
                                             else { Set::<<T as View>::V>::empty() }).contains(x) by {
                         if av.difference(bv).contains(x) {
                             if x == akv {
-                                assert(!found);
                             } else if alv.contains(x) {
                                 // x ∉ bv and blv ⊆ bv → x ∉ blv.
-                                assert(!blv.contains(x));
-                                assert(lrv.contains(x));
                             } else {
-                                assert(!brv.contains(x));
-                                assert(rrv.contains(x));
                             }
                         } else {
                             if lrv.contains(x) {
-                                assert(alv.contains(x) && !blv.contains(x));
                                 // x ∈ alv → x < ak. x ∉ blv. If x ∈ bv: x ∈ bv.remove(akv) = blv.union(brv).
                                 // x ∈ brv → x > ak. But x < ak. Contradiction. So x ∈ blv. But !blv. ∴ x ∉ bv.
                                 if bv.contains(x) {
@@ -1275,12 +1064,9 @@ pub mod BSTParaTreapMtEph {
                                         let ghost t_br = choose|t: T| #[trigger] t@ == x && brv.contains(t@);
                                         view_ord_consistent::<T>();
                                         lemma_cmp_equal_congruent(t_al, t_br, ak);
-                                        assert(false);
                                     }
-                                    assert(false);
                                 }
                             } else if rrv.contains(x) {
-                                assert(arv.contains(x) && !brv.contains(x));
                                 // x ∈ arv → x > ak. x ∉ brv. If x ∈ bv: x ∈ blv.union(brv). x ∈ blv → x < ak. Contradiction.
                                 if bv.contains(x) {
                                     assert(blv.union(brv).contains(x));
@@ -1289,21 +1075,13 @@ pub mod BSTParaTreapMtEph {
                                         let ghost t_bl = choose|t: T| #[trigger] t@ == x && blv.contains(t@);
                                         view_ord_consistent::<T>();
                                         lemma_cmp_equal_congruent_right(t_bl, t_ar, ak);
-                                        assert(false);
                                     }
-                                    assert(false);
                                 }
                             } else if !found && x == akv {
-                                assert(av.contains(akv));
                             }
                         }
                     };
-                    assert(av.difference(bv) =~= lrv.union(rrv).union(
-                        if !found { Set::<<T as View>::V>::empty().insert(akv) }
-                        else { Set::<<T as View>::V>::empty() }));
                     // Structural properties (from ambient ordering foralls).
-                    assert forall|t: T| #[trigger] lrv.contains(t@) implies t.cmp_spec(&ak) == Less by {};
-                    assert forall|t: T| #[trigger] rrv.contains(t@) implies t.cmp_spec(&ak) == Greater by {};
                     // lrv ⊆ alv < ak, rrv ⊆ arv > ak.
                     assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)]
                         lrv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {
@@ -1364,7 +1142,6 @@ pub mod BSTParaTreapMtEph {
                 // Termination: subtrees are strictly smaller than tree.
                 proof {
                     vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
-                    assert(lv.len() + rv.len() < tv.len());
                 }
                 // Sequential recursive calls.
                 let left_filtered = filter_inner(&left, predicate, Ghost(spec_pred));
@@ -1380,7 +1157,6 @@ pub mod BSTParaTreapMtEph {
                     // Length bounds for join preconditions.
                     vstd::set_lib::lemma_len_subset(left_filtered@, lv);
                     vstd::set_lib::lemma_len_subset(right_filtered@, rv);
-                    assert(left_filtered@.len() + right_filtered@.len() < usize::MAX as nat);
                 }
                 let keep = (**predicate)(&key);
                 if keep {
@@ -1388,29 +1164,7 @@ pub mod BSTParaTreapMtEph {
                         let lf = left_filtered@;
                         let rf = right_filtered@;
                         // Forward: lf.union(rf).insert(kv).contains(v) ==> spec_pred(v).
-                        assert forall|v: T::V| #[trigger]
-                            lf.union(rf).insert(kv).contains(v) implies spec_pred(v) by {
-                            if v == kv {
-                            } else if lf.contains(v) {
-                                assert(left_filtered@.contains(v));
-                            } else {
-                                assert(right_filtered@.contains(v));
-                            }
-                        };
                         // Backward: tv.contains(v) && spec_pred(v) ==> lf.union(rf).insert(kv).contains(v).
-                        assert forall|v: T::V| #[trigger]
-                            tv.contains(v) && spec_pred(v)
-                            implies lf.union(rf).insert(kv).contains(v) by {
-                            if v == kv {
-                                // kv is in the insert.
-                            } else {
-                                if lv.contains(v) {
-                                    assert(left_filtered@.contains(v));
-                                } else {
-                                    assert(right_filtered@.contains(v));
-                                }
-                            }
-                        };
                     }
                     join_with_priority(left_filtered, key, ap, right_filtered)
                 } else {
@@ -1418,28 +1172,8 @@ pub mod BSTParaTreapMtEph {
                         let lf = left_filtered@;
                         let rf = right_filtered@;
                         // Forward: lf.union(rf).contains(v) ==> spec_pred(v).
-                        assert forall|v: T::V| #[trigger]
-                            lf.union(rf).contains(v) implies spec_pred(v) by {
-                            if lf.contains(v) {
-                                assert(left_filtered@.contains(v));
-                            } else {
-                                assert(right_filtered@.contains(v));
-                            }
-                        };
                         // Backward: tv.contains(v) && spec_pred(v) ==> lf.union(rf).contains(v).
                         // kv is excluded; spec_pred(kv) = keep = false vacuously handles v == kv.
-                        assert forall|v: T::V| #[trigger]
-                            tv.contains(v) && spec_pred(v)
-                            implies lf.union(rf).contains(v) by {
-                            if v == kv {
-                            } else {
-                                if lv.contains(v) {
-                                    assert(left_filtered@.contains(v));
-                                } else {
-                                    assert(right_filtered@.contains(v));
-                                }
-                            }
-                        };
                     }
                     join_pair_inner(left_filtered, right_filtered)
                 }
@@ -1492,10 +1226,6 @@ pub mod BSTParaTreapMtEph {
                 let left_base = identity.clone();
                 let right_base = identity;
                 proof {
-                    assert(left@.finite());
-                    assert(right@.finite());
-                    assert(left@.len() < tree@.len());
-                    assert(right@.len() < tree@.len());
                 }
                 let f1 = move || -> T { reduce_inner(&left, &op_left, left_base) };
                 let f2 = move || -> T { reduce_inner(&right, &op_right, right_base) };
@@ -1536,7 +1266,6 @@ pub mod BSTParaTreapMtEph {
             | Exposed::Node(left, key, right) => {
                 proof {
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(tree@.len() == left@.len() + right@.len() + 1);
                 }
                 collect_in_order(&left, out);
                 out.push(key);
@@ -1816,10 +1545,7 @@ pub mod BSTParaTreapMtEph {
             let ghost kv = key@;
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                assert(left@.union(right@) =~= old_view.remove(kv));
-                assert(old_view.remove(kv).subset_of(old_view));
                 vstd::set_lib::lemma_len_subset(old_view.remove(kv), old_view);
-                assert(left@.len() + right@.len() < usize::MAX as nat);
             }
             let priority = priority_for(&key);
             let new_tree = join_with_priority(left, key, priority, right);
@@ -1834,10 +1560,7 @@ pub mod BSTParaTreapMtEph {
             let (left, _, right) = split_inner(self, key);
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                assert(left@.union(right@) =~= old_view.remove(kref@));
-                assert(old_view.remove(kref@).subset_of(old_view));
                 vstd::set_lib::lemma_len_subset(old_view.remove(kref@), old_view);
-                assert(left@.len() + right@.len() < usize::MAX as nat);
                 assert forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
                     left@.contains(s@) && right@.contains(o@) implies s.cmp_spec(&o) == Less by {
                     lemma_cmp_antisymmetry(o, kref);
@@ -1858,10 +1581,6 @@ pub mod BSTParaTreapMtEph {
                     proof {
                         reveal(vstd::laws_cmp::obeys_cmp_ord);
                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                        assert(!left@.union(right@).contains(root_key@));
-                        assert(self@.len() == left@.len() + right@.len() + 1);
-                        assert(left@.len() < self@.len());
-                        assert(right@.len() < self@.len());
                     }
                     match <T as std::cmp::Ord>::cmp(key, &root_key) {
                         | Equal => Some(root_key),
@@ -1999,11 +1718,6 @@ pub mod BSTParaTreapMtEph {
                         vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
                         use_type_invariant(&left);
                         use_type_invariant(&right);
-                        assert forall|v: T::V| #[trigger] contents.contains(v)
-                            implies exists|t: T| t@ == v by {
-                            if lv.contains(v) { } else if rv.contains(v) { }
-                            else { assert(key@ == v); }
-                        };
                         // Clone bridge: structural copy inherits BST ordering and size bound.
                         assume(forall|t: T| (#[trigger] lv.contains(t@)) ==> t.cmp_spec(&key) == Less);
                         assume(forall|t: T| (#[trigger] rv.contains(t@)) ==> t.cmp_spec(&key) == Greater);

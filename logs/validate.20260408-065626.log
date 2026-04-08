@@ -1,0 +1,28 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+   --> src/Chap39/BSTTreapMtEph.rs:240:32
+    |
+240 |                         assert(yk.is_lt(&xk));
+    |                                ^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+ --> vstd/std_specs/cmp.rs:219:8
+
+note: 
+
+yk.partial_cmp_spec(xk) == Some(Less)
+|   !(yk.partial_cmp_spec(xk) is None) ✘
+|   yk.partial_cmp_spec(xk) is Some ==>
+|       yk.partial_cmp_spec(xk).0 == Less ✘
+|       |   !(yk.partial_cmp_spec(xk).0 is Equal) ✘
+|       |   !(yk.partial_cmp_spec(xk).0 is Greater) ✘
+|       +---
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 5104MB, peak z3 RSS: 523MB, min free: 21138MB
+Sampled CPU Usage: rust_verify: 95s, z3 children: 80s

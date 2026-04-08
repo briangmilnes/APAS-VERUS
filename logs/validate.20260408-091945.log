@@ -1,0 +1,43 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:2572:21
+     |
+2572 |                     vstd::set_lib::lemma_len_subset(slv, lv);
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/set_lib.rs:1099:8
+     |
+     = note: failed precondition
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2578:32
+     |
+2578 |                         assert(slv.subset_of(lv));
+     |                                ^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2622:40
+     |
+2622 | ...                   assert(lv.contains(x) && rv.contains(x));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+ --> vstd/set_lib.rs:1099:8
+
+note: 
+
+lv.finite() ✔
+slv.subset_of(lv) ✘
+|   forall |a|
+|       slv.contains(a) ==>
+|           lv.contains(a) 
+|               function is uninterpreted
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 6932MB, peak z3 RSS: 829MB, min free: 16729MB
+Sampled CPU Usage: rust_verify: 140s, z3 children: 104s

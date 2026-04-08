@@ -1,0 +1,25 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2330:36
+     |
+2330 | ...                   assert(lrv.subset_of(lv));
+     |                              ^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+lrv.subset_of(lv)
+|   forall |a|
+|       lrv.contains(a) ==>
+|           lv.contains(a) 
+|               function is uninterpreted
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 4945MB, peak z3 RSS: 586MB, min free: 16604MB
+Sampled CPU Usage: rust_verify: 147s, z3 children: 123s

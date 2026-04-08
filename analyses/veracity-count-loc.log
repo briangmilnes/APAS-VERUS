@@ -1,13 +1,15 @@
     Spec/   Proof/    Exec/    Rust File
 --------------------------------------------
-     366/     807/     544/      68 BSTParaMtEph.rs
-     272/     646/     419/      63 BSTParaStEph.rs
+     316/     860/     487/      77 BSTParaTreapMtEph.rs
+     118/      28/     129/      32 BSTSetTreapMtEph.rs
+     343/     445/     398/      75 BSTTreapMtEph.rs
+     682/   1,431/     785/      78 BSTTreapStEph.rs
 --------------------------------------------
     spec    proof     exec     rust
-     638/   1,453/     963/     131 Total
-   3,859 total lines
-2 files analyzed
-60ms
+   1,459/   2,764/   1,799/     262 Total
+   7,655 total lines
+4 files analyzed
+98ms
 
 Proof Lines Per Function
 ========================
@@ -15,49 +17,60 @@ Proof Lines Per Function
 By chapter:
 |   # | Chapter    |  PrfTot |  InSpec |  InExec | InProof | ExecLOC |  Prf/Ex |
 | --- | ---------- | ------- | ------- | ------- | ------- | ------- | ------- |
-|   1 | root       |   2,093 |      72 |   1,891 |     130 |     963 |    2.17 |
+|   1 | root       |   4,172 |     288 |   3,284 |     600 |   1,799 |    2.32 |
 
-1 chapters, 2,093 proof lines, 963 exec lines, ratio 2.17
-2,093 min  2,093 max  2093.0 avg  2093.0 median (proof lines)
+1 chapters, 4,172 proof lines, 1,799 exec lines, ratio 2.32
+4,172 min  4,172 max  4172.0 avg  4172.0 median (proof lines)
 
 By module:
 |   # | Chap       | Module                         |  PrfTot |  InSpec |  InExec | InProof | ExecLOC | Prf/Ex |
 | --- | ---------- | ------------------------------ | ------- | ------- | ------- | ------- | ------- | ------ |
-|   1 | root       | BSTParaMtEph                   |   1,174 |      36 |   1,075 |      63 |     544 |   2.16 |
-|   2 | root       | BSTParaStEph                   |     919 |      36 |     816 |      67 |     419 |   2.19 |
+|   1 | root       | BSTTreapStEph                  |   2,086 |     130 |   1,663 |     293 |     785 |   2.66 |
+|   2 | root       | BSTParaTreapMtEph              |   1,175 |      33 |   1,011 |     131 |     487 |   2.41 |
+|   3 | root       | BSTTreapMtEph                  |     766 |     119 |     471 |     176 |     398 |   1.92 |
+|   4 | root       | BSTSetTreapMtEph               |     145 |       6 |     139 |       0 |     129 |   1.12 |
 
-2 modules, 2,093 proof lines, 963 exec lines, ratio 2.17
-919 min  1,174 max  1046.5 avg  1046.5 median (proof lines)
+4 modules, 4,172 proof lines, 1,799 exec lines, ratio 2.32
+145 min  2,086 max  1043.0 avg  970.5 median (proof lines)
 
 Per exec function (proof lines within exec fns):
-  111 exec functions total, 106 with proof lines
-  1,891 total proof lines in exec fns
-  1 min  129 max  17.8 avg  6.0 median
+  252 exec functions total, 198 with proof lines
+  3,284 total proof lines in exec fns
+  1 min  168 max  16.6 avg  5.0 median
 
 Per proof function:
-  11 proof functions
-  130 total proof lines in proof fns
-  8 min  18 max  11.8 avg  11.0 median
+  62 proof functions
+  600 total proof lines in proof fns
+  1 min  35 max  9.7 avg  10.0 median
 
 Grand total:
-  140 total functions, 133 with proof lines (95%)
-  2,093 total proof lines, 963 exec lines, ratio 2.17
-  1 min  129 max  15.7 avg  6.0 median (proof lines per fn)
+  394 total functions, 309 with proof lines (78%)
+  4,172 total proof lines, 1,799 exec lines, ratio 2.32
+  1 min  168 max  13.5 avg  5.0 median (proof lines per fn)
 
 Outliers (>= 50 proof lines):
-|   # | Chap       | Module                         | Function               |  Kind |  Lines |
-| --- | ---------- | ------------------------------ | ---------------------- | ----- | ------ |
-|   1 | root       | BSTParaMtEph                   | split_inner            |  exec |    129 |
-|   2 | root       | BSTParaMtEph                   | intersect_inner        |  exec |    126 |
-|   3 | root       | BSTParaMtEph                   | difference_inner       |  exec |    125 |
-|   4 | root       | BSTParaStEph                   | intersect              |  exec |    105 |
-|   5 | root       | BSTParaStEph                   | split                  |  exec |    104 |
-|   6 | root       | BSTParaStEph                   | difference             |  exec |     95 |
-|   7 | root       | BSTParaMtEph                   | filter_inner           |  exec |     90 |
-|   8 | root       | BSTParaMtEph                   | collect_in_order_inner |  exec |     84 |
-|   9 | root       | BSTParaMtEph                   | union_inner            |  exec |     81 |
-|  10 | root       | BSTParaStEph                   | union                  |  exec |     70 |
-|  11 | root       | BSTParaStEph                   | collect_in_order       |  exec |     61 |
-|  12 | root       | BSTParaMtEph                   | join_pair_inner        |  exec |     53 |
+|   # | Chap       | Module                         | Function              |  Kind |  Lines |
+| --- | ---------- | ------------------------------ | --------------------- | ----- | ------ |
+|   1 | root       | BSTTreapStEph                  | join_pair_inner_st    |  exec |    168 |
+|   2 | root       | BSTParaTreapMtEph              | join_pair_inner       |  exec |    161 |
+|   3 | root       | BSTTreapStEph                  | split_inner_st        |  exec |    143 |
+|   4 | root       | BSTTreapStEph                  | difference_inner_st   |  exec |    135 |
+|   5 | root       | BSTTreapStEph                  | union_inner_st        |  exec |    132 |
+|   6 | root       | BSTTreapMtEph                  | delete_link           |  exec |    129 |
+|   7 | root       | BSTTreapStEph                  | delete_link           |  exec |    126 |
+|   8 | root       | BSTTreapStEph                  | intersect_inner_st    |  exec |    125 |
+|   9 | root       | BSTParaTreapMtEph              | split_inner           |  exec |    117 |
+|  10 | root       | BSTParaTreapMtEph              | join_with_priority    |  exec |    110 |
+|  11 | root       | BSTTreapStEph                  | filter_inner_st       |  exec |    109 |
+|  12 | root       | BSTParaTreapMtEph              | difference_inner      |  exec |    100 |
+|  13 | root       | BSTParaTreapMtEph              | intersect_inner       |  exec |     92 |
+|  14 | root       | BSTParaTreapMtEph              | union_inner           |  exec |     91 |
+|  15 | root       | BSTParaTreapMtEph              | filter_inner          |  exec |     88 |
+|  16 | root       | BSTTreapStEph                  | insert_link           |  exec |     70 |
+|  17 | root       | BSTTreapMtEph                  | insert_link           |  exec |     66 |
+|  18 | root       | BSTTreapStEph                  | param_find            |  exec |     60 |
+|  19 | root       | BSTTreapStEph                  | join_with_priority_st |  exec |     59 |
+|  20 | root       | BSTTreapMtEph                  | rotate_left           |  exec |     50 |
+|  21 | root       | BSTTreapMtEph                  | rotate_right          |  exec |     50 |
 
-12 functions over 50 proof lines
+21 functions over 50 proof lines

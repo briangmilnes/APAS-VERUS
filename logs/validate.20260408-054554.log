@@ -1,0 +1,44 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap39/BSTParaTreapMtEph.rs:612:13
+    |
+612 |               parts.0@.union(parts.2@) =~= tree@.remove(key@),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+619 | /         match expose_internal(tree) {
+620 | |             | Exposed::Leaf => (new_leaf(), false, new_leaf()),
+621 | |             | Exposed::Node(left, root_key, right) => {
+622 | |                 proof {
+...   |
+758 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap39/BSTParaTreapMtEph.rs:612:13
+    |
+612 |             parts.0@.union(parts.2@) =~= tree@.remove(key@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+parts.1 == old(tree).view().contains(old(key).view()) ✔
+parts.0.view().finite() ✔
+parts.2.view().finite() ✔
+parts.0.view().union(parts.2.view()) =~= old(tree).view().remove(old(key).view()) ✘
+parts.0.view().disjoint(parts.2.view()) ✔
+!(parts.0.view().contains(old(key).view())) ✔
+!(parts.2.view().contains(old(key).view())) ✔
+forall |t|
+    parts.0.view().contains(t.view()) ==>
+        t.cmp_spec(old(key)) == Less ✔
+forall |t|
+    parts.2.view().contains(t.view()) ==>
+        t.cmp_spec(old(key)) == Greater ✔
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 2542MB, peak z3 RSS: 340MB, min free: 22716MB
+Sampled CPU Usage: rust_verify: 38s, z3 children: 41s

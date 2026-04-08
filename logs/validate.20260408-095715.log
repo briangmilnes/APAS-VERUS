@@ -1,0 +1,35 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: postcondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:2674:37
+     |
+2674 |           ensures combined@.finite(), combined@ == a@.union(b@),
+     |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2679 | /         match expose_to_parts_st(a) {
+2680 | |             | None => b,
+2681 | |             | Some((al, ak, ap, ar)) => {
+2682 | |                 let ghost akv = ak@;
+...    |
+2816 | |         }
+     | |_________- at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:2674:37
+     |
+2674 |         ensures combined@.finite(), combined@ == a@.union(b@),
+     |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+combined.view().finite() ✔
+combined.view() =~= old(a).view().union(old(b).view()) ✘
+spec_param_wf_link(combined.root) ✔
+combined.spec_bsttreapsteph_wf() ✔
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 4225MB, peak z3 RSS: 519MB, min free: 19902MB
+Sampled CPU Usage: rust_verify: 63s, z3 children: 61s

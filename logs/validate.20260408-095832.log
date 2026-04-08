@@ -1,0 +1,85 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: expected an expression
+    --> src/Chap39/BSTTreapStEph.rs:2789:37
+     |
+2789 | ...                   else { assert(brv.contains(x)); assert(bv.contains(x)); }
+     |                       ^^^^
+
+error[E0425]: cannot find type `Node` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:3394:69
+     |
+3394 |     impl<T: StT + Ord + IsLtTransitive + fmt::Debug> fmt::Debug for Node<T> {
+     |                                                                     ^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+  35 +     use crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::Node;
+     |
+
+error[E0425]: cannot find type `Node` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:3406:73
+     |
+3406 |     impl<T: StT + Ord + IsLtTransitive + fmt::Display> fmt::Display for Node<T> {
+     |                                                                         ^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+  35 +     use crate::Chap39::BSTTreapMtEph::BSTTreapMtEph::Node;
+     |
+
+error[E0425]: cannot find type `BSTTreapStEph` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:3414:69
+     |
+3414 |     impl<T: StT + Ord + IsLtTransitive + fmt::Debug> fmt::Debug for BSTTreapStEph<T> {
+     |                                                                     ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTTreapStEph` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:3420:58
+     |
+3420 |     impl<T: StT + Ord + IsLtTransitive> fmt::Display for BSTTreapStEph<T> {
+     |                                                          ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ExposedTreap` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:3428:69
+     |
+3428 |     impl<T: StT + Ord + IsLtTransitive + fmt::Debug> fmt::Debug for ExposedTreap<T> {
+     |                                                                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ExposedTreap` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:3437:73
+     |
+3437 |     impl<T: StT + Ord + IsLtTransitive + fmt::Display> fmt::Display for ExposedTreap<T> {
+     |                                                                         ^^^^^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared type `ExposedTreap`
+    --> src/Chap39/BSTTreapStEph.rs:3431:17
+     |
+3431 |                 ExposedTreap::Leaf => write!(f, "Leaf"),
+     |                 ^^^^^^^^^^^^ use of undeclared type `ExposedTreap`
+
+error[E0433]: failed to resolve: use of undeclared type `ExposedTreap`
+    --> src/Chap39/BSTTreapStEph.rs:3432:17
+     |
+3432 |                 ExposedTreap::Node(l, k, r) => write!(f, "Node({:?}, {:?}, {:?})", l, k, r),
+     |                 ^^^^^^^^^^^^ use of undeclared type `ExposedTreap`
+
+error[E0433]: failed to resolve: use of undeclared type `ExposedTreap`
+    --> src/Chap39/BSTTreapStEph.rs:3440:17
+     |
+3440 |                 ExposedTreap::Leaf => write!(f, "Leaf"),
+     |                 ^^^^^^^^^^^^ use of undeclared type `ExposedTreap`
+
+error[E0433]: failed to resolve: use of undeclared type `ExposedTreap`
+    --> src/Chap39/BSTTreapStEph.rs:3441:17
+     |
+3441 |                 ExposedTreap::Node(l, k, r) => write!(f, "Node({}, {}, {})", l, k, r),
+     |                 ^^^^^^^^^^^^ use of undeclared type `ExposedTreap`
+
+error: aborting due to 11 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 2182MB, peak z3 RSS: 296MB, min free: 21745MB
+Sampled CPU Usage: rust_verify: 30s, z3 children: 13s

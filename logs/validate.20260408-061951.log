@@ -1,0 +1,33 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: postcondition not satisfied
+    --> src/Chap39/BSTParaTreapMtEph.rs:957:37
+     |
+ 957 |           ensures combined@.finite(), combined@ == a@.union(b@),
+     |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+ 961 | /         match expose_internal(a) {
+ 962 | |             | Exposed::Leaf => b.clone(),
+ 963 | |             | Exposed::Node(al, ak, ar) => {
+ 964 | |                 let ap = tree_priority_internal(a);
+...    |
+1068 | |         }
+     | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap39/BSTParaTreapMtEph.rs:957:37
+    |
+957 |         ensures combined@.finite(), combined@ == a@.union(b@),
+    |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+combined.view().finite() ✔
+combined.view() =~= old(a).view().union(old(b).view()) ✘
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 3381MB, peak z3 RSS: 465MB, min free: 22035MB
+Sampled CPU Usage: rust_verify: 66s, z3 children: 74s
