@@ -1,0 +1,303 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: unexpected token, expected `;`
+    --> src/Chap39/BSTParaTreapMtEph.rs:1176:62
+     |
+1176 |                         lrv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {
+     |                                                              ^^^^^^^
+
+error[E0425]: cannot find type `BSTParaTreapMtEphInv` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:2041:35
+     |
+2041 |     impl<T: MtKey> fmt::Debug for BSTParaTreapMtEphInv<T> {
+     |                                   ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTParaTreapMtEphInv` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:2047:37
+     |
+2047 |     impl<T: MtKey> fmt::Display for BSTParaTreapMtEphInv<T> {
+     |                                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `Exposed` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:2055:35
+     |
+2055 |     impl<T: MtKey> fmt::Debug for Exposed<T> {
+     |                                   ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `Exposed` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:2064:37
+     |
+2064 |     impl<T: MtKey> fmt::Display for Exposed<T> {
+     |                                     ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `NodeInner` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:2075:35
+     |
+2075 |     impl<T: MtKey> fmt::Debug for NodeInner<T> {
+     |                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `NodeInner` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:2084:37
+     |
+2084 |     impl<T: MtKey> fmt::Display for NodeInner<T> {
+     |                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamTreap` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:2094:36
+     |
+2094 |     unsafe impl<T: MtKey> Send for ParamTreap<T> {}
+     |                                    ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamTreap` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:2095:36
+     |
+2095 |     unsafe impl<T: MtKey> Sync for ParamTreap<T> {}
+     |                                    ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamTreap` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:2097:56
+     |
+2097 |     impl<T: MtKey + ClonePreservesView> fmt::Debug for ParamTreap<T> {
+     |                                                        ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamTreap` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:2103:58
+     |
+2103 |     impl<T: MtKey + ClonePreservesView> fmt::Display for ParamTreap<T> {
+     |                                                          ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamTreap` in this scope
+  --> src/Chap39/BSTSetTreapMtEph.rs:45:19
+   |
+45 |         pub tree: ParamTreap<T>,
+   |                   ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamTreap` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:231:38
+    |
+231 |         fn as_tree(&self) -> (tree: &ParamTreap<T>)
+    |                                      ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamTreap` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:240:60
+    |
+240 |     fn minimum_inner<T: MtKey + ClonePreservesView>(tree: &ParamTreap<T>) -> (min: Option<T>)
+    |                                                            ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamTreap` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:264:60
+    |
+264 |     fn maximum_inner<T: MtKey + ClonePreservesView>(tree: &ParamTreap<T>) -> (max: Option<T>)
+    |                                                            ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamTreap` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:422:38
+    |
+422 |         fn as_tree(&self) -> (tree: &ParamTreap<T>) { &self.tree }
+    |                                      ^^^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+    --> src/Chap39/BSTParaTreapMtEph.rs:2058:17
+     |
+2058 |                 Exposed::Leaf => write!(f, "Exposed::Leaf"),
+     |                 ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+    --> src/Chap39/BSTParaTreapMtEph.rs:2059:17
+     |
+2059 |                 Exposed::Node(_, _, _) => write!(f, "Exposed::Node(...)"),
+     |                 ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+    --> src/Chap39/BSTParaTreapMtEph.rs:2067:17
+     |
+2067 |                 Exposed::Leaf => write!(f, "Leaf"),
+     |                 ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+    --> src/Chap39/BSTParaTreapMtEph.rs:2068:17
+     |
+2068 |                 Exposed::Node(_, _, _) => write!(f, "Node(...)"),
+     |                 ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+   --> src/Chap39/BSTSetTreapMtEph.rs:248:13
+    |
+248 |             Exposed::Leaf => None,
+    |             ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+   --> src/Chap39/BSTSetTreapMtEph.rs:249:13
+    |
+249 |             Exposed::Node(left, key, _right) => {
+    |             ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+   --> src/Chap39/BSTSetTreapMtEph.rs:272:13
+    |
+272 |             Exposed::Leaf => None,
+    |             ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+   --> src/Chap39/BSTSetTreapMtEph.rs:273:13
+    |
+273 |             Exposed::Node(_left, key, right) => {
+    |             ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamTreap`
+   --> src/Chap39/BSTSetTreapMtEph.rs:290:38
+    |
+290 |             BSTSetTreapMtEph { tree: ParamTreap::new() }
+    |                                      ^^^^^^^^^^ use of undeclared type `ParamTreap`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamTreap`
+   --> src/Chap39/BSTSetTreapMtEph.rs:397:23
+    |
+397 |                 tree: ParamTreap::join_mid(Exposed::Node(left.tree, pivot, right.tree)),
+    |                       ^^^^^^^^^^ use of undeclared type `ParamTreap`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+   --> src/Chap39/BSTSetTreapMtEph.rs:397:44
+    |
+397 |                 tree: ParamTreap::join_mid(Exposed::Node(left.tree, pivot, right.tree)),
+    |                                            ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+  --> src/Chap39/BSTSetTreapMtEph.rs:74:61
+   |
+74 |             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+   |                                                             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+  --> src/Chap39/BSTSetTreapMtEph.rs:87:61
+   |
+87 |             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+   |                                                             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+  --> src/Chap39/BSTSetTreapMtEph.rs:94:61
+   |
+94 |             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+   |                                                             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+  --> src/Chap39/BSTSetTreapMtEph.rs:99:61
+   |
+99 |             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+   |                                                             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:107:61
+    |
+107 |             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+    |                                                             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:117:17
+    |
+117 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:125:17
+    |
+125 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:133:17
+    |
+133 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:141:17
+    |
+141 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:149:17
+    |
+149 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:155:61
+    |
+155 |             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+    |                                                             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:173:17
+    |
+173 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:185:17
+    |
+185 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:202:17
+    |
+202 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:221:17
+    |
+221 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:227:61
+    |
+227 |             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+    |                                                             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:241:57
+    |
+241 |         requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+    |                                                         ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:265:57
+    |
+265 |         requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+    |                                                         ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_cmp_antisymmetry` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:359:21
+    |
+359 |                     lemma_cmp_antisymmetry(o, kref);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_cmp_transitivity` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:360:21
+    |
+360 |                     lemma_cmp_transitivity(s, kref, o);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `param_treap_assert_finite` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:394:13
+    |
+394 |             param_treap_assert_finite(&left.tree);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `param_treap_assert_finite` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:395:13
+    |
+395 |             param_treap_assert_finite(&right.tree);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 49 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 2062MB, peak z3 RSS: 230MB, min free: 24343MB
+Sampled CPU Usage: rust_verify: 22s, z3 children: 0s

@@ -1,0 +1,34 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+    --> src/Chap39/BSTParaTreapMtEph.rs:1135:38
+     |
+1135 |                       assert forall|x| #[trigger] av.intersect(bv).contains(x) <==>
+     |  ______________________________________^
+1136 | |                         lrv.union(rrv).union(if found { Set::<<T as View>::V>::empty().insert(akv) }
+1137 | |                                            else { Set::<<T as View>::V>::empty() }).contains(x) by {
+     | |_______________________________________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTParaTreapMtEph.rs:1136:25
+     |
+1136 | /                         lrv.union(rrv).union(if found { Set::<<T as View>::V>::empty().insert(akv) }
+1137 | |                                            else { Set::<<T as View>::V>::empty() }).contains(x) by {
+     | |_______________________________________________________________________________________________^
+
+note: 
+
+av.intersect(bv).contains(x) == lrv.union(rrv).union(if found { empty().insert(akv) } else { empty() }).contains(x)
+|   av.intersect(bv).contains(x) ==>
+|       lrv.union(rrv).union(if found { empty().insert(akv) } else { empty() }).contains(x) ✘
+|           function is uninterpreted
+|   lrv.union(rrv).union(if found { empty().insert(akv) } else { empty() }).contains(x) ==>
+|       av.intersect(bv).contains(x) ✔
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 5693MB, peak z3 RSS: 676MB, min free: 20591MB
+Sampled CPU Usage: rust_verify: 99s, z3 children: 85s

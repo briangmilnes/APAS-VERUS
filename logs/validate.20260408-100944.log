@@ -1,0 +1,41 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2882:38
+     |
+2882 |                       assert forall|x| #[trigger] av.intersect(bv).contains(x) <==>
+     |  ______________________________________^
+2883 | |                         lrv.union(rrv).union(if found { Set::<<T as View>::V>::empty().insert(akv) }
+2884 | |                                            else { Set::<<T as View>::V>::empty() }).contains(x) by {
+     | |_______________________________________________________________________________________________^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2926:40
+     |
+2926 | ...                   assert(av.contains(x) && bv.contains(x));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2929:40
+     |
+2929 | ...                   assert(av.contains(x) && bv.contains(x));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:2926:58
+     |
+2926 | ...                   assert(av.contains(x) && bv.contains(x));
+     |                                                ^^^^^^^^^^^^^^
+
+note: 
+
+av.contains(x) ✔
+bv.contains(x) ✘
+    function is uninterpreted
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 3648MB, peak z3 RSS: 296MB, min free: 20326MB
+Sampled CPU Usage: rust_verify: 65s, z3 children: 59s

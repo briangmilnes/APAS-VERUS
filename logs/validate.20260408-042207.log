@@ -1,0 +1,76 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap38/BSTParaStEph.rs:468:17
+    |
+468 |                   parts.0@.disjoint(parts.2@),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+823 | /             match self.expose() {
+824 | |                 | Exposed::Leaf => (Self::new(), false, Self::new()),
+825 | |                 | Exposed::Node(left, root_key, right) => {
+826 | |                     proof {
+...   |
+947 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap38/BSTParaStEph.rs:816:17
+    |
+816 |                   parts.0@.disjoint(parts.2@),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+823 | /             match self.expose() {
+824 | |                 | Exposed::Leaf => (Self::new(), false, Self::new()),
+825 | |                 | Exposed::Node(left, root_key, right) => {
+826 | |                     proof {
+...   |
+947 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap38/BSTParaStEph.rs:468:17
+    |
+468 |                 parts.0@.disjoint(parts.2@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+parts.1 == old(self).view().contains(old(key).view()) ✔
+parts.0.view().finite() ✔
+parts.2.view().finite() ✔
+parts.0.view().union(parts.2.view()) =~= old(self).view().remove(old(key).view()) ✔
+parts.0.view().disjoint(parts.2.view()) ✘
+|   forall |a|
+|       parts.0.view().contains(a) ==>
+|           !(parts.2.view().contains(a)) 
+|               function is uninterpreted
++---
+!(parts.0.view().contains(old(key).view())) ✔
+!(parts.2.view().contains(old(key).view())) ✔
+forall |t|
+    parts.0.view().contains(t.view()) ==>
+        t.cmp_spec(old(key)) == Less ✔
+forall |t|
+    parts.2.view().contains(t.view()) ==>
+        t.cmp_spec(old(key)) == Greater ✔
+parts.1 == old(self).view().contains(old(key).view()) ✔
+parts.0.view().finite() ✔
+parts.2.view().finite() ✔
+parts.0.view().union(parts.2.view()) =~= old(self).view().remove(old(key).view()) ✔
+parts.0.view().disjoint(parts.2.view()) ✔
+!(parts.0.view().contains(old(key).view())) ✔
+!(parts.2.view().contains(old(key).view())) ✔
+forall |t|
+    parts.0.view().contains(t.view()) ==>
+        t.cmp_spec(old(key)) == Less ✔
+forall |t|
+    parts.2.view().contains(t.view()) ==>
+        t.cmp_spec(old(key)) == Greater ✔
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 2090MB, peak z3 RSS: 216MB, min free: 21564MB
+Sampled CPU Usage: rust_verify: 20s, z3 children: 5s

@@ -1,20 +1,6 @@
 Mode: isolate
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
-error: assertion failed
-   --> src/Chap37/BSTPlainMtEph.rs:301:44
-    |
-301 | ...                   #[trigger] T::le(node_val, x)
-    |                                  ^^^^^^^^^^^^^^^^^^ assertion failed
-
-note: diagnostics via expansion
-
-note: 
-
-node_val.le(x) 
-
-verification results:: 1957 verified, 1 errors
-error: aborting due to 1 previous error
-
-Elapsed: 17s
-Sampled Memory Usage: peak rust_verify RSS: 3436MB, peak z3 RSS: 377MB, min free: 22190MB
-Sampled CPU Usage: rust_verify: 52s, z3 children: 43s
+Isolate: including Chap38 Chap18 Chap02
+verification results:: 1168 verified, 0 errors
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 2788MB, peak z3 RSS: 288MB, min free: 22181MB
+Sampled CPU Usage: rust_verify: 50s, z3 children: 41s

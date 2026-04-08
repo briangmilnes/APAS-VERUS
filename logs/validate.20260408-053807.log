@@ -1,0 +1,43 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: precondition not satisfied
+   --> src/Chap39/BSTParaTreapMtEph.rs:576:39
+    |
+459 |             forall|t: T| (#[trigger] right@.contains(t@)) ==> t.cmp_spec(&key) == Greater,
+    |             ----------------------------------------------------------------------------- failed precondition
+...
+576 |                     let merged_left = join_with_priority(left, key, priority, rl);
+    |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap39/BSTParaTreapMtEph.rs:459:83
+    |
+459 |             forall|t: T| (#[trigger] right@.contains(t@)) ==> t.cmp_spec(&key) == Greater,
+    |                                                                                   ^^^^^^^
+
+note: 
+
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+left.view().finite() ✔
+rl.view().finite() ✔
+left.view().disjoint(rl.view()) ✔
+!(left.view().contains(key.view())) ✔
+!(rl.view().contains(key.view())) ✔
+clip(nat, left.view().len() + rl.view().len()) < UnsignedMax.Exec(usize::BITS) ✔
+forall |t|
+    left.view().contains(t.view()) ==>
+        t.cmp_spec(key) == Less ✔
+forall |t|
+    rl.view().contains(t.view()) ==>
+        t.cmp_spec(key) == Greater ✘
+        |   !(t.cmp_spec(key) is Less) ✘
+        |   !(t.cmp_spec(key) is Equal) ✔
+        +---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 2983MB, peak z3 RSS: 446MB, min free: 23134MB
+Sampled CPU Usage: rust_verify: 37s, z3 children: 27s

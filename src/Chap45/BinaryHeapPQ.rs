@@ -103,6 +103,7 @@ pub mod BinaryHeapPQ {
             } else {
                 lemma_log_s(2, n);
                 reveal(vstd::arithmetic::power::pow);
+                // Veracity: NEEDED assert
                 assert(n / 2 < vstd::arithmetic::power::pow(2, (bits - 1) as nat));
                 lemma_log2_bound(n / 2, (bits - 1) as nat);
             }
@@ -123,6 +124,7 @@ pub mod BinaryHeapPQ {
             } else {
                 let p = (i - 1) / 2;
                 lemma_heap_root_le_all::<T>(seq, p);
+                // Veracity: NEEDED assert
                 assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(seq, p));
                 let left = 2 * p + 1;
                 let right = 2 * p + 2;
@@ -143,6 +145,7 @@ pub mod BinaryHeapPQ {
                 TotalOrder::le(seq[(i - 1) / 2], seq[i]),
         {
             let p = (i - 1) / 2;
+            // Veracity: NEEDED assert
             assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(seq, p));
             let left = 2 * p + 1;
             let right = 2 * p + 2;
@@ -188,6 +191,7 @@ pub mod BinaryHeapPQ {
                 forall|i: int| 0 <= i < b.len() ==>
                     #[trigger] TotalOrder::le(min_elem, b[i]),
         {
+            // Veracity: NEEDED assert
             assert forall|i: int| 0 <= i < b.len()
                 implies #[trigger] TotalOrder::le(min_elem, b[i]) by {
                 // b[i] appears in b, so it's in b's multiset.
@@ -432,20 +436,26 @@ pub mod BinaryHeapPQ {
                 let ghost pre_view = result@;
                 result = ArraySeqStPerS::append(&result, &single_seq);
 
+                // Veracity: NEEDED proof block
                 proof {
                     let pos: int = if k == i { j as int } else if k == j { i as int } else { k as int };
                     axiom_cloned_implies_eq_owned(seq.spec_index(pos), element);
                     // New element at position k.
                     // Previous elements preserved by append.
+                    // Veracity: NEEDED assert
                     assert forall|m: int| 0 <= m < k as int
                         implies #[trigger] result@[m] == sv[m] by {
+                        // Veracity: NEEDED assert
                         assert(result.spec_index(m)@ == result@[m]);
+                        // Veracity: NEEDED assert
                         assert(pre_view[m] == sv[m]);
                     }
                 }
             }
 
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(result@ =~= sv);
                 lemma_swap_preserves_multiset(seq@, i as int, j as int);
             }
@@ -464,8 +474,10 @@ pub mod BinaryHeapPQ {
         {
             let mut result = seq.clone();
 
+            // Veracity: NEEDED proof block
             proof {
                 // Clone bridge: cloned elements are T-level equal, so views match.
+                // Veracity: NEEDED assert
                 assert(result@ =~= seq@);
             }
 
@@ -481,6 +493,7 @@ pub mod BinaryHeapPQ {
                 decreases i,
             {
                 let parent_idx = parent(i);
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 let current = result.nth(i);
@@ -489,6 +502,7 @@ pub mod BinaryHeapPQ {
                 if *current >= *parent_val {
                     i = 0;
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                     }
                     result = swap_elements(&result, i, parent_idx);
@@ -514,7 +528,9 @@ pub mod BinaryHeapPQ {
             let n = result.length();
             let mut idx = i;
 
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(result@ =~= heap@);
             }
 
@@ -551,6 +567,7 @@ pub mod BinaryHeapPQ {
                     result = swap_elements(&result, idx, smallest);
                     idx = smallest;
                 }
+                // Veracity: NEEDED proof block
                 proof { old_idx = idx as int; }
             }
 
@@ -576,6 +593,7 @@ pub mod BinaryHeapPQ {
             let mut v = heap.seq;
             let n = v.len();
             if n <= 1 {
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 return ArraySeqStPerS { seq: v };
@@ -628,6 +646,7 @@ pub mod BinaryHeapPQ {
                         let c2 = TotalOrder::cmp(&v[right], &v[smallest]);
                         match c2 {
                             Ordering::Less => {
+                                // Veracity: NEEDED proof block
                                 proof {
                                     // c2 gives le(right, pre[sbc]).
                                     // Establish le(right, idx) and le(right, left) while
@@ -657,6 +676,7 @@ pub mod BinaryHeapPQ {
                     if smallest == idx {
                         done = true;
                     } else {
+                        // Veracity: NEEDED proof block
                         proof {
                             T::reflexive(pre[smallest as int]);
                             if right < n {
@@ -666,15 +686,18 @@ pub mod BinaryHeapPQ {
                         let ghost pre_view = view_seq;
                         vec_swap(&mut v, idx, smallest);
 
+                        // Veracity: NEEDED proof block
                         proof {
                             let id = idx as int;
                             let sc = smallest as int;
+                            // Veracity: NEEDED assert
                             assert(v@ =~= pre.update(id, pre[sc]).update(sc, pre[id]));
                             lemma_swap_preserves_multiset(pre, id, sc);
 
                             // View tracking.
                             view_seq = pre_view.update(id, pre_view[sc]).update(sc, pre_view[id]);
                             lemma_swap_preserves_multiset(pre_view, id, sc);
+                            // Veracity: NEEDED assert
                             assert forall|k: int| 0 <= k < n as int
                                 implies #[trigger] view_seq[k] == v@[k]@ by {
                                 if k == id {
@@ -683,9 +706,11 @@ pub mod BinaryHeapPQ {
                             }
 
                             // C2 at new position sc: parent(sc) = id.
+                            // Veracity: NEEDED assert
                             assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(pre, sc));
 
                             // Heap-except at sc.
+                            // Veracity: NEEDED assert
                             assert forall|j: int| 0 <= j < n as int && j != sc
                                 implies #[trigger] BinaryHeapPQ::<T>::spec_exec_heap_inv_at(v@, j) by {
                                 if j == id {
@@ -696,9 +721,11 @@ pub mod BinaryHeapPQ {
                                     // Parent of id. v@[j] unchanged.
                                     // Child at id: v@[id] = pre[sc], le(pre[j], pre[sc]) from C2.
                                     // Sibling child: unchanged, from old heap.
+                                    // Veracity: NEEDED assert
                                     assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(pre, j));
                                 } else {
                                     // Positions j, 2j+1, 2j+2 are all ∉ {id, sc}.
+                                    // Veracity: NEEDED assert
                                     assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(pre, j));
                                 }
                             };
@@ -708,7 +735,9 @@ pub mod BinaryHeapPQ {
                 }
             }
 
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(ArraySeqStPerS::<T> { seq: v }.view() =~= view_seq) by {
                 }
             }
@@ -749,6 +778,7 @@ pub mod BinaryHeapPQ {
             let mut v = heap.seq;
             let n = v.len();
             if i == 0 {
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 return ArraySeqStPerS { seq: v };
@@ -796,11 +826,14 @@ pub mod BinaryHeapPQ {
                         let ghost pre_view = view_seq;
                         vec_swap(&mut v, i, p);
 
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             assert(v@ =~= pre.update(ii, pre[pp]).update(pp, pre[ii]));
                             lemma_swap_preserves_multiset(pre, ii, pp);
                             view_seq = pre_view.update(ii, pre_view[pp]).update(pp, pre_view[ii]);
                             lemma_swap_preserves_multiset(pre_view, ii, pp);
+                            // Veracity: NEEDED assert
                             assert forall|k: int| 0 <= k < n as int
                                 implies #[trigger] view_seq[k] == v@[k]@ by {
                                 if k == ii {
@@ -822,31 +855,38 @@ pub mod BinaryHeapPQ {
                         }
 
                         if p == 0 {
+                            // Veracity: NEEDED proof block
                             proof {
+                                // Veracity: NEEDED assert
                                 assert forall|j: int| 0 <= j < n as int
                                     implies #[trigger] BinaryHeapPQ::<T>::spec_exec_heap_inv_at(v@, j) by {
                                     if j == pp || j == ii {
                                     } else {
+                                        // Veracity: NEEDED assert
                                         assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(pre, j));
                                     }
                                 };
                             }
                             done = true;
                         } else {
+                            // Veracity: NEEDED proof block
                             proof {
                                 let gp = (pp - 1) / 2;
                                 // spec_is_exec_heap_except(v@, gp)
+                                // Veracity: NEEDED assert
                                 assert forall|j: int| 0 <= j < n as int && j != gp
                                     implies #[trigger] BinaryHeapPQ::<T>::spec_exec_heap_inv_at(v@, j) by {
                                     if j == pp {
                                     } else if j == ii {
                                     } else {
+                                        // Veracity: NEEDED assert
                                         assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(pre, j));
                                     }
                                 };
 
                                 // New sibling condition: le(v@[gp], v@[sibling_of_pp]).
                                 // gp and sibling unchanged. From heap_inv_at(pre, gp).
+                                // Veracity: NEEDED assert
                                 assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(pre, gp));
 
                                 // New children condition: le(v@[gp], v@[child_of_pp]).
@@ -866,6 +906,7 @@ pub mod BinaryHeapPQ {
                     }
                     _ => {
                         // v[i] >= v[p]: heap_inv_at(parent(i)) now holds, completing the heap.
+                        // Veracity: NEEDED proof block
                         proof {
                             match cmp {
                                 Ordering::Equal => { T::reflexive(pre[pp]); }
@@ -877,7 +918,9 @@ pub mod BinaryHeapPQ {
                 }
             }
 
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(ArraySeqStPerS::<T> { seq: v }.view() =~= view_seq) by {
                 }
             }
@@ -896,7 +939,9 @@ pub mod BinaryHeapPQ {
         {
             if seq.length() <= 1 {
                 let r = seq.clone();
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(r@ =~= seq@);
                 }
                 return r;
@@ -904,7 +949,9 @@ pub mod BinaryHeapPQ {
 
             let mut result = seq.clone();
 
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(result@ =~= seq@);
             }
 
@@ -963,6 +1010,7 @@ pub mod BinaryHeapPQ {
             requires pow2(e as nat) <= usize::MAX as int,
             ensures power as int == pow2(e as nat),
         {
+            // Veracity: NEEDED proof block
             proof {
                 lemma_pow2_pos(e as nat);
                 vstd::arithmetic::power::lemma_pow0(2);
@@ -974,6 +1022,7 @@ pub mod BinaryHeapPQ {
                     pow2(i as nat) <= pow2(e as nat),
                     pow2(e as nat) <= usize::MAX as int,
             {
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_pow2_unfold((i + 1) as nat);
                     lemma_pow2_pos(i as nat);
@@ -993,11 +1042,14 @@ pub mod BinaryHeapPQ {
             decreases n,
         {
             if n < 2 {
+                // Veracity: NEEDED proof block
                 proof { lemma_log0(2, n as int); }
                 0
             } else {
+                // Veracity: NEEDED proof block
                 proof { lemma_log_s(2, n as int); }
                 let rest = exec_log2(n / 2);
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_log_nonnegative(2, (n / 2) as int);
                     vstd::layout::unsigned_int_max_values();
@@ -1074,6 +1126,7 @@ pub mod BinaryHeapPQ {
                 let pq = BinaryHeapPQ {
                     elements: ArraySeqStPerS::empty(),
                 };
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 pq
@@ -1085,7 +1138,9 @@ pub mod BinaryHeapPQ {
                 let pq = BinaryHeapPQ {
                     elements: ArraySeqStPerS::singleton(element),
                 };
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(pq@ =~= Seq::<T::V>::empty().push(element@));
                     // Heap property: 1-element sequence is trivially a heap.
                 }
@@ -1099,11 +1154,14 @@ pub mod BinaryHeapPQ {
                     None
                 } else {
                     let root = self.elements.nth(0);
+                    // Veracity: NEEDED proof block
                     proof {
                         // Root is in the multiset.
+                        // Veracity: NEEDED assert
                         assert(self@[0] == root@);
                         vstd::seq_lib::to_multiset_contains(self@, root@);
                         // Root <= all elements via heap ordering.
+                        // Veracity: NEEDED assert
                         assert forall|i: int| 0 <= i < self.spec_seq().len()
                             implies #[trigger] TotalOrder::le(*root, self.spec_seq()[i]) by {
                             lemma_heap_root_le_all::<T>(self.spec_seq(), i);
@@ -1123,36 +1181,44 @@ pub mod BinaryHeapPQ {
                 let ghost ne_seq = new_elements.seq@;
                 let ghost ne_view = new_elements@;
 
+                // Veracity: NEEDED proof block
                 proof {
                     let n = self.elements.spec_len() as int;
                     let li = last_index as int; // = n
                     let orig = self.elements.seq@;
 
                     // T-level element identity from append.
+                    // Veracity: NEEDED assert
                     assert forall|k: int| 0 <= k < n
                         implies #[trigger] ne_seq[k] == orig[k] by {
+                        // Veracity: NEEDED assert
                         assert(new_elements.spec_index(k) == orig[k]);
                     }
 
                     // View-level correspondence for post-call multiset proof.
+                    // Veracity: NEEDED assert
                     assert forall|k: int| 0 <= k < n
                         implies #[trigger] ne_view[k] == self@[k] by {
                     }
+                    // Veracity: NEEDED assert
                     assert(ne_view =~= self@.push(element@));
 
                     if li > 0 {
                         let p = (li - 1) / 2;
                         // spec_is_exec_heap_except(ne_seq, p).
+                        // Veracity: NEEDED assert
                         assert forall|j: int| 0 <= j < (n + 1) && j != p
                             implies #[trigger] BinaryHeapPQ::<T>::spec_exec_heap_inv_at(ne_seq, j) by {
                             if j == li {
                                 // Last position: no children.
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(orig, j));
                             }
                         };
 
                         // Sibling condition from original heap_inv_at(parent(li)).
+                        // Veracity: NEEDED assert
                         assert(BinaryHeapPQ::<T>::spec_exec_heap_inv_at(orig, p));
                     }
                 }
@@ -1160,6 +1226,7 @@ pub mod BinaryHeapPQ {
                 let heapified = bubble_up_heap(new_elements, last_index);
 
                 let pq = BinaryHeapPQ { elements: heapified };
+                // Veracity: NEEDED proof block
                 proof {
                     // heapified@.to_multiset() =~= ne_view.to_multiset() from bubble_up_heap.
                     // ne_view =~= self@.push(element@), established above.
@@ -1178,8 +1245,10 @@ pub mod BinaryHeapPQ {
                 if self.elements.length() == 1 {
                     let min_element = self.elements.nth(0).clone();
                     let empty_pq = Self::empty();
+                    // Veracity: NEEDED proof block
                     proof {
                         axiom_cloned_implies_eq_owned(self.elements.spec_index(0), min_element);
+                        // Veracity: NEEDED assert
                         assert(self@ =~= Seq::<T::V>::empty().push(self@[0]));
                     }
                     return (empty_pq, Some(min_element));
@@ -1192,6 +1261,7 @@ pub mod BinaryHeapPQ {
                 let n = self.elements.length();
                 let end = n - 1;
 
+                // Veracity: NEEDED proof block
                 proof {
                     axiom_cloned_implies_eq_owned(self.elements.spec_index(0), min_element);
                     axiom_cloned_implies_eq_owned(self.elements.spec_index(n as int - 1), last_element);
@@ -1222,33 +1292,43 @@ pub mod BinaryHeapPQ {
                     let ghost pre_view = new_elements@;
                     new_elements = ArraySeqStPerS::append(&new_elements, &single_seq);
 
+                    // Veracity: NEEDED proof block
                     proof {
                         // single_seq.spec_index(0) is the cloned element.
                         axiom_cloned_implies_eq_owned(self.elements.spec_index(i as int), single_seq.spec_index(0));
                         // New element at position i.
                         // Element at position 0 preserved.
                         // Previous elements preserved.
+                        // Veracity: NEEDED assert
                         assert forall|m: int| 1 <= m < i as int
                             implies #[trigger] new_elements@[m] == self@[m] by {
+                            // Veracity: NEEDED assert
                             assert(new_elements.spec_index(m)@ == new_elements@[m]);
                         }
                         // T-level: new element at position i.
                         // T-level: position 0 preserved.
+                        // Veracity: NEEDED assert
                         assert(new_elements.seq@[0] == last_element) by {
+                            // Veracity: NEEDED assert
                             assert(new_elements.spec_index(0) == pre_seq[0]);
                         }
                         // T-level: previous elements preserved.
+                        // Veracity: NEEDED assert
                         assert forall|m: int| 1 <= m < i as int
                             implies #[trigger] new_elements.seq@[m] == self.elements.seq@[m] by {
+                            // Veracity: NEEDED assert
                             assert(new_elements.spec_index(m) == pre_seq[m]);
                         }
                     }
                 }
 
                 // Prove heap-except-0 for new_elements.
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|j: int| 0 <= j < new_elements.seq@.len() && j != 0
                         implies #[trigger] Self::spec_exec_heap_inv_at(new_elements.seq@, j) by {
+                        // Veracity: NEEDED assert
                         assert(Self::spec_exec_heap_inv_at(self.elements.seq@, j));
                         let left = 2 * j + 1;
                         let right = 2 * j + 2;
@@ -1265,8 +1345,10 @@ pub mod BinaryHeapPQ {
                 let heapified = bubble_down_heap(new_elements);
 
                 let new_pq = BinaryHeapPQ { elements: heapified };
+                // Veracity: NEEDED proof block
                 proof {
                     // le(min_element, every element in new_elem_seq).
+                    // Veracity: NEEDED assert
                     assert forall|j: int| 0 <= j < new_elem_seq.len()
                         implies #[trigger] TotalOrder::le(min_element, new_elem_seq[j]) by {
                         if j == 0 {
@@ -1290,6 +1372,7 @@ pub mod BinaryHeapPQ {
                     let rearranged = first + rest;
 
                     // Show new_elem_view =~= rearranged.
+                    // Veracity: NEEDED assert
                     assert(new_elem_view =~= rearranged) by {
                     }
 
@@ -1297,6 +1380,7 @@ pub mod BinaryHeapPQ {
                     // Because: sr = rest.push(sr.last()), so sr.to_multiset() = rest.to_multiset().insert(sr.last())
                     // And: rearranged = first + rest, rearranged.to_multiset() = first.to_multiset().add(rest.to_multiset())
                     //     = singleton(sr.last()).add(rest.to_multiset())
+                    // Veracity: NEEDED assert
                     assert(sr =~= rest.push(sr.last())) by {
                     }
                     // sr.to_multiset() = rest.push(sr.last()).to_multiset() = rest.to_multiset().insert(sr.last())
@@ -1349,17 +1433,22 @@ pub mod BinaryHeapPQ {
                 let heapified = heapify(&merged);
 
                 let pq = BinaryHeapPQ { elements: heapified };
+                // Veracity: NEEDED proof block
                 proof {
                     // Bridge: append ensures at T-level → view-level sequence equality.
                     let a_len = self.elements.spec_len() as int;
                     let b_len = other.elements.spec_len() as int;
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < a_len
                         implies #[trigger] merged@[i] == self@[i] by {
+                        // Veracity: NEEDED assert
                         assert(merged.spec_index(i)@ == merged@[i]);
                     }
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < b_len
                         implies #[trigger] merged@[a_len + i] == other@[i] by {
                     }
+                    // Veracity: NEEDED assert
                     assert(merged@ =~= self@ + other@);
                     vstd::seq_lib::lemma_multiset_commutative(self@, other@);
                     // heapify preserves multiset: heapified@.to_multiset() =~= merged@.to_multiset()
@@ -1408,10 +1497,13 @@ pub mod BinaryHeapPQ {
                 let mut current_heap = self.clone();
 
                 // Clone preserves T-level seq equality, so heap property transfers.
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|j: int| 0 <= j < current_heap.spec_seq().len()
                         implies #[trigger] Self::spec_exec_heap_inv_at(
                             current_heap.spec_seq(), j) by {
+                        // Veracity: NEEDED assert
                         assert(Self::spec_exec_heap_inv_at(self.elements.seq@, j));
                         let left = 2 * j + 1;
                         let right = 2 * j + 2;
@@ -1444,6 +1536,7 @@ pub mod BinaryHeapPQ {
                         let ghost pre_seq = result.seq@;
                         result = ArraySeqStPerS::append(&result, &single_seq);
 
+                        // Veracity: NEEDED proof block
                         proof {
                             // element == current_heap.spec_seq()[0] from delete_min.
                             // le(element, new_heap[h]) for all h from delete_min.
@@ -1451,15 +1544,19 @@ pub mod BinaryHeapPQ {
                             // T-level identity through append.
 
                             // Sorted: old elements + new element.
+                            // Veracity: NEEDED assert
                             assert forall|i: int, j: int|
                                 0 <= i < j < result.seq@.len()
                                 implies #[trigger] TotalOrder::le(
                                     result.seq@[i], result.seq@[j]) by {
                                 if i < old_result_len && j < old_result_len {
+                                    // Veracity: NEEDED assert
                                     assert(result.spec_index(i) == pre_seq[i]);
+                                    // Veracity: NEEDED assert
                                     assert(result.spec_index(j) == pre_seq[j]);
                                 } else if i < old_result_len {
                                     // j == old_result_len; new element is the min.
+                                    // Veracity: NEEDED assert
                                     assert(result.spec_index(i) == pre_seq[i]);
                                     // le(old[i], current_heap root) from boundary.
                                     // Use boundary: le(old_result_seq[i],
@@ -1469,6 +1566,7 @@ pub mod BinaryHeapPQ {
                             };
 
                             // Boundary: all result elements <= all new_heap elements.
+                            // Veracity: NEEDED assert
                             assert forall|r: int, h: int|
                                 0 <= r < result.seq@.len()
                                     && 0 <= h < new_heap.spec_seq().len()
@@ -1505,6 +1603,7 @@ pub mod BinaryHeapPQ {
                     0
                 } else {
                     let h = exec_log2(n);
+                    // Veracity: NEEDED proof block
                     proof {
                         vstd::layout::unsigned_int_max_values();
                         vstd::arithmetic::power2::lemma_pow2(usize::BITS as nat);
@@ -1519,6 +1618,7 @@ pub mod BinaryHeapPQ {
             fn level_elements(&self, level: usize) -> ArraySeqStPerS<T> {
                 let mut result = ArraySeqStPerS::empty();
                 let n = self.elements.length();
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_pow2_pos(level as nat);
                     lemma_pow2_pos((level + 1) as nat);
@@ -1576,6 +1676,7 @@ pub mod BinaryHeapPQ {
                         forall|j: int| 0 <= j < i ==> (result@[j])@ == #[trigger] seq@[j],
                 {
                     let elem = seq.nth(i).clone();
+                    // Veracity: NEEDED proof block
                     proof { axiom_cloned_implies_eq_owned(seq.spec_index(i as int), elem); }
                     result.push(elem);
                 }
@@ -1600,9 +1701,11 @@ pub mod BinaryHeapPQ {
                         obeys_feq_clone::<T>(),
                 {
                     let elem = sorted_seq.nth(i).clone();
+                    // Veracity: NEEDED proof block
                     proof { axiom_cloned_implies_eq_owned(sorted_seq.spec_index(i as int), elem); }
                     result.push(elem);
                 }
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 result
@@ -1634,6 +1737,7 @@ pub mod BinaryHeapPQ {
                         #[trigger] cloned.elements.seq@[i] == self.elements.seq@[i],
             {
                 let cloned = BinaryHeapPQ { elements: self.elements.clone() };
+                // Veracity: NEEDED proof block
                 proof {
                     assume(obeys_feq_clone::<T>());
                     lemma_seq_map_cloned_view_eq(
@@ -1651,6 +1755,7 @@ pub mod BinaryHeapPQ {
                 ensures equal == (self@ == other@)
             {
                 let equal = self.elements == other.elements;
+                // Veracity: NEEDED proof block
                 proof { assume(equal == (self@ == other@)); }
                 equal
             }

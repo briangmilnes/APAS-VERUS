@@ -1,0 +1,72 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap39/BSTTreapMtEph.rs:465:37
+    |
+465 | ...                   by {};
+    |                       ^^
+
+error[E0425]: cannot find type `Node` in this scope
+    --> src/Chap39/BSTTreapMtEph.rs:1575:67
+     |
+1575 |     impl<T: StTInMtT + Ord + std::fmt::Debug> std::fmt::Debug for Node<T> {
+     |                                                                   ^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+  38 +     use crate::Chap39::BSTTreapStEph::BSTTreapStEph::Node;
+     |
+
+error[E0425]: cannot find type `Node` in this scope
+    --> src/Chap39/BSTTreapMtEph.rs:1587:71
+     |
+1587 |     impl<T: StTInMtT + Ord + std::fmt::Display> std::fmt::Display for Node<T> {
+     |                                                                       ^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+  38 +     use crate::Chap39::BSTTreapStEph::BSTTreapStEph::Node;
+     |
+
+error[E0425]: cannot find type `BSTTreapMtEphInv` in this scope
+    --> src/Chap39/BSTTreapMtEph.rs:1595:30
+     |
+1595 |     impl std::fmt::Debug for BSTTreapMtEphInv {
+     |                              ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTTreapMtEphInv` in this scope
+    --> src/Chap39/BSTTreapMtEph.rs:1601:32
+     |
+1601 |     impl std::fmt::Display for BSTTreapMtEphInv {
+     |                                ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTTreapMtEph` in this scope
+    --> src/Chap39/BSTTreapMtEph.rs:1609:66
+     |
+1609 |     impl<T: StTInMtT + Ord + IsLtTransitive> std::fmt::Debug for BSTTreapMtEph<T> {
+     |                                                                  ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTTreapMtEph` in this scope
+    --> src/Chap39/BSTTreapMtEph.rs:1615:68
+     |
+1615 |     impl<T: StTInMtT + Ord + IsLtTransitive> std::fmt::Display for BSTTreapMtEph<T> {
+     |                                                                    ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `Lnk` in this scope
+    --> src/Chap39/BSTTreapMtEph.rs:1623:30
+     |
+1623 |     impl std::fmt::Debug for Lnk {
+     |                              ^^^ not found in this scope
+
+error[E0425]: cannot find type `Lnk` in this scope
+    --> src/Chap39/BSTTreapMtEph.rs:1629:32
+     |
+1629 |     impl std::fmt::Display for Lnk {
+     |                                ^^^ not found in this scope
+
+error: aborting due to 9 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 3095MB, peak z3 RSS: 307MB, min free: 23580MB
+Sampled CPU Usage: rust_verify: 51s, z3 children: 29s

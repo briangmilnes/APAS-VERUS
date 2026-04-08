@@ -1,32 +1,31 @@
 Mode: isolate
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+Isolate: including Chap39 Chap18 Chap02
 error: assertion failed
-   --> src/Chap37/BSTSplayMtEph.rs:526:37
+   --> src/Chap39/BSTParaTreapMtEph.rs:811:28
     |
-526 | ...                   (TotalOrder::le(ll_key, x) && x != ll_key)
-    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+811 |                     assert(slv.subset_of(left@));
+    |                            ^^^^^^^^^^^^^^^^^^^^ assertion failed
 
 error: assertion failed
-   --> src/Chap37/BSTSplayMtEph.rs:708:37
+   --> src/Chap39/BSTParaTreapMtEph.rs:812:28
     |
-708 | ...                   (TotalOrder::le(x, lr_key) && x != lr_key)
-    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+812 |                     assert(srv.subset_of(left@));
+    |                            ^^^^^^^^^^^^^^^^^^^^ assertion failed
 
 note: diagnostics via expansion
 
 note: 
 
-ll_key.le(x) ✔
-!(x == ll_key) ✔
+slv.subset_of(left.view())
+|   forall |a|
+|       slv.contains(a) ==>
+|           left.view().contains(a) 
+|               function is uninterpreted
++---
 
-    NOTE: Verus failed to prove an assertion even though all of its
-    sub-assertions succeeded. This is usually unexpected, and it may
-    indicate that the proof is "flaky". It might also be a result
-    of additional expressions in the triggering context in the expanded
-    version.
-verification results:: 1957 verified, 1 errors
+verification results:: 1306 verified, 1 errors
 error: aborting due to 2 previous errors
 
-Elapsed: 21s
-Sampled Memory Usage: peak rust_verify RSS: 5741MB, peak z3 RSS: 907MB, min free: 20488MB
-Sampled CPU Usage: rust_verify: 94s, z3 children: 93s
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 5741MB, peak z3 RSS: 909MB, min free: 20483MB
+Sampled CPU Usage: rust_verify: 94s, z3 children: 88s

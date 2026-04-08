@@ -1,45 +1,20 @@
 Mode: isolate
-Isolate: including Chap18 Chap02
-error: postcondition not satisfied
-   --> src/Chap18/ArraySeqStEph.rs:274:17
+Isolate: including Chap38 Chap18 Chap02
+error: assertion failed
+   --> src/Chap38/BSTParaMtEph.rs:866:29
     |
-274 | /                 Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
-275 | |                     =~= spec_inject(
-276 | |                         Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
-277 | |                         updates@);
-    | |_________________________________^ failed this postcondition
-...
-681 |               injected
-    |               -------- at the end of the function body
+866 |                     implies result@[i] != result@[j] by {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
 
 note: diagnostics via expansion
-   --> src/Chap18/ArraySeqStEph.rs:274:17
-    |
-274 | /                 Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
-275 | |                     =~= spec_inject(
-276 | |                         Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
-277 | |                         updates@);
-    | |_________________________________^
 
 note: 
 
-%return.spec_arrayseqsteph_wf() ✔
-%return.spec_len() == old(a).spec_len() ✔
-new(%return.spec_len(), (|i| %return.spec_index(i))) =~= spec_inject(new(old(a).spec_len(), (|i| old(a).spec_index(i))), old(updates).view()) ✘
+!(result.view().index(i) == result.view().index(j)) 
 
-note: recommendation not met
-   --> src/Chap18/ArraySeqStEph.rs:666:28
-    |
-666 |                     assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
-    |                            ^^^^^^^^^^^^^^^^
-    |
-   --> vstd/seq_lib.rs:510:12
-    |
-    = note: recommendation not met
-
-verification results:: 1087 verified, 1 errors
+verification results:: 1167 verified, 1 errors
 error: aborting due to 1 previous error
 
-Elapsed: 7s
-Sampled Memory Usage: peak rust_verify RSS: 5320MB, peak z3 RSS: 408MB, min free: 20973MB
-Sampled CPU Usage: rust_verify: 125s, z3 children: 112s
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 5342MB, peak z3 RSS: 410MB, min free: 20967MB
+Sampled CPU Usage: rust_verify: 126s, z3 children: 112s

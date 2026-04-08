@@ -1,6 +1,33 @@
 Mode: isolate
-Isolate: including Chap47 Chap18 Chap02
-verification results:: 1254 verified, 0 errors
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:791:79
+    |
+791 |                     assert forall|l: T| #[trigger] left@.contains(l@) implies l@ != rkv by {
+    |                                                                               ^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:824:70
+    |
+824 |                         srv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {};
+    |                                                                      ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap39/BSTParaTreapMtEph.rs:824:88
+    |
+824 |                         srv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {};
+    |                                                                                        ^^^^
+
+note: 
+
+s.cmp_spec(o) == Less
+|   !(s.cmp_spec(o) is Equal) ✘
+|   !(s.cmp_spec(o) is Greater) ✘
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 2 previous errors
+
 Elapsed: 14s
-Sampled Memory Usage: peak rust_verify RSS: 4109MB, peak z3 RSS: 542MB, min free: 22170MB
-Sampled CPU Usage: rust_verify: 66s, z3 children: 51s
+Sampled Memory Usage: peak rust_verify RSS: 4121MB, peak z3 RSS: 478MB, min free: 22219MB
+Sampled CPU Usage: rust_verify: 62s, z3 children: 49s

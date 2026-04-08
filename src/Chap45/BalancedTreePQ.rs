@@ -313,6 +313,7 @@ broadcast use {
                 // Insert at sorted position.
                 vals.insert(pos, element);
 
+                // Veracity: NEEDED proof block
                 proof {
                     // vals@.len() = n + 1 = self@.len() + 1 < usize::MAX (from requires).
                     // n = old_vals.len(), and old_vals.map_values(..) =~= self.elements.spec_seq()
@@ -321,6 +322,7 @@ broadcast use {
                 let result = BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::from_vec(vals),
                 };
+                // Veracity: NEEDED proof block
                 proof {
                     // vals@ == old_vals.insert(pos, element)  (from Vec::insert)
                     // result@ =~= vals@.map_values(|t: T| t@)  (from from_vec)
@@ -332,6 +334,7 @@ broadcast use {
                     old_vals.insert_ensures(pos as int, element);
                     self@.insert_ensures(pos as int, element@);
                     let view_fn = |t: T| t@;
+                    // Veracity: NEEDED assert
                     assert forall|k: int| 0 <= k < vals@.map_values(view_fn).len()
                         implies #[trigger] vals@.map_values(view_fn)[k]
                             == self@.insert(pos as int, element@)[k] by {
@@ -340,6 +343,7 @@ broadcast use {
                         } else {
                         }
                     }
+                    // Veracity: NEEDED assert
                     assert(result@ =~= self@.insert(pos as int, element@));
                     // to_multiset_insert (broadcast): s.insert(i, a).to_multiset() == s.to_multiset().insert(a)
                 }
@@ -421,6 +425,7 @@ broadcast use {
                     values.push(other.elements.nth(j).clone());
                     j = j + 1;
                 }
+                // Veracity: NEEDED proof block
                 proof {
                     // n1 = self.elements.length() ensures n1 as nat == self@.len().
                     // n2 = other.elements.length() ensures n2 as nat == other@.len().
@@ -436,6 +441,7 @@ broadcast use {
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
                 let mut result = Self::empty();
                 let n = seq.length();
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_size_lt_usize_max::<T>(&seq.root);
                     lemma_size_eq_inorder_len::<T>(&seq.root);
@@ -449,6 +455,7 @@ broadcast use {
                         n < usize::MAX,
                         seq.spec_avltreeseqstper_wf(),
                 {
+                    // Veracity: NEEDED proof block
                     proof {
                         // result@.len() = i < n < usize::MAX → result@.len() + 1 < usize::MAX.
                     }
@@ -494,6 +501,7 @@ broadcast use {
                 {
                     values.push(self.elements.nth(i).clone());
                 }
+                // Veracity: NEEDED proof block
                 proof {
                     // After loop: values@.len() = n - 1. Since n is usize and n >= 1,
                     // n - 1 <= usize::MAX - 1 < usize::MAX.
@@ -507,6 +515,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg(1+n/m)), Span O(m lg(1+n/m))
             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self {
                 let other = Self::from_seq(elements);
+                // Veracity: NEEDED proof block
                 proof {
                     // other@.len() == elements@.len() (from from_seq ensures).
                     // self@.len() + elements@.len() < usize::MAX (from requires).
@@ -561,6 +570,7 @@ broadcast use {
                         values.push(current.clone());
                     }
                 }
+                // Veracity: NEEDED proof block
                 proof {
                     // values@.len() <= n < usize::MAX (from wf).
                     lemma_size_lt_usize_max::<T>(&self.elements.root);
@@ -585,10 +595,12 @@ broadcast use {
                         values.push(current.clone());
                     }
                 }
+                // Veracity: NEEDED proof block
                 proof {
                     // values@.len() <= n < usize::MAX (from wf).
                     lemma_size_lt_usize_max::<T>(&self.elements.root);
                     lemma_size_eq_inorder_len::<T>(&self.elements.root);
+                    // Veracity: NEEDED assert
                     assert(values@.len() < usize::MAX);
                 }
                 AVLTreeSeqStPerS::from_vec(values)
@@ -606,6 +618,7 @@ broadcast use {
                         n == elements@.len(),
                         n < usize::MAX,
                 {
+                    // Veracity: NEEDED proof block
                     proof {
                         // result@.len() = i < n < usize::MAX → result@.len() + 1 < usize::MAX.
                     }
@@ -686,6 +699,7 @@ broadcast use {
                 let mut right = Self::empty();
                 let mut found = false;
                 let n = self.elements.length();
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_size_lt_usize_max::<T>(&self.elements.root);
                     lemma_size_eq_inorder_len::<T>(&self.elements.root);
@@ -700,6 +714,7 @@ broadcast use {
                         n < usize::MAX,
                         self.elements.spec_avltreeseqstper_wf(),
                 {
+                    // Veracity: NEEDED proof block
                     proof {
                         // left@.len() <= i < n < usize::MAX and right@.len() <= i < n < usize::MAX.
                     }
@@ -726,6 +741,7 @@ broadcast use {
             {
                 let mut result = Self::empty();
                 let n = self.elements.length();
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_size_lt_usize_max::<T>(&self.elements.root);
                     lemma_size_eq_inorder_len::<T>(&self.elements.root);
@@ -742,6 +758,7 @@ broadcast use {
                         forall|t: &T| #[trigger] predicate.requires((t,)),
                     decreases n - i,
                 {
+                    // Veracity: NEEDED proof block
                     proof {
                         // result@.len() <= i < n < usize::MAX → result@.len() + 1 < usize::MAX.
                     }
@@ -759,6 +776,7 @@ broadcast use {
             {
                 let mut result = BalancedTreePQ::<U>::empty();
                 let n = self.elements.length();
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_size_lt_usize_max::<T>(&self.elements.root);
                     lemma_size_eq_inorder_len::<T>(&self.elements.root);
@@ -775,6 +793,7 @@ broadcast use {
                         forall|t: &T| #[trigger] f.requires((t,)),
                     decreases n - i,
                 {
+                    // Veracity: NEEDED proof block
                     proof {
                         // result@.len() = i < n < usize::MAX → result@.len() + 1 < usize::MAX.
                     }
@@ -816,6 +835,7 @@ broadcast use {
                 ensures equal == (self@ == other@)
             {
                 let equal = self.elements == other.elements;
+                // Veracity: NEEDED proof block
                 proof { assume(equal == (self@ == other@)); }
                 equal
             }

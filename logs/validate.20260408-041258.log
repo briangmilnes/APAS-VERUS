@@ -1,0 +1,40 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap38/BSTParaStEph.rs:367:63
+    |
+367 |             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparasteph_wf();
+    |                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+607 |          new_param_bst(None, Ghost(Set::empty())) }
+    |          ---------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap38/BSTParaStEph.rs:604:63
+    |
+604 |             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparasteph_wf()
+    |                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+607 |          new_param_bst(None, Ghost(Set::empty())) }
+    |          ---------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap38/BSTParaStEph.rs:367:63
+    |
+367 |             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparasteph_wf();
+    |                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+empty.view() =~= empty() ✔
+empty.spec_bstparasteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+empty.view() =~= empty() ✔
+empty.spec_bstparasteph_wf() ✔
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 4671MB, peak z3 RSS: 909MB, min free: 21333MB
+Sampled CPU Usage: rust_verify: 76s, z3 children: 76s

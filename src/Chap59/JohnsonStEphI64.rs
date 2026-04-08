@@ -133,13 +133,16 @@ pub mod JohnsonStEphI64 {
                 forall|k: usize| vertices@.contains(k) <==> k < i,
             decreases (max_val + 1) - i,
         {
+            // Veracity: NEEDED proof block
             proof {
             }
             let _ = vertices.insert(i);
+            // Veracity: NEEDED proof block
             proof {
             }
             i = i + 1;
         }
+        // Veracity: NEEDED proof block
         proof {
         }
         vertices
@@ -266,6 +269,7 @@ pub mod JohnsonStEphI64 {
             reweighted@.A.len() * 2 + 2 <= usize::MAX as int,
     {
         let vertices = build_vertex_set(n - 1);
+        // Veracity: NEEDED proof block
         proof {
         }
 
@@ -314,11 +318,13 @@ pub mod JohnsonStEphI64 {
         }
 
         let result = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+        // Veracity: NEEDED proof block
         proof {
             // Prove edges@.len() <= graph@.A.len():
             // At loop exit: edges@.len() <= it@.0 == arcs_seq.len().
             // The view function on LabEdge<usize, i128> is injective (identity).
             let view_fn = |k: LabEdge<usize, i128>| k@;
+            // Veracity: NEEDED assert
             assert forall|x: LabEdge<usize, i128>, y: LabEdge<usize, i128>|
                 #[trigger] view_fn(x) == #[trigger] view_fn(y) implies x == y
             by {};
@@ -328,6 +334,7 @@ pub mod JohnsonStEphI64 {
             let mapped = arcs_seq.map_values(view_fn);
             mapped.unique_seq_to_set();
             // mapped.to_set() =~= arcs_seq.map(|i, k| k@).to_set() =~= graph@.A.
+            // Veracity: NEEDED assert
             assert(mapped =~= arcs_seq.map(|i: int, k: LabEdge<usize, i128>| k@));
             // Therefore arcs_seq.len() == graph@.A.len().
             // And edges@.len() <= arcs_seq.len() from loop invariant.
@@ -415,6 +422,7 @@ pub mod JohnsonStEphI64 {
 
         // Phase 2: Reweight graph edges.
         let reweighted = reweight_graph(graph, &potentials, n);
+        // Veracity: NEEDED assert
         assert(spec_labgraphview_wf(reweighted@));
 
         // Phase 3: Run Dijkstra from each vertex, adjust distances back.

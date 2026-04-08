@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2777:28
+     |
+2777 |                     assert(left_union@.len() + right_union@.len() < usize::MAX as nat);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:2814:17
+     |
+2201 |             left@.disjoint(right@),
+     |             ---------------------- failed precondition
+...
+2814 |                 join_with_priority_st(left_union, ak, ap, right_union)
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+clip(nat, left_union.view().len() + right_union.view().len()) < UnsignedMax.Exec(usize::BITS) 
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 3568MB, peak z3 RSS: 322MB, min free: 20048MB
+Sampled CPU Usage: rust_verify: 73s, z3 children: 69s

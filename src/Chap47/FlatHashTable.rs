@@ -170,6 +170,7 @@ pub mod FlatHashTable {
                 FlatEntry::Occupied(k, v) => FlatEntry::Occupied(k.clone(), v.clone()),
                 FlatEntry::Deleted => FlatEntry::Deleted,
             };
+            // Veracity: NEEDED proof block
             proof { assume(c == *self); } // Clone bridge.
             c
         }

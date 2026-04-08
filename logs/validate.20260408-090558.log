@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2430:36
+     |
+2430 | ...                   assert(rebuilt@.union(rrv) =~= tree@.remove(key@));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+rebuilt.view().union(rrv) =~= tree.view().remove(key.view()) 
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 6721MB, peak z3 RSS: 587MB, min free: 16937MB
+Sampled CPU Usage: rust_verify: 178s, z3 children: 228s

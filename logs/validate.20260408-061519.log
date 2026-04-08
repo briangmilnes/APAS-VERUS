@@ -1,6 +1,25 @@
 Mode: isolate
-Isolate: including Chap47 Chap18 Chap02
-verification results:: 1254 verified, 0 errors
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:982:28
+    |
+982 |                     assert(brv.subset_of(b@)) by {
+    |                            ^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+brv.subset_of(b.view())
+|   forall |a|
+|       brv.contains(a) ==>
+|           b.view().contains(a) 
+|               function is uninterpreted
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
 Elapsed: 12s
-Sampled Memory Usage: peak rust_verify RSS: 3476MB, peak z3 RSS: 518MB, min free: 23069MB
-Sampled CPU Usage: rust_verify: 47s, z3 children: 33s
+Sampled Memory Usage: peak rust_verify RSS: 3376MB, peak z3 RSS: 504MB, min free: 23147MB
+Sampled CPU Usage: rust_verify: 46s, z3 children: 33s

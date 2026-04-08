@@ -1,0 +1,39 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: assertion failed
+    --> src/Chap38/BSTParaStEph.rs:1454:44
+     |
+1454 | ...                   assert(!other@.contains(x));
+     |                              ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap38/BSTParaStEph.rs:1460:44
+     |
+1460 | ...                   assert(!other@.contains(x));
+     |                              ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap38/BSTParaStEph.rs:1464:48
+     |
+1464 | ...                   assert(alv.difference(blv).contains(x));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap38/BSTParaStEph.rs:1466:48
+     |
+1466 | ...                   assert(arv.difference(brv).contains(x));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(other.view().contains(x)) 
+    function is uninterpreted
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 4850MB, peak z3 RSS: 474MB, min free: 21678MB
+Sampled CPU Usage: rust_verify: 87s, z3 children: 66s

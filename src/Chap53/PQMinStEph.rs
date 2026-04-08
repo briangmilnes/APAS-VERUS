@@ -184,6 +184,7 @@ pub mod PQMinStEph {
             search.visited@.contains(source@),
     {
         let sources = AVLTreeSetStEph::singleton(source);
+        // Veracity: NEEDED proof block
         proof {
         }
         pq_min_multi(graph, sources, priority_fn, Ghost(vertex_universe))
@@ -204,8 +205,10 @@ pub mod PQMinStEph {
             None
         } else {
             let seq = frontier.to_seq();
+            // Veracity: NEEDED assert
             assert(seq@.len() > 0) by {
                 if seq@.len() == 0 {
+                    // Veracity: NEEDED assert
                     assert(seq@.to_set() =~= Set::empty());
                 }
             }
@@ -299,8 +302,10 @@ pub mod PQMinStEph {
                 view_ord_consistent::<Pair<V, P>>(),
         {
             let seq = frontier.to_seq();
+            // Veracity: NEEDED assert
             assert(seq@.len() > 0) by {
                 if seq@.len() == 0 {
+                    // Veracity: NEEDED assert
                     assert(seq@.to_set() =~= Set::empty());
                 }
             }
@@ -313,15 +318,18 @@ pub mod PQMinStEph {
             let frontier_new = frontier.difference(&AVLTreeSetStEph::singleton(entry));
 
             // Capacity: visited ⊆ vertex_universe from invariant.
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_len_subset(visited@, vertex_universe);
             }
             let v_for_visited = v.clone_plus();
             let visited_new = visited.union(&AVLTreeSetStEph::singleton(v_for_visited));
             // Maintain visited@.subset_of(vertex_universe): v@ ∈ vertex_universe from frontier entry.
+            // Veracity: NEEDED proof block
             proof {
                 // v was clone_plus'd from entry_ref.1, so cloned(entry_ref.1, v).
                 // feq chain: entry_ref.1 == v, hence v@ == entry_ref@.1 == seq@[0].1.
+                // Veracity: NEEDED assert
                 assert(frontier@.contains(seq@[0 as int]));
                 // v_for_visited was clone_plus'd from v, so v == v_for_visited.
                 // visited_new@ = visited@ ∪ {v_for_visited@} = visited@ ∪ {v@}.
@@ -333,6 +341,7 @@ pub mod PQMinStEph {
             let nlen = neighbors_seq.length();
             let mut i: usize = 0;
             // Establish neighbor vertices ∈ vertex_universe before inner loop.
+            // Veracity: NEEDED proof block
             proof {
             }
             while i < nlen
@@ -379,6 +388,7 @@ pub mod PQMinStEph {
                     // View-determinism ensures each vertex has at most one frontier entry,
                     // so |frontier| <= |vertex_universe| < usize::MAX - 1.
                     let ghost old_fu = frontier_updated@;
+                    // Veracity: NEEDED proof block
                     proof {
                         let proj = |e: ((<P as View>::V, <V as View>::V), <V as View>::V)| -> <V as View>::V { e.1 };
                         // Prove injective_on(proj, frontier_updated@).
@@ -392,22 +402,27 @@ pub mod PQMinStEph {
                     }
                     frontier_updated = frontier_updated.union(&AVLTreeSetStEph::singleton(neighbor_entry));
                     // Maintain all frontier invariants after union.
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(obeys_feq_full_trigger::<P>());
                         // clone_plus gives view equality.
                         // Vertex universe membership.
+                        // Veracity: NEEDED assert
                         assert forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                             #[trigger] frontier_updated@.contains(e)
                             implies vertex_universe.contains(e.1) by {
                             if old_fu.contains(e) {}
                         }
                         // Canonical form: inner vertex == outer vertex.
+                        // Veracity: NEEDED assert
                         assert forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                             #[trigger] frontier_updated@.contains(e)
                             implies e.0.1 == e.1 by {
                             if old_fu.contains(e) {}
                         }
                         // Priority witness: priority from priority_fn.
+                        // Veracity: NEEDED assert
                         assert forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                             frontier_updated@.contains(e)
                             implies (exists|v_ref: &V, p_val: P|
@@ -430,6 +445,7 @@ pub mod PQMinStEph {
         let visited_seq = visited.to_seq();
         let vlen = visited_seq.length();
         let mut j: usize = 0;
+        // Veracity: NEEDED proof block
         proof {
             lemma_wf_implies_len_bound_steph(visited_seq);
         }
@@ -452,11 +468,13 @@ pub mod PQMinStEph {
             let vref = visited_seq.nth(j);
             let p = priority_fn(vref);
             let vp = Pair(vref.clone(), p);
+            // Veracity: NEEDED proof block
             proof {
                 lemma_wf_implies_len_bound_steph(visited_seq);
             }
             let ghost old_pri = priorities@;
             priorities = priorities.union(&AVLTreeSetStEph::singleton(vp));
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_len_union(old_pri, Set::empty().insert(vp@));
             }
@@ -504,6 +522,7 @@ pub mod PQMinStEph {
         let slen = sources_seq.length();
         let mut i: usize = 0;
         // Establish sources_seq vertices ∈ vertex_universe.
+        // Veracity: NEEDED proof block
         proof {
             lemma_wf_implies_len_bound_steph(sources_seq);
         }
@@ -545,28 +564,34 @@ pub mod PQMinStEph {
             let v_clone2 = v.clone_plus();
             let p_clone = p.clone_plus();
             let entry = Pair(Pair(p_clone, v_clone1), v_clone2);
+            // Veracity: NEEDED proof block
             proof {
                 lemma_wf_implies_len_bound_steph(sources_seq);
             }
             let ghost old_if = initial_frontier@;
             initial_frontier = initial_frontier.union(&AVLTreeSetStEph::singleton(entry));
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_len_union(old_if, Set::empty().insert(entry@));
                 // clone_plus gives view equality.
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<P>());
                 // Vertex universe membership.
+                // Veracity: NEEDED assert
                 assert forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                     #[trigger] initial_frontier@.contains(e)
                     implies vertex_universe.contains(e.1) by {
                     if old_if.contains(e) {}
                 }
                 // Canonical form: inner vertex == outer vertex.
+                // Veracity: NEEDED assert
                 assert forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                     #[trigger] initial_frontier@.contains(e)
                     implies e.0.1 == e.1 by {
                     if old_if.contains(e) {}
                 }
                 // Priority witness.
+                // Veracity: NEEDED assert
                 assert forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                     initial_frontier@.contains(e)
                     implies (exists|v_ref: &V, p_val: P|

@@ -1,47 +1,39 @@
 Mode: isolate
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
-error: assertion failed
-   --> src/Chap37/BSTBBAlphaStEph.rs:354:49
-    |
-354 |   ...                   assert forall|x: T| r.tree_contains(x) ==
-    |  ___________________________________________^
-355 | | ...                       (node.tree_contains(x) || x == value)
-    | |_______________________________________________________________^ assertion failed
+Isolate: including Chap38 Chap18 Chap02
+error: precondition not satisfied
+    --> src/Chap38/BSTParaMtEph.rs:1559:38
+     |
+ 381 | /                 forall|s: T, o: T| #![trigger self@.contains(s@), right@.contains(o@)]
+ 382 | |                     self@.contains(s@) && right@.contains(o@) ==> s.cmp_spec(&o) == Less,
+     | |________________________________________________________________________________________- failed precondition
+...
+1559 |                           let result = left_res.join_pair_inner(&right_res);
+     |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 note: diagnostics via expansion
-   --> src/Chap37/BSTPlainStEph.rs:263:43
+   --> src/Chap38/BSTParaMtEph.rs:382:85
     |
-263 |                 BalBinTree::Node(node) => BSTSpecFns::tree_contains(*node, value),
-    |                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    |
-   ::: src/Chap37/BSTBBAlphaStEph.rs:354:49
-    |
-354 | ...                   assert forall|x: T| r.tree_contains(x) ==
-    |                                           ^^^^^^^^^^^^^^^^^^
-355 | ...                       (node.tree_contains(x) || x == value)
-    |                                                     ^^^^^^^^^^
+382 |                     self@.contains(s@) && right@.contains(o@) ==> s.cmp_spec(&o) == Less,
+    |                                                                                     ^^^^
 
 note: 
 
-r.tree_contains(x) == (node.tree_contains(x) || x == value)
-|   r.tree_contains(x) ==>
-|       !(node.tree_contains(x)) ==>
-|           x == value ✘
-|   node.tree_contains(x) || x == value ==>
-|       r.tree_contains(x) ✘
-|       |   let tmp%% = r;
-|       |       tmp%% is Leaf ==>
-|       |           false ✔
-|       |       !(tmp%% is Leaf) ==>
-|       |           let node = tmp%%.0;
-|       |               node.tree_contains(x) ✘
-|       |                   reached fuel limit for recursion
-|       +---
-+---
+left_res.view().finite() ✔
+right_res.view().finite() ✔
+left_res.view().disjoint(right_res.view()) ✔
+clip(nat, left_res.view().len() + right_res.view().len()) <= UnsignedMax.Exec(usize::BITS) ✔
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+forall |s, o|
+    left_res.view().contains(s.view()) && right_res.view().contains(o.view()) ==>
+        s.cmp_spec(o) == Less ✘
+        |   !(s.cmp_spec(o) is Equal) ✔
+        |   !(s.cmp_spec(o) is Greater) ✘
+        +---
 
-verification results:: 1957 verified, 1 errors
+verification results:: 1167 verified, 1 errors
 error: aborting due to 1 previous error
 
-Elapsed: 20s
-Sampled Memory Usage: peak rust_verify RSS: 6670MB, peak z3 RSS: 808MB, min free: 19469MB
-Sampled CPU Usage: rust_verify: 99s, z3 children: 95s
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 3219MB, peak z3 RSS: 308MB, min free: 23447MB
+Sampled CPU Usage: rust_verify: 33s, z3 children: 3s

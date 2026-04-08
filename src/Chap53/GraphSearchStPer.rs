@@ -177,14 +177,17 @@ pub mod GraphSearchStPer {
                 (AVLTreeSetStPer::empty(), false)
             } else {
                 let seq = frontier.to_seq();
+                // Veracity: NEEDED proof block
                 proof {
                     // Prove seq is non-empty from frontier being non-empty.
                     if seq@.len() == 0 {
+                        // Veracity: NEEDED assert
                         assert(seq@.to_set() =~= Set::<<V as View>::V>::empty());
                     }
                 }
                 let first_ref = seq.nth(0);
                 let first = first_ref.clone();
+                // Veracity: NEEDED proof block
                 proof { assert(cloned(*first_ref, first)); }
                 let result = AVLTreeSetStPer::singleton(first);
                 (result, false)
@@ -212,6 +215,7 @@ pub mod GraphSearchStPer {
         ensures search.visited@.contains(source@),
     {
         let sources = AVLTreeSetStPer::singleton(source);
+        // Veracity: NEEDED proof block
         proof {
         }
         graph_search_multi(graph, sources, strategy, Ghost(vertex_universe))
@@ -262,6 +266,7 @@ pub mod GraphSearchStPer {
                 vstd::laws_cmp::obeys_cmp_spec::<V>(),
                 view_ord_consistent::<V>(),
         {
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_len_subset(visited@, vertex_universe);
                 vstd::set_lib::lemma_len_subset(frontier@, vertex_universe);
@@ -290,6 +295,7 @@ pub mod GraphSearchStPer {
             {
                 let v = frontier_seq.nth(i);
                 let neighbors = graph(v);
+                // Veracity: NEEDED proof block
                 proof {
                     vstd::set_lib::lemma_len_subset(new_neighbors@, vertex_universe);
                     vstd::set_lib::lemma_len_subset(neighbors@, vertex_universe);
@@ -300,6 +306,7 @@ pub mod GraphSearchStPer {
 
             let frontier_new = new_neighbors.difference(&visited_new);
 
+            // Veracity: NEEDED proof block
             proof {
             }
 

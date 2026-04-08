@@ -1,21 +1,6 @@
 Mode: isolate
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
-error: assertion failed
-    --> src/Chap37/BSTSplayMtEph.rs:1575:88
-     |
-1575 |                         assert forall|x: T| #[trigger] link_contains(*link, x) implies TotalOrder::le(x, node.key) by {
-     |                                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
-
-note: diagnostics via expansion
-
-note: 
-
-x.le(node.key) 
-    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
-
-verification results:: 1957 verified, 1 errors
-error: aborting due to 1 previous error
-
-Elapsed: 21s
-Sampled Memory Usage: peak rust_verify RSS: 5258MB, peak z3 RSS: 655MB, min free: 20627MB
-Sampled CPU Usage: rust_verify: 103s, z3 children: 88s
+Isolate: including Chap39 Chap18 Chap02
+verification results:: 1307 verified, 0 errors
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 5195MB, peak z3 RSS: 794MB, min free: 20653MB
+Sampled CPU Usage: rust_verify: 103s, z3 children: 86s

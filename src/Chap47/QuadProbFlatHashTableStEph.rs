@@ -138,6 +138,7 @@ pub mod QuadProbFlatHashTableStEph {
         vstd::arithmetic::div_mod::lemma_fundamental_div_mod((a + 1) * (a + 2), 2);
         let x: int = a * (a + 1) / 2;
         let y: int = (a + 1) * (a + 2) / 2;
+        // Veracity: NEEDED assert
         assert(a * (a + 1) + 2 * (a + 1) == (a + 1) * (a + 2)) by (nonlinear_arith);
     }
 
@@ -177,6 +178,7 @@ pub mod QuadProbFlatHashTableStEph {
             // a * b = pn1 * (a * c).
             vstd::arithmetic::mul::lemma_mul_is_commutative(a, pn1);
             vstd::arithmetic::mul::lemma_mul_is_associative(pn1, a, c);
+            // Veracity: NEEDED assert
             assert(a * (pn1 * c) == pn1 * (a * c)) by (nonlinear_arith);
             let ac = a * c;
 
@@ -243,6 +245,7 @@ pub mod QuadProbFlatHashTableStEph {
             let tj = j * (j + 1) / 2;
 
             // (j-i)*(j+i+1) == j*(j+1) - i*(i+1).
+            // Veracity: NEEDED assert
             assert((j - i) * (j + i + 1) == j * (j + 1) - i * (i + 1)) by (nonlinear_arith);
 
             // Both are even (consecutive products).
@@ -253,6 +256,7 @@ pub mod QuadProbFlatHashTableStEph {
 
             // prod = 2 * (tj - ti).
             let prod = (j - i) * (j + i + 1);
+            // Veracity: NEEDED assert
             assert(prod == 2 * (tj - ti)) by (nonlinear_arith)
                 requires prod == j * (j + 1) - i * (i + 1),
                          i * (i + 1) == 2 * ti,
@@ -263,6 +267,7 @@ pub mod QuadProbFlatHashTableStEph {
             vstd::arithmetic::div_mod::lemma_fundamental_div_mod(tj, m);
             vstd::arithmetic::mul::lemma_mul_is_distributive_sub(m, tj / m, ti / m);
             let q = tj / m - ti / m;
+            // Veracity: NEEDED assert
             assert(prod == 2 * (m * q)) by (nonlinear_arith)
                 requires prod == 2 * (tj - ti), tj - ti == m * q;
 
@@ -279,6 +284,7 @@ pub mod QuadProbFlatHashTableStEph {
             // Parity: (j-i) + (j+i+1) = 2j+1 is odd.
             let a = j - i;
             let b = j + i + 1;
+            // Veracity: NEEDED assert
             assert(a + b == 2 * j + 1) by (nonlinear_arith)
                 requires a == j - i, b == j + i + 1;
             vstd::arithmetic::div_mod::lemma_add_mod_noop(a, b, 2);
@@ -372,7 +378,9 @@ pub mod QuadProbFlatHashTableStEph {
         // Build the probe sequence and show no_duplicates via injectivity.
         let probes = Seq::new(m as nat, |d: int| spec_tri_probe(hi, d, m));
 
+        // Veracity: NEEDED assert
         assert(probes.no_duplicates()) by {
+            // Veracity: NEEDED assert
             assert forall |i: int, j: int|
                 0 <= i < m && 0 <= j < m && i != j
                 implies probes[i] != probes[j] by {
@@ -407,6 +415,7 @@ pub mod QuadProbFlatHashTableStEph {
         lemma_subset_equality(probes.to_set(), set_int_range(0, m));
 
         // s ∈ set_int_range(0, m), so s ∈ probes.to_set().
+        // Veracity: NEEDED assert
         assert(probes.to_set().contains(s));
 
         // probes.contains(s) gives a witness d.
@@ -459,11 +468,15 @@ pub mod QuadProbFlatHashTableStEph {
         decreases old_table.len(),
     {
         if old_table.len() == 1 {
+            // Veracity: NEEDED assert
             assert(spec_count_empties::<Key, Value>(old_table.drop_last()) == 0);
+            // Veracity: NEEDED assert
             assert(spec_count_empties::<Key, Value>(new_table.drop_last()) == 0);
         } else if s == old_table.len() - 1 {
+            // Veracity: NEEDED assert
             assert(new_table.drop_last() =~= old_table.drop_last());
         } else {
+            // Veracity: NEEDED assert
             assert forall |j: int| 0 <= j < old_table.drop_last().len() && j != s
                 implies #[trigger] new_table.drop_last()[j] == old_table.drop_last()[j] by {
             }
@@ -503,6 +516,7 @@ pub mod QuadProbFlatHashTableStEph {
             let m = table.current_size;
             let mut attempt: usize = 0;
             let mut slot: usize = h;
+            // Veracity: NEEDED proof block
             proof {
                 vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
             }
@@ -533,26 +547,32 @@ pub mod QuadProbFlatHashTableStEph {
                 let entry = table.table[slot].clone();
                 match entry {
                     FlatEntry::Occupied(k, _v) => {
+                        // Veracity: NEEDED proof block
                         proof { assert(obeys_feq_full_trigger::<Key>()); }
                         let eq = feq(&k, &key);
                         if eq {
                             // Overwrite existing key.
                             let ghost old_table_seq = table.table@;
                             table.table.set(slot, FlatEntry::Occupied(key, value));
+                            // Veracity: NEEDED proof block
                             proof {
                                 lemma_reveal_view_injective::<Key>();
+                                // Veracity: NEEDED assert
                                 assert(spec_flat_has_key(old_table_seq[slot as int], key));
+                                // Veracity: NEEDED assert
                                 assert forall |j: int| 0 <= j < old_table_seq.len() && j != slot as int
                                     implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
                                     if spec_flat_has_key(old_table_seq[j], key) {}
                                 }
                                 let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
+                                // Veracity: NEEDED assert
                                 assert(new_entry.spec_entry_to_map() =~=
                                     old_table_seq[slot as int].spec_entry_to_map().insert(key, value));
                                 lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
                                     old_table_seq, slot as int, new_entry, key, value);
                                 // Wf: no-dup.
                                 // Wf: probe chain (Occupied→Occupied, Empty status unchanged).
+                                // Veracity: NEEDED assert
                                 assert forall |i: int, k: Key|
                                     0 <= i < m as int
                                     && #[trigger] spec_flat_has_key(table.table@[i], k)
@@ -574,10 +594,12 @@ pub mod QuadProbFlatHashTableStEph {
                                         && forall |j: int| 0 <= j < n
                                             ==> !(#[trigger] old_table_seq[spec_tri_probe(hk, j, m as int)] is Empty);
                                 }
+                                // Veracity: NEEDED assert
                                 assert(spec_other_slots_preserved(old(table).table@, table.table@, slot as int));
                             }
                             return;
                         }
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                     }
@@ -588,7 +610,9 @@ pub mod QuadProbFlatHashTableStEph {
                         if table.num_elements < usize::MAX {
                             table.num_elements = table.num_elements + 1;
                         }
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             assert forall |j: int| 0 <= j < old_table_seq.len()
                                 implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
                                 if spec_flat_has_key(old_table_seq[j], key) {}
@@ -601,6 +625,7 @@ pub mod QuadProbFlatHashTableStEph {
                             // Wf: probe chain — new key at slot with witness n = attempt.
                             let ga = attempt as int;
                             let gm = m as int;
+                            // Veracity: NEEDED assert
                             assert forall |i: int, k: Key|
                                 0 <= i < gm
                                 && #[trigger] spec_flat_has_key(table.table@[i], k)
@@ -624,11 +649,13 @@ pub mod QuadProbFlatHashTableStEph {
                                             ==> !(#[trigger] old_table_seq[spec_tri_probe(hk, j, gm)] is Empty);
                                 }
                             }
+                            // Veracity: NEEDED assert
                             assert(spec_other_slots_preserved(old(table).table@, table.table@, slot as int));
                         }
                         return;
                     }
                     FlatEntry::Deleted => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                     }
@@ -637,6 +664,7 @@ pub mod QuadProbFlatHashTableStEph {
                 // Increments by a+1, maintaining slot = (h + (a+1)*(a+2)/2) % m.
                 let new_inc: usize = attempt + 1;
                 slot = if new_inc < m - slot { slot + new_inc } else { new_inc - (m - slot) };
+                // Veracity: NEEDED proof block
                 proof {
                     let ga: int = attempt as int;
                     let gm: int = m as int;
@@ -658,8 +686,10 @@ pub mod QuadProbFlatHashTableStEph {
             // Exhausted all m positions. Unreachable because the triangular probe sequence
             // is a complete permutation of {0..m-1} (m a power of two), so a non-full table
             // must contain an empty slot that the probe sequence reaches.
+            // Veracity: NEEDED proof block
             proof {
                 // Bridge: loop invariant uses `m`, lemma requires `table.current_size`.
+                // Veracity: NEEDED assert
                 assert forall |d: int| #![trigger spec_tri_probe(h as int, d, table.current_size as int)]
                     0 <= d < table.current_size as int
                     implies !spec_flat_has_key(
@@ -680,6 +710,7 @@ pub mod QuadProbFlatHashTableStEph {
             let m = table.current_size;
             let mut attempt: usize = 0;
             let mut slot: usize = h;
+            // Veracity: NEEDED proof block
             proof {
                 vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
             }
@@ -704,14 +735,18 @@ pub mod QuadProbFlatHashTableStEph {
                 let entry = table.table[slot].clone();
                 match entry {
                     FlatEntry::Occupied(k, v) => {
+                        // Veracity: NEEDED proof block
                         proof { assert(obeys_feq_full_trigger::<Key>()); }
                         let eq = feq(&k, key);
                         if eq {
+                            // Veracity: NEEDED proof block
                             proof {
                                 lemma_reveal_view_injective::<Key>();
+                                // Veracity: NEEDED assert
                                 assert forall |j: int| 0 <= j < table.table@.len() && j != slot as int
                                     implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                                     if spec_flat_has_key(table.table@[j], *key) {
+                                        // Veracity: NEEDED assert
                                         assert(spec_flat_has_key(table.table@[slot as int], *key));
                                     }
                                 }
@@ -720,13 +755,16 @@ pub mod QuadProbFlatHashTableStEph {
                             }
                             return Some(v);
                         }
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                     }
                     FlatEntry::Empty => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Wf: if key existed at slot j, its probe path has no Empty before j.
                             // Since we found Empty at this attempt, key cannot be at any later probe.
+                            // Veracity: NEEDED assert
                             assert forall |j: int| 0 <= j < table.table@.len()
                                 implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                                 if spec_flat_has_key(table.table@[j], *key) {
@@ -741,12 +779,14 @@ pub mod QuadProbFlatHashTableStEph {
                         return None;
                     }
                     FlatEntry::Deleted => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                     }
                 }
                 let new_inc: usize = attempt + 1;
                 slot = if new_inc < m - slot { slot + new_inc } else { new_inc - (m - slot) };
+                // Veracity: NEEDED proof block
                 proof {
                     let ga: int = attempt as int;
                     let gm: int = m as int;
@@ -766,7 +806,9 @@ pub mod QuadProbFlatHashTableStEph {
                 attempt = attempt + 1;
             }
             // Exhausted all m positions without finding key.
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall |j: int| 0 <= j < table.table@.len()
                     implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                     if spec_flat_has_key(table.table@[j], *key) {
@@ -785,6 +827,7 @@ pub mod QuadProbFlatHashTableStEph {
             let m = table.current_size;
             let mut attempt: usize = 0;
             let mut slot: usize = h;
+            // Veracity: NEEDED proof block
             proof {
                 vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
             }
@@ -814,6 +857,7 @@ pub mod QuadProbFlatHashTableStEph {
                 let entry = table.table[slot].clone();
                 match entry {
                     FlatEntry::Occupied(k, _v) => {
+                        // Veracity: NEEDED proof block
                         proof { assert(obeys_feq_full_trigger::<Key>()); }
                         let eq = feq(&k, key);
                         if eq {
@@ -822,15 +866,19 @@ pub mod QuadProbFlatHashTableStEph {
                             if table.num_elements > 0 {
                                 table.num_elements = table.num_elements - 1;
                             }
+                            // Veracity: NEEDED proof block
                             proof {
                                 lemma_reveal_view_injective::<Key>();
+                                // Veracity: NEEDED assert
                                 assert forall |j: int| 0 <= j < old_table_seq.len() && j != slot as int
                                     implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(*key) by {
                                     if spec_flat_has_key(old_table_seq[j], *key) {
+                                        // Veracity: NEEDED assert
                                         assert(spec_flat_has_key(old_table_seq[slot as int], *key));
                                     }
                                 }
                                 let new_entry = FlatEntry::<Key, Value>::Deleted;
+                                // Veracity: NEEDED assert
                                 assert(new_entry.spec_entry_to_map() =~=
                                     old_table_seq[slot as int].spec_entry_to_map().remove(*key));
                                 lemma_table_to_map_update_remove::<Key, Value, FlatEntry<Key, Value>>(
@@ -839,6 +887,7 @@ pub mod QuadProbFlatHashTableStEph {
                                     old_table_seq, slot as int, *key);
                                 // Wf: no-dup.
                                 // Wf: probe chain (Occupied→Deleted, which is not Empty).
+                                // Veracity: NEEDED assert
                                 assert forall |i: int, k: Key|
                                     0 <= i < m as int
                                     && #[trigger] spec_flat_has_key(table.table@[i], k)
@@ -860,11 +909,14 @@ pub mod QuadProbFlatHashTableStEph {
                             }
                             return true;
                         }
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                     }
                     FlatEntry::Empty => {
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             assert forall |j: int| 0 <= j < table.table@.len()
                                 implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                                 if spec_flat_has_key(table.table@[j], *key) {
@@ -875,12 +927,14 @@ pub mod QuadProbFlatHashTableStEph {
                         return false;
                     }
                     FlatEntry::Deleted => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                     }
                 }
                 let new_inc: usize = attempt + 1;
                 slot = if new_inc < m - slot { slot + new_inc } else { new_inc - (m - slot) };
+                // Veracity: NEEDED proof block
                 proof {
                     let ga: int = attempt as int;
                     let gm: int = m as int;
@@ -900,7 +954,9 @@ pub mod QuadProbFlatHashTableStEph {
                 attempt = attempt + 1;
             }
             // Exhausted all m positions without finding key.
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall |j: int| 0 <= j < table.table@.len()
                     implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                     if spec_flat_has_key(table.table@[j], *key) {
@@ -935,21 +991,28 @@ pub mod QuadProbFlatHashTableStEph {
                 let entry = table.table[i].clone();
                 if let FlatEntry::Occupied(k, v) = entry {
                     pairs.push((k, v));
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(pairs@.drop_last() =~= old_pairs);
                         let ghost entry_map = table.table@[i as int].spec_entry_to_map();
                     }
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                     }
                 }
+                // Veracity: NEEDED proof block
                 proof {
                     let ghost sub_next = table.table@.subrange(0, (i + 1) as int);
+                    // Veracity: NEEDED assert
                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
                 }
                 i = i + 1;
             }
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(table.table@.subrange(0, table.table@.len() as int) =~= table.table@);
             }
 
@@ -968,6 +1031,7 @@ pub mod QuadProbFlatHashTableStEph {
             {
                 let ghost old_vec = new_table_vec@;
                 new_table_vec.push(FlatEntry::Empty);
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_table_to_map_push_empty::<Key, Value, FlatEntry<Key, Value>>(
                         old_vec, FlatEntry::Empty);
@@ -984,8 +1048,10 @@ pub mod QuadProbFlatHashTableStEph {
                 spec_hash: table.spec_hash,
                 _phantom: PhantomData,
             };
+            // Veracity: NEEDED proof block
             proof {
                 // spec_is_power_of_two follows from spec_resize_ok requirement.
+                // Veracity: NEEDED assert
                 assert(spec_quadprobflathashsteph_wf(&new_table));
                 lemma_all_empties_count::<Key, Value>(new_table.table@);
             }
@@ -1011,6 +1077,7 @@ pub mod QuadProbFlatHashTableStEph {
             {
                 let key = clone_elem(&pairs[j].0);
                 let value = clone_elem(&pairs[j].1);
+                // Veracity: NEEDED proof block
                 proof {
                     // Prove spec_has_insert_capacity: empties > 0 implies exists Empty slot.
                     lemma_empties_positive_implies_exists_empty::<Key, Value>(
@@ -1018,18 +1085,22 @@ pub mod QuadProbFlatHashTableStEph {
                 }
                 let ghost old_new_table_seq = new_table.table@;
                 Self::insert(&mut new_table, key, value);
+                // Veracity: NEEDED proof block
                 proof {
                     // Use exists |s| from insert ensures to maintain empties invariant.
                     let s = choose |s: int| #[trigger] spec_other_slots_preserved(
                         old_new_table_seq, new_table.table@, s);
                     lemma_one_slot_change_empties::<Key, Value>(
                         old_new_table_seq, new_table.table@, s);
+                    // Veracity: NEEDED assert
                     assert(pairs@.subrange(0, (j + 1) as int).drop_last()
                         =~= pairs@.subrange(0, j as int));
                 }
                 j = j + 1;
             }
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(pairs@.subrange(0, pairs@.len() as int) =~= pairs@);
             }
 

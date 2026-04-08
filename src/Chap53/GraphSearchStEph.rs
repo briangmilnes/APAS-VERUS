@@ -169,13 +169,16 @@ pub mod GraphSearchStEph {
                 (AVLTreeSetStEph::empty(), false)
             } else {
                 let seq = frontier.to_seq();
+                // Veracity: NEEDED assert
                 assert(seq@.len() > 0) by {
                     if seq@.len() == 0 {
+                        // Veracity: NEEDED assert
                         assert(seq@.to_set() =~= Set::empty());
                     }
                 }
                 let first_ref = seq.nth(0);
                 let first = first_ref.clone();
+                // Veracity: NEEDED proof block
                 proof { assert(cloned(*first_ref, first)); }
                 let result = AVLTreeSetStEph::singleton(first);
                 (result, false)
@@ -203,6 +206,7 @@ pub mod GraphSearchStEph {
         ensures search.visited@.contains(source@),
     {
         let sources = AVLTreeSetStEph::singleton(source);
+        // Veracity: NEEDED proof block
         proof {
         }
         graph_search_multi(graph, sources, strategy, Ghost(vertex_universe))
@@ -253,6 +257,7 @@ pub mod GraphSearchStEph {
                 vstd::laws_cmp::obeys_cmp_spec::<V>(),
                 view_ord_consistent::<V>(),
         {
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_len_subset(visited@, vertex_universe);
                 vstd::set_lib::lemma_len_subset(frontier@, vertex_universe);
@@ -281,6 +286,7 @@ pub mod GraphSearchStEph {
             {
                 let v = frontier_seq.nth(i);
                 let neighbors = graph(v);
+                // Veracity: NEEDED proof block
                 proof {
                     vstd::set_lib::lemma_len_subset(new_neighbors@, vertex_universe);
                     vstd::set_lib::lemma_len_subset(neighbors@, vertex_universe);
@@ -291,6 +297,7 @@ pub mod GraphSearchStEph {
 
             let frontier_new = new_neighbors.difference(&visited_new);
 
+            // Veracity: NEEDED proof block
             proof {
             }
 

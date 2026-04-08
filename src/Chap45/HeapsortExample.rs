@@ -109,6 +109,7 @@ broadcast use {
                     binary_heap_result: self.binary_heap_result.clone(),
                     leftist_heap_result: self.leftist_heap_result.clone(),
                 };
+                // Veracity: NEEDED proof block
                 proof { assume(cloned@ == self@); }
                 cloned
             }
@@ -124,6 +125,7 @@ broadcast use {
                     && self.balanced_tree_result == other.balanced_tree_result
                     && self.binary_heap_result == other.binary_heap_result
                     && self.leftist_heap_result == other.leftist_heap_result;
+                // Veracity: NEEDED proof block
                 proof { assume(equal == (self@ == other@)); }
                 equal
             }

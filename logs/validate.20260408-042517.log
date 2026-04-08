@@ -1,53 +1,21 @@
 Mode: isolate
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+Isolate: including Chap38 Chap18 Chap02
 error: assertion failed
-   --> src/Chap37/BSTPlainStEph.rs:704:53
+   --> src/Chap38/BSTParaStEph.rs:893:74
     |
-704 |   ...                   assert forall|x: T| r.tree_contains(x) ==
-    |  ___________________________________________^
-705 | | ...                       (node.tree_contains(x) && x != *target)
-    | |_________________________________________________________________^ assertion failed
+893 | ...                   assert forall|x| rrv.contains(x) implies rv.contains(x) by {
+    |                                                                ^^^^^^^^^^^^^^ assertion failed
 
 note: diagnostics via expansion
-   --> src/Chap37/BSTPlainStEph.rs:263:43
-    |
-263 |                 BalBinTree::Node(node) => BSTSpecFns::tree_contains(*node, value),
-    |                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-...
-704 |                                 assert forall|x: T| r.tree_contains(x) ==
-    |                                                     ^^^^^^^^^^^^^^^^^^
-705 |                                     (node.tree_contains(x) && x != *target)
-    |                                      ^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^
 
 note: 
 
-r.tree_contains(x) == (node.tree_contains(x) && !(x == target))
-|   r.tree_contains(x) ==>
-|       node.tree_contains(x) ✘
-|       |   let tmp%% = node;
-|       |       tmp%% is Leaf ==>
-|       |           false ✔
-|       |       !(tmp%% is Leaf) ==>
-|       |           let node = tmp%%.0;
-|       |               node.tree_contains(x) ✘
-|       |                   reached fuel limit for recursion
-|       +---
-|       !(x == target) ✘
-|   node.tree_contains(x) && !(x == target) ==>
-|       r.tree_contains(x) ✘
-|       |   let tmp%% = r;
-|       |       tmp%% is Leaf ==>
-|       |           false ✔
-|       |       !(tmp%% is Leaf) ==>
-|       |           let node = tmp%%.0;
-|       |               node.tree_contains(x) ✘
-|       |                   reached fuel limit for recursion
-|       +---
-+---
+rv.contains(x) 
+    function is uninterpreted
 
-verification results:: 1957 verified, 1 errors
+verification results:: 1167 verified, 1 errors
 error: aborting due to 1 previous error
 
-Elapsed: 20s
-Sampled Memory Usage: peak rust_verify RSS: 4178MB, peak z3 RSS: 544MB, min free: 22033MB
-Sampled CPU Usage: rust_verify: 56s, z3 children: 38s
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3208MB, peak z3 RSS: 406MB, min free: 23077MB
+Sampled CPU Usage: rust_verify: 43s, z3 children: 26s

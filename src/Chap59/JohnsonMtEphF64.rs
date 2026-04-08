@@ -144,6 +144,7 @@ pub mod JohnsonMtEphF64 {
         let potentials = ArraySeqStEphS::tabulate(&get_dist, n);
 
         let reweighted_graph = reweight_graph(graph, &potentials, n);
+        // Veracity: NEEDED proof block
         proof {
         }
 
@@ -309,6 +310,7 @@ pub mod JohnsonMtEphF64 {
             let _ = vertices.insert(i);
             i = i + 1;
         }
+        // Veracity: NEEDED proof block
         proof {
         }
 
@@ -408,6 +410,7 @@ pub mod JohnsonMtEphF64 {
             let _ = vertices.insert(i);
             i = i + 1;
         }
+        // Veracity: NEEDED proof block
         proof {
         }
 
@@ -447,18 +450,22 @@ pub mod JohnsonMtEphF64 {
             }
         }
 
+        // Veracity: NEEDED proof block
         proof {
             let view_fn = |k: LabEdge<usize, WrappedF64>| k@;
+            // Veracity: NEEDED assert
             assert forall|x: LabEdge<usize, WrappedF64>, y: LabEdge<usize, WrappedF64>|
                 #[trigger] view_fn(x) == #[trigger] view_fn(y) implies x == y
             by {};
             arcs_seq.lemma_no_duplicates_injective(view_fn);
             let mapped = arcs_seq.map_values(view_fn);
             mapped.unique_seq_to_set();
+            // Veracity: NEEDED assert
             assert(mapped =~= arcs_seq.map(|i: int, k: LabEdge<usize, WrappedF64>| k@));
         }
 
         let result = WeightedDirGraphStEphF64::from_weighed_edges(vertices, reweighted_edges);
+        // Veracity: NEEDED proof block
         proof {
         }
         result

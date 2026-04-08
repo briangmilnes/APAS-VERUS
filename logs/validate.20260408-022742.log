@@ -1,0 +1,159 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: unexpected token, expected `;`
+    --> src/Chap38/BSTParaMtEph.rs:1390:53
+     |
+1390 | ...                   result@.contains(x) by {
+     |                                           ^^
+
+error[E0425]: cannot find type `BSTParaMtEphInv` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:2048:40
+     |
+2048 |     impl<T: MtKey> std::fmt::Debug for BSTParaMtEphInv<T> {
+     |                                        ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTParaMtEphInv` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:2054:32
+     |
+2054 |     impl<T: MtKey> Display for BSTParaMtEphInv<T> {
+     |                                ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `Exposed` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:2063:40
+     |
+2063 |     impl<T: MtKey> std::fmt::Debug for Exposed<T> {
+     |                                        ^^^^^^^ not found in this scope
+     |
+help: consider importing this enum
+     |
+  39 +     use crate::Chap38::BSTParaStEph::BSTParaStEph::Exposed;
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+    --> src/Chap38/BSTParaMtEph.rs:2066:17
+     |
+2066 |                 Exposed::Leaf => write!(f, "Leaf"),
+     |                 ^^^^^^^ use of undeclared type `Exposed`
+     |
+help: consider importing this enum
+     |
+  39 +     use crate::Chap38::BSTParaStEph::BSTParaStEph::Exposed;
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+    --> src/Chap38/BSTParaMtEph.rs:2067:17
+     |
+2067 |                 Exposed::Node(l, k, r) => write!(f, "Node({:?}, {:?}, {:?})", l, k, r),
+     |                 ^^^^^^^ use of undeclared type `Exposed`
+     |
+help: consider importing this enum
+     |
+  39 +     use crate::Chap38::BSTParaStEph::BSTParaStEph::Exposed;
+     |
+
+error[E0425]: cannot find type `Exposed` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:2072:32
+     |
+2072 |     impl<T: MtKey> Display for Exposed<T> {
+     |                                ^^^^^^^ not found in this scope
+     |
+help: consider importing this enum
+     |
+  39 +     use crate::Chap38::BSTParaStEph::BSTParaStEph::Exposed;
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+    --> src/Chap38/BSTParaMtEph.rs:2075:17
+     |
+2075 |                 Exposed::Leaf => write!(f, "Leaf"),
+     |                 ^^^^^^^ use of undeclared type `Exposed`
+     |
+help: consider importing this enum
+     |
+  39 +     use crate::Chap38::BSTParaStEph::BSTParaStEph::Exposed;
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+    --> src/Chap38/BSTParaMtEph.rs:2076:17
+     |
+2076 |                 Exposed::Node(l, k, r) => write!(f, "Node({}, {}, {})", l, k, r),
+     |                 ^^^^^^^ use of undeclared type `Exposed`
+     |
+help: consider importing this enum
+     |
+  39 +     use crate::Chap38::BSTParaStEph::BSTParaStEph::Exposed;
+     |
+
+error[E0425]: cannot find type `NodeInner` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:2083:40
+     |
+2083 |     impl<T: MtKey> std::fmt::Debug for NodeInner<T> {
+     |                                        ^^^^^^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+  39 +     use crate::Chap38::BSTParaStEph::BSTParaStEph::NodeInner;
+     |
+
+error[E0425]: cannot find type `NodeInner` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:2089:32
+     |
+2089 |     impl<T: MtKey> Display for NodeInner<T> {
+     |                                ^^^^^^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+  39 +     use crate::Chap38::BSTParaStEph::BSTParaStEph::NodeInner;
+     |
+
+error[E0425]: cannot find type `ParamBST` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:2099:36
+     |
+2099 |     unsafe impl<T: MtKey> Send for ParamBST<T> {}
+     |                                    ^^^^^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+  39 +     use crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBST;
+     |
+
+error[E0425]: cannot find type `ParamBST` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:2100:36
+     |
+2100 |     unsafe impl<T: MtKey> Sync for ParamBST<T> {}
+     |                                    ^^^^^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+  39 +     use crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBST;
+     |
+
+error[E0425]: cannot find type `ParamBST` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:2102:40
+     |
+2102 |     impl<T: MtKey> std::fmt::Debug for ParamBST<T> {
+     |                                        ^^^^^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+  39 +     use crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBST;
+     |
+
+error[E0425]: cannot find type `ParamBST` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:2108:32
+     |
+2108 |     impl<T: MtKey> Display for ParamBST<T> {
+     |                                ^^^^^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+  39 +     use crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBST;
+     |
+
+error: aborting due to 15 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 24614MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

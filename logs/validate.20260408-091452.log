@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2528:76
+     |
+2528 |                     assert forall|l: T| #[trigger] lv.contains(l@) implies l@ != rkv by {
+     |                                                                            ^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(l.view() == rkv) 
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 22s
+Sampled Memory Usage: peak rust_verify RSS: 6049MB, peak z3 RSS: 715MB, min free: 17553MB
+Sampled CPU Usage: rust_verify: 140s, z3 children: 137s

@@ -275,6 +275,7 @@ broadcast use {
                     (right, left)
                 };
                 let fr = final_right.rank();
+                // Veracity: NEEDED proof block
                 proof { lemma_rank_le_size(&final_right); }
                 let node_rank = fr + 1;
                 let node = LeftistHeapNode::Node {
@@ -287,6 +288,7 @@ broadcast use {
                 // Heap: key <= children roots from requires (swap preserves), children heaps from requires.
                 // Rank bounded: node_rank = fr + 1 <= final_right.spec_size() + 1 <= size.
                 // Multiset preservation: unfold to_multiset of concatenation.
+                // Veracity: NEEDED proof block
                 proof {
                     let s1 = Seq::<T>::empty().push(key);
                     let s2 = final_left.spec_seq();
@@ -324,6 +326,7 @@ broadcast use {
                             let melded_right = Self::meld_nodes(*ra, b_node);
                             // ka <= kb from total_order_le; ka <= root(ra) from heap property.
                             let result = Self::make_node(ka, *la, melded_right);
+                            // Veracity: NEEDED proof block
                             proof {
                                 // Unfold a_view via lemma_multiset_commutative.
                                 vstd::seq_lib::lemma_multiset_commutative(
@@ -335,11 +338,13 @@ broadcast use {
                             }
                             result
                         } else {
+                            // Veracity: NEEDED proof block
                             proof { TotalOrder::total(ka, kb); }
                             let a_node = LeftistHeapNode::Node { key: ka, left: la, right: ra, rank: 0 };
                             let melded_right = Self::meld_nodes(a_node, *rb);
                             // kb <= ka from totality + !le(ka,kb); kb <= root(rb) from heap property.
                             let result = Self::make_node(kb, *lb, melded_right);
+                            // Veracity: NEEDED proof block
                             proof {
                                 // Unfold b_view via lemma_multiset_commutative.
                                 vstd::seq_lib::lemma_multiset_commutative(
@@ -362,6 +367,7 @@ broadcast use {
                 match self {
                     LeftistHeapNode::Leaf => 0,
                     LeftistHeapNode::Node { left, right, .. } => {
+                        // Veracity: NEEDED assert
                         assert(self.spec_size() == 1 + left.spec_size() + right.spec_size());
                         let ls = left.size();
                         let rs = right.size();
@@ -377,6 +383,7 @@ broadcast use {
                 match self {
                     LeftistHeapNode::Leaf => 0,
                     LeftistHeapNode::Node { left, right, .. } => {
+                        // Veracity: NEEDED assert
                         assert(self.spec_size() == 1 + left.spec_size() + right.spec_size());
                         let lh = left.height();
                         let rh = right.height();
@@ -427,6 +434,7 @@ broadcast use {
                 match self {
                     LeftistHeapNode::Leaf => true,
                     LeftistHeapNode::Node { rank, left, right, .. } => {
+                        // Veracity: NEEDED assert
                         assert(self.spec_size() == 1 + left.spec_size() + right.spec_size());
                         let sz = left.size() + right.size() + 1;
                         *rank <= sz && left.is_rank_bounded() && right.is_rank_bounded()
@@ -441,6 +449,7 @@ broadcast use {
                 match self {
                     LeftistHeapNode::Leaf => Vec::new(),
                     LeftistHeapNode::Node { key, left, right, .. } => {
+                        // Veracity: NEEDED assert
                         assert(self.spec_size() == 1 + left.spec_size() + right.spec_size());
                         let mut result = left.to_vec();
                         let left_len = result.len();
@@ -513,6 +522,7 @@ broadcast use {
                     lemma_heap_root_is_min(&**left);
                     lemma_heap_root_is_min(&**right);
 
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < s.len() implies
                         #[trigger] TotalOrder::le(s[0], s[i])
                     by {
@@ -524,7 +534,9 @@ broadcast use {
                             match &**left {
                                 LeftistHeapNode::Leaf => {},
                                 LeftistHeapNode::Node { key: lk, left: ll, right: lr, .. } => {
+                                    // Veracity: NEEDED assert
                                     assert(ls =~= Seq::empty().push(*lk) + ll.spec_seq() + lr.spec_seq());
+                                    // Veracity: NEEDED assert
                                     assert(TotalOrder::le(ls[0], ls[li]));
                                     TotalOrder::transitive(*key, *lk, ls[li]);
                                 },
@@ -535,7 +547,9 @@ broadcast use {
                             match &**right {
                                 LeftistHeapNode::Leaf => {},
                                 LeftistHeapNode::Node { key: rk, left: rl, right: rr, .. } => {
+                                    // Veracity: NEEDED assert
                                     assert(rs =~= Seq::empty().push(*rk) + rl.spec_seq() + rr.spec_seq());
+                                    // Veracity: NEEDED assert
                                     assert(TotalOrder::le(rs[0], rs[ri]));
                                     TotalOrder::transitive(*key, *rk, rs[ri]);
                                 },
@@ -707,6 +721,7 @@ broadcast use {
         {
             match TotalOrder::cmp(a, b) {
                 Ordering::Greater => {
+                    // Veracity: NEEDED proof block
                     proof {
                         if TotalOrder::le(*a, *b) {
                             TotalOrder::antisymmetric(*a, *b);
@@ -715,6 +730,7 @@ broadcast use {
                     false
                 }
                 _ => {
+                    // Veracity: NEEDED proof block
                     proof { TotalOrder::reflexive(*a); }
                     true
                 }
@@ -765,9 +781,13 @@ broadcast use {
                         rank: 1,
                     },
                 };
+                // Veracity: NEEDED assert
                 assert(LeftistHeapNode::<T>::Leaf.spec_is_leftist());
+                // Veracity: NEEDED assert
                 assert(LeftistHeapNode::<T>::Leaf.spec_is_heap());
+                // Veracity: NEEDED assert
                 assert(LeftistHeapNode::<T>::Leaf.spec_rank_bounded());
+                // Veracity: NEEDED assert
                 assert(LeftistHeapNode::<T>::Leaf.spec_seq() =~= Seq::<T>::empty());
                 pq
             }
@@ -780,14 +800,18 @@ broadcast use {
                         None
                     }
                     LeftistHeapNode::Node { key, left, right, .. } => {
+                        // Veracity: NEEDED proof block
                         proof {
                             let s = self.root.spec_seq();
+                            // Veracity: NEEDED assert
                             assert(s =~= Seq::empty().push(*key) + left.spec_seq() + right.spec_seq());
                             lemma_heap_root_is_min(&self.root);
+                            // Veracity: NEEDED assert
                             assert forall|e: T| self@.count(e) > 0 implies
                                 #[trigger] TotalOrder::le(*key, e)
                             by {
                                 let i = choose|i: int| 0 <= i < s.len() && s[i] == e;
+                                // Veracity: NEEDED assert
                                 assert(TotalOrder::le(s[0], s[i]));
                             }
                         }
@@ -801,7 +825,9 @@ broadcast use {
             fn insert(&self, element: T) -> (pq: Self) {
                 let singleton = Self::singleton(element);
                 let pq = self.meld(&singleton);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|x: T| #![trigger self@.insert(element).count(x)]
                         self@.add(Multiset::<T>::empty().insert(element)).count(x) ==
                         self@.insert(element).count(x)
@@ -827,6 +853,7 @@ broadcast use {
                             LeftistHeapNode::Node { key, left, right, .. } => {
                                 let melded_root = LeftistHeapNode::meld_nodes(*left, *right);
                                 let new_pq = LeftistHeapPQ { root: melded_root };
+                                // Veracity: NEEDED proof block
                                 proof {
                                     // cloned_root == self.root, so same spec_seq.
                                     let s1 = Seq::<T>::empty().push(key);
@@ -835,18 +862,25 @@ broadcast use {
 // Veracity: TESTING assert                                     assert(self.root.spec_seq() =~= s1 + s2 + s3);
                                     vstd::seq_lib::lemma_multiset_commutative(s1 + s2, s3);
                                     vstd::seq_lib::lemma_multiset_commutative(s1, s2);
+                                    // Veracity: NEEDED assert
                                     assert(self@ =~= Multiset::empty().insert(key).add(left@).add(right@));
+                                    // Veracity: NEEDED assert
                                     assert(new_pq@ =~= left@.add(right@));
                                     // Prove key is minimum of self@.
                                     lemma_heap_root_is_min(&self.root);
                                     let s = self.root.spec_seq();
+                                    // Veracity: NEEDED assert
                                     assert(s[0] == key);
+                                    // Veracity: NEEDED assert
                                     assert forall|e: T| self@.count(e) > 0 implies
                                         #[trigger] TotalOrder::le(key, e)
                                     by {
+                                        // Veracity: NEEDED assert
                                         assert(s.to_multiset().count(e) > 0);
+                                        // Veracity: NEEDED assert
                                         assert(s.contains(e));
                                         let i = choose|i: int| 0 <= i < s.len() && s[i] == e;
+                                        // Veracity: NEEDED assert
                                         assert(TotalOrder::le(s[0], s[i]));
                                     }
                                 }
@@ -893,10 +927,12 @@ broadcast use {
             fn is_empty(&self) -> (is_empty: bool) {
                 match &self.root {
                     LeftistHeapNode::Leaf => {
+                        // Veracity: NEEDED assert
                         assert(self.root.spec_size() == 0);
                         true
                     }
                     LeftistHeapNode::Node { left, right, .. } => {
+                        // Veracity: NEEDED assert
                         assert(self.root.spec_size() == 1 + left.spec_size() + right.spec_size());
                         false
                     }
@@ -922,6 +958,7 @@ broadcast use {
                     let ghost old_heap_ms = current_heap@;
                     let (new_heap, min_element) = current_heap.delete_min();
                     if let Some(element) = min_element {
+                        // Veracity: NEEDED proof block
                         proof {
                             // element is the minimum of old_heap_ms.
                             // All prior result elements are <= all old_heap elements (invariant).
@@ -930,21 +967,28 @@ broadcast use {
                             // Thus after push, result is still sorted and all <= new_heap elements.
 
                             // Sortedness: element >= all prior result elements.
+                            // Veracity: NEEDED assert
                             assert forall|i: int, j: int|
                                 0 <= i < j < result@.push(element).len()
                                 implies #[trigger] TotalOrder::le(result@.push(element)[i], result@.push(element)[j])
                             by {
                                 if j < old_result.len() {
                                     // Both in old result — sorted by invariant.
+                                    // Veracity: NEEDED assert
                                     assert(result@.push(element)[i] == old_result[i]);
+                                    // Veracity: NEEDED assert
                                     assert(result@.push(element)[j] == old_result[j]);
                                 } else {
                                     // j == old_result.len(), so result@.push(element)[j] == element.
+                                    // Veracity: NEEDED assert
                                     assert(result@.push(element)[j] == element);
                                     if i < old_result.len() {
                                         // old_result[i] <= element by invariant (element in old_heap).
+                                        // Veracity: NEEDED assert
                                         assert(result@.push(element)[i] == old_result[i]);
+                                        // Veracity: NEEDED assert
                                         assert(old_heap_ms.count(element) > 0);
+                                        // Veracity: NEEDED assert
                                         assert(TotalOrder::le(old_result[i], element));
                                     } else {
                                         // i == j, contradiction with i < j.
@@ -953,20 +997,25 @@ broadcast use {
                             }
 
                             // All result elements (including element) are <= all new_heap elements.
+                            // Veracity: NEEDED assert
                             assert forall|i: int, e2: T|
                                 0 <= i < result@.push(element).len() && new_heap@.count(e2) > 0
                                 implies #[trigger] TotalOrder::le(result@.push(element)[i], e2)
                             by {
                                 // e2 is in new_heap, which is old_heap minus element.
                                 // old_heap@ =~= new_heap@.insert(element), so old_heap has e2.
+                                // Veracity: NEEDED assert
                                 assert(old_heap_ms.count(e2) > 0);
                                 if i < old_result.len() as int {
                                     // old_result[i] <= e2 by invariant.
+                                    // Veracity: NEEDED assert
                                     assert(result@.push(element)[i] == old_result[i]);
                                 } else {
                                     // i == old_result.len(), result@.push(element)[i] == element.
+                                    // Veracity: NEEDED assert
                                     assert(result@.push(element)[i] == element);
                                     // element is min of old_heap, so element <= e2.
+                                    // Veracity: NEEDED assert
                                     assert(TotalOrder::le(element, e2));
                                 }
                             }
@@ -990,10 +1039,12 @@ broadcast use {
             fn root_rank(&self) -> (rank_val: usize) {
                 match &self.root {
                     LeftistHeapNode::Leaf => {
+                        // Veracity: NEEDED assert
                         assert(self.root.spec_size() == 0);
                         0
                     }
                     LeftistHeapNode::Node { left, right, .. } => {
+                        // Veracity: NEEDED assert
                         assert(self.root.spec_size() == 1 + left.spec_size() + right.spec_size());
                         self.root.rank()
                     }
@@ -1034,6 +1085,7 @@ broadcast use {
                         Self::spec_total_size(heaps@, heaps@.len() as int) <= usize::MAX as nat,
                         result.spec_leftistheappq_wf(),
                 {
+                    // Veracity: NEEDED proof block
                     proof { lemma_total_size_monotone::<T>(heaps@, (i + 1) as int, n as int); }
                     result = result.meld(&heaps[i]);
                 }
@@ -1091,6 +1143,7 @@ broadcast use {
                             right: Box::new((**right).clone()),
                             rank: *rank,
                         };
+                        // Veracity: NEEDED proof block
                         proof { assume(cloned == *self); }
                         cloned
                     }
@@ -1111,6 +1164,7 @@ broadcast use {
                     }
                     _ => false,
                 };
+                // Veracity: NEEDED proof block
                 proof { assume(equal == (*self == *other)); }
                 equal
             }
@@ -1136,6 +1190,7 @@ broadcast use {
                 ensures cloned.root == self.root
             {
                 let cloned = LeftistHeapPQ { root: self.root.clone() };
+                // Veracity: NEEDED proof block
                 proof { assume(cloned.root == self.root); }
                 cloned
             }
@@ -1146,6 +1201,7 @@ broadcast use {
                 ensures equal == (self.root == other.root)
             {
                 let equal = self.root == other.root;
+                // Veracity: NEEDED proof block
                 proof { assume(equal == (self.root == other.root)); }
                 equal
             }

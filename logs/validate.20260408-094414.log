@@ -1,0 +1,25 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2706:28
+     |
+2706 |                     assert(brv.subset_of(bv)) by {
+     |                            ^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+brv.subset_of(bv)
+|   forall |a|
+|       brv.contains(a) ==>
+|           bv.contains(a) 
+|               function is uninterpreted
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 23s
+Sampled Memory Usage: peak rust_verify RSS: 6112MB, peak z3 RSS: 967MB, min free: 16601MB
+Sampled CPU Usage: rust_verify: 175s, z3 children: 182s

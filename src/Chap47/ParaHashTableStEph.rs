@@ -159,6 +159,7 @@ pub mod ParaHashTableStEph {
         ensures
             spec_table_to_map(table.push(entry)) == Map::<Key, Value>::empty(),
     {
+        // Veracity: NEEDED assert
         assert(table.push(entry).drop_last() == table);
         // spec_table_to_map(table.push(entry))
         //   = spec_table_to_map(table).union_prefer_right(entry.spec_entry_to_map())
@@ -183,9 +184,11 @@ pub mod ParaHashTableStEph {
         let updated = table.update(index, new_entry);
         if index == table.len() - 1 {
             // Updated element is the last: union_prefer_right includes its domain.
+            // Veracity: NEEDED assert
             assert(updated.drop_last() == table.drop_last());
         } else {
             // Updated element is before last: recurse on drop_last.
+            // Veracity: NEEDED assert
             assert(updated.drop_last() == table.drop_last().update(index, new_entry));
             lemma_table_to_map_update_contains(table.drop_last(), index, new_entry, key);
         }
@@ -229,6 +232,7 @@ pub mod ParaHashTableStEph {
     {
         let updated = table.update(index, new_entry);
         if index == table.len() - 1 {
+            // Veracity: NEEDED assert
             assert(updated.drop_last() =~= table.drop_last());
             // key is not in any entry in drop_last (all have j != index).
             lemma_table_to_map_not_contains::<Key, Value, Entry>(table.drop_last(), key);
@@ -236,8 +240,10 @@ pub mod ParaHashTableStEph {
             //   =~= rest.union_prefer_right(old_map).insert(key, value)
             // when key not in rest.
         } else {
+            // Veracity: NEEDED assert
             assert(updated.drop_last() =~= table.drop_last().update(index, new_entry));
             // Precondition for recursive call: key not in entries j != index of drop_last.
+            // Veracity: NEEDED assert
             assert forall |j: int| 0 <= j < table.drop_last().len() && j != index
                 implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
             }
@@ -271,10 +277,13 @@ pub mod ParaHashTableStEph {
     {
         let updated = table.update(index, new_entry);
         if index == table.len() - 1 {
+            // Veracity: NEEDED assert
             assert(updated.drop_last() =~= table.drop_last());
             lemma_table_to_map_not_contains::<Key, Value, Entry>(table.drop_last(), key);
         } else {
+            // Veracity: NEEDED assert
             assert(updated.drop_last() =~= table.drop_last().update(index, new_entry));
+            // Veracity: NEEDED assert
             assert forall |j: int| 0 <= j < table.drop_last().len() && j != index
                 implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
             }
@@ -303,6 +312,7 @@ pub mod ParaHashTableStEph {
         if index == table.len() - 1 {
             lemma_table_to_map_not_contains::<Key, Value, Entry>(table.drop_last(), key);
         } else {
+            // Veracity: NEEDED assert
             assert forall |j: int| 0 <= j < table.drop_last().len() && j != index
                 implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
             }
@@ -390,12 +400,15 @@ pub mod ParaHashTableStEph {
             {
                 let ghost old_view = table_vec@;
                 table_vec.push(Entry::new());
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_table_to_map_push_empty::<Key, Value, Entry>(old_view, table_vec@.last());
                 }
                 i += 1;
             }
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall |k: Key, j: int| 0 <= j < table_vec@.len()
                     && j != (spec_hash@)(k) as int % initial_size as int
                     implies !#[trigger] table_vec@[j].spec_entry_to_map().dom().contains(k) by {}
@@ -515,6 +528,7 @@ pub mod ParaHashTableStEph {
         ensures c == *x,
     {
         let c = x.clone();
+        // Veracity: NEEDED assert
         assert(cloned(*x, c));
         c
     }

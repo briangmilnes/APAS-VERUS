@@ -1,6 +1,21 @@
 Mode: isolate
-Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
-verification results:: 2128 verified, 0 errors
-Elapsed: 38s
-Sampled Memory Usage: peak rust_verify RSS: 6953MB, peak z3 RSS: 744MB, min free: 16923MB
-Sampled CPU Usage: rust_verify: 180s, z3 children: 175s
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2707:83
+     |
+2707 |                         assert forall|x: T::V| #[trigger] brv.contains(x) implies bv.contains(x) by {
+     |                                                                                   ^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+bv.contains(x) 
+    function is uninterpreted
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 4947MB, peak z3 RSS: 394MB, min free: 18139MB
+Sampled CPU Usage: rust_verify: 87s, z3 children: 48s

@@ -143,11 +143,15 @@ pub mod DoubleHashFlatHashTableStEph {
         decreases old_table.len(),
     {
         if old_table.len() == 1 {
+            // Veracity: NEEDED assert
             assert(spec_count_empties::<Key, Value>(old_table.drop_last()) == 0);
+            // Veracity: NEEDED assert
             assert(spec_count_empties::<Key, Value>(new_table.drop_last()) == 0);
         } else if s == old_table.len() - 1 {
+            // Veracity: NEEDED assert
             assert(new_table.drop_last() =~= old_table.drop_last());
         } else {
+            // Veracity: NEEDED assert
             assert forall |j: int| 0 <= j < old_table.drop_last().len() && j != s
                 implies #[trigger] new_table.drop_last()[j] == old_table.drop_last()[j] by {
             }
@@ -241,6 +245,7 @@ pub mod DoubleHashFlatHashTableStEph {
             let step = Self::second_hash(&key, m);
             // step == spec_second_hash(key, m): wf gives concrete probe chain.
             let mut slot: usize = h;
+            // Veracity: NEEDED proof block
             proof {
                 vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
             }
@@ -273,26 +278,32 @@ pub mod DoubleHashFlatHashTableStEph {
                 let entry = table.table[slot].clone();
                 match entry {
                     FlatEntry::Occupied(k, _v) => {
+                        // Veracity: NEEDED proof block
                         proof { assert(obeys_feq_full_trigger::<Key>()); }
                         let eq = feq(&k, &key);
                         if eq {
                             // Overwrite existing key.
                             let ghost old_table_seq = table.table@;
                             table.table.set(slot, FlatEntry::Occupied(key, value));
+                            // Veracity: NEEDED proof block
                             proof {
                                 lemma_reveal_view_injective::<Key>();
+                                // Veracity: NEEDED assert
                                 assert(spec_flat_has_key(old_table_seq[slot as int], key));
+                                // Veracity: NEEDED assert
                                 assert forall |j: int| 0 <= j < old_table_seq.len() && j != slot as int
                                     implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
                                     if spec_flat_has_key(old_table_seq[j], key) {}
                                 }
                                 let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
+                                // Veracity: NEEDED assert
                                 assert(new_entry.spec_entry_to_map() =~=
                                     old_table_seq[slot as int].spec_entry_to_map().insert(key, value));
                                 lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
                                     old_table_seq, slot as int, new_entry, key, value);
                                 // Wf: no-dup.
                                 // Wf: probe chain (Occupied→Occupied).
+                                // Veracity: NEEDED assert
                                 assert forall |i: int, k: Key|
                                     0 <= i < m as int
                                     && #[trigger] spec_flat_has_key(table.table@[i], k)
@@ -310,11 +321,13 @@ pub mod DoubleHashFlatHashTableStEph {
                                     }
                                     let hk = (table.spec_hash@)(k) as int % m as int;
                                 }
+                                // Veracity: NEEDED assert
                                 assert(spec_other_slots_preserved(
                                     old(table).table@, table.table@, slot as int));
                             }
                             return;
                         }
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                     }
@@ -325,7 +338,9 @@ pub mod DoubleHashFlatHashTableStEph {
                         if table.num_elements < usize::MAX {
                             table.num_elements = table.num_elements + 1;
                         }
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             assert forall |j: int| 0 <= j < old_table_seq.len()
                                 implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
                                 if spec_flat_has_key(old_table_seq[j], key) {}
@@ -336,6 +351,7 @@ pub mod DoubleHashFlatHashTableStEph {
                                 old_table_seq, slot as int, new_entry, key, value);
                             // Wf: no-dup.
                             // Wf: probe chain — new key with witness n=attempt.
+                            // Veracity: NEEDED assert
                             assert forall |i: int, k: Key|
                                 0 <= i < m as int
                                 && #[trigger] spec_flat_has_key(table.table@[i], k)
@@ -355,12 +371,14 @@ pub mod DoubleHashFlatHashTableStEph {
                                 } else {
                                 }
                             }
+                            // Veracity: NEEDED assert
                             assert(spec_other_slots_preserved(
                                 old(table).table@, table.table@, slot as int));
                         }
                         return;
                     }
                     FlatEntry::Deleted => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                     }
@@ -369,6 +387,7 @@ pub mod DoubleHashFlatHashTableStEph {
                 let step_mod: usize = step % m;
                 let ghost prev_slot: int = slot as int;
                 slot = if step_mod < m - slot { slot + step_mod } else { step_mod - (m - slot) };
+                // Veracity: NEEDED proof block
                 proof {
                     let gs: int = step as int;
                     let gm: int = m as int;
@@ -389,12 +408,15 @@ pub mod DoubleHashFlatHashTableStEph {
             // Exhausted all m positions — unreachable given spec_has_insert_capacity.
             // spec_second_hash == 1 (via lemma), so step == 1 and double hashing
             // degenerates to linear probing. All m positions are visited.
+            // Veracity: NEEDED proof block
             proof {
                 lemma_spec_second_hash_value::<Key>(key, m as nat);
+                // Veracity: NEEDED assert
                 assert forall |j: int| 0 <= j < m as int
                     implies !(#[trigger] table.table@[j] is Empty) by {
                     lemma_probe_mod_identity(h as int, j, m as int);
                     let d = (j - h as int + m as int) % (m as int);
+                    // Veracity: NEEDED assert
                     assert(d * 1int == d) by(nonlinear_arith);
                 }
             }
@@ -409,6 +431,7 @@ pub mod DoubleHashFlatHashTableStEph {
             let step = Self::second_hash(key, m);
             // step == spec_second_hash(*key, m): wf gives concrete probe chain.
             let mut slot: usize = h;
+            // Veracity: NEEDED proof block
             proof {
                 vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
             }
@@ -437,14 +460,18 @@ pub mod DoubleHashFlatHashTableStEph {
                 let entry = table.table[slot].clone();
                 match entry {
                     FlatEntry::Occupied(k, v) => {
+                        // Veracity: NEEDED proof block
                         proof { assert(obeys_feq_full_trigger::<Key>()); }
                         let eq = feq(&k, key);
                         if eq {
+                            // Veracity: NEEDED proof block
                             proof {
                                 lemma_reveal_view_injective::<Key>();
+                                // Veracity: NEEDED assert
                                 assert forall |j: int| 0 <= j < table.table@.len() && j != slot as int
                                     implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                                     if spec_flat_has_key(table.table@[j], *key) {
+                                        // Veracity: NEEDED assert
                                         assert(spec_flat_has_key(table.table@[slot as int], *key));
                                     }
                                 }
@@ -453,11 +480,14 @@ pub mod DoubleHashFlatHashTableStEph {
                             }
                             return Some(v);
                         }
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                     }
                     FlatEntry::Empty => {
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             assert forall |j: int| 0 <= j < table.table@.len()
                                 implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                                 if spec_flat_has_key(table.table@[j], *key) {
@@ -472,6 +502,7 @@ pub mod DoubleHashFlatHashTableStEph {
                         return None;
                     }
                     FlatEntry::Deleted => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                     }
@@ -480,6 +511,7 @@ pub mod DoubleHashFlatHashTableStEph {
                 let step_mod: usize = step % m;
                 let ghost prev_slot: int = slot as int;
                 slot = if step_mod < m - slot { slot + step_mod } else { step_mod - (m - slot) };
+                // Veracity: NEEDED proof block
                 proof {
                     let gs: int = step as int;
                     let gm: int = m as int;
@@ -504,7 +536,9 @@ pub mod DoubleHashFlatHashTableStEph {
                 attempt = attempt + 1;
             }
             // Exhausted all m positions without finding key.
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall |j: int| 0 <= j < table.table@.len()
                     implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                     if spec_flat_has_key(table.table@[j], *key) {
@@ -525,6 +559,7 @@ pub mod DoubleHashFlatHashTableStEph {
             let step = Self::second_hash(key, m);
             // step == spec_second_hash(*key, m): wf gives concrete probe chain.
             let mut slot: usize = h;
+            // Veracity: NEEDED proof block
             proof {
                 vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
             }
@@ -556,6 +591,7 @@ pub mod DoubleHashFlatHashTableStEph {
                 let entry = table.table[slot].clone();
                 match entry {
                     FlatEntry::Occupied(k, _v) => {
+                        // Veracity: NEEDED proof block
                         proof { assert(obeys_feq_full_trigger::<Key>()); }
                         let eq = feq(&k, key);
                         if eq {
@@ -564,15 +600,19 @@ pub mod DoubleHashFlatHashTableStEph {
                             if table.num_elements > 0 {
                                 table.num_elements = table.num_elements - 1;
                             }
+                            // Veracity: NEEDED proof block
                             proof {
                                 lemma_reveal_view_injective::<Key>();
+                                // Veracity: NEEDED assert
                                 assert forall |j: int| 0 <= j < old_table_seq.len() && j != slot as int
                                     implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(*key) by {
                                     if spec_flat_has_key(old_table_seq[j], *key) {
+                                        // Veracity: NEEDED assert
                                         assert(spec_flat_has_key(old_table_seq[slot as int], *key));
                                     }
                                 }
                                 let new_entry = FlatEntry::<Key, Value>::Deleted;
+                                // Veracity: NEEDED assert
                                 assert(new_entry.spec_entry_to_map() =~=
                                     old_table_seq[slot as int].spec_entry_to_map().remove(*key));
                                 lemma_table_to_map_update_remove::<Key, Value, FlatEntry<Key, Value>>(
@@ -581,6 +621,7 @@ pub mod DoubleHashFlatHashTableStEph {
                                     old_table_seq, slot as int, *key);
                                 // Wf: no-dup.
                                 // Wf: probe chain integrity.
+                                // Veracity: NEEDED assert
                                 assert forall |i: int, k: Key|
                                     0 <= i < m as int
                                     && #[trigger] spec_flat_has_key(table.table@[i], k)
@@ -600,11 +641,14 @@ pub mod DoubleHashFlatHashTableStEph {
                             }
                             return true;
                         }
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                     }
                     FlatEntry::Empty => {
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             assert forall |j: int| 0 <= j < table.table@.len()
                                 implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                                 if spec_flat_has_key(table.table@[j], *key) {
@@ -615,6 +659,7 @@ pub mod DoubleHashFlatHashTableStEph {
                         return false;
                     }
                     FlatEntry::Deleted => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                     }
@@ -623,6 +668,7 @@ pub mod DoubleHashFlatHashTableStEph {
                 let step_mod: usize = step % m;
                 let ghost prev_slot: int = slot as int;
                 slot = if step_mod < m - slot { slot + step_mod } else { step_mod - (m - slot) };
+                // Veracity: NEEDED proof block
                 proof {
                     let gs: int = step as int;
                     let gm: int = m as int;
@@ -641,7 +687,9 @@ pub mod DoubleHashFlatHashTableStEph {
                 attempt = attempt + 1;
             }
             // Exhausted all m positions.
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall |j: int| 0 <= j < table.table@.len()
                     implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                     if spec_flat_has_key(table.table@[j], *key) {
@@ -676,21 +724,28 @@ pub mod DoubleHashFlatHashTableStEph {
                 let entry = table.table[i].clone();
                 if let FlatEntry::Occupied(k, v) = entry {
                     pairs.push((k, v));
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(pairs@.drop_last() =~= old_pairs);
                         let ghost entry_map = table.table@[i as int].spec_entry_to_map();
                     }
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                     }
                 }
+                // Veracity: NEEDED proof block
                 proof {
                     let ghost sub_next = table.table@.subrange(0, (i + 1) as int);
+                    // Veracity: NEEDED assert
                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
                 }
                 i = i + 1;
             }
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(table.table@.subrange(0, table.table@.len() as int)
                     =~= table.table@);
             }
@@ -710,6 +765,7 @@ pub mod DoubleHashFlatHashTableStEph {
             {
                 let ghost old_vec = new_table_vec@;
                 new_table_vec.push(FlatEntry::Empty);
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_table_to_map_push_empty::<Key, Value, FlatEntry<Key, Value>>(
                         old_vec, FlatEntry::Empty);
@@ -726,12 +782,15 @@ pub mod DoubleHashFlatHashTableStEph {
                 spec_hash: table.spec_hash,
                 _phantom: PhantomData,
             };
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(spec_doublehashflathashsteph_wf(&new_table));
             }
 
             // Phase 3: reinsert all pairs.
             let mut j: usize = 0;
+            // Veracity: NEEDED proof block
             proof {
                 lemma_all_empties_count::<Key, Value>(new_table.table@);
             }
@@ -754,23 +813,28 @@ pub mod DoubleHashFlatHashTableStEph {
             {
                 let key = clone_elem(&pairs[j].0);
                 let value = clone_elem(&pairs[j].1);
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_empties_positive_implies_exists_empty::<Key, Value>(
                         new_table.table@);
                 }
                 let ghost old_new_table_seq = new_table.table@;
                 Self::insert(&mut new_table, key, value);
+                // Veracity: NEEDED proof block
                 proof {
                     let s = choose |s: int| #[trigger] spec_other_slots_preserved(
                         old_new_table_seq, new_table.table@, s);
                     lemma_one_slot_change_empties::<Key, Value>(
                         old_new_table_seq, new_table.table@, s);
+                    // Veracity: NEEDED assert
                     assert(pairs@.subrange(0, (j + 1) as int).drop_last()
                         =~= pairs@.subrange(0, j as int));
                 }
                 j = j + 1;
             }
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(pairs@.subrange(0, pairs@.len() as int) =~= pairs@);
             }
 

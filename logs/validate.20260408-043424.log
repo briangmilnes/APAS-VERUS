@@ -1,0 +1,59 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: precondition not satisfied
+    --> src/Chap38/BSTParaStEph.rs:1144:25
+     |
+1144 |                         vstd::set_lib::lemma_len_subset(blv, other@);
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/set_lib.rs:1099:8
+     |
+     = note: failed precondition
+
+error: precondition not satisfied
+    --> src/Chap38/BSTParaStEph.rs:1145:25
+     |
+1145 |                         vstd::set_lib::lemma_len_subset(brv, other@);
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/set_lib.rs:1099:8
+     |
+     = note: failed precondition
+
+error: assertion failed
+    --> src/Chap38/BSTParaStEph.rs:1179:47
+     |
+1179 | ...                   else { assert(other@.contains(x)); }
+     |                                     ^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap38/BSTParaStEph.rs:1182:47
+     |
+1182 | ...                   else { assert(other@.contains(x)); }
+     |                                     ^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap38/BSTParaStEph.rs:1200:40
+     |
+1200 | ...                   assert(other@.contains(x));
+     |                              ^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+ --> vstd/set_lib.rs:1099:8
+
+note: 
+
+tmp%.finite() ✔
+blv.subset_of(tmp%) ✘
+|   forall |a|
+|       blv.contains(a) ==>
+|           tmp%.contains(a) 
+|               function is uninterpreted
++---
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 3438MB, peak z3 RSS: 566MB, min free: 22573MB
+Sampled CPU Usage: rust_verify: 51s, z3 children: 38s

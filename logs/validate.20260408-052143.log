@@ -1,0 +1,39 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap39/BSTParaTreapMtEph.rs:210:13
+    |
+193 |       proof fn lemma_joined_left_lt_rk<T: MtKey>(
+    |  ___________-
+194 | |         left_v: Set<T::V>,
+195 | |         rlv: Set<T::V>,
+196 | |         key: T,
+...   |
+199 | |         right_v: Set<T::V>,
+200 | |     )
+    | |_____- at the end of the function body
+...
+210 |               forall|t: T| (#[trigger] joined_v.contains(t@)) ==> t.cmp_spec(&rk) == Less,
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+   --> src/Chap39/BSTParaTreapMtEph.rs:210:84
+    |
+210 |             forall|t: T| (#[trigger] joined_v.contains(t@)) ==> t.cmp_spec(&rk) == Less,
+    |                                                                                    ^^^^
+
+note: 
+
+forall |t|
+    old(joined_v).contains(t.view()) ==>
+        t.cmp_spec(old(rk)) == Less
+        |   !(t.cmp_spec(old(rk)) is Equal) ✔
+        |   !(t.cmp_spec(old(rk)) is Greater) ✘
+        +---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 3647MB, peak z3 RSS: 475MB, min free: 23020MB
+Sampled CPU Usage: rust_verify: 57s, z3 children: 50s

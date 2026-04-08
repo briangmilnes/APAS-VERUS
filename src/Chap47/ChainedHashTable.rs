@@ -45,6 +45,7 @@ pub mod ChainedHashTable {
             if pairs.len() == 1 {
             } else if i == pairs.len() - 1 {
             } else {
+                // Veracity: NEEDED assert
                 assert(pairs.remove(i).drop_last() =~= pairs.drop_last().remove(i));
                 lemma_seq_pairs_to_map_remove_preserves_other_keys(pairs.drop_last(), i, k);
             }
@@ -67,13 +68,16 @@ pub mod ChainedHashTable {
         {
             let removed = pairs.remove(i);
             let final_seq = removed.push((key, value));
+            // Veracity: NEEDED assert
             assert(final_seq.drop_last() == removed);
+            // Veracity: NEEDED assert
             assert forall |k: Key| k != key implies
                 spec_seq_pairs_to_map(removed).dom().contains(k)
                     == spec_seq_pairs_to_map(pairs).dom().contains(k)
             by {
                 lemma_seq_pairs_to_map_remove_preserves_other_keys(pairs, i, k);
             }
+            // Veracity: NEEDED assert
             assert forall |k: Key| k != key && #[trigger] spec_seq_pairs_to_map(removed).dom().contains(k) implies
                 spec_seq_pairs_to_map(removed)[k] == spec_seq_pairs_to_map(pairs)[k]
             by {

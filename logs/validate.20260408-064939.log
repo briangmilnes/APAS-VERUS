@@ -1,0 +1,47 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+   --> src/Chap39/BSTTreapMtEph.rs:152:32
+    |
+152 |                         assert(Lnk::spec_bst_link(&Some(x)));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapMtEph.rs:1405:128
+     |
+1405 | ...   && (forall|k: T| #![trigger spec_contains_link(&node.right, k)] spec_contains_link(&node.right, k) ==> node.key.is_lt(&k))
+     |                                                                                                              ^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/std_specs/cmp.rs:219:8
+
+note: 
+
+spec_bst_link(Some(x))
+|   let tmp%% = Some(x);
+|       tmp%% is None ==>
+|           true ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               spec_bst_link(node.left) ✔
+|               spec_bst_link(node.right) ✔
+|               forall |k|
+|                   spec_contains_link(node.left, k) ==>
+|                       k.partial_cmp_spec(node.key) == Some(Less) ✔
+|               forall |k|
+|                   spec_contains_link(node.right, k) ==>
+|                       node.key.partial_cmp_spec(k) == Some(Less) ✘
+|                       |   !(node.key.partial_cmp_spec(k) is None) ✘
+|                       |   node.key.partial_cmp_spec(k) is Some ==>
+|                       |       node.key.partial_cmp_spec(k).0 == Less ✘
+|                       |       |   !(node.key.partial_cmp_spec(k).0 is Equal) ✘
+|                       |       |   !(node.key.partial_cmp_spec(k).0 is Greater) ✘
+|                       |       +---
+|                       +---
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 3580MB, peak z3 RSS: 575MB, min free: 22477MB
+Sampled CPU Usage: rust_verify: 87s, z3 children: 95s

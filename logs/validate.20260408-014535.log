@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: assertion failed
+   --> src/Chap38/BSTParaMtEph.rs:853:66
+    |
+853 |                 assert forall|v: T::V| self@.contains(v) implies result@.contains(v) by {
+    |                                                                  ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+result.view().contains(v)
+|   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = result.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && result.view().index(i) == v) 
++---
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 4767MB, peak z3 RSS: 689MB, min free: 21229MB
+Sampled CPU Usage: rust_verify: 64s, z3 children: 37s

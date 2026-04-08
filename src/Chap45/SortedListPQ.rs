@@ -267,6 +267,7 @@ broadcast use {
 
             /// Pushing an element >= the last onto a sorted seq preserves sorted.
             proof fn lemma_push_preserves_sorted(s: Seq<T>, x: T) {
+                // Veracity: NEEDED assert
                 assert forall|a: int, b: int|
                     0 <= a < b < s.push(x).len() implies
                     #[trigger] TotalOrder::le(s.push(x)[a], s.push(x)[b])
@@ -283,8 +284,11 @@ broadcast use {
                 let pq = SortedListPQ {
                     elements: ArraySeqStPerS::empty(),
                 };
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(pq@ =~= Seq::<T::V>::empty());
+                    // Veracity: NEEDED assert
                     assert(Seq::<T::V>::empty().to_multiset() =~= Multiset::<T::V>::empty());
                 }
                 pq
@@ -296,7 +300,9 @@ broadcast use {
                 let pq = SortedListPQ {
                     elements: ArraySeqStPerS::singleton(element),
                 };
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(pq@ =~= Seq::<T::V>::empty().push(element@));
                 }
                 pq
@@ -340,6 +346,7 @@ broadcast use {
                                 insert_pos = i;
                             }
                             core::cmp::Ordering::Equal => {
+                                // Veracity: NEEDED proof block
                                 proof { TotalOrder::reflexive(element); }
                                 insert_pos = i;
                             }
@@ -358,42 +365,54 @@ broadcast use {
                 let new_elements = ArraySeqStPerS::append(&prefix_elem, &suffix);
 
                 let pq = SortedListPQ { elements: new_elements };
+                // Veracity: NEEDED proof block
                 proof {
                     let target: Seq<T::V> = Seq::new((n + 1) as nat, |j: int|
                         if j < insert_pos as int { self@[j] }
                         else if j == insert_pos as int { element_view }
                         else { self@[j - 1] });
                     // Chain spec_index equalities through append/subseq_copy.
+                    // Veracity: NEEDED assert
                     assert forall|j: int| 0 <= j < (n + 1) as int implies
                         #[trigger] pq@[j] == target[j]
                     by {
                         if j < insert_pos as int {
+                            // Veracity: NEEDED assert
                             assert(prefix.spec_index(j)
                                 == self.elements.spec_index(j));
+                            // Veracity: NEEDED assert
                             assert(prefix_elem.spec_index(j) == prefix.seq@[j]);
+                            // Veracity: NEEDED assert
                             assert(new_elements.spec_index(j)
                                 == prefix_elem.seq@[j]);
                         } else if j == insert_pos as int {
+                            // Veracity: NEEDED assert
                             assert(new_elements.spec_index(j)
                                 == prefix_elem.seq@[j]);
+                            // Veracity: NEEDED assert
                             assert(prefix_elem.spec_index(
                                 prefix.seq@.len() as int + 0)
                                 == elem_seq.seq@[0]);
                         } else {
                             let si = j - (insert_pos as int + 1);
+                            // Veracity: NEEDED assert
                             assert(suffix.spec_index(si)
                                 == self.elements.spec_index(
                                     insert_pos as int + si));
+                            // Veracity: NEEDED assert
                             assert(new_elements.spec_index(
                                 prefix_elem.seq@.len() as int + si)
                                 == suffix.seq@[si]);
                         }
                     }
+                    // Veracity: NEEDED assert
                     assert(pq@ =~= target);
                     // Multiset: target = prefix_view ++ [element_view] ++ suffix_view.
                     let pv = self@.take(insert_pos as int);
                     let sv = self@.subrange(insert_pos as int, n as int);
+                    // Veracity: NEEDED assert
                     assert(self@ =~= pv + sv);
+                    // Veracity: NEEDED assert
                     assert(target =~= pv
                         + Seq::<T::V>::empty().push(element_view) + sv);
                     vstd::seq_lib::lemma_multiset_commutative(
@@ -402,7 +421,9 @@ broadcast use {
                         pv, Seq::<T::V>::empty().push(element_view));
                     vstd::seq_lib::lemma_multiset_commutative(pv, sv);
                     // Sorted: result is prefix ++ [element] ++ suffix.
+                    // Veracity: NEEDED assert
                     assert(elem_seq.seq@[0] == raw_element);
+                    // Veracity: NEEDED assert
                     assert forall|a: int, b: int|
                         0 <= a < b < new_elements.seq@.len() implies
                         #[trigger] TotalOrder::le(
@@ -410,46 +431,60 @@ broadcast use {
                     by {
                         // Establish raw-level position mappings.
                         if a < insert_pos as int {
+                            // Veracity: NEEDED assert
                             assert(prefix.spec_index(a)
                                 == self.elements.spec_index(a));
+                            // Veracity: NEEDED assert
                             assert(prefix_elem.spec_index(a)
                                 == prefix.seq@[a]);
+                            // Veracity: NEEDED assert
                             assert(new_elements.spec_index(a)
                                 == prefix_elem.seq@[a]);
                         } else if a == insert_pos as int {
+                            // Veracity: NEEDED assert
                             assert(new_elements.spec_index(a)
                                 == prefix_elem.seq@[a]);
+                            // Veracity: NEEDED assert
                             assert(prefix_elem.spec_index(
                                 prefix.seq@.len() as int + 0)
                                 == elem_seq.seq@[0]);
                         } else {
                             let sa = a - (insert_pos as int + 1);
+                            // Veracity: NEEDED assert
                             assert(suffix.spec_index(sa)
                                 == self.elements.spec_index(
                                     insert_pos as int + sa));
+                            // Veracity: NEEDED assert
                             assert(new_elements.spec_index(
                                 prefix_elem.seq@.len() as int + sa)
                                 == suffix.seq@[sa]);
                         }
                         if b > insert_pos as int {
                             let sb = b - (insert_pos as int + 1);
+                            // Veracity: NEEDED assert
                             assert(suffix.spec_index(sb)
                                 == self.elements.spec_index(
                                     insert_pos as int + sb));
+                            // Veracity: NEEDED assert
                             assert(new_elements.spec_index(
                                 prefix_elem.seq@.len() as int + sb)
                                 == suffix.seq@[sb]);
                         } else if b == insert_pos as int {
+                            // Veracity: NEEDED assert
                             assert(new_elements.spec_index(b)
                                 == prefix_elem.seq@[b]);
+                            // Veracity: NEEDED assert
                             assert(prefix_elem.spec_index(
                                 prefix.seq@.len() as int + 0)
                                 == elem_seq.seq@[0]);
                         } else {
+                            // Veracity: NEEDED assert
                             assert(prefix.spec_index(b)
                                 == self.elements.spec_index(b));
+                            // Veracity: NEEDED assert
                             assert(prefix_elem.spec_index(b)
                                 == prefix.seq@[b]);
+                            // Veracity: NEEDED assert
                             assert(new_elements.spec_index(b)
                                 == prefix_elem.seq@[b]);
                         }
@@ -479,32 +514,43 @@ broadcast use {
                 }
                 let n = self.elements.length();
                 let min_element = self.elements.nth(0).clone();
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(cloned(self.elements.seq@[0], min_element));
                     axiom_cloned_implies_eq_owned(self.elements.seq@[0], min_element);
                 }
                 let new_elements = self.elements.subseq_copy(1, n - 1);
                 let new_pq = SortedListPQ { elements: new_elements };
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < (n - 1) as int implies
                         #[trigger] new_pq@[i] == self@[i + 1]
                     by {
+                        // Veracity: NEEDED assert
                         assert(new_elements.spec_index(i)
                             == self.elements.spec_index(1 + i));
                     }
+                    // Veracity: NEEDED assert
                     assert(new_pq@ =~= self@.subrange(1, n as int));
+                    // Veracity: NEEDED assert
                     assert(self@.take(1) =~= Seq::<T::V>::empty().push(min_element@));
+                    // Veracity: NEEDED assert
                     assert(self@ =~= self@.take(1) + self@.subrange(1, n as int));
                     vstd::seq_lib::lemma_multiset_commutative(
                         self@.take(1), self@.subrange(1, n as int));
                     // Sorted: subsequence of sorted seq is sorted.
+                    // Veracity: NEEDED assert
                     assert forall|i: int, j: int|
                         0 <= i < j < new_elements.seq@.len() implies
                         #[trigger] TotalOrder::le(
                             new_elements.seq@[i], new_elements.seq@[j])
                     by {
+                        // Veracity: NEEDED assert
                         assert(new_elements.spec_index(i)
                             == self.elements.spec_index(1 + i));
+                        // Veracity: NEEDED assert
                         assert(new_elements.spec_index(j)
                             == self.elements.spec_index(1 + j));
                     }
@@ -547,12 +593,15 @@ broadcast use {
                     match TotalOrder::cmp(si, oj) {
                         core::cmp::Ordering::Less
                         | core::cmp::Ordering::Equal => {
+                            // Veracity: NEEDED proof block
                             proof { TotalOrder::reflexive(*si); }
                             let single_seq =
                                 ArraySeqStPerS::singleton(si.clone());
                             result = ArraySeqStPerS::append(
                                 &result, &single_seq);
+                            // Veracity: NEEDED proof block
                             proof {
+                                // Veracity: NEEDED assert
                                 assert(cloned(
                                     self.elements.seq@[i as int],
                                     single_seq.seq@[0]));
@@ -560,28 +609,34 @@ broadcast use {
                                     self.elements.seq@[i as int],
                                     single_seq.seq@[0]);
                                 // Raw push for sorted proof.
+                                // Veracity: NEEDED assert
                                 assert forall|k: int|
                                     0 <= k < result.seq@.len() implies
                                     #[trigger] result.seq@[k] == old_result_seq.push(
                                         self.elements.seq@[i as int])[k]
                                 by {
                                     if k < old_result_seq.len() as int {
+                                        // Veracity: NEEDED assert
                                         assert(result.spec_index(k)
                                             == old_result_seq[k]);
                                     } else {
+                                        // Veracity: NEEDED assert
                                         assert(result.spec_index(
                                             old_result_seq.len() as int + 0)
                                             == single_seq.seq@[0]);
                                     }
                                 }
+                                // Veracity: NEEDED assert
                                 assert(result.seq@ =~= old_result_seq.push(
                                     self.elements.seq@[i as int]));
                                 Self::lemma_push_preserves_sorted(
                                     old_result_seq,
                                     self.elements.seq@[i as int]);
+                                // Veracity: NEEDED assert
                                 assert(result.seq@.last()
                                     == self.elements.seq@[i as int]);
                                 // View push for multiset proof.
+                                // Veracity: NEEDED assert
                                 assert forall|k: int|
                                     0 <= k < result@.len() implies
                                     #[trigger] result@[k]
@@ -589,14 +644,17 @@ broadcast use {
                                             self@[i as int])[k]
                                 by {
                                     if k < old_result_view.len() {
+                                        // Veracity: NEEDED assert
                                         assert(result.spec_index(k)
                                             == old_result_seq[k]);
                                     } else {
+                                        // Veracity: NEEDED assert
                                         assert(result.spec_index(
                                             old_result_seq.len() as int + 0)
                                             == single_seq.seq@[0]);
                                     }
                                 }
+                                // Veracity: NEEDED assert
                                 assert(result@ =~= old_result_view.push(
                                     self@[i as int]));
                                 self@.lemma_take_succ_push(i as int);
@@ -608,7 +666,9 @@ broadcast use {
                                 ArraySeqStPerS::singleton(oj.clone());
                             result = ArraySeqStPerS::append(
                                 &result, &single_seq);
+                            // Veracity: NEEDED proof block
                             proof {
+                                // Veracity: NEEDED assert
                                 assert(cloned(
                                     other.elements.seq@[j as int],
                                     single_seq.seq@[0]));
@@ -616,28 +676,34 @@ broadcast use {
                                     other.elements.seq@[j as int],
                                     single_seq.seq@[0]);
                                 // Raw push for sorted proof.
+                                // Veracity: NEEDED assert
                                 assert forall|k: int|
                                     0 <= k < result.seq@.len() implies
                                     #[trigger] result.seq@[k] == old_result_seq.push(
                                         other.elements.seq@[j as int])[k]
                                 by {
                                     if k < old_result_seq.len() as int {
+                                        // Veracity: NEEDED assert
                                         assert(result.spec_index(k)
                                             == old_result_seq[k]);
                                     } else {
+                                        // Veracity: NEEDED assert
                                         assert(result.spec_index(
                                             old_result_seq.len() as int + 0)
                                             == single_seq.seq@[0]);
                                     }
                                 }
+                                // Veracity: NEEDED assert
                                 assert(result.seq@ =~= old_result_seq.push(
                                     other.elements.seq@[j as int]));
                                 Self::lemma_push_preserves_sorted(
                                     old_result_seq,
                                     other.elements.seq@[j as int]);
+                                // Veracity: NEEDED assert
                                 assert(result.seq@.last()
                                     == other.elements.seq@[j as int]);
                                 // View push for multiset proof.
+                                // Veracity: NEEDED assert
                                 assert forall|k: int|
                                     0 <= k < result@.len() implies
                                     #[trigger] result@[k]
@@ -645,14 +711,17 @@ broadcast use {
                                             other@[j as int])[k]
                                 by {
                                     if k < old_result_view.len() {
+                                        // Veracity: NEEDED assert
                                         assert(result.spec_index(k)
                                             == old_result_seq[k]);
                                     } else {
+                                        // Veracity: NEEDED assert
                                         assert(result.spec_index(
                                             old_result_seq.len() as int + 0)
                                             == single_seq.seq@[0]);
                                     }
                                 }
+                                // Veracity: NEEDED assert
                                 assert(result@ =~= old_result_view.push(
                                     other@[j as int]));
                                 other@.lemma_take_succ_push(j as int);
@@ -688,33 +757,41 @@ broadcast use {
                         self.elements.nth(i).clone());
                     result = ArraySeqStPerS::append(
                         &result, &single_seq);
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(cloned(self.elements.seq@[i as int],
                             single_seq.seq@[0]));
                         axiom_cloned_implies_eq_owned(
                             self.elements.seq@[i as int],
                             single_seq.seq@[0]);
+                        // Veracity: NEEDED assert
                         assert forall|k: int|
                             0 <= k < result.seq@.len() implies
                             #[trigger] result.seq@[k] == old_result_seq.push(
                                 self.elements.seq@[i as int])[k]
                         by {
                             if k < old_result_seq.len() as int {
+                                // Veracity: NEEDED assert
                                 assert(result.spec_index(k)
                                     == old_result_seq[k]);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(result.spec_index(
                                     old_result_seq.len() as int + 0)
                                     == single_seq.seq@[0]);
                             }
                         }
+                        // Veracity: NEEDED assert
                         assert(result.seq@ =~= old_result_seq.push(
                             self.elements.seq@[i as int]));
                         Self::lemma_push_preserves_sorted(
                             old_result_seq,
                             self.elements.seq@[i as int]);
+                        // Veracity: NEEDED assert
                         assert(result.seq@.last()
                             == self.elements.seq@[i as int]);
+                        // Veracity: NEEDED assert
                         assert forall|k: int|
                             0 <= k < result@.len() implies
                             #[trigger] result@[k]
@@ -722,14 +799,17 @@ broadcast use {
                                     self@[i as int])[k]
                         by {
                             if k < old_result_view.len() {
+                                // Veracity: NEEDED assert
                                 assert(result.spec_index(k)
                                     == old_result_seq[k]);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(result.spec_index(
                                     old_result_seq.len() as int + 0)
                                     == single_seq.seq@[0]);
                             }
                         }
+                        // Veracity: NEEDED assert
                         assert(result@ =~= old_result_view.push(
                             self@[i as int]));
                         self@.lemma_take_succ_push(i as int);
@@ -759,33 +839,41 @@ broadcast use {
                         other.elements.nth(j).clone());
                     result = ArraySeqStPerS::append(
                         &result, &single_seq);
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(cloned(other.elements.seq@[j as int],
                             single_seq.seq@[0]));
                         axiom_cloned_implies_eq_owned(
                             other.elements.seq@[j as int],
                             single_seq.seq@[0]);
+                        // Veracity: NEEDED assert
                         assert forall|k: int|
                             0 <= k < result.seq@.len() implies
                             #[trigger] result.seq@[k] == old_result_seq.push(
                                 other.elements.seq@[j as int])[k]
                         by {
                             if k < old_result_seq.len() as int {
+                                // Veracity: NEEDED assert
                                 assert(result.spec_index(k)
                                     == old_result_seq[k]);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(result.spec_index(
                                     old_result_seq.len() as int + 0)
                                     == single_seq.seq@[0]);
                             }
                         }
+                        // Veracity: NEEDED assert
                         assert(result.seq@ =~= old_result_seq.push(
                             other.elements.seq@[j as int]));
                         Self::lemma_push_preserves_sorted(
                             old_result_seq,
                             other.elements.seq@[j as int]);
+                        // Veracity: NEEDED assert
                         assert(result.seq@.last()
                             == other.elements.seq@[j as int]);
+                        // Veracity: NEEDED assert
                         assert forall|k: int|
                             0 <= k < result@.len() implies
                             #[trigger] result@[k]
@@ -793,14 +881,17 @@ broadcast use {
                                     other@[j as int])[k]
                         by {
                             if k < old_result_view.len() {
+                                // Veracity: NEEDED assert
                                 assert(result.spec_index(k)
                                     == old_result_seq[k]);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(result.spec_index(
                                     old_result_seq.len() as int + 0)
                                     == single_seq.seq@[0]);
                             }
                         }
+                        // Veracity: NEEDED assert
                         assert(result@ =~= old_result_view.push(
                             other@[j as int]));
                         other@.lemma_take_succ_push(j as int);
@@ -809,8 +900,11 @@ broadcast use {
                 }
 
                 let pq = SortedListPQ { elements: result };
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(self@.take(n as int) =~= self@);
+                    // Veracity: NEEDED assert
                     assert(other@.take(m as int) =~= other@);
                 }
                 pq
@@ -830,13 +924,16 @@ broadcast use {
                         Self::spec_sorted(pq.spec_seq()),
                 {
                     let elem = seq.nth(i).clone();
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(cloned(seq.seq@[i as int], elem));
                         axiom_cloned_implies_eq_owned(seq.seq@[i as int], elem);
                         // elem@ == seq@[i].
                     }
                     let ghost old_pq_view = pq@;
                     pq = pq.insert(elem);
+                    // Veracity: NEEDED proof block
                     proof {
                         // pq@.to_multiset() =~= old_pq.ms.insert(elem@)
                         //                    =~= seq@.take(i).ms.insert(seq@[i])
@@ -867,21 +964,28 @@ broadcast use {
             fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>) {
                 let n = self.elements.length();
                 let sorted = self.elements.subseq_copy(0, n);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < sorted@.len() implies
                         #[trigger] sorted@[i] == self@[i]
                     by {
+                        // Veracity: NEEDED assert
                         assert(sorted.spec_index(i)
                             == self.elements.spec_index(0 + i));
                     }
+                    // Veracity: NEEDED assert
                     assert(sorted@ =~= self@);
+                    // Veracity: NEEDED assert
                     assert forall|i: int, j: int|
                         0 <= i < j < sorted.seq@.len() implies
                         #[trigger] TotalOrder::le(
                             sorted.seq@[i], sorted.seq@[j])
                     by {
+                        // Veracity: NEEDED assert
                         assert(sorted.spec_index(i)
                             == self.elements.spec_index(0 + i));
+                        // Veracity: NEEDED assert
                         assert(sorted.spec_index(j)
                             == self.elements.spec_index(0 + j));
                     }
@@ -905,36 +1009,48 @@ broadcast use {
                 }
                 let n = self.elements.length();
                 let max_element = self.elements.nth(n - 1).clone();
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(cloned(self.elements.seq@[(n - 1) as int], max_element));
                     axiom_cloned_implies_eq_owned(
                         self.elements.seq@[(n - 1) as int], max_element);
                 }
                 let new_elements = self.elements.subseq_copy(0, n - 1);
                 let new_pq = SortedListPQ { elements: new_elements };
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < (n - 1) as int implies
                         #[trigger] new_pq@[i] == self@[i]
                     by {
+                        // Veracity: NEEDED assert
                         assert(new_elements.spec_index(i)
                             == self.elements.spec_index(0 + i));
                     }
+                    // Veracity: NEEDED assert
                     assert(new_pq@ =~= self@.take((n - 1) as int));
+                    // Veracity: NEEDED assert
                     assert(self@.take((n - 1) as int)
                         =~= self@.subrange(0, (n - 1) as int));
                     let sv = self@.subrange((n - 1) as int, n as int);
+                    // Veracity: NEEDED assert
                     assert(sv =~= Seq::<T::V>::empty().push(max_element@));
+                    // Veracity: NEEDED assert
                     assert(self@ =~= self@.take((n - 1) as int) + sv);
                     vstd::seq_lib::lemma_multiset_commutative(
                         self@.take((n - 1) as int), sv);
                     // Sorted: prefix of sorted seq is sorted.
+                    // Veracity: NEEDED assert
                     assert forall|i: int, j: int|
                         0 <= i < j < new_elements.seq@.len() implies
                         #[trigger] TotalOrder::le(
                             new_elements.seq@[i], new_elements.seq@[j])
                     by {
+                        // Veracity: NEEDED assert
                         assert(new_elements.spec_index(i)
                             == self.elements.spec_index(0 + i));
+                        // Veracity: NEEDED assert
                         assert(new_elements.spec_index(j)
                             == self.elements.spec_index(0 + j));
                     }
@@ -947,11 +1063,15 @@ broadcast use {
                 let ghost vec_view = vec@;
                 let seq = ArraySeqStPerS::from_vec(vec);
                 let pq = Self::from_seq(&seq);
+                // Veracity: NEEDED proof block
                 proof {
                     // seq@ =~= vec@.map(view): chain through spec_index.
+                    // Veracity: NEEDED assert
                     assert(seq@ =~= vec_view.map(|_i: int, t: T| t@)) by {
+                        // Veracity: NEEDED assert
                         assert forall|i: int| 0 <= i < seq@.len()
                         implies #[trigger] seq@[i] == vec_view.map(|_i: int, t: T| t@)[i] by {
+                            // Veracity: NEEDED assert
                             assert(seq.spec_index(i) == vec_view[i]);
                         };
                     };
@@ -987,14 +1107,18 @@ broadcast use {
                             #[trigger] v@[k] == self.elements.seq@[k],
                 {
                     let elem = self.elements.nth(i).clone();
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(cloned(self.elements.seq@[i as int], elem));
                         axiom_cloned_implies_eq_owned(
                             self.elements.seq@[i as int], elem);
                     }
                     v.push(elem);
                 }
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|i: int, j: int|
                         0 <= i < j < v@.len() implies
                         #[trigger] TotalOrder::le(v@[i], v@[j])
@@ -1022,10 +1146,12 @@ broadcast use {
                     let curr = self.elements.nth(i);
                     match TotalOrder::cmp(prev, curr) {
                         core::cmp::Ordering::Greater => {
+                            // Veracity: NEEDED proof block
                             proof {
                                 // le(curr, prev) && prev != curr.
                                 // If le(prev, curr) too, antisymmetric gives
                                 // prev == curr — contradiction. So !le(prev, curr).
+                                // Veracity: NEEDED assert
                                 assert(!TotalOrder::le(*prev, *curr)) by {
                                     if TotalOrder::le(*prev, *curr) {
                                         TotalOrder::antisymmetric(*prev, *curr);
@@ -1035,12 +1161,15 @@ broadcast use {
                             return false;
                         }
                         core::cmp::Ordering::Equal => {
+                            // Veracity: NEEDED proof block
                             proof {
                                 // prev == curr, so le(prev, curr) by reflexive.
                                 TotalOrder::reflexive(*prev);
+                                // Veracity: NEEDED assert
                                 assert(TotalOrder::le(
                                     self.elements.seq@[(i - 1) as int],
                                     self.elements.seq@[i as int]));
+                                // Veracity: NEEDED assert
                                 assert forall|a: int, b: int|
                                     0 <= a < b < (i + 1) as int implies
                                     #[trigger] TotalOrder::le(
@@ -1056,8 +1185,10 @@ broadcast use {
                             }
                         }
                         core::cmp::Ordering::Less => {
+                            // Veracity: NEEDED proof block
                             proof {
                                 // le(prev, curr) directly.
+                                // Veracity: NEEDED assert
                                 assert forall|a: int, b: int|
                                     0 <= a < b < (i + 1) as int implies
                                     #[trigger] TotalOrder::le(
@@ -1096,6 +1227,7 @@ broadcast use {
                 ensures cloned@ == self@
             {
                 let cloned = SortedListPQ { elements: self.elements.clone() };
+                // Veracity: NEEDED proof block
                 proof {
                     assume(obeys_feq_clone::<T>());
                     lemma_seq_map_cloned_view_eq(

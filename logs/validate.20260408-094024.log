@@ -1,0 +1,37 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:2712:21
+     |
+2712 |                     vstd::set_lib::lemma_len_subset(blv, bv);
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/set_lib.rs:1099:8
+     |
+     = note: failed precondition
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2767:72
+     |
+2767 | ...                   else { assert(blv.contains(x)); assert(bv.contains(x)); }
+     |                                                              ^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+ --> vstd/set_lib.rs:1099:8
+
+note: 
+
+bv.finite() ✔
+blv.subset_of(bv) ✘
+|   forall |a|
+|       blv.contains(a) ==>
+|           bv.contains(a) 
+|               function is uninterpreted
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 3374MB, peak z3 RSS: 493MB, min free: 19325MB
+Sampled CPU Usage: rust_verify: 88s, z3 children: 90s

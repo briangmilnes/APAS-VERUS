@@ -105,6 +105,7 @@ pub mod StructChainedHashTable {
             match chain {
                 None => {
                     let out = Some(Box::new(Node { key, value, next: None }));
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal_with_fuel(spec_chain_to_map, 2);
                         reveal_with_fuel(spec_chain_keys_unique, 2);
@@ -113,10 +114,12 @@ pub mod StructChainedHashTable {
                 }
                 Some(node) => {
                     let Node { key: nk, value: nv, next: nn } = *node;
+                    // Veracity: NEEDED proof block
                     proof { assert(obeys_feq_full_trigger::<Key>()); }
                     let eq = feq(&nk, &key);
                     if eq {
                         let out = Some(Box::new(Node { key, value, next: nn }));
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_reveal_view_injective::<Key>();
                             reveal_with_fuel(spec_chain_to_map, 2);
@@ -126,6 +129,7 @@ pub mod StructChainedHashTable {
                     } else {
                         let (updated, existed) = chain_insert(nn, key, value);
                         let out = Some(Box::new(Node { key: nk, value: nv, next: updated }));
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_chain_to_map, 2);
                             reveal_with_fuel(spec_chain_keys_unique, 2);
@@ -156,20 +160,24 @@ pub mod StructChainedHashTable {
         {
             match chain {
                 None => {
+                    // Veracity: NEEDED proof block
                     proof { reveal_with_fuel(spec_chain_to_map, 1); }
                     None
                 }
                 Some(node) => {
+                    // Veracity: NEEDED proof block
                     proof { assert(obeys_feq_full_trigger::<Key>()); lemma_reveal_view_injective::<Key>(); }
                     let eq = feq(&node.key, key);
                     if eq {
                         let v = clone_elem(&node.value);
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_chain_to_map, 2);
                         }
                         Some(v)
                     } else {
                         let result = chain_lookup(&node.next, key);
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_chain_to_map, 2);
                             // spec_chain_to_map(*chain) = spec_chain_to_map(node.next).insert(node.key, node.value)
@@ -198,15 +206,18 @@ pub mod StructChainedHashTable {
         {
             match chain {
                 None => {
+                    // Veracity: NEEDED proof block
                     proof { reveal_with_fuel(spec_chain_to_map, 1); }
                     (None, false)
                 }
                 Some(node) => {
                     let Node { key: nk, value: nv, next: nn } = *node;
+                    // Veracity: NEEDED proof block
                     proof { assert(obeys_feq_full_trigger::<Key>()); lemma_reveal_view_injective::<Key>(); }
                     let eq = feq(&nk, key);
                     let (new_next, tail_deleted) = chain_delete(nn, key);
                     if eq {
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_chain_to_map, 2);
                             reveal_with_fuel(spec_chain_keys_unique, 2);
@@ -214,6 +225,7 @@ pub mod StructChainedHashTable {
                         (new_next, true)
                     } else {
                         let out = Some(Box::new(Node { key: nk, value: nv, next: new_next }));
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_chain_to_map, 2);
                             reveal_with_fuel(spec_chain_keys_unique, 2);
@@ -246,6 +258,7 @@ pub mod StructChainedHashTable {
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive scan of chain, n = chain length.
             fn lookup(&self, key: &Key) -> (found: Option<Value>)
             {
+                // Veracity: NEEDED proof block
                 proof { assert(obeys_feq_full_trigger::<Value>()); }
                 chain_lookup(&self.head, key)
             }
@@ -339,14 +352,17 @@ pub mod StructChainedHashTable {
 
                 table.table.set(index, entry);
 
+                // Veracity: NEEDED proof block
                 proof {
 
+                    // Veracity: NEEDED assert
                     assert forall |j: int| 0 <= j < old_table.len() && j != index as int
                         implies !#[trigger] old_table[j].spec_entry_to_map().dom().contains(key) by {}
 
                     lemma_table_to_map_update_insert::<Key, Value, ChainList<Key, Value>>(
                         old_table, index as int, table.table@[index as int], key, value);
 
+                    // Veracity: NEEDED assert
                     assert forall |j: int, k: Key| 0 <= j < table.table@.len()
                         && j != (table.spec_hash@)(k) as int % table.current_size as int
                         implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
@@ -355,6 +371,7 @@ pub mod StructChainedHashTable {
                     }
                     // Chain uniqueness preserved.
                     // One-slot modification witness for trait ensures.
+                    // Veracity: NEEDED assert
                     assert(spec_other_slots_preserved(old(table).table@, table.table@, index as int));
                 }
 
@@ -368,11 +385,13 @@ pub mod StructChainedHashTable {
             fn lookup(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 let result = chain_lookup(&table.table[index].head, key);
+                // Veracity: NEEDED proof block
                 proof {
                     // chain_lookup ensures correctness against spec_chain_to_map(head).
                     // spec_entry_to_map for ChainList == spec_chain_to_map(self.head).
                     if spec_chain_to_map(table.table@[index as int].head).dom().contains(*key) {
                         // Key in this bucket. By wf, not in any other bucket.
+                        // Veracity: NEEDED assert
                         assert forall |j: int| 0 <= j < table.table@.len() && j != index as int
                             implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {}
                         lemma_table_to_map_unique_entry_value::<Key, Value, ChainList<Key, Value>>(
@@ -401,14 +420,17 @@ pub mod StructChainedHashTable {
 
                 table.table.set(index, entry);
 
+                // Veracity: NEEDED proof block
                 proof {
 
+                    // Veracity: NEEDED assert
                     assert forall |j: int| 0 <= j < old_table.len() && j != index as int
                         implies !#[trigger] old_table[j].spec_entry_to_map().dom().contains(*key) by {}
 
                     lemma_table_to_map_update_remove::<Key, Value, ChainList<Key, Value>>(
                         old_table, index as int, table.table@[index as int], *key);
 
+                    // Veracity: NEEDED assert
                     assert forall |j: int, k: Key| 0 <= j < table.table@.len()
                         && j != (table.spec_hash@)(k) as int % table.current_size as int
                         implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
@@ -422,6 +444,7 @@ pub mod StructChainedHashTable {
                     if found {
                         lemma_table_to_map_update_contains::<Key, Value, ChainList<Key, Value>>(
                             old_table, index as int, old_table[index as int], *key);
+                        // Veracity: NEEDED assert
                         assert(old_table.update(index as int, old_table[index as int]) =~= old_table);
                     } else {
                         lemma_table_to_map_not_contains::<Key, Value, ChainList<Key, Value>>(old_table, *key);
@@ -516,11 +539,13 @@ pub mod StructChainedHashTable {
 
                         pairs.push((ck, cv));
 
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_chain_to_map, 2);
                             reveal_with_fuel(spec_chain_keys_unique, 2);
 
                             // nk is in entry[i] (from the chain partition).
+                            // Veracity: NEEDED assert
                             assert(table.table@[i as int].spec_entry_to_map().dom().contains(nk));
                             // By wf contrapositive: i == hash(nk) % size.
                             // nk not in old_outer (which has keys from buckets < i only).
@@ -530,6 +555,7 @@ pub mod StructChainedHashTable {
                             pairs_map = pairs_map.insert(nk, nv);
 
                             // Maintain pairs_map =~= spec_seq_pairs_to_map(pairs@).
+                            // Veracity: NEEDED assert
                             assert(pairs@.drop_last() =~= old_pairs);
 
                             // Maintain pairs_map =~= old_outer.upr(inner_collected).
@@ -540,6 +566,7 @@ pub mod StructChainedHashTable {
                             //   = inner.upr(chain_to_map(nn)).insert(nk,nv)  [nk ∉ chain_to_map(nn)]
 
                             // Maintain inner/current disjointness.
+                            // Veracity: NEEDED assert
                             assert forall |k: Key|
                                 #[trigger] inner_collected.dom().contains(k)
                                 implies !spec_chain_to_map(nn).dom().contains(k)
@@ -557,6 +584,7 @@ pub mod StructChainedHashTable {
                         current = nn;
                     }
 
+                    // Veracity: NEEDED proof block
                     proof {
                         // After inner loop: current == None.
                         reveal_with_fuel(spec_chain_to_map, 1);
@@ -564,6 +592,7 @@ pub mod StructChainedHashTable {
                         //   =~= chain_to_map(original_chain).
 
                         // Re-establish outer forward invariant at i+1.
+                        // Veracity: NEEDED assert
                         assert forall |k: Key| #[trigger] pairs_map.dom().contains(k) implies (
                             (table.spec_hash@)(k) as int % (table.current_size as int)
                                 < ((i + 1) as int)
@@ -578,6 +607,7 @@ pub mod StructChainedHashTable {
                                 % (table.current_size as int);
                             if inner_collected.dom().contains(k) {
                                 // k from bucket i. hash(k)%size == i.
+                                // Veracity: NEEDED assert
                                 assert(table.table@[i as int]
                                     .spec_entry_to_map().dom().contains(k));
                                 // pairs_map[k] via upr: inner_collected wins.
@@ -587,6 +617,7 @@ pub mod StructChainedHashTable {
                         }
 
                         // Re-establish outer backward invariant at i+1.
+                        // Veracity: NEEDED assert
                         assert forall |j: int, k: Key| 0 <= j < ((i + 1) as int)
                             && #[trigger] table.table@[j]
                                 .spec_entry_to_map().dom().contains(k)
@@ -602,8 +633,10 @@ pub mod StructChainedHashTable {
                     i = i + 1;
                 }
 
+                // Veracity: NEEDED proof block
                 proof {
                     // After Phase 1: pairs_map =~= table@.
+                    // Veracity: NEEDED assert
                     assert forall |k: Key|
                         (#[trigger] pairs_map.dom().contains(k)) <==>
                         (#[trigger] spec_table_to_map::<Key, Value, ChainList<Key, Value>>(
@@ -613,6 +646,7 @@ pub mod StructChainedHashTable {
                         if pairs_map.dom().contains(k) {
                             let bucket = (table.spec_hash@)(k) as int
                                 % (table.current_size as int);
+                            // Veracity: NEEDED assert
                             assert forall |jj: int|
                                 0 <= jj < table.table@.len() && jj != bucket
                                 implies !#[trigger] table.table@[jj]
@@ -627,6 +661,7 @@ pub mod StructChainedHashTable {
                         ).dom().contains(k)
                             && !pairs_map.dom().contains(k)
                         {
+                            // Veracity: NEEDED assert
                             assert forall |j: int| 0 <= j < table.table@.len()
                                 implies !#[trigger] table.table@[j]
                                     .spec_entry_to_map().dom().contains(k)
@@ -636,6 +671,7 @@ pub mod StructChainedHashTable {
                             >(table.table@, k);
                         }
                     }
+                    // Veracity: NEEDED assert
                     assert forall |k: Key|
                         #[trigger] pairs_map.dom().contains(k)
                         && spec_table_to_map::<Key, Value, ChainList<Key, Value>>(
@@ -647,6 +683,7 @@ pub mod StructChainedHashTable {
                     by {
                         let bucket = (table.spec_hash@)(k) as int
                             % (table.current_size as int);
+                        // Veracity: NEEDED assert
                         assert forall |jj: int|
                             0 <= jj < table.table@.len() && jj != bucket
                             implies !#[trigger] table.table@[jj]
@@ -676,6 +713,7 @@ pub mod StructChainedHashTable {
                 {
                     let ghost old_vec = new_table_vec@;
                     new_table_vec.push(ChainList { head: None });
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal_with_fuel(spec_chain_keys_unique, 1);
                         reveal_with_fuel(spec_chain_to_map, 1);
@@ -697,8 +735,10 @@ pub mod StructChainedHashTable {
                     _phantom: PhantomData,
                 };
 
+                // Veracity: NEEDED proof block
                 proof {
                     // Establish spec_parahashtablesteph_wf for the empty new table.
+                    // Veracity: NEEDED assert
                     assert forall |kk: Key, j: int|
                         0 <= j < new_table.table@.len()
                         && j != (new_table.spec_hash@)(kk) as int
@@ -729,7 +769,9 @@ pub mod StructChainedHashTable {
                     let key = clone_elem(&pairs[m].0);
                     let value = clone_elem(&pairs[m].1);
                     Self::insert(&mut new_table, key, value);
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(
                             pairs@.subrange(0, (m + 1) as int).drop_last()
                             =~= pairs@.subrange(0, m as int)
@@ -738,7 +780,9 @@ pub mod StructChainedHashTable {
                     m = m + 1;
                 }
 
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(pairs@.subrange(0, pairs@.len() as int) =~= pairs@);
                     // new_table@ =~= spec_seq_pairs_to_map(pairs@) =~= pairs_map =~= table@.
                 }
@@ -781,6 +825,7 @@ pub mod StructChainedHashTable {
                         Some(b) => Some(Box::new((**b).clone())),
                     },
                 };
+                // Veracity: NEEDED proof block
                 proof { assume(cloned == *self); }
                 cloned
             }
@@ -798,6 +843,7 @@ pub mod StructChainedHashTable {
                         (Some(a), Some(b)) => (**a) == (**b),
                         _ => false,
                     };
+                // Veracity: NEEDED proof block
                 proof { assume(equal == (*self == *other)); }
                 equal
             }
@@ -828,6 +874,7 @@ pub mod StructChainedHashTable {
                         Some(b) => Some(Box::new((**b).clone())),
                     },
                 };
+                // Veracity: NEEDED proof block
                 proof { assume(cloned == *self); }
                 cloned
             }
@@ -842,6 +889,7 @@ pub mod StructChainedHashTable {
                     (Some(a), Some(b)) => (**a) == (**b),
                     _ => false,
                 };
+                // Veracity: NEEDED proof block
                 proof { assume(equal == (*self == *other)); }
                 equal
             }

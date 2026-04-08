@@ -1,6 +1,34 @@
 Mode: isolate
-Isolate: including Chap19 Chap27 Chap02
-verification results:: 945 verified, 0 errors
-Elapsed: 8s
-Sampled Memory Usage: peak rust_verify RSS: 2911MB, peak z3 RSS: 251MB, min free: 23628MB
-Sampled CPU Usage: rust_verify: 30s, z3 children: 9s
+Isolate: including Chap38 Chap18 Chap02
+error: assertion failed
+    --> src/Chap38/BSTParaStEph.rs:1313:46
+     |
+1313 |   ...                   assert forall|x| #[trigger] sv.intersect(other@).contains(x) <==>
+     |  ________________________________________^
+1314 | | ...                       result@.contains(x) by {
+     | |_____________________________________________^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap38/BSTParaStEph.rs:1313:46
+     |
+1313 | ...                   assert forall|x| #[trigger] sv.intersect(other@).contains(x) <==>
+     |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1314 | ...                       result@.contains(x) by {
+     |                           ^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+sv.intersect(other.view()).contains(x) == result.view().contains(x)
+|   sv.intersect(other.view()).contains(x) ==>
+|       result.view().contains(x) ✘
+|           function is uninterpreted
+|   result.view().contains(x) ==>
+|       sv.intersect(other.view()).contains(x) ✘
++---
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3167MB, peak z3 RSS: 390MB, min free: 23184MB
+Sampled CPU Usage: rust_verify: 36s, z3 children: 21s

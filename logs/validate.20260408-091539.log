@@ -1,0 +1,27 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2535:69
+     |
+2535 |                         lv.contains(s@) && rlv.contains(o@) implies s.cmp_spec(&o) == Less by {
+     |                                                                     ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:2535:87
+     |
+2535 |                         lv.contains(s@) && rlv.contains(o@) implies s.cmp_spec(&o) == Less by {
+     |                                                                                       ^^^^
+
+note: 
+
+s.cmp_spec(o) == Less
+|   !(s.cmp_spec(o) is Equal) ✘
+|   !(s.cmp_spec(o) is Greater) ✘
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 22s
+Sampled Memory Usage: peak rust_verify RSS: 6894MB, peak z3 RSS: 952MB, min free: 16135MB
+Sampled CPU Usage: rust_verify: 145s, z3 children: 139s

@@ -1,22 +1,6 @@
 Mode: isolate
-Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
-error: assertion failed
-   --> src/Chap62/StarContractionMtEph.rs:285:24
-    |
-285 |                 assert(edges_vec@.map(|_i: int, t: Edge<V>| t@).contains(edges_vec@[j]@));
-    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
-
-note: diagnostics via expansion
-
-note: 
-
-edges_vec.view().map((|_i, t| t.view())).contains(edges_vec.view().index(j).view())
-|   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = edges_vec.view().map((|_i, t| t.view())).len() in tmp%% <= tmp%% && tmp%% < tmp%% && edges_vec.view().map((|_i, t| t.view())).index(i) == edges_vec.view().index(j).view()) 
-+---
-
-verification results:: 1339 verified, 1 errors
-error: aborting due to 1 previous error
-
-Elapsed: 18s
-Sampled Memory Usage: peak rust_verify RSS: 4259MB, peak z3 RSS: 337MB, min free: 22138MB
-Sampled CPU Usage: rust_verify: 65s, z3 children: 38s
+Isolate: including Chap38 Chap18 Chap02
+verification results:: 1168 verified, 0 errors
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 3530MB, peak z3 RSS: 362MB, min free: 22971MB
+Sampled CPU Usage: rust_verify: 38s, z3 children: 17s

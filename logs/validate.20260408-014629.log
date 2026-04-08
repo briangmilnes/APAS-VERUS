@@ -1,0 +1,61 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:468:17
+    |
+468 |                 forall|v: T::V| self@.contains(v) <==> seq@.contains(v),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+878 |             result
+    |             ------ at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:844:17
+    |
+844 |                 forall|v: T::V| self@.contains(v) <==> seq@.contains(v),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+878 |             result
+    |             ------ at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:846:17
+    |
+846 |                 seq@.to_set() =~= self@,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+878 |             result
+    |             ------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap38/BSTParaMtEph.rs:468:33
+    |
+468 |                 forall|v: T::V| self@.contains(v) <==> seq@.contains(v),
+    |                                 ^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^
+
+note: 
+
+seq.view().len() == old(self).view().len() ✔
+forall |v|
+    old(self).view().contains(v) == seq.view().contains(v) ✘
+    |   old(self).view().contains(v) ==>
+    |       seq.view().contains(v) ✘
+    |       |   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = seq.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && seq.view().index(i) == v) 
+    |       +---
+    |   seq.view().contains(v) ==>
+    |       old(self).view().contains(v) ✘
+    |           function is uninterpreted
+    +---
+seq.view().no_duplicates() ✔
+seq.view().len() == old(self).view().len() ✔
+forall |v|
+    old(self).view().contains(v) == seq.view().contains(v) ✔
+seq.view().no_duplicates() ✔
+seq.view().to_set() =~= old(self).view() ✔
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 5048MB, peak z3 RSS: 541MB, min free: 21108MB
+Sampled CPU Usage: rust_verify: 96s, z3 children: 101s

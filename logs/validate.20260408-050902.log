@@ -1,6 +1,19 @@
 Mode: isolate
-Isolate: including Chap19 Chap27 Chap02
-verification results:: 945 verified, 0 errors
-Elapsed: 7s
-Sampled Memory Usage: peak rust_verify RSS: 3096MB, peak z3 RSS: 204MB, min free: 23695MB
-Sampled CPU Usage: rust_verify: 30s, z3 children: 6s
+Isolate: including Chap38 Chap18 Chap02
+error: unexpected closing delimiter: `}`
+    --> src/Chap38/BSTParaStEph.rs:1746:1
+     |
+1554 |                             implies out@[i]@ != out@[j]@ by {
+     |                                                             - this delimiter might not be properly closed...
+...
+1568 |                         };
+     |                         - ...as it matches this but it has different indentation
+...
+1746 | }
+     | ^ unexpected closing delimiter
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 25610MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

@@ -1,47 +1,6 @@
 Mode: isolate
-Isolate: including Chap47 Chap18 Chap02
-error: invariant not satisfied at end of loop body
-   --> src/Chap47/LinkedListChainedHashTableStEph.rs:483:29
-    |
-483 | / ...                   spec_seq_pairs_to_map(pairs@) =~=
-484 | | ...                       outer_map.union_prefer_right(
-485 | | ...                           spec_seq_pairs_to_map(
-486 | | ...                               table.table@[i as int].seq@.subrange(0, j as int))),
-    | |_____________________________________________________________________________________^
-
-note: recommendation not met
-   --> src/Chap47/LinkedListChainedHashTableStEph.rs:504:36
-    |
-504 | ...                   assert(chain_sub_next.last() == chain[j as int]);
-    |                              ^^^^^^^^^^^^^^^^^^^^^
-    |
-   --> vstd/seq.rs:154:12
-    |
-    = note: recommendation not met
-
-note: recommendation not met
-   --> src/Chap47/LinkedListChainedHashTableStEph.rs:516:32
-    |
-516 |                         assert(sub_next.drop_last()
-    |                                ^^^^^^^^^^^^^^^^^^^^
-    |
-   --> vstd/seq_lib.rs:492:12
-    |
-    = note: recommendation not met
-
-note: recommendation not met
-   --> src/Chap47/LinkedListChainedHashTableStEph.rs:518:32
-    |
-518 |                         assert(sub_next.last() == table.table@[i as int]);
-    |                                ^^^^^^^^^^^^^^^
-    |
-   --> vstd/seq.rs:154:12
-    |
-    = note: recommendation not met
-
-verification results:: 1253 verified, 1 errors
-error: aborting due to 1 previous error
-
-Elapsed: 10s
-Sampled Memory Usage: peak rust_verify RSS: 4285MB, peak z3 RSS: 683MB, min free: 23128MB
-Sampled CPU Usage: rust_verify: 63s, z3 children: 54s
+Isolate: including Chap39 Chap18 Chap02
+verification results:: 1307 verified, 0 errors
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 3275MB, peak z3 RSS: 622MB, min free: 23180MB
+Sampled CPU Usage: rust_verify: 52s, z3 children: 51s

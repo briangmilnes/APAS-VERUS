@@ -128,13 +128,16 @@ pub mod JohnsonStEphF64 {
                 forall|k: usize| vertices@.contains(k) <==> k < i,
             decreases (max_val + 1) - i,
         {
+            // Veracity: NEEDED proof block
             proof {
             }
             let _ = vertices.insert(i);
+            // Veracity: NEEDED proof block
             proof {
             }
             i = i + 1;
         }
+        // Veracity: NEEDED proof block
         proof {
         }
         vertices
@@ -263,6 +266,7 @@ pub mod JohnsonStEphF64 {
             reweighted@.A.len() * 2 + 2 <= usize::MAX as int,
     {
         let vertices = build_vertex_set(n - 1);
+        // Veracity: NEEDED proof block
         proof {
         }
 
@@ -311,14 +315,17 @@ pub mod JohnsonStEphF64 {
         }
 
         let result = WeightedDirGraphStEphF64::from_weighed_edges(vertices, edges);
+        // Veracity: NEEDED proof block
         proof {
             let view_fn = |k: LabEdge<usize, WrappedF64>| k@;
+            // Veracity: NEEDED assert
             assert forall|x: LabEdge<usize, WrappedF64>, y: LabEdge<usize, WrappedF64>|
                 #[trigger] view_fn(x) == #[trigger] view_fn(y) implies x == y
             by {};
             arcs_seq.lemma_no_duplicates_injective(view_fn);
             let mapped = arcs_seq.map_values(view_fn);
             mapped.unique_seq_to_set();
+            // Veracity: NEEDED assert
             assert(mapped =~= arcs_seq.map(|i: int, k: LabEdge<usize, WrappedF64>| k@));
         }
         result
@@ -386,6 +393,7 @@ pub mod JohnsonStEphF64 {
 
         // Phase 2: Reweight graph edges.
         let reweighted = reweight_graph(graph, &potentials, n);
+        // Veracity: NEEDED assert
         assert(spec_labgraphview_wf(reweighted@));
 
         // Phase 3: Run Dijkstra from each vertex, adjust distances back.

@@ -132,6 +132,7 @@ pub mod JohnsonMtEphI64 {
         let potentials = ArraySeqStEphS::tabulate(&get_dist, n);
 
         let reweighted_graph = reweight_graph(graph, &potentials, n);
+        // Veracity: NEEDED proof block
         proof {
         }
 
@@ -298,6 +299,7 @@ pub mod JohnsonMtEphI64 {
             let _ = vertices.insert(i);
             i = i + 1;
         }
+        // Veracity: NEEDED proof block
         proof {
         }
 
@@ -396,6 +398,7 @@ pub mod JohnsonMtEphI64 {
             let _ = vertices.insert(i);
             i = i + 1;
         }
+        // Veracity: NEEDED proof block
         proof {
         }
 
@@ -440,21 +443,25 @@ pub mod JohnsonMtEphI64 {
             }
         }
 
+        // Veracity: NEEDED proof block
         proof {
             // Prove reweighted@.A.len() <= graph@.A.len().
             // After the loop: reweighted_edges@.len() <= arcs_seq.len().
             // Prove arcs_seq.len() == graph@.A.len() via injective mapping.
             let view_fn = |k: LabEdge<usize, i128>| k@;
+            // Veracity: NEEDED assert
             assert forall|x: LabEdge<usize, i128>, y: LabEdge<usize, i128>|
                 #[trigger] view_fn(x) == #[trigger] view_fn(y) implies x == y
             by {};
             arcs_seq.lemma_no_duplicates_injective(view_fn);
             let mapped = arcs_seq.map_values(view_fn);
             mapped.unique_seq_to_set();
+            // Veracity: NEEDED assert
             assert(mapped =~= arcs_seq.map(|i: int, k: LabEdge<usize, i128>| k@));
         }
 
         let result = WeightedDirGraphStEphI128::from_weighed_edges(vertices, reweighted_edges);
+        // Veracity: NEEDED proof block
         proof {
         }
         result

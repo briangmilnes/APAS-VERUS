@@ -1,6 +1,6 @@
 Mode: isolate
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
-verification results:: 1958 verified, 0 errors
-Elapsed: 28s
-Sampled Memory Usage: peak rust_verify RSS: 5728MB, peak z3 RSS: 559MB, min free: 20510MB
-Sampled CPU Usage: rust_verify: 128s, z3 children: 129s
+Isolate: including Chap38 Chap18 Chap02
+verification results:: 1168 verified, 0 errors
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 4948MB, peak z3 RSS: 431MB, min free: 21542MB
+Sampled CPU Usage: rust_verify: 81s, z3 children: 53s

@@ -1,39 +1,6 @@
 Mode: isolate
-Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
-error: assertion failed
-   --> src/Chap62/StarPartitionMtEph.rs:326:24
-    |
-326 |                 assert(coin_flips@.contains_key(u@));
-    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
-
-error: assertion failed
-   --> src/Chap62/StarPartitionMtEph.rs:327:24
-    |
-327 |                 assert(coin_flips@.contains_key(v@));
-    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
-
-error: assertion failed
-   --> src/Chap62/StarPartitionMtEph.rs:328:24
-    |
-328 |                 assert(vertex_to_index@.contains_key(u@));
-    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
-
-error: assertion failed
-   --> src/Chap62/StarPartitionMtEph.rs:329:24
-    |
-329 |                 assert(vertex_to_index@.contains_key(v@));
-    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
-
-note: diagnostics via expansion
-
-note: 
-
-coin_flips.view().dom().contains(u.view()) 
-    function is uninterpreted
-
-verification results:: 1339 verified, 1 errors
-error: aborting due to 4 previous errors
-
-Elapsed: 15s
-Sampled Memory Usage: peak rust_verify RSS: 3999MB, peak z3 RSS: 360MB, min free: 22627MB
-Sampled CPU Usage: rust_verify: 63s, z3 children: 70s
+Isolate: including Chap38 Chap18 Chap02
+verification results:: 1168 verified, 0 errors
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 3243MB, peak z3 RSS: 266MB, min free: 23224MB
+Sampled CPU Usage: rust_verify: 65s, z3 children: 72s

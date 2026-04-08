@@ -175,6 +175,7 @@ pub mod PQMinStPer {
             search.visited@.contains(source@),
     {
         let sources = AVLTreeSetStPer::singleton(source);
+        // Veracity: NEEDED proof block
         proof {
         }
         pq_min_multi(graph, sources, priority_fn, Ghost(vertex_universe), Ghost(spec_priority))
@@ -195,8 +196,10 @@ pub mod PQMinStPer {
             None
         } else {
             let seq = frontier.to_seq();
+            // Veracity: NEEDED proof block
             proof {
                 if seq@.len() == 0 {
+                    // Veracity: NEEDED assert
                     assert(seq@.to_set() =~= Set::<<Pair<Pair<P, V>, V> as View>::V>::empty());
                 }
             }
@@ -276,9 +279,11 @@ pub mod PQMinStPer {
                 view_ord_consistent::<Pair<V, P>>(),
         {
             let frontier_seq = frontier.to_seq();
+            // Veracity: NEEDED proof block
             proof {
                 // Prove frontier_seq is non-empty from frontier@.len() > 0.
                 if frontier_seq@.len() == 0 {
+                    // Veracity: NEEDED assert
                     assert(frontier_seq@.to_set() =~= Set::<<Pair<Pair<P, V>, V> as View>::V>::empty());
                 }
             }
@@ -291,13 +296,16 @@ pub mod PQMinStPer {
             let frontier_new = frontier.difference(&AVLTreeSetStPer::singleton(entry));
 
             // Capacity: visited ⊆ vertex_universe from invariant.
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_len_subset(visited@, vertex_universe);
             }
             let v_for_visited = v.clone_plus();
             let visited_new = visited.union(&AVLTreeSetStPer::singleton(v_for_visited));
             // Maintain visited@.subset_of(vertex_universe): v@ ∈ vertex_universe from frontier entry.
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(frontier@.contains(frontier_seq@[0 as int]));
             }
 
@@ -307,6 +315,7 @@ pub mod PQMinStPer {
             let nlen = neighbors_seq.length();
             let mut i: usize = 0;
             // Establish neighbor vertices ∈ vertex_universe before inner loop.
+            // Veracity: NEEDED proof block
             proof {
             }
             while i < nlen
@@ -344,6 +353,7 @@ pub mod PQMinStPer {
                     // Capacity via injection: frontier entries are uniquely determined by
                     // their vertex component, so |frontier| ≤ |vertex_universe|.
                     let ghost old_fu = frontier_updated@;
+                    // Veracity: NEEDED proof block
                     proof {
                         // Establish neighbor_entry structure.
                         // Define injection: entry ↦ entry.1 (vertex component).
@@ -360,13 +370,17 @@ pub mod PQMinStPer {
                     }
                     frontier_updated = frontier_updated.union(&AVLTreeSetStPer::singleton(neighbor_entry));
                     // Maintain frontier vertex and entry structure invariants after union.
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(vertex_universe.contains(neighbors_seq@[i as int]));
+                        // Veracity: NEEDED assert
                         assert forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                             #[trigger] frontier_updated@.contains(e)
                             implies vertex_universe.contains(e.1) by {
                             if old_fu.contains(e) {}
                         }
+                        // Veracity: NEEDED assert
                         assert forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                             #[trigger] frontier_updated@.contains(e)
                             implies e.0 == (spec_priority(e.1), e.1) by {
@@ -403,11 +417,13 @@ pub mod PQMinStPer {
             let vref = visited_seq.nth(j);
             let p = priority_fn(vref);
             let vp = Pair(vref.clone(), p);
+            // Veracity: NEEDED proof block
             proof {
                 lemma_wf_implies_len_bound_stper(visited_seq);
             }
             let ghost old_pri = priorities@;
             priorities = priorities.union(&AVLTreeSetStPer::singleton(vp));
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_len_union(old_pri, Set::empty().insert(vp@));
             }
@@ -453,6 +469,7 @@ pub mod PQMinStPer {
         let slen = sources_seq.length();
         let mut i: usize = 0;
         // Establish sources_seq vertices ∈ vertex_universe.
+        // Veracity: NEEDED proof block
         proof {
         }
         // Close initial_frontier+1 via loop counter: slen < usize::MAX from tree wf.
@@ -490,6 +507,7 @@ pub mod PQMinStPer {
             let v_clone1 = v.clone_plus();
             let v_clone2 = v.clone_plus();
             let entry = Pair(Pair(p, v_clone1), v_clone2);
+            // Veracity: NEEDED proof block
             proof {
                 // slen < usize::MAX from tree wf lemma.
                 lemma_wf_implies_len_bound_stper(sources_seq);
@@ -497,15 +515,18 @@ pub mod PQMinStPer {
             }
             let ghost old_if = initial_frontier@;
             initial_frontier = initial_frontier.union(&AVLTreeSetStPer::singleton(entry));
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_len_union(old_if, Set::empty().insert(entry@));
                 // Maintain frontier vertex invariant: entry@.1 = v@ ∈ vertex_universe.
+                // Veracity: NEEDED assert
                 assert forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                     #[trigger] initial_frontier@.contains(e)
                     implies vertex_universe.contains(e.1) by {
                     if old_if.contains(e) {}
                 }
                 // Maintain entry structure invariant.
+                // Veracity: NEEDED assert
                 assert forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                     #[trigger] initial_frontier@.contains(e)
                     implies e.0 == (spec_priority(e.1), e.1) by {

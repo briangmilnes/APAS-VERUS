@@ -1,13 +1,6 @@
 Mode: isolate
-Isolate: including Chap19 Chap27 Chap02
-error: unexpected token, expected `;`
-   --> src/Chap27/ScanContractStEph.rs:380:17
-    |
-380 |                 by {
-    |                 ^^
-
-error: aborting due to 1 previous error
-
-Elapsed: 1s
-Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 23198MB
-Sampled CPU Usage: rust_verify: 0s, z3 children: 0s
+Isolate: including Chap39 Chap18 Chap02
+verification results:: 1307 verified, 0 errors
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 5019MB, peak z3 RSS: 514MB, min free: 21366MB
+Sampled CPU Usage: rust_verify: 71s, z3 children: 63s

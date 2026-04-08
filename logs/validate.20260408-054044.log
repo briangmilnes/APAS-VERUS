@@ -1,0 +1,54 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: precondition not satisfied
+   --> src/Chap39/BSTParaTreapMtEph.rs:646:29
+    |
+646 | ...                   vstd::set_lib::lemma_len_subset(lrv, lv);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/set_lib.rs:1099:8
+    |
+    = note: failed precondition
+
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:650:40
+    |
+650 | ...                   assert(lv.contains(t@));
+    |                              ^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap39/BSTParaTreapMtEph.rs:656:39
+    |
+455 |             left@.disjoint(right@),
+    |             ---------------------- failed precondition
+...
+656 |                         let rebuilt = join_with_priority(lr, root_key, priority, right);
+    |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:658:46
+    |
+658 |   ...                   assert forall|x| #[trigger] (llv.union(rebuilt@)).contains(x)
+    |  ________________________________________^
+659 | | ...                       <==> tree@.remove(key@).contains(x) by {
+    | |_____________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+ --> vstd/set_lib.rs:1099:8
+
+note: 
+
+lv.finite() ✔
+lrv.subset_of(lv) ✘
+|   forall |a|
+|       lrv.contains(a) ==>
+|           lv.contains(a) 
+|               function is uninterpreted
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 4270MB, peak z3 RSS: 437MB, min free: 22322MB
+Sampled CPU Usage: rust_verify: 59s, z3 children: 30s
