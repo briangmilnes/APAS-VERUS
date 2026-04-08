@@ -1,0 +1,65 @@
+error[E0276]: impl has stricter requirements than trait
+   --> src/Chap43/OrderedSetStPer.rs:454:22
+    |
+262 | /         fn first_iter(&self) -> (first: Option<T>)
+263 | |             requires self.spec_orderedsetstper_wf(),
+264 | |             ensures
+265 | |                 self@.finite(),
+266 | |                 self@.len() == 0 <==> first matches None,
+267 | |                 first matches Some(v) ==> self@.contains(v@),
+268 | |                 first matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==> TotalOrder::le(v, t);
+    | |______________________________________________________________________________________________________________- definition of `first_iter` from trait
+...
+454 |               where T: TotalOrder
+    |                        ^^^^^^^^^^ impl has extra requirement `T: vstdplus::total_order::total_order::TotalOrder`
+
+error[E0276]: impl has stricter requirements than trait
+   --> src/Chap43/OrderedSetStPer.rs:537:22
+    |
+270 | /         fn last_iter(&self) -> (last: Option<T>)
+271 | |             requires self.spec_orderedsetstper_wf(),
+272 | |             ensures
+273 | |                 self@.finite(),
+274 | |                 self@.len() == 0 <==> last matches None,
+275 | |                 last matches Some(v) ==> self@.contains(v@),
+276 | |                 last matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==> TotalOrder::le(t, v);
+    | |_____________________________________________________________________________________________________________- definition of `last_iter` from trait
+...
+537 |               where T: TotalOrder
+    |                        ^^^^^^^^^^ impl has extra requirement `T: vstdplus::total_order::total_order::TotalOrder`
+
+error[E0276]: impl has stricter requirements than trait
+   --> src/Chap43/OrderedSetStPer.rs:620:22
+    |
+278 | /         fn previous_iter(&self, k: &T) -> (predecessor: Option<T>)
+279 | |             requires self.spec_orderedsetstper_wf(),
+280 | |             ensures
+281 | |                 self@.finite(),
+282 | |                 predecessor matches Some(v) ==> self@.contains(v@),
+283 | |                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+284 | |                 predecessor matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+    | |_________________________________________________________________________________________________________________________________________________________- definition of `previous_iter` from trait
+...
+620 |               where T: TotalOrder
+    |                        ^^^^^^^^^^ impl has extra requirement `T: vstdplus::total_order::total_order::TotalOrder`
+
+error[E0276]: impl has stricter requirements than trait
+   --> src/Chap43/OrderedSetStPer.rs:733:22
+    |
+286 | /         fn next_iter(&self, k: &T) -> (successor: Option<T>)
+287 | |             requires self.spec_orderedsetstper_wf(),
+288 | |             ensures
+289 | |                 self@.finite(),
+290 | |                 successor matches Some(v) ==> self@.contains(v@),
+291 | |                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
+292 | |                 successor matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
+    | |_______________________________________________________________________________________________________________________________________________________- definition of `next_iter` from trait
+...
+733 |               where T: TotalOrder
+    |                        ^^^^^^^^^^ impl has extra requirement `T: vstdplus::total_order::total_order::TotalOrder`
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:268:90
+    |
+268 |                 first matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==> TotalOrder::le(v, t);
+    |                                                                                          ^^^^^^^^

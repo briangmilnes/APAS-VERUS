@@ -1,0 +1,100 @@
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:535:18
+    |
+535 |             self.first_iter()
+    |                  ^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerTrait::first_iter`
+   --> src/Chap43/OrderedSetStPer.rs:263:22
+    |
+262 |         fn first_iter(&self) -> (first: Option<T>)
+    |            ---------- required by a bound in this associated function
+263 |             where T: TotalOrder
+    |                      ^^^^^^^^^^ required by this bound in `OrderedSetStPerTrait::first_iter`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+349 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:618:18
+    |
+618 |             self.last_iter()
+    |                  ^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerTrait::last_iter`
+   --> src/Chap43/OrderedSetStPer.rs:272:22
+    |
+271 |         fn last_iter(&self) -> (last: Option<T>)
+    |            --------- required by a bound in this associated function
+272 |             where T: TotalOrder
+    |                      ^^^^^^^^^^ required by this bound in `OrderedSetStPerTrait::last_iter`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+349 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:731:32
+    |
+731 |             self.previous_iter(k)
+    |                  ------------- ^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |                  |
+    |                  required by a bound introduced by this call
+    |
+note: required by a bound in `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerTrait::previous_iter`
+   --> src/Chap43/OrderedSetStPer.rs:281:22
+    |
+280 |         fn previous_iter(&self, k: &T) -> (predecessor: Option<T>)
+    |            ------------- required by a bound in this associated function
+281 |             where T: TotalOrder
+    |                      ^^^^^^^^^^ required by this bound in `OrderedSetStPerTrait::previous_iter`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+349 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:844:28
+    |
+844 |             self.next_iter(k)
+    |                  --------- ^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |                  |
+    |                  required by a bound introduced by this call
+    |
+note: required by a bound in `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerTrait::next_iter`
+   --> src/Chap43/OrderedSetStPer.rs:290:22
+    |
+289 |         fn next_iter(&self, k: &T) -> (successor: Option<T>)
+    |            --------- required by a bound in this associated function
+290 |             where T: TotalOrder
+    |                      ^^^^^^^^^^ required by this bound in `OrderedSetStPerTrait::next_iter`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+349 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+    --> src/Chap43/OrderedSetStPer.rs:1186:28
+     |
+1186 |             self.rank_iter(k)
+     |                  --------- ^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+     |                  |
+     |                  required by a bound introduced by this call
+     |
+note: required by a bound in `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerTrait::rank_iter`
+    --> src/Chap43/OrderedSetStPer.rs:325:22
+     |
+ 324 |         fn rank_iter(&self, k: &T) -> (rank: usize)
+     |            --------- required by a bound in this associated function
+ 325 |             where T: TotalOrder
+     |                      ^^^^^^^^^^ required by this bound in `OrderedSetStPerTrait::rank_iter`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+     |
+ 349 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+     |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 15s
