@@ -83,9 +83,6 @@ pub mod QuickSortMtEphSlice {
         ensures total_ordering(spec_leq::<T>())
     {
         let leq = spec_leq::<T>();
-        assert(reflexive(leq)) by {
-            assert forall|x: T| #[trigger] leq(x, x) by { T::reflexive(x); }
-        };
         assert(antisymmetric(leq)) by {
             assert forall|x: T, y: T|
                 #[trigger] leq(x, y) && #[trigger] leq(y, x) implies x == y by
@@ -137,15 +134,11 @@ pub mod QuickSortMtEphSlice {
         right_view.lemma_sort_by_ensures(leq);
         original.lemma_sort_by_ensures(leq);
 
-        assert(sorted_left.to_multiset() =~= left_view.to_multiset());
-        assert(sorted_right.to_multiset() =~= right_view.to_multiset());
 
         assert forall|j: int| 0 <= j < sorted_left.len() implies
             T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
         {
-            assert(sorted_left.to_multiset().count(sorted_left[j]) > 0);
             assert(left_view.to_multiset().count(sorted_left[j]) > 0);
-            assert(left_view.contains(sorted_left[j]));
             let idx = choose|idx: int|
                 0 <= idx < left_view.len() && left_view[idx] == sorted_left[j];
         };
@@ -153,9 +146,7 @@ pub mod QuickSortMtEphSlice {
         assert forall|j: int| 0 <= j < sorted_right.len() implies
             T::le(pivot, #[trigger] sorted_right[j]) && sorted_right[j] != pivot by
         {
-            assert(sorted_right.to_multiset().count(sorted_right[j]) > 0);
             assert(right_view.to_multiset().count(sorted_right[j]) > 0);
-            assert(right_view.contains(sorted_right[j]));
             let idx = choose|idx: int|
                 0 <= idx < right_view.len() && right_view[idx] == sorted_right[j];
         };
@@ -169,26 +160,18 @@ pub mod QuickSortMtEphSlice {
                 let ell = eq_view.len();
                 if ai < ll && bi < ll {
                 } else if ai < ll && bi < ll + ell {
-                    assert(candidate[bi] == pivot);
                 } else if ai < ll && bi >= ll + ell {
                     T::transitive(candidate[ai], pivot, candidate[bi]);
                 } else if ai >= ll && ai < ll + ell && bi >= ll && bi < ll + ell {
-                    assert(candidate[ai] == pivot && candidate[bi] == pivot);
                     T::reflexive(pivot);
                 } else if ai >= ll && ai < ll + ell && bi >= ll + ell {
-                    assert(candidate[ai] == pivot);
                 } else {
-                    assert(ai >= ll + ell && bi >= ll + ell);
                 }
             };
         };
 
         vstd::seq_lib::lemma_multiset_commutative(sorted_left, eq_view);
         vstd::seq_lib::lemma_multiset_commutative(sorted_left + eq_view, sorted_right);
-        assert(candidate.to_multiset() =~=
-            sorted_left.to_multiset().add(eq_view.to_multiset()).add(sorted_right.to_multiset()));
-        assert(candidate.to_multiset() =~=
-            left_view.to_multiset().add(eq_view.to_multiset()).add(right_view.to_multiset()));
         assert(candidate.to_multiset() =~= original.to_multiset());
 
         vstd::seq_lib::lemma_sorted_unique(original.sort_by(leq), candidate, leq);
@@ -203,11 +186,9 @@ pub mod QuickSortMtEphSlice {
                 0 <= i < v.len() ==> a.spec_index(i) == v[i],
         ensures elements(a) =~= v,
     {
-        assert(elements(a).len() == v.len());
         assert forall|i: int| 0 <= i < v.len()
             implies elements(a)[i] == #[trigger] v[i] by
         {
-            assert(elements(a)[i] == a.spec_index(i));
         };
     }
 
@@ -319,12 +300,10 @@ pub mod QuickSortMtEphSlice {
         }
         proof {
             let ghost target = a_orig + b@;
-            assert(a@.len() == target.len());
             assert forall|k: int| 0 <= k < a@.len()
                 implies a@[k] == #[trigger] target[k] by
             {
                 if k < alen as int {
-                    assert(a@[k] == a_orig[k]);
                 } else {
                     let kp = k - alen as int;
                     assert(a@[alen as int + kp] == b@[kp]);
@@ -361,12 +340,9 @@ pub mod QuickSortMtEphSlice {
         } else if n == 1 {
             let elem = a.nth_cloned(0);
             proof {
-                assert(elements(*a).len() == 1);
-                assert(elements(*a)[0] == elem);
             }
             match TotalOrder::cmp(&elem, pivot) {
                 core::cmp::Ordering::Less => {
-                    proof { assert(T::le(elem, *pivot)); assert(elem != *pivot); }
                     let mut v: Vec<T> = Vec::new();
                     v.push(elem);
                     proof {
@@ -383,7 +359,6 @@ pub mod QuickSortMtEphSlice {
                     (Vec::new(), v, Vec::new())
                 }
                 core::cmp::Ordering::Greater => {
-                    proof { assert(T::le(*pivot, elem)); assert(elem != *pivot); }
                     let mut v: Vec<T> = Vec::new();
                     v.push(elem);
                     proof {
@@ -452,15 +427,12 @@ pub mod QuickSortMtEphSlice {
             proof {
                 // elements(*a) =~= left_elems + right_elems
                 let ghost ea = elements(*a);
-                assert(ea.len() == left_elems.len() + right_elems.len());
                 assert forall|k: int| 0 <= k < ea.len()
                     implies ea[k] == #[trigger] (left_elems + right_elems)[k] by
                 {
                     if k < left_elems.len() {
-                        assert(left_half.spec_index(k) == a.spec_index(k));
                     } else {
                         let kp = k - left_elems.len();
-                        assert(right_half.spec_index(kp) == a.spec_index(mid as int + kp));
                     }
                 };
                 assert(ea =~= left_elems + right_elems);
@@ -471,8 +443,6 @@ pub mod QuickSortMtEphSlice {
                 vstd::seq_lib::lemma_multiset_commutative(r1_pre, r2@);
 
                 // Multiset rearrangement: Z3 handles integer arithmetic.
-                assert(ea.to_multiset() =~=
-                    l1@.to_multiset().add(r1@.to_multiset()).add(e1@.to_multiset()));
             }
 
             (l1, e1, r1)
@@ -619,21 +589,16 @@ pub mod QuickSortMtEphSlice {
                 let ghost m = mid@;
                 let ghost r = right@;
                 let ghost target = l + m + r;
-                assert(out@.len() == target.len());
                 assert forall|k: int| 0 <= k < out@.len()
                     implies out@[k] == #[trigger] target[k] by
                 {
                     if k < sl as int {
-                        assert(out@[k] == left@[k]);
-                        assert(target[k] == l[k]);
                     } else if k < (sl + el) as int {
                         let kp = k - sl as int;
                         assert(out@[(sl as int + kp)] == mid@[kp]);
-                        assert(target[k] == m[kp]);
                     } else {
                         let kp = k - sl as int - el as int;
                         assert(out@[(sl as int + el as int + kp)] == right@[kp]);
-                        assert(target[k] == r[kp]);
                     }
                 };
             }
@@ -653,12 +618,8 @@ pub mod QuickSortMtEphSlice {
                     lemma_total_ordering::<T>();
                     s.lemma_sort_by_ensures(leq);
                     if s.len() == 0 {
-                        assert(s.to_multiset().len() == s.len());
                         assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
-                        assert(s.sort_by(leq).to_multiset() =~= s.to_multiset());
-                        assert(s.sort_by(leq).len() == s.len());
                     } else {
-                        assert(sorted_by(s, leq));
                         vstd::seq_lib::lemma_sorted_unique(s, s.sort_by(leq), leq);
                     }
                 }
@@ -676,32 +637,8 @@ pub mod QuickSortMtEphSlice {
                 assert(s[pivot_idx as int] == pivot);
                 assert(s.to_multiset().count(pivot) > 0) by {
                     s.to_multiset_ensures();
-                    assert(s.contains(pivot));
                 };
                 // left and right contain no copies of pivot.
-                assert(left@.to_multiset().count(pivot) == 0nat) by {
-                    if left@.to_multiset().count(pivot) > 0 {
-                        left@.to_multiset_ensures();
-                        assert(left@.contains(pivot));
-                        let j = choose|j: int| 0 <= j < left@.len() && left@[j] == pivot;
-                        assert(left@[j] != pivot);
-                    }
-                };
-                assert(right@.to_multiset().count(pivot) == 0nat) by {
-                    if right@.to_multiset().count(pivot) > 0 {
-                        right@.to_multiset_ensures();
-                        assert(right@.contains(pivot));
-                        let j = choose|j: int| 0 <= j < right@.len() && right@[j] == pivot;
-                        assert(right@[j] != pivot);
-                    }
-                };
-                assert(equals@.to_multiset().count(pivot) > 0nat);
-                assert(equals@.len() >= 1) by {
-                    if equals@.len() == 0 {
-                        assert(equals@.to_multiset() =~= Multiset::empty());
-                    }
-                };
-                assert(left@.len() + right@.len() < n);
             }
 
             let ghost left_view = left@;
@@ -725,11 +662,9 @@ pub mod QuickSortMtEphSlice {
                 Self::quick_sort_first(&mut la);
                 let v = la.to_vec();
                 proof {
-                    assert(elements(la) =~= pre_elems.sort_by(spec_leq::<T>()));
                     assert forall|i: int| 0 <= i < la.spec_len()
                         implies v@[i] == #[trigger] elements(la)[i] by
                     { assert(v@[i] == la.spec_index(i)); };
-                    assert(v@ =~= elements(la));
                 }
                 v
             };
@@ -745,11 +680,9 @@ pub mod QuickSortMtEphSlice {
                 Self::quick_sort_first(&mut ra);
                 let v = ra.to_vec();
                 proof {
-                    assert(elements(ra) =~= pre_elems.sort_by(spec_leq::<T>()));
                     assert forall|i: int| 0 <= i < ra.spec_len()
                         implies v@[i] == #[trigger] elements(ra)[i] by
                     { assert(v@[i] == ra.spec_index(i)); };
-                    assert(v@ =~= elements(ra));
                 }
                 v
             };
@@ -759,17 +692,10 @@ pub mod QuickSortMtEphSlice {
                 lemma_total_ordering::<T>();
                 left_view.lemma_sort_by_ensures(leq);
                 right_view.lemma_sort_by_ensures(leq);
-                assert(sorted_left@ =~= left_view.sort_by(spec_leq::<T>()));
-                assert(sorted_right@ =~= right_view.sort_by(spec_leq::<T>()));
-                assert(sorted_left@.len() == left_view.sort_by(leq).len());
                 assert(left_view.sort_by(leq).len() == left_view.len()) by {
-                    assert(left_view.sort_by(leq).to_multiset() =~= left_view.to_multiset());
-                    assert(left_view.sort_by(leq).to_multiset().len() == left_view.sort_by(leq).len());
                     assert(left_view.to_multiset().len() == left_view.len());
                 };
                 assert(right_view.sort_by(leq).len() == right_view.len()) by {
-                    assert(right_view.sort_by(leq).to_multiset() =~= right_view.to_multiset());
-                    assert(right_view.sort_by(leq).to_multiset().len() == right_view.sort_by(leq).len());
                     assert(right_view.to_multiset().len() == right_view.len());
                 };
             }
@@ -799,12 +725,8 @@ pub mod QuickSortMtEphSlice {
                     lemma_total_ordering::<T>();
                     s.lemma_sort_by_ensures(leq);
                     if s.len() == 0 {
-                        assert(s.to_multiset().len() == s.len());
                         assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
-                        assert(s.sort_by(leq).to_multiset() =~= s.to_multiset());
-                        assert(s.sort_by(leq).len() == s.len());
                     } else {
-                        assert(sorted_by(s, leq));
                         vstd::seq_lib::lemma_sorted_unique(s, s.sort_by(leq), leq);
                     }
                 }
@@ -821,31 +743,7 @@ pub mod QuickSortMtEphSlice {
                 assert(s[pivot_idx as int] == pivot);
                 assert(s.to_multiset().count(pivot) > 0) by {
                     s.to_multiset_ensures();
-                    assert(s.contains(pivot));
                 };
-                assert(left@.to_multiset().count(pivot) == 0nat) by {
-                    if left@.to_multiset().count(pivot) > 0 {
-                        left@.to_multiset_ensures();
-                        assert(left@.contains(pivot));
-                        let j = choose|j: int| 0 <= j < left@.len() && left@[j] == pivot;
-                        assert(left@[j] != pivot);
-                    }
-                };
-                assert(right@.to_multiset().count(pivot) == 0nat) by {
-                    if right@.to_multiset().count(pivot) > 0 {
-                        right@.to_multiset_ensures();
-                        assert(right@.contains(pivot));
-                        let j = choose|j: int| 0 <= j < right@.len() && right@[j] == pivot;
-                        assert(right@[j] != pivot);
-                    }
-                };
-                assert(equals@.to_multiset().count(pivot) > 0nat);
-                assert(equals@.len() >= 1) by {
-                    if equals@.len() == 0 {
-                        assert(equals@.to_multiset() =~= Multiset::empty());
-                    }
-                };
-                assert(left@.len() + right@.len() < n);
             }
 
             let ghost left_view = left@;
@@ -869,11 +767,9 @@ pub mod QuickSortMtEphSlice {
                 Self::quick_sort_median3(&mut la);
                 let v = la.to_vec();
                 proof {
-                    assert(elements(la) =~= pre_elems.sort_by(spec_leq::<T>()));
                     assert forall|i: int| 0 <= i < la.spec_len()
                         implies v@[i] == #[trigger] elements(la)[i] by
                     { assert(v@[i] == la.spec_index(i)); };
-                    assert(v@ =~= elements(la));
                 }
                 v
             };
@@ -889,11 +785,9 @@ pub mod QuickSortMtEphSlice {
                 Self::quick_sort_median3(&mut ra);
                 let v = ra.to_vec();
                 proof {
-                    assert(elements(ra) =~= pre_elems.sort_by(spec_leq::<T>()));
                     assert forall|i: int| 0 <= i < ra.spec_len()
                         implies v@[i] == #[trigger] elements(ra)[i] by
                     { assert(v@[i] == ra.spec_index(i)); };
-                    assert(v@ =~= elements(ra));
                 }
                 v
             };
@@ -903,17 +797,10 @@ pub mod QuickSortMtEphSlice {
                 lemma_total_ordering::<T>();
                 left_view.lemma_sort_by_ensures(leq);
                 right_view.lemma_sort_by_ensures(leq);
-                assert(sorted_left@ =~= left_view.sort_by(spec_leq::<T>()));
-                assert(sorted_right@ =~= right_view.sort_by(spec_leq::<T>()));
-                assert(sorted_left@.len() == left_view.sort_by(leq).len());
                 assert(left_view.sort_by(leq).len() == left_view.len()) by {
-                    assert(left_view.sort_by(leq).to_multiset() =~= left_view.to_multiset());
-                    assert(left_view.sort_by(leq).to_multiset().len() == left_view.sort_by(leq).len());
                     assert(left_view.to_multiset().len() == left_view.len());
                 };
                 assert(right_view.sort_by(leq).len() == right_view.len()) by {
-                    assert(right_view.sort_by(leq).to_multiset() =~= right_view.to_multiset());
-                    assert(right_view.sort_by(leq).to_multiset().len() == right_view.sort_by(leq).len());
                     assert(right_view.to_multiset().len() == right_view.len());
                 };
             }
@@ -943,12 +830,8 @@ pub mod QuickSortMtEphSlice {
                     lemma_total_ordering::<T>();
                     s.lemma_sort_by_ensures(leq);
                     if s.len() == 0 {
-                        assert(s.to_multiset().len() == s.len());
                         assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
-                        assert(s.sort_by(leq).to_multiset() =~= s.to_multiset());
-                        assert(s.sort_by(leq).len() == s.len());
                     } else {
-                        assert(sorted_by(s, leq));
                         vstd::seq_lib::lemma_sorted_unique(s, s.sort_by(leq), leq);
                     }
                 }
@@ -965,31 +848,7 @@ pub mod QuickSortMtEphSlice {
                 assert(s[pivot_idx as int] == pivot);
                 assert(s.to_multiset().count(pivot) > 0) by {
                     s.to_multiset_ensures();
-                    assert(s.contains(pivot));
                 };
-                assert(left@.to_multiset().count(pivot) == 0nat) by {
-                    if left@.to_multiset().count(pivot) > 0 {
-                        left@.to_multiset_ensures();
-                        assert(left@.contains(pivot));
-                        let j = choose|j: int| 0 <= j < left@.len() && left@[j] == pivot;
-                        assert(left@[j] != pivot);
-                    }
-                };
-                assert(right@.to_multiset().count(pivot) == 0nat) by {
-                    if right@.to_multiset().count(pivot) > 0 {
-                        right@.to_multiset_ensures();
-                        assert(right@.contains(pivot));
-                        let j = choose|j: int| 0 <= j < right@.len() && right@[j] == pivot;
-                        assert(right@[j] != pivot);
-                    }
-                };
-                assert(equals@.to_multiset().count(pivot) > 0nat);
-                assert(equals@.len() >= 1) by {
-                    if equals@.len() == 0 {
-                        assert(equals@.to_multiset() =~= Multiset::empty());
-                    }
-                };
-                assert(left@.len() + right@.len() < n);
             }
 
             let ghost left_view = left@;
@@ -1013,11 +872,9 @@ pub mod QuickSortMtEphSlice {
                 Self::quick_sort_random(&mut la);
                 let v = la.to_vec();
                 proof {
-                    assert(elements(la) =~= pre_elems.sort_by(spec_leq::<T>()));
                     assert forall|i: int| 0 <= i < la.spec_len()
                         implies v@[i] == #[trigger] elements(la)[i] by
                     { assert(v@[i] == la.spec_index(i)); };
-                    assert(v@ =~= elements(la));
                 }
                 v
             };
@@ -1033,11 +890,9 @@ pub mod QuickSortMtEphSlice {
                 Self::quick_sort_random(&mut ra);
                 let v = ra.to_vec();
                 proof {
-                    assert(elements(ra) =~= pre_elems.sort_by(spec_leq::<T>()));
                     assert forall|i: int| 0 <= i < ra.spec_len()
                         implies v@[i] == #[trigger] elements(ra)[i] by
                     { assert(v@[i] == ra.spec_index(i)); };
-                    assert(v@ =~= elements(ra));
                 }
                 v
             };
@@ -1047,17 +902,10 @@ pub mod QuickSortMtEphSlice {
                 lemma_total_ordering::<T>();
                 left_view.lemma_sort_by_ensures(leq);
                 right_view.lemma_sort_by_ensures(leq);
-                assert(sorted_left@ =~= left_view.sort_by(spec_leq::<T>()));
-                assert(sorted_right@ =~= right_view.sort_by(spec_leq::<T>()));
-                assert(sorted_left@.len() == left_view.sort_by(leq).len());
                 assert(left_view.sort_by(leq).len() == left_view.len()) by {
-                    assert(left_view.sort_by(leq).to_multiset() =~= left_view.to_multiset());
-                    assert(left_view.sort_by(leq).to_multiset().len() == left_view.sort_by(leq).len());
                     assert(left_view.to_multiset().len() == left_view.len());
                 };
                 assert(right_view.sort_by(leq).len() == right_view.len()) by {
-                    assert(right_view.sort_by(leq).to_multiset() =~= right_view.to_multiset());
-                    assert(right_view.sort_by(leq).to_multiset().len() == right_view.sort_by(leq).len());
                     assert(right_view.to_multiset().len() == right_view.len());
                 };
             }

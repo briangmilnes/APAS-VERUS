@@ -136,7 +136,6 @@ pub mod QuickSortMtEph {
             T::le(pivot, #[trigger] sorted_right[j]) && sorted_right[j] != pivot by
         {
             assert(sorted_right.to_multiset().count(sorted_right[j]) > 0);
-            assert(right_view.contains(sorted_right[j]));
             let idx = choose|idx: int|
                 0 <= idx < right_view.len() && right_view[idx] == sorted_right[j];
         };
@@ -537,19 +536,15 @@ pub mod QuickSortMtEph {
                 }
                 match TotalOrder::cmp(&elem, &pivot) {
                     core::cmp::Ordering::Less => {
-proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
                         left.push(elem);
                         proof {
                             let li = (left@.len() - 1) as int;
-                            assert(T::le(left@[li], pivot) && left@[li] != pivot);
                         }
                     },
                     core::cmp::Ordering::Greater => {
-                        proof { assert(T::le(pivot, elem)); assert(elem != pivot); }
                         right.push(elem);
                         proof {
                             let ri = (right@.len() - 1) as int;
-                            assert(T::le(pivot, right@[ri]) && right@[ri] != pivot);
                         }
                     },
                     core::cmp::Ordering::Equal => {
@@ -561,8 +556,6 @@ proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
 
             proof {
                 assert(s.subrange(0, n as int) =~= s);
-                assert(left@.len() + right@.len() < n);
-                assert(equals@.len() >= 1);
             }
 
             let ghost left_view = left@;
@@ -592,8 +585,6 @@ proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
                 lemma_total_ordering::<T>();
                 left_view.lemma_sort_by_ensures(leq);
                 right_view.lemma_sort_by_ensures(leq);
-                assert(sorted_left_a.seq@.len() == left_view.len());
-                assert(sorted_right_a.seq@.len() == right_view.len());
             }
 
             let sorted = Self::concat_three(&sorted_left_a, &equals_a, &sorted_right_a);
@@ -618,12 +609,8 @@ proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
                     lemma_total_ordering::<T>();
                     s.lemma_sort_by_ensures(leq);
                     if s.len() == 0 {
-                        assert(s.to_multiset().len() == s.len());
                         assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
-                        assert(s.sort_by(leq).to_multiset() =~= s.to_multiset());
-                        assert(s.sort_by(leq).len() == s.len());
                     } else {
-                        assert(sorted_by(s, leq));
                         vstd::seq_lib::lemma_sorted_unique(s, s.sort_by(leq), leq);
                     }
                 }
@@ -662,19 +649,15 @@ proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
                 }
                 match TotalOrder::cmp(&elem, &pivot) {
                     core::cmp::Ordering::Less => {
-                        proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
                         left.push(elem);
                         proof {
                             let li = (left@.len() - 1) as int;
-                            assert(T::le(left@[li], pivot) && left@[li] != pivot);
                         }
                     },
                     core::cmp::Ordering::Greater => {
-                        proof { assert(T::le(pivot, elem)); assert(elem != pivot); }
                         right.push(elem);
                         proof {
                             let ri = (right@.len() - 1) as int;
-                            assert(T::le(pivot, right@[ri]) && right@[ri] != pivot);
                         }
                     },
                     core::cmp::Ordering::Equal => {
@@ -686,8 +669,6 @@ proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
 
             proof {
                 assert(s.subrange(0, n as int) =~= s);
-                assert(left@.len() + right@.len() < n);
-                assert(equals@.len() >= 1);
             }
 
             let ghost left_view = left@;
@@ -717,8 +698,6 @@ proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
                 lemma_total_ordering::<T>();
                 left_view.lemma_sort_by_ensures(leq);
                 right_view.lemma_sort_by_ensures(leq);
-                assert(sorted_left_a.seq@.len() == left_view.len());
-                assert(sorted_right_a.seq@.len() == right_view.len());
             }
 
             let sorted = Self::concat_three(&sorted_left_a, &equals_a, &sorted_right_a);
