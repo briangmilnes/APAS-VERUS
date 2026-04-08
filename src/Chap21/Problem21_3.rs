@@ -83,6 +83,7 @@ pub mod Problem21_3 {
                 decreases n + 1 - y,
             {
                 let ghost v_len_mid = v@.len();
+                // Veracity: NEEDED proof block
                 proof {
                     // v_len_mid == v_len_before + (y-1)*n, v_len_before == x*nn, nn == n*n, nnn == nn*n
                     // x <= n-1, y <= n, so v_len_mid <= (n-1)*n*n + (n-1)*n = n*n*n - n < nnn
@@ -115,6 +116,7 @@ pub mod Problem21_3 {
                             && 2 <= v@[k].1.1 && v@[k].1.1 <= n + 1,
                     decreases n + 2 - z,
                 {
+                    // Veracity: NEEDED proof block
                     proof {
                         // v.len() < nnn so push won't overflow capacity
                         // Veracity: NEEDED assert
@@ -133,6 +135,7 @@ pub mod Problem21_3 {
                     z = z + 1;
                 }
                 // After inner: added n elements, v.len() == v_len_mid + n
+                // Veracity: NEEDED proof block
                 proof {
                     // (y - 1) * n + n == y * n
                     // Veracity: NEEDED assert
@@ -151,6 +154,7 @@ pub mod Problem21_3 {
                 y = y + 1;
             }
             // After middle: v.len() == v_len_before + n * n == (x+1) * nn
+            // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
                 assert((x as int + 1) * nn as int == x as int * nn as int + nn as int)
@@ -158,6 +162,7 @@ pub mod Problem21_3 {
             }
             x = x + 1;
         }
+        // Veracity: NEEDED proof block
         proof {
             // Veracity: NEEDED assert
             assert(n as int * nn as int == n as int * n as int * n as int)

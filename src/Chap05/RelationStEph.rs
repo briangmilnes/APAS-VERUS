@@ -208,6 +208,7 @@ verus!
                 let _ = out.insert(a_clone);
             }
 
+            // Veracity: NEEDED proof block
             proof {
                 // Connect invariant to postcondition
                 // Veracity: NEEDED assert
@@ -251,6 +252,7 @@ verus!
                 let _ = out.insert(b_clone);
             }
 
+            // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
                 assert forall |y: Y::V| out@.contains(y) implies 

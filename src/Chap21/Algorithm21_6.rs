@@ -91,6 +91,7 @@ pub mod Algorithm21_6 {
                     let i = i0 + 2;
                     let limit = if i == 0 { 0 } else { n / i };
                     let len = if limit >= 2 { limit - 1 } else { 0 };
+                    // Veracity: NEEDED proof block
                     proof {
                         // Veracity: NEEDED assert
                         assert forall|j0: usize| j0 < len implies

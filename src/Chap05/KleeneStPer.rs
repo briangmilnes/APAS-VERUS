@@ -244,6 +244,7 @@ verus!
                 }
                 i += 1;
             }
+            // Veracity: NEEDED proof block
             proof {
             }
             true

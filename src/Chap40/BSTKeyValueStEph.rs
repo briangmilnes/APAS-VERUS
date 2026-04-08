@@ -471,6 +471,7 @@ pub mod BSTKeyValueStEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn rotate_left(link: &mut Link<K, V>) {
+            // Veracity: NEEDED proof block
             proof { reveal_with_fuel(spec_ordered_link, 2); }
             let ghost old_content = spec_content_link(link);
             let ghost old_count = spec_node_count_link(link);
@@ -485,8 +486,10 @@ pub mod BSTKeyValueStEph {
                     let ghost c_content = spec_content_link(&y.right);
                     let ghost yk = y.key;
                     let ghost yv = y.value;
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal_with_fuel(spec_content_link, 2);
+                        // Veracity: NEEDED assert
                         assert(x_right_content.contains_key(yk));
                         // Capture all ordering facts before mutations.
                     }
@@ -494,8 +497,10 @@ pub mod BSTKeyValueStEph {
                     x.right = y.left.take();
 
                     // Prove new x (left=A, right=B, key=xk) is ordered.
+                    // Veracity: NEEDED proof block
                     proof {
                         // B was in x.right content, so B > xk.
+                        // Veracity: NEEDED assert
                         assert(forall |k: K| #[trigger] b_content.contains_key(k)
                             ==> x_right_content.contains_key(k));
                     }
@@ -503,15 +508,18 @@ pub mod BSTKeyValueStEph {
                     y.left = Some(x);
 
                     // Prove new x (y.left) is ordered.
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_ordered_assemble_kv(&y.left);
                     }
 
                     // Ordering of new y: left=new_x, right=C, key=yk.
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal_with_fuel(spec_content_link, 2);
                         let ghost new_x_content = spec_content_link(&y.left);
                         // A keys < yk by transitivity: A < xk < yk.
+                        // Veracity: NEEDED assert
                         assert forall |k: K| #[trigger] a_content.contains_key(k)
                             implies (TotalOrder::le(k, yk) && k != yk) by {
                             if a_content.contains_key(k) {
@@ -531,10 +539,12 @@ pub mod BSTKeyValueStEph {
                     }
 
                     // Re-assert y's ordering components before move.
+                    // Veracity: NEEDED proof block
                     proof {
                     }
 
                     *link = Some(y);
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal_with_fuel(spec_ordered_link, 2);
                         reveal_with_fuel(spec_content_link, 3);
@@ -553,6 +563,7 @@ pub mod BSTKeyValueStEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn rotate_right(link: &mut Link<K, V>) {
+            // Veracity: NEEDED proof block
             proof { reveal_with_fuel(spec_ordered_link, 2); }
             let ghost old_content = spec_content_link(link);
             let ghost old_count = spec_node_count_link(link);
@@ -567,8 +578,10 @@ pub mod BSTKeyValueStEph {
                     let ghost b_content = spec_content_link(&y.right);
                     let ghost yk = y.key;
                     let ghost yv = y.value;
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal_with_fuel(spec_content_link, 2);
+                        // Veracity: NEEDED assert
                         assert(x_left_content.contains_key(yk));
                         // Capture all ordering facts before mutations.
                     }
@@ -576,8 +589,10 @@ pub mod BSTKeyValueStEph {
                     x.left = y.right.take();
 
                     // Prove new x (left=B, right=C, key=xk) is ordered.
+                    // Veracity: NEEDED proof block
                     proof {
                         // B was in x.left content, so B < xk.
+                        // Veracity: NEEDED assert
                         assert(forall |k: K| #[trigger] b_content.contains_key(k)
                             ==> x_left_content.contains_key(k));
                     }
@@ -585,15 +600,18 @@ pub mod BSTKeyValueStEph {
                     y.right = Some(x);
 
                     // Prove new x (y.right) is ordered.
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_ordered_assemble_kv(&y.right);
                     }
 
                     // Ordering of new y: left=A, right=new_x, key=yk.
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal_with_fuel(spec_content_link, 2);
                         let ghost new_x_content = spec_content_link(&y.right);
                         // C keys > yk by transitivity: C > xk > yk.
+                        // Veracity: NEEDED assert
                         assert forall |k: K| #[trigger] c_content.contains_key(k)
                             implies (TotalOrder::le(yk, k) && k != yk) by {
                             if c_content.contains_key(k) {
@@ -607,6 +625,7 @@ pub mod BSTKeyValueStEph {
                     }
 
                     *link = Some(y);
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal_with_fuel(spec_ordered_link, 2);
                         reveal_with_fuel(spec_content_link, 3);
@@ -627,6 +646,7 @@ pub mod BSTKeyValueStEph {
         fn insert_link(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> (inserted: bool)
             decreases old(link),
         {
+            // Veracity: NEEDED proof block
             proof { reveal_with_fuel(spec_ordered_link, 2); }
             let ghost old_content = spec_content_link(link);
             let ghost old_count = spec_node_count_link(link);
@@ -637,6 +657,7 @@ pub mod BSTKeyValueStEph {
                 let ghost node_value = node.value;
                 let ghost old_left_count = spec_node_count_link(&node.left);
                 let ghost old_right_count = spec_node_count_link(&node.right);
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(spec_content_link, 2);
                     reveal_with_fuel(spec_node_count_link, 2);
@@ -647,6 +668,7 @@ pub mod BSTKeyValueStEph {
                 match c {
                     Ordering::Less => {
                         // Key not in right subtree (all right keys > node_key > key).
+                        // Veracity: NEEDED proof block
                         proof {
                             if old_right_content.contains_key(key) {
                                 // Right ordering: le(node_key, key) && key != node_key.
@@ -656,10 +678,12 @@ pub mod BSTKeyValueStEph {
                         }
                         let inserted = Self::insert_link(&mut node.left, key, value, priority);
                         // Ordering: new left = old_left.insert(key,value). All < node_key.
+                        // Veracity: NEEDED proof block
                         proof {
                             // Right subtree unchanged — reassert ordering.
                         }
                         *link = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_content_link, 2);
                             reveal_with_fuel(spec_node_count_link, 2);
@@ -677,13 +701,16 @@ pub mod BSTKeyValueStEph {
                         inserted
                     }
                     Ordering::Greater => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         let inserted = Self::insert_link(&mut node.right, key, value, priority);
+                        // Veracity: NEEDED proof block
                         proof {
                             // Left subtree unchanged — reassert ordering.
                         }
                         *link = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_content_link, 2);
                             reveal_with_fuel(spec_node_count_link, 2);
@@ -703,9 +730,11 @@ pub mod BSTKeyValueStEph {
                     Ordering::Equal => {
                         node.value = value;
                         // Both children unchanged — reassert ordering.
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         *link = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_content_link, 2);
                             reveal_with_fuel(spec_node_count_link, 2);
@@ -716,6 +745,7 @@ pub mod BSTKeyValueStEph {
                 }
             } else {
                 *link = Some(Box::new(Node::new(key, value, priority)));
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(spec_content_link, 2);
                     reveal_with_fuel(spec_node_count_link, 2);
@@ -739,6 +769,7 @@ pub mod BSTKeyValueStEph {
                 let ghost node_value = node.value;
                 let ghost old_left_count = spec_node_count_link(&node.left);
                 let ghost old_right_count = spec_node_count_link(&node.right);
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(spec_ordered_link, 2);
                     reveal_with_fuel(spec_content_link, 2);
@@ -748,6 +779,7 @@ pub mod BSTKeyValueStEph {
                 let c = TotalOrder::cmp(key, &node.key);
                 match c {
                     Ordering::Less => {
+                        // Veracity: NEEDED proof block
                         proof {
                             if old_right_content.contains_key(*key) {
                                 K::antisymmetric(*key, node_key);
@@ -755,6 +787,7 @@ pub mod BSTKeyValueStEph {
                         }
                         let deleted = Self::delete_link(&mut node.left, key);
                         *link = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_content_link, 2);
                             reveal_with_fuel(spec_node_count_link, 2);
@@ -763,6 +796,7 @@ pub mod BSTKeyValueStEph {
                         deleted
                     }
                     Ordering::Greater => {
+                        // Veracity: NEEDED proof block
                         proof {
                             if old_left_content.contains_key(*key) {
                                 K::antisymmetric(node_key, *key);
@@ -770,6 +804,7 @@ pub mod BSTKeyValueStEph {
                         }
                         let deleted = Self::delete_link(&mut node.right, key);
                         *link = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_content_link, 2);
                             reveal_with_fuel(spec_node_count_link, 2);
@@ -780,6 +815,7 @@ pub mod BSTKeyValueStEph {
                     Ordering::Equal => {
                         if node.left.is_none() && node.right.is_none() {
                             // Leaf: remove entirely. link is already None from take().
+                            // Veracity: NEEDED proof block
                             proof {
                                 reveal_with_fuel(spec_node_count_link, 2);
                             }
@@ -800,6 +836,7 @@ pub mod BSTKeyValueStEph {
                                 let mut rot = link.take().unwrap();
                                 let ghost rot_left_content = spec_content_link(&rot.left);
                                 let ghost rot_right_content = spec_content_link(&rot.right);
+                                // Veracity: NEEDED proof block
                                 proof {
                                     reveal_with_fuel(spec_ordered_link, 2);
                                     reveal_with_fuel(spec_content_link, 2);
@@ -807,6 +844,7 @@ pub mod BSTKeyValueStEph {
                                 }
                                 let deleted = Self::delete_link(&mut rot.right, key);
                                 *link = Some(rot);
+                                // Veracity: NEEDED proof block
                                 proof {
                                     reveal_with_fuel(spec_content_link, 2);
                                     reveal_with_fuel(spec_node_count_link, 2);
@@ -820,12 +858,14 @@ pub mod BSTKeyValueStEph {
                             } else {
                                 Self::rotate_left(link);
                                 // Unfold ordering before take — link still Some(rotated).
+                                // Veracity: NEEDED proof block
                                 proof {
                                     reveal_with_fuel(spec_ordered_link, 2);
                                 }
                                 let mut rot = link.take().unwrap();
                                 let ghost rot_left_content = spec_content_link(&rot.left);
                                 let ghost rot_right_content = spec_content_link(&rot.right);
+                                // Veracity: NEEDED proof block
                                 proof {
                                     reveal_with_fuel(spec_content_link, 2);
                                     reveal_with_fuel(spec_node_count_link, 2);
@@ -833,6 +873,7 @@ pub mod BSTKeyValueStEph {
                                 let deleted = Self::delete_link(&mut rot.left, key);
                                 *link = Some(rot);
                                 // Content proof.
+                                // Veracity: NEEDED proof block
                                 proof {
                                     reveal_with_fuel(spec_content_link, 2);
                                     reveal_with_fuel(spec_node_count_link, 2);
@@ -841,9 +882,11 @@ pub mod BSTKeyValueStEph {
                                     }
                                 }
                                 // Left subtree ordering after deletion.
+                                // Veracity: NEEDED proof block
                                 proof {
                                 }
                                 // Incrementally build conjunction to work around Z3 flakiness.
+                                // Veracity: NEEDED proof block
                                 proof {
                                     reveal_with_fuel(spec_ordered_link, 2);
                                     // Connect rot fields to link.unwrap() fields.
@@ -869,6 +912,7 @@ pub mod BSTKeyValueStEph {
         fn find_link<'a>(link: &'a Link<K, V>, key: &K) -> (found: Option<&'a V>)
             decreases *link,
         {
+            // Veracity: NEEDED proof block
             proof { reveal_with_fuel(spec_ordered_link, 2); }
             match link {
                 | None => None,
@@ -876,12 +920,14 @@ pub mod BSTKeyValueStEph {
                     let c = TotalOrder::cmp(key, &node.key);
                     match c {
                         Ordering::Equal => {
+                            // Veracity: NEEDED proof block
                             proof {
                             }
                             Some(&node.value)
                         }
                         Ordering::Less => {
                             let r = Self::find_link(&node.left, key);
+                            // Veracity: NEEDED proof block
                             proof {
                                 if r.is_some() {
                                 }
@@ -898,6 +944,7 @@ pub mod BSTKeyValueStEph {
                         }
                         Ordering::Greater => {
                             let r = Self::find_link(&node.right, key);
+                            // Veracity: NEEDED proof block
                             proof {
                                 if r.is_some() {
                                 }
@@ -1335,9 +1382,11 @@ pub mod BSTKeyValueStEph {
         match link {
             None => None,
             Some(node) => {
+                // Veracity: NEEDED proof block
                 proof { reveal_with_fuel(spec_ordered_link, 2); }
                 let k = node.key.clone();
                 let v = node.value.clone();
+                // Veracity: NEEDED proof block
                 proof { assume(k == node.key && v == node.value); } // accept hole: Clone bridge
                 Some(Box::new(Node {
                     key: k,
@@ -1403,6 +1452,7 @@ pub mod BSTKeyValueStEph {
         match (a, b) {
             (None, None) => true,
             (Some(an), Some(bn)) => {
+                // Veracity: NEEDED proof block
                 proof { reveal_with_fuel(spec_ordered_link, 2); }
                 an.key == bn.key && an.value == bn.value
                     && compare_kv_links(&an.left, &bn.left)
@@ -1417,6 +1467,7 @@ pub mod BSTKeyValueStEph {
 
     impl<K: StT + Ord + TotalOrder, V: StT> Clone for Node<K, V> {
         fn clone(&self) -> Self {
+            // Veracity: NEEDED proof block
             proof { assume(spec_ordered_link(&self.left)); assume(spec_ordered_link(&self.right)); } // Clone body: ordering bridge
             Node {
                 key: self.key.clone(),
@@ -1444,6 +1495,7 @@ pub mod BSTKeyValueStEph {
                 cloned@ == self@,
                 cloned.size == self.size,
         {
+            // Veracity: NEEDED proof block
             proof { assume(spec_ordered_link(&self.root)); } // Clone body: ordering bridge
             BSTKeyValueStEph {
                 root: clone_link(&self.root),
@@ -1464,8 +1516,10 @@ pub mod BSTKeyValueStEph {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
+            // Veracity: NEEDED proof block
             proof { assume(spec_ordered_link(&self.root)); assume(spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
             let equal = compare_kv_links(&self.root, &other.root) && self.size == other.size;
+            // Veracity: NEEDED proof block
             proof { assume(equal == (self@ == other@)); }
             equal
         }

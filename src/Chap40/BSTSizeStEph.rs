@@ -534,52 +534,66 @@ pub mod BSTSizeStEph {
             if let Some(mut x) = link.take() {
                 let ghost xl = Lnk::spec_size_link(&x.left);
                 let ghost xr = Lnk::spec_size_link(&x.right);
+                // Veracity: NEEDED assert
                 assert(Lnk::spec_link_size_wf(&x.left));
+                // Veracity: NEEDED assert
                 assert(Lnk::spec_link_size_wf(&x.right));
                 let ghost x_left_content = Lnk::spec_content_link(&x.left);
                 let ghost x_right_content = Lnk::spec_content_link(&x.right);
                 let ghost x_key = x.key;
                 // Ordering facts from pre-rotation.
+                // Veracity: NEEDED assert
                 assert(Lnk::spec_ordered_link(&x.right));
 
                 if let Some(mut y) = x.right.take() {
                     let ghost yl = Lnk::spec_size_link(&y.left);
                     let ghost yr = Lnk::spec_size_link(&y.right);
+                    // Veracity: NEEDED assert
                     assert(Lnk::spec_link_size_wf(&y.left));
+                    // Veracity: NEEDED assert
                     assert(Lnk::spec_link_size_wf(&y.right));
                     let ghost y_left_content = Lnk::spec_content_link(&y.left);
                     let ghost y_right_content = Lnk::spec_content_link(&y.right);
                     let ghost y_key = y.key;
 
                     x.right = y.left.take();
+                    // Veracity: NEEDED assert
                     assert(Lnk::spec_link_size_wf(&x.right));
+                    // Veracity: NEEDED assert
                     assert(Lnk::spec_link_size_wf(&x.left));
                     // Ordering of new x: left=A, right=B (y_left_content).
                     // B was part of old x.right content, so B > x_key.
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(forall |k: T| #[trigger] y_left_content.contains(k)
                             ==> x_right_content.contains(k));
                     }
                     Self::update_size(&mut *x);
 
                     // Prove ordering for new x before it moves into y.left.
+                    // Veracity: NEEDED proof block
                     proof {
                     }
 
                     y.left = Some(x);
                     Self::update_size(&mut *y);
+                    // Veracity: NEEDED assert
                     assert(Lnk::spec_link_size_wf(&y.right));
                     // Capture content before y is moved.
                     let ghost y_left_new_content = Lnk::spec_content_link(&y.left);
                     let ghost pre_move_content = y_left_new_content.union(y_right_content).insert(y_key);
 
                     // Ordering of new y: left=Some(new_x), right=C.
+                    // Veracity: NEEDED proof block
                     proof {
                         // y_key was in old x.right, so y_key > x_key.
+                        // Veracity: NEEDED assert
                         assert(x_right_content.contains(y_key));
                         // By antisymmetry: x_key < y_key.
                         lemma_cmp_antisymmetry(y_key, x_key);
                         // All k in A: k < x_key < y_key by transitivity.
+                        // Veracity: NEEDED assert
                         assert forall |k: T| #[trigger] x_left_content.contains(k)
                             implies k.cmp_spec(&y_key) == std::cmp::Ordering::Less by {
                             if x_left_content.contains(k) {
@@ -592,6 +606,7 @@ pub mod BSTSizeStEph {
                     }
 
                     *link = Some(y);
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_wf_assemble(link);
                         lemma_ordered_assemble(link);
@@ -610,50 +625,64 @@ pub mod BSTSizeStEph {
             if let Some(mut x) = link.take() {
                 let ghost xl = Lnk::spec_size_link(&x.left);
                 let ghost xr = Lnk::spec_size_link(&x.right);
+                // Veracity: NEEDED assert
                 assert(Lnk::spec_link_size_wf(&x.left));
+                // Veracity: NEEDED assert
                 assert(Lnk::spec_link_size_wf(&x.right));
                 let ghost x_left_content = Lnk::spec_content_link(&x.left);
                 let ghost x_right_content = Lnk::spec_content_link(&x.right);
                 let ghost x_key = x.key;
+                // Veracity: NEEDED assert
                 assert(Lnk::spec_ordered_link(&x.left));
 
                 if let Some(mut y) = x.left.take() {
                     let ghost yl = Lnk::spec_size_link(&y.left);
                     let ghost yr = Lnk::spec_size_link(&y.right);
+                    // Veracity: NEEDED assert
                     assert(Lnk::spec_link_size_wf(&y.left));
+                    // Veracity: NEEDED assert
                     assert(Lnk::spec_link_size_wf(&y.right));
                     let ghost y_left_content = Lnk::spec_content_link(&y.left);
                     let ghost y_right_content = Lnk::spec_content_link(&y.right);
                     let ghost y_key = y.key;
 
                     x.left = y.right.take();
+                    // Veracity: NEEDED assert
                     assert(Lnk::spec_link_size_wf(&x.left));
+                    // Veracity: NEEDED assert
                     assert(Lnk::spec_link_size_wf(&x.right));
                     // Ordering of new x: left=B (y_right_content), right=C (x_right_content).
                     // B was part of old x.left content, so B < x_key.
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(forall |k: T| #[trigger] y_right_content.contains(k)
                             ==> x_left_content.contains(k));
                     }
                     Self::update_size(&mut *x);
 
+                    // Veracity: NEEDED proof block
                     proof {
                     }
 
                     y.right = Some(x);
                     Self::update_size(&mut *y);
+                    // Veracity: NEEDED assert
                     assert(Lnk::spec_link_size_wf(&y.left));
                     // Capture content before y is moved.
                     let ghost y_right_new_content = Lnk::spec_content_link(&y.right);
                     let ghost pre_move_content = y_left_content.union(y_right_new_content).insert(y_key);
 
                     // Ordering of new y: left=A (y_left_content), right=Some(new_x).
+                    // Veracity: NEEDED proof block
                     proof {
                         // y_key was in old x.left, so y_key < x_key.
+                        // Veracity: NEEDED assert
                         assert(x_left_content.contains(y_key));
                         // By antisymmetry: x_key > y_key.
                         lemma_cmp_antisymmetry_lt(y_key, x_key);
                         // All k in C: k > x_key > y_key by transitivity.
+                        // Veracity: NEEDED assert
                         assert forall |k: T| #[trigger] x_right_content.contains(k)
                             implies k.cmp_spec(&y_key) == std::cmp::Ordering::Greater by {
                             if x_right_content.contains(k) {
@@ -666,6 +695,7 @@ pub mod BSTSizeStEph {
                     }
 
                     *link = Some(y);
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_wf_assemble(link);
                         lemma_ordered_assemble(link);
@@ -682,12 +712,15 @@ pub mod BSTSizeStEph {
         fn insert_link(link: &mut Link<T>, value: T, priority: u64)
             decreases old(link),
         {
+            // Veracity: NEEDED proof block
             proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
             let ghost old_content = Lnk::spec_content_link(link);
             if let Some(mut node) = link.take() {
                 let ghost old_left = Lnk::spec_size_link(&node.left);
                 let ghost old_right = Lnk::spec_size_link(&node.right);
+                // Veracity: NEEDED assert
                 assert(Lnk::spec_link_size_wf(&node.left));
+                // Veracity: NEEDED assert
                 assert(Lnk::spec_link_size_wf(&node.right));
                 let ghost old_left_content = Lnk::spec_content_link(&node.left);
                 let ghost old_right_content = Lnk::spec_content_link(&node.right);
@@ -696,14 +729,18 @@ pub mod BSTSizeStEph {
                 match value.cmp(&node.key) {
                     std::cmp::Ordering::Less => {
                         Self::insert_link(&mut node.left, value, priority);
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_link_size_wf(&node.right));
                         // New left content = old_left_content ∪ {value}. All < node_key:
                         // old left elements < node_key (pre-ordering), value < node_key (from cmp).
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         Self::update_size(&mut *node);
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_link_size_wf(&node.right));
                         *link = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_wf_assemble(link);
                             lemma_ordered_assemble(link);
@@ -718,14 +755,18 @@ pub mod BSTSizeStEph {
                     },
                     std::cmp::Ordering::Greater => {
                         Self::insert_link(&mut node.right, value, priority);
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_link_size_wf(&node.left));
                         // New right content = old_right_content ∪ {value}. All > node_key:
                         // old right elements > node_key (pre-ordering), value > node_key (from cmp).
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         Self::update_size(&mut *node);
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_link_size_wf(&node.left));
                         *link = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_wf_assemble(link);
                             lemma_ordered_assemble(link);
@@ -740,6 +781,7 @@ pub mod BSTSizeStEph {
                     },
                     std::cmp::Ordering::Equal => {
                         *link = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_wf_assemble(link);
                             lemma_ordered_assemble(link);
@@ -754,6 +796,7 @@ pub mod BSTSizeStEph {
                     left: None,
                     right: None,
                 }));
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_wf_assemble(link);
                     lemma_ordered_assemble(link);
@@ -765,6 +808,7 @@ pub mod BSTSizeStEph {
         fn delete_link(link: &mut Link<T>, key: &T) -> (deleted: bool)
             decreases Lnk::spec_size_link(old(link)),
         {
+            // Veracity: NEEDED proof block
             proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
             let ghost old_content = Lnk::spec_content_link(link);
             let ghost old_size = Lnk::spec_size_link(link);
@@ -774,13 +818,17 @@ pub mod BSTSizeStEph {
                 let ghost node_key = node.key;
                 let ghost old_left_size = Lnk::spec_size_link(&node.left);
                 let ghost old_right_size = Lnk::spec_size_link(&node.right);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(Lnk::spec_link_size_wf(&node.left));
+                    // Veracity: NEEDED assert
                     assert(Lnk::spec_link_size_wf(&node.right));
                 }
 
                 match key.cmp(&node.key) {
                     std::cmp::Ordering::Less => {
+                        // Veracity: NEEDED proof block
                         proof {
                             if old_right_content.contains(*key) {
                             }
@@ -788,6 +836,7 @@ pub mod BSTSizeStEph {
                         let deleted = Self::delete_link(&mut node.left, key);
                         Self::update_size(&mut *node);
                         *link = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_wf_assemble(link);
                             lemma_ordered_assemble(link);
@@ -796,6 +845,7 @@ pub mod BSTSizeStEph {
                         deleted
                     }
                     std::cmp::Ordering::Greater => {
+                        // Veracity: NEEDED proof block
                         proof {
                             if old_left_content.contains(*key) {
                             }
@@ -803,6 +853,7 @@ pub mod BSTSizeStEph {
                         let deleted = Self::delete_link(&mut node.right, key);
                         Self::update_size(&mut *node);
                         *link = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_wf_assemble(link);
                             lemma_ordered_assemble(link);
@@ -812,6 +863,7 @@ pub mod BSTSizeStEph {
                     }
                     std::cmp::Ordering::Equal => {
                         if node.left.is_none() && node.right.is_none() {
+                            // Veracity: NEEDED proof block
                             proof {
                             }
                             true
@@ -827,17 +879,20 @@ pub mod BSTSizeStEph {
                             if rotate_right {
                                 Self::rotate_right(link);
                                 let ghost new_root_key = spec_root_key_link(link);
+                                // Veracity: NEEDED proof block
                                 proof {
                                     // From rotate_right ensures: new root < old root.
                                 }
                                 let mut rot = link.take().unwrap();
                                 let ghost rot_left_content = Lnk::spec_content_link(&rot.left);
                                 let ghost rot_right_content = Lnk::spec_content_link(&rot.right);
+                                // Veracity: NEEDED proof block
                                 proof {
                                 }
                                 let deleted = Self::delete_link(&mut rot.right, key);
                                 Self::update_size(&mut *rot);
                                 *link = Some(rot);
+                                // Veracity: NEEDED proof block
                                 proof {
                                     // rot.key == new_root_key != *key.
                                     // rot.key < *key by antisymmetry.
@@ -852,17 +907,20 @@ pub mod BSTSizeStEph {
                             } else {
                                 Self::rotate_left(link);
                                 let ghost new_root_key = spec_root_key_link(link);
+                                // Veracity: NEEDED proof block
                                 proof {
                                     // From rotate_left ensures: new root > old root.
                                 }
                                 let mut rot = link.take().unwrap();
                                 let ghost rot_left_content = Lnk::spec_content_link(&rot.left);
                                 let ghost rot_right_content = Lnk::spec_content_link(&rot.right);
+                                // Veracity: NEEDED proof block
                                 proof {
                                 }
                                 let deleted = Self::delete_link(&mut rot.left, key);
                                 Self::update_size(&mut *rot);
                                 *link = Some(rot);
+                                // Veracity: NEEDED proof block
                                 proof {
                                     // rot.key == new_root_key != *key.
                                     // rot.key > *key by antisymmetry.
@@ -887,12 +945,14 @@ pub mod BSTSizeStEph {
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             decreases *link,
         {
+            // Veracity: NEEDED proof block
             proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
             match link {
                 | None => None,
                 | Some(node) => {
                     match target.cmp(&node.key) {
                         std::cmp::Ordering::Equal => {
+                            // Veracity: NEEDED assert
                             assert(Lnk::spec_content_link(link) =~=
                                 Lnk::spec_content_link(&node.left)
                                     .union(Lnk::spec_content_link(&node.right))
@@ -901,9 +961,11 @@ pub mod BSTSizeStEph {
                         },
                         std::cmp::Ordering::Less => {
                             let found = Self::find_link(&node.left, target);
+                            // Veracity: NEEDED proof block
                             proof {
                                 reveal(vstd::laws_cmp::obeys_cmp_ord);
                                 reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+                                // Veracity: NEEDED assert
                                 assert(Lnk::spec_content_link(link) =~=
                                     Lnk::spec_content_link(&node.left)
                                         .union(Lnk::spec_content_link(&node.right))
@@ -919,6 +981,7 @@ pub mod BSTSizeStEph {
                         },
                         std::cmp::Ordering::Greater => {
                             let found = Self::find_link(&node.right, target);
+                            // Veracity: NEEDED proof block
                             proof {
                                 reveal(vstd::laws_cmp::obeys_cmp_ord);
                                 reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
@@ -969,10 +1032,12 @@ pub mod BSTSizeStEph {
             match link {
                 | None => 0,
                 | Some(node) => {
+                    // Veracity: NEEDED proof block
                     proof { lemma_size_wf_child_bounded(link); }
                     let lh = Self::height_link(&node.left);
                     let rh = Self::height_link(&node.right);
                     let m = if lh >= rh { lh } else { rh };
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_height_le_size(&node.left);
                         lemma_height_le_size(&node.right);
@@ -1065,6 +1130,7 @@ pub mod BSTSizeStEph {
             match link {
                 | None => 0,
                 | Some(node) => {
+                    // Veracity: NEEDED proof block
                     proof { lemma_size_wf_child_bounded(link); }
                     let left_size = Self::size_link(&node.left);
                     if *key < node.key {
@@ -1367,6 +1433,7 @@ pub mod BSTSizeStEph {
             None => None,
             Some(node) => {
                 let k = node.key.clone();
+                // Veracity: NEEDED proof block
                 proof { assume(k == node.key); } // accept hole: Clone bridge
                 Some(Box::new(Node {
                     key: k,
@@ -1384,6 +1451,7 @@ pub mod BSTSizeStEph {
 
     impl<T: StT + Ord> Clone for Node<T> {
         fn clone(&self) -> (cloned: Self) {
+            // Veracity: NEEDED proof block
             proof { assume(Lnk::spec_ordered_link(&self.left)); assume(Lnk::spec_ordered_link(&self.right)); } // Clone body: ordering bridge
             Node {
                 key: self.key.clone(),
@@ -1411,6 +1479,7 @@ pub mod BSTSizeStEph {
                 Lnk::spec_size_link(&cloned.root) == Lnk::spec_size_link(&self.root),
                 Lnk::spec_link_size_wf(&self.root) ==> Lnk::spec_link_size_wf(&cloned.root),
         {
+            // Veracity: NEEDED proof block
             proof { assume(Lnk::spec_ordered_link(&self.root)); } // Clone body: ordering bridge
             BSTSizeStEph { root: clone_link(&self.root) }
         }
@@ -1428,8 +1497,10 @@ pub mod BSTSizeStEph {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
+            // Veracity: NEEDED proof block
             proof { assume(Lnk::spec_ordered_link(&self.root)); assume(Lnk::spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
             let equal = compare_links(&self.root, &other.root);
+            // Veracity: NEEDED proof block
             proof { assume(equal == (self@ == other@)); }
             equal
         }

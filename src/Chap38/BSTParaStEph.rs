@@ -103,6 +103,7 @@ pub mod BSTParaStEph {
     pub fn reveal_param_bst_backings<T: StT + Ord>(tree: &ParamBST<T>)
         ensures forall|v: <T as View>::V| tree@.contains(v) ==> exists|t: T| #[trigger] tree@.contains(t@) && t@ == v
     {
+        // Veracity: NEEDED proof block
         proof { use_type_invariant(tree); }
     }
 
@@ -113,6 +114,7 @@ pub mod BSTParaStEph {
         ensures c == *x,
     {
         let c = x.clone();
+        // Veracity: NEEDED assert
         assert(cloned(*x, c));  // strictly_cloned(*x,c) from call_ensures; triggers axiom
         c
     }
@@ -145,30 +147,40 @@ pub mod BSTParaStEph {
         match tree.expose() {
             | Exposed::Leaf => ParamBST::new(),
             | Exposed::Node(left, key, right) => {
+                // Veracity: NEEDED proof block
                 proof {
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                    // Veracity: NEEDED assert
                     assert(!left@.union(right@).contains(key@));
+                    // Veracity: NEEDED assert
                     assert(tree@.len() == left@.len() + right@.len() + 1);
                 }
                 let left_filtered = filter_inner(&left, predicate, Ghost(spec_pred));
                 let right_filtered = filter_inner(&right, predicate, Ghost(spec_pred));
                 if predicate(&key) {
+                    // Veracity: NEEDED proof block
                     proof {
                         vstd::set_lib::lemma_len_subset(left_filtered@, left@);
                         vstd::set_lib::lemma_len_subset(right_filtered@, right@);
                         // Disjointness: subsets of disjoint sets.
+                        // Veracity: NEEDED assert
                         assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {};
                         // Ordering: left_filtered ⊆ left (< key), right_filtered ⊆ right (> key).
+                        // Veracity: NEEDED assert
                         assert forall|t: T| (#[trigger] left_filtered@.contains(t@)) implies t.cmp_spec(&key) == Less by {};
+                        // Veracity: NEEDED assert
                         assert forall|t: T| (#[trigger] right_filtered@.contains(t@)) implies t.cmp_spec(&key) == Greater by {};
                     }
                     ParamBST::join_m(left_filtered, key, right_filtered)
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {};
                         vstd::set_lib::lemma_len_subset(left_filtered@, left@);
                         vstd::set_lib::lemma_len_subset(right_filtered@, right@);
                         // Ordering: left_filtered ⊆ left < key < right ⊇ right_filtered.
+                        // Veracity: NEEDED assert
                         assert forall|s: T, o: T| #![trigger left_filtered@.contains(s@), right_filtered@.contains(o@)]
                             left_filtered@.contains(s@) && right_filtered@.contains(o@) implies
                             s.cmp_spec(&o) == Less by {
@@ -198,9 +210,12 @@ pub mod BSTParaStEph {
         match tree.expose() {
             | Exposed::Leaf => identity,
             | Exposed::Node(left, key, right) => {
+                // Veracity: NEEDED proof block
                 proof {
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                    // Veracity: NEEDED assert
                     assert(!left@.union(right@).contains(key@));
+                    // Veracity: NEEDED assert
                     assert(tree@.len() == left@.len() + right@.len() + 1);
                 }
                 let left_acc = reduce_inner(&left, op, identity.clone());
@@ -333,6 +348,7 @@ pub mod BSTParaStEph {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
         // a@ == b@ from view_ord_consistent + Equal(a,b).
+        // Veracity: NEEDED assert
         assert(a@ == b@);
         // Mismatch cases (a cmp c) != (b cmp c) all lead to contradiction:
         // (L,G) or (G,L): transitivity gives Less(a,b) or Less(b,a),
@@ -352,6 +368,7 @@ pub mod BSTParaStEph {
     {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+        // Veracity: NEEDED assert
         assert(b@ == c@);
     }
 
@@ -603,6 +620,7 @@ pub mod BSTParaStEph {
         fn new() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparasteph_wf()
         {
+        // Veracity: NEEDED assert
         assert(obeys_feq_full_trigger::<T>());
          new_param_bst(None, Ghost(Set::empty())) }
 
@@ -613,6 +631,7 @@ pub mod BSTParaStEph {
                 tree@.finite(),
                 tree.spec_bstparasteph_wf()
         {
+                      // Veracity: NEEDED assert
                       assert(obeys_feq_full_trigger::<T>());
             let left: Self = Self::new();
             let right: Self = Self::new();
@@ -637,7 +656,9 @@ pub mod BSTParaStEph {
                 },
             decreases self@.len(), 0nat,
         {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(self); }
+            // Veracity: NEEDED proof block
             proof { assert(obeys_feq_full_trigger::<T>()); }
             let handle = self.locked_root.acquire_read();
             let exposed = match handle.borrow() {
@@ -645,24 +666,32 @@ pub mod BSTParaStEph {
                     Exposed::Leaf
                 }
                 | Some(node) => {
+                    // Veracity: NEEDED proof block
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(node.left@, node.right@);
+                        // Veracity: NEEDED assert
                         assert(node.left@.len() < self@.len());
+                        // Veracity: NEEDED assert
                         assert(node.right@.len() < self@.len());
                     }
                     let l = node.left.clone();
                     let k = clone_elem(&node.key);
                     let r = node.right.clone();
+                    // Veracity: NEEDED proof block
                     proof {
                         // k == node.key from clone_elem ensures.
                         // l@ == node.left@ and r@ == node.right@ from ParamBST::clone ensures.
                         // Ordering transfers: spec fn on equal args yields equal results.
+                        // Veracity: NEEDED assert
                         assert forall |t: T| (#[trigger] l@.contains(t@))
                             implies t.cmp_spec(&k) == Less by {
+                            // Veracity: NEEDED assert
                             assert(node.left@.contains(t@));
                         }
+                        // Veracity: NEEDED assert
                         assert forall |t: T| (#[trigger] r@.contains(t@))
                             implies t.cmp_spec(&k) == Greater by {
+                            // Veracity: NEEDED assert
                             assert(node.right@.contains(t@));
                         }
                     }
@@ -686,13 +715,17 @@ pub mod BSTParaStEph {
                     let rs = right.size();
                     let size = 1 + ls + rs;
                     let ghost contents = lv.union(rv).insert(kv);
+                    // Veracity: NEEDED proof block
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
+                        // Veracity: NEEDED assert
                         assert(!lv.union(rv).contains(kv));
+                        // Veracity: NEEDED assert
                         assert(contents.len() == size as nat);
                         // Witness property: every view in contents has a T witness.
                         use_type_invariant(&left);
                         use_type_invariant(&right);
+                        // Veracity: NEEDED assert
                         assert forall|v: <T as View>::V| contents.contains(v)
                             implies exists|t: T| t@ == v by {
                             if lv.contains(v) {
@@ -700,7 +733,9 @@ pub mod BSTParaStEph {
                             } else if rv.contains(v) {
                                 // From right's type_invariant.
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(v == kv);
+                                // Veracity: NEEDED assert
                                 assert(key@ == v);
                             }
                         };
@@ -723,11 +758,13 @@ pub mod BSTParaStEph {
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
         {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(self); }
             let handle = self.locked_root.acquire_read();
             let count = match handle.borrow() {
                 None => 0usize,
                 Some(node) => {
+                    // Veracity: NEEDED proof block
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(node.left@, node.right@);
                     }
@@ -748,14 +785,18 @@ pub mod BSTParaStEph {
             let ghost old_view = self@;
             let (left, _, right) = self.split(&key);
             let ghost kv = key@;
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
                 // left@ ∪ right@ =~= old_view.remove(kv), disjoint.
                 // disjoint_lens: left@.len() + right@.len() == old_view.remove(kv).len().
                 // old_view.remove(kv).len() ≤ old_view.len() < usize::MAX (from requires).
+                // Veracity: NEEDED assert
                 assert(left@.union(right@) =~= old_view.remove(kv));
+                // Veracity: NEEDED assert
                 assert(old_view.remove(kv).subset_of(old_view));
                 vstd::set_lib::lemma_len_subset(old_view.remove(kv), old_view);
+                // Veracity: NEEDED assert
                 assert(left@.len() + right@.len() < usize::MAX as nat);
             }
             *self = Self::join_m(left, key, right);
@@ -766,12 +807,17 @@ pub mod BSTParaStEph {
             let ghost old_view = self@;
             let ghost kref = *key;
             let (left, _, right) = self.split(key);
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                // Veracity: NEEDED assert
                 assert(left@.union(right@) =~= old_view.remove(kref@));
+                // Veracity: NEEDED assert
                 assert(old_view.remove(kref@).subset_of(old_view));
                 vstd::set_lib::lemma_len_subset(old_view.remove(kref@), old_view);
+                // Veracity: NEEDED assert
                 assert(left@.len() + right@.len() < usize::MAX as nat);
+                // Veracity: NEEDED assert
                 assert forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
                     left@.contains(s@) && right@.contains(o@) implies
                     s.cmp_spec(&o) == Less by {
@@ -790,10 +836,13 @@ pub mod BSTParaStEph {
             match self.expose() {
                 | Exposed::Leaf => None,
                 | Exposed::Node(left, root_key, right) => {
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal(vstd::laws_cmp::obeys_cmp_ord);
                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                        // Veracity: NEEDED assert
                         assert(!left@.union(right@).contains(root_key@));
+                        // Veracity: NEEDED assert
                         assert(self@.len() == left@.len() + right@.len() + 1);
                     }
                     match key.cmp(&root_key) {
@@ -823,10 +872,13 @@ pub mod BSTParaStEph {
             match self.expose() {
                 | Exposed::Leaf => (Self::new(), false, Self::new()),
                 | Exposed::Node(left, root_key, right) => {
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal(vstd::laws_cmp::obeys_cmp_ord);
                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                        // Veracity: NEEDED assert
                         assert(!left@.union(right@).contains(root_key@));
+                        // Veracity: NEEDED assert
                         assert(self@.len() == left@.len() + right@.len() + 1);
                     }
                     let ghost rk = root_key;
@@ -839,26 +891,36 @@ pub mod BSTParaStEph {
                             let (ll, found, lr) = left.split(key);
                             let ghost llv = ll@;
                             let ghost lrv = lr@;
+                            // Veracity: NEEDED proof block
                             proof {
+                                // Veracity: NEEDED assert
                                 assert forall|x| lrv.contains(x) implies lv.contains(x) by {
+                                    // Veracity: NEEDED assert
                                     assert(llv.union(lrv).contains(x));
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|x| llv.contains(x) implies lv.contains(x) by {
+                                    // Veracity: NEEDED assert
                                     assert(llv.union(lrv).contains(x));
                                 };
                                 vstd::set_lib::lemma_len_subset(lrv, lv);
                             }
                             let rebuilt = Self::join_mid(Exposed::Node(lr, root_key, right));
+                            // Veracity: NEEDED proof block
                             proof {
+                                // Veracity: NEEDED assert
                                 assert forall|x| #[trigger] (llv.union(rebuilt@)).contains(x) <==> self@.remove(key@).contains(x) by {
                                     if llv.contains(x) {
+                                        // Veracity: NEEDED assert
                                         assert(llv.union(lrv).contains(x));
                                     }
                                     if lv.contains(x) && x != key@ {
+                                        // Veracity: NEEDED assert
                                         assert(llv.union(lrv).contains(x));
                                     }
                                 };
                                 // Ordering: rebuilt elements > key.
+                                // Veracity: NEEDED assert
                                 assert forall|t: T| (#[trigger] rebuilt@.contains(t@)) implies
                                     t.cmp_spec(&key) == Greater by {
                                     reveal(vstd::laws_cmp::obeys_cmp_ord);
@@ -886,26 +948,36 @@ pub mod BSTParaStEph {
                             let (rl, found, rr) = right.split(key);
                             let ghost rlv = rl@;
                             let ghost rrv = rr@;
+                            // Veracity: NEEDED proof block
                             proof {
+                                // Veracity: NEEDED assert
                                 assert forall|x| rlv.contains(x) implies rv.contains(x) by {
+                                    // Veracity: NEEDED assert
                                     assert(rlv.union(rrv).contains(x));
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|x| rrv.contains(x) implies rv.contains(x) by {
+                                    // Veracity: NEEDED assert
                                     assert(rlv.union(rrv).contains(x));
                                 };
                                 vstd::set_lib::lemma_len_subset(rlv, rv);
                             }
                             let rebuilt = Self::join_mid(Exposed::Node(left, root_key, rl));
+                            // Veracity: NEEDED proof block
                             proof {
+                                // Veracity: NEEDED assert
                                 assert forall|x| #[trigger] (rebuilt@.union(rrv)).contains(x) <==> self@.remove(key@).contains(x) by {
                                     if rrv.contains(x) {
+                                        // Veracity: NEEDED assert
                                         assert(rlv.union(rrv).contains(x));
                                     }
                                     if rv.contains(x) && x != key@ {
+                                        // Veracity: NEEDED assert
                                         assert(rlv.union(rrv).contains(x));
                                     }
                                 };
                                 // Ordering: rebuilt elements < key.
+                                // Veracity: NEEDED assert
                                 assert forall|t: T| (#[trigger] rebuilt@.contains(t@)) implies
                                     t.cmp_spec(&key) == Less by {
                                     reveal(vstd::laws_cmp::obeys_cmp_ord);
@@ -928,13 +1000,16 @@ pub mod BSTParaStEph {
                             (rebuilt, found, rr)
                         }
                         | Equal => {
+                            // Veracity: NEEDED proof block
                             proof {
                                 // left < root_key == key, right > root_key == key.
                                 // Right congruence: Equal(kval, rk) → t cmp kval == t cmp rk.
+                                // Veracity: NEEDED assert
                                 assert forall|t: T| (#[trigger] left@.contains(t@)) implies
                                     t.cmp_spec(&key) == Less by {
                                     lemma_cmp_equal_congruent_right(t, kval, rk);
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|t: T| (#[trigger] right@.contains(t@)) implies
                                     t.cmp_spec(&key) == Greater by {
                                     lemma_cmp_equal_congruent_right(t, kval, rk);
@@ -959,14 +1034,19 @@ pub mod BSTParaStEph {
             match self.expose() {
                 | Exposed::Leaf => None,
                 | Exposed::Node(left, key, right) => {
+                    // Veracity: NEEDED proof block
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                        // Veracity: NEEDED assert
                         assert(!left@.union(right@).contains(key@));
+                        // Veracity: NEEDED assert
                         assert(self@.len() == left@.len() + right@.len() + 1);
                     }
                     match left.min_key() {
                         | Some(rec) => {
+                            // Veracity: NEEDED proof block
                             proof {
+                                // Veracity: NEEDED assert
                                 assert forall|t: T| #![trigger self@.contains(t@)] self@.contains(t@) implies
                                     rec.cmp_spec(&t) == Less || rec@ == t@ by {
                                     if left@.contains(t@) {
@@ -988,7 +1068,9 @@ pub mod BSTParaStEph {
                             Some(rec)
                         }
                         | None => {
+                            // Veracity: NEEDED proof block
                             proof {
+                                // Veracity: NEEDED assert
                                 assert forall|t: T| #![trigger self@.contains(t@)] self@.contains(t@) implies
                                     key.cmp_spec(&t) == Less || key@ == t@ by {
                                     if right@.contains(t@) {
@@ -1017,14 +1099,19 @@ pub mod BSTParaStEph {
             match self.expose() {
                 | Exposed::Leaf => None,
                 | Exposed::Node(left, key, right) => {
+                    // Veracity: NEEDED proof block
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                        // Veracity: NEEDED assert
                         assert(!left@.union(right@).contains(key@));
+                        // Veracity: NEEDED assert
                         assert(self@.len() == left@.len() + right@.len() + 1);
                     }
                     match right.max_key() {
                         | Some(rec) => {
+                            // Veracity: NEEDED proof block
                             proof {
+                                // Veracity: NEEDED assert
                                 assert forall|t: T| #![trigger self@.contains(t@)] self@.contains(t@) implies
                                     t.cmp_spec(&rec) == Less || rec@ == t@ by {
                                     if right@.contains(t@) {
@@ -1048,7 +1135,9 @@ pub mod BSTParaStEph {
                             Some(rec)
                         }
                         | None => {
+                            // Veracity: NEEDED proof block
                             proof {
+                                // Veracity: NEEDED assert
                                 assert forall|t: T| #![trigger self@.contains(t@)] self@.contains(t@) implies
                                     t.cmp_spec(&key) == Less || key@ == t@ by {
                                     if left@.contains(t@) {
@@ -1072,6 +1161,7 @@ pub mod BSTParaStEph {
         {
             match other.expose() {
                 | Exposed::Leaf => {
+                    // Veracity: NEEDED proof block
                     proof { assert(self@.union(other@) =~= self@); }
                     self.clone()
                 }
@@ -1081,28 +1171,40 @@ pub mod BSTParaStEph {
                     let ghost lv = left@;
                     let ghost rv = right@;
                     let ghost kv = key@;
+                    // Veracity: NEEDED proof block
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
+                        // Veracity: NEEDED assert
                         assert(!lv.union(rv).contains(kv));
+                        // Veracity: NEEDED assert
                         assert(ov.len() == lv.len() + rv.len() + 1);
                         // self ⊥ left: left ⊆ other and self ⊥ other.
+                        // Veracity: NEEDED assert
                         assert forall|x| lv.contains(x) implies ov.contains(x) by {};
+                        // Veracity: NEEDED assert
                         assert(sv.disjoint(lv));
+                        // Veracity: NEEDED assert
                         assert(sv.len() + lv.len() < usize::MAX as nat);
                     }
                     let merged = self.join_pair(left);
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost mv = merged@;
                         // merged ⊥ right.
+                        // Veracity: NEEDED assert
                         assert forall|x| !(mv.contains(x) && rv.contains(x)) by {
                             if rv.contains(x) { assert(ov.contains(x)); }
                         };
                         // key ∉ merged.
+                        // Veracity: NEEDED assert
                         assert(ov.contains(kv));
+                        // Veracity: NEEDED assert
                         assert(!mv.contains(kv));
                         // Size bound.
                         vstd::set_lib::lemma_set_disjoint_lens(sv, lv);
+                        // Veracity: NEEDED assert
                         assert(mv.len() == sv.len() + lv.len());
+                        // Veracity: NEEDED assert
                         assert(mv.len() + rv.len() < usize::MAX as nat);
                     }
                     Self::join_m(merged, key, right)
@@ -1128,18 +1230,24 @@ pub mod BSTParaStEph {
                     let ghost alv = al@;
                     let ghost arv = ar@;
                     let ghost akv = ak@;
+                    // Veracity: NEEDED proof block
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(alv, arv);
+                        // Veracity: NEEDED assert
                         assert(!alv.union(arv).contains(akv));
+                        // Veracity: NEEDED assert
                         assert(sv.len() == alv.len() + arv.len() + 1);
                     }
                     let (bl, _, br) = other.split(&ak);
                     let ghost blv = bl@;
                     let ghost brv = br@;
+                    // Veracity: NEEDED proof block
                     proof {
                         // Recursive call bounds: al@.len() + bl@.len() <= usize::MAX.
                         // bl ⊂ other (from split), so bl.len() ≤ other.len().
+                        // Veracity: NEEDED assert
                         assert(blv.subset_of(other@.remove(akv)));
+                        // Veracity: NEEDED assert
                         assert(other@.remove(akv).subset_of(other@));
                         vstd::set_lib::lemma_len_subset(blv, other@);
                         vstd::set_lib::lemma_len_subset(brv, other@);
@@ -1148,22 +1256,30 @@ pub mod BSTParaStEph {
                     let right_union = ar.union(&br);
                     let ghost luv = left_union@;
                     let ghost ruv = right_union@;
+                    // Veracity: NEEDED proof block
                     proof {
                         // Ordering: luv = alv ∪ blv (all < ak), ruv = arv ∪ brv (all > ak).
+                        // Veracity: NEEDED assert
                         assert forall|t: T| (#[trigger] luv.contains(t@))
                             implies t.cmp_spec(&ak) == Less by {};
+                        // Veracity: NEEDED assert
                         assert forall|t: T| (#[trigger] ruv.contains(t@))
                             implies t.cmp_spec(&ak) == Greater by {};
                         // Disjointness via witness property: every view in al@/bl@ has a T witness.
                         use_type_invariant(&al);
                         use_type_invariant(&bl);
+                        // Veracity: NEEDED assert
                         assert forall|x| !(luv.contains(x) && ruv.contains(x)) by {
                             if luv.contains(x) && ruv.contains(x) {
                                 // x ∈ luv = alv ∪ blv → has T witness from type_invariant.
+                                // Veracity: NEEDED assert
                                 assert(alv.contains(x) || blv.contains(x));
+                                // Veracity: NEEDED assert
                                 assert(exists|t: T| t@ == x);
                                 let ghost t: T = choose|t: T| t@ == x;
+                                // Veracity: NEEDED assert
                                 assert(t.cmp_spec(&ak) == Less);
+                                // Veracity: NEEDED assert
                                 assert(t.cmp_spec(&ak) == Greater);
                             }
                         };
@@ -1171,6 +1287,7 @@ pub mod BSTParaStEph {
                         // So luv.len() + ruv.len() + 1 ≤ (self@ ∪ other@).len() ≤ usize::MAX.
                         vstd::set_lib::lemma_set_disjoint_lens(luv, ruv);
                         let ghost luv_ruv = luv.union(ruv);
+                        // Veracity: NEEDED assert
                         assert forall|x| #[trigger] luv_ruv.insert(akv).contains(x)
                             implies sv.union(other@).contains(x) by {
                             if x == akv { assert(sv.contains(akv)); }
@@ -1184,9 +1301,11 @@ pub mod BSTParaStEph {
                         };
                         vstd::set_lib::lemma_len_union(sv, other@);
                         vstd::set_lib::lemma_len_subset(luv_ruv.insert(akv), sv.union(other@));
+                        // Veracity: NEEDED assert
                         assert(luv.len() + ruv.len() < usize::MAX as nat);
                     }
                     let result = Self::join_m(left_union, ak, right_union);
+                    // Veracity: NEEDED proof block
                     proof {
                         // result@ = luv ∪ ruv ∪ {akv} = (alv ∪ blv) ∪ (arv ∪ brv) ∪ {akv}.
                         // self@ ∪ other@ = (alv ∪ arv ∪ {akv}) ∪ other@.
@@ -1194,12 +1313,15 @@ pub mod BSTParaStEph {
                         // So result@ = alv ∪ arv ∪ blv ∪ brv ∪ {akv}
                         //            = alv ∪ arv ∪ other@.remove(akv) ∪ {akv}
                         //            = self@ ∪ other@.
+                        // Veracity: NEEDED assert
                         assert forall|x| #[trigger] sv.union(other@).contains(x) <==>
                             result@.contains(x) by {
                             if blv.contains(x) || brv.contains(x) {
+                                // Veracity: NEEDED assert
                                 assert(other@.contains(x));
                             }
                             if other@.contains(x) && x != akv {
+                                // Veracity: NEEDED assert
                                 assert(blv.union(brv).contains(x));
                             }
                         };
@@ -1224,8 +1346,10 @@ pub mod BSTParaStEph {
                     let ghost alv = al@;
                     let ghost arv = ar@;
                     let ghost akv = ak@;
+                    // Veracity: NEEDED proof block
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(alv, arv);
+                        // Veracity: NEEDED assert
                         assert(sv.len() == alv.len() + arv.len() + 1);
                     }
                     let (bl, found, br) = other.split(&ak);
@@ -1236,10 +1360,13 @@ pub mod BSTParaStEph {
                     let ghost lrv = left_res@;
                     let ghost rrv = right_res@;
                     if found {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Disjoint: subsets of disjoint sets.
+                            // Veracity: NEEDED assert
                             assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
                                 if lrv.contains(x) && rrv.contains(x) {
+                                    // Veracity: NEEDED assert
                                     assert(alv.contains(x) && arv.contains(x));
                                 }
                             };
@@ -1247,39 +1374,56 @@ pub mod BSTParaStEph {
                             vstd::set_lib::lemma_len_subset(lrv, alv);
                             vstd::set_lib::lemma_len_subset(rrv, arv);
                             // Ordering: lrv ⊂ al@ (< ak), rrv ⊂ ar@ (> ak).
+                            // Veracity: NEEDED assert
                             assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&ak) == Less by {};
+                            // Veracity: NEEDED assert
                             assert forall|t: T| (#[trigger] rrv.contains(t@)) implies t.cmp_spec(&ak) == Greater by {};
                         }
                         let result = Self::join_m(left_res, ak, right_res);
+                        // Veracity: NEEDED proof block
                         proof {
                             // result@ = lrv ∪ rrv ∪ {akv} where lrv = alv∩blv, rrv = arv∩brv.
                             // found ⟹ akv ∈ other@.
                             use_type_invariant(&al);
                             use_type_invariant(&ar);
+                            // Veracity: NEEDED assert
                             assert forall|x| #[trigger] sv.intersect(other@).contains(x) <==>
                                 result@.contains(x) by {
                                 if lrv.contains(x) {
+                                    // Veracity: NEEDED assert
                                     assert(other@.remove(akv).contains(x));
                                 }
                                 if rrv.contains(x) {
+                                    // Veracity: NEEDED assert
                                     assert(other@.remove(akv).contains(x));
                                 }
                                 if sv.contains(x) && other@.contains(x) && x != akv {
+                                    // Veracity: NEEDED assert
                                     assert(blv.union(brv).contains(x));
                                     // Route x to matching child via ordering witness.
                                     if alv.contains(x) {
+                                        // Veracity: NEEDED assert
                                         assert(exists|t: T| t@ == x);
                                         let ghost t: T = choose|t: T| t@ == x;
+                                        // Veracity: NEEDED assert
                                         assert(t.cmp_spec(&ak) == Less);
+                                        // Veracity: NEEDED assert
                                         assert(!brv.contains(x));
+                                        // Veracity: NEEDED assert
                                         assert(blv.contains(x));
+                                        // Veracity: NEEDED assert
                                         assert(lrv.contains(x));
                                     } else {
+                                        // Veracity: NEEDED assert
                                         assert(exists|t: T| t@ == x);
                                         let ghost t: T = choose|t: T| t@ == x;
+                                        // Veracity: NEEDED assert
                                         assert(t.cmp_spec(&ak) == Greater);
+                                        // Veracity: NEEDED assert
                                         assert(!blv.contains(x));
+                                        // Veracity: NEEDED assert
                                         assert(brv.contains(x));
+                                        // Veracity: NEEDED assert
                                         assert(rrv.contains(x));
                                     }
                                 }
@@ -1287,10 +1431,13 @@ pub mod BSTParaStEph {
                         }
                         result
                     } else {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Disjoint: subsets of disjoint sets.
+                            // Veracity: NEEDED assert
                             assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
                                 if lrv.contains(x) && rrv.contains(x) {
+                                    // Veracity: NEEDED assert
                                     assert(alv.contains(x) && arv.contains(x));
                                 }
                             };
@@ -1299,6 +1446,7 @@ pub mod BSTParaStEph {
                             vstd::set_lib::lemma_len_subset(lrv, alv);
                             vstd::set_lib::lemma_len_subset(rrv, arv);
                             // Ordering: lrv ⊂ al@ (< ak), rrv ⊂ ar@ (> ak). s < ak < o ⟹ s < o.
+                            // Veracity: NEEDED assert
                             assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)] lrv.contains(s@) && rrv.contains(o@)
                                 implies s.cmp_spec(&o) == Less by {
                                 lemma_cmp_antisymmetry(o, ak);
@@ -1306,34 +1454,49 @@ pub mod BSTParaStEph {
                             };
                         }
                         let result = left_res.join_pair(right_res);
+                        // Veracity: NEEDED proof block
                         proof {
                             // !found ⟹ akv ∉ other@.
                             use_type_invariant(&al);
                             use_type_invariant(&ar);
+                            // Veracity: NEEDED assert
                             assert forall|x| #[trigger] sv.intersect(other@).contains(x) <==>
                                 result@.contains(x) by {
                                 if lrv.contains(x) {
+                                    // Veracity: NEEDED assert
                                     assert(other@.remove(akv).contains(x));
                                 }
                                 if rrv.contains(x) {
+                                    // Veracity: NEEDED assert
                                     assert(other@.remove(akv).contains(x));
                                 }
                                 if sv.contains(x) && other@.contains(x) {
+                                    // Veracity: NEEDED assert
                                     assert(blv.union(brv).contains(x));
                                     // Route x to matching child via ordering witness.
                                     if alv.contains(x) {
+                                        // Veracity: NEEDED assert
                                         assert(exists|t: T| t@ == x);
                                         let ghost t: T = choose|t: T| t@ == x;
+                                        // Veracity: NEEDED assert
                                         assert(t.cmp_spec(&ak) == Less);
+                                        // Veracity: NEEDED assert
                                         assert(!brv.contains(x));
+                                        // Veracity: NEEDED assert
                                         assert(blv.contains(x));
+                                        // Veracity: NEEDED assert
                                         assert(lrv.contains(x));
                                     } else {
+                                        // Veracity: NEEDED assert
                                         assert(exists|t: T| t@ == x);
                                         let ghost t: T = choose|t: T| t@ == x;
+                                        // Veracity: NEEDED assert
                                         assert(t.cmp_spec(&ak) == Greater);
+                                        // Veracity: NEEDED assert
                                         assert(!blv.contains(x));
+                                        // Veracity: NEEDED assert
                                         assert(brv.contains(x));
+                                        // Veracity: NEEDED assert
                                         assert(rrv.contains(x));
                                     }
                                 }
@@ -1363,8 +1526,10 @@ pub mod BSTParaStEph {
                     let ghost alv = al@;
                     let ghost arv = ar@;
                     let ghost akv = ak@;
+                    // Veracity: NEEDED proof block
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(alv, arv);
+                        // Veracity: NEEDED assert
                         assert(sv.len() == alv.len() + arv.len() + 1);
                     }
                     let (bl, found, br) = other.split(&ak);
@@ -1375,10 +1540,13 @@ pub mod BSTParaStEph {
                     let ghost lrv = left_res@;
                     let ghost rrv = right_res@;
                     if found {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Disjoint: subsets of disjoint sets are disjoint.
+                            // Veracity: NEEDED assert
                             assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
                                 if lrv.contains(x) && rrv.contains(x) {
+                                    // Veracity: NEEDED assert
                                     assert(alv.contains(x) && arv.contains(x));
                                 }
                             };
@@ -1387,6 +1555,7 @@ pub mod BSTParaStEph {
                             vstd::set_lib::lemma_len_subset(lrv, alv);
                             vstd::set_lib::lemma_len_subset(rrv, arv);
                             // Ordering: elements of lrv ⊂ al@ are < ak, elements of rrv ⊂ ar@ are > ak.
+                            // Veracity: NEEDED assert
                             assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)] lrv.contains(s@) && rrv.contains(o@)
                                 implies s.cmp_spec(&o) == Less by {
                                 lemma_cmp_antisymmetry(o, ak);
@@ -1394,29 +1563,39 @@ pub mod BSTParaStEph {
                             };
                         }
                         let result = left_res.join_pair(right_res);
+                        // Veracity: NEEDED proof block
                         proof {
                             // found ⟹ akv ∈ other@, so akv ∉ difference.
                             // other@ = blv ∪ brv ∪ {akv} (found means akv ∈ other@).
                             use_type_invariant(&al);
                             use_type_invariant(&ar);
+                            // Veracity: NEEDED assert
                             assert forall|x| #[trigger] sv.difference(other@).contains(x) <==>
                                 result@.contains(x) by {
                                 if lrv.contains(x) {
+                                    // Veracity: NEEDED assert
                                     assert(exists|t: T| t@ == x);
                                     let ghost t: T = choose|t: T| t@ == x;
+                                    // Veracity: NEEDED assert
                                     assert(t.cmp_spec(&ak) == Less);
+                                    // Veracity: NEEDED assert
                                     assert(!other@.contains(x));
                                 }
                                 if rrv.contains(x) {
+                                    // Veracity: NEEDED assert
                                     assert(exists|t: T| t@ == x);
                                     let ghost t: T = choose|t: T| t@ == x;
+                                    // Veracity: NEEDED assert
                                     assert(t.cmp_spec(&ak) == Greater);
+                                    // Veracity: NEEDED assert
                                     assert(!other@.contains(x));
                                 }
                                 if sv.contains(x) && !other@.contains(x) {
                                     if alv.contains(x) {
+                                        // Veracity: NEEDED assert
                                         assert(alv.difference(blv).contains(x));
                                     } else if arv.contains(x) {
+                                        // Veracity: NEEDED assert
                                         assert(arv.difference(brv).contains(x));
                                     }
                                 }
@@ -1424,10 +1603,13 @@ pub mod BSTParaStEph {
                         }
                         result
                     } else {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Disjoint: subsets of disjoint sets.
+                            // Veracity: NEEDED assert
                             assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
                                 if lrv.contains(x) && rrv.contains(x) {
+                                    // Veracity: NEEDED assert
                                     assert(alv.contains(x) && arv.contains(x));
                                 }
                             };
@@ -1435,34 +1617,47 @@ pub mod BSTParaStEph {
                             vstd::set_lib::lemma_len_subset(lrv, alv);
                             vstd::set_lib::lemma_len_subset(rrv, arv);
                             // Ordering: lrv ⊂ al@ (< ak), rrv ⊂ ar@ (> ak).
+                            // Veracity: NEEDED assert
                             assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&ak) == Less by {};
+                            // Veracity: NEEDED assert
                             assert forall|t: T| (#[trigger] rrv.contains(t@)) implies t.cmp_spec(&ak) == Greater by {};
                         }
                         let result = Self::join_m(left_res, ak, right_res);
+                        // Veracity: NEEDED proof block
                         proof {
                             // !found ⟹ akv ∉ other@, so akv ∈ difference.
                             // other@ = blv ∪ brv (akv ∉ other@, so remove is identity).
                             use_type_invariant(&al);
                             use_type_invariant(&ar);
+                            // Veracity: NEEDED assert
                             assert(blv.union(brv) =~= other@);
+                            // Veracity: NEEDED assert
                             assert forall|x| #[trigger] sv.difference(other@).contains(x) <==>
                                 result@.contains(x) by {
                                 if lrv.contains(x) {
+                                    // Veracity: NEEDED assert
                                     assert(exists|t: T| t@ == x);
                                     let ghost t: T = choose|t: T| t@ == x;
+                                    // Veracity: NEEDED assert
                                     assert(t.cmp_spec(&ak) == Less);
+                                    // Veracity: NEEDED assert
                                     assert(!other@.contains(x));
                                 }
                                 if rrv.contains(x) {
+                                    // Veracity: NEEDED assert
                                     assert(exists|t: T| t@ == x);
                                     let ghost t: T = choose|t: T| t@ == x;
+                                    // Veracity: NEEDED assert
                                     assert(t.cmp_spec(&ak) == Greater);
+                                    // Veracity: NEEDED assert
                                     assert(!other@.contains(x));
                                 }
                                 if sv.contains(x) && !other@.contains(x) && x != akv {
                                     if alv.contains(x) {
+                                        // Veracity: NEEDED assert
                                         assert(alv.difference(blv).contains(x));
                                     } else if arv.contains(x) {
+                                        // Veracity: NEEDED assert
                                         assert(arv.difference(brv).contains(x));
                                     }
                                 }
@@ -1507,9 +1702,12 @@ pub mod BSTParaStEph {
                 | Exposed::Node(left, key, right) => {
                     let ghost g0 = out@.len();
                     let ghost out_0 = out@;
+                    // Veracity: NEEDED proof block
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                        // Veracity: NEEDED assert
                         assert(!left@.union(right@).contains(key@));
+                        // Veracity: NEEDED assert
                         assert(self@.len() == left@.len() + right@.len() + 1);
                     }
                     left.collect_in_order(out);
@@ -1519,49 +1717,68 @@ pub mod BSTParaStEph {
                     let ghost g2 = out@.len();
                     let ghost out_2 = out@;
                     right.collect_in_order(out);
+                    // Veracity: NEEDED proof block
                     proof {
                         // Containment: new elements come from self@.
+                        // Veracity: NEEDED assert
                         assert forall|i: int| #![trigger out@[i]] g0 <= i < out@.len() implies
                             self@.contains(out@[i]@) by {
                             if i < g1 as int {
+                                // Veracity: NEEDED assert
                                 assert(left@.contains(out@[i]@));
                             } else if i == g1 as int {
+                                // Veracity: NEEDED assert
                                 assert(out@[i]@ == key@);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(right@.contains(out@[i]@));
                             }
                         };
                         // Completeness: all elements of self@ appear.
+                        // Veracity: NEEDED assert
                         assert forall|v: T::V| self@.contains(v) implies
                             exists|i: int| #![trigger out@[i]] g0 <= i < out@.len() && out@[i]@ == v by {
                             if left@.contains(v) {
                                 let i_left = choose|i: int| #![trigger out_1[i]] g0 <= i < g1 as int && out_1[i]@ == v;
+                                // Veracity: NEEDED assert
                                 assert(out@[i_left]@ == v);
                             } else if v == key@ {
+                                // Veracity: NEEDED assert
                                 assert(out@[g1 as int]@ == key@);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(right@.contains(v));
                             }
                         };
                         // Preservation: old elements unchanged.
+                        // Veracity: NEEDED assert
                         assert forall|i: int| #![trigger out@[i]] 0 <= i < g0 implies out@[i] == out_0[i] by {
+                            // Veracity: NEEDED assert
                             assert(out_1[i] == out_0[i]);
                         };
                         // No duplicate views in the new portion.
                         // Left portion has views in left@, key has view key@, right portion has views in right@.
                         // These three regions are pairwise disjoint by BST invariant.
+                        // Veracity: NEEDED assert
                         assert forall|i: int, j: int| #![trigger out@[i], out@[j]] g0 <= i < j < out@.len()
                             implies out@[i]@ != out@[j]@ by {
                             if i < g1 as int && j < g1 as int {
                             } else if i < g1 as int && j == g1 as int {
+                                // Veracity: NEEDED assert
                                 assert(left@.contains(out@[i]@));
+                                // Veracity: NEEDED assert
                                 assert(!left@.contains(key@));
                             } else if i < g1 as int && j >= g2 as int {
+                                // Veracity: NEEDED assert
                                 assert(left@.contains(out@[i]@));
+                                // Veracity: NEEDED assert
                                 assert(right@.contains(out@[j]@));
                             } else if i == g1 as int && j >= g2 as int {
+                                // Veracity: NEEDED assert
                                 assert(out@[i]@ == key@);
+                                // Veracity: NEEDED assert
                                 assert(right@.contains(out@[j]@));
+                                // Veracity: NEEDED assert
                                 assert(!right@.contains(key@));
                             } else if i >= g2 as int && j >= g2 as int {
                             }
@@ -1578,22 +1795,32 @@ pub mod BSTParaStEph {
             let mut out = Vec::with_capacity(count);
             self.collect_in_order(&mut out);
             let result = ArraySeqStPerS::from_vec(out);
+            // Veracity: NEEDED proof block
             proof {
                 // Containment: self@.contains(v) <==> seq@.contains(v).
+                // Veracity: NEEDED assert
                 assert forall|v: T::V| self@.contains(v) implies result@.contains(v) by {
                     let i = choose|i: int| #![trigger out@[i]] 0 <= i < out@.len() && out@[i]@ == v;
+                    // Veracity: NEEDED assert
                     assert(result@[i] == result.spec_index(i)@);
+                    // Veracity: NEEDED assert
                     assert(result.spec_index(i) == out@[i]);
                 };
+                // Veracity: NEEDED assert
                 assert forall|v: T::V| result@.contains(v) implies self@.contains(v) by {
                     let i = choose|i: int| 0 <= i < result@.len() && result@[i] == v;
+                    // Veracity: NEEDED assert
                     assert(result.spec_index(i) == out@[i]);
+                    // Veracity: NEEDED assert
                     assert(self@.contains(out@[i]@));
                 };
                 // No duplicates: collect_in_order gives view-level no-dups, lift to result@.
+                // Veracity: NEEDED assert
                 assert forall|i: int, j: int| 0 <= i < result@.len() && 0 <= j < result@.len() && i != j
                     implies result@[i] != result@[j] by {
+                    // Veracity: NEEDED assert
                     assert(result.spec_index(i) == out@[i]);
+                    // Veracity: NEEDED assert
                     assert(result.spec_index(j) == out@[j]);
                     if i < j { } else { assert(out@[j]@ != out@[i]@); }
                 };
@@ -1663,6 +1890,7 @@ pub mod BSTParaStEph {
             ensures cloned@ == self@,
             decreases self@.len(), 1nat,
         {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(self); }
             let exposed = self.expose();
             match exposed {
@@ -1670,6 +1898,7 @@ pub mod BSTParaStEph {
                     Self::new()
                 }
                 Exposed::Node(l, k, r) => {
+                    // Veracity: NEEDED proof block
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(l@, r@);
                     }

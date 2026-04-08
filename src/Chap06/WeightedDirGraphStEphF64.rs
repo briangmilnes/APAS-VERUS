@@ -141,6 +141,7 @@ verus!
                 match it.next() {
                     None => break,
                     Some(triple) => {
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_seq_index_in_map_to_set(edge_seq, it@.0 - 1);
                         }
@@ -149,6 +150,7 @@ verus!
                 }
             }
 
+            // Veracity: NEEDED proof block
             proof {
             }
 
@@ -192,6 +194,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         return edges;
@@ -226,6 +229,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
 // Veracity: NEEDED assert
 assert forall |p: (V::V, f64)| neighbors@.contains(p) implies
@@ -278,6 +282,7 @@ assert forall |p: (V::V, f64)| (exists |w: f64| #![trigger wa_view.contains((v_v
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
 // Veracity: NEEDED assert
 assert forall |p: (V::V, f64)| neighbors@.contains(p) implies

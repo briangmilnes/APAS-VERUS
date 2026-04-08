@@ -286,6 +286,7 @@ verus!
                     forall |j: int| #![trigger v@[j]] 0 <= j < i ==> is_functional_seq_at(v@, v@[j]@),
             {
                 if !Self::is_functional_vec_at(v, &v[i]) {
+                    // Veracity: NEEDED proof block
                     proof {
                         let pi = v@[i as int]@;
                         let witness_k = choose |k: int| #![trigger v@[k]] 0 <= k < v@.len() && v@[k]@.0 == pi.0 && v@[k]@.1 != pi.1;
@@ -324,6 +325,7 @@ verus!
                     Some(q) => {
                         if feq(&q.0, &p.0) {
                             if !feq(&q.1, &p.1) {
+                                // Veracity: NEEDED proof block
                                 proof {
                                     let idx = iter@.0 - 1;
                                     let mapped = the_seq.map(|i: int, pair: Pair<X,Y>| pair@);
@@ -355,6 +357,7 @@ verus!
             {
                 match outer_iter.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |x: X::V, y1: Y::V, y2: Y::V|
@@ -370,6 +373,7 @@ verus!
                     }
                     Some(p) => {
                         if !Self::is_functional_SetStEph_at(s, p) {
+                            // Veracity: NEEDED proof block
                             proof {
                                 let idx = outer_iter@.0 - 1;
                                 let mapped = the_seq.map(|i: int, pair: Pair<X,Y>| pair@);
@@ -393,6 +397,7 @@ verus!
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
         fn empty() -> MappingStEph<X, Y> {
             let result = MappingStEph { mapping: RelationStEph::empty() };
+            // Veracity: NEEDED proof block
             proof { 
             }
             result
@@ -403,6 +408,7 @@ verus!
             let ghost v_seq = v@;
             let pairs = SetStEph::from_vec(v);
             let result = MappingStEph { mapping: RelationStEph::from_set(pairs) };
+            // Veracity: NEEDED proof block
             proof {
                 // result.mapping@ == pairs@ == v_seq.map(|i, p: Pair<X, Y>| p@).to_set()
                 // is_functional_seq(v_seq) == is_functional_set(v_seq.map(|i, p| p@).to_set())
@@ -426,6 +432,7 @@ verus!
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|), Span O(|r|) — clones the relation.
         fn from_relation(r: &RelationStEph<X, Y>) -> MappingStEph<X, Y> {
             let result = MappingStEph { mapping: r.clone() };
+            // Veracity: NEEDED proof block
             proof {
                 // result.mapping@ == r@ (from clone ensures).
                 // is_functional_relation(*r) == is_functional_set(r@) == is_functional_set(result.mapping@).
@@ -443,6 +450,7 @@ verus!
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to relation size().
         fn size(&self) -> (size: usize) {
             let size = self.mapping.size();
+            // Veracity: NEEDED proof block
             proof {
                 let s = self.mapping@;
                 let proj = |p: (X::V, Y::V)| -> X::V { p.0 };
@@ -468,6 +476,7 @@ verus!
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — delegates to relation range().
         fn range(&self) -> SetStEph<Y> {
             let result = self.mapping.range();
+            // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
                 assert forall |y: Y::V| result@.contains(y) implies 
@@ -639,11 +648,13 @@ verus!
             ensures equal == (self@ == other@)
         {
             let r = self.mapping == other.mapping;
+            // Veracity: NEEDED proof block
             proof {
                 if r {
                 }
             }
             // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
+            // Veracity: NEEDED proof block
             proof { assume(r == (self@ == other@)); }
             r
         }

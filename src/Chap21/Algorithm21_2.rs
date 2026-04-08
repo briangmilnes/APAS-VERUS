@@ -74,6 +74,7 @@ pub mod Algorithm21_2 {
                     ensures
                         block.seq@.len() == pow(n as int, 2),
                 {
+                    // Veracity: NEEDED proof block
                     proof {
                         // Trigger Pair feq axioms for the nested Pair type.
                         // Veracity: NEEDED assert
@@ -104,6 +105,7 @@ pub mod Algorithm21_2 {
                         );
 
                     let flat_mid = ArraySeqStPerS::flatten(&mid);
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost mapped = mid.seq@.map_values(|inner: ArraySeqStPerS<Pair<usize, Pair<usize, usize>>>| inner.seq@);
                         // Veracity: NEEDED assert
@@ -117,11 +119,13 @@ pub mod Algorithm21_2 {
                 n,
             );
 
+        // Veracity: NEEDED proof block
         proof {
             // Veracity: NEEDED assert
             assert(Pair_feq_trigger::<usize, Pair<usize, usize>>());
         }
         let flattened = ArraySeqStPerS::flatten(&outer);
+        // Veracity: NEEDED proof block
         proof {
             let ghost n2 = pow(n as int, 2);
             let ghost mapped = outer.seq@.map_values(|inner: ArraySeqStPerS<Pair<usize, Pair<usize, usize>>>| inner.seq@);

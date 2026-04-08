@@ -164,6 +164,7 @@ verus!
                 match it.next() {
                     None => break,
                     Some(triple) => {
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_seq_index_in_map_to_set(edge_seq, it@.0 - 1);
                         }
@@ -212,6 +213,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         return edges;
@@ -246,6 +248,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |p: (V::V, u32)| neighbors@.contains(p) implies 
@@ -298,6 +301,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |p: (V::V, u32)| neighbors@.contains(p) implies 
@@ -348,6 +352,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_reveal_view_injective::<LabEdge<V, u32>>();
                             lemma_seq_fold_left_plus_is_weighted_seq_sum::<LabEdge<V, u32>, V::V, V::V>(wa_seq);
@@ -357,6 +362,7 @@ verus!
                         return sum;
                     },
                     Some(labeled_edge) => {
+                        // Veracity: NEEDED proof block
                         proof { assert(wa_seq.take(it@.0 as int).drop_last() =~= wa_seq.take((it@.0 - 1) as int)); }
                         sum = sum.add_value(labeled_edge.2);
                     },
@@ -385,6 +391,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |t: (V::V, V::V, u32)| #[trigger] edges@.contains(t) implies 
@@ -434,6 +441,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |t: (V::V, V::V, u32)| #[trigger] edges@.contains(t) implies 

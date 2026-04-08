@@ -149,11 +149,13 @@ broadcast use {
         decreases n
     {
         if n == 0 {
+            // Veracity: NEEDED assert
             assert(Set::new(|i: usize| (i as int) < 0int) =~= Set::<usize>::empty());
         } else {
             lemma_bounded_usize_set_finite((n - 1) as usize);
             let smaller = Set::new(|i: usize| (i as int) < (n - 1) as int);
             let bigger = Set::new(|i: usize| (i as int) < n as int);
+            // Veracity: NEEDED assert
             assert(bigger =~= smaller.insert((n - 1) as usize));
         }
     }
@@ -170,6 +172,7 @@ broadcast use {
             && u64_view(bits[i as int / 64])[i as int % 64]
         );
         let range_set = Set::new(|i: usize| (i as int) < universe_size as int);
+        // Veracity: NEEDED assert
         assert(our_set.subset_of(range_set));
         lemma_bounded_usize_set_finite(universe_size);
         // range_set is finite, our_set is a subset — lemma_set_subset_finite fires.
@@ -355,16 +358,21 @@ broadcast use {
                 j = j + 1;
             }
             let result = ArraySetEnumMtEph { bits, universe_size: u };
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall|i: usize| !(#[trigger] result@.contains(i)) by {
                     if (i as int) < u as int {
                         let word_idx = i as int / 64;
                         let bit_idx = i as int % 64;
+                        // Veracity: NEEDED assert
                         assert(0 <= word_idx < word_count as int);
+                        // Veracity: NEEDED assert
                         assert(result.bits@[word_idx] == 0u64);
                         zero_bit_false(bit_idx as u64);
                     }
                 }
+                // Veracity: NEEDED assert
                 assert(result@ =~= Set::<usize>::empty());
             }
             result
@@ -374,6 +382,7 @@ broadcast use {
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite(),
         {
+            // Veracity: NEEDED proof block
             proof { lemma_view_finite(self.bits@, self.universe_size); }
             let mut count: usize = 0;
             let ghost mut partial_set: Set<usize> = Set::empty();
@@ -390,26 +399,36 @@ broadcast use {
                 let word_idx = i / 64;
                 let bit_idx = (i % 64) as u64;
                 if get_bit64_macro!(self.bits[word_idx], bit_idx) {
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(self@.contains(i));
+                        // Veracity: NEEDED assert
                         assert(!partial_set.contains(i));
                         partial_set = partial_set.insert(i);
                     }
                     count = count + 1;
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(!self@.contains(i));
                     }
                 }
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(partial_set =~= Set::new(|j: usize|
                         (j as int) < (i + 1) as int && self@.contains(j)));
                     let range_set = Set::new(|j: usize| (j as int) < (i + 1) as int);
+                    // Veracity: NEEDED assert
                     assert(partial_set.subset_of(range_set));
                     lemma_bounded_usize_set_finite((i + 1) as usize);
                 }
             }
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(partial_set =~= self@);
             }
             count
@@ -418,6 +437,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)
         {
+            // Veracity: NEEDED proof block
             proof { lemma_view_finite(self.bits@, self.universe_size); }
             let mut result_vec: Vec<usize> = Vec::new();
             let ghost mut collected: Set<usize> = Set::empty();
@@ -448,56 +468,75 @@ broadcast use {
                 let word_idx = i / 64;
                 let bit_idx = (i % 64) as u64;
                 if get_bit64_macro!(self.bits[word_idx], bit_idx) {
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(self@.contains(i));
+                        // Veracity: NEEDED assert
                         assert(!collected.contains(i));
                     }
                     let ghost old_collected = collected;
                     let old_len = result_vec.len();
                     let ghost old_view = result_vec@;
                     result_vec.push(i);
+                    // Veracity: NEEDED proof block
                     proof {
                         collected = collected.insert(i);
                         // Push preserves existing elements.
+                        // Veracity: NEEDED assert
                         assert forall|k: int| 0 <= k < old_len as int implies
                             #[trigger] result_vec@[k] == old_view[k] by {}
                         // Ordering: all previous elements < i.
+                        // Veracity: NEEDED assert
                         assert forall|k: int, l: int|
                             0 <= k < l < result_vec@.len() implies
                             (#[trigger] result_vec@[k]) < (#[trigger] result_vec@[l]) by
                         {
                             if l == old_len as int {
+                                // Veracity: NEEDED assert
                                 assert(result_vec@[k] == old_view[k]);
                             }
                         }
                         // Coverage: collected elements are in vec.
+                        // Veracity: NEEDED assert
                         assert forall|x: usize| #[trigger] collected.contains(x) implies
                             result_vec@.contains(x) by
                         {
                             if x == i {
+                                // Veracity: NEEDED assert
                                 assert(result_vec@[old_len as int] == i);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(old_collected.contains(x));
+                                // Veracity: NEEDED assert
                                 assert(old_view.contains(x));
                                 let k = choose|k: int|
                                     0 <= k < old_view.len() && old_view[k] == x;
+                                // Veracity: NEEDED assert
                                 assert(result_vec@[k] == old_view[k]);
+                                // Veracity: NEEDED assert
                                 assert(result_vec@[k] == x);
                             }
                         }
                         // Ghost set update.
+                        // Veracity: NEEDED assert
                         assert(collected =~= Set::new(|j: usize|
                             (j as int) < (i + 1) as int && self@.contains(j)));
                         let range_set = Set::new(|j: usize| (j as int) < (i + 1) as int);
+                        // Veracity: NEEDED assert
                         assert(collected.subset_of(range_set));
                         lemma_bounded_usize_set_finite((i + 1) as usize);
                     }
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(!self@.contains(i));
+                        // Veracity: NEEDED assert
                         assert(collected =~= Set::new(|j: usize|
                             (j as int) < (i + 1) as int && self@.contains(j)));
                         let range_set = Set::new(|j: usize| (j as int) < (i + 1) as int);
+                        // Veracity: NEEDED assert
                         assert(collected.subset_of(range_set));
                         lemma_bounded_usize_set_finite((i + 1) as usize);
                     }
@@ -505,30 +544,41 @@ broadcast use {
             }
 
             let seq = ArraySeqMtEphS::from_vec(result_vec);
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(collected =~= self@);
                 // seq@ is result_vec@ mapped through view (identity for usize).
+                // Veracity: NEEDED assert
                 assert(seq@ =~= result_vec@) by {
+                    // Veracity: NEEDED assert
                     assert forall|k: int| 0 <= k < result_vec@.len() implies
                         #[trigger] seq@[k] == result_vec@[k] by
                     {
+                        // Veracity: NEEDED assert
                         assert(seq.spec_index(k) == result_vec@[k]);
                     }
                 }
                 // seq@.to_set() =~= self@.
+                // Veracity: NEEDED assert
                 assert forall|x: usize|
                     seq@.to_set().contains(x) <==> #[trigger] self@.contains(x) by
                 {
                     if seq@.to_set().contains(x) {
                         let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == x;
+                        // Veracity: NEEDED assert
                         assert(result_vec@[j] == x);
+                        // Veracity: NEEDED assert
                         assert(collected.contains(x));
                     }
                     if self@.contains(x) {
+                        // Veracity: NEEDED assert
                         assert(collected.contains(x));
+                        // Veracity: NEEDED assert
                         assert(result_vec@.contains(x));
                         let k = choose|k: int|
                             0 <= k < result_vec@.len() && result_vec@[k] == x;
+                        // Veracity: NEEDED assert
                         assert(seq@[k] == x);
                     }
                 }
@@ -557,6 +607,7 @@ broadcast use {
             let mut s = Self::new(u);
             if x < u {
                 s.insert(x);
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_view_finite(s.bits@, u);
                 }
@@ -600,6 +651,7 @@ broadcast use {
                 }
             }
             let constructed = ArraySetEnumMtEph { bits, universe_size: u };
+            // Veracity: NEEDED proof block
             proof { lemma_view_finite(constructed.bits@, u); }
             constructed
         }
@@ -625,11 +677,14 @@ broadcast use {
                 j = j + 1;
             }
             // Establish: all bits in new_bits are zero (subset invariant holds vacuously).
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall|k: int, b: int| #![trigger u64_view(new_bits@[k])[b]]
                     0 <= k < word_count as int && 0 <= b < 64 && u64_view(new_bits@[k])[b]
                     implies u64_view(self.bits@[k])[b] by
                 {
+                    // Veracity: NEEDED assert
                     assert(new_bits@[k] == 0u64);
                     zero_bit_false(b as u64);
                 }
@@ -655,11 +710,14 @@ broadcast use {
                     let ghost old_new_bits = new_bits@;
                     let old_word = new_bits[word_idx];
                     let new_word = set_bit64_macro!(old_word, bit_idx, true);
+                    // Veracity: NEEDED proof block
                     proof {
                         set_bit64_proof(new_word, old_word, bit_idx, true);
                     }
                     new_bits.set(word_idx, new_word);
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert forall|k: int, b: int| #![trigger u64_view(new_bits@[k])[b]]
                             0 <= k < word_count as int && 0 <= b < 64
                                 && u64_view(new_bits@[k])[b]
@@ -670,11 +728,14 @@ broadcast use {
                                     // We set this bit; self.bits has it (checked by if condition).
                                 } else {
                                     // Other bits in same word: preserved by set_bit64_proof.
+                                    // Veracity: NEEDED assert
                                     assert(u64_view(new_word)[b] == u64_view(old_word)[b]);
+                                    // Veracity: NEEDED assert
                                     assert(old_new_bits[k] == old_word);
                                 }
                             } else {
                                 // Different word: unchanged by Vec::set.
+                                // Veracity: NEEDED assert
                                 assert(new_bits@[k] == old_new_bits[k]);
                             }
                         }
@@ -683,7 +744,9 @@ broadcast use {
                 i = i + 1;
             }
             let filtered = ArraySetEnumMtEph { bits: new_bits, universe_size: self.universe_size };
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall|elem: usize|
                     #[trigger] filtered@.contains(elem)
                     implies self@.contains(elem) by
@@ -691,10 +754,13 @@ broadcast use {
                     if (elem as int) < self.universe_size as int {
                         let k = elem as int / 64;
                         let b = elem as int % 64;
+                        // Veracity: NEEDED assert
                         assert(0 <= k < word_count as int);
+                        // Veracity: NEEDED assert
                         assert(0 <= b < 64);
                     }
                 }
+                // Veracity: NEEDED assert
                 assert(filtered@.subset_of(self@));
                 lemma_view_finite(filtered.bits@, self.universe_size);
             }
@@ -726,6 +792,7 @@ broadcast use {
                 let w1 = self.bits[i];
                 let w2 = other.bits[i];
                 let and_word: u64 = w1 & w2;
+                // Veracity: NEEDED proof block
                 proof {
                     bit_and_64_proof(w1, w2, and_word);
                 }
@@ -733,19 +800,25 @@ broadcast use {
                 i = i + 1;
             }
             let common = ArraySetEnumMtEph { bits: result_bits, universe_size: self.universe_size };
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall|elem: usize|
                     #[trigger] common@.contains(elem) == self@.intersect(other@).contains(elem) by
                 {
                     if (elem as int) < self.universe_size as int {
                         let k = elem as int / 64;
                         let j = elem as int % 64;
+                        // Veracity: NEEDED assert
                         assert(0 <= k < n as int);
+                        // Veracity: NEEDED assert
                         assert(0 <= j < 64);
+                        // Veracity: NEEDED assert
                         assert(u64_view(common.bits@[k])[j] ==
                             (u64_view(self.bits@[k])[j] && u64_view(other.bits@[k])[j]));
                     }
                 }
+                // Veracity: NEEDED assert
                 assert(common@ =~= self@.intersect(other@));
                 lemma_view_finite(common.bits@, self.universe_size);
             }
@@ -777,6 +850,7 @@ broadcast use {
                 let w1 = self.bits[i];
                 let w2 = other.bits[i];
                 let andnot_word: u64 = w1 & !w2;
+                // Veracity: NEEDED proof block
                 proof {
                     bit_andnot_64_proof(w1, w2, andnot_word);
                 }
@@ -784,19 +858,25 @@ broadcast use {
                 i = i + 1;
             }
             let remaining = ArraySetEnumMtEph { bits: result_bits, universe_size: self.universe_size };
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall|elem: usize|
                     #[trigger] remaining@.contains(elem) == self@.difference(other@).contains(elem) by
                 {
                     if (elem as int) < self.universe_size as int {
                         let k = elem as int / 64;
                         let j = elem as int % 64;
+                        // Veracity: NEEDED assert
                         assert(0 <= k < n as int);
+                        // Veracity: NEEDED assert
                         assert(0 <= j < 64);
+                        // Veracity: NEEDED assert
                         assert(u64_view(remaining.bits@[k])[j] ==
                             (u64_view(self.bits@[k])[j] && !u64_view(other.bits@[k])[j]));
                     }
                 }
+                // Veracity: NEEDED assert
                 assert(remaining@ =~= self@.difference(other@));
                 lemma_view_finite(remaining.bits@, self.universe_size);
             }
@@ -828,6 +908,7 @@ broadcast use {
                 let w1 = self.bits[i];
                 let w2 = other.bits[i];
                 let or_word: u64 = w1 | w2;
+                // Veracity: NEEDED proof block
                 proof {
                     bit_or_64_proof(w1, w2, or_word);
                 }
@@ -835,19 +916,25 @@ broadcast use {
                 i = i + 1;
             }
             let combined = ArraySetEnumMtEph { bits: result_bits, universe_size: self.universe_size };
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall|elem: usize|
                     #[trigger] combined@.contains(elem) == self@.union(other@).contains(elem) by
                 {
                     if (elem as int) < self.universe_size as int {
                         let k = elem as int / 64;
                         let j = elem as int % 64;
+                        // Veracity: NEEDED assert
                         assert(0 <= k < n as int);
+                        // Veracity: NEEDED assert
                         assert(0 <= j < 64);
+                        // Veracity: NEEDED assert
                         assert(u64_view(combined.bits@[k])[j] ==
                             (u64_view(self.bits@[k])[j] || u64_view(other.bits@[k])[j]));
                     }
                 }
+                // Veracity: NEEDED assert
                 assert(combined@ =~= self@.union(other@));
                 lemma_view_finite(combined.bits@, self.universe_size);
             }
@@ -880,11 +967,14 @@ broadcast use {
                 let bit_idx: u64 = (x % 64) as u64;
                 let old_word: u64 = self.bits[word_idx];
                 let new_word: u64 = set_bit64_macro!(old_word, bit_idx, false);
+                // Veracity: NEEDED proof block
                 proof {
                     set_bit64_proof(new_word, old_word, bit_idx, false);
                 }
                 self.bits.set(word_idx, new_word);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|elem: usize|
                         #[trigger] self@.contains(elem) == old(self)@.remove(x).contains(elem) by
                     {
@@ -896,6 +986,7 @@ broadcast use {
                                 if elem == x {
                                     // Deleted bit
                                 } else {
+                                    // Veracity: NEEDED assert
                                     assert(ej != bit_idx as int);
                                     // Different bit in same word
                                 }
@@ -904,12 +995,15 @@ broadcast use {
                             }
                         }
                     }
+                    // Veracity: NEEDED assert
                     assert(self@ =~= old(self)@.remove(x));
                     lemma_view_finite(self.bits@, self.universe_size);
                 }
             } else {
                 // x not in set (x >= universe_size), so remove(x) is identity.
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(self@ =~= old(self)@.remove(x));
                     lemma_view_finite(self.bits@, self.universe_size);
                 }
@@ -929,11 +1023,14 @@ broadcast use {
                 let bit_idx: u64 = (x % 64) as u64;
                 let old_word: u64 = self.bits[word_idx];
                 let new_word: u64 = set_bit64_macro!(old_word, bit_idx, true);
+                // Veracity: NEEDED proof block
                 proof {
                     set_bit64_proof(new_word, old_word, bit_idx, true);
                 }
                 self.bits.set(word_idx, new_word);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|elem: usize|
                         #[trigger] self@.contains(elem) == old(self)@.insert(x).contains(elem) by
                     {
@@ -943,15 +1040,19 @@ broadcast use {
                             let ek = elem as int / 64;
                             let ej = elem as int % 64;
                             if ek == word_idx as int {
+                                // Veracity: NEEDED assert
                                 assert(ej != bit_idx as int);
                             }
                         }
                     }
+                    // Veracity: NEEDED assert
                     assert(self@ =~= old(self)@.insert(x));
                     lemma_view_finite(self.bits@, self.universe_size);
                 }
             } else {
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(self@ =~= old(self)@);
                     lemma_view_finite(self.bits@, self.universe_size);
                 }
@@ -975,6 +1076,7 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             let equal = self.universe_size == other.universe_size && self.bits == other.bits;
+            // Veracity: NEEDED proof block
             proof { assume(equal == (self@ == other@)); }
             equal
         }
@@ -988,6 +1090,7 @@ broadcast use {
                 bits: self.bits.clone(),
                 universe_size: self.universe_size,
             };
+            // Veracity: NEEDED proof block
             proof { assume(cloned@ == self@); }
             cloned
         }

@@ -306,6 +306,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] neighbors@.contains(w) implies
@@ -327,6 +328,7 @@ verus!
                         return neighbors;
                     },
                     Some(u) => {
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_seq_index_in_map_to_set(u_seq, it@.0 - 1);
                         }
@@ -361,6 +363,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] out@.contains(w) implies
@@ -415,6 +418,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |u: V::V| #[trigger] inn@.contains(u) implies
@@ -470,6 +474,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] out_neighbors@.contains(w) implies
@@ -491,6 +496,7 @@ verus!
                         return out_neighbors;
                     },
                     Some(u) => {
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_seq_index_in_map_to_set(u_seq, it@.0 - 1);
                         }
@@ -526,6 +532,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] in_neighbors@.contains(w) implies
@@ -547,6 +554,7 @@ verus!
                         return in_neighbors;
                     },
                     Some(u) => {
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_seq_index_in_map_to_set(u_seq, it@.0 - 1);
                         }
@@ -723,6 +731,7 @@ verus!
         {
             let v_eq = self.V == other.V;
             let a_eq = self.A == other.A;
+            // Veracity: NEEDED proof block
             proof {
                 if v_eq && a_eq {
                 }

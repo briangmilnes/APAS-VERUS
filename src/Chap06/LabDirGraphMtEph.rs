@@ -322,6 +322,7 @@ pub mod LabDirGraphMtEph {
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |e: (V::V, V::V)| #[trigger] arcs@.contains(e) implies 
@@ -380,12 +381,14 @@ pub mod LabDirGraphMtEph {
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         return None;
                     },
                     Some(labeled_arc) => {
                         if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
+                            // Veracity: NEEDED proof block
                             proof {
                                 let idx = it@.0 - 1;
                                 lemma_seq_index_in_map_to_set(la_seq, idx);
@@ -417,12 +420,14 @@ pub mod LabDirGraphMtEph {
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         return false;
                     },
                     Some(labeled_arc) => {
                         if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
+                            // Veracity: NEEDED proof block
                             proof {
                                 let idx = it@.0 - 1;
                                 lemma_seq_index_in_map_to_set(la_seq, idx);
@@ -459,6 +464,7 @@ pub mod LabDirGraphMtEph {
             else if n == 1 {
                 let LabEdge(from, to, label) = arcs.choose();
                 if feq(&from, &v) {
+                    // Veracity: NEEDED proof block
                     proof {
                         // Veracity: NEEDED assert
                         assert forall |w: V::V| #![trigger Set::empty().insert(to@).contains(w)] Set::empty().insert(to@).contains(w) implies
@@ -474,6 +480,7 @@ pub mod LabDirGraphMtEph {
                     }
                     SetStEph::singleton(to.clone_plus())
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                     }
                     SetStEph::empty()
@@ -497,6 +504,7 @@ pub mod LabDirGraphMtEph {
 
                 let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
 
+                // Veracity: NEEDED proof block
                 proof {
                     // Veracity: NEEDED assert
                     assert forall |w: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(w)] left_neighbors@.union(right_neighbors@).contains(w) implies
@@ -536,6 +544,7 @@ pub mod LabDirGraphMtEph {
             else if n == 1 {
                 let LabEdge(from, to, label) = arcs.choose();
                 if feq(&to, &v) {
+                    // Veracity: NEEDED proof block
                     proof {
                         // Veracity: NEEDED assert
                         assert forall |u: V::V| #![trigger Set::empty().insert(from@).contains(u)] Set::empty().insert(from@).contains(u) implies
@@ -551,6 +560,7 @@ pub mod LabDirGraphMtEph {
                     }
                     SetStEph::singleton(from.clone_plus())
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                     }
                     SetStEph::empty()
@@ -574,6 +584,7 @@ pub mod LabDirGraphMtEph {
 
                 let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
 
+                // Veracity: NEEDED proof block
                 proof {
                     // Veracity: NEEDED assert
                     assert forall |u: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(u)] left_neighbors@.union(right_neighbors@).contains(u) implies
@@ -850,6 +861,7 @@ pub mod LabDirGraphMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn add_vertex(&mut self, v: V) -> (added: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
+            // Veracity: NEEDED proof block
             proof { assume(self.ghost_locked_graph@ == locked_val@); }
             locked_val.add_vertex(v);
             let ghost new_val = locked_val@;
@@ -861,6 +873,7 @@ pub mod LabDirGraphMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn add_labeled_arc(&mut self, from: V, to: V, label: L) -> (added: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
+            // Veracity: NEEDED proof block
             proof { assume(self.ghost_locked_graph@ == locked_val@); }
             locked_val.add_labeled_arc(from, to, label);
             let ghost new_val = locked_val@;
@@ -873,6 +886,7 @@ pub mod LabDirGraphMtEph {
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let n_plus = inner.n_plus(v);
             read_handle.release_read();
@@ -883,6 +897,7 @@ pub mod LabDirGraphMtEph {
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let n_minus = inner.n_minus(v);
             read_handle.release_read();

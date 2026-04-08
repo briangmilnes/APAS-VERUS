@@ -104,6 +104,7 @@ pub mod Algorithm21_1 {
         // First pass: compute total length.
         let mut total_len: usize = 0;
         let mut i: usize = 0;
+        // Veracity: NEEDED proof block
         proof { lemma_sum_inner_lens_mono(ss.seq@, 0, ss.seq@.len() as int); }
         while i < ss_len
             invariant
@@ -114,6 +115,7 @@ pub mod Algorithm21_1 {
                 sum_inner_lens(ss.seq@, i as int) <= sum_inner_lens(ss.seq@, ss.seq@.len() as int),
             decreases ss_len - i
         {
+            // Veracity: NEEDED proof block
             proof { lemma_sum_inner_lens_mono(ss.seq@, (i + 1) as int, ss.seq@.len() as int); }
             total_len = total_len + ss.seq[i].seq.len();
             i = i + 1;
@@ -193,6 +195,7 @@ pub mod Algorithm21_1 {
                 n,
             );
 
+        // Veracity: NEEDED proof block
         proof {
             // Each inner sequence has length n-1.
             // Therefore sum_inner_lens(inner, n) == n * (n-1).

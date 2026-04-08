@@ -501,6 +501,7 @@ pub mod BalBinTreeStEph {
                 right: clone_tree(&node.right),
             })),
         };
+        // Veracity: NEEDED proof block
         proof { assume(c == *t); }
         c
     }
@@ -812,6 +813,7 @@ pub mod BalBinTreeStEph {
                 (BalBinTree::Leaf, BalBinTree::Leaf) => true,
                 (BalBinTree::Node(a), BalBinTree::Node(b)) => {
                     let equal = a.left == b.left && a.value == b.value && a.right == b.right;
+                    // Veracity: NEEDED proof block
                     proof { assume(equal == (*self == *other)); }
                     equal
                 },
@@ -848,6 +850,7 @@ pub mod BalBinTreeStEph {
             ensures equal == (*self == *other)
         {
             let equal = self.left == other.left && self.value == other.value && self.right == other.right;
+            // Veracity: NEEDED proof block
             proof { assume(equal == (*self == *other)); }
             equal
         }
@@ -864,6 +867,7 @@ pub mod BalBinTreeStEph {
                 value: self.value.clone(),
                 right: clone_tree(&self.right),
             };
+            // Veracity: NEEDED proof block
             proof { assume(cloned == *self); }
             cloned
         }

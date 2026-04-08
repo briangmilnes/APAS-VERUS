@@ -151,6 +151,7 @@ pub mod PrimTreeSeqStPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — moves ownership, no copy.
         fn from_vec(vec: Vec<T>) -> (seq: Self)
         {
+            // Veracity: NEEDED proof block
             proof { axiom_spec_len(&vec); }
             PrimTreeSeqStS { seq: vec }
         }
@@ -175,6 +176,7 @@ pub mod PrimTreeSeqStPer {
                 PrimTreeSeqStTree::Zero
             } else if len == 1 {
                 let elem = self.seq[0].clone();
+                // Veracity: NEEDED proof block
                 proof {
                     axiom_cloned_implies_eq_owned(self.seq@[0], elem);
                 }
@@ -196,6 +198,7 @@ pub mod PrimTreeSeqStPer {
                     decreases mid - i,
                 {
                     left_vec.push(self.seq[i].clone());
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost last = left_vec@[left_vec@.len() - 1 as int];
                         axiom_cloned_implies_eq_owned(self.seq[i as int], last);
@@ -215,6 +218,7 @@ pub mod PrimTreeSeqStPer {
                     decreases len - i,
                 {
                     right_vec.push(self.seq[i].clone());
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost last = right_vec@[right_vec@.len() - 1 as int];
                         axiom_cloned_implies_eq_owned(self.seq[i as int], last);
@@ -242,6 +246,7 @@ pub mod PrimTreeSeqStPer {
                     let mut combined = left.seq;
                     let mut right_vec = right.seq;
                     combined.append(&mut right_vec);
+                    // Veracity: NEEDED proof block
                     proof { axiom_spec_len(&combined); }
                     PrimTreeSeqStS { seq: combined }
                 }
@@ -266,6 +271,7 @@ pub mod PrimTreeSeqStPer {
                 decreases a_len - i,
             {
                 seq.push(a.seq[i].clone());
+                // Veracity: NEEDED proof block
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
                     axiom_cloned_implies_eq_owned(a.seq[i as int], last);
@@ -285,6 +291,7 @@ pub mod PrimTreeSeqStPer {
                 decreases b_len - j,
             {
                 seq.push(b.seq[j].clone());
+                // Veracity: NEEDED proof block
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
                     axiom_cloned_implies_eq_owned(b.seq[j as int], last);
@@ -312,6 +319,7 @@ pub mod PrimTreeSeqStPer {
                 decreases end - i,
             {
                 seq.push(self.seq[i].clone());
+                // Veracity: NEEDED proof block
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
                     axiom_cloned_implies_eq_owned(self.seq[i as int], last);
@@ -341,12 +349,14 @@ pub mod PrimTreeSeqStPer {
             {
                 if i == index {
                     seq.push(item.clone());
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
                         axiom_cloned_implies_eq_owned(item, last);
                     }
                 } else {
                     seq.push(a.seq[i].clone());
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
                         axiom_cloned_implies_eq_owned(a.seq[i as int], last);
@@ -363,6 +373,7 @@ pub mod PrimTreeSeqStPer {
             let len = a.seq.len();
             let mut seq: Vec<U> = Vec::with_capacity(len);
             let mut i: usize = 0;
+            // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < a.seq@.len() implies #[trigger] f.requires((&a.seq@[j],)) by {
@@ -411,6 +422,7 @@ pub mod PrimTreeSeqStPer {
             let len = a.seq.len();
             let mut seq: Vec<T> = Vec::new();
             let mut i: usize = 0;
+            // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < a.seq@.len() implies #[trigger] pred.requires((&a.seq@[j],)) by {
@@ -432,6 +444,7 @@ pub mod PrimTreeSeqStPer {
                     seq@.to_multiset() =~= a.seq@.subrange(0, i as int).to_multiset().filter(spec_pred),
                 decreases len - i,
             {
+                // Veracity: NEEDED proof block
                 proof {
                     broadcast use vstd::seq_lib::group_to_multiset_ensures;
                 }
@@ -441,6 +454,7 @@ pub mod PrimTreeSeqStPer {
                 assert(a.seq@.subrange(0, i as int + 1).drop_last() =~= a.seq@.subrange(0, i as int));
                 if pred(&a.seq[i]) {
                     let elem = a.seq[i].clone();
+                    // Veracity: NEEDED proof block
                     proof {
                         axiom_cloned_implies_eq_owned(a.seq[i as int], elem);
                     }
@@ -449,6 +463,7 @@ pub mod PrimTreeSeqStPer {
                 i += 1;
             }
             let filtered = PrimTreeSeqStS { seq };
+            // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
                 assert(a.seq@ =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)));
@@ -496,12 +511,14 @@ pub mod PrimTreeSeqStPer {
                     decreases inner_len - j,
                 {
                     seq.push(inner.seq[j].clone());
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
                         axiom_cloned_implies_eq_owned(inner.seq[j as int], last);
                     }
                     j += 1;
                 }
+                // Veracity: NEEDED proof block
                 proof {
                     let ghost prefix = a.seq@.take(i as int).map_values(|inner: PrimTreeSeqStS<T>| inner.seq@);
                     // Veracity: NEEDED assert
@@ -511,6 +528,7 @@ pub mod PrimTreeSeqStPer {
                 }
                 i += 1;
             }
+            // Veracity: NEEDED proof block
             proof {
             }
             PrimTreeSeqStS { seq }
@@ -917,6 +935,7 @@ pub mod PrimTreeSeqStPer {
             ensures cloned@ == self@
         {
             let cloned = PrimTreeSeqStS { seq: self.seq.clone() };
+            // Veracity: NEEDED proof block
             proof { assume(cloned@ == self@); }
             cloned
         }
@@ -929,6 +948,7 @@ pub mod PrimTreeSeqStPer {
             ensures equal == (self@ == other@)
         {
             let equal = self.seq == other.seq;
+            // Veracity: NEEDED proof block
             proof { assume(equal == (self@ == other@)); }
             equal
         }
@@ -956,6 +976,7 @@ pub mod PrimTreeSeqStPer {
                 PrimTreeSeqStTree::One(v) => PrimTreeSeqStTree::One(v.clone()),
                 PrimTreeSeqStTree::Two(l, r) => PrimTreeSeqStTree::Two(l.clone(), r.clone()),
             };
+            // Veracity: NEEDED proof block
             proof { assume(cloned@ == self@); }
             cloned
         }
@@ -973,11 +994,13 @@ pub mod PrimTreeSeqStPer {
                 },
                 (PrimTreeSeqStTree::One(a), PrimTreeSeqStTree::One(b)) => {
                     let equal = *a == *b;
+                    // Veracity: NEEDED proof block
                     proof { assume(equal == (self@ == other@)); }
                     equal
                 },
                 (PrimTreeSeqStTree::Two(l1, r1), PrimTreeSeqStTree::Two(l2, r2)) => {
                     let equal = *l1 == *l2 && *r1 == *r2;
+                    // Veracity: NEEDED proof block
                     proof { assume(equal == (self@ == other@)); }
                     equal
                 },

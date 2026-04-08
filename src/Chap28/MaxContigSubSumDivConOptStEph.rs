@@ -315,6 +315,7 @@ broadcast use {
 
         if n == 1 {
             let val = *a.nth(0);
+            // Veracity: NEEDED proof block
             proof {
                 lemma_range_sum_single(a.seq@, 0);
                 // val == a.seq@[0], range_sum(a, 0, 1) == val
@@ -326,6 +327,7 @@ broadcast use {
         let left = a.subseq_copy(0, mid);
         let right = a.subseq_copy(mid, n - mid);
 
+        // Veracity: NEEDED proof block
         proof {
             // Veracity: NEEDED assert
             assert forall|i: int| #![trigger left.seq@[i]]
@@ -344,6 +346,7 @@ broadcast use {
         let (m_right, p_right, s_right, t_right) = max_contig_sub_sum_aux(&right);
 
         // Prove all four combine operations don't overflow i32.
+        // Veracity: NEEDED proof block
         proof {
             // Witnesses for suffix/prefix achievement.
             let lo_s: int = choose|lo: int|
@@ -379,6 +382,7 @@ broadcast use {
         let max_suffix = if s_right >= s_left + t_right { s_right } else { s_left + t_right };
         let total = t_left + t_right;
 
+        // Veracity: NEEDED proof block
         proof {
             lemma_strength_combine(
                 a.seq@, left.seq@, right.seq@, mid as int,

@@ -231,6 +231,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |e: (V::V, V::V)| #[trigger] arcs@.contains(e) implies 
@@ -288,12 +289,14 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         return None;
                     },
                     Some(labeled_arc) => {
                         if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
+                            // Veracity: NEEDED proof block
                             proof {
                                 let idx = it@.0 - 1;
                                 lemma_seq_index_in_map_to_set(la_seq, idx);
@@ -325,6 +328,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // No arc found - prove spec_arcs doesn't contain (from, to)
                             let pred = |e: (V::V, V::V)| exists |l: L::V| #![trigger la_view.contains((e.0, e.1, l))] la_view.contains((e.0, e.1, l));
@@ -336,6 +340,7 @@ verus!
                     },
                     Some(labeled_arc) => {
                         if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
+                            // Veracity: NEEDED proof block
                             proof {
                                 let idx = it@.0 - 1;
                                 lemma_seq_index_in_map_to_set(la_seq, idx);
@@ -371,6 +376,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] neighbors@.contains(w) implies 
@@ -422,6 +428,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |u: V::V| #[trigger] neighbors@.contains(u) implies 

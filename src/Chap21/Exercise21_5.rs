@@ -108,6 +108,7 @@ pub mod Exercise21_5 {
             );
         let mid: ArraySeqStPerS<ArraySeqStPerS<usize>> =
             ArraySeqStPerS::flatten(&nested);
+        // Veracity: NEEDED proof block
         proof {
             let ghost mapped = nested.seq@.map_values(
                 |inner: ArraySeqStPerS<ArraySeqStPerS<usize>>| inner.seq@);

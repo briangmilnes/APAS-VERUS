@@ -226,6 +226,7 @@ broadcast use {
                 min_prefix = running_sum;
             }
 
+            // Veracity: NEEDED proof block
             proof { lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int); }
             running_sum = running_sum + *a.nth(i);
             i = i + 1;
@@ -234,6 +235,7 @@ broadcast use {
         // Now: running_sum = prefix(n) = total,
         //      min_prefix = min(prefix(0), ..., prefix(n-1)).
         // result = total - min_prefix = max suffix sum.
+        // Veracity: NEEDED proof block
         proof {
             let total = running_sum as int;
 
@@ -278,6 +280,7 @@ broadcast use {
         let mut max_val: i32 = *a.nth(0);
         let mut running_sum: i32 = *a.nth(0);
 
+        // Veracity: NEEDED proof block
         proof { lemma_range_sum_single(a.seq@, 0); }
 
         let mut i: usize = 1;
@@ -295,6 +298,7 @@ broadcast use {
                     1 <= j <= i && max_val as int == spec_range_sum(a.seq@, 0, j)),
             decreases n - i,
         {
+            // Veracity: NEEDED proof block
             proof { lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int); }
             running_sum = running_sum + *a.nth(i);
             if running_sum > max_val {
@@ -317,6 +321,7 @@ broadcast use {
                 return None;
             }
             if n == 1 {
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_range_sum_single(a.seq@, 0);
                 }
@@ -327,6 +332,7 @@ broadcast use {
             let left = a.subseq_copy(0, mid);
             let right = a.subseq_copy(mid, n - mid);
 
+            // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger left.seq@[i]]
@@ -347,6 +353,7 @@ broadcast use {
             let s_left = max_suffix_sum(&left);
             let p_right = max_prefix_sum(&right);
 
+            // Veracity: NEEDED proof block
             proof {
                 // Show s_left + p_right fits in i32.
                 // s_left = range_sum(left, lo_s, mid) for some lo_s.
@@ -369,6 +376,7 @@ broadcast use {
             let mcss = max_with_neginf(max_left, max_right);
             let mcss = max_with_neginf(mcss, Some(max_crossing));
 
+            // Veracity: NEEDED proof block
             proof {
                 lemma_divcon_combine(
                     a.seq@,

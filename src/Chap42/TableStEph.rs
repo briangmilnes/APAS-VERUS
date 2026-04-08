@@ -109,11 +109,13 @@ broadcast use {
         if entries.len() > 0 {
             let last = entries.last();
             if last.0 == k {
+                // Veracity: NEEDED assert
                 assert(entries[entries.len() - 1].0 == k);
             } else {
                 lemma_entries_to_map_key_in_seq::<KV, VV>(entries.drop_last(), k);
                 let prefix = entries.drop_last();
                 let i = choose|i: int| 0 <= i < prefix.len() && (#[trigger] prefix[i]).0 == k;
+                // Veracity: NEEDED assert
                 assert(entries[i].0 == k);
             }
         }
@@ -143,30 +145,40 @@ broadcast use {
             let prefix = entries.drop_last();
             let last = entries.last();
             let last_idx = entries.len() - 1;
+            // Veracity: NEEDED assert
             assert(spec_keys_no_dups(prefix)) by {
+                // Veracity: NEEDED assert
                 assert forall|i: int, j: int|
                     0 <= i < j < prefix.len()
                     implies (#[trigger] prefix[i]).0 != (#[trigger] prefix[j]).0
                 by {
+                    // Veracity: NEEDED assert
                     assert(entries[i].0 != entries[j].0);
                 };
             };
             lemma_entries_to_map_len::<KV, VV>(prefix);
             let prefix_map = spec_entries_to_map(prefix);
+            // Veracity: NEEDED assert
             assert(!prefix_map.contains_key(last.0)) by {
                 if prefix_map.contains_key(last.0) {
                     lemma_entries_to_map_key_in_seq(prefix, last.0);
                     let idx = choose|i: int| 0 <= i < prefix.len() && (#[trigger] prefix[i]).0 == last.0;
+                    // Veracity: NEEDED assert
                     assert(entries[idx].0 == last.0);
+                    // Veracity: NEEDED assert
                     assert(entries[last_idx].0 == last.0);
+                    // Veracity: NEEDED assert
                     assert(idx != last_idx);
                 }
             };
+            // Veracity: NEEDED assert
             assert(prefix_map.dom().finite()) by {
                 lemma_entries_to_map_finite::<KV, VV>(prefix);
             };
+            // Veracity: NEEDED assert
             assert(spec_entries_to_map(entries) =~=
                 prefix_map.insert(last.0, last.1));
+            // Veracity: NEEDED assert
             assert(prefix_map.insert(last.0, last.1).len() ==
                 prefix_map.len() + 1);
         }
@@ -199,21 +211,31 @@ broadcast use {
             let prefix = entries.drop_last();
             if idx == entries.len() - 1 {
             } else {
+                // Veracity: NEEDED assert
                 assert(spec_keys_no_dups(prefix)) by {
+                    // Veracity: NEEDED assert
                     assert forall|i: int, j: int|
                         0 <= i < j < prefix.len()
                         implies (#[trigger] prefix[i]).0 != (#[trigger] prefix[j]).0
                     by {
+                        // Veracity: NEEDED assert
                         assert(i < entries.len());
+                        // Veracity: NEEDED assert
                         assert(j < entries.len());
+                        // Veracity: NEEDED assert
                         assert(entries[i].0 != entries[j].0);
                     };
                 };
+                // Veracity: NEEDED assert
                 assert(prefix[idx] == entries[idx]);
                 lemma_entries_to_map_get::<KV, VV>(prefix, idx);
+                // Veracity: NEEDED assert
                 assert(last.0 != k) by {
+                    // Veracity: NEEDED assert
                     assert(entries[idx].0 == k);
+                    // Veracity: NEEDED assert
                     assert(entries[entries.len() - 1].0 == last.0);
+                    // Veracity: NEEDED assert
                     assert(idx < entries.len() - 1);
                 };
             }
@@ -229,6 +251,7 @@ broadcast use {
             exists|j: int| 0 <= j < sup.len() && (#[trigger] sup[j]).0 == (#[trigger] sub[i]).0,
         ensures spec_entries_to_map(sub).dom().subset_of(spec_entries_to_map(sup).dom()),
     {
+        // Veracity: NEEDED assert
         assert forall|k: KV| spec_entries_to_map(sub).dom().contains(k)
             implies spec_entries_to_map(sup).dom().contains(k)
         by {
@@ -544,9 +567,11 @@ broadcast use {
             let sv_idx = choose|i: int| 0 <= i < self.entries.seq@.len()
                 && (#[trigger] self.entries.seq@[i]).0@ == k;
             // By no_dups: both indices have the same key, so they must be equal.
+            // Veracity: NEEDED assert
             assert(self.entries@[sv_idx].0 == k) by {
                 self.entries.lemma_view_index(sv_idx);
             };
+            // Veracity: NEEDED assert
             assert(self.entries@[view_idx].0 == k);
             // lemma_entries_to_map_get tells us self@[k] == entries@[sv_idx].1.
             lemma_entries_to_map_get::<K::V, V::V>(self.entries@, sv_idx);
@@ -573,6 +598,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
         {
+            // Veracity: NEEDED proof block
             proof {
                 lemma_entries_to_map_len::<K::V, V::V>(self.entries@);
             }
@@ -583,10 +609,15 @@ broadcast use {
         fn empty() -> (empty: Self)
         {
             let entries = ArraySeqStEphS::empty();
+            // Veracity: NEEDED assert
             assert(entries@ =~= Seq::<(K::V, V::V)>::empty());
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<K>());
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<V>());
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
             }
             TableStEph { entries }
@@ -596,15 +627,24 @@ broadcast use {
         fn singleton(key: K, value: V) -> (tree: Self)
         {
             let entries = ArraySeqStEphS::singleton(Pair(key, value));
+            // Veracity: NEEDED assert
             assert(entries@ =~= seq![(key@, value@)]);
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<K>());
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<V>());
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
                 let s = entries@;
+                // Veracity: NEEDED assert
                 assert(s.len() == 1);
+                // Veracity: NEEDED assert
                 assert(s.drop_last() =~= Seq::<(K::V, V::V)>::empty());
+                // Veracity: NEEDED assert
                 assert(spec_entries_to_map(s.drop_last()) =~= Map::<K::V, V::V>::empty());
+                // Veracity: NEEDED assert
                 assert(s.last() == (key@, value@));
             }
             TableStEph { entries }
@@ -632,14 +672,18 @@ broadcast use {
                 let ghost old_keys = keys@;
                 let key_clone = pair.0.clone_plus();
                 keys.insert(key_clone);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|j: int| 0 <= j < i as int + 1
                         implies keys@.contains((#[trigger] self.entries@[j]).0)
                     by {
                         if j < i as int {
+                            // Veracity: NEEDED assert
                             assert(old_keys.contains(self.entries@[j].0));
                         }
                     };
+                    // Veracity: NEEDED assert
                     assert forall|k: K::V| keys@.contains(k)
                         implies exists|j: int| 0 <= j < i as int + 1
                             && (#[trigger] self.entries@[j]).0 == k
@@ -648,13 +692,16 @@ broadcast use {
                             let j = choose|j: int| 0 <= j < i as int
                                 && (#[trigger] self.entries@[j]).0 == k;
                         } else {
+                            // Veracity: NEEDED assert
                             assert(self.entries@[i as int].0 == k);
                         }
                     };
                 }
                 i += 1;
             }
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] keys@.contains(k) == self@.dom().contains(k)
                 by {
                     if keys@.contains(k) {
@@ -676,8 +723,11 @@ broadcast use {
         #[verifier::loop_isolation(false)]
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
         {
+                      // Veracity: NEEDED assert
                       assert(obeys_feq_full_trigger::<K>());
+           // Veracity: NEEDED assert
            assert(obeys_feq_full_trigger::<V>());
+           // Veracity: NEEDED assert
            assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let key_seq = keys.to_seq();
             let mut entries: Vec<Pair<K, V>> = Vec::new();
@@ -696,6 +746,7 @@ broadcast use {
                 let key = key_seq.nth(i);
                 let value = f(key);
                 let key_clone = key.clone_plus();
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_cloned_view_eq::<K>(*key, key_clone);
                 }
@@ -703,22 +754,28 @@ broadcast use {
                 i += 1;
             }
             let seq = ArraySeqStEphS::from_vec(entries);
+            // Veracity: NEEDED proof block
             proof {
                 lemma_entries_to_map_finite::<K::V, V::V>(seq@);
                 // Each entry key matches the corresponding key_seq element.
+                // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < seq@.len()
                     implies (#[trigger] seq@[j]).0 == key_seq@[j]
                 by {
+                    // Veracity: NEEDED assert
                     assert(seq.spec_index(j) == entries@[j]);
                 };
                 // No duplicate keys since key_seq has no duplicates.
+                // Veracity: NEEDED assert
                 assert(spec_keys_no_dups(seq@)) by {
+                    // Veracity: NEEDED assert
                     assert forall|i: int, j: int|
                         0 <= i < j < seq@.len()
                         implies (#[trigger] seq@[i]).0 != (#[trigger] seq@[j]).0
                     by {};
                 };
                 // Domain matches keys@.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] spec_entries_to_map(seq@).dom().contains(k) == keys@.contains(k)
                 by {
@@ -735,6 +792,7 @@ broadcast use {
                     }
                 };
                 // Closure ensures postcondition.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] spec_entries_to_map(seq@).contains_key(k)
                     implies exists|key_arg: K, result: V|
@@ -744,8 +802,10 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(seq@, k);
                     let j = choose|j: int| 0 <= j < seq@.len()
                         && (#[trigger] seq@[j]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(seq.spec_index(j) == entries@[j]);
                     lemma_entries_to_map_get::<K::V, V::V>(seq@, j);
+                    // Veracity: NEEDED assert
                     assert(key_seq.seq@[j]@ == key_seq@[j]);
                 };
             }
@@ -780,21 +840,27 @@ broadcast use {
                 i += 1;
             }
             self.entries = ArraySeqStEphS::from_vec(mapped);
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall|i: int| 0 <= i < self.entries@.len()
                     implies (#[trigger] self.entries@[i]).0 == old_entries[i].0
                 by {
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(i) == mapped@[i]);
                 };
                 lemma_entries_to_map_dom_same_keys::<K::V, V::V, V::V>(old_entries, self.entries@);
                 // No duplicate keys (inherited from old).
+                // Veracity: NEEDED assert
                 assert(spec_keys_no_dups(self.entries@)) by {
+                    // Veracity: NEEDED assert
                     assert forall|a: int, b: int|
                         0 <= a < b < self.entries@.len()
                         implies (#[trigger] self.entries@[a]).0 != (#[trigger] self.entries@[b]).0
                     by {};
                 };
                 // Closure ensures postcondition.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] spec_entries_to_map(self.entries@).contains_key(k)
                     implies exists|old_val: V, result: V|
@@ -805,6 +871,7 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let j = choose|j: int| 0 <= j < self.entries@.len()
                         && (#[trigger] self.entries@[j]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(j) == mapped@[j]);
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, j);
                     lemma_entries_to_map_get::<K::V, V::V>(old_entries, j);
@@ -850,9 +917,11 @@ broadcast use {
                 if f(&pair.0, &pair.1) {
                     let cloned = pair.clone_plus();
                     kept.push(cloned);
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost old_sources = sources;
                         sources = sources.push(i as int);
+                        // Veracity: NEEDED assert
                         assert forall|si: int| 0 <= si < i as int + 1
                             && spec_pred((#[trigger] old_view[si]).0, old_view[si].1)
                             implies exists|j: int| 0 <= j < sources.len() && sources[j] == si
@@ -860,8 +929,10 @@ broadcast use {
                             if si < i as int {
                                 let j = choose|j: int|
                                     0 <= j < old_sources.len() && old_sources[j] == si;
+                                // Veracity: NEEDED assert
                                 assert(sources[j] == old_sources[j]);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(sources[sources.len() - 1] == i as int);
                             }
                         };
@@ -870,7 +941,9 @@ broadcast use {
                 i += 1;
             }
             self.entries = ArraySeqStEphS::from_vec(kept);
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] self@.dom().contains(k)
                     implies spec_entries_to_map(old_view).dom().contains(k)
@@ -878,23 +951,30 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(idx) == kept@[idx]);
                     let s = sources[idx];
                     lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, s);
                 };
                 // No duplicate keys.
+                // Veracity: NEEDED assert
                 assert(spec_keys_no_dups(self.entries@)) by {
+                    // Veracity: NEEDED assert
                     assert forall|j1: int, j2: int|
                         0 <= j1 < j2 < self.entries@.len()
                         implies (#[trigger] self.entries@[j1]).0
                             != (#[trigger] self.entries@[j2]).0
                     by {
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j1) == kept@[j1]);
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j2) == kept@[j2]);
+                        // Veracity: NEEDED assert
                         assert(sources[j1] < sources[j2]);
                     };
                 };
                 // Value preservation.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] self@.contains_key(k)
                     implies self@[k] == spec_entries_to_map(old_view)[k]
@@ -902,12 +982,14 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(idx) == kept@[idx]);
                     let s = sources[idx];
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, s);
                 };
                 // Completeness: every key satisfying spec_pred was kept.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     spec_entries_to_map(old_view).dom().contains(k)
                     && spec_pred(k, spec_entries_to_map(old_view)[k])
@@ -918,7 +1000,9 @@ broadcast use {
                         && (#[trigger] old_view[si]).0 == k;
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, si);
                     let j = choose|j: int| 0 <= j < sources.len() && sources[j] == si;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(j) == kept@[j]);
+                    // Veracity: NEEDED assert
                     assert(self.entries@[j].0 == k);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
                 };
@@ -991,6 +1075,7 @@ broadcast use {
                     decreases other.entries.spec_len() - j,
                 {
                     let pair_j = other.entries.nth(j);
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal(obeys_view_eq);
                         other.entries.lemma_view_index(j as int);
@@ -1006,10 +1091,12 @@ broadcast use {
                     let combined_value = combine(&pair_i.1, &pair_j.1);
                     let key_clone = pair_i.0.clone_plus();
                     kept.push(Pair(key_clone, combined_value));
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost old_self_srcs = self_srcs;
                         self_srcs = self_srcs.push(i as int);
                         other_srcs = other_srcs.push(found_idx as int);
+                        // Veracity: NEEDED assert
                         assert forall|si: int| 0 <= si < i as int + 1
                             && (exists|oj: int| 0 <= oj < other_view.len()
                                 && (#[trigger] other_view[oj]).0 == (#[trigger] old_self_view[si]).0)
@@ -1018,13 +1105,16 @@ broadcast use {
                             if si < i as int {
                                 let j = choose|j: int|
                                     0 <= j < old_self_srcs.len() && old_self_srcs[j] == si;
+                                // Veracity: NEEDED assert
                                 assert(self_srcs[j] == old_self_srcs[j]);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(self_srcs[self_srcs.len() - 1] == i as int);
                             }
                         };
                     }
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_entries_to_map_no_key::<K::V, V::V>(other_view, key_view);
                     }
@@ -1032,15 +1122,18 @@ broadcast use {
                 i += 1;
             }
             self.entries = ArraySeqStEphS::from_vec(kept);
+            // Veracity: NEEDED proof block
             proof {
                 let ghost result_dom = spec_entries_to_map(self.entries@).dom();
                 let ghost target_dom = spec_entries_to_map(old_self_view).dom().intersect(other@.dom());
+                // Veracity: NEEDED assert
                 assert forall|k: K::V| result_dom.contains(k) == target_dom.contains(k)
                 by {
                     if result_dom.contains(k) {
                         lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                         let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                             && (#[trigger] self.entries@[idx]).0 == k;
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(idx) == kept@[idx]);
                         let s1 = self_srcs[idx];
                         let s2 = other_srcs[idx];
@@ -1056,22 +1149,29 @@ broadcast use {
                         let oj = choose|oj: int| 0 <= oj < other_view.len()
                             && (#[trigger] other_view[oj]).0 == k;
                         let j = choose|j: int| 0 <= j < self_srcs.len() && self_srcs[j] == si;
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j) == kept@[j]);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
                     }
                 };
                 // No duplicate keys (self_srcs monotone + old has no dups).
+                // Veracity: NEEDED assert
                 assert(spec_keys_no_dups(self.entries@)) by {
+                    // Veracity: NEEDED assert
                     assert forall|j1: int, j2: int|
                         0 <= j1 < j2 < self.entries@.len()
                         implies (#[trigger] self.entries@[j1]).0 != (#[trigger] self.entries@[j2]).0
                     by {
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j1) == kept@[j1]);
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j2) == kept@[j2]);
+                        // Veracity: NEEDED assert
                         assert(self_srcs[j1] < self_srcs[j2]);
                     };
                 };
                 // Value preservation: combine.ensures postcondition.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] spec_entries_to_map(self.entries@).contains_key(k)
                     implies exists|v1: V, v2: V, r: V|
@@ -1083,12 +1183,14 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(idx) == kept@[idx]);
                     let s1 = self_srcs[idx];
                     let s2 = other_srcs[idx];
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);
                     lemma_entries_to_map_get::<K::V, V::V>(old_self_view, s1);
                     lemma_entries_to_map_get::<K::V, V::V>(other_view, s2);
+                    // Veracity: NEEDED assert
                     assert(combine.ensures(
                         (&old_self_raw[s1].1, &other_raw[s2].1), kept@[idx].1));
                 };
@@ -1160,6 +1262,7 @@ broadcast use {
                     decreases other_len - j,
                 {
                     let pair_j = other.entries.nth(j);
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal(obeys_view_eq);
                         other.entries.lemma_view_index(j as int);
@@ -1174,6 +1277,7 @@ broadcast use {
                     let key_clone = pair_i.0.clone_plus();
                     let combined_value = combine(&pair_i.1, &pair_j.1);
                     kept.push(Pair(key_clone, combined_value));
+                    // Veracity: NEEDED proof block
                     proof {
                         phase1_matches = phase1_matches.push(match_idx as int);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(
@@ -1182,6 +1286,7 @@ broadcast use {
                 } else {
                     let cloned = pair_i.clone_plus();
                     kept.push(cloned);
+                    // Veracity: NEEDED proof block
                     proof {
                         phase1_matches = phase1_matches.push(-1int);
                         lemma_entries_to_map_no_key::<K::V, V::V>(
@@ -1240,6 +1345,7 @@ broadcast use {
             {
                 let pair_j = other.entries.nth(j);
                 let ghost key_view: K::V = other.entries@[j as int].0;
+                // Veracity: NEEDED proof block
                 proof { other.entries.lemma_view_index(j as int); }
                 // Scan self for matching key.
                 let mut found: bool = false;
@@ -1259,12 +1365,14 @@ broadcast use {
                     decreases self.entries.spec_len() - ii,
                 {
                     let pair_ii = self.entries.nth(ii);
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal(obeys_view_eq);
                         self.entries.lemma_view_index(ii as int);
                     }
                     if pair_j.0 == pair_ii.0 {
                         found = true;
+                        // Veracity: NEEDED proof block
                         proof { found_idx = ii as int; }
                     }
                     ii += 1;
@@ -1274,19 +1382,23 @@ broadcast use {
                 if !found {
                     let cloned = pair_j.clone_plus();
                     kept.push(cloned);
+                    // Veracity: NEEDED proof block
                     proof {
                         phase2_sources = phase2_sources.push(j as int);
                         lemma_entries_to_map_no_key::<K::V, V::V>(
                             old_self_view, key_view);
                     }
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_entries_to_map_contains_key::<K::V, V::V>(
                             old_self_view, found_idx);
                     }
                 }
+                // Veracity: NEEDED proof block
                 proof {
                     // Re-establish coverage for all oj in 0..j+1.
+                    // Veracity: NEEDED assert
                     assert forall|oj: int| 0 <= oj < j + 1 implies
                         spec_entries_to_map(old_self_view).contains_key(
                             (#[trigger] other.entries@[oj]).0)
@@ -1304,6 +1416,7 @@ broadcast use {
                                 let k = choose|k: int|
                                     0 <= k < old_phase2_sources.len()
                                     && (#[trigger] old_phase2_sources[k]) == oj;
+                                // Veracity: NEEDED assert
                                 assert(phase2_sources[k] == oj);
                             }
                         } else {
@@ -1311,6 +1424,7 @@ broadcast use {
                             if !found {
                                 // We just pushed j onto phase2_sources.
                                 let k = phase2_sources.len() - 1;
+                                // Veracity: NEEDED assert
                                 assert(phase2_sources[k] == oj);
                             }
                         }
@@ -1319,8 +1433,10 @@ broadcast use {
                 j += 1;
             }
             self.entries = ArraySeqStEphS::from_vec(kept);
+            // Veracity: NEEDED proof block
             proof {
                 // Every old self key is in the output (Phase 1).
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     spec_entries_to_map(old_self_view).dom().contains(k)
                     implies self@.dom().contains(k)
@@ -1332,6 +1448,7 @@ broadcast use {
                     lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, si);
                 };
                 // Every other key is in the output.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] spec_entries_to_map(other.entries@).dom().contains(k)
                     implies self@.dom().contains(k)
@@ -1360,6 +1477,7 @@ broadcast use {
                     }
                 };
                 // Reverse: every output key is in old self or other.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     self@.dom().contains(k)
                     implies spec_entries_to_map(old_self_view).dom().contains(k)
@@ -1368,6 +1486,7 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(idx) == kept@[idx]);
                     if idx < phase1_len {
                         self.entries.lemma_view_index(idx);
@@ -1379,12 +1498,16 @@ broadcast use {
                     }
                 };
                 // No duplicate keys.
+                // Veracity: NEEDED assert
                 assert(spec_keys_no_dups(self.entries@)) by {
+                    // Veracity: NEEDED assert
                     assert forall|a: int, b: int|
                         0 <= a < b < self.entries@.len()
                         implies (#[trigger] self.entries@[a]).0 != (#[trigger] self.entries@[b]).0
                     by {
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(a) == kept@[a]);
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(b) == kept@[b]);
                         if a < phase1_len && b < phase1_len {
                             // Both from phase 1 — keys from old_self_view which has no dups.
@@ -1393,6 +1516,7 @@ broadcast use {
                             let kidx_b = b - phase1_len;
                             let src_b = phase2_sources[kidx_b];
                             // Phase 2 entries are NOT in old_self; phase 1 key IS in old_self.
+                            // Veracity: NEEDED assert
                             assert(!spec_entries_to_map(old_self_view).contains_key(
                                 other.entries@[src_b].0));
                             lemma_entries_to_map_contains_key::<K::V, V::V>(old_self_view, a);
@@ -1406,6 +1530,7 @@ broadcast use {
                     };
                 };
                 // Value: key only in self (not in other) => value unchanged.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] spec_entries_to_map(old_self_view).contains_key(k)
                     && !other@.contains_key(k)
@@ -1414,17 +1539,21 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_self_view, k);
                     let si = choose|si: int| 0 <= si < old_self_view.len()
                         && (#[trigger] old_self_view[si]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(si) == kept@[si]);
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, si);
                     lemma_entries_to_map_get::<K::V, V::V>(old_self_view, si);
                     // Contrapositive: match >= 0 would imply contains_key, contradiction.
                     if phase1_matches[si] >= 0 {
+                        // Veracity: NEEDED assert
                         assert(spec_entries_to_map(other.entries@).contains_key(
                             old_self_view[si].0));
+                        // Veracity: NEEDED assert
                         assert(false);
                     }
                 };
                 // Value: key only in other (not in self) => value is other's.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] other@.contains_key(k) && !spec_entries_to_map(old_self_view).contains_key(k)
                     implies self@[k] == other@[k]
@@ -1436,11 +1565,13 @@ broadcast use {
                         0 <= kidx < phase2_sources.len()
                         && (#[trigger] phase2_sources[kidx]) == oj;
                     let out_idx = phase1_len + kidx;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(out_idx) == kept@[out_idx]);
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, out_idx);
                     lemma_entries_to_map_get::<K::V, V::V>(other.entries@, oj);
                 };
                 // Value: key in both => combined.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] spec_entries_to_map(old_self_view).contains_key(k)
                     && other@.contains_key(k)
@@ -1453,13 +1584,16 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_self_view, k);
                     let si = choose|si: int| 0 <= si < old_self_view.len()
                         && (#[trigger] old_self_view[si]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(si) == kept@[si]);
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, si);
                     lemma_entries_to_map_get::<K::V, V::V>(old_self_view, si);
                     // Contrapositive: match < 0 would imply !contains_key, contradiction.
                     if phase1_matches[si] < 0 {
+                        // Veracity: NEEDED assert
                         assert(!spec_entries_to_map(other.entries@).contains_key(
                             old_self_view[si].0));
+                        // Veracity: NEEDED assert
                         assert(false);
                     }
                     let oj = phase1_matches[si];
@@ -1524,6 +1658,7 @@ broadcast use {
                     decreases other_len - j,
                 {
                     let pair_j = other.entries.nth(j);
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal(obeys_view_eq);
                         other.entries.lemma_view_index(j as int);
@@ -1534,14 +1669,17 @@ broadcast use {
                     j += 1;
                 }
                 if match_idx == other_len {
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_entries_to_map_no_key::<K::V, V::V>(other_view, key_view);
                     }
                     let cloned = pair_i.clone_plus();
                     kept.push(cloned);
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost old_sources = sources;
                         sources = sources.push(i as int);
+                        // Veracity: NEEDED assert
                         assert forall|si: int| 0 <= si < i as int + 1
                             && !spec_entries_to_map(other_view).contains_key(
                                 (#[trigger] old_self_view[si]).0)
@@ -1550,13 +1688,16 @@ broadcast use {
                             if si < i as int {
                                 let j = choose|j: int|
                                     0 <= j < old_sources.len() && old_sources[j] == si;
+                                // Veracity: NEEDED assert
                                 assert(sources[j] == old_sources[j]);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(sources[sources.len() - 1] == i as int);
                             }
                         };
                     }
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_entries_to_map_contains_key::<K::V, V::V>(
                             other_view, match_idx as int);
@@ -1565,16 +1706,19 @@ broadcast use {
                 i += 1;
             }
             self.entries = ArraySeqStEphS::from_vec(kept);
+            // Veracity: NEEDED proof block
             proof {
                 let ghost result_dom = spec_entries_to_map(self.entries@).dom();
                 let ghost target_dom = spec_entries_to_map(old_self_view).dom().difference(
                     other@.dom());
+                // Veracity: NEEDED assert
                 assert forall|k: K::V| result_dom.contains(k) == target_dom.contains(k)
                 by {
                     if result_dom.contains(k) {
                         lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                         let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                             && (#[trigger] self.entries@[idx]).0 == k;
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(idx) == kept@[idx]);
                         let s = sources[idx];
                         lemma_entries_to_map_contains_key::<K::V, V::V>(old_self_view, s);
@@ -1585,23 +1729,30 @@ broadcast use {
                         let si = choose|si: int| 0 <= si < old_self_view.len()
                             && (#[trigger] old_self_view[si]).0 == k;
                         let j = choose|j: int| 0 <= j < sources.len() && sources[j] == si;
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j) == kept@[j]);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
                     }
                 };
                 // No duplicate keys.
+                // Veracity: NEEDED assert
                 assert(spec_keys_no_dups(self.entries@)) by {
+                    // Veracity: NEEDED assert
                     assert forall|j1: int, j2: int|
                         0 <= j1 < j2 < self.entries@.len()
                         implies (#[trigger] self.entries@[j1]).0
                             != (#[trigger] self.entries@[j2]).0
                     by {
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j1) == kept@[j1]);
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j2) == kept@[j2]);
+                        // Veracity: NEEDED assert
                         assert(sources[j1] < sources[j2]);
                     };
                 };
                 // Value preservation.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] self@.contains_key(k)
                     implies self@[k] == spec_entries_to_map(old_self_view)[k]
@@ -1609,6 +1760,7 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(idx) == kept@[idx]);
                     let s = sources[idx];
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);
@@ -1632,9 +1784,11 @@ broadcast use {
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
+                // Veracity: NEEDED proof block
                 proof { reveal(obeys_view_eq); }
                 if pair.0.eq(key) {
                     let v = pair.1.clone_plus();
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_entries_to_map_get::<K::V, V::V>(self.entries@, i as int);
                     }
@@ -1642,6 +1796,7 @@ broadcast use {
                 }
                 i += 1;
             }
+            // Veracity: NEEDED proof block
             proof {
                 lemma_entries_to_map_no_key::<K::V, V::V>(self.entries@, key@);
             }
@@ -1662,11 +1817,14 @@ broadcast use {
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
+                // Veracity: NEEDED proof block
                 proof { reveal(obeys_view_eq); }
                 if pair.0.eq(key) {
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_entries_to_map_get::<K::V, V::V>(self.entries@, i as int);
                         // Prove uniqueness: i is the only index with this key.
+                        // Veracity: NEEDED assert
                         assert forall|j: int|
                             0 <= j < self.entries.seq@.len()
                             && (#[trigger] self.entries.seq@[j]).0@ == key@
@@ -1675,9 +1833,11 @@ broadcast use {
                             if j < i as int {
                                 // From the view-level entries: entries@[j].0 != key@
                                 // entries@[j].0 == entries.seq@[j].0@ (by View definition)
+                                // Veracity: NEEDED assert
                                 assert(self.entries@[j].0 != key@);
                             } else if j > i as int {
                                 // From spec_keys_no_dups: distinct indices have distinct keys.
+                                // Veracity: NEEDED assert
                                 assert(self.entries@[i as int].0 != self.entries@[j].0);
                             }
                         };
@@ -1686,6 +1846,7 @@ broadcast use {
                 }
                 i += 1;
             }
+            // Veracity: NEEDED proof block
             proof {
                 lemma_entries_to_map_no_key::<K::V, V::V>(self.entries@, key@);
             }
@@ -1723,13 +1884,16 @@ broadcast use {
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
+                // Veracity: NEEDED proof block
                 proof { reveal(obeys_view_eq); }
                 if !pair.0.eq(key) {
                     let cloned = pair.clone_plus();
                     kept.push(cloned);
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost old_src = src;
                         src = src.push(i as int);
+                        // Veracity: NEEDED assert
                         assert forall|si: int| 0 <= si < i as int + 1
                             && (#[trigger] old_view[si]).0 != key@
                             implies exists|j: int| 0 <= j < src.len() && src[j] == si
@@ -1737,8 +1901,10 @@ broadcast use {
                             if si < i as int {
                                 let j = choose|j: int|
                                     0 <= j < old_src.len() && old_src[j] == si;
+                                // Veracity: NEEDED assert
                                 assert(src[j] == old_src[j]);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(src[src.len() - 1] == i as int);
                             }
                         };
@@ -1747,19 +1913,23 @@ broadcast use {
                 i += 1;
             }
             self.entries = ArraySeqStEphS::from_vec(kept);
+            // Veracity: NEEDED proof block
             proof {
                 let ghost result_map = spec_entries_to_map(self.entries@);
                 let ghost target_map = old_map.remove(key@);
+                // Veracity: NEEDED assert
                 assert forall|k: K::V| result_map.dom().contains(k)
                     implies target_map.dom().contains(k)
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(idx) == kept@[idx]);
                     let s = src[idx];
                     lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, s);
                 };
+                // Veracity: NEEDED assert
                 assert forall|k: K::V| target_map.dom().contains(k)
                     implies result_map.dom().contains(k)
                 by {
@@ -1767,16 +1937,21 @@ broadcast use {
                     let si = choose|si: int| 0 <= si < old_view.len()
                         && (#[trigger] old_view[si]).0 == k;
                     let j = choose|j: int| 0 <= j < src.len() && src[j] == si;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(j) == kept@[j]);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
                 };
                 // Result entries have no duplicate keys (inherited from old).
+                // Veracity: NEEDED assert
                 assert(spec_keys_no_dups(self.entries@)) by {
+                    // Veracity: NEEDED assert
                     assert forall|i: int, j: int|
                         0 <= i < self.entries@.len() && 0 <= j < self.entries@.len() && i != j
                         implies (#[trigger] self.entries@[i]).0 != (#[trigger] self.entries@[j]).0
                     by {
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(i) == kept@[i]);
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j) == kept@[j]);
                         let si = src[i];
                         let sj = src[j];
@@ -1784,6 +1959,7 @@ broadcast use {
                         // old_view has no dups, so old_view[si].0 != old_view[sj].0.
                     };
                 };
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] result_map.dom().contains(k) && target_map.dom().contains(k)
                     implies result_map[k] == target_map[k]
@@ -1791,6 +1967,7 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(idx) == kept@[idx]);
                     let s = src[idx];
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);
@@ -1839,16 +2016,20 @@ broadcast use {
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
+                // Veracity: NEEDED proof block
                 proof { reveal(obeys_view_eq); }
                 if pair.0 == key {
+                    // Veracity: NEEDED proof block
                     proof { self.entries.lemma_view_index(i as int); }
                     match_index = i;
                 } else {
                     let cloned = pair.clone_plus();
                     all.push(cloned);
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost old_src = src;
                         src = src.push(i as int);
+                        // Veracity: NEEDED assert
                         assert forall|si: int| 0 <= si < i as int + 1
                             && (#[trigger] old_view[si]).0 != key_view
                             implies exists|j: int| 0 <= j < src.len() && src[j] == si
@@ -1856,8 +2037,10 @@ broadcast use {
                             if si < i as int {
                                 let j = choose|j: int|
                                     0 <= j < old_src.len() && old_src[j] == si;
+                                // Veracity: NEEDED assert
                                 assert(src[j] == old_src[j]);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(src[src.len() - 1] == i as int);
                             }
                         };
@@ -1870,6 +2053,7 @@ broadcast use {
             let final_value;
             if match_index < n {
                 let old_entry = self.entries.nth(match_index);
+                // Veracity: NEEDED proof block
                 proof {
                     self.entries.lemma_view_index(match_index as int);
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, match_index as int);
@@ -1881,12 +2065,15 @@ broadcast use {
             }
             all.push(Pair(key, final_value));
             self.entries = ArraySeqStEphS::from_vec(all);
+            // Veracity: NEEDED proof block
             proof {
                 let last = (self.entries@.len() - 1) as int;
+                // Veracity: NEEDED assert
                 assert(self.entries.spec_index(last) == all@[last]);
                 self.entries.lemma_view_index(last);
                 lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, last);
                 // Domain backward: old keys + key@ are in result.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] old_map.dom().contains(k) || k == key_view
                     implies spec_entries_to_map(self.entries@).dom().contains(k)
@@ -1897,11 +2084,13 @@ broadcast use {
                         let si = choose|si: int| 0 <= si < old_view.len()
                             && (#[trigger] old_view[si]).0 == k;
                         let j = choose|j: int| 0 <= j < src.len() && src[j] == si;
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j) == all@[j]);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
                     }
                 };
                 // Domain forward: result keys are in old ∪ {key@}.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] spec_entries_to_map(self.entries@).dom().contains(k)
                     implies old_map.dom().contains(k) || k == key_view
@@ -1909,6 +2098,7 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(idx) == all@[idx]);
                     if idx < src.len() as int {
                         let s = src[idx];
@@ -1916,22 +2106,29 @@ broadcast use {
                     }
                 };
                 // No duplicate keys.
+                // Veracity: NEEDED assert
                 assert(spec_keys_no_dups(self.entries@)) by {
+                    // Veracity: NEEDED assert
                     assert forall|a: int, b: int|
                         0 <= a < b < self.entries@.len()
                         implies (#[trigger] self.entries@[a]).0 != (#[trigger] self.entries@[b]).0
                     by {
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(a) == all@[a]);
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(b) == all@[b]);
                         if a < src.len() as int && b < src.len() as int {
+                            // Veracity: NEEDED assert
                             assert(src[a] < src[b]);
                         } else if a < src.len() as int && b == last {
+                            // Veracity: NEEDED assert
                             assert(all@[a].0@ != key_view);
                         } else if a == last {
                         }
                     };
                 };
                 // Value preservation for non-key entries.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     k != key_view && #[trigger] old_map.contains_key(k)
                     implies self@[k] == old_map[k]
@@ -1940,6 +2137,7 @@ broadcast use {
                     let si = choose|si: int| 0 <= si < old_view.len()
                         && (#[trigger] old_view[si]).0 == k;
                     let j = choose|j: int| 0 <= j < src.len() && src[j] == si;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(j) == all@[j]);
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, j);
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, si);
@@ -1954,17 +2152,22 @@ broadcast use {
                 let ghost chosen_i = choose|i: int| 0 <= i < self.entries.seq@.len()
                     && (#[trigger] self.entries.seq@[i]).0@ == key_view;
                 if chosen_i != last {
+                    // Veracity: NEEDED assert
                     assert(self.entries@[chosen_i].0 == key_view);
                 }
+                // Veracity: NEEDED assert
                 assert(chosen_i == last);
+                // Veracity: NEEDED assert
                 assert(self.spec_stored_value(key_view) == self.entries.seq@[last].1);
                 // Prove the existing-key spec_stored_value ensures.
                 if match_index < n as usize {
                     let ghost old_chosen = choose|i: int| 0 <= i < old_exec_seq.len()
                         && (#[trigger] old_exec_seq[i]).0@ == key_view;
                     if old_chosen != match_index as int {
+                        // Veracity: NEEDED assert
                         assert(old_view[old_chosen].0 == key_view);
                     }
+                    // Veracity: NEEDED assert
                     assert(old_chosen == match_index as int);
                 }
             }
@@ -2016,12 +2219,15 @@ broadcast use {
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
+                // Veracity: NEEDED proof block
                 proof { reveal(obeys_view_eq); }
                 if pair.0 == key {
+                    // Veracity: NEEDED proof block
                     proof { self.entries.lemma_view_index(i as int); }
                     match_index = i;
                 } else {
                     // Prove pair.1.spec_wf() so we can call clone_wf.
+                    // Veracity: NEEDED proof block
                     proof {
                         self.entries.lemma_view_index(i as int);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, i as int);
@@ -2032,17 +2238,21 @@ broadcast use {
                             && (#[trigger] old_exec_seq[idx]).0@ == k_at_i;
                         // old_exec_seq[i].0@ == old_view[i].0 == k_at_i
                         if chosen != i as int {
+                            // Veracity: NEEDED assert
                             assert(old_view[chosen].0 == k_at_i);
                         }
+                        // Veracity: NEEDED assert
                         assert(chosen == i as int);
                     }
                     let kc = pair.0.clone_view();
                     let vc = pair.1.clone_wf();
                     let cloned = Pair(kc, vc);
                     all.push(cloned);
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost old_src = src;
                         src = src.push(i as int);
+                        // Veracity: NEEDED assert
                         assert forall|si: int| 0 <= si < i as int + 1
                             && (#[trigger] old_view[si]).0 != key_view
                             implies exists|j: int| 0 <= j < src.len() && src[j] == si
@@ -2050,8 +2260,10 @@ broadcast use {
                             if si < i as int {
                                 let j = choose|j: int|
                                     0 <= j < old_src.len() && old_src[j] == si;
+                                // Veracity: NEEDED assert
                                 assert(src[j] == old_src[j]);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(src[src.len() - 1] == i as int);
                             }
                         };
@@ -2064,6 +2276,7 @@ broadcast use {
             let final_value;
             if match_index < n {
                 let old_entry = self.entries.nth(match_index);
+                // Veracity: NEEDED proof block
                 proof {
                     self.entries.lemma_view_index(match_index as int);
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, match_index as int);
@@ -2073,8 +2286,10 @@ broadcast use {
                     let ghost chosen = choose|idx: int| 0 <= idx < old_exec_seq.len()
                         && (#[trigger] old_exec_seq[idx]).0@ == k_at_m;
                     if chosen != match_index as int {
+                        // Veracity: NEEDED assert
                         assert(old_view[chosen].0 == k_at_m);
                     }
+                    // Veracity: NEEDED assert
                     assert(chosen == match_index as int);
                 }
                 final_value = combine(&old_entry.1, &value);
@@ -2083,12 +2298,15 @@ broadcast use {
             }
             all.push(Pair(key, final_value));
             self.entries = ArraySeqStEphS::from_vec(all);
+            // Veracity: NEEDED proof block
             proof {
                 let last = (self.entries@.len() - 1) as int;
+                // Veracity: NEEDED assert
                 assert(self.entries.spec_index(last) == all@[last]);
                 self.entries.lemma_view_index(last);
                 lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, last);
                 // Domain backward: old keys + key@ are in result.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] old_map.dom().contains(k) || k == key_view
                     implies spec_entries_to_map(self.entries@).dom().contains(k)
@@ -2099,11 +2317,13 @@ broadcast use {
                         let si = choose|si: int| 0 <= si < old_view.len()
                             && (#[trigger] old_view[si]).0 == k;
                         let j = choose|j: int| 0 <= j < src.len() && src[j] == si;
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j) == all@[j]);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
                     }
                 };
                 // Domain forward: result keys are in old ∪ {key@}.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] spec_entries_to_map(self.entries@).dom().contains(k)
                     implies old_map.dom().contains(k) || k == key_view
@@ -2111,6 +2331,7 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(idx) == all@[idx]);
                     if idx < src.len() as int {
                         let s = src[idx];
@@ -2118,22 +2339,29 @@ broadcast use {
                     }
                 };
                 // No duplicate keys.
+                // Veracity: NEEDED assert
                 assert(spec_keys_no_dups(self.entries@)) by {
+                    // Veracity: NEEDED assert
                     assert forall|a: int, b: int|
                         0 <= a < b < self.entries@.len()
                         implies (#[trigger] self.entries@[a]).0 != (#[trigger] self.entries@[b]).0
                     by {
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(a) == all@[a]);
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(b) == all@[b]);
                         if a < src.len() as int && b < src.len() as int {
+                            // Veracity: NEEDED assert
                             assert(src[a] < src[b]);
                         } else if a < src.len() as int && b == last {
+                            // Veracity: NEEDED assert
                             assert(all@[a].0@ != key_view);
                         } else if a == last {
                         }
                     };
                 };
                 // Value preservation for non-key entries.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     k != key_view && #[trigger] old_map.contains_key(k)
                     implies self@[k] == old_map[k]
@@ -2142,6 +2370,7 @@ broadcast use {
                     let si = choose|si: int| 0 <= si < old_view.len()
                         && (#[trigger] old_view[si]).0 == k;
                     let j = choose|j: int| 0 <= j < src.len() && src[j] == si;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(j) == all@[j]);
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, j);
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, si);
@@ -2155,38 +2384,49 @@ broadcast use {
                 let ghost chosen_i = choose|i: int| 0 <= i < self.entries.seq@.len()
                     && (#[trigger] self.entries.seq@[i]).0@ == key_view;
                 if chosen_i != last {
+                    // Veracity: NEEDED assert
                     assert(self.entries@[chosen_i].0 == key_view);
+                    // Veracity: NEEDED assert
                     assert(self.entries@[last].0 == key_view);
                 }
+                // Veracity: NEEDED assert
                 assert(chosen_i == last);
+                // Veracity: NEEDED assert
                 assert(self.spec_stored_value(key_view) == self.entries.seq@[last].1);
                 // Prove the existing-key spec_stored_value ensures.
                 if match_index < n as usize {
                     let ghost old_chosen = choose|i: int| 0 <= i < old_exec_seq.len()
                         && (#[trigger] old_exec_seq[i]).0@ == key_view;
                     if old_chosen != match_index as int {
+                        // Veracity: NEEDED assert
                         assert(old_view[old_chosen].0 == key_view);
                     }
+                    // Veracity: NEEDED assert
                     assert(old_chosen == match_index as int);
                 }
                 // Prove stored-value wf for all keys.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] self@.contains_key(k)
                     implies self.spec_stored_value(k).spec_wf()
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(idx) == all@[idx]);
                     // spec_stored_value(k) == self.entries.seq@[sv_idx].1
                     let ghost sv_idx = choose|i: int| 0 <= i < self.entries.seq@.len()
                         && (#[trigger] self.entries.seq@[i]).0@ == k;
                     // sv_idx is the unique index with key k in new entries.
                     // idx also has key k. By no_dups, sv_idx == idx.
+                    // Veracity: NEEDED assert
                     assert(self.entries@[sv_idx].0 == k);
                     if sv_idx != idx {
                         // Contradicts spec_keys_no_dups
                     }
+                    // Veracity: NEEDED assert
                     assert(sv_idx == idx);
+                    // Veracity: NEEDED assert
                     assert(self.spec_stored_value(k) == self.entries.seq@[idx].1);
                     // all@[idx].1.spec_wf() — from loop invariant or final_value wf.
                     if idx == last {
@@ -2194,11 +2434,14 @@ broadcast use {
                         if match_index < n as usize {
                             // combine result: combine.ensures((&old_v, &value), final_value)
                             // && old_v.spec_wf() && value.spec_wf() ==> final_value.spec_wf()
+                            // Veracity: NEEDED assert
                             assert(combine.ensures((&old_stored_at_key.1, &value), final_value));
+                            // Veracity: NEEDED assert
                             assert(old_stored_at_key.1.spec_wf());
                         }
                     } else {
                         // Non-key entry: wf from loop invariant.
+                        // Veracity: NEEDED assert
                         assert(all@[idx].1.spec_wf());
                     }
                 };
@@ -2242,9 +2485,11 @@ broadcast use {
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
+                // Veracity: NEEDED proof block
                 proof { reveal(obeys_view_eq); }
                 if !pair.0.eq(key) {
                     // Prove pair.1.spec_wf() so we can call clone_wf.
+                    // Veracity: NEEDED proof block
                     proof {
                         self.entries.lemma_view_index(i as int);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, i as int);
@@ -2252,17 +2497,21 @@ broadcast use {
                         let ghost chosen = choose|idx: int| 0 <= idx < old_exec_seq.len()
                             && (#[trigger] old_exec_seq[idx]).0@ == k_at_i;
                         if chosen != i as int {
+                            // Veracity: NEEDED assert
                             assert(old_view[chosen].0 == k_at_i);
                         }
+                        // Veracity: NEEDED assert
                         assert(chosen == i as int);
                     }
                     let kc = pair.0.clone_view();
                     let vc = pair.1.clone_wf();
                     let cloned = Pair(kc, vc);
                     kept.push(cloned);
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost old_src = src;
                         src = src.push(i as int);
+                        // Veracity: NEEDED assert
                         assert forall|si: int| 0 <= si < i as int + 1
                             && (#[trigger] old_view[si]).0 != key@
                             implies exists|j: int| 0 <= j < src.len() && src[j] == si
@@ -2270,8 +2519,10 @@ broadcast use {
                             if si < i as int {
                                 let j = choose|j: int|
                                     0 <= j < old_src.len() && old_src[j] == si;
+                                // Veracity: NEEDED assert
                                 assert(src[j] == old_src[j]);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(src[src.len() - 1] == i as int);
                             }
                         };
@@ -2280,19 +2531,23 @@ broadcast use {
                 i += 1;
             }
             self.entries = ArraySeqStEphS::from_vec(kept);
+            // Veracity: NEEDED proof block
             proof {
                 let ghost result_map = spec_entries_to_map(self.entries@);
                 let ghost target_map = old_map.remove(key@);
+                // Veracity: NEEDED assert
                 assert forall|k: K::V| result_map.dom().contains(k)
                     implies target_map.dom().contains(k)
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(idx) == kept@[idx]);
                     let s = src[idx];
                     lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, s);
                 };
+                // Veracity: NEEDED assert
                 assert forall|k: K::V| target_map.dom().contains(k)
                     implies result_map.dom().contains(k)
                 by {
@@ -2300,20 +2555,26 @@ broadcast use {
                     let si = choose|si: int| 0 <= si < old_view.len()
                         && (#[trigger] old_view[si]).0 == k;
                     let j = choose|j: int| 0 <= j < src.len() && src[j] == si;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(j) == kept@[j]);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
                 };
+                // Veracity: NEEDED assert
                 assert(spec_keys_no_dups(self.entries@)) by {
+                    // Veracity: NEEDED assert
                     assert forall|i: int, j: int|
                         0 <= i < self.entries@.len() && 0 <= j < self.entries@.len() && i != j
                         implies (#[trigger] self.entries@[i]).0 != (#[trigger] self.entries@[j]).0
                     by {
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(i) == kept@[i]);
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j) == kept@[j]);
                         let si = src[i];
                         let sj = src[j];
                     };
                 };
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] result_map.dom().contains(k) && target_map.dom().contains(k)
                     implies result_map[k] == target_map[k]
@@ -2321,26 +2582,34 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(idx) == kept@[idx]);
                     let s = src[idx];
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, s);
                 };
                 // Prove stored-value wf for all remaining keys.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] self@.contains_key(k)
                     implies self.spec_stored_value(k).spec_wf()
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(idx) == kept@[idx]);
                     let ghost sv_idx = choose|i: int| 0 <= i < self.entries.seq@.len()
                         && (#[trigger] self.entries.seq@[i]).0@ == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries@[sv_idx].0 == k);
                     if sv_idx != idx {}
+                    // Veracity: NEEDED assert
                     assert(sv_idx == idx);
+                    // Veracity: NEEDED assert
                     assert(self.spec_stored_value(k) == self.entries.seq@[idx].1);
+                    // Veracity: NEEDED assert
                     assert(self.entries.seq@[idx] == kept@[idx]);
+                    // Veracity: NEEDED assert
                     assert(kept@[idx].1.spec_wf());
                 };
             }
@@ -2378,9 +2647,11 @@ broadcast use {
                 if keys.find(&pair.0) {
                     let cloned = pair.clone_plus();
                     kept.push(cloned);
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost old_sources = sources;
                         sources = sources.push(i as int);
+                        // Veracity: NEEDED assert
                         assert forall|si: int| 0 <= si < i as int + 1
                             && keys@.contains((#[trigger] old_view[si]).0)
                             implies exists|j: int| 0 <= j < sources.len() && sources[j] == si
@@ -2388,8 +2659,10 @@ broadcast use {
                             if si < i as int {
                                 let j = choose|j: int|
                                     0 <= j < old_sources.len() && old_sources[j] == si;
+                                // Veracity: NEEDED assert
                                 assert(sources[j] == old_sources[j]);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(sources[sources.len() - 1] == i as int);
                             }
                         };
@@ -2398,15 +2671,18 @@ broadcast use {
                 i += 1;
             }
             self.entries = ArraySeqStEphS::from_vec(kept);
+            // Veracity: NEEDED proof block
             proof {
                 let ghost result_dom = spec_entries_to_map(self.entries@).dom();
                 let ghost target_dom = spec_entries_to_map(old_view).dom().intersect(keys@);
+                // Veracity: NEEDED assert
                 assert forall|k: K::V| result_dom.contains(k) == target_dom.contains(k)
                 by {
                     if result_dom.contains(k) {
                         lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                         let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                             && (#[trigger] self.entries@[idx]).0 == k;
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(idx) == kept@[idx]);
                         let s = sources[idx];
                         lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, s);
@@ -2416,23 +2692,30 @@ broadcast use {
                         let si = choose|si: int| 0 <= si < old_view.len()
                             && (#[trigger] old_view[si]).0 == k;
                         let j = choose|j: int| 0 <= j < sources.len() && sources[j] == si;
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j) == kept@[j]);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
                     }
                 };
                 // No duplicate keys.
+                // Veracity: NEEDED assert
                 assert(spec_keys_no_dups(self.entries@)) by {
+                    // Veracity: NEEDED assert
                     assert forall|j1: int, j2: int|
                         0 <= j1 < j2 < self.entries@.len()
                         implies (#[trigger] self.entries@[j1]).0
                             != (#[trigger] self.entries@[j2]).0
                     by {
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j1) == kept@[j1]);
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j2) == kept@[j2]);
+                        // Veracity: NEEDED assert
                         assert(sources[j1] < sources[j2]);
                     };
                 };
                 // Value preservation.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] self@.contains_key(k)
                     implies self@[k] == spec_entries_to_map(old_view)[k]
@@ -2440,6 +2723,7 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(idx) == kept@[idx]);
                     let s = sources[idx];
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);
@@ -2480,9 +2764,11 @@ broadcast use {
                 if !keys.find(&pair.0) {
                     let cloned = pair.clone_plus();
                     kept.push(cloned);
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost old_sources = sources;
                         sources = sources.push(i as int);
+                        // Veracity: NEEDED assert
                         assert forall|si: int| 0 <= si < i as int + 1
                             && !keys@.contains((#[trigger] old_view[si]).0)
                             implies exists|j: int| 0 <= j < sources.len() && sources[j] == si
@@ -2490,8 +2776,10 @@ broadcast use {
                             if si < i as int {
                                 let j = choose|j: int|
                                     0 <= j < old_sources.len() && old_sources[j] == si;
+                                // Veracity: NEEDED assert
                                 assert(sources[j] == old_sources[j]);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(sources[sources.len() - 1] == i as int);
                             }
                         };
@@ -2500,15 +2788,18 @@ broadcast use {
                 i += 1;
             }
             self.entries = ArraySeqStEphS::from_vec(kept);
+            // Veracity: NEEDED proof block
             proof {
                 let ghost result_dom = spec_entries_to_map(self.entries@).dom();
                 let ghost target_dom = spec_entries_to_map(old_view).dom().difference(keys@);
+                // Veracity: NEEDED assert
                 assert forall|k: K::V| result_dom.contains(k) == target_dom.contains(k)
                 by {
                     if result_dom.contains(k) {
                         lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                         let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                             && (#[trigger] self.entries@[idx]).0 == k;
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(idx) == kept@[idx]);
                         let s = sources[idx];
                         lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, s);
@@ -2518,23 +2809,30 @@ broadcast use {
                         let si = choose|si: int| 0 <= si < old_view.len()
                             && (#[trigger] old_view[si]).0 == k;
                         let j = choose|j: int| 0 <= j < sources.len() && sources[j] == si;
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j) == kept@[j]);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
                     }
                 };
                 // No duplicate keys.
+                // Veracity: NEEDED assert
                 assert(spec_keys_no_dups(self.entries@)) by {
+                    // Veracity: NEEDED assert
                     assert forall|j1: int, j2: int|
                         0 <= j1 < j2 < self.entries@.len()
                         implies (#[trigger] self.entries@[j1]).0
                             != (#[trigger] self.entries@[j2]).0
                     by {
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j1) == kept@[j1]);
+                        // Veracity: NEEDED assert
                         assert(self.entries.spec_index(j2) == kept@[j2]);
+                        // Veracity: NEEDED assert
                         assert(sources[j1] < sources[j2]);
                     };
                 };
                 // Value preservation.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] self@.contains_key(k)
                     implies self@[k] == spec_entries_to_map(old_view)[k]
@@ -2542,6 +2840,7 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    // Veracity: NEEDED assert
                     assert(self.entries.spec_index(idx) == kept@[idx]);
                     let s = sources[idx];
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);
@@ -2553,7 +2852,9 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>) {
             let entries = self.entries.clone();
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(Pair_feq_trigger::<K, V>());
                 lemma_seq_map_cloned_view_eq(
                     self.entries.seq@,
@@ -2572,6 +2873,7 @@ broadcast use {
         ensures cloned@.dom().finite()
     {
         let seq = ArraySeqStEphS::from_vec(entries);
+        // Veracity: NEEDED proof block
         proof {
             lemma_entries_to_map_finite::<K::V, V::V>(seq@);
         }
@@ -2598,6 +2900,7 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             let equal = self.entries == other.entries;
+            // Veracity: NEEDED proof block
             proof { assume(equal == (self@ == other@)); }
             equal
         }

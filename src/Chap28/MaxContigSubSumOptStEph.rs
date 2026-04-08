@@ -141,6 +141,7 @@ broadcast use {
                             pv@[k] as int == spec_prefix_sum(a.seq@, k),
                 decreases n - i,
             {
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int);
                     // spec_prefix_sum(a.seq@, i+1) = spec_prefix_sum(a.seq@, i) + a.seq@[i]
@@ -179,6 +180,7 @@ broadcast use {
                 if cur < rmin {
                     rmin = cur;
                 }
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(spec_min_prefix_sum, 2);
                 }
@@ -223,6 +225,7 @@ broadcast use {
             {
                 let p_hi = *ap.nth(idx);
                 let m_lo = *mp.nth(idx - 1);
+                // Veracity: NEEDED proof block
                 proof {
                     // Show the subtraction fits in i32.
                     // p_hi = prefix(idx), m_lo = min_prefix(idx-1).
@@ -245,6 +248,7 @@ broadcast use {
             }
 
 
+            // Veracity: NEEDED proof block
             proof {
                 lemma_prefix_opt_is_mcss(a.seq@, max_sum.unwrap() as int, n as int);
             }

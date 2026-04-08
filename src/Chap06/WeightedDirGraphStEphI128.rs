@@ -166,6 +166,7 @@ verus!
                 match it.next() {
                     None => break,
                     Some(triple) => {
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_seq_index_in_map_to_set(edge_seq, it@.0 - 1);
                         }
@@ -174,6 +175,7 @@ verus!
                 }
             }
 
+            // Veracity: NEEDED proof block
             proof {
             }
 
@@ -217,6 +219,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         return edges;
@@ -251,6 +254,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
 // Veracity: NEEDED assert
 assert forall |p: (V::V, i128)| neighbors@.contains(p) implies 
@@ -303,6 +307,7 @@ assert forall |p: (V::V, i128)| (exists |w: i128| #![trigger wa_view.contains((v
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
 // Veracity: NEEDED assert
 assert forall |p: (V::V, i128)| neighbors@.contains(p) implies 
@@ -353,6 +358,7 @@ assert forall |p: (V::V, i128)| (exists |w: i128| #![trigger wa_view.contains((p
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_reveal_view_injective::<LabEdge<V, i128>>();
                             lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i128::<LabEdge<V, i128>, V::V, V::V>(wa_seq);
@@ -361,6 +367,7 @@ assert forall |p: (V::V, i128)| (exists |w: i128| #![trigger wa_view.contains((p
                         return sum;
                     },
                     Some(labeled_edge) => {
+// Veracity: NEEDED proof block
 proof { assert(wa_seq.take(it@.0 as int).drop_last() =~= wa_seq.take((it@.0 - 1) as int)); }
                         sum = sum.add_value(labeled_edge.2);
                     },
@@ -389,6 +396,7 @@ proof { assert(wa_seq.take(it@.0 as int).drop_last() =~= wa_seq.take((it@.0 - 1)
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
 // Veracity: NEEDED assert
 assert forall |t: (V::V, V::V, i128)| #[trigger] edges@.contains(t) implies 
@@ -438,6 +446,7 @@ assert forall |t: (V::V, V::V, i128)| #[trigger] wa_view.contains(t) && t.2 > th
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
 // Veracity: NEEDED assert
 assert forall |t: (V::V, V::V, i128)| #[trigger] edges@.contains(t) implies 

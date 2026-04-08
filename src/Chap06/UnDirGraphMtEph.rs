@@ -330,23 +330,28 @@ pub mod UnDirGraphMtEph {
         {
             let n = edges.size();
             if n == 0 {
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 SetStEph::empty()
             }
             else if n == 1 {
                 let Edge(a, b) = edges.choose();
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 if feq(&a, &v) {
+                    // Veracity: NEEDED proof block
                     proof {
                     }
                     SetStEph::singleton(b.clone_plus())
                 } else if feq(&b, &v) {
+                    // Veracity: NEEDED proof block
                     proof {
                     }
                     SetStEph::singleton(a.clone_plus())
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                     }
                     SetStEph::empty()
@@ -385,6 +390,7 @@ pub mod UnDirGraphMtEph {
             else if n == 1 {
                 let u = verts.choose();
                 let neighbors = self.ng(&u);
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 neighbors
@@ -406,6 +412,7 @@ pub mod UnDirGraphMtEph {
                 let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
 
                 let neighbors = left_neighbors.union(&right_neighbors);
+                // Veracity: NEEDED proof block
                 proof {
                     // Veracity: NEEDED assert
                     assert forall |w: V::V| #![trigger neighbors@.contains(w)] self.spec_ng_of_vertices_from_set(verts@).contains(w)
@@ -686,6 +693,7 @@ pub mod UnDirGraphMtEph {
         fn vertices(&self) -> (v: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let v = inner.V.clone();
             read_handle.release_read();
@@ -696,6 +704,7 @@ pub mod UnDirGraphMtEph {
         fn edges(&self) -> (e: SetStEph<Edge<V>>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let e = inner.E.clone();
             read_handle.release_read();
@@ -706,6 +715,7 @@ pub mod UnDirGraphMtEph {
         fn sizeV(&self) -> (n: usize) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let n = inner.sizeV();
             read_handle.release_read();
@@ -716,6 +726,7 @@ pub mod UnDirGraphMtEph {
         fn sizeE(&self) -> (n: usize) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let n = inner.sizeE();
             read_handle.release_read();
@@ -726,6 +737,7 @@ pub mod UnDirGraphMtEph {
         fn neighbor(&self, u: &V, v: &V) -> (b: bool) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let b = inner.neighbor(u, v);
             read_handle.release_read();
@@ -736,6 +748,7 @@ pub mod UnDirGraphMtEph {
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let neighbors = inner.ng(v);
             read_handle.release_read();
@@ -746,6 +759,7 @@ pub mod UnDirGraphMtEph {
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let neighbors = inner.ng_of_vertices(u_set);
             read_handle.release_read();
@@ -788,6 +802,7 @@ pub mod UnDirGraphMtEph {
         {
             let v_eq = self.V == other.V;
             let e_eq = self.E == other.E;
+            // Veracity: NEEDED proof block
             proof {
                 if v_eq && e_eq {
                 }

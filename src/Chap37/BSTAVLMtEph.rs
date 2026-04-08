@@ -88,7 +88,9 @@ pub mod BSTAVLMtEph {
         match tree {
             BalBinTree::Leaf => {},
             BalBinTree::Node(node) => {
+                // Veracity: NEEDED assert
                 assert(node.left.tree_is_bst());
+                // Veracity: NEEDED assert
                 assert(node.right.tree_is_bst());
                 match node.left {
                     BalBinTree::Leaf => {},
@@ -295,13 +297,18 @@ pub mod BSTAVLMtEph {
                         let r = BalBinTree::Node(Box::new(BalBinNode {
                             left: ll, value: x_val, right: right_sub,
                         }));
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_bst_deep::<T>(tree_ghost);
+                            // Veracity: NEEDED assert
                             assert forall|z: T| #[trigger] old_lr.tree_contains(z) implies
                                 T::le(z, y_val) && z != y_val
                             by { assert(old_left.tree_contains(z)); };
+                            // Veracity: NEEDED assert
                             assert(old_left.tree_contains(x_val));
+                            // Veracity: NEEDED assert
                             assert(right_sub.tree_is_bst());
+                            // Veracity: NEEDED assert
                             assert forall|z: T| #[trigger] right_sub.tree_contains(z) implies
                                 T::le(x_val, z) && z != x_val
                             by {
@@ -311,15 +318,21 @@ pub mod BSTAVLMtEph {
                                     if z == x_val { T::antisymmetric(x_val, y_val); }
                                 }
                             };
+                            // Veracity: NEEDED assert
                             assert forall|z: T| r.tree_contains(z) == tree_ghost.tree_contains(z)
                             by {
+                                // Veracity: NEEDED assert
                                 assert(right_sub.tree_contains(z) == (y_val == z
                                     || old_lr.tree_contains(z) || old_r.tree_contains(z)));
+                                // Veracity: NEEDED assert
                                 assert(old_left.tree_contains(z) == (x_val == z
                                     || old_ll.tree_contains(z) || old_lr.tree_contains(z)));
                             };
+                            // Veracity: NEEDED assert
                             assert(r.spec_size() == 1 + old_ll.spec_size() + right_sub.spec_size());
+                            // Veracity: NEEDED assert
                             assert(tree_ghost.spec_size() == 1 + old_left.spec_size() + old_r.spec_size());
+                            // Veracity: NEEDED assert
                             assert(avl_balanced(r) <==>
                                 (avl_balanced(old_ll) && avl_balanced(right_sub) && {
                                     let lh = old_ll.spec_height() as int;
@@ -359,13 +372,18 @@ pub mod BSTAVLMtEph {
                         let r = BalBinTree::Node(Box::new(BalBinNode {
                             left: left_sub, value: y_val, right: rr,
                         }));
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_bst_deep::<T>(tree_ghost);
+                            // Veracity: NEEDED assert
                             assert forall|z: T| #[trigger] old_rl.tree_contains(z) implies
                                 T::le(x_val, z) && z != x_val
                             by { assert(old_right.tree_contains(z)); };
+                            // Veracity: NEEDED assert
                             assert(old_right.tree_contains(y_val));
+                            // Veracity: NEEDED assert
                             assert(left_sub.tree_is_bst());
+                            // Veracity: NEEDED assert
                             assert forall|z: T| #[trigger] left_sub.tree_contains(z) implies
                                 T::le(z, y_val) && z != y_val
                             by {
@@ -375,15 +393,21 @@ pub mod BSTAVLMtEph {
                                 } else if z == x_val { assert(x_val != y_val); }
                                 else if old_rl.tree_contains(z) {}
                             };
+                            // Veracity: NEEDED assert
                             assert forall|z: T| r.tree_contains(z) == tree_ghost.tree_contains(z)
                             by {
+                                // Veracity: NEEDED assert
                                 assert(left_sub.tree_contains(z) == (x_val == z
                                     || old_l.tree_contains(z) || old_rl.tree_contains(z)));
+                                // Veracity: NEEDED assert
                                 assert(old_right.tree_contains(z) == (y_val == z
                                     || old_rl.tree_contains(z) || old_rr.tree_contains(z)));
                             };
+                            // Veracity: NEEDED assert
                             assert(r.spec_size() == 1 + left_sub.spec_size() + old_rr.spec_size());
+                            // Veracity: NEEDED assert
                             assert(tree_ghost.spec_size() == 1 + old_l.spec_size() + old_right.spec_size());
+                            // Veracity: NEEDED assert
                             assert(avl_balanced(r) <==>
                                 (avl_balanced(left_sub) && avl_balanced(old_rr) && {
                                     let lh = left_sub.spec_height() as int;
@@ -430,15 +454,19 @@ pub mod BSTAVLMtEph {
                             value: v,
                             right: right,
                         }));
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             assert forall|x: T| intermediate.tree_contains(x) ==
                                 tree_ghost.tree_contains(x)
                             by {
+                                // Veracity: NEEDED assert
                                 assert(intermediate.tree_contains(x) ==
                                     (v == x || new_left.tree_contains(x) || right.tree_contains(x)));
                             };
                         }
                         let result = intermediate.rotate_right();
+                        // Veracity: NEEDED proof block
                         proof {
                             match tree_ghost {
                                 BalBinTree::Node(tg) => {
@@ -451,6 +479,7 @@ pub mod BSTAVLMtEph {
                                                     let lrr_h = tg_lr.right.spec_height();
                                                     let r_h = tg.right.spec_height();
 
+                                                    // Veracity: NEEDED assert
                                                     assert(avl_balanced(tg_l.right));
 
 
@@ -467,6 +496,7 @@ pub mod BSTAVLMtEph {
                         result
                     } else {
                         let result = BalBinTree::Node(inner).rotate_right();
+                        // Veracity: NEEDED proof block
                         proof {
                             match tree_ghost {
                                 BalBinTree::Node(tg) => {
@@ -504,15 +534,19 @@ pub mod BSTAVLMtEph {
                             value: v,
                             right: new_right,
                         }));
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             assert forall|x: T| intermediate.tree_contains(x) ==
                                 tree_ghost.tree_contains(x)
                             by {
+                                // Veracity: NEEDED assert
                                 assert(intermediate.tree_contains(x) ==
                                     (v == x || left.tree_contains(x) || new_right.tree_contains(x)));
                             };
                         }
                         let result = intermediate.rotate_left();
+                        // Veracity: NEEDED proof block
                         proof {
                             match tree_ghost {
                                 BalBinTree::Node(tg) => {
@@ -525,6 +559,7 @@ pub mod BSTAVLMtEph {
                                                     let rlr_h = tg_rl.right.spec_height();
                                                     let l_h = tg.left.spec_height();
 
+                                                    // Veracity: NEEDED assert
                                                     assert(avl_balanced(tg_r.left));
 
 
@@ -541,6 +576,7 @@ pub mod BSTAVLMtEph {
                         result
                     } else {
                         let result = BalBinTree::Node(inner).rotate_left();
+                        // Veracity: NEEDED proof block
                         proof {
                             match tree_ghost {
                                 BalBinTree::Node(tg) => {
@@ -592,15 +628,20 @@ pub mod BSTAVLMtEph {
                         let r = BalBinTree::Node(Box::new(BalBinNode {
                             left: new_left, value: node_val, right: right,
                         }));
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             assert forall|x: T| #[trigger] new_left.tree_contains(x) implies
                                 T::le(x, node_val) && x != node_val
                             by { if old_left.tree_contains(x) {} else { assert(x == value); } };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| #[trigger] old_right.tree_contains(x) implies
                                 T::le(node_val, x) && x != node_val by {};
+                            // Veracity: NEEDED assert
                             assert forall|x: T| r.tree_contains(x) ==
                                 (node.tree_contains(x) || x == value)
                             by {
+                                // Veracity: NEEDED assert
                                 assert(r.tree_contains(x) == (node_val == x
                                     || new_left.tree_contains(x) || old_right.tree_contains(x)));
                             };
@@ -613,15 +654,20 @@ pub mod BSTAVLMtEph {
                         let r = BalBinTree::Node(Box::new(BalBinNode {
                             left: left, value: node_val, right: new_right,
                         }));
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             assert forall|x: T| #[trigger] old_left.tree_contains(x) implies
                                 T::le(x, node_val) && x != node_val by {};
+                            // Veracity: NEEDED assert
                             assert forall|x: T| #[trigger] new_right.tree_contains(x) implies
                                 T::le(node_val, x) && x != node_val
                             by { if old_right.tree_contains(x) {} else { assert(x == value); } };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| r.tree_contains(x) ==
                                 (node.tree_contains(x) || x == value)
                             by {
+                                // Veracity: NEEDED assert
                                 assert(r.tree_contains(x) == (node_val == x
                                     || old_left.tree_contains(x) || new_right.tree_contains(x)));
                             };
@@ -633,7 +679,9 @@ pub mod BSTAVLMtEph {
                         let r = BalBinTree::Node(Box::new(BalBinNode {
                             left: left, value: node_val, right: right,
                         }));
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             assert forall|x: T| r.tree_contains(x) ==
                                 (node.tree_contains(x) || x == value)
                             by {
@@ -656,11 +704,13 @@ pub mod BSTAVLMtEph {
                     core::cmp::Ordering::Equal => true,
                     core::cmp::Ordering::Less => {
                         let r = inner.left.contains_node(target);
+                        // Veracity: NEEDED proof block
                         proof { if inner.right.tree_contains(*target) { T::antisymmetric(*target, inner.value); } }
                         r
                     }
                     core::cmp::Ordering::Greater => {
                         let r = inner.right.contains_node(target);
+                        // Veracity: NEEDED proof block
                         proof { if inner.left.tree_contains(*target) { T::antisymmetric(*target, inner.value); } }
                         r
                     }
@@ -679,11 +729,13 @@ pub mod BSTAVLMtEph {
                     core::cmp::Ordering::Equal => Some(&inner.value),
                     core::cmp::Ordering::Less => {
                         let r = inner.left.find_node(target);
+                        // Veracity: NEEDED proof block
                         proof { if inner.right.tree_contains(*target) { T::antisymmetric(*target, inner.value); } }
                         r
                     }
                     core::cmp::Ordering::Greater => {
                         let r = inner.right.find_node(target);
+                        // Veracity: NEEDED proof block
                         proof { if inner.left.tree_contains(*target) { T::antisymmetric(*target, inner.value); } }
                         r
                     }
@@ -850,11 +902,13 @@ pub mod BSTAVLMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert(&mut self, value: T) -> (inserted: Result<(), ()>) {
             let (tree, write_handle) = self.root.acquire_write();
+            // Veracity: NEEDED proof block
             proof { assume(self.ghost_root@ == tree); }
             let current_size = tree.size();
             let current_height = tree.height();
             if current_size < usize::MAX && current_height < usize::MAX {
                 let new_tree = tree.insert_node(value);
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 let ghost new_root = new_tree;
@@ -873,6 +927,7 @@ pub mod BSTAVLMtEph {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let found = tree_ref.contains_node(target);
+            // Veracity: NEEDED proof block
             proof { assume(found == self@.tree_contains(*target)); }
             read_handle.release_read();
             found
@@ -884,6 +939,7 @@ pub mod BSTAVLMtEph {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let n = tree_ref.size();
+            // Veracity: NEEDED proof block
             proof { assume(n as nat == self@.spec_size()); }
             read_handle.release_read();
             n
@@ -895,6 +951,7 @@ pub mod BSTAVLMtEph {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let b = tree_ref.is_leaf();
+            // Veracity: NEEDED proof block
             proof { assume(b == (self@ is Leaf)); }
             read_handle.release_read();
             b
@@ -906,6 +963,7 @@ pub mod BSTAVLMtEph {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let h = tree_ref.height();
+            // Veracity: NEEDED proof block
             proof { assume(h as nat == self@.spec_height()); }
             read_handle.release_read();
             h
@@ -916,6 +974,7 @@ pub mod BSTAVLMtEph {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let found = tree_ref.find_node(target).cloned();
+            // Veracity: NEEDED proof block
             proof {
                 assume(found.is_some() == self@.tree_contains(*target));
                 accept(found.is_some() ==> found.unwrap() == *target);

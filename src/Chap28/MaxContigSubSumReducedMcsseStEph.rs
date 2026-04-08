@@ -127,11 +127,13 @@ pub mod MaxContigSubSumReducedMcsseStEph {
                         min_p as int == spec_min_prefix_sum(a.seq@, k as int),
                     decreases j - k,
                 {
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_range_sum_snoc(a.seq@, 0, (k + 1) as int);
                     }
                     running = running + *a.nth(k);
 
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal_with_fuel(spec_min_prefix_sum, 2);
                     }
@@ -143,11 +145,13 @@ pub mod MaxContigSubSumReducedMcsseStEph {
                 }
 
                 // total = prefix_sum(j+1), min_p = min_prefix_sum(j)
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_range_sum_snoc(a.seq@, 0, (j + 1) as int);
                 }
                 let total = running + *a.nth(j);
 
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_min_prefix_sum_achieved(a.seq@, j as int);
                     let w = choose|w: int|
@@ -158,6 +162,7 @@ pub mod MaxContigSubSumReducedMcsseStEph {
                 }
                 let mcsse_j = total - min_p;
 
+                // Veracity: NEEDED proof block
                 proof {
                     // mcsse_j == prefix_sum(j+1) - min_prefix_sum(j)
                     // Show mcsse_j >= all range_sum(a, lo, j+1) for lo in 0..=j
@@ -182,6 +187,7 @@ pub mod MaxContigSubSumReducedMcsseStEph {
 
                 global_max = max_with_neginf(global_max, Some(mcsse_j));
 
+                // Veracity: NEEDED proof block
                 proof {
                     // Extend forall to cover ranges ending at j+1
                     if j > 0 {

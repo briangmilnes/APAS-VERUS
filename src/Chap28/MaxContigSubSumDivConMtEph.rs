@@ -106,11 +106,13 @@ pub mod MaxContigSubSumDivConMtEph {
             decreases n - i,
         {
             if running_sum < min_prefix { min_prefix = running_sum; }
+            // Veracity: NEEDED proof block
             proof { lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int); }
             running_sum = running_sum + *a.nth(i);
             i = i + 1;
         }
 
+        // Veracity: NEEDED proof block
         proof {
             let total = running_sum as int;
             if n > 0 {
@@ -142,6 +144,7 @@ pub mod MaxContigSubSumDivConMtEph {
         let n = a.length();
         let mut max_val: i32 = *a.nth(0);
         let mut running_sum: i32 = *a.nth(0);
+        // Veracity: NEEDED proof block
         proof { lemma_range_sum_single(a.seq@, 0); }
         let mut i: usize = 1;
         while i < n
@@ -158,6 +161,7 @@ pub mod MaxContigSubSumDivConMtEph {
                     1 <= j <= i && max_val as int == spec_range_sum(a.seq@, 0, j)),
             decreases n - i,
         {
+            // Veracity: NEEDED proof block
             proof { lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int); }
             running_sum = running_sum + *a.nth(i);
             if running_sum > max_val { max_val = running_sum; }
@@ -174,6 +178,7 @@ pub mod MaxContigSubSumDivConMtEph {
             let n = a.length();
             if n == 0 { return None; }
             if n == 1 {
+                // Veracity: NEEDED proof block
                 proof { lemma_range_sum_single(a.seq@, 0); }
                 return Some(*a.nth(0));
             }
@@ -182,6 +187,7 @@ pub mod MaxContigSubSumDivConMtEph {
             let left = a.subseq_copy(0, mid);
             let right = a.subseq_copy(mid, n - mid);
 
+            // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger left.seq@[i]]
@@ -201,6 +207,7 @@ pub mod MaxContigSubSumDivConMtEph {
             let s_left = max_suffix_sum(&left);
             let p_right = max_prefix_sum(&right);
 
+            // Veracity: NEEDED proof block
             proof {
                 let lo_s: int = choose|lo: int|
                     #![trigger spec_range_sum(left.seq@, lo, left.seq@.len() as int)]
@@ -219,6 +226,7 @@ pub mod MaxContigSubSumDivConMtEph {
             let mcss = max_with_neginf(max_left, max_right);
             let mcss = max_with_neginf(mcss, Some(max_crossing));
 
+            // Veracity: NEEDED proof block
             proof {
                 lemma_divcon_combine(
                     a.seq@, left.seq@, right.seq@, mid as int,

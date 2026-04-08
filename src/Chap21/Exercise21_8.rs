@@ -212,6 +212,7 @@ pub mod Exercise21_8 {
 
         let prime = ones.length() == 1;
 
+        // Veracity: NEEDED proof block
         proof {
             // Ghost: count divisors in [1, k+1) via spec_divisor_count.
             // From tabulate: all.seq@[i] == (n % (i+1) == 0) for i in [0, k).

@@ -353,6 +353,7 @@ verus!
                     iter.elements == v_seq,
                     s@ == v_seq.take(iter.pos).map(|idx: int, t: T| t@).to_set(),
             {
+                // Veracity: NEEDED proof block
                 proof { lemma_take_one_more_extends_the_seq_set_with_view(v_seq, iter.pos); }
                 let x_clone: T = x.clone_plus();
                 let _ = s.insert(x_clone);
@@ -362,6 +363,7 @@ verus!
 
         fn iter<'a>(&'a self) -> (it: SetMtEphIter<'a, T>) {
             let inner = self.elements.iter();
+            // Veracity: NEEDED proof block
             proof {
                 lemma_seq_map_to_set_equality(inner@.1, self@);
                 // Derive element-wise membership from HashSetWithViewPlus iter postcondition.
@@ -435,6 +437,7 @@ verus!
                     s2_seq.map(|i: int, k: T| k@).to_set() == s2@,
                     union@ == s1_view.union(s2_seq.take(iter.pos).map(|i: int, k: T| k@).to_set()),
             {
+                // Veracity: NEEDED proof block
                 proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.pos); }
                 let _ = union.insert(x.clone_plus());
             }
@@ -460,6 +463,7 @@ verus!
                     it1_seq.map(|i: int, k: T| k@).to_set() == self@,
                     union@ == it1_seq.take(iter1.pos).map(|i: int, k: T| k@).to_set(),
             {
+                // Veracity: NEEDED proof block
                 proof { lemma_take_one_more_extends_the_seq_set_with_view(it1_seq, iter1.pos); }
                 let _ = union.insert(x.clone_plus());
             }
@@ -478,10 +482,12 @@ verus!
                     s1_view.disjoint(s2_view),
                     union@ == s1_view.union(it2_seq.take(iter2.pos).map(|i: int, k: T| k@).to_set()),
             {
+                // Veracity: NEEDED proof block
                 proof { lemma_take_one_more_extends_the_seq_set_with_view(it2_seq, iter2.pos); }
                 let _ = union.insert(x.clone_plus());
             }
 
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(self@, s2@);
             }
@@ -507,6 +513,7 @@ verus!
                     s2_view == s2@,
                     intersection@ == s1_seq.take(iter.pos).map(|i: int, k: T| k@).to_set().intersect(s2_view),
             {
+                // Veracity: NEEDED proof block
                 proof { lemma_take_one_more_intersect(s1_seq, s2_view, iter.pos); }
 
                 if s2.mem(s1mem) {
@@ -539,6 +546,7 @@ verus!
                        product@.contains((av, bv)) <==>
                        (av == a_view && s2_seq.take(iter.pos).map(|i: int, k: U| k@).to_set().contains(bv)),
             {
+                // Veracity: NEEDED proof block
                 proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.pos); }
                 let _ = product.insert(Pair(a.clone_plus(), b.clone_plus()));
             }
@@ -589,6 +597,7 @@ verus!
                         let a_clone = a.clone_plus();
                         let s2_clone = s2.clone();
 
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_cloned_view_eq(*a, a_clone);
                         }
@@ -608,6 +617,7 @@ verus!
                         );
 
                         handles.push(handle);
+                        // Veracity: NEEDED proof block
                         proof { spawned_views = spawned_views.push(a_view); }
                     },
                     None => break,
@@ -655,6 +665,7 @@ verus!
 
                 let thread_result: SetMtEph<Pair<T, U>> = wait(handle);
 
+                // Veracity: NEEDED proof block
                 proof {
                     // From wait's ensures: handle.predicate(thread_result)
                     // From spawn loop invariant: handle.predicate(ret) ==> (ret@.finite() && forall av, bv: ...)
@@ -675,11 +686,13 @@ verus!
 
                 product = product.disjoint_union(&thread_result);
 
+                // Veracity: NEEDED proof block
                 proof {
                     joined_views = joined_views.insert(a_view);
                 }
             }
 
+            // Veracity: NEEDED proof block
             proof {
                 // Prove joined_views == s1_view
                 // At loop end: handles@.len() == 0, so joined_views contains spawned_views[0..n]
@@ -720,6 +733,7 @@ verus!
                 match parts_it.next() {
                     Some(subset) => {
                         if subset.size() == 0 {
+                            // Veracity: NEEDED proof block
                             proof {
                                 lemma_seq_index_in_map_to_set(parts_seq, old_pos);
                             }
@@ -766,10 +780,12 @@ verus!
                         if subset.mem(x) {
                             let ghost prev_found_index = found_index;
                             count = count + 1;
+                            // Veracity: NEEDED proof block
                             proof {
                                 found_index = Some(old_pos);
                             }
                             if count > 1 {
+                                // Veracity: NEEDED proof block
                                 proof {
                                     lemma_reveal_view_injective::<SetMtEph<T>>();
                                     let prev_idx = match prev_found_index { Some(i) => i, None => arbitrary() };
@@ -784,6 +800,7 @@ verus!
                         if count == 0 {
                             return false;
                         } else {
+                          // Veracity: NEEDED proof block
                           proof {
                                 let idx = match found_index { Some(i) => i, None => arbitrary() };
                                 lemma_seq_index_in_map_to_set(parts_seq, idx);
@@ -830,6 +847,7 @@ verus!
                 match s1_it.next() {
                     Some(x) => {
                         if !Self::partition_on_elt(x, parts) {
+                            // Veracity: NEEDED proof block
                             proof {
                                 lemma_seq_index_in_map_to_set(s1_seq, old_pos);
                             }
@@ -864,6 +882,7 @@ verus!
                     first@.len() == if iter.pos <= n { iter.pos } else { n as int },
                     second@.len() == if iter.pos <= n { 0 } else { iter.pos - n },
             {
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_take_one_more_extends_the_seq_set_with_view(iter_seq, iter.pos);
                     // Veracity: NEEDED assert
@@ -894,6 +913,7 @@ verus!
 
             // iter() ensures: s.contains(k) ==> self@.contains(k@)
             // And self@.len() > 0 implies s.len() > 0 (bijection)
+            // Veracity: NEEDED proof block
             proof {
                 // s.len() > 0 because self@.len() > 0 and iter ensures bijection
             }
@@ -901,6 +921,7 @@ verus!
             let opt = it.next();
             let element_ref: &T = opt.unwrap();
 
+            // Veracity: NEEDED proof block
             proof {
                 // next() ensures element_ref == s[0]
                 // Since 0 < s.len(), s.contains(element_ref)
@@ -911,6 +932,7 @@ verus!
             }
 
             let result = element_ref.clone_plus();
+            // Veracity: NEEDED proof block
             proof {
                 lemma_cloned_view_eq(*element_ref, result);
             }
@@ -1123,6 +1145,7 @@ verus!
         fn size(&self) -> (size: usize) {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let size = inner.size();
             read_handle.release_read();
@@ -1133,6 +1156,7 @@ verus!
         fn mem(&self, x: T) -> (contains: bool) {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let contains = inner.mem(&x);
             read_handle.release_read();
@@ -1142,6 +1166,7 @@ verus!
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires write lock, delegates to insert().
         fn insert(&mut self, x: T) -> (inserted: std::result::Result<bool, ()>) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+            // Veracity: NEEDED proof block
             proof { assume(self.ghost_locked_set@ == locked_val@); }
             let inserted = locked_val.insert(x);
             let ghost new_val = locked_val@;
@@ -1154,6 +1179,7 @@ verus!
         fn choose(&self) -> (element: T) {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let element = inner.choose();
             read_handle.release_read();
@@ -1197,6 +1223,7 @@ verus!
             ensures equal == (self@ == other@)
         {
             let equal = self.elements == other.elements;
+            // Veracity: NEEDED proof block
             proof { assume(equal == (self@ == other@)); }
             equal
         }

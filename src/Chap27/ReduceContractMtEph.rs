@@ -192,6 +192,7 @@ pub mod ReduceContractMtEph {
 
         // Clone array into Arc for sharing between closures
         let a_cloned = a.clone();
+        // Veracity: NEEDED proof block
         proof {
             // Veracity: NEEDED assert
             assert forall|i: int| 0 <= i < a.spec_len() implies
@@ -302,6 +303,7 @@ pub mod ReduceContractMtEph {
 
         let b = ArraySeqMtEphS { seq: b_vec };
 
+        // Veracity: NEEDED proof block
         proof {
             // b_vec@ == left_snap + right_snap (from vstd Vec::append spec)
             // Veracity: NEEDED assert
@@ -334,6 +336,7 @@ pub mod ReduceContractMtEph {
 
             // Base case: empty
             if n == 0 {
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 return id;
@@ -342,6 +345,7 @@ pub mod ReduceContractMtEph {
             // Base case: single element — use f(id, a[0]) to avoid unspecified clone
             if n == 1 {
                 let reduced = call_f(&f, &id, a.nth(0));
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(Seq::fold_left, 2);
                 }
@@ -353,6 +357,7 @@ pub mod ReduceContractMtEph {
             let b = contract_parallel(a, &f, Ghost(spec_f), half);
 
             let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));
+            // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < half as int implies {
@@ -370,6 +375,7 @@ pub mod ReduceContractMtEph {
             if n % 2 == 1 {
                 let last = a.nth(n - 1);
                 let reduced = call_f(&f, &contracted_result, last);
+                // Veracity: NEEDED proof block
                 proof {
                     let s_even = s.subrange(0, (n - 1) as int);
                     let s_last_part = s.subrange((n - 1) as int, n as int);
@@ -384,6 +390,7 @@ pub mod ReduceContractMtEph {
                 }
                 reduced
             } else {
+                // Veracity: NEEDED proof block
                 proof {
                     // Veracity: NEEDED assert
                     assert(b_seq =~= Seq::new(

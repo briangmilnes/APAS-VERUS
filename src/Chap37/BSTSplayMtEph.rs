@@ -348,6 +348,7 @@ pub mod BSTSplayMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn size_link(link: &Link<T>) -> (size: usize)
     {
+        // Veracity: NEEDED proof block
         proof { reveal(link_spec_size); }
         match link.as_ref() {
             None => 0,
@@ -376,12 +377,14 @@ pub mod BSTSplayMtEph {
     {
         let ghost orig = root;
         let mut root = root;
+        // Veracity: NEEDED proof block
         proof {
             reveal_with_fuel(spec_is_bst_link, 4);
             reveal_with_fuel(link_contains, 4);
         }
         match TotalOrder::cmp(target,&root.key) {
             core::cmp::Ordering::Equal => {
+                // Veracity: NEEDED proof block
                 proof { reveal_with_fuel(link_contains, 2); }
                 root
             }
@@ -390,9 +393,12 @@ pub mod BSTSplayMtEph {
                 let ghost orig_root_left = root.left;
                 let ghost orig_root_right = root.right;
                 // Capture BST ordering facts while root is intact.
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|x: T| link_contains(orig_root_left, x) implies
                         (TotalOrder::le(x, root_key) && x != root_key) by {};
+                    // Veracity: NEEDED assert
                     assert forall|x: T| link_contains(orig_root_right, x) implies
                         (TotalOrder::le(root_key, x) && x != root_key) by {};
                 }
@@ -403,16 +409,21 @@ pub mod BSTSplayMtEph {
                 let ghost orig_left_left = left.left;
                 let ghost orig_left_right = left.right;
                 // Capture BST facts for left while left is intact.
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|x: T| link_contains(orig_left_left, x) implies
                         (TotalOrder::le(x, left_key) && x != left_key) by {};
+                    // Veracity: NEEDED assert
                     assert forall|x: T| link_contains(orig_left_right, x) implies
                         (TotalOrder::le(left_key, x) && x != left_key) by {};
                     // left_key ∈ orig_root_left, so left_key < root_key.
                     // Elements in orig_left_right are in orig_root_left, so < root_key.
+                    // Veracity: NEEDED assert
                     assert forall|x: T| link_contains(orig_left_right, x) implies
                         (TotalOrder::le(x, root_key) && x != root_key) by {
                     };
+                    // Veracity: NEEDED assert
                     assert forall|x: T| link_contains(orig_left_left, x) implies
                         (TotalOrder::le(x, root_key) && x != root_key) by {
                     };
@@ -422,14 +433,17 @@ pub mod BSTSplayMtEph {
                         // Zig: right rotation
                         root.left = left.right.take();
                         Self::update(&mut root);
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         left.right = Some(root);
                         Self::update(&mut left);
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 3);
                             reveal_with_fuel(link_contains, 4);
                             // BST ordering: elements in left.right (= Some(root)) > left.key.
+                            // Veracity: NEEDED assert
                             assert forall|x: T| #[trigger] link_contains(left.right, x) implies
                                 (TotalOrder::le(left_key, x) && x != left_key)
                             by {
@@ -442,6 +456,7 @@ pub mod BSTSplayMtEph {
                                 }
                             };
                             // Element preservation.
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(Some(orig), x) implies
                                 link_contains(Some(left), x)
                             by {
@@ -456,6 +471,7 @@ pub mod BSTSplayMtEph {
                                     }
                                 }
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(Some(left), x) implies
                                 link_contains(Some(orig), x)
                             by {
@@ -480,6 +496,7 @@ pub mod BSTSplayMtEph {
                         }
                         root.left = left.right.take();
                         Self::update(&mut root);
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         left.right = Some(root);
@@ -490,16 +507,20 @@ pub mod BSTSplayMtEph {
                             let ghost ll_right = ll.right;
                             left.left = ll.right.take();
                             Self::update(&mut left);
+                            // Veracity: NEEDED proof block
                             proof {
                             }
                             ll.right = Some(left);
                             Self::update(&mut ll);
+                            // Veracity: NEEDED proof block
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(link_contains, 5);
                                 // ll_key ∈ splay result ∈ orig_left_left, so < left_key.
+                                // Veracity: NEEDED assert
                                 assert(link_contains(orig_left_left, ll_key));
                                 // BST: ll.right elements > ll_key.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(ll.right, x) implies
                                     (TotalOrder::le(ll_key, x) && x != ll_key)
                                 by {
@@ -521,11 +542,13 @@ pub mod BSTSplayMtEph {
                                     }
                                 };
                                 // BST: left.left (= ll_right) elements < left_key.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(left.left, x) implies
                                     (TotalOrder::le(x, left_key) && x != left_key)
                                 by {
                                 };
                                 // BST: left.right elements > left_key.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(left.right, x) implies
                                     (TotalOrder::le(left_key, x) && x != left_key)
                                 by {
@@ -538,6 +561,7 @@ pub mod BSTSplayMtEph {
                                     }
                                 };
                                 // Element preservation.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(orig), x) implies
                                     link_contains(Some(ll), x)
                                 by {
@@ -552,17 +576,20 @@ pub mod BSTSplayMtEph {
                                         }
                                     }
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(ll), x) implies
                                     link_contains(Some(orig), x)
                                 by {
                                     reveal_with_fuel(link_contains, 5);
                                     if x == ll_key {
                                     } else if link_contains(ll_left, x) {
+                                        // Veracity: NEEDED assert
                                         assert(link_contains(orig_left_left, x));
                                     } else {
                                         reveal_with_fuel(link_contains, 3);
                                         if x == left_key {
                                         } else if link_contains(ll_right, x) {
+                                            // Veracity: NEEDED assert
                                             assert(link_contains(orig_left_left, x));
                                         } else {
                                             reveal_with_fuel(link_contains, 2);
@@ -577,9 +604,11 @@ pub mod BSTSplayMtEph {
                             ll
                         } else {
                             // orig_left_left was None. Single Zig rotation.
+                            // Veracity: NEEDED proof block
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(link_contains, 4);
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(left.right, x) implies
                                     (TotalOrder::le(left_key, x) && x != left_key)
                                 by {
@@ -591,6 +620,7 @@ pub mod BSTSplayMtEph {
                                     } else if x == root_key {
                                     }
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(orig), x) implies
                                     link_contains(Some(left), x)
                                 by {
@@ -601,6 +631,7 @@ pub mod BSTSplayMtEph {
                                         reveal_with_fuel(link_contains, 2);
                                     }
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(left), x) implies
                                     link_contains(Some(orig), x)
                                 by {
@@ -629,30 +660,38 @@ pub mod BSTSplayMtEph {
                             let ghost lr_left = lr.left;
                             let ghost lr_right = lr.right;
                             // lr is splay of orig_left_right. BST, same elements.
+                            // Veracity: NEEDED proof block
                             proof {
+                                // Veracity: NEEDED assert
                                 assert(link_contains(orig_left_right, lr_key));
                                 // Capture splay BST ordering while lr is intact.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(lr_left, x) implies
                                     (TotalOrder::le(x, lr_key) && x != lr_key) by {};
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(lr_right, x) implies
                                     (TotalOrder::le(lr_key, x) && x != lr_key) by {};
                             }
                             left.right = lr.left.take();
                             Self::update(&mut left);
+                            // Veracity: NEEDED proof block
                             proof {
                             }
                             lr.left = Some(left);
                             Self::update(&mut lr);
                             root.left = lr.right.take();
                             Self::update(&mut root);
+                            // Veracity: NEEDED proof block
                             proof {
                             }
                             lr.right = Some(root);
                             Self::update(&mut lr);
+                            // Veracity: NEEDED proof block
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(link_contains, 5);
                                 // BST: lr.left (= Some(left)) elements < lr_key.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(lr.left, x) implies
                                     (TotalOrder::le(x, lr_key) && x != lr_key)
                                 by {
@@ -666,6 +705,7 @@ pub mod BSTSplayMtEph {
                                     }
                                 };
                                 // BST: lr.right (= Some(root)) elements > lr_key.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(lr.right, x) implies
                                     (TotalOrder::le(lr_key, x) && x != lr_key)
                                 by {
@@ -679,17 +719,21 @@ pub mod BSTSplayMtEph {
                                     }
                                 };
                                 // BST: left.right (= lr_left) elements > left_key.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(left.right, x) implies
                                     (TotalOrder::le(left_key, x) && x != left_key)
                                 by {
                                 };
                                 // BST: root.left (= lr_right) elements < root_key.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(root.left, x) implies
                                     (TotalOrder::le(x, root_key) && x != root_key)
                                 by {
+                                    // Veracity: NEEDED assert
                                     assert(link_contains(orig_left_right, x));
                                 };
                                 // Element preservation.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(orig), x) implies
                                     link_contains(Some(lr), x)
                                 by {
@@ -701,10 +745,12 @@ pub mod BSTSplayMtEph {
                                         if x == left_key {
                                         } else if link_contains(orig_left_left, x) {
                                         } else {
+                                            // Veracity: NEEDED assert
                                             assert(link_contains(orig_left_right, x));
                                         }
                                     }
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(lr), x) implies
                                     link_contains(Some(orig), x)
                                 by {
@@ -715,12 +761,14 @@ pub mod BSTSplayMtEph {
                                         if x == left_key {
                                         } else if link_contains(orig_left_left, x) {
                                         } else {
+                                            // Veracity: NEEDED assert
                                             assert(link_contains(orig_left_right, x));
                                         }
                                     } else {
                                         reveal_with_fuel(link_contains, 3);
                                         if x == root_key {
                                         } else if link_contains(lr_right, x) {
+                                            // Veracity: NEEDED assert
                                             assert(link_contains(orig_left_right, x));
                                         } else {
                                         }
@@ -731,15 +779,18 @@ pub mod BSTSplayMtEph {
                             lr
                         } else {
                             // orig_left_right was None. Single Zig rotation.
+                            // Veracity: NEEDED proof block
                             proof {
                             }
                             root.left = left.right.take();
                             Self::update(&mut root);
                             left.right = Some(root);
                             Self::update(&mut left);
+                            // Veracity: NEEDED proof block
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(link_contains, 4);
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(left.right, x) implies
                                     (TotalOrder::le(left_key, x) && x != left_key)
                                 by {
@@ -750,6 +801,7 @@ pub mod BSTSplayMtEph {
                                     } else if x == root_key {
                                     }
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(orig), x) implies
                                     link_contains(Some(left), x)
                                 by {
@@ -760,6 +812,7 @@ pub mod BSTSplayMtEph {
                                         reveal_with_fuel(link_contains, 2);
                                     }
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(left), x) implies
                                     link_contains(Some(orig), x)
                                 by {
@@ -784,9 +837,12 @@ pub mod BSTSplayMtEph {
                 let ghost orig_root_left = root.left;
                 let ghost orig_root_right = root.right;
                 // Capture BST ordering facts while root is intact.
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|x: T| link_contains(orig_root_left, x) implies
                         (TotalOrder::le(x, root_key) && x != root_key) by {};
+                    // Veracity: NEEDED assert
                     assert forall|x: T| link_contains(orig_root_right, x) implies
                         (TotalOrder::le(root_key, x) && x != root_key) by {};
                 }
@@ -797,16 +853,21 @@ pub mod BSTSplayMtEph {
                 let ghost orig_right_left = right.left;
                 let ghost orig_right_right = right.right;
                 // Capture BST facts for right while right is intact.
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|x: T| link_contains(orig_right_left, x) implies
                         (TotalOrder::le(x, right_key) && x != right_key) by {};
+                    // Veracity: NEEDED assert
                     assert forall|x: T| link_contains(orig_right_right, x) implies
                         (TotalOrder::le(right_key, x) && x != right_key) by {};
                     // right_key ∈ orig_root_right, so right_key > root_key.
                     // Elements in orig_right_left are in orig_root_right, so > root_key.
+                    // Veracity: NEEDED assert
                     assert forall|x: T| link_contains(orig_right_left, x) implies
                         (TotalOrder::le(root_key, x) && x != root_key) by {
                     };
+                    // Veracity: NEEDED assert
                     assert forall|x: T| link_contains(orig_right_right, x) implies
                         (TotalOrder::le(root_key, x) && x != root_key) by {
                     };
@@ -816,14 +877,17 @@ pub mod BSTSplayMtEph {
                         // Zag: left rotation
                         root.right = right.left.take();
                         Self::update(&mut root);
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         right.left = Some(root);
                         Self::update(&mut right);
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 3);
                             reveal_with_fuel(link_contains, 4);
                             // BST ordering: elements in right.left (= Some(root)) < right.key.
+                            // Veracity: NEEDED assert
                             assert forall|x: T| #[trigger] link_contains(right.left, x) implies
                                 (TotalOrder::le(x, right_key) && x != right_key)
                             by {
@@ -837,6 +901,7 @@ pub mod BSTSplayMtEph {
                             };
                             // BST ordering: elements in right.right > right.key (unchanged).
                             // Element preservation.
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(Some(orig), x) implies
                                 link_contains(Some(right), x)
                             by {
@@ -851,6 +916,7 @@ pub mod BSTSplayMtEph {
                                     }
                                 }
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(Some(right), x) implies
                                 link_contains(Some(orig), x)
                             by {
@@ -876,6 +942,7 @@ pub mod BSTSplayMtEph {
                         }
                         root.right = right.left.take();
                         Self::update(&mut root);
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         right.left = Some(root);
@@ -886,16 +953,20 @@ pub mod BSTSplayMtEph {
                             let ghost rr_right = rr.right;
                             right.right = rr.left.take();
                             Self::update(&mut right);
+                            // Veracity: NEEDED proof block
                             proof {
                             }
                             rr.left = Some(right);
                             Self::update(&mut rr);
+                            // Veracity: NEEDED proof block
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(link_contains, 5);
                                 // rr_key ∈ splay result ∈ orig_right_right, so > right_key.
+                                // Veracity: NEEDED assert
                                 assert(link_contains(orig_right_right, rr_key));
                                 // BST: rr.left (= Some(right)) elements < rr_key.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(rr.left, x) implies
                                     (TotalOrder::le(x, rr_key) && x != rr_key)
                                 by {
@@ -917,11 +988,13 @@ pub mod BSTSplayMtEph {
                                     }
                                 };
                                 // BST: right.right (= rr_left) elements > right_key.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(right.right, x) implies
                                     (TotalOrder::le(right_key, x) && x != right_key)
                                 by {
                                 };
                                 // BST: right.left elements < right_key.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(right.left, x) implies
                                     (TotalOrder::le(x, right_key) && x != right_key)
                                 by {
@@ -934,6 +1007,7 @@ pub mod BSTSplayMtEph {
                                     }
                                 };
                                 // Element preservation.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(orig), x) implies
                                     link_contains(Some(rr), x)
                                 by {
@@ -948,17 +1022,20 @@ pub mod BSTSplayMtEph {
                                         }
                                     }
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(rr), x) implies
                                     link_contains(Some(orig), x)
                                 by {
                                     reveal_with_fuel(link_contains, 5);
                                     if x == rr_key {
                                     } else if link_contains(rr_right, x) {
+                                        // Veracity: NEEDED assert
                                         assert(link_contains(orig_right_right, x));
                                     } else {
                                         reveal_with_fuel(link_contains, 3);
                                         if x == right_key {
                                         } else if link_contains(rr_left, x) {
+                                            // Veracity: NEEDED assert
                                             assert(link_contains(orig_right_right, x));
                                         } else {
                                             reveal_with_fuel(link_contains, 2);
@@ -974,9 +1051,11 @@ pub mod BSTSplayMtEph {
                             rr
                         } else {
                             // orig_right_right was None. Single Zag rotation.
+                            // Veracity: NEEDED proof block
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(link_contains, 4);
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(right.left, x) implies
                                     (TotalOrder::le(x, right_key) && x != right_key)
                                 by {
@@ -988,6 +1067,7 @@ pub mod BSTSplayMtEph {
                                     } else if x == root_key {
                                     }
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(orig), x) implies
                                     link_contains(Some(right), x)
                                 by {
@@ -998,6 +1078,7 @@ pub mod BSTSplayMtEph {
                                         reveal_with_fuel(link_contains, 2);
                                     }
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(right), x) implies
                                     link_contains(Some(orig), x)
                                 by {
@@ -1026,30 +1107,38 @@ pub mod BSTSplayMtEph {
                             let ghost rl_left = rl.left;
                             let ghost rl_right = rl.right;
                             // rl is splay of orig_right_left. BST, same elements.
+                            // Veracity: NEEDED proof block
                             proof {
+                                // Veracity: NEEDED assert
                                 assert(link_contains(orig_right_left, rl_key));
                                 // Capture splay BST ordering while rl is intact.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(rl_left, x) implies
                                     (TotalOrder::le(x, rl_key) && x != rl_key) by {};
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(rl_right, x) implies
                                     (TotalOrder::le(rl_key, x) && x != rl_key) by {};
                             }
                             right.left = rl.right.take();
                             Self::update(&mut right);
+                            // Veracity: NEEDED proof block
                             proof {
                             }
                             rl.right = Some(right);
                             Self::update(&mut rl);
                             root.right = rl.left.take();
                             Self::update(&mut root);
+                            // Veracity: NEEDED proof block
                             proof {
                             }
                             rl.left = Some(root);
                             Self::update(&mut rl);
+                            // Veracity: NEEDED proof block
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(link_contains, 5);
                                 // BST: rl.right (= Some(right)) elements > rl_key.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(rl.right, x) implies
                                     (TotalOrder::le(rl_key, x) && x != rl_key)
                                 by {
@@ -1063,6 +1152,7 @@ pub mod BSTSplayMtEph {
                                     }
                                 };
                                 // BST: rl.left (= Some(root)) elements < rl_key.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(rl.left, x) implies
                                     (TotalOrder::le(x, rl_key) && x != rl_key)
                                 by {
@@ -1076,17 +1166,21 @@ pub mod BSTSplayMtEph {
                                     }
                                 };
                                 // BST: right.left (= rl_right) elements < right_key.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(right.left, x) implies
                                     (TotalOrder::le(x, right_key) && x != right_key)
                                 by {
                                 };
                                 // BST: root.right (= rl_left) elements > root_key.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(root.right, x) implies
                                     (TotalOrder::le(root_key, x) && x != root_key)
                                 by {
+                                    // Veracity: NEEDED assert
                                     assert(link_contains(orig_right_left, x));
                                 };
                                 // Element preservation.
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(orig), x) implies
                                     link_contains(Some(rl), x)
                                 by {
@@ -1098,10 +1192,12 @@ pub mod BSTSplayMtEph {
                                         if x == right_key {
                                         } else if link_contains(orig_right_right, x) {
                                         } else {
+                                            // Veracity: NEEDED assert
                                             assert(link_contains(orig_right_left, x));
                                         }
                                     }
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(rl), x) implies
                                     link_contains(Some(orig), x)
                                 by {
@@ -1112,12 +1208,14 @@ pub mod BSTSplayMtEph {
                                         if x == right_key {
                                         } else if link_contains(orig_right_right, x) {
                                         } else {
+                                            // Veracity: NEEDED assert
                                             assert(link_contains(orig_right_left, x));
                                         }
                                     } else {
                                         reveal_with_fuel(link_contains, 3);
                                         if x == root_key {
                                         } else if link_contains(rl_left, x) {
+                                            // Veracity: NEEDED assert
                                             assert(link_contains(orig_right_left, x));
                                         } else {
                                         }
@@ -1127,15 +1225,18 @@ pub mod BSTSplayMtEph {
                             rl
                         } else {
                             // orig_right_left was None. Single Zag rotation.
+                            // Veracity: NEEDED proof block
                             proof {
                             }
                             root.right = right.left.take();
                             Self::update(&mut root);
                             right.left = Some(root);
                             Self::update(&mut right);
+                            // Veracity: NEEDED proof block
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(link_contains, 4);
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| #[trigger] link_contains(right.left, x) implies
                                     (TotalOrder::le(x, right_key) && x != right_key)
                                 by {
@@ -1146,6 +1247,7 @@ pub mod BSTSplayMtEph {
                                     } else if x == root_key {
                                     }
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(orig), x) implies
                                     link_contains(Some(right), x)
                                 by {
@@ -1156,6 +1258,7 @@ pub mod BSTSplayMtEph {
                                         reveal_with_fuel(link_contains, 2);
                                     }
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|x: T| link_contains(Some(right), x) implies
                                     link_contains(Some(orig), x)
                                 by {
@@ -1186,6 +1289,7 @@ pub mod BSTSplayMtEph {
         match cur {
             | None => {
                 *link = Some(Box::new(Self::new_node(value)));
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 2);
                     reveal_with_fuel(link_contains, 2);
@@ -1201,9 +1305,11 @@ pub mod BSTSplayMtEph {
                         Self::bst_insert(&mut node.left, value);
                         Self::update(&mut node);
                         *link = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(node.left, x) implies
                                 (TotalOrder::le(x, node.key) && x != node.key)
                             by {
@@ -1211,16 +1317,19 @@ pub mod BSTSplayMtEph {
                                 } else {
                                 }
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(*old(link), x) implies
                                 (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
                             by {
                                 reveal_with_fuel(link_contains, 2);
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| (node_key == x || link_contains(old_left, x) || link_contains(old_right, x)) implies
                                 link_contains(*old(link), x)
                             by {
                                 reveal_with_fuel(link_contains, 2);
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(*old(link), x) implies
                                 link_contains(*link, x)
                             by {
@@ -1229,6 +1338,7 @@ pub mod BSTSplayMtEph {
                                 } else if link_contains(old_left, x) {
                                 }
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(*link, x) implies
                                 (link_contains(*old(link), x) || x == value)
                             by {
@@ -1246,9 +1356,11 @@ pub mod BSTSplayMtEph {
                         Self::bst_insert(&mut node.right, value);
                         Self::update(&mut node);
                         *link = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(node.right, x) implies
                                 (TotalOrder::le(node.key, x) && x != node.key)
                             by {
@@ -1256,16 +1368,19 @@ pub mod BSTSplayMtEph {
                                 } else {
                                 }
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(*old(link), x) implies
                                 (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
                             by {
                                 reveal_with_fuel(link_contains, 2);
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| (node_key == x || link_contains(old_left, x) || link_contains(old_right, x)) implies
                                 link_contains(*old(link), x)
                             by {
                                 reveal_with_fuel(link_contains, 2);
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(*old(link), x) implies
                                 link_contains(*link, x)
                             by {
@@ -1274,6 +1389,7 @@ pub mod BSTSplayMtEph {
                                 } else if link_contains(old_right, x) {
                                 }
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(*link, x) implies
                                 (link_contains(*old(link), x) || x == value)
                             by {
@@ -1289,6 +1405,7 @@ pub mod BSTSplayMtEph {
                     }
                     core::cmp::Ordering::Equal => {
                         *link = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
@@ -1323,7 +1440,9 @@ pub mod BSTSplayMtEph {
                 match TotalOrder::cmp(target, &node.key) {
                     core::cmp::Ordering::Equal => Some(&node.key),
                     core::cmp::Ordering::Less => {
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             assert(!link_contains(node.right, *target)) by {
                                 if link_contains(node.right, *target) {
                                     TotalOrder::antisymmetric(*target, node.key);
@@ -1333,7 +1452,9 @@ pub mod BSTSplayMtEph {
                         Self::find_link(&node.left, target)
                     }
                     core::cmp::Ordering::Greater => {
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             assert(!link_contains(node.left, *target)) by {
                                 if link_contains(node.left, *target) {
                                     TotalOrder::antisymmetric(node.key, *target);
@@ -1355,13 +1476,16 @@ pub mod BSTSplayMtEph {
             | None => None,
             | Some(node) => match node.left {
                 | None => {
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert forall|x: T| #[trigger] link_contains(*link, x) implies TotalOrder::le(node.key, x) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if x == node.key {
                                 TotalOrder::reflexive(x);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(link_contains(node.right, x));
                             }
                         };
@@ -1370,15 +1494,18 @@ pub mod BSTSplayMtEph {
                 }
                 | Some(_) => {
                     let min = Self::min_link(&node.left);
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(link_contains, 2);
+                        // Veracity: NEEDED assert
                         assert forall|x: T| #[trigger] link_contains(*link, x) implies TotalOrder::le(*min.unwrap(), x) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if link_contains(node.left, x) {
                             } else if x == node.key {
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(link_contains(node.right, x));
                                 TotalOrder::transitive(*min.unwrap(), node.key, x);
                             }
@@ -1398,13 +1525,16 @@ pub mod BSTSplayMtEph {
             | None => None,
             | Some(node) => match node.right {
                 | None => {
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert forall|x: T| #[trigger] link_contains(*link, x) implies TotalOrder::le(x, node.key) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if x == node.key {
                                 TotalOrder::reflexive(x);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(link_contains(node.left, x));
                             }
                         };
@@ -1413,15 +1543,18 @@ pub mod BSTSplayMtEph {
                 }
                 | Some(_) => {
                     let max = Self::max_link(&node.right);
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(link_contains, 2);
+                        // Veracity: NEEDED assert
                         assert forall|x: T| #[trigger] link_contains(*link, x) implies TotalOrder::le(x, *max.unwrap()) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if link_contains(node.right, x) {
                             } else if x == node.key {
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(link_contains(node.left, x));
                                 TotalOrder::transitive(x, node.key, *max.unwrap());
                             }
@@ -1491,6 +1624,7 @@ pub mod BSTSplayMtEph {
                     left,
                     right,
                 }));
+                // Veracity: NEEDED proof block
                 proof { assume(c == *link); }
                 c
             }
@@ -1507,15 +1641,18 @@ pub mod BSTSplayMtEph {
         let mid = values.len() / 2;
         let left_slice = slice_subrange(values, 0, mid);
         let right_slice = slice_subrange(values, mid + 1, values.len());
+        // Veracity: NEEDED proof block
         proof {
             // Sorted sub-slices: left_slice and right_slice are sorted.
             // Prove left_slice is strictly sorted.
+            // Veracity: NEEDED assert
             assert forall|i: int, j: int| 0 <= i < j < left_slice@.len() implies
                 TotalOrder::le(#[trigger] left_slice@[i], #[trigger] left_slice@[j])
                 && left_slice@[i] != left_slice@[j]
             by {
             }
             // Prove right_slice is strictly sorted.
+            // Veracity: NEEDED assert
             assert forall|i: int, j: int| 0 <= i < j < right_slice@.len() implies
                 TotalOrder::le(#[trigger] right_slice@[i], #[trigger] right_slice@[j])
                 && right_slice@[i] != right_slice@[j]
@@ -1528,26 +1665,31 @@ pub mod BSTSplayMtEph {
         let ghost gr = right;
         let ghost pivot = values@[mid as int];
         // Prove ordering while left/right are in scope (triggers match directly).
+        // Veracity: NEEDED proof block
         proof {
             // Left elements < pivot.
+            // Veracity: NEEDED assert
             assert forall|x: T| #[trigger] link_contains(left, x) implies
                 TotalOrder::le(x, pivot) && x != pivot
             by {
                 let i = choose|i: int| 0 <= i < left_slice@.len() && left_slice@[i] == x;
             }
             // Right elements > pivot.
+            // Veracity: NEEDED assert
             assert forall|x: T| #[trigger] link_contains(right, x) implies
                 TotalOrder::le(pivot, x) && x != pivot
             by {
                 let j = choose|j: int| 0 <= j < right_slice@.len() && right_slice@[j] == x;
             }
             // Containment: left elements are in values[0..mid].
+            // Veracity: NEEDED assert
             assert forall|x: T| #[trigger] link_contains(left, x) implies
                 exists|k: int| 0 <= k < values@.len() && values@[k] == x
             by {
                 let i = choose|i: int| 0 <= i < left_slice@.len() && left_slice@[i] == x;
             }
             // Containment: right elements are in values[mid+1..].
+            // Veracity: NEEDED assert
             assert forall|x: T| #[trigger] link_contains(right, x) implies
                 exists|k: int| 0 <= k < values@.len() && values@[k] == x
             by {
@@ -1556,8 +1698,10 @@ pub mod BSTSplayMtEph {
         }
         let key = values[mid].clone();
         let ghost gkey = key;
+        // Veracity: NEEDED proof block
         proof {
             // Introduce cloned trigger for broadcast axiom.
+            // Veracity: NEEDED assert
             assert(cloned(pivot, gkey));
             // Broadcast axiom_cloned_implies_eq_owned fires: pivot == gkey.
         }
@@ -1565,6 +1709,7 @@ pub mod BSTSplayMtEph {
         node.left = left;
         node.right = right;
         Self::update(&mut node);
+        // Veracity: NEEDED proof block
         proof {
             reveal_with_fuel(link_node_count, 2);
 
@@ -1572,10 +1717,12 @@ pub mod BSTSplayMtEph {
             // node.key == gkey from new_node, gkey == pivot from cloned broadcast.
 
             // Transfer ordering to node fields via ghost equality.
+            // Veracity: NEEDED assert
             assert forall|x: T| #[trigger] link_contains(node.left, x) implies
                 TotalOrder::le(x, node.key) && x != node.key
             by {
             }
+            // Veracity: NEEDED assert
             assert forall|x: T| #[trigger] link_contains(node.right, x) implies
                 TotalOrder::le(node.key, x) && x != node.key
             by {
@@ -1583,6 +1730,7 @@ pub mod BSTSplayMtEph {
             reveal_with_fuel(spec_is_bst_link, 2);
 
             // Containment for the full tree.
+            // Veracity: NEEDED assert
             assert forall|x: T| #[trigger] link_contains(Some(node), x) implies
                 exists|k: int| 0 <= k < values@.len() && values@[k] == x
             by {
@@ -1590,6 +1738,7 @@ pub mod BSTSplayMtEph {
                 if node.key == x {
                 } else if link_contains(node.left, x) {
                 } else {
+                    // Veracity: NEEDED assert
                     assert(link_contains(gr, x));
                 }
             }
@@ -1606,6 +1755,7 @@ pub mod BSTSplayMtEph {
         match link {
             | None => Vec::new(),
             | Some(node) => {
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(link_node_count, 2);
                 }
@@ -1630,6 +1780,7 @@ pub mod BSTSplayMtEph {
         match link {
             | None => identity,
             | Some(node) => {
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(link_node_count, 2);
                 }
@@ -1649,6 +1800,7 @@ pub mod BSTSplayMtEph {
         match link {
             | None => 0,
             | Some(node) => {
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 1 + Self::height_rec(&node.left).max(Self::height_rec(&node.right))
@@ -1851,10 +2003,12 @@ pub mod BSTSplayMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert(&mut self, value: T) -> (inserted: Result<(), ()>) {
             let (mut current, write_handle) = self.root.acquire_write();
+            // Veracity: NEEDED proof block
             proof { assume(self.ghost_root@ == current); }
             let sz = Node::<T>::compute_link_spec_size(&current);
             if sz < usize::MAX {
                 Node::<T>::insert_link(&mut current, value);
+                // Veracity: NEEDED proof block
                 proof {
                     assume(link_node_count(current) <= usize::MAX as nat);
                     assume(link_spec_size(current) <= link_spec_size(old(self)@) + 1);
@@ -1874,6 +2028,7 @@ pub mod BSTSplayMtEph {
         fn contains(&self, target: &T) -> (found: bool) {
             let handle = self.root.acquire_read();
             let found = Node::<T>::find_link(handle.borrow(), target).is_some();
+            // Veracity: NEEDED proof block
             proof { assume(found == link_contains(self@, *target)); }
             handle.release_read();
             found
@@ -1884,6 +2039,7 @@ pub mod BSTSplayMtEph {
         fn size(&self) -> (n: usize) {
             let handle = self.root.acquire_read();
             let n = Node::<T>::size_link(handle.borrow());
+            // Veracity: NEEDED proof block
             proof { assume(n as nat == link_spec_size(self@)); }
             handle.release_read();
             n
@@ -1894,6 +2050,7 @@ pub mod BSTSplayMtEph {
         fn is_empty(&self) -> (b: bool) {
             let handle = self.root.acquire_read();
             let b = handle.borrow().is_none();
+            // Veracity: NEEDED proof block
             proof { assume(b == (self@ is None)); }
             handle.release_read();
             b
@@ -1904,10 +2061,12 @@ pub mod BSTSplayMtEph {
         fn height(&self) -> (h: usize) {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
+            // Veracity: NEEDED proof block
             proof {
                 lemma_height_le_node_count::<T>(*data);
             }
             let h = Node::<T>::height_rec(data);
+            // Veracity: NEEDED proof block
             proof { assume(h as nat == link_height(self@)); }
             handle.release_read();
             h
@@ -1917,6 +2076,7 @@ pub mod BSTSplayMtEph {
         fn find(&self, target: &T) -> (found: Option<T>) {
             let handle = self.root.acquire_read();
             let found = Node::<T>::find_link(handle.borrow(), target).cloned();
+            // Veracity: NEEDED proof block
             proof {
                 assume(found.is_some() <==> link_contains(self@, *target));
                 accept(found.is_some() ==> found.unwrap() == *target);
@@ -1929,6 +2089,7 @@ pub mod BSTSplayMtEph {
         fn minimum(&self) -> (min: Option<T>) {
             let handle = self.root.acquire_read();
             let min = Node::<T>::min_link(handle.borrow()).cloned();
+            // Veracity: NEEDED proof block
             proof {
                 assume(link_spec_size(self@) > 0 ==> min.is_some());
                 assume(min.is_some() ==> link_contains(self@, min.unwrap()));
@@ -1943,6 +2104,7 @@ pub mod BSTSplayMtEph {
         fn maximum(&self) -> (max: Option<T>) {
             let handle = self.root.acquire_read();
             let max = Node::<T>::max_link(handle.borrow()).cloned();
+            // Veracity: NEEDED proof block
             proof {
                 assume(link_spec_size(self@) > 0 ==> max.is_some());
                 assume(max.is_some() ==> link_contains(self@, max.unwrap()));
@@ -2020,6 +2182,7 @@ pub mod BSTSplayMtEph {
                 left,
                 right,
             };
+            // Veracity: NEEDED proof block
             proof { assume(cloned == *self); }
             cloned
         }

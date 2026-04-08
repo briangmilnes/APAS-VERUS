@@ -612,6 +612,7 @@ pub mod BSTSetSplayMtEph {
             } else {
                 let item = self.snapshot[self.pos].clone();
                 self.pos = self.pos + 1;
+                // Veracity: NEEDED proof block
                 proof { assume(item == old(self)@.1[old(self)@.0]); }  // accept hole: Clone preserves value
                 Some(item)
             }

@@ -70,17 +70,23 @@ pub mod QuickSortStEph {
         ensures total_ordering(spec_leq::<T>())
     {
         let leq = spec_leq::<T>();
+        // Veracity: NEEDED assert
         assert(antisymmetric(leq)) by {
+            // Veracity: NEEDED assert
             assert forall|x: T, y: T|
                 #[trigger] leq(x, y) && #[trigger] leq(y, x) implies x == y by
             { T::antisymmetric(x, y); }
         };
+        // Veracity: NEEDED assert
         assert(transitive(leq)) by {
+            // Veracity: NEEDED assert
             assert forall|x: T, y: T, z: T|
                 #[trigger] leq(x, y) && #[trigger] leq(y, z) implies leq(x, z) by
             { T::transitive(x, y, z); }
         };
+        // Veracity: NEEDED assert
         assert(strongly_connected(leq)) by {
+            // Veracity: NEEDED assert
             assert forall|x: T, y: T|
                 #[trigger] leq(x, y) || #[trigger] leq(y, x) by
             { T::total(x, y); }
@@ -122,24 +128,31 @@ pub mod QuickSortStEph {
         original.lemma_sort_by_ensures(leq);
 
 
+        // Veracity: NEEDED assert
         assert forall|j: int| 0 <= j < sorted_left.len() implies
             T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
         {
+            // Veracity: NEEDED assert
             assert(left_view.to_multiset().count(sorted_left[j]) > 0);
             let idx = choose|idx: int|
                 0 <= idx < left_view.len() && left_view[idx] == sorted_left[j];
         };
 
+        // Veracity: NEEDED assert
         assert forall|j: int| 0 <= j < sorted_right.len() implies
             T::le(pivot, #[trigger] sorted_right[j]) && sorted_right[j] != pivot by
         {
+            // Veracity: NEEDED assert
             assert(right_view.to_multiset().count(sorted_right[j]) > 0);
+            // Veracity: NEEDED assert
             assert(right_view.contains(sorted_right[j]));
             let idx = choose|idx: int|
                 0 <= idx < right_view.len() && right_view[idx] == sorted_right[j];
         };
 
+        // Veracity: NEEDED assert
         assert(sorted_by(candidate, leq)) by {
+            // Veracity: NEEDED assert
             assert forall|ai: int, bi: int|
                 0 <= ai < bi < candidate.len()
                 implies (#[trigger] leq(candidate[ai], candidate[bi])) by
@@ -148,6 +161,7 @@ pub mod QuickSortStEph {
                 let ell = eq_view.len();
                 if ai < ll && bi < ll {
                 } else if ai < ll && bi < ll + ell {
+                    // Veracity: NEEDED assert
                     assert(candidate[bi] == pivot);
                 } else if ai < ll && bi >= ll + ell {
                     T::transitive(candidate[ai], pivot, candidate[bi]);
@@ -155,6 +169,7 @@ pub mod QuickSortStEph {
                     T::reflexive(pivot);
                 } else if ai >= ll && ai < ll + ell && bi >= ll + ell {
                 } else {
+                    // Veracity: NEEDED assert
                     assert(ai >= ll + ell && bi >= ll + ell);
                 }
             };
@@ -162,6 +177,7 @@ pub mod QuickSortStEph {
 
         vstd::seq_lib::lemma_multiset_commutative(sorted_left, eq_view);
         vstd::seq_lib::lemma_multiset_commutative(sorted_left + eq_view, sorted_right);
+        // Veracity: NEEDED assert
         assert(candidate.to_multiset() =~= original.to_multiset());
 
         vstd::seq_lib::lemma_sorted_unique(original.sort_by(leq), candidate, leq);
@@ -236,20 +252,25 @@ pub mod QuickSortStEph {
         fn median_of_three(a: T, b: T, c: T) -> (median: T) {
             match TotalOrder::cmp(&a, &b) {
                 core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
+                    // Veracity: NEEDED proof block
                     proof { T::reflexive(a); }
                     match TotalOrder::cmp(&b, &c) {
                         core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
+                            // Veracity: NEEDED proof block
                             proof { T::reflexive(b); }
                             b
                         }
                         core::cmp::Ordering::Greater => {
+                            // Veracity: NEEDED proof block
                             proof { if T::le(b, c) { T::antisymmetric(b, c); } }
                             match TotalOrder::cmp(&a, &c) {
                                 core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
+                                    // Veracity: NEEDED proof block
                                     proof { T::reflexive(a); }
                                     c
                                 }
                                 core::cmp::Ordering::Greater => {
+                                    // Veracity: NEEDED proof block
                                     proof { if T::le(a, c) { T::antisymmetric(a, c); } }
                                     a
                                 }
@@ -258,20 +279,25 @@ pub mod QuickSortStEph {
                     }
                 }
                 core::cmp::Ordering::Greater => {
+                    // Veracity: NEEDED proof block
                     proof { if T::le(a, b) { T::antisymmetric(a, b); } }
                     match TotalOrder::cmp(&a, &c) {
                         core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
+                            // Veracity: NEEDED proof block
                             proof { T::reflexive(a); }
                             a
                         }
                         core::cmp::Ordering::Greater => {
+                            // Veracity: NEEDED proof block
                             proof { if T::le(a, c) { T::antisymmetric(a, c); } }
                             match TotalOrder::cmp(&b, &c) {
                                 core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
+                                    // Veracity: NEEDED proof block
                                     proof { T::reflexive(b); }
                                     c
                                 }
                                 core::cmp::Ordering::Greater => {
+                                    // Veracity: NEEDED proof block
                                     proof { if T::le(b, c) { T::antisymmetric(b, c); } }
                                     b
                                 }
@@ -356,21 +382,26 @@ pub mod QuickSortStEph {
                 j = j + 1;
             }
 
+            // Veracity: NEEDED proof block
             proof {
                 let ghost l = left.seq@;
                 let ghost m = mid.seq@;
                 let ghost r = right.seq@;
                 let ghost target = l + m + r;
+                // Veracity: NEEDED assert
                 assert forall|k: int| 0 <= k < out@.len()
                     implies out@[k] == #[trigger] target[k] by
                 {
                     if k < sl as int {
+                        // Veracity: NEEDED assert
                         assert(target[k] == l[k]);
                     } else if k < (sl + el) as int {
                         let kp = k - sl as int;
+                        // Veracity: NEEDED assert
                         assert(out@[(sl as int + kp)] == mid.seq@[kp]);
                     } else {
                         let kp = k - sl as int - el as int;
+                        // Veracity: NEEDED assert
                         assert(out@[(sl as int + el as int + kp)] == right.seq@[kp]);
                     }
                 };
@@ -387,10 +418,12 @@ pub mod QuickSortStEph {
             if n <= 1 {
                 let ghost s = a.seq@;
                 let ghost leq = spec_leq::<T>();
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_total_ordering::<T>();
                     s.lemma_sort_by_ensures(leq);
                     if s.len() == 0 {
+                        // Veracity: NEEDED assert
                         assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
                     } else {
                         vstd::seq_lib::lemma_sorted_unique(s, s.sort_by(leq), leq);
@@ -425,12 +458,15 @@ pub mod QuickSortStEph {
                 decreases n - i,
             {
                 let elem = *a.nth(i);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(s.subrange(0, (i + 1) as int) =~=
                         s.subrange(0, i as int).push(s[i as int]));
                 }
                 match TotalOrder::cmp(&elem, &pivot) {
                     core::cmp::Ordering::Less => {
+                        // Veracity: NEEDED proof block
                         proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
                         left.push(elem);
                     },
@@ -444,7 +480,9 @@ pub mod QuickSortStEph {
                 i = i + 1;
             }
 
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(s.subrange(0, n as int) =~= s);
             }
 
@@ -456,6 +494,7 @@ pub mod QuickSortStEph {
             Self::quick_sort_first(&mut left_a);
             Self::quick_sort_first(&mut right_a);
 
+            // Veracity: NEEDED proof block
             proof {
                 lemma_total_ordering::<T>();
                 left_view.lemma_sort_by_ensures(leq);
@@ -464,6 +503,7 @@ pub mod QuickSortStEph {
             }
 
             let sorted = Self::concat_three(&left_a, &equals_a, &right_a);
+            // Veracity: NEEDED proof block
             proof {
                 lemma_partition_sort_concat::<T>(
                     s, left_view, right_view, equals_a.seq@,
@@ -481,10 +521,12 @@ pub mod QuickSortStEph {
             if n <= 1 {
                 let ghost s = a.seq@;
                 let ghost leq = spec_leq::<T>();
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_total_ordering::<T>();
                     s.lemma_sort_by_ensures(leq);
                     if s.len() == 0 {
+                        // Veracity: NEEDED assert
                         assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
                     } else {
                         vstd::seq_lib::lemma_sorted_unique(s, s.sort_by(leq), leq);
@@ -519,7 +561,9 @@ pub mod QuickSortStEph {
                 decreases n - i,
             {
                 let elem = *a.nth(i);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(s.subrange(0, (i + 1) as int) =~=
                         s.subrange(0, i as int).push(s[i as int]));
                 }
@@ -537,7 +581,9 @@ pub mod QuickSortStEph {
                 i = i + 1;
             }
 
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(s.subrange(0, n as int) =~= s);
             }
 
@@ -549,6 +595,7 @@ pub mod QuickSortStEph {
             Self::quick_sort_median3(&mut left_a);
             Self::quick_sort_median3(&mut right_a);
 
+            // Veracity: NEEDED proof block
             proof {
                 lemma_total_ordering::<T>();
                 left_view.lemma_sort_by_ensures(leq);
@@ -556,6 +603,7 @@ pub mod QuickSortStEph {
             }
 
             let sorted = Self::concat_three(&left_a, &equals_a, &right_a);
+            // Veracity: NEEDED proof block
             proof {
                 lemma_partition_sort_concat::<T>(
                     s, left_view, right_view, equals_a.seq@,
@@ -573,14 +621,19 @@ pub mod QuickSortStEph {
             if n <= 1 {
                 let ghost s = a.seq@;
                 let ghost leq = spec_leq::<T>();
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_total_ordering::<T>();
                     s.lemma_sort_by_ensures(leq);
                     if s.len() == 0 {
+                        // Veracity: NEEDED assert
                         assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
+                        // Veracity: NEEDED assert
                         assert(s.sort_by(leq).to_multiset() =~= s.to_multiset());
+                        // Veracity: NEEDED assert
                         assert(s.sort_by(leq).len() == s.len());
                     } else {
+                        // Veracity: NEEDED assert
                         assert(sorted_by(s, leq));
                         vstd::seq_lib::lemma_sorted_unique(s, s.sort_by(leq), leq);
                     }
@@ -614,7 +667,9 @@ pub mod QuickSortStEph {
                 decreases n - i,
             {
                 let elem = *a.nth(i);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(s.subrange(0, (i + 1) as int) =~=
                         s.subrange(0, i as int).push(s[i as int]));
                 }
@@ -632,7 +687,9 @@ pub mod QuickSortStEph {
                 i = i + 1;
             }
 
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(s.subrange(0, n as int) =~= s);
             }
 
@@ -644,6 +701,7 @@ pub mod QuickSortStEph {
             Self::quick_sort_random(&mut left_a);
             Self::quick_sort_random(&mut right_a);
 
+            // Veracity: NEEDED proof block
             proof {
                 lemma_total_ordering::<T>();
                 left_view.lemma_sort_by_ensures(leq);
@@ -651,6 +709,7 @@ pub mod QuickSortStEph {
             }
 
             let sorted = Self::concat_three(&left_a, &equals_a, &right_a);
+            // Veracity: NEEDED proof block
             proof {
                 lemma_partition_sort_concat::<T>(
                     s, left_view, right_view, equals_a.seq@,

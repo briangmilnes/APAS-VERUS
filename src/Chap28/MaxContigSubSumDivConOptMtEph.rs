@@ -101,6 +101,7 @@ pub mod MaxContigSubSumDivConOptMtEph {
         let n = a.length();
         if n == 1 {
             let val = *a.nth(0);
+            // Veracity: NEEDED proof block
             proof {
                 lemma_range_sum_single(a.seq@, 0);
             }
@@ -111,6 +112,7 @@ pub mod MaxContigSubSumDivConOptMtEph {
         let left = a.subseq_copy(0, mid);
         let right = a.subseq_copy(mid, n - mid);
 
+        // Veracity: NEEDED proof block
         proof {
             // Veracity: NEEDED assert
             assert forall|i: int| #![trigger left.seq@[i]]
@@ -128,6 +130,7 @@ pub mod MaxContigSubSumDivConOptMtEph {
         let (m_left, p_left, s_left, t_left) = max_contig_sub_sum_aux(&left);
         let (m_right, p_right, s_right, t_right) = max_contig_sub_sum_aux(&right);
 
+        // Veracity: NEEDED proof block
         proof {
             let lo_s: int = choose|lo: int|
                 #![trigger spec_range_sum(left.seq@, lo, left.seq@.len() as int)]
@@ -153,6 +156,7 @@ pub mod MaxContigSubSumDivConOptMtEph {
         let max_suffix = if s_right >= s_left + t_right { s_right } else { s_left + t_right };
         let total = t_left + t_right;
 
+        // Veracity: NEEDED proof block
         proof {
             lemma_strength_combine(
                 a.seq@, left.seq@, right.seq@, mid as int,

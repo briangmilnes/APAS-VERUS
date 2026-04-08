@@ -289,6 +289,7 @@ pub mod LabUnDirGraphMtEph {
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |e: (V::V, V::V)| edges@.contains(e) implies
@@ -352,6 +353,7 @@ pub mod LabUnDirGraphMtEph {
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         return None;
@@ -359,6 +361,7 @@ pub mod LabUnDirGraphMtEph {
                     Some(labeled_edge) => {
                         if (feq(&labeled_edge.0, v1) && feq(&labeled_edge.1, v2)) || 
                            (feq(&labeled_edge.0, v2) && feq(&labeled_edge.1, v1)) {
+                            // Veracity: NEEDED proof block
                             proof {
                                 let idx = it@.0 - 1;
                                 lemma_seq_index_in_map_to_set(le_seq, idx);
@@ -392,6 +395,7 @@ pub mod LabUnDirGraphMtEph {
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         return false;
@@ -399,6 +403,7 @@ pub mod LabUnDirGraphMtEph {
                     Some(labeled_edge) => {
                         if (feq(&labeled_edge.0, v1) && feq(&labeled_edge.1, v2)) || 
                            (feq(&labeled_edge.0, v2) && feq(&labeled_edge.1, v1)) {
+                            // Veracity: NEEDED proof block
                             proof {
                                 let idx = it@.0 - 1;
                                 lemma_seq_index_in_map_to_set(le_seq, idx);
@@ -423,6 +428,7 @@ pub mod LabUnDirGraphMtEph {
         {
             let n = edges.size();
             if n == 0 {
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 SetStEph::empty()
@@ -431,6 +437,7 @@ pub mod LabUnDirGraphMtEph {
                 let LabEdge(a, b, label) = edges.choose();
                 // edges@ contains (a@, b@, label@)
                 if feq(&a, &v) {
+                    // Veracity: NEEDED proof block
                     proof {
                         // a@ == v@ by feq correctness
                         // spec_ng_from_set = {w | exists l. edges@.contains((v@, w, l)) || edges@.contains((w, v@, l))}
@@ -458,6 +465,7 @@ pub mod LabUnDirGraphMtEph {
                     }
                     SetStEph::singleton(b.clone_plus())
                 } else if feq(&b, &v) {
+                    // Veracity: NEEDED proof block
                     proof {
                         // a@ != v@ and b@ == v@
                         // (v@, w, l) in edges@ iff (v@, w, l) == (a@, b@, label@) iff v@ == a@ (false)
@@ -484,6 +492,7 @@ pub mod LabUnDirGraphMtEph {
                     }
                     SetStEph::singleton(a.clone_plus())
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                         // a@ != v@ and b@ != v@
                         // (v@, w, l) in edges@ requires v@ == a@ (false)
@@ -512,6 +521,7 @@ pub mod LabUnDirGraphMtEph {
 
                 let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
 
+                // Veracity: NEEDED proof block
                 proof {
                     // Prove subset in one direction
                     // Veracity: NEEDED assert
@@ -798,6 +808,7 @@ pub mod LabUnDirGraphMtEph {
         fn vertices(&self) -> (v: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let v = inner.vertices().clone();
             read_handle.release_read();
@@ -808,6 +819,7 @@ pub mod LabUnDirGraphMtEph {
         fn labeled_edges(&self) -> (e: SetStEph<LabEdge<V, L>>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let e = inner.labeled_edges().clone();
             read_handle.release_read();
@@ -818,6 +830,7 @@ pub mod LabUnDirGraphMtEph {
         fn edges(&self) -> (edges: SetStEph<Edge<V>>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let edges = inner.edges();
             read_handle.release_read();
@@ -828,6 +841,7 @@ pub mod LabUnDirGraphMtEph {
         fn has_edge(&self, v1: V, v2: V) -> (b: bool) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let b = inner.has_edge(&v1, &v2);
             read_handle.release_read();
@@ -838,6 +852,7 @@ pub mod LabUnDirGraphMtEph {
         fn ng(&self, v: V) -> (ng: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let ng = inner.ng(&v);
             read_handle.release_read();
@@ -847,6 +862,7 @@ pub mod LabUnDirGraphMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn add_vertex(&mut self, v: V) -> (added: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
+            // Veracity: NEEDED proof block
             proof { assume(self.ghost_locked_graph@ == locked_val@); }
             locked_val.add_vertex(v);
             let ghost new_val = locked_val@;
@@ -858,6 +874,7 @@ pub mod LabUnDirGraphMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) -> (added: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
+            // Veracity: NEEDED proof block
             proof { assume(self.ghost_locked_graph@ == locked_val@); }
             locked_val.add_labeled_edge(v1, v2, label);
             let ghost new_val = locked_val@;

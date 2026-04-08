@@ -256,6 +256,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] ng@.contains(w) implies 
@@ -314,6 +315,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] neighbors@.contains(w) implies 
@@ -335,6 +337,7 @@ verus!
                         return neighbors;
                     },
                     Some(u) => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // u comes from iterator at position (it@.0 - 1)
                             // u == u_seq[it@.0 - 1], so u@ is in the mapped set
@@ -505,6 +508,7 @@ verus!
         {
             let v_eq = self.V == other.V;
             let e_eq = self.E == other.E;
+            // Veracity: NEEDED proof block
             proof {
                 if v_eq && e_eq {
                 }

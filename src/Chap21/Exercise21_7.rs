@@ -126,6 +126,7 @@ pub mod Exercise21_7 {
             fa_len,
         );
         let pairs = ArraySeqStPerS::flatten(&nested);
+        // Veracity: NEEDED proof block
         proof {
             let ghost mapped = nested.seq@.map_values(
                 |inner: ArraySeqStPerS<Pair<usize, char>>| inner.seq@);

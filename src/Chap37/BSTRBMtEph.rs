@@ -204,11 +204,13 @@ pub mod BSTRBMtEph {
                 reveal_with_fuel(spec_is_bst_link, 2);
                 lemma_link_to_bbt_is_bst::<T>(node.left);
                 lemma_link_to_bbt_is_bst::<T>(node.right);
+                // Veracity: NEEDED assert
                 assert forall|x: T| (#[trigger] link_to_bbt(node.left).tree_contains(x))
                     implies (TotalOrder::le(x, node.key) && x != node.key)
                 by {
                     lemma_link_to_bbt_contains::<T>(node.left, x);
                 };
+                // Veracity: NEEDED assert
                 assert forall|x: T| (#[trigger] link_to_bbt(node.right).tree_contains(x))
                     implies (TotalOrder::le(node.key, x) && x != node.key)
                 by {
@@ -427,11 +429,14 @@ pub mod BSTRBMtEph {
             let ghost h_key = h.key;
             let ghost old_h_left = h.left;
             let ghost old_h_right = h.right;
+            // Veracity: NEEDED proof block
             proof {
                 reveal_with_fuel(spec_is_bst_link, 3);
                 reveal_with_fuel(link_contains, 3);
+                // Veracity: NEEDED assert
                 assert forall|z: T| link_contains(old_h_left, z) implies
                     (TotalOrder::le(z, h_key) && z != h_key) by {};
+                // Veracity: NEEDED assert
                 assert forall|z: T| link_contains(old_h_right, z) implies
                     (TotalOrder::le(h_key, z) && z != h_key) by {};
             }
@@ -439,14 +444,19 @@ pub mod BSTRBMtEph {
                 let ghost x_key = x.key;
                 let ghost old_x_left = x.left;
                 let ghost old_x_right = x.right;
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 2);
                     reveal_with_fuel(link_contains, 2);
+                    // Veracity: NEEDED assert
                     assert(TotalOrder::le(h_key, x_key) && x_key != h_key);
+                    // Veracity: NEEDED assert
                     assert forall|z: T| link_contains(old_x_left, z) implies
                         (TotalOrder::le(z, x_key) && z != x_key) by {};
+                    // Veracity: NEEDED assert
                     assert forall|z: T| link_contains(old_x_right, z) implies
                         (TotalOrder::le(x_key, z) && z != x_key) by {};
+                    // Veracity: NEEDED assert
                     assert forall|z: T| link_contains(old_x_left, z) implies
                         (TotalOrder::le(h_key, z) && z != h_key) by {
                     };
@@ -458,9 +468,11 @@ pub mod BSTRBMtEph {
                 x.left = Some(h);
                 update(&mut x);
                 *self = Some(x);
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 3);
                     reveal_with_fuel(link_contains, 4);
+                    // Veracity: NEEDED assert
                     assert forall|z: T| #[trigger] link_contains(x.left, z) implies
                         (TotalOrder::le(z, x_key) && z != x_key)
                     by {
@@ -473,12 +485,14 @@ pub mod BSTRBMtEph {
                         }
                     };
                     // Size preservation: rotation rearranges subtrees, no nodes added/removed.
+                    // Veracity: NEEDED assert
                     assert(link_spec_size(*self) == link_spec_size(old_link)) by {
                         reveal_with_fuel(link_spec_size, 3);
                     };
                 }
             } else {
                 *self = Some(h);
+                // Veracity: NEEDED proof block
                 proof { reveal_with_fuel(link_spec_size, 2); }
             }
         }
@@ -492,11 +506,14 @@ pub mod BSTRBMtEph {
             let ghost h_key = h.key;
             let ghost old_h_left = h.left;
             let ghost old_h_right = h.right;
+            // Veracity: NEEDED proof block
             proof {
                 reveal_with_fuel(spec_is_bst_link, 3);
                 reveal_with_fuel(link_contains, 3);
+                // Veracity: NEEDED assert
                 assert forall|z: T| link_contains(old_h_left, z) implies
                     (TotalOrder::le(z, h_key) && z != h_key) by {};
+                // Veracity: NEEDED assert
                 assert forall|z: T| link_contains(old_h_right, z) implies
                     (TotalOrder::le(h_key, z) && z != h_key) by {};
             }
@@ -504,14 +521,19 @@ pub mod BSTRBMtEph {
                 let ghost x_key = x.key;
                 let ghost old_x_left = x.left;
                 let ghost old_x_right = x.right;
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 2);
                     reveal_with_fuel(link_contains, 2);
+                    // Veracity: NEEDED assert
                     assert(TotalOrder::le(x_key, h_key) && x_key != h_key);
+                    // Veracity: NEEDED assert
                     assert forall|z: T| link_contains(old_x_left, z) implies
                         (TotalOrder::le(z, x_key) && z != x_key) by {};
+                    // Veracity: NEEDED assert
                     assert forall|z: T| link_contains(old_x_right, z) implies
                         (TotalOrder::le(x_key, z) && z != x_key) by {};
+                    // Veracity: NEEDED assert
                     assert forall|z: T| link_contains(old_x_right, z) implies
                         (TotalOrder::le(z, h_key) && z != h_key) by {
                     };
@@ -523,9 +545,11 @@ pub mod BSTRBMtEph {
                 x.right = Some(h);
                 update(&mut x);
                 *self = Some(x);
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 3);
                     reveal_with_fuel(link_contains, 4);
+                    // Veracity: NEEDED assert
                     assert forall|z: T| #[trigger] link_contains(x.right, z) implies
                         (TotalOrder::le(x_key, z) && z != x_key)
                     by {
@@ -537,12 +561,14 @@ pub mod BSTRBMtEph {
                         } else {
                         }
                     };
+                    // Veracity: NEEDED assert
                     assert(link_spec_size(*self) == link_spec_size(old_link)) by {
                         reveal_with_fuel(link_spec_size, 3);
                     };
                 }
             } else {
                 *self = Some(h);
+                // Veracity: NEEDED proof block
                 proof { reveal_with_fuel(link_spec_size, 2); }
             }
         }
@@ -556,6 +582,7 @@ pub mod BSTRBMtEph {
             let ghost node_key = node.key;
             let ghost orig_left = node.left;
             let ghost orig_right = node.right;
+            // Veracity: NEEDED proof block
             proof {
                 reveal_with_fuel(spec_is_bst_link, 2);
             }
@@ -578,19 +605,25 @@ pub mod BSTRBMtEph {
                 node.right = Some(right);
             }
             *self = Some(node);
+            // Veracity: NEEDED proof block
             proof {
                 reveal_with_fuel(spec_is_bst_link, 3);
                 reveal_with_fuel(link_contains, 3);
                 // Children's key/left/right unchanged (only color modified).
+                // Veracity: NEEDED assert
                 assert forall|z: T| #[trigger] link_contains(node.left, z) implies
                     (TotalOrder::le(z, node_key) && z != node_key) by {
+                    // Veracity: NEEDED assert
                     assert(link_contains(orig_left, z));
                 };
+                // Veracity: NEEDED assert
                 assert forall|z: T| #[trigger] link_contains(node.right, z) implies
                     (TotalOrder::le(node_key, z) && z != node_key) by {
+                    // Veracity: NEEDED assert
                     assert(link_contains(orig_right, z));
                 };
                 // Size preservation: flip_colors only changes colors, not structure.
+                // Veracity: NEEDED assert
                 assert(link_spec_size(*self) == link_spec_size(old_link)) by {
                     reveal_with_fuel(link_spec_size, 3);
                 };
@@ -615,6 +648,7 @@ pub mod BSTRBMtEph {
             self.rotate_left();
         }
         let ghost after_rl = *self;
+        // Veracity: NEEDED proof block
         proof {
         }
 
@@ -635,6 +669,7 @@ pub mod BSTRBMtEph {
             self.rotate_right();
         }
         let ghost after_rr = *self;
+        // Veracity: NEEDED proof block
         proof {
         }
 
@@ -650,6 +685,7 @@ pub mod BSTRBMtEph {
             self.flip_colors();
         }
         let ghost after_fl = *self;
+        // Veracity: NEEDED proof block
         proof {
         }
 
@@ -659,6 +695,7 @@ pub mod BSTRBMtEph {
             *self = Some(node);
         }
 
+        // Veracity: NEEDED proof block
         proof {
             reveal_with_fuel(spec_is_bst_link, 2);
             reveal_with_fuel(link_contains, 2);
@@ -675,6 +712,7 @@ pub mod BSTRBMtEph {
         match cur {
             | None => {
                 *self = Some(Box::new(new_node(value)));
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 2);
                     reveal_with_fuel(link_contains, 2);
@@ -690,24 +728,29 @@ pub mod BSTRBMtEph {
                         node.left.insert_link(value);
                         update(&mut node);
                         *self = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(node.left, x) implies
                                 (TotalOrder::le(x, node.key) && x != node.key)
                             by {
                                 if link_contains(old_left, x) {
                                 } else {
                                     // Bridge: trait ensures via spec_contains.
+                                    // Veracity: NEEDED assert
                                     assert(node.left.spec_contains(x) ==>
                                         (old_left.spec_contains(x) || x == value));
                                 }
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(*old(self), x) implies
                                 (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
                             by {
                                 reveal_with_fuel(link_contains, 2);
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(*old(self), x) implies
                                 link_contains(*self, x)
                             by {
@@ -715,10 +758,12 @@ pub mod BSTRBMtEph {
                                 if node_key == x {
                                 } else if link_contains(old_left, x) {
                                     // Bridge: trait ensures via spec_contains.
+                                    // Veracity: NEEDED assert
                                     assert(old_left.spec_contains(x) ==>
                                         node.left.spec_contains(x));
                                 }
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(*self, x) implies
                                 (link_contains(*old(self), x) || x == value)
                             by {
@@ -726,6 +771,7 @@ pub mod BSTRBMtEph {
                                 if node.key == x {
                                 } else if link_contains(node.left, x) {
                                     // Bridge: trait ensures via spec_contains.
+                                    // Veracity: NEEDED assert
                                     assert(node.left.spec_contains(x) ==>
                                         (old_left.spec_contains(x) || x == value));
                                     if link_contains(old_left, x) {
@@ -738,24 +784,29 @@ pub mod BSTRBMtEph {
                         node.right.insert_link(value);
                         update(&mut node);
                         *self = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(node.right, x) implies
                                 (TotalOrder::le(node.key, x) && x != node.key)
                             by {
                                 if link_contains(old_right, x) {
                                 } else {
                                     // Bridge: trait ensures via spec_contains.
+                                    // Veracity: NEEDED assert
                                     assert(node.right.spec_contains(x) ==>
                                         (old_right.spec_contains(x) || x == value));
                                 }
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(*old(self), x) implies
                                 (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
                             by {
                                 reveal_with_fuel(link_contains, 2);
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(*old(self), x) implies
                                 link_contains(*self, x)
                             by {
@@ -763,10 +814,12 @@ pub mod BSTRBMtEph {
                                 if node_key == x {
                                 } else if link_contains(old_right, x) {
                                     // Bridge: trait ensures via spec_contains.
+                                    // Veracity: NEEDED assert
                                     assert(old_right.spec_contains(x) ==>
                                         node.right.spec_contains(x));
                                 }
                             };
+                            // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(*self, x) implies
                                 (link_contains(*old(self), x) || x == value)
                             by {
@@ -774,6 +827,7 @@ pub mod BSTRBMtEph {
                                 if node.key == x {
                                 } else if link_contains(node.right, x) {
                                     // Bridge: trait ensures via spec_contains.
+                                    // Veracity: NEEDED assert
                                     assert(node.right.spec_contains(x) ==>
                                         (old_right.spec_contains(x) || x == value));
                                     if link_contains(old_right, x) {
@@ -784,6 +838,7 @@ pub mod BSTRBMtEph {
                     }
                     core::cmp::Ordering::Equal => {
                         *self = Some(node);
+                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
@@ -806,7 +861,9 @@ pub mod BSTRBMtEph {
                 match TotalOrder::cmp(target, &node.key) {
                     core::cmp::Ordering::Equal => Some(&node.key),
                     core::cmp::Ordering::Less => {
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             assert(!link_contains(node.right, *target)) by {
                                 if link_contains(node.right, *target) {
                                     T::antisymmetric(*target, node.key);
@@ -816,7 +873,9 @@ pub mod BSTRBMtEph {
                         node.left.find_link(target)
                     }
                     core::cmp::Ordering::Greater => {
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             assert(!link_contains(node.left, *target)) by {
                                 if link_contains(node.left, *target) {
                                     T::antisymmetric(node.key, *target);
@@ -838,13 +897,16 @@ pub mod BSTRBMtEph {
             | None => None,
             | Some(node) => match node.left {
                 | None => {
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert forall|x: T| #[trigger] link_contains(*self, x) implies TotalOrder::le(node.key, x) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if x == node.key {
                                 T::reflexive(x);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(link_contains(node.right, x));
                             }
                         };
@@ -853,17 +915,21 @@ pub mod BSTRBMtEph {
                 }
                 | Some(_) => {
                     let min = node.left.min_link();
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(link_contains, 2);
                         // Bridge: trait ensures uses spec_contains → link_contains.
+                        // Veracity: NEEDED assert
                         assert forall|x: T| #[trigger] link_contains(*self, x) implies TotalOrder::le(*min.unwrap(), x) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if link_contains(node.left, x) {
+                                // Veracity: NEEDED assert
                                 assert(node.left.spec_contains(x));
                             } else if x == node.key {
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(link_contains(node.right, x));
                                 T::transitive(*min.unwrap(), node.key, x);
                             }
@@ -883,13 +949,16 @@ pub mod BSTRBMtEph {
             | None => None,
             | Some(node) => match node.right {
                 | None => {
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert forall|x: T| #[trigger] link_contains(*self, x) implies TotalOrder::le(x, node.key) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if x == node.key {
                                 T::reflexive(x);
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(link_contains(node.left, x));
                             }
                         };
@@ -898,17 +967,21 @@ pub mod BSTRBMtEph {
                 }
                 | Some(_) => {
                     let max = node.right.max_link();
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(link_contains, 2);
                         // Bridge: trait ensures uses spec_contains → link_contains.
+                        // Veracity: NEEDED assert
                         assert forall|x: T| #[trigger] link_contains(*self, x) implies TotalOrder::le(x, *max.unwrap()) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if link_contains(node.right, x) {
+                                // Veracity: NEEDED assert
                                 assert(node.right.spec_contains(x));
                             } else if x == node.key {
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(link_contains(node.left, x));
                                 T::transitive(x, node.key, *max.unwrap());
                             }
@@ -967,6 +1040,7 @@ pub mod BSTRBMtEph {
         match self {
             | None => Vec::new(),
             | Some(node) => {
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(link_spec_size, 2);
                 }
@@ -991,6 +1065,7 @@ pub mod BSTRBMtEph {
         match self {
             | None => identity,
             | Some(node) => {
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(link_spec_size, 2);
                 }
@@ -1010,6 +1085,7 @@ pub mod BSTRBMtEph {
         match self {
             | None => 0,
             | Some(node) => {
+                // Veracity: NEEDED proof block
                 proof {
                     // link_height = 1 + max(left, right), so children have height < usize::MAX.
                 }
@@ -1055,6 +1131,7 @@ pub mod BSTRBMtEph {
         node.right = right;
         node.color = Color::Black;
         update(&mut node);
+        // Veracity: NEEDED proof block
         proof {
             reveal_with_fuel(link_spec_size, 2);
         }
@@ -1206,6 +1283,7 @@ pub mod BSTRBMtEph {
             let vlen = values.len();
             let link = build_balanced(values);
             let ghost ghost_link = link;
+            // Veracity: NEEDED proof block
             proof {
                 // build_balanced ensures link_spec_size(link) <= values@.len().
                 // vlen: usize = values.len(), so values@.len() <= usize::MAX.
@@ -1222,6 +1300,7 @@ pub mod BSTRBMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert(&mut self, value: T) -> (inserted: Result<(), ()>) {
             let (mut current, write_handle) = self.root.acquire_write();
+            // Veracity: NEEDED proof block
             proof { assume(self.ghost_root@ == current); }
             let sz = current.compute_link_spec_size();
             if sz < usize::MAX {
@@ -1235,26 +1314,32 @@ pub mod BSTRBMtEph {
                 }
                 let ghost old_ghost = self.ghost_root@;
                 let ghost new_root = current;
+                // Veracity: NEEDED proof block
                 proof {
                     // Color change (Black root) preserves structural properties.
                     reveal_with_fuel(link_spec_size, 2);
                     reveal_with_fuel(link_contains, 2);
                     reveal_with_fuel(spec_is_bst_link, 2);
                     // Bridge from trait ensures (spec_contains) to link_contains.
+                    // Veracity: NEEDED assert
                     assert forall|x: T| link_contains(after_insert, x) implies
                         (link_contains(old_ghost, x) || x == value)
                     by {
+                        // Veracity: NEEDED assert
                         assert(after_insert.spec_contains(x) ==>
                             (old_ghost.spec_contains(x) || x == value));
                     };
+                    // Veracity: NEEDED assert
                     assert forall|x: T| (link_contains(old_ghost, x) || x == value) implies
                         link_contains(after_insert, x)
                     by {
                         if link_contains(old_ghost, x) {
+                            // Veracity: NEEDED assert
                             assert(old_ghost.spec_contains(x) ==>
                                 after_insert.spec_contains(x));
                         }
                     };
+                    // Veracity: NEEDED assert
                     assert forall|x: T| link_contains(new_root, x) <==>
                         link_contains(after_insert, x)
                     by { reveal_with_fuel(link_contains, 2); };
@@ -1263,6 +1348,7 @@ pub mod BSTRBMtEph {
                     lemma_link_to_bbt_size::<T>(new_root);
                     lemma_link_to_bbt_size::<T>(old_ghost);
                     lemma_link_to_bbt_contains::<T>(new_root, value);
+                    // Veracity: NEEDED assert
                     assert forall|x: T| (#[trigger] link_to_bbt(new_root).tree_contains(x))
                         <==> (link_to_bbt(old_ghost).tree_contains(x) || x == value)
                     by {
@@ -1288,6 +1374,7 @@ pub mod BSTRBMtEph {
             let data = handle.borrow();
             // spec_is_bst_link(*data) from lock predicate via acquire_read.
             let found = data.find_link(target).is_some();
+            // Veracity: NEEDED proof block
             proof { assume(found == self@.tree_contains(*target)); }
             handle.release_read();
             found
@@ -1300,6 +1387,7 @@ pub mod BSTRBMtEph {
             let data = handle.borrow();
             // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
             let n = data.size_link();
+            // Veracity: NEEDED proof block
             proof { assume(n as nat == self@.spec_size()); }
             handle.release_read();
             n
@@ -1310,6 +1398,7 @@ pub mod BSTRBMtEph {
         fn is_empty(&self) -> (b: bool) {
             let handle = self.root.acquire_read();
             let b = handle.borrow().is_none();
+            // Veracity: NEEDED proof block
             proof { assume(b == (self@.spec_size() == 0)); }
             handle.release_read();
             b
@@ -1320,12 +1409,14 @@ pub mod BSTRBMtEph {
         fn height(&self) -> (h: usize) {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
+            // Veracity: NEEDED proof block
             proof {
                 // Lock predicate gives link_spec_size(*data) <= usize::MAX.
                 // Lemma gives link_height <= link_spec_size.
                 lemma_height_le_size::<T>(*data);
             }
             let h = data.height_rec();
+            // Veracity: NEEDED proof block
             proof { assume(h as nat == self@.spec_height()); }
             handle.release_read();
             h
@@ -1337,6 +1428,7 @@ pub mod BSTRBMtEph {
             let data = handle.borrow();
             // spec_is_bst_link(*data) from lock predicate via acquire_read.
             let found = data.find_link(target).cloned();
+            // Veracity: NEEDED proof block
             proof {
                 assume(found.is_some() == self@.tree_contains(*target));
                 accept(found.is_some() ==> found.unwrap() == *target);

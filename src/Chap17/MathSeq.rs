@@ -413,6 +413,7 @@ pub mod MathSeq {
                     let x = self.data[i].clone();
                     let not_seen = !seen.contains(&x);
                     if not_seen {
+                        // Veracity: NEEDED proof block
                         proof {
 
                             lemma_map_not_contains_implies_all_ne(out@, x@);
@@ -424,11 +425,13 @@ pub mod MathSeq {
                         let ghost old_out = out@;
                         let ghost old_out_mapped = old_out.map(|_j: int, t: T| t@);
                         let x_clone = x.clone();
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_cloned_view_eq(x, x_clone);
                         }
                         seen.insert(x_clone);
                         out.push(x);
+                        // Veracity: NEEDED proof block
                         proof {
 
                             let f = |t: T| t@;
@@ -466,6 +469,7 @@ pub mod MathSeq {
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass counting with HashMap + second pass emitting pairs.
             fn multiset_range(&self) -> (range: Vec<(usize, T)>)
             {
+                // Veracity: NEEDED proof block
                 proof { lemma_reveal_view_injective::<T>(); }
                 let mut counts: HashMapWithView<T, usize> = HashMapWithView::with_capacity(self.data.len());
                 let mut order: Vec<T> = Vec::new();
@@ -490,17 +494,20 @@ pub mod MathSeq {
                         let old_count = *counts.get(&x).unwrap();
                         if old_count < usize::MAX {
                             counts.insert(x, old_count + 1);
+                            // Veracity: NEEDED proof block
                             proof {
                             }
                         }
                     } else {
                         let x2 = x.clone();
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert(cloned(x, x2));
                         }
                         counts.insert(x2, 1);
                         order.push(x);
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                     }
@@ -526,6 +533,7 @@ pub mod MathSeq {
                     decreases order_len - j,
                 {
                     let x = order[j].clone();
+                    // Veracity: NEEDED proof block
                     proof {
                         // Veracity: NEEDED assert
                         assert(cloned(order@[j as int], x));
@@ -686,6 +694,7 @@ pub mod MathSeq {
             ensures cloned@ == self@
         {
             let cloned = MathSeqS { data: self.data.clone() };
+            // Veracity: NEEDED proof block
             proof { assume(cloned@ == self@); }
             cloned
         }
@@ -698,6 +707,7 @@ pub mod MathSeq {
             ensures equal == (self@ == other@)
         {
             let equal = self.data == other.data;
+            // Veracity: NEEDED proof block
             proof { assume(equal == (self@ == other@)); }
             equal
         }

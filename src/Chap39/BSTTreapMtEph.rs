@@ -122,56 +122,76 @@ pub mod BSTTreapMtEph {
             let ghost bst_input = Lnk::spec_bst_link(&Some(x));
             let ghost xk = x.key;
             let ghost orig_right = x.right;
+            // Veracity: NEEDED assert
             assert(Lnk::spec_link_size_wf(&x.left));
+            // Veracity: NEEDED assert
             assert(Lnk::spec_link_size_wf(&x.right));
             if let Some(mut y) = x.right.take() {
                 let ghost yk = y.key;
                 let ghost b  = y.left;
                 let ghost a  = y.right;
+                // Veracity: NEEDED assert
                 assert(Lnk::spec_link_size_wf(&y.left));
+                // Veracity: NEEDED assert
                 assert(Lnk::spec_link_size_wf(&y.right));
                 let ghost x_left_sz = Lnk::spec_size_link(&x.left);
                 let ghost y_left_sz = Lnk::spec_size_link(&y.left);
                 let ghost y_right_sz = Lnk::spec_size_link(&y.right);
+                // Veracity: NEEDED proof block
                 proof {
                     if bst_input {
                         lemma_bst_decompose(&orig_right);
+                        // Veracity: NEEDED assert
                         assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies xk.is_lt(&k) by {
                             lemma_contains_left(&y, k);
                         };
+                        // Veracity: NEEDED assert
                         assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies k.is_lt(&yk) by {};
                     }
                 }
                 x.right = y.left.take();
+                // Veracity: NEEDED assert
                 assert(1 + x_left_sz + y_left_sz + 1 + y_right_sz <= usize::MAX as nat);
                 update(&mut x);
+                // Veracity: NEEDED proof block
                 proof {
                     if bst_input {
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_bst_link(&x.right));
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_bst_link(&x.left));
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_bst_link(&Some(x)));
                     }
                 }
                 y.left = Some(x);
                 update(&mut y);
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_wf_assemble_node(&*y);
                     reveal_with_fuel(spec_contains_link, 3);
                     if bst_input {
                         lemma_bst_decompose(&orig_right);
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_bst_link(&y.right));
                         lemma_contains_root(&y);
+                        // Veracity: NEEDED assert
                         assert(spec_contains_link(&orig_right, yk));
+                        // Veracity: NEEDED assert
                         assert(xk.is_lt(&yk));
+                        // Veracity: NEEDED assert
                         assert(x.right == b);
+                        // Veracity: NEEDED assert
                         assert forall |k: T| #[trigger] spec_contains_link(&y.left, k) implies k.is_lt(&yk) by {
                             if spec_contains_link(&x.left, k) {
                                 T::is_lt_transitive(k, xk, yk);
                             }
                             if spec_contains_link(&x.right, k) {
+                                // Veracity: NEEDED assert
                                 assert(spec_contains_link(&b, k));
                             }
                         };
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_bst_link(&Some(y)));
                     }
                 }
@@ -197,56 +217,76 @@ pub mod BSTTreapMtEph {
             let ghost bst_input = Lnk::spec_bst_link(&Some(x));
             let ghost xk = x.key;
             let ghost orig_left = x.left;
+            // Veracity: NEEDED assert
             assert(Lnk::spec_link_size_wf(&x.left));
+            // Veracity: NEEDED assert
             assert(Lnk::spec_link_size_wf(&x.right));
             if let Some(mut y) = x.left.take() {
                 let ghost yk = y.key;
                 let ghost b  = y.right;
                 let ghost a  = y.left;
+                // Veracity: NEEDED assert
                 assert(Lnk::spec_link_size_wf(&y.left));
+                // Veracity: NEEDED assert
                 assert(Lnk::spec_link_size_wf(&y.right));
                 let ghost x_right_sz = Lnk::spec_size_link(&x.right);
                 let ghost y_left_sz = Lnk::spec_size_link(&y.left);
                 let ghost y_right_sz = Lnk::spec_size_link(&y.right);
+                // Veracity: NEEDED proof block
                 proof {
                     if bst_input {
                         lemma_bst_decompose(&orig_left);
+                        // Veracity: NEEDED assert
                         assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies k.is_lt(&xk) by {
                             lemma_contains_right(&y, k);
                         };
+                        // Veracity: NEEDED assert
                         assert forall |k: T| #[trigger] spec_contains_link(&b, k) implies yk.is_lt(&k) by {};
                     }
                 }
                 x.left = y.right.take();
+                // Veracity: NEEDED assert
                 assert(1 + y_left_sz + x_right_sz + 1 + y_right_sz <= usize::MAX as nat);
                 update(&mut x);
+                // Veracity: NEEDED proof block
                 proof {
                     if bst_input {
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_bst_link(&x.right));
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_bst_link(&x.left));
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_bst_link(&Some(x)));
                     }
                 }
                 y.right = Some(x);
                 update(&mut y);
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_wf_assemble_node(&*y);
                     reveal_with_fuel(spec_contains_link, 3);
                     if bst_input {
                         lemma_bst_decompose(&orig_left);
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_bst_link(&y.left));
                         lemma_contains_root(&y);
+                        // Veracity: NEEDED assert
                         assert(spec_contains_link(&orig_left, yk));
+                        // Veracity: NEEDED assert
                         assert(yk.is_lt(&xk));
+                        // Veracity: NEEDED assert
                         assert(x.left == b);
+                        // Veracity: NEEDED assert
                         assert forall |k: T| #[trigger] spec_contains_link(&y.right, k) implies yk.is_lt(&k) by {
                             if spec_contains_link(&x.right, k) {
                                 T::is_lt_transitive(yk, xk, k);
                             }
                             if spec_contains_link(&x.left, k) {
+                                // Veracity: NEEDED assert
                                 assert(spec_contains_link(&b, k));
                             }
                         };
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_bst_link(&Some(y)));
                     }
                 }
@@ -273,41 +313,53 @@ pub mod BSTTreapMtEph {
             Lnk::spec_bst_link(old(link)) ==> Lnk::spec_bst_link(link),
         decreases old(link),
     {
+        // Veracity: NEEDED proof block
         proof { reveal_with_fuel(spec_contains_link, 3); }
         if let Some(mut node) = link.take() {
             let ghost orig_key = node.key;
             let ghost orig_left = node.left;
             let ghost orig_right = node.right;
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall |k: T|
                     #[trigger] spec_contains_link(old(link), k) <==>
                     (node.key == k || spec_contains_link(&node.left, k) || spec_contains_link(&node.right, k))
                     by {};
             }
+            // Veracity: NEEDED assert
             assert(Lnk::spec_link_size_wf(&node.left));
+            // Veracity: NEEDED assert
             assert(Lnk::spec_link_size_wf(&node.right));
             if value < node.key {
                 insert_link(&mut node.left, value, priority);
                 update(&mut node);
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_wf_assemble_node(&*node);
+                    // Veracity: NEEDED assert
                     assert forall |k: T| #[trigger] spec_contains_link(old(link), k)
                         implies spec_contains_link(&Some(node), k) by {
                         if spec_contains_link(&node.left, k) { lemma_contains_left(&node, k); }
                         if spec_contains_link(&node.right, k) { lemma_contains_right(&node, k); }
                     };
+                    // Veracity: NEEDED assert
                     assert forall |k: T| #[trigger] spec_contains_link(&Some(node), k)
                         implies (spec_contains_link(old(link), k) || k == value) by {};
                     if Lnk::spec_bst_link(old(link)) {
                         lemma_bst_decompose(old(link));
+                        // Veracity: NEEDED assert
                         assert(node.key == orig_key);
+                        // Veracity: NEEDED assert
                         assert forall |k: T| #[trigger] spec_contains_link(&node.left, k)
                             implies k.is_lt(&node.key) by {
                             if spec_contains_link(&orig_left, k) {
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(value.is_lt(&node.key));
                             }
                         };
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_bst_link(&Some(node)));
                     }
                 }
@@ -322,25 +374,32 @@ pub mod BSTTreapMtEph {
             } else if node.key < value {
                 insert_link(&mut node.right, value, priority);
                 update(&mut node);
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_wf_assemble_node(&*node);
+                    // Veracity: NEEDED assert
                     assert forall |k: T| #[trigger] spec_contains_link(old(link), k)
                         implies spec_contains_link(&Some(node), k) by {
                         if spec_contains_link(&node.left, k) { lemma_contains_left(&node, k); }
                         if spec_contains_link(&node.right, k) { lemma_contains_right(&node, k); }
                     };
+                    // Veracity: NEEDED assert
                     assert forall |k: T| #[trigger] spec_contains_link(&Some(node), k)
                         implies (spec_contains_link(old(link), k) || k == value) by {};
                     if Lnk::spec_bst_link(old(link)) {
                         lemma_bst_decompose(old(link));
+                        // Veracity: NEEDED assert
                         assert(node.key == orig_key);
+                        // Veracity: NEEDED assert
                         assert forall |k: T| #[trigger] spec_contains_link(&node.right, k)
                             implies node.key.is_lt(&k) by {
                             if spec_contains_link(&orig_right, k) {
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(node.key.is_lt(&value));
                             }
                         };
+                        // Veracity: NEEDED assert
                         assert(Lnk::spec_bst_link(&Some(node)));
                     }
                 }
@@ -357,6 +416,7 @@ pub mod BSTTreapMtEph {
             }
         } else {
             let n = Box::new(Node { key: value, priority, size: 1, left: None, right: None });
+            // Veracity: NEEDED proof block
             proof { lemma_wf_assemble_node(&*n); }
             *link = Some(n);
         }
@@ -376,34 +436,44 @@ pub mod BSTTreapMtEph {
             Lnk::spec_bst_link(old(link)) ==> Lnk::spec_bst_link(link),
         decreases Lnk::spec_size_link(old(link)),
     {
+        // Veracity: NEEDED proof block
         proof { reveal_with_fuel(spec_contains_link, 3); }
         if let Some(mut node) = link.take() {
             let ghost orig_key = node.key;
             let ghost orig_left = node.left;
             let ghost orig_right = node.right;
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall |k: T|
                     #[trigger] spec_contains_link(old(link), k) <==>
                     (node.key == k || spec_contains_link(&node.left, k) || spec_contains_link(&node.right, k))
                     by {};
             }
+            // Veracity: NEEDED assert
             assert(Lnk::spec_link_size_wf(&node.left));
+            // Veracity: NEEDED assert
             assert(Lnk::spec_link_size_wf(&node.right));
             if *target < node.key {
                 delete_link(&mut node.left, target);
                 update(&mut node);
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_wf_assemble_node(&*node);
+                    // Veracity: NEEDED assert
                     assert forall |k: T| #[trigger] spec_contains_link(&Some(node), k)
                         implies spec_contains_link(old(link), k) by {
                         if spec_contains_link(&node.left, k) {
+                            // Veracity: NEEDED assert
                             assert(spec_contains_link(&orig_left, k));
                         }
                     };
                     if Lnk::spec_bst_link(old(link)) {
                         lemma_bst_decompose(old(link));
+                        // Veracity: NEEDED assert
                         assert forall |k: T| #[trigger] spec_contains_link(&node.left, k)
                             implies k.is_lt(&node.key) by {
+                            // Veracity: NEEDED assert
                             assert(spec_contains_link(&orig_left, k));
                         };
                     }
@@ -412,18 +482,23 @@ pub mod BSTTreapMtEph {
             } else if node.key < *target {
                 delete_link(&mut node.right, target);
                 update(&mut node);
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_wf_assemble_node(&*node);
+                    // Veracity: NEEDED assert
                     assert forall |k: T| #[trigger] spec_contains_link(&Some(node), k)
                         implies spec_contains_link(old(link), k) by {
                         if spec_contains_link(&node.right, k) {
+                            // Veracity: NEEDED assert
                             assert(spec_contains_link(&orig_right, k));
                         }
                     };
                     if Lnk::spec_bst_link(old(link)) {
                         lemma_bst_decompose(old(link));
+                        // Veracity: NEEDED assert
                         assert forall |k: T| #[trigger] spec_contains_link(&node.right, k)
                             implies node.key.is_lt(&k) by {
+                            // Veracity: NEEDED assert
                             assert(spec_contains_link(&orig_right, k));
                         };
                     }
@@ -434,6 +509,7 @@ pub mod BSTTreapMtEph {
                 if node.left.is_none() && node.right.is_none() {
                     // Leaf: remove (link stays None from take).
                 } else if node.right.is_none() {
+                    // Veracity: NEEDED proof block
                     proof {
                         if Lnk::spec_bst_link(old(link)) {
                             lemma_bst_decompose(old(link));
@@ -441,6 +517,7 @@ pub mod BSTTreapMtEph {
                     }
                     *link = node.left.take();
                 } else if node.left.is_none() {
+                    // Veracity: NEEDED proof block
                     proof {
                         if Lnk::spec_bst_link(old(link)) {
                             lemma_bst_decompose(old(link));
@@ -458,39 +535,52 @@ pub mod BSTTreapMtEph {
                             let ghost rot_key = rotated.key;
                             let ghost rot_left = rotated.left;
                             let ghost rot_right = rotated.right;
+                            // Veracity: NEEDED proof block
                             proof {
+                                // Veracity: NEEDED assert
                                 assert forall |k: T|
                                     #[trigger] spec_contains_link(old(link), k) <==>
                                     (rot_key == k || spec_contains_link(&rot_left, k) || spec_contains_link(&rot_right, k))
                                     by {};
                                 if Lnk::spec_bst_link(old(link)) {
                                     lemma_bst_decompose(&Some(rotated));
+                                    // Veracity: NEEDED assert
                                     assert(Lnk::spec_bst_link(&rot_left));
+                                    // Veracity: NEEDED assert
                                     assert(Lnk::spec_bst_link(&rot_right));
+                                    // Veracity: NEEDED assert
                                     assert forall |k: T| #[trigger] spec_contains_link(&rot_left, k)
                                         implies k.is_lt(&rot_key) by {};
+                                    // Veracity: NEEDED assert
                                     assert forall |k: T| #[trigger] spec_contains_link(&rot_right, k)
                                         implies rot_key.is_lt(&k) by {};
                                 }
                             }
                             delete_link(&mut rotated.right, target);
                             update(&mut rotated);
+                            // Veracity: NEEDED proof block
                             proof {
                                 lemma_wf_assemble_node(&*rotated);
+                                // Veracity: NEEDED assert
                                 assert forall |k: T| #[trigger] spec_contains_link(&Some(rotated), k)
                                     implies spec_contains_link(old(link), k) by {
                                     if spec_contains_link(&rotated.right, k) {
+                                        // Veracity: NEEDED assert
                                         assert(spec_contains_link(&rot_right, k));
                                     }
                                     if spec_contains_link(&rotated.left, k) {
+                                        // Veracity: NEEDED assert
                                         assert(spec_contains_link(&rot_left, k));
                                     }
                                 };
                                 if Lnk::spec_bst_link(old(link)) {
+                                    // Veracity: NEEDED assert
                                     assert forall |k: T| #[trigger] spec_contains_link(&rotated.right, k)
                                         implies rotated.key.is_lt(&k) by {
+                                        // Veracity: NEEDED assert
                                         assert(spec_contains_link(&rot_right, k));
                                     };
+                                    // Veracity: NEEDED assert
                                     assert(Lnk::spec_bst_link(&Some(rotated)));
                                 }
                             }
@@ -502,39 +592,52 @@ pub mod BSTTreapMtEph {
                             let ghost rot_key = rotated.key;
                             let ghost rot_left = rotated.left;
                             let ghost rot_right = rotated.right;
+                            // Veracity: NEEDED proof block
                             proof {
+                                // Veracity: NEEDED assert
                                 assert forall |k: T|
                                     #[trigger] spec_contains_link(old(link), k) <==>
                                     (rot_key == k || spec_contains_link(&rot_left, k) || spec_contains_link(&rot_right, k))
                                     by {};
                                 if Lnk::spec_bst_link(old(link)) {
                                     lemma_bst_decompose(&Some(rotated));
+                                    // Veracity: NEEDED assert
                                     assert(Lnk::spec_bst_link(&rot_left));
+                                    // Veracity: NEEDED assert
                                     assert(Lnk::spec_bst_link(&rot_right));
+                                    // Veracity: NEEDED assert
                                     assert forall |k: T| #[trigger] spec_contains_link(&rot_left, k)
                                         implies k.is_lt(&rot_key) by {};
+                                    // Veracity: NEEDED assert
                                     assert forall |k: T| #[trigger] spec_contains_link(&rot_right, k)
                                         implies rot_key.is_lt(&k) by {};
                                 }
                             }
                             delete_link(&mut rotated.left, target);
                             update(&mut rotated);
+                            // Veracity: NEEDED proof block
                             proof {
                                 lemma_wf_assemble_node(&*rotated);
+                                // Veracity: NEEDED assert
                                 assert forall |k: T| #[trigger] spec_contains_link(&Some(rotated), k)
                                     implies spec_contains_link(old(link), k) by {
                                     if spec_contains_link(&rotated.left, k) {
+                                        // Veracity: NEEDED assert
                                         assert(spec_contains_link(&rot_left, k));
                                     }
                                     if spec_contains_link(&rotated.right, k) {
+                                        // Veracity: NEEDED assert
                                         assert(spec_contains_link(&rot_right, k));
                                     }
                                 };
                                 if Lnk::spec_bst_link(old(link)) {
+                                    // Veracity: NEEDED assert
                                     assert forall |k: T| #[trigger] spec_contains_link(&rotated.left, k)
                                         implies k.is_lt(&rotated.key) by {
+                                        // Veracity: NEEDED assert
                                         assert(spec_contains_link(&rot_left, k));
                                     };
+                                    // Veracity: NEEDED assert
                                     assert(Lnk::spec_bst_link(&Some(rotated)));
                                 }
                             }
@@ -557,13 +660,16 @@ pub mod BSTTreapMtEph {
             found.is_some() ==> *found.unwrap() == *target,
         decreases *link,
     {
+        // Veracity: NEEDED proof block
         proof { reveal_with_fuel(spec_contains_link, 2); }
         match link {
             | None => None,
             | Some(node) => {
+                // Veracity: NEEDED proof block
                 proof { lemma_bst_decompose(link); }
                 if *target < node.key {
                     let r = find_link(&node.left, target);
+                    // Veracity: NEEDED proof block
                     proof {
                         if r.is_some() {
                             lemma_contains_left(node, *target);
@@ -573,15 +679,20 @@ pub mod BSTTreapMtEph {
                             if spec_contains_link(&node.right, *target) {
                                 T::is_lt_transitive(*target, node.key, *target);
                             }
+                            // Veracity: NEEDED assert
                             assert(!spec_contains_link(&node.right, *target));
+                            // Veracity: NEEDED assert
                             assert(node.key != *target);
+                            // Veracity: NEEDED assert
                             assert(spec_contains_link(&node.left, *target));
+                            // Veracity: NEEDED assert
                             assert(r.is_some());
                         }
                     }
                     r
                 } else if node.key < *target {
                     let r = find_link(&node.right, target);
+                    // Veracity: NEEDED proof block
                     proof {
                         if r.is_some() {
                             lemma_contains_right(node, *target);
@@ -591,17 +702,23 @@ pub mod BSTTreapMtEph {
                             if spec_contains_link(&node.left, *target) {
                                 T::is_lt_transitive(*target, node.key, *target);
                             }
+                            // Veracity: NEEDED assert
                             assert(!spec_contains_link(&node.left, *target));
+                            // Veracity: NEEDED assert
                             assert(node.key != *target);
+                            // Veracity: NEEDED assert
                             assert(spec_contains_link(&node.right, *target));
+                            // Veracity: NEEDED assert
                             assert(r.is_some());
                         }
                     }
                     r
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                         T::is_lt_antisymmetric(*target, node.key);
                         lemma_contains_root(node);
+                        // Veracity: NEEDED assert
                         assert(spec_contains_link(link, *target));
                     }
                     Some(&node.key)
@@ -627,11 +744,13 @@ pub mod BSTTreapMtEph {
             | None => None,
             | Some(node) => match node.left {
                 | None => {
+                    // Veracity: NEEDED proof block
                     proof { lemma_contains_root(node); }
                     Some(&node.key)
                 },
                 | Some(_) => {
                     let r = min_link(&node.left);
+                    // Veracity: NEEDED proof block
                     proof {
                         if r.is_some() { lemma_contains_left(node, *r.unwrap()); }
                     }
@@ -658,11 +777,13 @@ pub mod BSTTreapMtEph {
             | None => None,
             | Some(node) => match node.right {
                 | None => {
+                    // Veracity: NEEDED proof block
                     proof { lemma_contains_root(node); }
                     Some(&node.key)
                 },
                 | Some(_) => {
                     let r = max_link(&node.right);
+                    // Veracity: NEEDED proof block
                     proof {
                         if r.is_some() { lemma_contains_right(node, *r.unwrap()); }
                     }
@@ -683,16 +804,22 @@ pub mod BSTTreapMtEph {
         match link {
             | None => 0,
             | Some(node) => {
+                // Veracity: NEEDED proof block
                 proof { lemma_size_wf_child_bounded(link); }
                 let lh = height_link(&node.left);
                 let rh = height_link(&node.right);
                 let m = if lh >= rh { lh } else { rh };
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_height_le_size(&node.left);
                     lemma_height_le_size(&node.right);
+                    // Veracity: NEEDED assert
                     assert(lh as nat == Lnk::spec_height_link(&node.left));
+                    // Veracity: NEEDED assert
                     assert(rh as nat == Lnk::spec_height_link(&node.right));
+                    // Veracity: NEEDED assert
                     assert(m as nat <= Lnk::spec_size_link(&node.left) || m as nat <= Lnk::spec_size_link(&node.right));
+                    // Veracity: NEEDED assert
                     assert(m < usize::MAX);
                 }
                 1 + m
@@ -831,9 +958,11 @@ pub mod BSTTreapMtEph {
                     // val@ == node.key@, and node.key@ is inserted into the set.
                 } else if spec_contains_link(&node.left, val) {
                     lemma_contains_implies_in_set(&node.left, val);
+                    // Veracity: NEEDED assert
                     assert(spec_set_of_link(&node.left).contains(val@));
                 } else {
                     lemma_contains_implies_in_set(&node.right, val);
+                    // Veracity: NEEDED assert
                     assert(spec_set_of_link(&node.right).contains(val@));
                 }
             }
@@ -888,6 +1017,7 @@ pub mod BSTTreapMtEph {
         match link {
             None => {},
             Some(node) => {
+                // Veracity: NEEDED assert
                 assert(node.size as nat == 1 + Lnk::spec_size_link(&node.left) + Lnk::spec_size_link(&node.right));
             }
         }
@@ -1171,6 +1301,7 @@ pub mod BSTTreapMtEph {
             match link {
                 None => {},
                 Some(node) => {
+                    // Veracity: NEEDED assert
                     assert(node.size as nat == 1 + Lnk::spec_size_link(&node.left) + Lnk::spec_size_link(&node.right));
                 }
             }
@@ -1228,6 +1359,7 @@ pub mod BSTTreapMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn insert(&mut self, value: T, priority: u64)
         {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(&*self); }
             let ghost value_view = value@;
             let ghost old_set = self.ghost_locked_root@;
@@ -1243,6 +1375,7 @@ pub mod BSTTreapMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn delete(&mut self, target: &T)
         {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(&*self); }
             let ghost target_view = target@;
             let ghost old_set = self.ghost_locked_root@;
@@ -1258,6 +1391,7 @@ pub mod BSTTreapMtEph {
             let handle = self.locked_root.acquire_read();
             let result = find_link(handle.borrow(), target).cloned();
             handle.release_read();
+            // Veracity: NEEDED proof block
             proof {
                 assume(result.is_some() <==> self@.contains(target@));
                 accept(result.is_some() ==> result.unwrap()@ == target@);
@@ -1275,10 +1409,12 @@ pub mod BSTTreapMtEph {
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
         {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(&*self); }
             let handle = self.locked_root.acquire_read();
             let result = size_link(handle.borrow());
             handle.release_read();
+            // Veracity: NEEDED proof block
             proof { assume(result as nat == self@.len()); }
             result
         }
@@ -1307,6 +1443,7 @@ pub mod BSTTreapMtEph {
             let handle = self.locked_root.acquire_read();
             let result = min_link(handle.borrow()).cloned();
             handle.release_read();
+            // Veracity: NEEDED proof block
             proof { assume(result.is_some() ==> self@.contains(result.unwrap()@)); }
             result
         }
@@ -1318,6 +1455,7 @@ pub mod BSTTreapMtEph {
             let handle = self.locked_root.acquire_read();
             let result = max_link(handle.borrow()).cloned();
             handle.release_read();
+            // Veracity: NEEDED proof block
             proof { assume(result.is_some() ==> self@.contains(result.unwrap()@)); }
             result
         }
@@ -1331,6 +1469,7 @@ pub mod BSTTreapMtEph {
             in_order_collect(handle.borrow(), &mut out);
             handle.release_read();
             let ordered = ArraySeqStPerS::from_vec(out);
+            // Veracity: NEEDED proof block
             proof { assume(ordered@.len() == self@.len()); }
             ordered
         }
@@ -1344,6 +1483,7 @@ pub mod BSTTreapMtEph {
             pre_order_collect(handle.borrow(), &mut out);
             handle.release_read();
             let preordered = ArraySeqStPerS::from_vec(out);
+            // Veracity: NEEDED proof block
             proof { assume(preordered@.len() == self@.len()); }
             preordered
         }
@@ -1469,6 +1609,7 @@ pub mod BSTTreapMtEph {
         match link {
             None => {
                 let c = None;
+                // Veracity: NEEDED proof block
                 proof { assume(c == *link); }
                 c
             }
@@ -1482,6 +1623,7 @@ pub mod BSTTreapMtEph {
                     left,
                     right,
                 }));
+                // Veracity: NEEDED proof block
                 proof { assume(c == *link); }
                 c
             }
@@ -1504,6 +1646,7 @@ pub mod BSTTreapMtEph {
         fn clone(&self) -> (cloned: Self)
             ensures cloned == *self
         {
+            // Veracity: NEEDED proof block
             proof {
                 assume(Lnk::spec_link_size_wf(&self.left));
                 assume(Lnk::spec_link_size_wf(&self.right));
@@ -1515,6 +1658,7 @@ pub mod BSTTreapMtEph {
                 left: clone_link(&self.left),
                 right: clone_link(&self.right),
             };
+            // Veracity: NEEDED proof block
             proof { assume(cloned == *self); }
             cloned
         }
@@ -1534,6 +1678,7 @@ pub mod BSTTreapMtEph {
             let handle = self.locked_root.acquire_read();
             let inner_clone = clone_link(handle.borrow());
             handle.release_read();
+            // Veracity: NEEDED proof block
             proof {
                 assume(spec_bsttreapmteph_link_wf(&inner_clone));
                 assume(self.ghost_locked_root@.finite());
@@ -1542,6 +1687,7 @@ pub mod BSTTreapMtEph {
                 locked_root: RwLock::new(inner_clone, Ghost(BSTTreapMtEphInv)),
                 ghost_locked_root: Ghost(self.ghost_locked_root@),
             };
+            // Veracity: NEEDED proof block
             proof { assume(cloned@ == self@); }
             cloned
         }

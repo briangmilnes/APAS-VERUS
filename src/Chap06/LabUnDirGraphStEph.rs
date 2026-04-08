@@ -224,6 +224,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |e: (V::V, V::V)| edges@.contains(e) implies 
@@ -287,6 +288,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         return None;
@@ -294,6 +296,7 @@ verus!
                     Some(labeled_edge) => {
                         if (feq(&labeled_edge.0, v1) && feq(&labeled_edge.1, v2)) || 
                            (feq(&labeled_edge.0, v2) && feq(&labeled_edge.1, v1)) {
+                            // Veracity: NEEDED proof block
                             proof {
                                 let idx = it@.0 - 1;
                                 lemma_seq_index_in_map_to_set(le_seq, idx);
@@ -328,6 +331,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         return false;
@@ -335,6 +339,7 @@ verus!
                     Some(labeled_edge) => {
                         if (feq(&labeled_edge.0, v1) && feq(&labeled_edge.1, v2)) || 
                            (feq(&labeled_edge.0, v2) && feq(&labeled_edge.1, v1)) {
+                            // Veracity: NEEDED proof block
                             proof {
                                 let idx = it@.0 - 1;
                                 lemma_seq_index_in_map_to_set(le_seq, idx);
@@ -372,6 +377,7 @@ verus!
             {
                 match it.next() {
                     None => {
+                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] ng@.contains(w) implies 

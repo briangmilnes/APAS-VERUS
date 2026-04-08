@@ -134,6 +134,7 @@ pub mod Problem21_4 {
                             b.seq@.contains(p.1),
                     {
                         let y = *b.nth(j);
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         Pair(x, y)
@@ -145,8 +146,10 @@ pub mod Problem21_4 {
             alen,
         );
 
+        // Veracity: NEEDED proof block
         proof { assert(Pair_feq_trigger::<usize, usize>()); }
         let pairs = ArraySeqStPerS::flatten(&nested);
+        // Veracity: NEEDED proof block
         proof {
             let ghost mapped = nested.seq@.map_values(
                 |inner: ArraySeqStPerS<Pair<usize, usize>>| inner.seq@);

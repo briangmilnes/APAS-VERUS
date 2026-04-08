@@ -67,17 +67,23 @@ pub mod OrderStatSelectStPer {
         ensures total_ordering(spec_leq::<T>())
     {
         let leq = spec_leq::<T>();
+        // Veracity: NEEDED assert
         assert(antisymmetric(leq)) by {
+            // Veracity: NEEDED assert
             assert forall|x: T, y: T|
                 #[trigger] leq(x, y) && #[trigger] leq(y, x) implies x == y by
             { T::antisymmetric(x, y); }
         };
+        // Veracity: NEEDED assert
         assert(transitive(leq)) by {
+            // Veracity: NEEDED assert
             assert forall|x: T, y: T, z: T|
                 #[trigger] leq(x, y) && #[trigger] leq(y, z) implies leq(x, z) by
             { T::transitive(x, y, z); }
         };
+        // Veracity: NEEDED assert
         assert(strongly_connected(leq)) by {
+            // Veracity: NEEDED assert
             assert forall|x: T, y: T|
                 #[trigger] leq(x, y) || #[trigger] leq(y, x) by
             { T::total(x, y); }
@@ -134,6 +140,7 @@ pub mod OrderStatSelectStPer {
         // Base case: single element.
         if n == 1 {
             let elem = *a.nth(0);
+            // Veracity: NEEDED proof block
             proof {
                 lemma_total_ordering::<T>();
                 s.lemma_sort_by_ensures(leq);
@@ -179,26 +186,34 @@ pub mod OrderStatSelectStPer {
         {
             let elem = *a.nth(i);
 
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(s.subrange(0, (i + 1) as int) =~=
                     s.subrange(0, i as int).push(s[i as int]));
             }
 
             match TotalOrder::cmp(&elem, &pivot) {
                 core::cmp::Ordering::Less => {
+                    // Veracity: NEEDED proof block
                     proof {
                     }
                     left.push(elem);
                 },
                 core::cmp::Ordering::Greater => {
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(T::le(pivot, elem));
+                        // Veracity: NEEDED assert
                         assert(elem != pivot);
                     }
                     right.push(elem);
                 },
                 core::cmp::Ordering::Equal => {
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(elem == pivot);
                         equals_seq = equals_seq.push(elem);
                     }
@@ -211,13 +226,16 @@ pub mod OrderStatSelectStPer {
         let right_count = right.len();
 
         // Post-loop ghost state for the partition-sort proof.
+        // Veracity: NEEDED proof block
         proof { lemma_total_ordering::<T>(); }
         let ghost sorted_left = left@.sort_by(leq);
         let ghost sorted_right = right@.sort_by(leq);
         let ghost candidate = sorted_left + equals_seq + sorted_right;
 
+        // Veracity: NEEDED proof block
         proof {
             // The full sequence multiset decomposes into the three partitions.
+            // Veracity: NEEDED assert
             assert(s.subrange(0, n as int) =~= s);
 
             left@.lemma_sort_by_ensures(leq);
@@ -227,32 +245,41 @@ pub mod OrderStatSelectStPer {
             // Multiset equality from sort_by.
 
             // Trigger to_multiset_len broadcast for each sequence.
+            // Veracity: NEEDED assert
             assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
 
             // Length preservation: sort_by doesn't change length.
 
             // sorted_left has same elements as left: all < pivot.
+            // Veracity: NEEDED assert
             assert forall|j: int| 0 <= j < sorted_left.len() implies
                 T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
             {
+                // Veracity: NEEDED assert
                 assert(left@.to_multiset().count(sorted_left[j]) > 0);
                 let idx = choose|idx: int|
                     0 <= idx < left@.len() && left@[idx] == sorted_left[j];
+                // Veracity: NEEDED assert
                 assert(T::le(sorted_left[j], pivot));
             };
 
             // sorted_right has same elements as right: all > pivot.
+            // Veracity: NEEDED assert
             assert forall|j: int| 0 <= j < sorted_right.len() implies
                 T::le(pivot, #[trigger] sorted_right[j]) && sorted_right[j] != pivot by
             {
+                // Veracity: NEEDED assert
                 assert(right@.to_multiset().count(sorted_right[j]) > 0);
                 let idx = choose|idx: int|
                     0 <= idx < right@.len() && right@[idx] == sorted_right[j];
+                // Veracity: NEEDED assert
                 assert(T::le(pivot, sorted_right[j]));
             };
 
             // The three-part concatenation is sorted because left < pivot == equals < right.
+            // Veracity: NEEDED assert
             assert(sorted_by(candidate, leq)) by {
+                // Veracity: NEEDED assert
                 assert forall|ai: int, bi: int|
                     0 <= ai < bi < candidate.len()
                     implies (#[trigger] leq(candidate[ai], candidate[bi])) by
@@ -281,6 +308,7 @@ pub mod OrderStatSelectStPer {
             vstd::seq_lib::lemma_multiset_commutative(sorted_left, equals_seq);
             vstd::seq_lib::lemma_multiset_commutative(
                 sorted_left + equals_seq, sorted_right);
+            // Veracity: NEEDED assert
             assert(candidate.to_multiset() =~= s.to_multiset());
 
             // By uniqueness of sorting: sort(s) == candidate.
@@ -292,24 +320,29 @@ pub mod OrderStatSelectStPer {
 
         if k < left_count {
             let left_a = ArraySeqStPerS { seq: left };
+            // Veracity: NEEDED proof block
             proof {
                 let left_a_view = Seq::new(
                     left_a.spec_len(), |j: int| left_a.spec_index(j));
+                // Veracity: NEEDED assert
                 assert(left_a_view =~= left@);
             }
             select_inner(&left_a, k)
         } else if k < n - right_count {
+            // Veracity: NEEDED proof block
             proof {
             }
             Some(pivot)
         } else {
             let right_a = ArraySeqStPerS { seq: right };
             let new_k = k - (n - right_count);
+            // Veracity: NEEDED proof block
             proof {
                 let ll = sorted_left.len();
                 let el = equals_seq.len();
                 let right_a_view = Seq::new(
                     right_a.spec_len(), |j: int| right_a.spec_index(j));
+                // Veracity: NEEDED assert
                 assert(right_a_view =~= right@);
             }
             select_inner(&right_a, new_k)

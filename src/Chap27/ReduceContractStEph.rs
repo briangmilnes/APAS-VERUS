@@ -192,6 +192,7 @@ pub mod ReduceContractStEph {
 
             // Base case: empty
             if n == 0 {
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 return id;
@@ -200,6 +201,7 @@ pub mod ReduceContractStEph {
             // Base case: single element — use f(id, a[0]) to avoid unspecified clone
             if n == 1 {
                 let reduced = f(&id, a.nth(0));
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(Seq::fold_left, 2);
                 }
@@ -236,6 +238,7 @@ pub mod ReduceContractStEph {
             let b = ArraySeqStEphS { seq: b_vec };
 
             let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));
+            // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < half as int implies {
@@ -252,6 +255,7 @@ pub mod ReduceContractStEph {
             if n % 2 == 1 {
                 let last = a.nth(n - 1);
                 let reduced = f(&contracted_result, last);
+                // Veracity: NEEDED proof block
                 proof {
                     let s_even = s.subrange(0, (n - 1) as int);
                     let s_last_part = s.subrange((n - 1) as int, n as int);
@@ -272,6 +276,7 @@ pub mod ReduceContractStEph {
                 }
                 reduced
             } else {
+                // Veracity: NEEDED proof block
                 proof {
                     // Veracity: NEEDED assert
                     assert(b_seq =~= Seq::new(

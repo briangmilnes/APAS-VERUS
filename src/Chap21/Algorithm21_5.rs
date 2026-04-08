@@ -79,6 +79,7 @@ pub mod Algorithm21_5 {
             &pred,
             Ghost(spec_pred),
         );
+        // Veracity: NEEDED proof block
         proof {
             let ghost all_seq = Seq::new(all.seq@.len(), |i: int| all.seq@[i]);
             let ghost filt_seq = Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i));
