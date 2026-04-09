@@ -580,6 +580,7 @@ pub mod OrdKeyMap {
         ensures forall|k: KV| spec_pair_set_to_map(sub).dom().contains(k) ==>
             #[trigger] spec_pair_set_to_map(sup).dom().contains(k)
     {
+        // Veracity: NEEDED assert
         assert forall|k: KV| spec_pair_set_to_map(sub).dom().contains(k)
             implies #[trigger] spec_pair_set_to_map(sup).dom().contains(k)
         by {
@@ -656,6 +657,7 @@ pub mod OrdKeyMap {
             forall|k: KV| #[trigger] spec_pair_set_to_map(sub).contains_key(k) ==>
                 spec_pair_set_to_map(sub)[k] == spec_pair_set_to_map(sup)[k]
     {
+        // Veracity: NEEDED assert
         assert forall|k: KV| #[trigger] spec_pair_set_to_map(sub).contains_key(k) implies
             spec_pair_set_to_map(sub)[k] == spec_pair_set_to_map(sup)[k]
         by {
@@ -2174,12 +2176,6 @@ pub mod OrdKeyMap {
                                 } else if (x, xv) == root_pair@ {
                                 } else {
                                     let xp: Pair<K, V> = choose|xp: Pair<K, V>| #[trigger] right@.contains(xp@) && xp@ == (x, xv);
-// Veracity: TESTING assert                                     assert(xp.0@ != root_pair.0@) by {
-// Veracity: TESTING assert                                         if xp.0@ == root_pair.0@ {
-// Veracity: TESTING assert                                             assert(tree@.contains(xp@));
-// Veracity: TESTING assert                                             assert(tree@.contains(root_pair@));
-// Veracity: TESTING assert                                         }
-// Veracity: TESTING assert                                     };
                                     K::cmp_spec_greater_implies_le(xp.0, root_pair.0);
                                     K::antisymmetric(t, key);
                                 }

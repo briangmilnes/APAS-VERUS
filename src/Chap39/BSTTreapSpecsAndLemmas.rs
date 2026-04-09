@@ -194,10 +194,14 @@ pub mod BSTTreapSpecsAndLemmas {
             left_part.subset_of(whole),
             right_part.subset_of(whole),
     {
+        // Veracity: NEEDED assert
         assert forall|x: V| #[trigger] left_part.contains(x) implies whole.contains(x) by {
+            // Veracity: NEEDED assert
             assert(whole.remove(key).contains(x));
         };
+        // Veracity: NEEDED assert
         assert forall|x: V| #[trigger] right_part.contains(x) implies whole.contains(x) by {
+            // Veracity: NEEDED assert
             assert(whole.remove(key).contains(x));
         };
     }
@@ -207,12 +211,6 @@ pub mod BSTTreapSpecsAndLemmas {
         requires a.union(b) =~= whole,
         ensures a.subset_of(whole), b.subset_of(whole),
     {
-        assert forall|x: V| #[trigger] a.contains(x) implies whole.contains(x) by {
-            assert(a.union(b).contains(x));
-        };
-        assert forall|x: V| #[trigger] b.contains(x) implies whole.contains(x) by {
-            assert(a.union(b).contains(x));
-        };
     }
 
     /// Given two sets separated by a key (left < key < right),
@@ -229,6 +227,7 @@ pub mod BSTTreapSpecsAndLemmas {
             forall|s: T, o: T| #![trigger left.contains(s@), right.contains(o@)]
                 left.contains(s@) && right.contains(o@) ==> s.cmp_spec(&o) == Less,
     {
+        // Veracity: NEEDED assert
         assert forall|s: T, o: T| #![trigger left.contains(s@), right.contains(o@)]
             left.contains(s@) && right.contains(o@) implies s.cmp_spec(&o) == Less by {
             if left.contains(s@) && right.contains(o@) {

@@ -2384,11 +2384,10 @@ pub mod BSTTreapStEph {
                         assert forall|x: T::V| #[trigger] luv.union(ruv).insert(akv).contains(x)
                             <==> av.union(bv).contains(x) by {
                             if luv.union(ruv).insert(akv).contains(x) {
+                                // Veracity: NEEDED assert
                                 if x == akv { assert(av.contains(akv)); }
                                 else if luv.contains(x) {
-                                    if alv.contains(x) { assert(av.contains(x)); }
                                 } else {
-                                    if arv.contains(x) { assert(av.contains(x)); }
                                 }
                             }
                             if av.union(bv).contains(x) && !luv.union(ruv).insert(akv).contains(x) {
@@ -2787,8 +2786,6 @@ pub mod BSTTreapStEph {
                         assert forall|x: T::V| #[trigger]
                             left_filtered@.union(right_filtered@).contains(x)
                             implies tv.contains(x) by {
-                            if left_filtered@.contains(x) { assert(lv.contains(x)); }
-                            else { assert(right_filtered@.contains(x)); assert(rv.contains(x)); }
                         };
                     };
                 }
@@ -2808,9 +2805,6 @@ pub mod BSTTreapStEph {
                         // Veracity: NEEDED assert
                         assert forall|v: T::V| #[trigger]
                             lf.union(rf).insert(kv).contains(v) implies spec_pred(v) by {
-                            if v == kv { assert(spec_pred(kv)); }
-                            else if lf.contains(v) { assert(left_filtered@.contains(v)); }
-                            else { assert(rf.contains(v)); assert(right_filtered@.contains(v)); }
                         };
                         // Veracity: NEEDED assert
                         assert forall|v: T::V| #[trigger]
@@ -2820,8 +2814,6 @@ pub mod BSTTreapStEph {
                             else {
                                 // Veracity: NEEDED assert
                                 assert(lv.union(rv).contains(v));
-                                if lv.contains(v) { assert(left_filtered@.contains(v)); assert(lf.contains(v)); }
-                                else { assert(rv.contains(v)); assert(right_filtered@.contains(v)); assert(rf.contains(v)); }
                             }
                         };
                     }
@@ -2834,19 +2826,16 @@ pub mod BSTTreapStEph {
                         // Veracity: NEEDED assert
                         assert forall|v: T::V| #[trigger]
                             lf.union(rf).contains(v) implies spec_pred(v) by {
-                            if lf.contains(v) { assert(left_filtered@.contains(v)); }
-                            else { assert(rf.contains(v)); assert(right_filtered@.contains(v)); }
                         };
                         // Veracity: NEEDED assert
                         assert forall|v: T::V| #[trigger]
                             tv.contains(v) && spec_pred(v)
                             implies lf.union(rf).contains(v) by {
+                            // Veracity: NEEDED assert
                             if v == kv { assert(!spec_pred(kv)); }
                             else {
                                 // Veracity: NEEDED assert
                                 assert(lv.union(rv).contains(v));
-                                if lv.contains(v) { assert(left_filtered@.contains(v)); assert(lf.contains(v)); }
-                                else { assert(rv.contains(v)); assert(right_filtered@.contains(v)); assert(rf.contains(v)); }
                             }
                         };
                     }

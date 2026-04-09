@@ -373,6 +373,7 @@ broadcast use {
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
         {
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED assert
             proof { assert(obeys_feq_full_trigger::<T>()); }
             let mut out: Vec<T> = Vec::new();
             self.tree.collect_in_order(&mut out);
@@ -506,6 +507,7 @@ broadcast use {
         fn delete(&mut self, x: &T)
         {
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED assert
             proof { assert(obeys_feq_full_trigger::<T>()); }
             self.tree.delete(x);
         }
@@ -514,6 +516,7 @@ broadcast use {
         fn insert(&mut self, x: T)
         {
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED assert
             proof { assert(obeys_feq_full_trigger::<T>()); }
             self.tree.insert(x);
         }

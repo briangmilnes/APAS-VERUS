@@ -1408,6 +1408,7 @@ pub mod BSTParaTreapMtEph {
         fn insert(&mut self, key: T) {
             let ghost old_view = self@;
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED assert
             proof { use_type_invariant(&*self); assert(old_view.finite()); }
             let (left, _, right) = split_inner(self, &key);
             let ghost kv = key@;
@@ -1425,6 +1426,7 @@ pub mod BSTParaTreapMtEph {
         fn delete(&mut self, key: &T) {
             let ghost old_view = self@;
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED assert
             proof { use_type_invariant(&*self); assert(old_view.finite()); }
             let ghost kref = *key;
             let (left, _, right) = split_inner(self, key);

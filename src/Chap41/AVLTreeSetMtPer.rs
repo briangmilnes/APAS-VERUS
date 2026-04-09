@@ -488,6 +488,7 @@ broadcast use {
         {
             let mut tree = self.tree.clone();
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED assert
             proof { assert(obeys_feq_full_trigger::<T>()); }
             tree.delete(x);
             AVLTreeSetMtPer { tree }
@@ -498,6 +499,7 @@ broadcast use {
         {
             let mut tree = self.tree.clone();
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED assert
             proof { assert(obeys_feq_full_trigger::<T>()); }
             tree.insert(x);
             AVLTreeSetMtPer { tree }
