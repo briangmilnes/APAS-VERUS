@@ -56,13 +56,13 @@ pub mod SpanTreeStEph {
 
         /// Sequential spanning tree via star contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract; St sequential.
         fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>
             requires Self::spec_spantreesteph_wf(graph);
 
         /// Verify spanning tree properties.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — connectivity check + edge count; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V| + |E|), Span O(|V| + |E|) — connectivity check + edge count; St sequential.
         fn verify_spanning_tree<V: HashOrd>(graph: &UnDirGraphStEph<V>, tree: &SetStEph<Edge<V>>) -> bool
             requires Self::spec_spantreesteph_wf(graph);
     }

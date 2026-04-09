@@ -64,7 +64,7 @@ verus!
          { self@.A.fold(0nat, |acc: nat, t: (V::V, V::V, u32)| acc + t.2 as nat) }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
         fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u32>>) -> (g: WeightedDirGraphStEphU32<V>)
             requires
                 valid_key_type_WeightedEdge::<V, u32>(),
@@ -83,7 +83,7 @@ verus!
                 self@.A == old(self)@.A.insert((from@, to@, weight));
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential search
         fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<u32>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u32>()
             ensures
@@ -91,14 +91,14 @@ verus!
                 weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential iteration
         fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, u32>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u32>()
             ensures
                 forall |t: (V::V, V::V, u32)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential filter
         fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, u32>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u32>()
             ensures
@@ -106,7 +106,7 @@ verus!
                     (exists |w: u32| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential filter
         fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, u32>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u32>()
             ensures
@@ -114,13 +114,13 @@ verus!
                     (exists |w: u32| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential fold
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential fold
         fn total_weight(&self) -> (total_weight: CheckedU32)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u32>()
             ensures total_weight@ == self.spec_total_weight() as int;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential filter
         fn edges_above_weight(&self, threshold: u32) -> (edges_above: SetStEph<WeightedEdge<V, u32>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u32>()
             ensures
@@ -128,7 +128,7 @@ verus!
                     (self@.A.contains(t) && t.2 > threshold);
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential filter
         fn edges_below_weight(&self, threshold: u32) -> (edges_below: SetStEph<WeightedEdge<V, u32>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, u32>()
             ensures
@@ -142,7 +142,7 @@ verus!
     impl<V: StT + Hash> WeightedDirGraphStEphU32Trait<V> for WeightedDirGraphStEphU32<V> {
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V| + |E|), Span O(|V| + |E|) — sequential
         fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, u32>>) -> (g: WeightedDirGraphStEphU32<V>) {
             let mut edge_set: SetStEph<LabEdge<V, u32>> = SetStEph::empty();
             let mut it = edges.iter();
@@ -183,7 +183,7 @@ verus!
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential
         fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<u32>) { 
             match self.get_arc_label(from, to) {
                 Some(w) => Some(*w),
@@ -192,7 +192,7 @@ verus!
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential
         fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, u32>>) {
             let mut edges: SetStEph<WeightedEdge<V, u32>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
@@ -226,7 +226,7 @@ verus!
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential
         fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, u32>>) {
             let mut neighbors: SetStEph<Pair<V, u32>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
@@ -279,7 +279,7 @@ verus!
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential
         fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, u32>>) {
             let mut neighbors: SetStEph<Pair<V, u32>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
@@ -332,7 +332,7 @@ verus!
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential
         fn total_weight(&self) -> (total_weight: CheckedU32) { 
             let mut sum = CheckedU32::new(0);
             let mut it = self.labeled_arcs().iter();
@@ -370,7 +370,7 @@ verus!
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential filter
         fn edges_above_weight(&self, threshold: u32) -> (edges_above: SetStEph<WeightedEdge<V, u32>>) {
             let mut edges: SetStEph<WeightedEdge<V, u32>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
@@ -420,7 +420,7 @@ verus!
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential filter
         fn edges_below_weight(&self, threshold: u32) -> (edges_below: SetStEph<WeightedEdge<V, u32>>) {
             let mut edges: SetStEph<WeightedEdge<V, u32>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();

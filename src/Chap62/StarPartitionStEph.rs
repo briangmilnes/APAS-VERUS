@@ -80,7 +80,7 @@ pub mod StarPartitionStEph {
 
         /// Sequential star partition using greedy selection.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — single pass over vertices + edges; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V| + |E|), Span O(|V| + |E|) — single pass over vertices + edges; St sequential.
         fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
             requires Self::spec_starpartitionsteph_wf(graph);
     }

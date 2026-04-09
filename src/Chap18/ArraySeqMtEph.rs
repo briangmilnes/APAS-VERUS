@@ -1,8 +1,8 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (ACCEPTED DIFFERENCE: C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! REVIEWED: NO
 
 //! Chapter 18 algorithms for ArraySeqMtEph multithreaded ephemeral. Verusified.
-//! Uses global work-stealing pool for parallel operations (map_par, reduce_par, filter_par).
+//! Uses global work-stealing pool for parallel operations (ACCEPTED DIFFERENCE: map_par, reduce_par, filter_par).
 
 //  Table of Contents
 //	Section 1. module
@@ -108,7 +108,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn new(length: usize, init_value: T) -> (new_seq: ArraySeqMtEphS<T>)
+        fn new(length: usize, init_value: T) -> (ACCEPTED DIFFERENCE: new_seq: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
             let seq = std::vec::from_elem(init_value, length);
@@ -116,7 +116,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>) {
+        fn set(&mut self, index: usize, item: T) -> (ACCEPTED DIFFERENCE: success: Result<(), &'static str>) {
             if index < self.seq.len() {
                 self.seq.set(index, item);
                 Ok(())
@@ -126,17 +126,17 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn length(&self) -> (len: usize) {
+        fn length(&self) -> (ACCEPTED DIFFERENCE: len: usize) {
             self.seq.len()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn nth(&self, index: usize) -> (nth_elem: &T) {
+        fn nth(&self, index: usize) -> (ACCEPTED DIFFERENCE: nth_elem: &T) {
             &self.seq[index]
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j - i), Span O(j - i)
-        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: ArraySeqMtEphS<T>)
+        fn subseq_copy(&self, start: usize, length: usize) -> (ACCEPTED DIFFERENCE: subseq: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
             let end = start + length;
@@ -147,7 +147,7 @@ pub mod ArraySeqMtEph {
                     start <= i <= end,
                     end == start + length,
                     end <= self.seq@.len(),
-                    seq@.len() == (i - start) as int,
+                    seq@.len() == (ACCEPTED DIFFERENCE: i - start) as int,
                     obeys_feq_clone::<T>(),
                     forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> seq@[j] == self.seq@[(start + j) as int],
                 decreases end - i,
@@ -164,7 +164,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j - i), Span O(j - i)
-        fn subseq(a: &ArraySeqMtEphS<T>, start: usize, length: usize) -> (subseq: ArraySeqMtEphS<T>)
+        fn subseq(a: &ArraySeqMtEphS<T>, start: usize, length: usize) -> (ACCEPTED DIFFERENCE: subseq: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
             let end = start + length;
@@ -175,7 +175,7 @@ pub mod ArraySeqMtEph {
                     start <= i <= end,
                     end == start + length,
                     end <= a.seq@.len(),
-                    seq@.len() == (i - start) as int,
+                    seq@.len() == (ACCEPTED DIFFERENCE: i - start) as int,
                     obeys_feq_clone::<T>(),
                     forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> seq@[j] == a.seq@[(start + j) as int],
                 decreases end - i,
@@ -192,7 +192,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn from_vec(elts: Vec<T>) -> (seq: ArraySeqMtEphS<T>) {
+        fn from_vec(elts: Vec<T>) -> (ACCEPTED DIFFERENCE: seq: ArraySeqMtEphS<T>) {
             ArraySeqMtEphS { seq: elts }
         }
     }
@@ -200,19 +200,19 @@ pub mod ArraySeqMtEph {
 
     impl<T> ArraySeqMtEphRedefinableTrait<T> for ArraySeqMtEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn empty() -> (empty_seq: ArraySeqMtEphS<T>) {
+        fn empty() -> (ACCEPTED DIFFERENCE: empty_seq: ArraySeqMtEphS<T>) {
             ArraySeqMtEphS { seq: Vec::new() }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn singleton(item: T) -> (singleton: ArraySeqMtEphS<T>) {
+        fn singleton(item: T) -> (ACCEPTED DIFFERENCE: singleton: ArraySeqMtEphS<T>) {
             let mut seq = Vec::with_capacity(1);
             seq.push(item);
             ArraySeqMtEphS { seq }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|)
-        fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (appended: ArraySeqMtEphS<T>)
+        fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (ACCEPTED DIFFERENCE: appended: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
             let a_len = a.seq.len();
@@ -260,13 +260,13 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: ArraySeqMtEphS<T>)
+        fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (ACCEPTED DIFFERENCE: filtered: ArraySeqMtEphS<T>)
             where T: Clone + Eq + Send + Sync + 'static
         {
             let filtered = Self::filter_dc(a, pred, Ghost(spec_pred));
             // Veracity: NEEDED proof block
             proof {
-                // Bridge filter_dc ensures (a.seq@) to trait ensures (Seq::new(...)).
+                // Bridge filter_dc ensures (ACCEPTED DIFFERENCE: a.seq@) to trait ensures (Seq::new(...)).
                 let ghost s = Seq::new(a.seq@.len(), |i: int| a.seq@[i]);
                 // Veracity: NEEDED assert
                 assert(s =~= a.seq@);
@@ -282,7 +282,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (updated: ArraySeqMtEphS<T>)
+        fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (ACCEPTED DIFFERENCE: updated: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
             let len = a.seq.len();
@@ -320,7 +320,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn inject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
+        fn inject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (ACCEPTED DIFFERENCE: injected: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
             let ghost s = a.seq@;
@@ -396,7 +396,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn ninject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
+        fn ninject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (ACCEPTED DIFFERENCE: injected: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
             // Delegate to deterministic inject. inject satisfies the weaker ninject spec
@@ -423,17 +423,17 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn is_empty(&self) -> (empty: bool) {
+        fn is_empty(&self) -> (ACCEPTED DIFFERENCE: empty: bool) {
             self.seq.len() == 0
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn is_singleton(&self) -> (single: bool) {
+        fn is_singleton(&self) -> (ACCEPTED DIFFERENCE: single: bool) {
             self.seq.len() == 1
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (acc: A) {
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (ACCEPTED DIFFERENCE: acc: A) {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             let mut acc = seed;
@@ -469,14 +469,14 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn reduce<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
+        fn reduce<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (ACCEPTED DIFFERENCE: reduced: T)
             where T: Clone + Eq + Send + Sync + 'static
         {
             Self::reduce_dc(a, f, Ghost(spec_f), id)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtEphS<T>, T))
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (ACCEPTED DIFFERENCE: scanned: (ArraySeqMtEphS<T>, T))
             where T: Clone + Eq
         {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
@@ -530,18 +530,18 @@ pub mod ArraySeqMtEph {
                 by {
                 }
             }
-            (scanned_seq, acc)
+            (ACCEPTED DIFFERENCE: scanned_seq, acc)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn map<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
+        fn map<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (ACCEPTED DIFFERENCE: mapped: ArraySeqMtEphS<U>)
             where T: Clone + Eq + Send + Sync + 'static
         {
             Self::map_dc(a, f)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtEphS<T>)
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (ACCEPTED DIFFERENCE: tab_seq: ArraySeqMtEphS<T>)
         {
             let mut seq = Vec::with_capacity(length);
             let mut i: usize = 0;
@@ -560,7 +560,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(total length), Span O(total length)
-        fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
+        fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (ACCEPTED DIFFERENCE: flattened: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
             let outer_len = a.seq.len();
@@ -621,7 +621,7 @@ pub mod ArraySeqMtEph {
         {}
 
         /// Returns an iterator over the sequence elements.
-        pub fn iter(&self) -> (it: ArraySeqMtEphIter<'_, T>)
+        pub fn iter(&self) -> (ACCEPTED DIFFERENCE: it: ArraySeqMtEphIter<'_, T>)
             ensures
                 it@.0 == 0,
                 it@.1 == self.seq@,
@@ -634,7 +634,7 @@ pub mod ArraySeqMtEph {
         pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: F,
-        ) -> (mapped: ArraySeqMtEphS<U>)
+        ) -> (ACCEPTED DIFFERENCE: mapped: ArraySeqMtEphS<U>)
             where T: Clone + Send + Sync + Eq + 'static
             requires
                 obeys_feq_clone::<T>(),
@@ -672,11 +672,11 @@ pub mod ArraySeqMtEph {
                 }
                 let left_len = Ghost(left_seq.seq@.len());
                 let right_len = Ghost(right_seq.seq@.len());
-                let (left, right) = join(
-                    (move || -> (r: ArraySeqMtEphS<U>)
+                let (ACCEPTED DIFFERENCE: left, right) = join(
+                    (ACCEPTED DIFFERENCE: move || -> (r: ArraySeqMtEphS<U>)
                         ensures r.seq@.len() == left_len@
                      { Self::map_par(&left_seq, f1) }),
-                    (move || -> (r: ArraySeqMtEphS<U>)
+                    (ACCEPTED DIFFERENCE: move || -> (r: ArraySeqMtEphS<U>)
                         ensures r.seq@.len() == right_len@
                      { Self::map_par(&right_seq, f2) }),
                 );
@@ -688,7 +688,7 @@ pub mod ArraySeqMtEph {
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             pred: F,
-        ) -> (filtered: ArraySeqMtEphS<T>)
+        ) -> (ACCEPTED DIFFERENCE: filtered: ArraySeqMtEphS<T>)
             where T: Clone + Send + Sync + Eq + 'static
             requires
                 obeys_feq_clone::<T>(),
@@ -729,11 +729,11 @@ pub mod ArraySeqMtEph {
                 }
                 let left_len = Ghost(left_seq.seq@.len());
                 let right_len = Ghost(right_seq.seq@.len());
-                let (left, right) = join(
-                    move || -> (r: ArraySeqMtEphS<T>)
+                let (ACCEPTED DIFFERENCE: left, right) = join(
+                    move || -> (ACCEPTED DIFFERENCE: r: ArraySeqMtEphS<T>)
                         ensures r.seq@.len() <= left_len@
                     { Self::filter_par(&left_seq, p1) },
-                    move || -> (r: ArraySeqMtEphS<T>)
+                    move || -> (ACCEPTED DIFFERENCE: r: ArraySeqMtEphS<T>)
                         ensures r.seq@.len() <= right_len@
                     { Self::filter_par(&right_seq, p2) },
                 );
@@ -741,14 +741,14 @@ pub mod ArraySeqMtEph {
             }
         }
 
-        /// For a monoid (f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
+        /// For a monoid (ACCEPTED DIFFERENCE: f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
         proof fn lemma_monoid_fold_left(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)
             requires spec_monoid(f, id)
             ensures f(x, s.fold_left(id, f)) == s.fold_left(x, f)
             decreases s.len()
         {
             if s.len() > 0 {
-                let n = (s.len() - 1) as int;
+                let n = (ACCEPTED DIFFERENCE: s.len() - 1) as int;
                 let s1 = s.subrange(0, n);
                 let tail = s.subrange(n, s.len() as int);
                 let a_last = s[n];
@@ -772,7 +772,7 @@ pub mod ArraySeqMtEph {
             f: F,
             Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
             id: T,
-        ) -> (reduced: T)
+        ) -> (ACCEPTED DIFFERENCE: reduced: T)
             where T: Clone + Send + Sync + Eq + 'static
             requires
                 obeys_feq_clone::<T>(),
@@ -816,7 +816,7 @@ pub mod ArraySeqMtEph {
                 let ghost left_s = Seq::new(left_seq.spec_len(), |i: int| left_seq.spec_index(i));
                 let ghost right_s = Seq::new(right_seq.spec_len(), |i: int| right_seq.spec_index(i));
 
-                let fa = move || -> (r: T)
+                let fa = move || -> (ACCEPTED DIFFERENCE: r: T)
                     requires
                         left_seq.seq@.len() > 0,
                         obeys_feq_clone::<T>(),
@@ -829,7 +829,7 @@ pub mod ArraySeqMtEph {
                     Self::reduce_par(&left_seq, f1, Ghost(spec_f), id1)
                 };
 
-                let fb = move || -> (r: T)
+                let fb = move || -> (ACCEPTED DIFFERENCE: r: T)
                     requires
                         right_seq.seq@.len() > 0,
                         obeys_feq_clone::<T>(),
@@ -842,7 +842,7 @@ pub mod ArraySeqMtEph {
                     Self::reduce_par(&right_seq, f2, Ghost(spec_f), id2)
                 };
 
-                let (left, right) = join(fa, fb);
+                let (ACCEPTED DIFFERENCE: left, right) = join(fa, fb);
                 let combined = f(&left, &right);
                 // Veracity: NEEDED proof block
                 proof {
@@ -864,7 +864,7 @@ pub mod ArraySeqMtEph {
             f: &F,
             Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
             id: T,
-        ) -> (reduced: T)
+        ) -> (ACCEPTED DIFFERENCE: reduced: T)
             where T: Clone + Eq + Send + Sync + 'static
             requires
                 obeys_feq_clone::<T>(),
@@ -908,7 +908,7 @@ pub mod ArraySeqMtEph {
                 let ghost left_s = Seq::new(left_seq.spec_len(), |i: int| left_seq.spec_index(i));
                 let ghost right_s = Seq::new(right_seq.spec_len(), |i: int| right_seq.spec_index(i));
 
-                let fa = move || -> (r: T)
+                let fa = move || -> (ACCEPTED DIFFERENCE: r: T)
                     requires
                         left_seq.seq@.len() > 0,
                         obeys_feq_clone::<T>(),
@@ -921,7 +921,7 @@ pub mod ArraySeqMtEph {
                     Self::reduce_dc(&left_seq, &f1, Ghost(spec_f), id1)
                 };
 
-                let fb = move || -> (r: T)
+                let fb = move || -> (ACCEPTED DIFFERENCE: r: T)
                     requires
                         right_seq.seq@.len() > 0,
                         obeys_feq_clone::<T>(),
@@ -934,7 +934,7 @@ pub mod ArraySeqMtEph {
                     Self::reduce_dc(&right_seq, &f2, Ghost(spec_f), id2)
                 };
 
-                let (left, right) = join(fa, fb);
+                let (ACCEPTED DIFFERENCE: left, right) = join(fa, fb);
                 let combined = f(&left, &right);
                 // Veracity: NEEDED proof block
                 proof {
@@ -954,7 +954,7 @@ pub mod ArraySeqMtEph {
         fn map_dc<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: &F,
-        ) -> (mapped: ArraySeqMtEphS<U>)
+        ) -> (ACCEPTED DIFFERENCE: mapped: ArraySeqMtEphS<U>)
             where T: Clone + Eq + Send + Sync + 'static
             requires
                 obeys_feq_clone::<T>(),
@@ -1018,8 +1018,8 @@ pub mod ArraySeqMtEph {
                     }
                 }
 
-                let (left, right) = join(
-                    move || -> (r: ArraySeqMtEphS<U>)
+                let (ACCEPTED DIFFERENCE: left, right) = join(
+                    move || -> (ACCEPTED DIFFERENCE: r: ArraySeqMtEphS<U>)
                         ensures
                             r.seq@.len() == left_ghost_len@,
                             forall|i: int| #![trigger r.seq@[i]] 0 <= i < left_ghost_len@ as int ==>
@@ -1031,7 +1031,7 @@ pub mod ArraySeqMtEph {
                         }
                         r
                     },
-                    move || -> (r: ArraySeqMtEphS<U>)
+                    move || -> (ACCEPTED DIFFERENCE: r: ArraySeqMtEphS<U>)
                         ensures
                             r.seq@.len() == right_ghost_len@,
                             forall|i: int| #![trigger r.seq@[i]] 0 <= i < right_ghost_len@ as int ==>
@@ -1076,7 +1076,7 @@ pub mod ArraySeqMtEph {
             a: &ArraySeqMtEphS<T>,
             pred: &F,
             Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,
-        ) -> (filtered: ArraySeqMtEphS<T>)
+        ) -> (ACCEPTED DIFFERENCE: filtered: ArraySeqMtEphS<T>)
             where T: Clone + Eq + Send + Sync + 'static
             requires
                 obeys_feq_clone::<T>(),
@@ -1177,7 +1177,7 @@ pub mod ArraySeqMtEph {
                     assert(a.seq@ =~= left_view + right_view);
                 }
 
-                let fa = move || -> (r: ArraySeqMtEphS<T>)
+                let fa = move || -> (ACCEPTED DIFFERENCE: r: ArraySeqMtEphS<T>)
                     requires
                         obeys_feq_clone::<T>(),
                         forall|i: int| 0 <= i < left_seq.seq@.len() ==> #[trigger] p1.requires((&left_seq.seq@[i],)),
@@ -1193,7 +1193,7 @@ pub mod ArraySeqMtEph {
                     Self::filter_dc(&left_seq, &p1, Ghost(spec_pred))
                 };
 
-                let fb = move || -> (r: ArraySeqMtEphS<T>)
+                let fb = move || -> (ACCEPTED DIFFERENCE: r: ArraySeqMtEphS<T>)
                     requires
                         obeys_feq_clone::<T>(),
                         forall|i: int| 0 <= i < right_seq.seq@.len() ==> #[trigger] p2.requires((&right_seq.seq@[i],)),
@@ -1209,11 +1209,11 @@ pub mod ArraySeqMtEph {
                     Self::filter_dc(&right_seq, &p2, Ghost(spec_pred))
                 };
 
-                let (left, right) = join(fa, fb);
+                let (ACCEPTED DIFFERENCE: left, right) = join(fa, fb);
                 let filtered = Self::append(&left, &right);
                 // Veracity: NEEDED proof block
                 proof {
-                    // a.seq@ == left_view + right_view (established above, survives join).
+                    // a.seq@ == left_view + right_view (ACCEPTED DIFFERENCE: established above, survives join).
 
                     // spec_filter_len distributes over concat.
                     lemma_spec_filter_len_concat(left_view, right_view, spec_pred);
@@ -1221,12 +1221,12 @@ pub mod ArraySeqMtEph {
                     // Multiset filter distributes over concat.
                     lemma_seq_concat_to_multiset_filter(left_view, right_view, spec_pred);
 
-                    // filtered.seq@ =~= left.seq@ + right.seq@ (from append ensures).
+                    // filtered.seq@ =~= left.seq@ + right.seq@ (ACCEPTED DIFFERENCE: from append ensures).
                     // Veracity: NEEDED assert
                     assert(filtered.seq@ =~= left.seq@ + right.seq@) by {
                         // Veracity: NEEDED assert
                         assert forall|i: int| 0 <= i < filtered.seq@.len() implies
-                            #[trigger] filtered.seq@[i] == (left.seq@ + right.seq@)[i]
+                            #[trigger] filtered.seq@[i] == (ACCEPTED DIFFERENCE: left.seq@ + right.seq@)[i]
                         by {
                             filtered.lemma_spec_index(i);
                             if i < left.seq@.len() as int {
@@ -1240,10 +1240,10 @@ pub mod ArraySeqMtEph {
                     broadcast use vstd::seq_lib::group_to_multiset_ensures;
 
                     // Chain: filtered.seq@ to a.seq@ multiset filter.
-                    // Step 1: filtered.seq@.to_multiset() =~= (left.seq@ + right.seq@).to_multiset()
+                    // Step 1: filtered.seq@.to_multiset() =~= (ACCEPTED DIFFERENCE: left.seq@ + right.seq@).to_multiset()
                     // Step 2: = left.seq@.to_multiset().add(right.seq@.to_multiset())
                     // Step 3: = left_view.to_multiset().filter(spec_pred).add(right_view.to_multiset().filter(spec_pred))
-                    // Step 4: = (left_view + right_view).to_multiset().filter(spec_pred)
+                    // Step 4: = (ACCEPTED DIFFERENCE: left_view + right_view).to_multiset().filter(spec_pred)
                     // Step 5: = a.seq@.to_multiset().filter(spec_pred)
                     vstd::seq_lib::lemma_multiset_commutative(left.seq@, right.seq@);
 
@@ -1265,12 +1265,12 @@ pub mod ArraySeqMtEph {
             }
         }
 
-        /// Definition 18.17 (ninject). Parallel nondeterministic inject via RwLock.
+        /// Definition 18.17 (ACCEPTED DIFFERENCE: ninject). Parallel nondeterministic inject via RwLock.
         /// Two threads contend for a single lock protecting the result buffer.
         /// Whichever thread acquires last overwrites the other's conflicting writes.
         /// That scheduling race is the source of nondeterminism.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |updates|), Span O(|updates|); lock serializes the writers.
-        pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
+        pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (ACCEPTED DIFFERENCE: injected: ArraySeqMtEphS<T>)
             where T: StTInMtT
             requires
                 obeys_feq_clone::<T>(),
@@ -1343,13 +1343,13 @@ pub mod ArraySeqMtEph {
                 assert(pred.updates =~= updates@);
             }
 
-            let (_, _) = join(
-                move || -> ()
+            let (ACCEPTED DIFFERENCE: _, _) = join(
+                move || -> (ACCEPTED DIFFERENCE: )
                     ensures true
                 {
                     apply_ninject_updates(lock1, left, Ghost(pred));
                 },
-                move || -> ()
+                move || -> (ACCEPTED DIFFERENCE: )
                     ensures true
                 {
                     apply_ninject_updates(lock2, right, Ghost(pred));
@@ -1357,7 +1357,7 @@ pub mod ArraySeqMtEph {
             );
 
             // Extract injected. The lock invariant gives us spec_ninject.
-            let (result_vec, write_handle) = lock.acquire_write();
+            let (ACCEPTED DIFFERENCE: result_vec, write_handle) = lock.acquire_write();
             // Veracity: NEEDED proof block
             proof {
             }
@@ -1389,8 +1389,8 @@ pub mod ArraySeqMtEph {
     }
 
     impl<'a, T> View for ArraySeqMtEphIter<'a, T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+        type V = (ACCEPTED DIFFERENCE: int, Seq<T>);
+        open spec fn view(&self) -> (ACCEPTED DIFFERENCE: int, Seq<T>) { self.inner@ }
     }
 
     pub open spec fn iter_invariant<'a, T>(it: &ArraySeqMtEphIter<'a, T>) -> bool {
@@ -1401,16 +1401,16 @@ pub mod ArraySeqMtEph {
         type Item = &'a T;
 
         // Relies on vstd's assume_specification for slice::Iter::next.
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
+        fn next(&mut self) -> (ACCEPTED DIFFERENCE: next: Option<&'a T>)
+            ensures (ACCEPTED DIFFERENCE: {
+                let (ACCEPTED DIFFERENCE: old_index, old_seq) = old(self)@;
                 match next {
                     None => {
                         &&& self@ == old(self)@
                         &&& old_index >= old_seq.len()
                     },
                     Some(element) => {
-                        let (new_index, new_seq) = self@;
+                        let (ACCEPTED DIFFERENCE: new_index, new_seq) = self@;
                         &&& 0 <= old_index < old_seq.len()
                         &&& new_seq == old_seq
                         &&& new_index == old_index + 1
@@ -1481,7 +1481,7 @@ pub mod ArraySeqMtEph {
     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqMtEphS<T> {
         type Item = &'a T;
         type IntoIter = ArraySeqMtEphIter<'a, T>;
-        fn into_iter(self) -> (it: Self::IntoIter)
+        fn into_iter(self) -> (ACCEPTED DIFFERENCE: it: Self::IntoIter)
             ensures
                 it@.0 == 0,
                 it@.1 == self.seq@,
@@ -1494,7 +1494,7 @@ pub mod ArraySeqMtEph {
     impl<T> std::iter::IntoIterator for ArraySeqMtEphS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> (it: Self::IntoIter)
+        fn into_iter(self) -> (ACCEPTED DIFFERENCE: it: Self::IntoIter)
             ensures
                 it@.0 == 0,
                 it@.1 == self.seq@,
@@ -1517,7 +1517,7 @@ pub mod ArraySeqMtEph {
     //		Section 8b. traits
 
 
-    /// - Base trait for multi-threaded ephemeral array sequences (Chapter 18).
+    /// - Base trait for multi-threaded ephemeral array sequences (ACCEPTED DIFFERENCE: Chapter 18).
     /// - These methods are never redefined in later chapters.
     pub trait ArraySeqMtEphBaseTrait<T>: Sized {
         spec fn spec_arrayseqmteph_wf(&self) -> bool;
@@ -1529,7 +1529,7 @@ pub mod ArraySeqMtEph {
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length).
-        fn new(length: usize, init_value: T) -> (new_seq: Self)
+        fn new(length: usize, init_value: T) -> (ACCEPTED DIFFERENCE: new_seq: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
@@ -1541,30 +1541,30 @@ pub mod ArraySeqMtEph {
 
         /// - Set the element at `index` to `item` in place.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
-        fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
+        fn set(&mut self, index: usize, item: T) -> (ACCEPTED DIFFERENCE: success: Result<(), &'static str>)
             requires index < old(self).spec_len()
             ensures
                 success.is_ok() ==> self.spec_len() == old(self).spec_len(),
                 success.is_ok() ==> self.spec_index(index as int) == item,
                 success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);
 
-        /// - Definition 18.1 (length). Return the number of elements.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Definition 18.1 (ACCEPTED DIFFERENCE: length). Return the number of elements.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn length(&self) -> (len: usize)
+        fn length(&self) -> (ACCEPTED DIFFERENCE: len: usize)
             ensures len as int == self.spec_len();
 
-        /// - Algorithm 19.11 (Function nth). Return a reference to the element at `index`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
+        /// - Algorithm 19.11 (ACCEPTED DIFFERENCE: Function nth). Return a reference to the element at `index`.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch22 CS 22.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn nth(&self, index: usize) -> (nth_elem: &T)
+        fn nth(&self, index: usize) -> (ACCEPTED DIFFERENCE: nth_elem: &T)
             requires index < self.spec_len()
             ensures *nth_elem == self.spec_index(index as int);
 
-        /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
+        /// - Definition 18.12 (ACCEPTED DIFFERENCE: subseq copy). Extract contiguous subsequence with allocation.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length).
-        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
+        fn subseq_copy(&self, start: usize, length: usize) -> (ACCEPTED DIFFERENCE: subseq: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
@@ -1575,10 +1575,10 @@ pub mod ArraySeqMtEph {
                 subseq.spec_len() == length as int,
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
-        /// - Definition 18.12 (subseq). Extract a contiguous subsequence.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Definition 18.12 (ACCEPTED DIFFERENCE: subseq). Extract a contiguous subsequence.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j), Span O(j) — ACCEPTED DIFFERENCE: Vec-backed; sequential clone loop, not O(1) slice
-        fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)
+        fn subseq(a: &Self, start: usize, length: usize) -> (ACCEPTED DIFFERENCE: subseq: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
@@ -1591,7 +1591,7 @@ pub mod ArraySeqMtEph {
 
         /// - Create sequence from Vec.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1).
-        fn from_vec(elts: Vec<T>) -> (seq: Self)
+        fn from_vec(elts: Vec<T>) -> (ACCEPTED DIFFERENCE: seq: Self)
             ensures
                 seq.spec_arrayseqmteph_wf(),
                 seq.spec_len() == elts@.len(),
@@ -1601,25 +1601,25 @@ pub mod ArraySeqMtEph {
     /// Redefinable trait - may be overridden with better algorithms in later chapters.
     pub trait ArraySeqMtEphRedefinableTrait<T>: ArraySeqMtEphBaseTrait<T> {
 
-        /// - Definition 18.1 (empty). Construct the empty sequence.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Definition 18.1 (ACCEPTED DIFFERENCE: empty). Construct the empty sequence.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn empty() -> (empty_seq: Self)
+        fn empty() -> (ACCEPTED DIFFERENCE: empty_seq: Self)
             ensures empty_seq.spec_arrayseqmteph_wf(), empty_seq.spec_len() == 0;
 
-        /// - Definition 18.1 (singleton). Construct a singleton sequence containing `item`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Definition 18.1 (ACCEPTED DIFFERENCE: singleton). Construct a singleton sequence containing `item`.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn singleton(item: T) -> (singleton: Self)
+        fn singleton(item: T) -> (ACCEPTED DIFFERENCE: singleton: Self)
             ensures
                 singleton.spec_arrayseqmteph_wf(),
                 singleton.spec_len() == 1,
                 singleton.spec_index(0) == item;
 
-        /// - Definition 18.13 (append). Concatenate two sequences.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(1)
+        /// - Definition 18.13 (ACCEPTED DIFFERENCE: append). Concatenate two sequences.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(|a| + |b|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: Vec-backed; span O(|a|+|b|) not O(1), sequential loops
-        fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (appended: Self)
+        fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (ACCEPTED DIFFERENCE: appended: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
@@ -1630,12 +1630,12 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],
                 forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
 
-        /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x)))
+        /// - Definition 18.14 (ACCEPTED DIFFERENCE: filter). Keep elements satisfying `pred`.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — ACCEPTED DIFFERENCE: Vec-backed; parallel D&C with multiset distribution lemma
         /// - The multiset postcondition captures predicate satisfaction, provenance,
         ///   and completeness in a single statement.
-        fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
+        fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (ACCEPTED DIFFERENCE: filtered: Self)
             where T: Clone + Eq + Send + Sync + 'static
             requires
                 obeys_feq_clone::<T>(),
@@ -1652,11 +1652,11 @@ pub mod ArraySeqMtEph {
                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
-        /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a|), Span O(1)
-        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
+        /// - Definition 18.16 (ACCEPTED DIFFERENCE: update). Return a copy with the index replaced by the new value.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(|a|), Span O(1)
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch22 CS 22.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: Vec-backed; span O(n) not O(1), sequential clone loop
-        fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (updated: Self)
+        fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (ACCEPTED DIFFERENCE: updated: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
@@ -1667,12 +1667,12 @@ pub mod ArraySeqMtEph {
                 updated.spec_index(index as int) == item,
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
 
-        /// - Definition 18.16 (inject). Update multiple positions at once; the first update in
+        /// - Definition 18.16 (ACCEPTED DIFFERENCE: inject). Update multiple positions at once; the first update in
         ///   the ordering of `updates` takes effect when positions collide.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(lg(degree(b)))
-        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(|b|), Span O(lg(degree(b)))
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(|a| + |b|), Span O(lg(degree(b)))
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch22 CS 22.2): Work O(|b|), Span O(lg(degree(b)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — ACCEPTED DIFFERENCE: Vec-backed; span O(n+m) not O(lg degree), sequential loops
-        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
+        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (ACCEPTED DIFFERENCE: injected: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
@@ -1684,11 +1684,11 @@ pub mod ArraySeqMtEph {
                         Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
                         updates@);
 
-        /// - Definition 18.17 (ninject). Nondeterministic inject: update multiple positions at
+        /// - Definition 18.17 (ACCEPTED DIFFERENCE: ninject). Nondeterministic inject: update multiple positions at
         ///   once; when positions collide, any one of the updates may take effect.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(1)
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(|a| + |b|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — ACCEPTED DIFFERENCE: Vec-backed; delegates to inject, span O(n+m) not O(1)
-        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
+        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (ACCEPTED DIFFERENCE: injected: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
@@ -1699,32 +1699,32 @@ pub mod ArraySeqMtEph {
                     updates@,
                     Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)));
 
-        /// - Definition 18.5 (isEmpty). true iff the sequence has length zero.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Definition 18.5 (ACCEPTED DIFFERENCE: isEmpty). true iff the sequence has length zero.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn is_empty(&self) -> (empty: bool)
+        fn is_empty(&self) -> (ACCEPTED DIFFERENCE: empty: bool)
             ensures empty <==> self.spec_len() == 0;
 
-        /// - Definition 18.5 (isSingleton). true iff the sequence has length one.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Definition 18.5 (ACCEPTED DIFFERENCE: isSingleton). true iff the sequence has length one.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn is_singleton(&self) -> (single: bool)
+        fn is_singleton(&self) -> (ACCEPTED DIFFERENCE: single: bool)
             ensures single <==> self.spec_len() == 1;
 
-        /// - Definition 18.7 (iterate). Fold with accumulator `seed`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.3): Work O(1 + Sigma W(f)), Span O(1 + Sigma S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) (iterate is sequential)
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (acc: A)
+        /// - Definition 18.7 (ACCEPTED DIFFERENCE: iterate). Fold with accumulator `seed`.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.3): Work O(1 + Sigma W(f)), Span O(1 + Sigma S(f))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) (iterate is sequential)
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (ACCEPTED DIFFERENCE: acc: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
                 forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
             ensures
                 acc == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);
 
-        /// - Definition 18.18 (reduce). Combine elements using associative `f` and identity `id`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.4): Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f))
+        /// - Definition 18.18 (ACCEPTED DIFFERENCE: reduce). Combine elements using associative `f` and identity `id`.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.4): Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) (parallel divide-and-conquer via join)
-        fn reduce<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
+        fn reduce<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (ACCEPTED DIFFERENCE: reduced: T)
             where T: Clone + Eq + Send + Sync + 'static
             requires
                 obeys_feq_clone::<T>(),
@@ -1735,10 +1735,10 @@ pub mod ArraySeqMtEph {
                 reduced == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
 
-        /// - Definition 18.19 (scan). Prefix-reduce returning inclusive prefix sums and total.
-        /// - Alg Analysis: APAS (Ch20 CS 20.5): Work O(|a|), Span O(lg |a|)
+        /// - Definition 18.19 (ACCEPTED DIFFERENCE: scan). Prefix-reduce returning inclusive prefix sums and total.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.5): Work O(|a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: Vec-backed; span O(n) not O(lg n), sequential loop
-        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtEphS<T>, T))
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (ACCEPTED DIFFERENCE: scanned: (ArraySeqMtEphS<T>, T))
             where T: Clone + Eq
             requires
                 spec_monoid(spec_f, id),
@@ -1752,10 +1752,10 @@ pub mod ArraySeqMtEph {
                 scanned.1 == spec_iterate(
                     Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);
 
-        /// - Algorithm 18.4 (map). Transform each element via `f`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
+        /// - Algorithm 18.4 (ACCEPTED DIFFERENCE: map). Transform each element via `f`.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n + max S(f)) — ACCEPTED DIFFERENCE: Vec-backed; parallel D&C via join; O(lg n) from Vec copy overhead
-        fn map<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
+        fn map<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (ACCEPTED DIFFERENCE: mapped: ArraySeqMtEphS<U>)
             where T: Clone + Eq + Send + Sync + 'static
             requires
                 obeys_feq_clone::<T>(),
@@ -1765,10 +1765,10 @@ pub mod ArraySeqMtEph {
                 mapped.seq@.len() == a.seq@.len(),
                 forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);
 
-        /// - Algorithm 18.3 (tabulate). Build a sequence by applying `f` to each index.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(i))), Span O(1 + max S(f(i)))
+        /// - Algorithm 18.3 (ACCEPTED DIFFERENCE: tabulate). Build a sequence by applying `f` to each index.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1 + Sigma W(f(i))), Span O(1 + max S(f(i)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: Vec-backed; span O(n) not O(1), sequential loop
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtEphS<T>)
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (ACCEPTED DIFFERENCE: tab_seq: ArraySeqMtEphS<T>)
             requires
                 length <= usize::MAX,
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
@@ -1776,10 +1776,10 @@ pub mod ArraySeqMtEph {
                 tab_seq.seq@.len() == length,
                 forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);
 
-        /// - Definition 18.15 (flatten). Concatenate a sequence of sequences.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + sum |a[i]|), Span O(lg |a|)
+        /// - Definition 18.15 (ACCEPTED DIFFERENCE: flatten). Concatenate a sequence of sequences.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(|a| + sum |a[i]|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(Σ|a_i|) — ACCEPTED DIFFERENCE: Vec-backed; span O(Σ|a_i|) not O(lg|a|), sequential nested loops
-        fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
+        fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (ACCEPTED DIFFERENCE: flattened: ArraySeqMtEphS<T>)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
@@ -1807,7 +1807,7 @@ pub mod ArraySeqMtEph {
             },
         ensures true,
     {
-        let (mut buf, write_handle) = lock.acquire_write();
+        let (ACCEPTED DIFFERENCE: mut buf, write_handle) = lock.acquire_write();
         let len = buf.len();
         let mut i: usize = 0;
         while i < updates.len()
@@ -1877,7 +1877,7 @@ pub mod ArraySeqMtEph {
 
 
     impl<T: Clone> Clone for ArraySeqMtEphS<T> {
-        fn clone(&self) -> (res: Self)
+        fn clone(&self) -> (ACCEPTED DIFFERENCE: res: Self)
             ensures
                 res.seq@.len() == self.seq@.len(),
                 forall|i: int| #![trigger res.seq@[i]]
@@ -1890,12 +1890,12 @@ pub mod ArraySeqMtEph {
     impl<T: Eq + View> Eq for ArraySeqMtEphS<T> {}
 
     impl<T: PartialEq + View> PartialEq for ArraySeqMtEphS<T> {
-        fn eq(&self, other: &Self) -> (equal: bool)
-            ensures equal == (self@ == other@)
+        fn eq(&self, other: &Self) -> (ACCEPTED DIFFERENCE: equal: bool)
+            ensures equal == (ACCEPTED DIFFERENCE: self@ == other@)
         {
             let equal = self.seq == other.seq;
             // Veracity: NEEDED proof block
-            proof { assume(equal == (self@ == other@)); }
+            proof { assume(equal == (ACCEPTED DIFFERENCE: self@ == other@)); }
             equal
         }
     }
@@ -1908,9 +1908,9 @@ pub mod ArraySeqMtEph {
     /// Literal constructor macro for ArraySeqMtEphS.
     #[macro_export]
     macro_rules! ArraySeqMtEphSLit {
-        () => { $crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(Vec::new()) };
-        ($x:expr; $n:expr) => { $crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(vec![$x; $n]) };
-        ($($x:expr),* $(,)?) => { $crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(vec![$($x),*]) };
+        (ACCEPTED DIFFERENCE: ) => { $crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(Vec::new()) };
+        (ACCEPTED DIFFERENCE: $x:expr; $n:expr) => { $crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(vec![$x; $n]) };
+        (ACCEPTED DIFFERENCE: $($x:expr),* $(,)?) => { $crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(vec![$($x),*]) };
     }
 
     //		Section 14. derive impls outside verus!
@@ -1952,7 +1952,7 @@ pub mod ArraySeqMtEph {
     impl<T: Display> Display for ArraySeqMtEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(f, "[")?;
-            for (i, item) in self.seq.iter().enumerate() {
+            for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
                 if i > 0 { write!(f, ", ")?; }
                 write!(f, "{item}")?;
             }

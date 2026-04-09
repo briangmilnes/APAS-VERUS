@@ -242,7 +242,7 @@ pub mod EdgeSetGraphMtPer {
 
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(|E| log |V|), Span Theta(|E| log |V|) — sequential iterate+insert.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work Theta(|E| log |V|), Span Theta(|E| log |V|) — sequential iterate+insert.
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
         {
             proof { lemma_eq_spec_iff_view_eq::<V>(); }
@@ -324,7 +324,7 @@ pub mod EdgeSetGraphMtPer {
 
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(|E| log |E|), Span O(log |E| * log |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E| log |E|), Span O(log |E| * log |V|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(|E| log |E|), Span Theta(|E| log |E|) — sequential iterate+insert.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work Theta(|E| log |E|), Span Theta(|E| log |E|) — sequential iterate+insert.
         fn delete_vertex(&self, v: &V) -> (updated: Self)
         {
             proof { lemma_eq_spec_iff_view_eq::<V>(); }

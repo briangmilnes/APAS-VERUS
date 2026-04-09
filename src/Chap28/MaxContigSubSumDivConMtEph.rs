@@ -81,7 +81,7 @@ pub mod MaxContigSubSumDivConMtEph {
 
     /// Find max suffix sum (MCSSE problem, Algorithm 28.12).
     /// - Alg Analysis: APAS (Ch28 Alg 28.18): Work O(n), Span O(lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — sequential loop
     fn max_suffix_sum(a: &ArraySeqMtEphS<i32>) -> (mss: i32)
         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
         ensures is_max_suffix_sum(a.seq@, mss as int),
@@ -136,7 +136,7 @@ pub mod MaxContigSubSumDivConMtEph {
 
     /// Find max prefix sum (MCSSS problem, Algorithm 28.11).
     /// - Alg Analysis: APAS (Ch28 Alg 28.18): Work O(n), Span O(lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — sequential loop
     fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> (mps: i32)
         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
         ensures is_max_prefix_sum(a.seq@, mps as int),

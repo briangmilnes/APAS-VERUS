@@ -174,7 +174,7 @@ pub mod Exercise21_8 {
     /// - isPrime n = |{ x in 1..=floor(sqrt(n)) : n mod x == 0 }| == 1
     /// - Uses tabulate + filter per the textbook.
     /// - Alg Analysis: APAS (Ch21 Alg 21.4): Work O(√n), Span O(lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(√n), Span O(√n) — sequential StEph tabulate + filter.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(√n), Span O(√n) — sequential StEph tabulate + filter.
     // veracity: no_requires
     pub fn is_prime(n: usize) -> (prime: bool)
         ensures prime == spec_is_prime(n as int)

@@ -152,7 +152,7 @@ pub mod LabDirGraphMtEph {
             ensures a@ =~= self@.A;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential map
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential map
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>)
             requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>(), valid_key_type_Edge::<V>()
             ensures arcs@.finite(), arcs@ == self.spec_arcs();
@@ -173,7 +173,7 @@ pub mod LabDirGraphMtEph {
                 self@.A == old(self)@.A.insert((from@, to@, label@));
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential search
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential search
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>)
             requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>()
             ensures
@@ -181,7 +181,7 @@ pub mod LabDirGraphMtEph {
                 label.is_some() ==> self@.A.contains((from@, to@, label.unwrap()@));
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential search
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential search
         fn has_arc(&self, from: &V, to: &V) -> (b: bool)
             requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>()
             ensures b == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l)));
@@ -300,7 +300,7 @@ pub mod LabDirGraphMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn labeled_arcs(&self) -> (a: &SetStEph<LabEdge<V, L>>) { &self.labeled_arcs }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>) {
             let mut arcs: SetStEph<Edge<V>> = SetStEph::empty();
             let mut it = self.labeled_arcs.iter();
@@ -361,7 +361,7 @@ pub mod LabDirGraphMtEph {
             let _ = self.labeled_arcs.insert(LabEdge(from, to, label));
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>) {
             let mut it = self.labeled_arcs.iter();
             let ghost la_seq = it@.1;
@@ -400,7 +400,7 @@ pub mod LabDirGraphMtEph {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
         fn has_arc(&self, from: &V, to: &V) -> (b: bool) {
             let mut it = self.labeled_arcs.iter();
             let ghost la_seq = it@.1;

@@ -178,7 +178,7 @@ pub mod DijkstraStEphF64 {
     /// Computes single-source shortest paths for non-negative edge weights.
     ///
     /// - Alg Analysis: APAS (Ch57 Alg 57.2): Work O(m lg n), Span O(m lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n); sequential PQ-based Dijkstra
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m lg n), Span O(m lg n); sequential PQ-based Dijkstra
     #[verifier::exec_allows_no_decreases_clause]
     pub fn dijkstra(graph: &WeightedDirGraphStEphF64<usize>, source: usize) -> (sssp: SSSPResultStEphF64)
         requires

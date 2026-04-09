@@ -53,7 +53,7 @@ pub mod ReduceContractMtEph {
         /// Reduce a sequence using parallel contraction: contract→solve→expand.
         /// Subsumes Example 27.1 (Maximal Element): call with max and 0 identity.
         /// - Alg Analysis: APAS (Ch27 Alg 27.2): Work O(n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — contraction via one-level join, each half sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — contraction via one-level join, each half sequential.
         fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: Arc<F>,

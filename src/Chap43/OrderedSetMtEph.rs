@@ -160,13 +160,13 @@ pub mod OrderedSetMtEph {
             ensures self@.finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.intersection (sequential)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.intersection (sequential)
         fn intersection(&mut self, other: &Self)
             requires old(self).spec_orderedsetmteph_wf(), other.spec_orderedsetmteph_wf(),
             ensures self@ == old(self)@.intersect(other@), self@.finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.union (sequential)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.union (sequential)
         fn union(&mut self, other: &Self)
             requires
                 old(self).spec_orderedsetmteph_wf(),
@@ -175,7 +175,7 @@ pub mod OrderedSetMtEph {
             ensures self@ == old(self)@.union(other@), self@.finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.difference (sequential)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.difference (sequential)
         fn difference(&mut self, other: &Self)
             requires old(self).spec_orderedsetmteph_wf(), other.spec_orderedsetmteph_wf(),
             ensures self@ == old(self)@.difference(other@), self@.finite();

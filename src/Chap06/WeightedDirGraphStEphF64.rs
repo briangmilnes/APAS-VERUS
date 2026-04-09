@@ -61,7 +61,7 @@ verus!
         View<V = LabGraphView<<V as View>::V, f64>> + Sized {
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
         fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, WrappedF64>>) -> (g: WeightedDirGraphStEphF64<V>)
             requires
                 valid_key_type_WeightedEdge::<V, WrappedF64>(),
@@ -80,7 +80,7 @@ verus!
                 self@.A == old(self)@.A.insert((from@, to@, weight@));
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential search
         fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<WrappedF64>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, WrappedF64>()
             ensures
@@ -88,14 +88,14 @@ verus!
                 weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()@));
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential iteration
         fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, WrappedF64>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, WrappedF64>()
             ensures
                 forall |t: (V::V, V::V, f64)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential filter
         fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, WrappedF64>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, WrappedF64>()
             ensures
@@ -103,7 +103,7 @@ verus!
                     (exists |w: f64| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential filter
         fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, WrappedF64>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, WrappedF64>()
             ensures
@@ -117,7 +117,7 @@ verus!
     impl<V: StT + Hash> WeightedDirGraphStEphF64Trait<V> for WeightedDirGraphStEphF64<V> {
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V| + |E|), Span O(|V| + |E|) — sequential
         fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, WrappedF64>>) -> (g: WeightedDirGraphStEphF64<V>) {
             let mut edge_set: SetStEph<LabEdge<V, WrappedF64>> = SetStEph::empty();
             let mut it = edges.iter();
@@ -164,7 +164,7 @@ verus!
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential
         fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<WrappedF64>) {
             match self.get_arc_label(from, to) {
                 Some(w) => Some(*w),
@@ -173,7 +173,7 @@ verus!
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential
         fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, WrappedF64>>) {
             let mut edges: SetStEph<WeightedEdge<V, WrappedF64>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
@@ -207,7 +207,7 @@ verus!
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential
         fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, WrappedF64>>) {
             let mut neighbors: SetStEph<Pair<V, WrappedF64>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
@@ -260,7 +260,7 @@ assert forall |p: (V::V, f64)| (exists |w: f64| #![trigger wa_view.contains((v_v
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential
         fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, WrappedF64>>) {
             let mut neighbors: SetStEph<Pair<V, WrappedF64>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();

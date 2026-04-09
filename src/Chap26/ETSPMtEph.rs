@@ -428,7 +428,7 @@ pub mod ETSPMtEph {
 
     /// Split points at midpoint. Verified: every output point traces to the input.
     /// - Alg Analysis: APAS (Ch26 Alg 26.7): Work O(n), Span O(n) — linear partition (simplified from sort-based split).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential copy into halves.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — sequential copy into halves.
     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
         requires points@.len() >= 4,
         ensures

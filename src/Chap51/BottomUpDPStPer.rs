@@ -92,7 +92,7 @@ pub mod BottomUpDPStPer {
                     self.spec_t_len()
                 );
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — allocates (n+1)*(m+1) table; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — allocates (n+1)*(m+1) table; St sequential.
         fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>)
             requires
                 self.spec_bottomupdpstper_wf(),
@@ -190,7 +190,7 @@ pub mod BottomUpDPStPer {
         }
 
         /// Compute MED using bottom-up row-by-row fill (Algorithm 51.1).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — bottom-up DP table fill; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — bottom-up DP table fill; St sequential.
         fn med_bottom_up(&self) -> (distance: usize) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -324,7 +324,7 @@ pub mod BottomUpDPStPer {
             table[s_len][t_len]
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — allocates (n+1)*(m+1) table; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — allocates (n+1)*(m+1) table; St sequential.
         fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();

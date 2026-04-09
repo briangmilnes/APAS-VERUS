@@ -203,7 +203,7 @@ broadcast use {
                     Self::spec_sorted(pq.spec_seq());
 
             /// - Alg Analysis: APAS (Ch45 cost table): Work O(n lg n), Span O(n lg n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n): sequential inserts
+            /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n lg n), Span O(n lg n): sequential inserts
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures

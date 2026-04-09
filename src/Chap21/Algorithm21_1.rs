@@ -91,7 +91,7 @@ pub mod Algorithm21_1 {
 
     /// Flatten a sequence of sequences into a single sequence.
     /// - Alg Analysis: APAS (Ch21 Alg 21.1): Work O(m), Span O(lg k) where m = total elements, k = number of inner sequences.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — sequential two-pass implementation.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m), Span O(m) — sequential two-pass implementation.
     fn flatten_inner<T: View + Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (flattened: ArraySeqStPerS<T>)
         requires
             sum_inner_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,
@@ -153,7 +153,7 @@ pub mod Algorithm21_1 {
     /// - Functional form: points2D n = flatten (tabulate (\x. tabulate (\y. (x, y+1)) (n-1)) n)
     /// - Generates all 2D points (x, y) where 0 ≤ x < n and 1 ≤ y < n.
     /// - Alg Analysis: APAS (Ch21 Alg 21.1): Work O(n²), Span O(lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — sequential StPer tabulate + flatten.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n²), Span O(n²) — sequential StPer tabulate + flatten.
     pub fn points2d_tab_flat(n: usize) -> (points: ArraySeqStPerS<Pair<usize, usize>>)
         requires
             n <= usize::MAX,

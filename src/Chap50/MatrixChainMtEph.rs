@@ -170,7 +170,7 @@ broadcast use {
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
             ensures mc@.dimensions.len() == dim_pairs@.len(), mc.spec_matrixchainmteph_wf();
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — memoized DP over n matrices, sequential loop
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n^3), Span O(n^3) — memoized DP over n matrices, sequential loop
         fn optimal_cost(&mut self) -> (cost: usize)
             requires
                 old(self).spec_matrixchainmteph_wf(),
@@ -240,7 +240,7 @@ broadcast use {
                 cost as nat == spec_chain_cost(self@.dimensions, i as int, j as int, i as int),
             decreases j - i;
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential linear scan for minimum
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — sequential linear scan for minimum
         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize)
             requires costs@.len() > 0,
             ensures
@@ -340,7 +340,7 @@ broadcast use {
             left_rows * split_cols * right_cols
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential linear scan for minimum
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — sequential linear scan for minimum
         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize) {
             let mut best: usize = costs[0];
             let mut idx: usize = 1;

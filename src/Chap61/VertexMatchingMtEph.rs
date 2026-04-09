@@ -72,7 +72,7 @@ pub mod VertexMatchingMtEph {
     ///
     /// - Alg Analysis: APAS (Ch61 Alg 61.4): Work O(|E|), Span O(lg |V|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |V|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|E|^2), Span Θ(|E|) — coin flip phase is sequential (RNG),
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work Θ(|E|^2), Span Θ(|E|) — coin flip phase is sequential (RNG),
     ///   edge selection scans all edges per candidate via should_select_edge
     ///
     /// Phase 1: Flip coins for all edges — sequential (RNG is inherently sequential)
@@ -110,7 +110,7 @@ pub mod VertexMatchingMtEph {
     ///
     /// - Alg Analysis: APAS (Ch61 Alg 61.4): Work O(|E|), Span O(1) — each coin is independent
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(1)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|E|), Span Θ(|E|) — RNG is sequential, no actual parallelism
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work Θ(|E|), Span Θ(|E|) — RNG is sequential, no actual parallelism
     fn flip_coins_parallel<V: StT + MtT + Hash + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
         seed: u64,

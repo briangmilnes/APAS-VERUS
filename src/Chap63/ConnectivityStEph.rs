@@ -62,25 +62,25 @@ pub mod ConnectivityStEph {
 
         /// Count connected components using star contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star contraction; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star contraction; St sequential.
         fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> usize
             requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find connected components using star contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star contraction; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star contraction; St sequential.
         fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
             requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Count components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — star_contract with base/expand closures; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O((n+m) lg n), Span O((n+m) lg n) — star_contract with base/expand closures; St sequential.
         fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> usize
             requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — star_contract with base/expand closures; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O((n+m) lg n), Span O((n+m) lg n) — star_contract with base/expand closures; St sequential.
         fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
             requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();
     }

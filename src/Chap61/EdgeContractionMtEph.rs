@@ -83,7 +83,7 @@ pub mod EdgeContractionMtEph {
     ///
     /// - Alg Analysis: APAS (Ch61 Alg 61.6): Work O(|V| + |E|), Span O(lg |V|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(lg |V|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|V| + |E|), Span Θ(|V| + |E|) — Phases 1-2 are sequential loops;
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — Phases 1-2 are sequential loops;
     ///   only Phase 3 (build_edges_parallel) is parallel
     ///
     /// Phase 1: Build vertex-to-block mapping — sequential

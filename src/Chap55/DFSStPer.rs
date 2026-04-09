@@ -209,7 +209,7 @@ broadcast use vstd::seq::group_seq_axioms;
     /// Recursive DFS helper using a bool vector for termination tracking and
     /// an AVLTreeSetStPer for persistent result accumulation.
     /// Ghost parameter `gray` tracks vertices on the recursion stack.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — visits each vertex and edge once; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — visits each vertex and edge once; St sequential.
     fn dfs_recursive(
         graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         visited_bool: &mut Vec<bool>,
@@ -412,7 +412,7 @@ broadcast use vstd::seq::group_seq_axioms;
     impl DFSStPerTrait for DFSStPer {
         /// Performs DFS from source vertex s on adjacency list graph G.
         /// Returns the set of all vertices reachable from s.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — initializes visited + delegates to dfs_recursive; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — initializes visited + delegates to dfs_recursive; St sequential.
         fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>, source: usize) -> (reachable: AVLTreeSetStPer<usize>)
         {
             let n = graph.length();

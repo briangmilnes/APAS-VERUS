@@ -121,7 +121,7 @@ pub mod BoruvkaStEph {
 
         /// Find vertex bridges for Borůvka's algorithm.
         /// APAS: Work O(|E|), Span O(|E|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — single pass over edges; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|E|), Span O(|E|) — single pass over edges; St sequential.
         fn vertex_bridges<V: HashOrd + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
         ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
@@ -133,7 +133,7 @@ pub mod BoruvkaStEph {
 
         /// Bridge-based star partition.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — single pass over vertices with coin flips; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|), Span O(|V|) — single pass over vertices with coin flips; St sequential.
         fn bridge_star_partition<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
@@ -192,7 +192,7 @@ pub mod BoruvkaStEph {
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — iterates over edges filtering by labels; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m), Span O(m) — iterates over edges filtering by labels; St sequential.
         fn mst_weight<V: StT + Hash + Ord + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: &SetStEph<usize>,
@@ -212,7 +212,7 @@ pub mod BoruvkaStEph {
         /// Returns a table mapping each vertex to (neighbor, weight, label).
         ///
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m), Span O(log m)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m) — DIFFERS: St sequential, APAS parallel
         /// - Sequential: Work O(m), Span O(m) — sequential iteration over edges.
         fn vertex_bridges<V: HashOrd + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
@@ -278,7 +278,7 @@ pub mod BoruvkaStEph {
         /// Each vertex flips a coin (Heads/Tails). Edges from Tail to Head are contracted.
         ///
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n) — DIFFERS: St sequential, APAS parallel
         /// - Sequential: Work O(n), Span O(n) — sequential iteration over vertices.
         fn bridge_star_partition<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
@@ -380,7 +380,7 @@ pub mod BoruvkaStEph {
         /// Returns the set of edge labels in the MST.
         ///
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m log n), Span O(log^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log n) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m log n) — DIFFERS: St sequential, APAS parallel
         /// - Sequential: Work O(m log n), Span O(m log n) — sequential; O(log n) rounds each O(m).
         #[verifier::exec_allows_no_decreases_clause]
         fn boruvka_mst<V: HashOrd + Copy>(
@@ -497,7 +497,7 @@ pub mod BoruvkaStEph {
         /// Deterministic coin flips replace StdRng for Verus verification.
         ///
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m log n), Span O(log^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log n) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m log n) — DIFFERS: St sequential, APAS parallel
         /// - Sequential: Work O(m log n), Span O(m log n) — delegates to sequential boruvka_mst.
         fn boruvka_mst_with_seed<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,

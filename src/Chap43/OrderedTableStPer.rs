@@ -353,7 +353,7 @@ broadcast use {
                 table@.dom() =~= left@.dom().union(right@.dom()),
                 table.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n + m), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + m) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(log n + m) — DIFFERS: St sequential, APAS parallel
         fn get_key_range(&self, k1: &K, k2: &K) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),

@@ -185,7 +185,7 @@ verus!
             ensures kleene.spec_kleenestper_wf(), kleene@ == alphabet@;
 
         /// Membership in Σ*: is every element of s in the alphabet?
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|) — linear scan, sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|s|), Span O(|s|) — linear scan, sequential.
         fn mem_star(&self, s: &[T]) -> (member: bool)
             requires self.spec_kleenestper_wf()
             ensures member == in_star(self@, viewed(s@));

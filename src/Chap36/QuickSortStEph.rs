@@ -410,7 +410,7 @@ pub mod QuickSortStEph {
             out
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(n log n) expected — first-element pivot quicksort; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n log n) expected, Span O(n log n) expected — first-element pivot quicksort; St sequential.
         fn quick_sort_first(a: &mut ArraySeqStEphS<T>)
             decreases old(a).spec_len(),
         {
@@ -513,7 +513,7 @@ pub mod QuickSortStEph {
             a.seq = sorted;
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(n log n) expected — median-of-three pivot quicksort; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n log n) expected, Span O(n log n) expected — median-of-three pivot quicksort; St sequential.
         fn quick_sort_median3(a: &mut ArraySeqStEphS<T>)
             decreases old(a).spec_len(),
         {
@@ -613,7 +613,7 @@ pub mod QuickSortStEph {
             a.seq = sorted;
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(n log n) expected — random pivot quicksort; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n log n) expected, Span O(n log n) expected — random pivot quicksort; St sequential.
         fn quick_sort_random(a: &mut ArraySeqStEphS<T>)
             decreases old(a).spec_len(),
         {

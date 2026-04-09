@@ -67,7 +67,7 @@ pub mod ScanContractStEph {
 
         /// Expand phase: interleave contracted scan results into full scan output.
         /// - Alg Analysis: APAS (Ch27 Alg 27.3): Work O(n), Span O(1) — parallel tabulate (expansion step).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop, no parallelism.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — sequential loop, no parallelism.
         fn expand_scan<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             b: &ArraySeqStEphS<T>,
@@ -106,7 +106,7 @@ pub mod ScanContractStEph {
 
 
     impl<T: StT + Clone> ScanContractStEphTrait<T> for ArraySeqStEphS<T> {
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive contract/expand; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — recursive contract/expand; St sequential.
         fn scan_contract<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             f: &F,
@@ -210,7 +210,7 @@ pub mod ScanContractStEph {
             scanned
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single loop over n/2 pairs; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — single loop over n/2 pairs; St sequential.
         fn expand_scan<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             b: &ArraySeqStEphS<T>,

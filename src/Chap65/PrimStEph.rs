@@ -65,7 +65,7 @@ pub mod PrimStEph {
 
         /// Prim's MST algorithm.
         /// APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log n), Span O(m log n) — priority queue with n extract-min + m decrease-key; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m log n), Span O(m log n) — priority queue with n extract-min + m decrease-key; St sequential.
         fn prim_mst<V: HashOrd + TotalOrder>(
             graph: &LabUnDirGraphStEph<V, u64>,
             start: V,
@@ -75,7 +75,7 @@ pub mod PrimStEph {
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — iterates over all MST edges; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m), Span O(m) — iterates over all MST edges; St sequential.
         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
             requires mst.spec_setsteph_wf(),
             ensures mst@.len() == 0 ==> total == 0;

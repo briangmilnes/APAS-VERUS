@@ -196,7 +196,7 @@ broadcast use {
             ensures domain@ =~= self@.dom(), self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n^2), Span Θ(n^2) -- delegates to OrderedTableStEph.tabulate (sequential insert loop)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work Θ(n^2), Span Θ(n^2) -- delegates to OrderedTableStEph.tabulate (sequential insert loop)
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
             requires
                 keys.spec_arraysetsteph_wf(),

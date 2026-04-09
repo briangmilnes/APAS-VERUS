@@ -149,7 +149,7 @@ verus!
         }
 
         /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|v|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — sequential loop, not parallel. Span == Work.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|v|), Span O(|v|) — sequential loop, not parallel. Span == Work.
         fn from_vec(v: Vec<T>) -> (s: Self)
             requires Self::spec_valid_key_type()
             ensures s.spec_setmteph_wf(), s@ == v@.map(|i: int, x: T| x@).to_set();
@@ -206,7 +206,7 @@ verus!
                 inserted == !old(self)@.contains(x@);
 
         /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — sequential loop, not parallel. Span == Work.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|a| + |b|), Span O(|a| + |b|) — sequential loop, not parallel. Span == Work.
         fn union(&self, s2: &Self) -> (union: Self)
             requires
                self.spec_setmteph_wf(),
@@ -215,7 +215,7 @@ verus!
 
         /// - Disjoint union: union of two sets known to be disjoint.
         /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — sequential loop, not parallel. Span == Work.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|a| + |b|), Span O(|a| + |b|) — sequential loop, not parallel. Span == Work.
         fn disjoint_union(&self, s2: &Self) -> (union: Self)
             requires
                self.spec_setmteph_wf(),
@@ -234,7 +234,7 @@ verus!
                 s2.spec_setmteph_wf(),
             ensures intersection.spec_setmteph_wf(), intersection@ == self@.intersect(s2@);
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s2|), Span O(|s2|) — sequential loop, creates one pair per element.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|s2|), Span O(|s2|) — sequential loop, creates one pair per element.
         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)
             requires
               Self::spec_valid_key_type(),
@@ -245,7 +245,7 @@ verus!
                forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (av == a@ && s2@.contains(bv));
 
         /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| × |b|), Span O(|b|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| × |b|), Span O(|a| × |b|) — spawns |a| parallel elt_cross_set tasks (each O(|b|)), but join phase is sequential disjoint_union over |a| results of size |b|. Sequential join dominates span.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|a| × |b|), Span O(|a| × |b|) — spawns |a| parallel elt_cross_set tasks (each O(|b|)), but join phase is sequential disjoint_union over |a| results of size |b|. Sequential join dominates span.
         fn cartesian_product<U: StT + Hash + Clone + Send + Sync + 'static>(&self, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)
             where T: Send + Sync + 'static, Pair<T, U>: StT + Hash + View<V = (T::V, U::V)>,
             requires
@@ -279,7 +279,7 @@ verus!
                 );
 
         /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| × |parts|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| × |parts|), Span O(|a| × |parts|) — sequential loop, not parallel. Span == Work.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|a| × |parts|), Span O(|a| × |parts|) — sequential loop, not parallel. Span == Work.
         fn partition(&self, parts: &SetMtEph<SetMtEph<T>>) -> (partition: bool)
             requires
                 self.spec_setmteph_wf(),
@@ -298,7 +298,7 @@ verus!
 
         /// Split a set into two parts: the first with n elements, the second with the rest.
         /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|self|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — sequential loop, not parallel. Span == Work.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|self|), Span O(|self|) — sequential loop, not parallel. Span == Work.
         fn split(&self, n: usize) -> (n_set_rest_set: (Self, Self))
             requires
                 self.spec_setmteph_wf(),
@@ -550,7 +550,7 @@ verus!
             product
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| x |b|), Span O(|a| x |b|) — spawns |a| parallel elt_cross_set tasks (each O(|b|)), but sequential disjoint_union join phase dominates span.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|a| x |b|), Span O(|a| x |b|) — spawns |a| parallel elt_cross_set tasks (each O(|b|)), but sequential disjoint_union join phase dominates span.
         fn cartesian_product<U: StT + Hash + Clone + Send + Sync + 'static>(&self, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)
             where T: Send + Sync + 'static, Pair<T, U>: StT + Hash + View<V = (T::V, U::V)>,
         {

@@ -92,7 +92,7 @@ pub trait ConcurrentStackMtTrait<T: Send>: Sized {
     /// Drain all elements from the stack into a Vec.
     /// Elements are returned in LIFO order (most recently pushed first).
     /// Note: Concurrent pushes during drain may or may not be included.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) — sequential pop loop.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: O(n) — sequential pop loop.
     fn drain(&self) -> (items: Vec<T>)
         requires self.wf();
 }
@@ -147,7 +147,7 @@ impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
         self.head.load(Ordering::Acquire).is_null()
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — pops all n elements sequentially.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — pops all n elements sequentially.
     #[verifier::external_body] // accept hole
     fn drain(&self) -> (items: Vec<T>) {
         let mut items = Vec::new();

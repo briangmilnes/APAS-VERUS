@@ -260,7 +260,7 @@ pub mod TopoSortStPer {
     pub trait TopoSortStPerTrait {
         /// Computes topological sort of a DAG (Algorithm 55.13)
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS finish order + reverse; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — DFS finish order + reverse; St sequential.
         fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (order: AVLTreeSeqStPerS<usize>)
             requires
                 spec_toposortstper_wf(graph),
@@ -275,7 +275,7 @@ pub mod TopoSortStPer {
 
 
     /// Recursive DFS that appends vertices in finish order.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS appending vertices at finish time; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — DFS appending vertices at finish time; St sequential.
     fn dfs_finish_order(
         graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         visited: &mut Vec<bool>,
@@ -569,7 +569,7 @@ pub mod TopoSortStPer {
 
     /// Recursive DFS with cycle detection via rec_stack.
     /// Returns true if no cycle found, false if cycle detected.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS with ancestor tracking; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — DFS with ancestor tracking; St sequential.
     fn dfs_finish_order_cycle_detect(
         graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         visited: &mut Vec<bool>,
@@ -657,7 +657,7 @@ pub mod TopoSortStPer {
     }
 
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS + cycle check + reverse; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — DFS + cycle check + reverse; St sequential.
     pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (topo_order: Option<AVLTreeSeqStPerS<usize>>)
         requires
             spec_toposortstper_wf(graph),
@@ -681,7 +681,7 @@ pub mod TopoSortStPer {
 
     impl TopoSortStPerTrait for TopoSortStPer {
         /// Returns sequence of vertices in topological order.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS finish order + reverse; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — DFS finish order + reverse; St sequential.
         fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (order: AVLTreeSeqStPerS<usize>)
         {
             let n = graph.length();

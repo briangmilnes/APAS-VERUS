@@ -97,7 +97,7 @@ pub mod BottomUpDPMtEph {
                 self.spec_t() == t@;
 
         /// - Alg Analysis: APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|+|T|) (Algorithm 51.1, diagonal parallel)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential row fill, not parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|S|*|T|), Span O(|S|*|T|) -- sequential row fill, not parallel.
         fn med_bottom_up_parallel(&mut self) -> (distance: usize)
             requires
                 old(self).spec_bottomupdpmteph_wf(),
@@ -214,7 +214,7 @@ pub mod BottomUpDPMtEph {
         fn set_t(&mut self, t: ArraySeqMtEphS<char>) { self.seq_t = t; }
 
         /// Compute MED using bottom-up row-by-row fill (Algorithm 51.1).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential row fill despite Mt name; no parallelism.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — sequential row fill despite Mt name; no parallelism.
         fn med_bottom_up_parallel(&mut self) -> (distance: usize) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -341,7 +341,7 @@ pub mod BottomUpDPMtEph {
             table[s_len][t_len]
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — allocates (n+1)*(m+1) table; sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — allocates (n+1)*(m+1) table; sequential.
         fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();

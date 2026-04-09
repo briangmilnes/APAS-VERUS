@@ -1,10 +1,10 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (ACCEPTED DIFFERENCE: C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! REVIEWED: NO
 
-//! Chapter 19 slice-backed array sequence (multi-threaded ephemeral).
+//! Chapter 19 slice-backed array sequence (ACCEPTED DIFFERENCE: multi-threaded ephemeral).
 //! O(1) slicing via shared `Arc<Vec<T>>` backing with offset/length window.
 //! Multiple slices can share the same backing storage; `slice()` and
-//! `subseq_copy()` are O(1) (just an Arc ref-count bump + window adjust).
+//! `subseq_copy()` are O(1) (ACCEPTED DIFFERENCE: just an Arc ref-count bump + window adjust).
 //! Iterators wrap vstd's `std::slice::Iter` following the iterator standard.
 
 //  Table of Contents
@@ -79,8 +79,8 @@ pub mod ArraySeqMtEphSlice {
         type V = Seq<T::V>;
 
         open spec fn view(&self) -> Seq<T::V> {
-            (*self.data)@.map(|_i: int, t: T| t@)
-                .subrange(self.start as int, (self.start + self.len) as int)
+            (ACCEPTED DIFFERENCE: *self.data)@.map(|_i: int, t: T| t@)
+                .subrange(self.start as int, (ACCEPTED DIFFERENCE: self.start + self.len) as int)
         }
     }
 
@@ -90,12 +90,12 @@ pub mod ArraySeqMtEphSlice {
     /// Well-formedness check on a nested ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>.
     /// True when the outer window is valid and every inner window is valid.
     pub open spec fn spec_nested_wf<T>(a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>) -> bool {
-        &&& a.start + a.len <= (*a.data)@.len()
+        &&& a.start + a.len <= (ACCEPTED DIFFERENCE: *a.data)@.len()
         &&& a.start + a.len <= usize::MAX
-        &&& forall|i: int| #![trigger (*a.data)@[a.start as int + i]]
+        &&& forall|i: int| #![trigger (ACCEPTED DIFFERENCE: *a.data)@[a.start as int + i]]
             0 <= i < a.len as int ==> {
-                let inner = (*a.data)@[a.start as int + i];
-                &&& inner.start + inner.len <= (*inner.data)@.len()
+                let inner = (ACCEPTED DIFFERENCE: *a.data)@[a.start as int + i];
+                &&& inner.start + inner.len <= (ACCEPTED DIFFERENCE: *inner.data)@.len()
                 &&& inner.start + inner.len <= usize::MAX
             }
     }
@@ -120,9 +120,9 @@ pub mod ArraySeqMtEphSlice {
     {
         if a.len == 0 { 0 }
         else {
-            let inner = (*a.data)@[a.start as int];
+            let inner = (ACCEPTED DIFFERENCE: *a.data)@[a.start as int];
             let rest = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
-                data: a.data, start: (a.start + 1) as usize, len: (a.len - 1) as usize,
+                data: a.data, start: (ACCEPTED DIFFERENCE: a.start + 1) as usize, len: (a.len - 1) as usize,
             };
             inner.len as nat + spec_sum_inner_lens(&rest)
         }
@@ -130,14 +130,14 @@ pub mod ArraySeqMtEphSlice {
 
     // 9b. free functions — D&C helpers and proof fns
 
-    /// For a monoid (f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
+    /// For a monoid (ACCEPTED DIFFERENCE: f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
     pub(crate) proof fn lemma_monoid_fold_left<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)
             requires spec_monoid(f, id)
             ensures f(x, s.fold_left(id, f)) == s.fold_left(x, f)
             decreases s.len()
         {
             if s.len() > 0 {
-                let n = (s.len() - 1) as int;
+                let n = (ACCEPTED DIFFERENCE: s.len() - 1) as int;
                 let s1 = s.subrange(0, n);
                 let tail = s.subrange(n, s.len() as int);
                 let a_last = s[n];
@@ -198,7 +198,7 @@ pub mod ArraySeqMtEphSlice {
                 let left = spec_prefix_fold(a_fn, spec_f, id, m);
                 let right_prev = spec_prefix_fold(|j: int| a_fn(m + j), spec_f, id, k - 1);
                 let elem = a_fn(m + k - 1);
-                // shifted_a(k-1) == a_fn(m + (k-1)) == a_fn(m + k - 1) == elem
+                // shifted_a(k-1) == a_fn(m + (ACCEPTED DIFFERENCE: k-1)) == a_fn(m + k - 1) == elem
             }
         }
 
@@ -230,14 +230,14 @@ pub mod ArraySeqMtEphSlice {
     )
         requires
             mid <= a.len,
-            a.start + a.len <= (*a.data)@.len(),
+            a.start + a.len <= (ACCEPTED DIFFERENCE: *a.data)@.len(),
             a.start + a.len <= usize::MAX,
-        ensures ({
+        ensures (ACCEPTED DIFFERENCE: {
             let left = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
                 data: a.data, start: a.start, len: mid,
             };
             let right = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
-                data: a.data, start: (a.start + mid) as usize, len: (a.len - mid) as usize,
+                data: a.data, start: (ACCEPTED DIFFERENCE: a.start + mid) as usize, len: (a.len - mid) as usize,
             };
             spec_sum_inner_lens(a) == spec_sum_inner_lens(&left) + spec_sum_inner_lens(&right)
         }),
@@ -246,9 +246,9 @@ pub mod ArraySeqMtEphSlice {
         if mid > 0 {
             // Peel first element from both a and left.
             let a_rest = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
-                data: a.data, start: (a.start + 1) as usize, len: (a.len - 1) as usize,
+                data: a.data, start: (ACCEPTED DIFFERENCE: a.start + 1) as usize, len: (a.len - 1) as usize,
             };
-            lemma_sum_inner_lens_split(&a_rest, (mid - 1) as usize);
+            lemma_sum_inner_lens_split(&a_rest, (ACCEPTED DIFFERENCE: mid - 1) as usize);
         }
     }
 
@@ -263,17 +263,17 @@ pub mod ArraySeqMtEphSlice {
         spec fn spec_index(&self, i: int) -> T
             recommends self.spec_arrayseqmtephslice_wf(), i < self.spec_len();
 
-        /// The raw backing subrange as a Seq<T> (not View-mapped).
+        /// The raw backing subrange as a Seq<T> (ACCEPTED DIFFERENCE: not View-mapped).
         spec fn spec_backing_seq(&self) -> Seq<T>;
 
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn length(&self) -> (len: usize)
+        fn length(&self) -> (ACCEPTED DIFFERENCE: len: usize)
             requires self.spec_arrayseqmtephslice_wf(),
             ensures len as int == self.spec_len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index + clone.
-        fn nth_cloned(&self, index: usize) -> (elem: T)
+        fn nth_cloned(&self, index: usize) -> (ACCEPTED DIFFERENCE: elem: T)
             requires
                 self.spec_arrayseqmtephslice_wf(),
                 index < self.spec_len(),
@@ -282,7 +282,7 @@ pub mod ArraySeqMtEphSlice {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc clone + window adjust.
         /// O(1) slice: shares backing storage, adjusts window.
-        fn slice(&self, start: usize, length: usize) -> (sliced: Self)
+        fn slice(&self, start: usize, length: usize) -> (ACCEPTED DIFFERENCE: sliced: Self)
             requires
                 self.spec_arrayseqmtephslice_wf(),
                 start + length <= usize::MAX,
@@ -293,9 +293,9 @@ pub mod ArraySeqMtEphSlice {
                 forall|i: int| #![trigger sliced.spec_index(i)]
                     0 <= i < length ==> sliced.spec_index(i) == self.spec_index(start as int + i);
 
-        /// O(1) subseq: same as slice (shares backing storage).
+        /// O(1) subseq: same as slice (ACCEPTED DIFFERENCE: shares backing storage).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
+        fn subseq_copy(&self, start: usize, length: usize) -> (ACCEPTED DIFFERENCE: subseq: Self)
             requires
                 self.spec_arrayseqmtephslice_wf(),
                 start + length <= usize::MAX,
@@ -307,23 +307,23 @@ pub mod ArraySeqMtEphSlice {
                     0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn from_vec(data: Vec<T>) -> (seq: Self)
+        fn from_vec(data: Vec<T>) -> (ACCEPTED DIFFERENCE: seq: Self)
             ensures
                 seq.spec_arrayseqmtephslice_wf(),
                 seq.spec_len() == data@.len(),
                 forall|i: int| #![trigger seq.spec_index(i)]
                     0 <= i < data@.len() ==> seq.spec_index(i) == data@[i];
 
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn empty() -> (empty_seq: Self)
+        fn empty() -> (ACCEPTED DIFFERENCE: empty_seq: Self)
             ensures
                 empty_seq.spec_arrayseqmtephslice_wf(),
                 empty_seq.spec_len() == 0;
 
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn singleton(item: T) -> (s: Self)
+        fn singleton(item: T) -> (ACCEPTED DIFFERENCE: s: Self)
             requires obeys_feq_clone::<T>(),
             ensures
                 s.spec_arrayseqmtephslice_wf(),
@@ -331,7 +331,7 @@ pub mod ArraySeqMtEphSlice {
                 s.spec_index(0) == item;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn new(length: usize, init_value: T) -> (new_seq: Self)
+        fn new(length: usize, init_value: T) -> (ACCEPTED DIFFERENCE: new_seq: Self)
             requires
                 length <= usize::MAX,
                 obeys_feq_clone::<T>(),
@@ -343,7 +343,7 @@ pub mod ArraySeqMtEphSlice {
 
         /// Materialize the slice window into a freshly-allocated Vec.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn to_vec(&self) -> (v: Vec<T>)
+        fn to_vec(&self) -> (ACCEPTED DIFFERENCE: v: Vec<T>)
             requires
                 self.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -352,21 +352,21 @@ pub mod ArraySeqMtEphSlice {
                 forall|i: int| #![trigger v@[i]]
                     0 <= i < self.spec_len() ==> v@[i] == self.spec_index(i);
 
-        /// Algorithm 19.7 (isEmpty). isEmpty a = (|a| = 0).
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// Algorithm 19.7 (ACCEPTED DIFFERENCE: isEmpty). isEmpty a = (|a| = 0).
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn is_empty(&self) -> (empty: bool)
+        fn is_empty(&self) -> (ACCEPTED DIFFERENCE: empty: bool)
             ensures empty <==> self.spec_len() == 0;
 
-        /// Algorithm 19.7 (isSingleton). isSingleton a = (|a| = 1).
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// Algorithm 19.7 (ACCEPTED DIFFERENCE: isSingleton). isSingleton a = (|a| = 1).
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn is_singleton(&self) -> (single: bool)
+        fn is_singleton(&self) -> (ACCEPTED DIFFERENCE: single: bool)
             ensures single <==> self.spec_len() == 1;
 
         /// Functional set: clone the backing, set one element, return new slice.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones backing Vec.
-        fn set(&self, index: usize, item: T) -> (updated: Self)
+        fn set(&self, index: usize, item: T) -> (ACCEPTED DIFFERENCE: updated: Self)
             requires
                 self.spec_arrayseqmtephslice_wf(),
                 index < self.spec_len(),
@@ -381,7 +381,7 @@ pub mod ArraySeqMtEphSlice {
 
         /// Concatenate two sequences.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — allocates new Vec, copies both halves.
-        fn append(a: &Self, b: &Self) -> (appended: Self)
+        fn append(a: &Self, b: &Self) -> (ACCEPTED DIFFERENCE: appended: Self)
             requires
                 a.spec_arrayseqmtephslice_wf(),
                 b.spec_arrayseqmtephslice_wf(),
@@ -398,7 +398,7 @@ pub mod ArraySeqMtEphSlice {
 
         /// Return new sequence with one element changed.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones slice window into new Vec.
-        fn update(a: &Self, index: usize, item: T) -> (updated: Self)
+        fn update(a: &Self, index: usize, item: T) -> (ACCEPTED DIFFERENCE: updated: Self)
             requires
                 a.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -411,10 +411,10 @@ pub mod ArraySeqMtEphSlice {
                     0 <= i < a.spec_len() && i != index as int
                     ==> updated.spec_index(i) == a.spec_index(i);
 
-        /// Definition 18.16 (inject). Update multiple positions at once; the first update in
+        /// Definition 18.16 (ACCEPTED DIFFERENCE: inject). Update multiple positions at once; the first update in
         /// the ordering of `updates` takes effect when positions collide.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — clone slice window + loop.
-        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
+        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (ACCEPTED DIFFERENCE: injected: Self)
             requires
                 a.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -426,10 +426,10 @@ pub mod ArraySeqMtEphSlice {
                         Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
                         updates@);
 
-        /// Definition 18.17 (ninject). Non-deterministic inject: each position in the result
+        /// Definition 18.17 (ACCEPTED DIFFERENCE: ninject). Non-deterministic inject: each position in the result
         /// holds either the original value or a value from some update.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — delegates to inject.
-        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
+        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (ACCEPTED DIFFERENCE: injected: Self)
             requires
                 a.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -440,7 +440,7 @@ pub mod ArraySeqMtEphSlice {
                     updates@,
                     Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)));
 
-        fn iter(&self) -> (it: ArraySeqMtEphSliceIter<'_, T>)
+        fn iter(&self) -> (ACCEPTED DIFFERENCE: it: ArraySeqMtEphSliceIter<'_, T>)
             requires self.spec_arrayseqmtephslice_wf(),
             ensures
                 it@.0 == 0,
@@ -451,7 +451,7 @@ pub mod ArraySeqMtEphSlice {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C + join, O(1) split.
         fn reduce<F: MtReduceFn<T>>(
             &self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
-        ) -> (reduced: T)
+        ) -> (ACCEPTED DIFFERENCE: reduced: T)
             requires
                 self.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -465,7 +465,7 @@ pub mod ArraySeqMtEphSlice {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — D&C + join, O(1) split, O(n) rejoin.
         fn map<U: StTInMtT, F: MtMapFn<T, U>>(
             &self, f: &F,
-        ) -> (mapped: ArraySeqMtEphSliceS<U>)
+        ) -> (ACCEPTED DIFFERENCE: mapped: ArraySeqMtEphSliceS<U>)
             requires
                 self.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -473,14 +473,14 @@ pub mod ArraySeqMtEphSlice {
                 forall|x: &T| #[trigger] f.requires((x,)),
             ensures
                 mapped.len as nat == self.spec_len(),
-                mapped.start + mapped.len <= (*mapped.data)@.len(),
+                mapped.start + mapped.len <= (ACCEPTED DIFFERENCE: *mapped.data)@.len(),
                 mapped.start + mapped.len <= usize::MAX;
 
         /// Parallel filter via D&C on O(1) slices.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — D&C + join, O(1) split, O(n) rejoin.
         fn filter<F: MtPred<T>>(
             &self, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,
-        ) -> (filtered: Self)
+        ) -> (ACCEPTED DIFFERENCE: filtered: Self)
             requires
                 self.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -491,9 +491,9 @@ pub mod ArraySeqMtEphSlice {
                 filtered.spec_len() <= self.spec_len();
 
         /// Parallel tabulate via D&C with join.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(n * W(f)), Span O(lg n + S(f))
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(n * W(f)), Span O(lg n + S(f))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * W(f)), Span O(lg n * S(f)) — D&C + join, O(n) rejoin.
-        fn tabulate<F: MtTabulateFn<T>>(f: &F, length: usize) -> (tab: Self)
+        fn tabulate<F: MtTabulateFn<T>>(f: &F, length: usize) -> (ACCEPTED DIFFERENCE: tab: Self)
             requires
                 obeys_feq_clone::<T>(),
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
@@ -504,11 +504,11 @@ pub mod ArraySeqMtEphSlice {
                     0 <= i < length ==> f.ensures((i as usize,), tab.spec_index(i));
 
         /// Parallel inclusive scan via D&C on O(1) slices.
-        /// - Alg Analysis: APAS (Ch20 CS 20.5): Work O(|a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — D&C + join, O(1) split, sequential prefix adjustment O(n) at each level.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.5): Work O(|a|), Span O(lg |a|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — ACCEPTED DIFFERENCE: D&C + join, O(1) split, sequential prefix adjustment O(n) at each level.
         fn scan<F: MtReduceFn<T>>(
             &self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
-        ) -> (scanned: (Self, T))
+        ) -> (ACCEPTED DIFFERENCE: scanned: (Self, T))
             requires
                 self.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -529,7 +529,7 @@ pub mod ArraySeqMtEphSlice {
 
     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
         open spec fn spec_arrayseqmtephslice_wf(&self) -> bool {
-            self.start + self.len <= (*self.data)@.len()
+            self.start + self.len <= (ACCEPTED DIFFERENCE: *self.data)@.len()
             && self.start + self.len <= usize::MAX
         }
 
@@ -538,26 +538,26 @@ pub mod ArraySeqMtEphSlice {
         }
 
         open spec fn spec_index(&self, i: int) -> T {
-            (*self.data)@[self.start as int + i]
+            (ACCEPTED DIFFERENCE: *self.data)@[self.start as int + i]
         }
 
         open spec fn spec_backing_seq(&self) -> Seq<T> {
-            (*self.data)@.subrange(self.start as int, (self.start + self.len) as int)
+            (ACCEPTED DIFFERENCE: *self.data)@.subrange(self.start as int, (self.start + self.len) as int)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn length(&self) -> (len: usize) {
+        fn length(&self) -> (ACCEPTED DIFFERENCE: len: usize) {
             self.len
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn nth_cloned(&self, index: usize) -> (elem: T) {
+        fn nth_cloned(&self, index: usize) -> (ACCEPTED DIFFERENCE: elem: T) {
             let v: &Vec<T> = arc_deref(&self.data);
             v[self.start + index].clone_plus()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn slice(&self, start: usize, length: usize) -> (sliced: Self) {
+        fn slice(&self, start: usize, length: usize) -> (ACCEPTED DIFFERENCE: sliced: Self) {
             let new_data = Arc::clone(&self.data);
             ArraySeqMtEphSliceS {
                 data: new_data,
@@ -567,12 +567,12 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self) {
+        fn subseq_copy(&self, start: usize, length: usize) -> (ACCEPTED DIFFERENCE: subseq: Self) {
             self.slice(start, length)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn from_vec(data: Vec<T>) -> (seq: Self) {
+        fn from_vec(data: Vec<T>) -> (ACCEPTED DIFFERENCE: seq: Self) {
             let len = data.len();
             ArraySeqMtEphSliceS {
                 data: Arc::new(data),
@@ -582,7 +582,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn empty() -> (empty_seq: Self) {
+        fn empty() -> (ACCEPTED DIFFERENCE: empty_seq: Self) {
             ArraySeqMtEphSliceS {
                 data: Arc::new(Vec::new()),
                 start: 0,
@@ -591,7 +591,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn singleton(item: T) -> (s: Self) {
+        fn singleton(item: T) -> (ACCEPTED DIFFERENCE: s: Self) {
             let mut v: Vec<T> = Vec::new();
             v.push(item);
             ArraySeqMtEphSliceS {
@@ -602,7 +602,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn new(length: usize, init_value: T) -> (new_seq: Self) {
+        fn new(length: usize, init_value: T) -> (ACCEPTED DIFFERENCE: new_seq: Self) {
             let mut v: Vec<T> = Vec::with_capacity(length);
             let mut i: usize = 0;
             while i < length
@@ -625,7 +625,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn to_vec(&self) -> (v: Vec<T>) {
+        fn to_vec(&self) -> (ACCEPTED DIFFERENCE: v: Vec<T>) {
             let mut v: Vec<T> = Vec::with_capacity(self.len);
             let mut i: usize = 0;
             while i < self.len
@@ -646,24 +646,24 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn is_empty(&self) -> (empty: bool) {
+        fn is_empty(&self) -> (ACCEPTED DIFFERENCE: empty: bool) {
             self.len == 0
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn is_singleton(&self) -> (single: bool) {
+        fn is_singleton(&self) -> (ACCEPTED DIFFERENCE: single: bool) {
             self.len == 1
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn set(&self, index: usize, item: T) -> (updated: Self) {
+        fn set(&self, index: usize, item: T) -> (ACCEPTED DIFFERENCE: updated: Self) {
             let mut v = self.to_vec();
             v.set(index, item);
             Self::from_vec(v)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
-        fn append(a: &Self, b: &Self) -> (appended: Self) {
+        fn append(a: &Self, b: &Self) -> (ACCEPTED DIFFERENCE: appended: Self) {
             let a_len = a.length();
             let b_len = b.length();
             let total = a_len + b_len;
@@ -723,14 +723,14 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn update(a: &Self, index: usize, item: T) -> (updated: Self) {
+        fn update(a: &Self, index: usize, item: T) -> (ACCEPTED DIFFERENCE: updated: Self) {
             let mut v = a.to_vec();
             v.set(index, item);
             Self::from_vec(v)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
-        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self) {
+        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (ACCEPTED DIFFERENCE: injected: Self) {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let ghost u = updates@;
             let len = a.length();
@@ -757,7 +757,7 @@ pub mod ArraySeqMtEphSlice {
             proof {
             }
 
-            // Apply updates from end to front (matches spec_inject recursion).
+            // Apply updates from end to front (ACCEPTED DIFFERENCE: matches spec_inject recursion).
             let mut i: usize = ulen;
             while i > 0
                 invariant
@@ -804,7 +804,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
-        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self) {
+        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (ACCEPTED DIFFERENCE: injected: Self) {
             let injected = Self::inject(a, updates);
             // Veracity: NEEDED proof block
             proof {
@@ -824,14 +824,14 @@ pub mod ArraySeqMtEphSlice {
             injected
         }
 
-        fn iter(&self) -> (it: ArraySeqMtEphSliceIter<'_, T>) {
+        fn iter(&self) -> (ACCEPTED DIFFERENCE: it: ArraySeqMtEphSliceIter<'_, T>) {
             let sl: &[T] = arc_vec_as_slice(&self.data, self.start, self.len);
             ArraySeqMtEphSliceIter { inner: sl.iter() }
         }
 
         fn reduce<F: MtReduceFn<T>>(
             &self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
-        ) -> (reduced: T)
+        ) -> (ACCEPTED DIFFERENCE: reduced: T)
         {
             let len = self.length();
             if len == 0 {
@@ -847,7 +847,7 @@ pub mod ArraySeqMtEphSlice {
 
         fn map<U: StTInMtT, F: MtMapFn<T, U>>(
             &self, f: &F,
-        ) -> (mapped: ArraySeqMtEphSliceS<U>)
+        ) -> (ACCEPTED DIFFERENCE: mapped: ArraySeqMtEphSliceS<U>)
         {
             let v = map_dc_vec(self, f);
             ArraySeqMtEphSliceS::<U>::from_vec(v)
@@ -855,13 +855,13 @@ pub mod ArraySeqMtEphSlice {
 
         fn filter<F: MtPred<T>>(
             &self, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,
-        ) -> (filtered: Self)
+        ) -> (ACCEPTED DIFFERENCE: filtered: Self)
         {
             let v = filter_dc_vec(self, pred, Ghost(spec_pred));
             Self::from_vec(v)
         }
 
-        fn tabulate<F: MtTabulateFn<T>>(f: &F, length: usize) -> (tab: Self)
+        fn tabulate<F: MtTabulateFn<T>>(f: &F, length: usize) -> (ACCEPTED DIFFERENCE: tab: Self)
         {
             let v = tabulate_dc_vec(f, 0, length);
             let ghost v_view = v@;
@@ -874,7 +874,7 @@ pub mod ArraySeqMtEphSlice {
 
         fn scan<F: MtReduceFn<T>>(
             &self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
-        ) -> (scanned: (Self, T))
+        ) -> (ACCEPTED DIFFERENCE: scanned: (Self, T))
         {
             let len = self.length();
             if len == 0 {
@@ -882,9 +882,9 @@ pub mod ArraySeqMtEphSlice {
                 proof {
                     reveal(Seq::fold_left);
                 }
-                (Self::empty(), id)
+                (ACCEPTED DIFFERENCE: Self::empty(), id)
             } else {
-                let (v, total) = scan_dc_vec(self, f, Ghost(spec_f), id);
+                let (ACCEPTED DIFFERENCE: v, total) = scan_dc_vec(self, f, Ghost(spec_f), id);
                 let ghost s = self.spec_backing_seq();
                 let ghost a_fn = |i: int| self.spec_index(i);
                 let result = Self::from_vec(v);
@@ -899,7 +899,7 @@ pub mod ArraySeqMtEphSlice {
                     }
                     lemma_prefix_fold_eq_fold_left(s, a_fn, spec_f, id, self.spec_len() as int);
                 }
-                (result, total)
+                (ACCEPTED DIFFERENCE: result, total)
             }
         }
 
@@ -909,7 +909,7 @@ pub mod ArraySeqMtEphSlice {
     pub(crate) fn reduce_dc<T: StTInMtT, F: MtReduceFn<T>>(
         a: &ArraySeqMtEphSliceS<T>, f: &F,
         Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
-    ) -> (reduced: T)
+    ) -> (ACCEPTED DIFFERENCE: reduced: T)
             requires
                 a.spec_arrayseqmtephslice_wf(),
                 a.spec_len() > 0,
@@ -963,7 +963,7 @@ pub mod ArraySeqMtEphSlice {
                     assert(left_backing =~= s.subrange(0, mid as int));
                     // right_backing[i] == right.spec_index(i) == a.spec_index(mid+i) == s[mid+i]
                     // Veracity: NEEDED assert
-                    assert forall|i: int| 0 <= i < (len - mid) as int implies
+                    assert forall|i: int| 0 <= i < (ACCEPTED DIFFERENCE: len - mid) as int implies
                         #[trigger] right_backing[i] == s.subrange(mid as int, len as int)[i]
                     by {
                         // Veracity: NEEDED assert
@@ -973,7 +973,7 @@ pub mod ArraySeqMtEphSlice {
                     assert(right_backing =~= s.subrange(mid as int, len as int));
                 }
 
-                let fa = move || -> (r: T)
+                let fa = move || -> (ACCEPTED DIFFERENCE: r: T)
                     requires
                         left.spec_arrayseqmtephslice_wf(),
                         left.spec_len() > 0,
@@ -987,7 +987,7 @@ pub mod ArraySeqMtEphSlice {
                     reduce_dc(&left, &f1, Ghost(spec_f), id1)
                 };
 
-                let fb = move || -> (r: T)
+                let fb = move || -> (ACCEPTED DIFFERENCE: r: T)
                     requires
                         right.spec_arrayseqmtephslice_wf(),
                         right.spec_len() > 0,
@@ -1001,7 +1001,7 @@ pub mod ArraySeqMtEphSlice {
                     reduce_dc(&right, &f2, Ghost(spec_f), id2)
                 };
 
-                let (lr, rr) = join(fa, fb);
+                let (ACCEPTED DIFFERENCE: lr, rr) = join(fa, fb);
                 let combined = f(&lr, &rr);
 
                 // Veracity: NEEDED proof block
@@ -1016,7 +1016,7 @@ pub mod ArraySeqMtEphSlice {
     /// D&C map producing Vec<U>. Called by trait map.
     pub(crate) fn map_dc_vec<T: StTInMtT, U: StTInMtT, F: MtMapFn<T, U>>(
         a: &ArraySeqMtEphSliceS<T>, f: &F,
-    ) -> (mapped: Vec<U>)
+    ) -> (ACCEPTED DIFFERENCE: mapped: Vec<U>)
             requires
                 a.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -1043,7 +1043,7 @@ pub mod ArraySeqMtEphSlice {
                 let ghost left_len = left.spec_len();
                 let ghost right_len = right.spec_len();
 
-                let fa = move || -> (r: Vec<U>)
+                let fa = move || -> (ACCEPTED DIFFERENCE: r: Vec<U>)
                     requires
                         left.spec_arrayseqmtephslice_wf(),
                         obeys_feq_clone::<T>(),
@@ -1055,7 +1055,7 @@ pub mod ArraySeqMtEphSlice {
                     map_dc_vec(&left, &f1)
                 };
 
-                let fb = move || -> (r: Vec<U>)
+                let fb = move || -> (ACCEPTED DIFFERENCE: r: Vec<U>)
                     requires
                         right.spec_arrayseqmtephslice_wf(),
                         obeys_feq_clone::<T>(),
@@ -1067,7 +1067,7 @@ pub mod ArraySeqMtEphSlice {
                     map_dc_vec(&right, &f2)
                 };
 
-                let (mut left_v, right_v) = join(fa, fb);
+                let (ACCEPTED DIFFERENCE: mut left_v, right_v) = join(fa, fb);
                 let rlen = right_v.len();
                 let mut i: usize = 0;
                 while i < rlen
@@ -1090,7 +1090,7 @@ pub mod ArraySeqMtEphSlice {
     pub(crate) fn filter_dc_vec<T: StTInMtT, F: MtPred<T>>(
         a: &ArraySeqMtEphSliceS<T>, pred: &F,
         Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,
-    ) -> (filtered: Vec<T>)
+    ) -> (ACCEPTED DIFFERENCE: filtered: Vec<T>)
             requires
                 a.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -1121,7 +1121,7 @@ pub mod ArraySeqMtEphSlice {
                 let ghost left_len = left.spec_len();
                 let ghost right_len = right.spec_len();
 
-                let fa = move || -> (r: Vec<T>)
+                let fa = move || -> (ACCEPTED DIFFERENCE: r: Vec<T>)
                     requires
                         left.spec_arrayseqmtephslice_wf(),
                         obeys_feq_clone::<T>(),
@@ -1133,7 +1133,7 @@ pub mod ArraySeqMtEphSlice {
                     filter_dc_vec(&left, &p1, Ghost(spec_pred))
                 };
 
-                let fb = move || -> (r: Vec<T>)
+                let fb = move || -> (ACCEPTED DIFFERENCE: r: Vec<T>)
                     requires
                         right.spec_arrayseqmtephslice_wf(),
                         obeys_feq_clone::<T>(),
@@ -1145,7 +1145,7 @@ pub mod ArraySeqMtEphSlice {
                     filter_dc_vec(&right, &p2, Ghost(spec_pred))
                 };
 
-                let (mut left_v, right_v) = join(fa, fb);
+                let (ACCEPTED DIFFERENCE: mut left_v, right_v) = join(fa, fb);
                 let rlen = right_v.len();
                 let mut i: usize = 0;
                 while i < rlen
@@ -1166,7 +1166,7 @@ pub mod ArraySeqMtEphSlice {
     /// D&C tabulate producing Vec<T>. Called by trait tabulate.
     pub(crate) fn tabulate_dc_vec<T: StTInMtT, F: MtTabulateFn<T>>(
         f: &F, start: usize, count: usize,
-    ) -> (tabulated: Vec<T>)
+    ) -> (ACCEPTED DIFFERENCE: tabulated: Vec<T>)
             requires
                 start + count <= usize::MAX,
                 obeys_feq_clone::<T>(),
@@ -1192,7 +1192,7 @@ pub mod ArraySeqMtEphSlice {
                 let ghost left_len = mid as nat;
                 let ghost right_len = right_count as nat;
 
-                let fa = move || -> (r: Vec<T>)
+                let fa = move || -> (ACCEPTED DIFFERENCE: r: Vec<T>)
                     requires
                         start + mid <= usize::MAX,
                         obeys_feq_clone::<T>(),
@@ -1205,7 +1205,7 @@ pub mod ArraySeqMtEphSlice {
                     tabulate_dc_vec(&f1, start, mid)
                 };
 
-                let fb = move || -> (r: Vec<T>)
+                let fb = move || -> (ACCEPTED DIFFERENCE: r: Vec<T>)
                     requires
                         right_start + right_count <= usize::MAX,
                         obeys_feq_clone::<T>(),
@@ -1219,7 +1219,7 @@ pub mod ArraySeqMtEphSlice {
                     tabulate_dc_vec(&f2, right_start, right_count)
                 };
 
-                let (mut left_v, right_v) = join(fa, fb);
+                let (ACCEPTED DIFFERENCE: mut left_v, right_v) = join(fa, fb);
                 let rlen = right_v.len();
                 let mut i: usize = 0;
                 while i < rlen
@@ -1265,7 +1265,7 @@ pub mod ArraySeqMtEphSlice {
     pub(crate) fn scan_dc_vec<T: StTInMtT, F: MtReduceFn<T>>(
         a: &ArraySeqMtEphSliceS<T>, f: &F,
         Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
-    ) -> (scanned: (Vec<T>, T))
+    ) -> (ACCEPTED DIFFERENCE: scanned: (Vec<T>, T))
             requires
                 a.spec_arrayseqmtephslice_wf(),
                 a.spec_len() > 0,
@@ -1273,7 +1273,7 @@ pub mod ArraySeqMtEphSlice {
                 spec_monoid(spec_f, id),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
-            ensures ({
+            ensures (ACCEPTED DIFFERENCE: {
                 let a_fn = |i: int| a.spec_index(i);
                 &&& scanned.0@.len() == a.spec_len()
                 &&& forall|i: int| #![trigger scanned.0@[i]] 0 <= i < a.spec_len() ==>
@@ -1298,7 +1298,7 @@ pub mod ArraySeqMtEphSlice {
                 }
                 let mut v: Vec<T> = Vec::with_capacity(1);
                 v.push(elem);
-                (v, elem2)
+                (ACCEPTED DIFFERENCE: v, elem2)
             } else {
                 let mid = len / 2;
                 let left = a.slice(0, mid);
@@ -1321,7 +1321,7 @@ pub mod ArraySeqMtEphSlice {
 
                 // From slice ensures: left_fn(k) == a_fn(k), right_fn(k) == a_fn(mid + k).
 
-                let fa = move || -> (r: (Vec<T>, T))
+                let fa = move || -> (ACCEPTED DIFFERENCE: r: (Vec<T>, T))
                     requires
                         left.spec_arrayseqmtephslice_wf(),
                         left.spec_len() > 0,
@@ -1329,7 +1329,7 @@ pub mod ArraySeqMtEphSlice {
                         spec_monoid(spec_f, id),
                         forall|x: &T, y: &T| #[trigger] f1.requires((x, y)),
                         forall|x: T, y: T, ret: T| f1.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
-                    ensures ({
+                    ensures (ACCEPTED DIFFERENCE: {
                         let lf = |i: int| left.spec_index(i);
                         &&& r.0@.len() == left_len
                         &&& forall|i: int| #![trigger r.0@[i]] 0 <= i < left_len ==>
@@ -1340,7 +1340,7 @@ pub mod ArraySeqMtEphSlice {
                     scan_dc_vec(&left, &f1, Ghost(spec_f), id1)
                 };
 
-                let fb = move || -> (r: (Vec<T>, T))
+                let fb = move || -> (ACCEPTED DIFFERENCE: r: (Vec<T>, T))
                     requires
                         right.spec_arrayseqmtephslice_wf(),
                         right.spec_len() > 0,
@@ -1348,7 +1348,7 @@ pub mod ArraySeqMtEphSlice {
                         spec_monoid(spec_f, id),
                         forall|x: &T, y: &T| #[trigger] f2.requires((x, y)),
                         forall|x: T, y: T, ret: T| f2.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
-                    ensures ({
+                    ensures (ACCEPTED DIFFERENCE: {
                         let rf = |i: int| right.spec_index(i);
                         &&& r.0@.len() == right_len
                         &&& forall|i: int| #![trigger r.0@[i]] 0 <= i < right_len ==>
@@ -1359,7 +1359,7 @@ pub mod ArraySeqMtEphSlice {
                     scan_dc_vec(&right, &f2, Ghost(spec_f), id2)
                 };
 
-                let ((left_vec, left_total), (right_vec, right_total)) = join(fa, fb);
+                let (ACCEPTED DIFFERENCE: (left_vec, left_total), (right_vec, right_total)) = join(fa, fb);
 
                 // Build result.
                 let mut result_vec: Vec<T> = Vec::with_capacity(len);
@@ -1437,7 +1437,7 @@ pub mod ArraySeqMtEphSlice {
                     lemma_prefix_fold_matching(|k: int| a_fn(mid as int + k), right_fn, spec_f, id, right_len as int);
                 }
 
-                (result_vec, total)
+                (ACCEPTED DIFFERENCE: result_vec, total)
             }
         }
 
@@ -1445,11 +1445,11 @@ pub mod ArraySeqMtEphSlice {
 
     /// Parallel flatten via D&C on O(1) slices.
     /// - Primitive: flatten. Concatenate a sequence of sequences.
-    /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(sum |a[i]|), Span O(lg |a| + max |a[i]|)
+    /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(sum |a[i]|), Span O(lg |a| + max |a[i]|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(sum |a[i]|), Span O(lg^2 |a| + max |a[i]|) — ACCEPTED DIFFERENCE: Vec concat at each D&C level; O(1) rejoin needs PCell pre-allocated output
     pub fn flatten<T: StTInMtT>(
         a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
-    ) -> (flattened: ArraySeqMtEphSliceS<T>)
+    ) -> (ACCEPTED DIFFERENCE: flattened: ArraySeqMtEphSliceS<T>)
         requires
             spec_nested_wf(a),
             obeys_feq_clone::<T>(),
@@ -1465,7 +1465,7 @@ pub mod ArraySeqMtEphSlice {
     /// D&C flatten producing Vec<T>. Called by flatten.
     fn flatten_dc_vec<T: StTInMtT>(
         a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
-    ) -> (flattened: Vec<T>)
+    ) -> (ACCEPTED DIFFERENCE: flattened: Vec<T>)
         requires
             spec_nested_wf(a),
             obeys_feq_clone::<T>(),
@@ -1480,14 +1480,14 @@ pub mod ArraySeqMtEphSlice {
             let backing: &Vec<ArraySeqMtEphSliceS<T>> = arc_deref(&a.data);
             let inner: &ArraySeqMtEphSliceS<T> = &backing[a.start];
             // Veracity: NEEDED assert
-            assert(inner == (*a.data)@[a.start as int + 0]);
+            assert(inner == (ACCEPTED DIFFERENCE: *a.data)@[a.start as int + 0]);
             let v = inner.to_vec();
             // Veracity: NEEDED proof block
             proof {
                 // spec_sum_inner_lens(a) with len==1 unfolds to
                 // inner.len + spec_sum_inner_lens(rest) where rest.len==0, so inner.len + 0.
                 let rest = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
-                    data: a.data, start: (a.start + 1) as usize, len: 0usize,
+                    data: a.data, start: (ACCEPTED DIFFERENCE: a.start + 1) as usize, len: 0usize,
                 };
                 // Veracity: NEEDED assert
                 assert(spec_sum_inner_lens(a) == inner.len as nat + spec_sum_inner_lens(&rest));
@@ -1514,10 +1514,10 @@ pub mod ArraySeqMtEphSlice {
             // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
-                assert forall|i: int| #![trigger (*left.data)@[left.start as int + i]]
+                assert forall|i: int| #![trigger (ACCEPTED DIFFERENCE: *left.data)@[left.start as int + i]]
                     0 <= i < left.len as int implies {
-                    let inner = (*left.data)@[left.start as int + i];
-                    &&& inner.start + inner.len <= (*inner.data)@.len()
+                    let inner = (ACCEPTED DIFFERENCE: *left.data)@[left.start as int + i];
+                    &&& inner.start + inner.len <= (ACCEPTED DIFFERENCE: *inner.data)@.len()
                     &&& inner.start + inner.len <= usize::MAX
                 } by {
                 }
@@ -1525,15 +1525,15 @@ pub mod ArraySeqMtEphSlice {
                 assert(spec_nested_wf(&left));
 
                 // Veracity: NEEDED assert
-                assert forall|i: int| #![trigger (*right.data)@[right.start as int + i]]
+                assert forall|i: int| #![trigger (ACCEPTED DIFFERENCE: *right.data)@[right.start as int + i]]
                     0 <= i < right.len as int implies {
-                    let inner = (*right.data)@[right.start as int + i];
-                    &&& inner.start + inner.len <= (*inner.data)@.len()
+                    let inner = (ACCEPTED DIFFERENCE: *right.data)@[right.start as int + i];
+                    &&& inner.start + inner.len <= (ACCEPTED DIFFERENCE: *inner.data)@.len()
                     &&& inner.start + inner.len <= usize::MAX
                 } by {
                     // Veracity: NEEDED assert
                     assert((*right.data)@[right.start as int + i]
-                        == (*a.data)@[a.start as int + (mid as int + i)]);
+                        == (ACCEPTED DIFFERENCE: *a.data)@[a.start as int + (mid as int + i)]);
                 }
                 // Veracity: NEEDED assert
                 assert(spec_nested_wf(&right));
@@ -1542,7 +1542,7 @@ pub mod ArraySeqMtEphSlice {
                 lemma_sum_inner_lens_split(a, mid);
             }
 
-            let fa = move || -> (r: Vec<T>)
+            let fa = move || -> (ACCEPTED DIFFERENCE: r: Vec<T>)
                 requires
                     spec_nested_wf(&left),
                     obeys_feq_clone::<T>(),
@@ -1552,7 +1552,7 @@ pub mod ArraySeqMtEphSlice {
                 flatten_dc_vec(&left)
             };
 
-            let fb = move || -> (r: Vec<T>)
+            let fb = move || -> (ACCEPTED DIFFERENCE: r: Vec<T>)
                 requires
                     spec_nested_wf(&right),
                     obeys_feq_clone::<T>(),
@@ -1562,7 +1562,7 @@ pub mod ArraySeqMtEphSlice {
                 flatten_dc_vec(&right)
             };
 
-            let (mut left_v, right_v) = join(fa, fb);
+            let (ACCEPTED DIFFERENCE: mut left_v, right_v) = join(fa, fb);
             let rlen = right_v.len();
             let mut i: usize = 0;
             while i < rlen
@@ -1589,8 +1589,8 @@ pub mod ArraySeqMtEphSlice {
     }
 
     impl<'a, T> View for ArraySeqMtEphSliceIter<'a, T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+        type V = (ACCEPTED DIFFERENCE: int, Seq<T>);
+        open spec fn view(&self) -> (ACCEPTED DIFFERENCE: int, Seq<T>) { self.inner@ }
     }
 
     pub open spec fn iter_invariant<'a, T>(it: &ArraySeqMtEphSliceIter<'a, T>) -> bool {
@@ -1600,16 +1600,16 @@ pub mod ArraySeqMtEphSlice {
     impl<'a, T> std::iter::Iterator for ArraySeqMtEphSliceIter<'a, T> {
         type Item = &'a T;
 
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
+        fn next(&mut self) -> (ACCEPTED DIFFERENCE: next: Option<&'a T>)
+            ensures (ACCEPTED DIFFERENCE: {
+                let (ACCEPTED DIFFERENCE: old_index, old_seq) = old(self)@;
                 match next {
                     None => {
                         &&& self@ == old(self)@
                         &&& old_index >= old_seq.len()
                     },
                     Some(element) => {
-                        let (new_index, new_seq) = self@;
+                        let (ACCEPTED DIFFERENCE: new_index, new_seq) = self@;
                         &&& 0 <= old_index < old_seq.len()
                         &&& new_seq == old_seq
                         &&& new_index == old_index + 1
@@ -1681,7 +1681,7 @@ pub mod ArraySeqMtEphSlice {
         type Item = &'a T;
         type IntoIter = ArraySeqMtEphSliceIter<'a, T>;
 
-        fn into_iter(self) -> (it: Self::IntoIter)
+        fn into_iter(self) -> (ACCEPTED DIFFERENCE: it: Self::IntoIter)
             requires self.spec_arrayseqmtephslice_wf(),
             ensures
                 it@.0 == 0,
@@ -1706,7 +1706,7 @@ pub mod ArraySeqMtEphSlice {
 
 
     impl<T: Clone> Clone for ArraySeqMtEphSliceS<T> {
-        fn clone(&self) -> (cloned: Self)
+        fn clone(&self) -> (ACCEPTED DIFFERENCE: cloned: Self)
             ensures
                 cloned.data == self.data,
                 cloned.start == self.start,
@@ -1721,12 +1721,12 @@ pub mod ArraySeqMtEphSlice {
     }
 
     impl<T: PartialEq + View + Eq + Clone> PartialEq for ArraySeqMtEphSliceS<T> {
-        fn eq(&self, other: &Self) -> (equal: bool)
-            ensures equal == (self@ == other@)
+        fn eq(&self, other: &Self) -> (ACCEPTED DIFFERENCE: equal: bool)
+            ensures equal == (ACCEPTED DIFFERENCE: self@ == other@)
         {
             let equal = self.start == other.start && self.len == other.len;
             // Veracity: NEEDED proof block
-            proof { assume(equal == (self@ == other@)); }
+            proof { assume(equal == (ACCEPTED DIFFERENCE: self@ == other@)); }
             equal
         }
     }
@@ -1740,17 +1740,17 @@ pub mod ArraySeqMtEphSlice {
 
     #[macro_export]
     macro_rules! ArraySeqMtEphSliceSLit {
-        () => {
+        (ACCEPTED DIFFERENCE: ) => {
             $crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS::from_vec(
                 Vec::new(),
             )
         };
-        ($x:expr; $n:expr) => {
+        (ACCEPTED DIFFERENCE: $x:expr; $n:expr) => {
             $crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS::from_vec(
                 vec![$x; $n],
             )
         };
-        ($($x:expr),* $(,)?) => {
+        (ACCEPTED DIFFERENCE: $($x:expr),* $(,)?) => {
             $crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS::from_vec(
                 vec![$($x),*],
             )

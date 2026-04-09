@@ -106,7 +106,7 @@ pub mod TopDownDPMtEph {
         fn set_t(&mut self, t: ArraySeqMtEphS<char>) { self.seq_t = t; }
 
         /// Compute MED using sequential top-down memoization (Algorithm 51.4).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
         fn med_memoized_concurrent(&mut self) -> (distance: usize) {
             // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -196,7 +196,7 @@ pub mod TopDownDPMtEph {
                 self.spec_t() == t@;
 
         /// - Alg Analysis: APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|*|T|) (sequential memo threading)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential memoized recursion.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|S|*|T|), Span O(|S|*|T|) -- sequential memoized recursion.
         fn med_memoized_concurrent(&mut self) -> (distance: usize)
             requires
                 old(self).spec_topdowndpmteph_wf(),
@@ -231,7 +231,7 @@ pub mod TopDownDPMtEph {
 
     /// Sequential recursive MED with verified memoization.
     /// - Alg Analysis: APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|*|T|) (Algorithm 51.4, sequential)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo.
     fn med_recursive_sequential(
         seq_s: &ArraySeqMtEphS<char>,
         seq_t: &ArraySeqMtEphS<char>,

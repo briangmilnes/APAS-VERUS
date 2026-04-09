@@ -154,7 +154,7 @@ pub mod DocumentIndex {
             requires docs.spec_avltreesetstper_wf()
             ensures count == docs@.len();
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential iteration over AVL tree sequence
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — sequential iteration over AVL tree sequence
         fn to_seq(docs: &DocumentSet) -> (seq: ArraySeqStPerS<DocumentId>)
             requires docs.spec_avltreesetstper_wf()
             ensures seq.spec_arrayseqstper_wf();
@@ -183,7 +183,7 @@ pub mod DocumentIndex {
 
         /// Algorithm 44.2: Make Index — table-based insert.
         /// Iterate docs, iterate words per doc, insert each word into the table.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(D * W * lg n), Span O(D * W * lg n) — nested loops: D docs × W words/doc × O(lg n) table insert; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(D * W * lg n), Span O(D * W * lg n) — nested loops: D docs × W words/doc × O(lg n) table insert; St sequential.
         fn make_index(docs: &DocumentCollection) -> (di: Self) {
             proof {
                 assert(Pair_feq_trigger::<Word, DocumentSet>());
@@ -347,7 +347,7 @@ pub mod DocumentIndex {
         }
 
         /// Algorithm 44.3: find function - simple table lookup.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — BST table lookup + clone; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(lg n), Span O(lg n) — BST table lookup + clone; St sequential.
         fn find(&self, word: &Word) -> (found: DocumentSet) {
             match self.word_to_docs.find_ref(word) {
                 Some(doc_set_ref) => {
@@ -358,19 +358,19 @@ pub mod DocumentIndex {
         }
 
         /// Algorithm 44.3: queryAnd - set intersection.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — AVL tree set intersection; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n + m), Span O(n + m) — AVL tree set intersection; St sequential.
         fn query_and(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet) {
             docs_a.intersection(docs_b)
         }
 
         /// Algorithm 44.3: queryOr - set union.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — AVL tree set union; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n + m), Span O(n + m) — AVL tree set union; St sequential.
         fn query_or(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet) {
             docs_a.union(docs_b)
         }
 
         /// Algorithm 44.3: queryAndNot - set difference.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — AVL tree set difference; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n + m), Span O(n + m) — AVL tree set difference; St sequential.
         fn query_and_not(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (remaining: DocumentSet) {
             docs_a.difference(docs_b)
         }
@@ -382,7 +382,7 @@ pub mod DocumentIndex {
         }
 
         /// Algorithm 44.3: toSeq function.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — in-order traversal collecting n elements; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — in-order traversal collecting n elements; St sequential.
         fn to_seq(docs: &DocumentSet) -> (seq: ArraySeqStPerS<DocumentId>) {
             let avl_seq = docs.to_seq();
             let len = avl_seq.length();
@@ -410,7 +410,7 @@ pub mod DocumentIndex {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — collect all table entries then extract keys; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — collect all table entries then extract keys; St sequential.
         fn get_all_words(&self) -> (words: ArraySeqStPerS<Word>) {
             let entries = self.word_to_docs.collect();
             let len = entries.length();
@@ -550,7 +550,7 @@ pub mod DocumentIndex {
         }
 
         /// Complex query: (word1 AND word2) OR (word3 AND NOT word4).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — 4 finds + 3 set ops; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — 4 finds + 3 set ops; St sequential.
         fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (found: DocumentSet) {
             let set1 = self.find(word1);
             let set2 = self.find(word2);
@@ -572,7 +572,7 @@ pub mod DocumentIndex {
     // 10. free functions
 
     /// Tokenization: splits content into lowercase ASCII words.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — sequential character iteration
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m), Span O(m) — sequential character iteration
     // veracity: no_requires
     pub fn tokens(content: &Contents) -> (words: ArraySeqStPerS<Word>)
         ensures words.spec_arrayseqstper_wf()

@@ -107,7 +107,7 @@ pub mod ScanDCStPer {
         /// Exclusive prefix sums via divide-and-conquer scan.
         /// Convenience: scan_dc with (+, 0).
         /// - Alg Analysis: APAS (Ch26 Alg 26.5): Work O(n lg n), Span O(lg n) — same as scan_dc.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — delegates to sequential scan_dc.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n lg n), Span O(n lg n) — delegates to sequential scan_dc.
         fn prefix_sums_dc(a: &ArraySeqStPerS<usize>) -> (sums: (ArraySeqStPerS<usize>, usize))
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -122,7 +122,7 @@ pub mod ScanDCStPer {
 
 
     impl ScanDCStTrait for ArraySeqStPerS<usize> {
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive D&C scan halving n; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — recursive D&C scan halving n; St sequential.
         fn scan_dc<F: Fn(&usize, &usize) -> usize>(a: &ArraySeqStPerS<usize>, f: &F, Ghost(spec_f): Ghost<spec_fn(usize, usize) -> usize>, id: usize) -> (scanned: (ArraySeqStPerS<usize>, usize))
             decreases a.spec_len(),
         {
@@ -310,7 +310,7 @@ pub mod ScanDCStPer {
             (result_prefixes, total)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to scan_dc with addition; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — delegates to scan_dc with addition; St sequential.
         fn prefix_sums_dc(a: &ArraySeqStPerS<usize>) -> (sums: (ArraySeqStPerS<usize>, usize)) {
             Self::scan_dc(a,
                 &(|x: &usize, y: &usize| -> (ret: usize)

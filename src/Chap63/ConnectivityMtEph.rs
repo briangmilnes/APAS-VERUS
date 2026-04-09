@@ -148,7 +148,7 @@ pub mod ConnectivityMtEph {
 
     /// Compose maps (P . C): for each (u -> v) in P, output (u -> C[v]).
     ///
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|P|), Span O(|P|) — currently sequential despite "parallel" name
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|P|), Span O(|P|) — currently sequential despite "parallel" name
     fn compose_maps_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         partition_map: &HashMapWithViewPlus<V, V>,
         component_map: &HashMapWithViewPlus<V, V>,

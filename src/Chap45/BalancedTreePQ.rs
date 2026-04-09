@@ -126,7 +126,7 @@ broadcast use {
                 ensures pq@.len() == self@.len() + other@.len(), pq.spec_balancedtreepq_wf();
 
             /// - Alg Analysis: APAS (Ch45 cost table, balanced trees): Work O(n lg n), Span O(n lg n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n): sequential inserts
+            /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n lg n), Span O(n lg n): sequential inserts
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> (pq: Self)
                 requires seq.spec_avltreeseqstper_wf(),
                 ensures pq@.len() == seq@.len(), pq.spec_balancedtreepq_wf();

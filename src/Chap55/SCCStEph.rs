@@ -80,7 +80,7 @@ pub mod SCCStEph {
 
 
     /// Computes the finish order for SCC (decreasing finish times).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — full DFS producing finish-time ordering; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — full DFS producing finish-time ordering; St sequential.
     fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (finish_order: AVLTreeSeqStEphS<usize>)
         requires
             spec_toposortsteph_wf(graph),
@@ -175,7 +175,7 @@ pub mod SCCStEph {
     }
 
     /// Transposes a directed graph (reverses all edges).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — iterates all edges once to build transposed adj lists; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — iterates all edges once to build transposed adj lists; St sequential.
     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<usize>>)
         requires spec_toposortsteph_wf(graph),
         ensures
@@ -305,7 +305,7 @@ pub mod SCCStEph {
     }
 
     /// Runtime check that all neighbor indices are valid vertex indices.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — checks all edges for valid indices; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — checks all edges for valid indices; St sequential.
     // veracity: no_requires
     fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (valid: bool)
         ensures valid ==> spec_toposortsteph_wf(graph),
@@ -360,7 +360,7 @@ pub mod SCCStEph {
         true
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS collecting reachable component; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — DFS collecting reachable component; St sequential.
     fn dfs_reach(
         graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: &mut ArraySeqStEphS<bool>,
@@ -480,7 +480,7 @@ pub mod SCCStEph {
 
     impl SCCStEphTrait for SCCStEph {
         /// Finds strongly connected components in a directed graph.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — Kosaraju's: two DFS passes + transpose; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — Kosaraju's: two DFS passes + transpose; St sequential.
         fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<usize>>
         {
             let finish_order = compute_finish_order(graph);

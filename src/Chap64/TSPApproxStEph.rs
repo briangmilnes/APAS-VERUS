@@ -60,7 +60,7 @@ pub mod TSPApproxStEph {
 
         /// Compute Euler tour of a tree.
         /// APAS: Work O(|V|), Span O(|V|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — DFS traversal of tree; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|), Span O(|V|) — DFS traversal of tree; St sequential.
         fn euler_tour<V: HashOrd>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             start: &V,
@@ -73,12 +73,12 @@ pub mod TSPApproxStEph {
 
         /// Shortcut Euler tour to avoid revisiting vertices.
         /// APAS: Work O(|V|), Span O(|V|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — single pass removing duplicates; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|), Span O(|V|) — single pass removing duplicates; St sequential.
         fn shortcut_tour<V: HashOrd>(euler_tour: &[V]) -> Vec<V>;
 
         /// Compute total weight of a tour.
         /// APAS: Work O(|V|), Span O(|V|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — single pass summing edge weights; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|), Span O(|V|) — single pass summing edge weights; St sequential.
         fn tour_weight<V: HashOrd>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             tour: &[V],
@@ -89,7 +89,7 @@ pub mod TSPApproxStEph {
 
         /// 2-approximation algorithm for metric TSP.
         /// APAS: Work O(|V|² log |V|), Span O(|V|² log |V|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — euler tour + shortcut + weight; St sequential. MST cost dominates overall.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|), Span O(|V|) — euler tour + shortcut + weight; St sequential. MST cost dominates overall.
         fn approx_metric_tsp<V: HashOrd>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             spanning_tree: &SetStEph<LabEdge<V, WrappedF64>>,
@@ -106,7 +106,7 @@ pub mod TSPApproxStEph {
 
 
     /// Linear scan for edge pair in visited-edges vector.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan over vec; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — linear scan over vec; St sequential.
     // veracity: no_requires
     fn vec_contains_pair<V: HashOrd>(v: &Vec<(V, V)>, key: &(V, V)) -> (found: bool)
         ensures true,
@@ -131,7 +131,7 @@ pub mod TSPApproxStEph {
     ///
     /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n), Span O(n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DFS is inherently sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — DFS is inherently sequential.
     ///
     /// Arguments:
     /// - graph: Undirected graph (should be a tree)

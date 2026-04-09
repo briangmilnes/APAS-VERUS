@@ -1,4 +1,4 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (ACCEPTED DIFFERENCE: C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! REVIEWED: NO
 
 //! The simplest possible version, ignoring parallelism. Verusified.
@@ -98,11 +98,11 @@ pub mod ArraySeq {
     //		Section 6. spec fns
 
 
-    /// Definition 18.19 (iteratePrefixes). Return the exclusive prefix folds and the total.
+    /// Definition 18.19 (ACCEPTED DIFFERENCE: iteratePrefixes). Return the exclusive prefix folds and the total.
     /// The sequence contains the accumulator state before processing each element:
     /// prefixes[i] = fold_left(x, f, a[0..i]).  The second component is the final fold.
-    pub open spec fn spec_iterate_prefixes<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, x: A) -> (Seq<A>, A) {
-        (Seq::new(s.len(), |i: int| s.take(i).fold_left(x, f)), s.fold_left(x, f))
+    pub open spec fn spec_iterate_prefixes<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, x: A) -> (ACCEPTED DIFFERENCE: Seq<A>, A) {
+        (ACCEPTED DIFFERENCE: Seq::new(s.len(), |i: int| s.take(i).fold_left(x, f)), s.fold_left(x, f))
     }
 
     /// Find the index of the first group whose key matches `k`, or None.
@@ -121,7 +121,7 @@ pub mod ArraySeq {
         }
     }
 
-    /// Definition 18.18 (collect). Group key-value pairs by key, preserving value order.
+    /// Definition 18.18 (ACCEPTED DIFFERENCE: collect). Group key-value pairs by key, preserving value order.
     /// Processes pairs left to right: if the key already has a group, append the value;
     /// otherwise create a new group. Keys appear in first-occurrence order.
     pub open spec fn spec_collect<K, V>(pairs: Seq<(K, V)>) -> Seq<(K, Seq<V>)>
@@ -134,7 +134,7 @@ pub mod ArraySeq {
             let k = pairs.last().0;
             let v = pairs.last().1;
             match spec_find_key_index(rest, k) {
-                Some(i) => rest.update(i, (k, rest[i].1.push(v))),
+                Some(i) => rest.update(i, (ACCEPTED DIFFERENCE: k, rest[i].1.push(v))),
                 None => rest.push((k, seq![v])),
             }
         }
@@ -234,7 +234,7 @@ pub mod ArraySeq {
             spec_find_key_index(old_dv, k) == Some(idx),
         ensures
             spec_collect(pairs_prefix.push((k, v)))
-                =~= old_dv.remove(idx).insert(idx, (k, old_dv[idx].1.push(v))),
+                =~= old_dv.remove(idx).insert(idx, (ACCEPTED DIFFERENCE: k, old_dv[idx].1.push(v))),
     {
         lemma_find_key_index_bounds(old_dv, k, idx);
         let extended = pairs_prefix.push((k, v));
@@ -311,7 +311,7 @@ pub mod ArraySeq {
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(1).
-        fn new(length: usize, init_value: T) -> (new_seq: Self)
+        fn new(length: usize, init_value: T) -> (ACCEPTED DIFFERENCE: new_seq: Self)
             where T: Clone + Eq
             requires
               obeys_feq_full::<T>(),
@@ -322,45 +322,45 @@ pub mod ArraySeq {
 
         /// - Set the element at `index` to `item` in place.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
-        fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
+        fn set(&mut self, index: usize, item: T) -> (ACCEPTED DIFFERENCE: success: Result<(), &'static str>)
             requires index < old(self).spec_len()
             ensures
                 success.is_ok() ==> self.spec_len() == old(self).spec_len(),
                 success.is_ok() ==> self.spec_index(index as int) == item,
                 success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);
 
-        /// - Definition 18.1 (length). Return the number of elements.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Definition 18.1 (ACCEPTED DIFFERENCE: length). Return the number of elements.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn length(&self) -> (len: usize)
+        fn length(&self) -> (ACCEPTED DIFFERENCE: len: usize)
             ensures len as int == self.spec_len();
 
-        /// - Algorithm 19.11 (Function nth). Return a reference to the element at `index`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
+        /// - Algorithm 19.11 (ACCEPTED DIFFERENCE: Function nth). Return a reference to the element at `index`.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch22 CS 22.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn nth(&self, index: usize) -> (nth_elem: &T)
+        fn nth(&self, index: usize) -> (ACCEPTED DIFFERENCE: nth_elem: &T)
             requires index < self.spec_len()
             ensures *nth_elem == self.spec_index(index as int);
 
-        /// - Definition 18.1 (empty). Construct the empty sequence.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Definition 18.1 (ACCEPTED DIFFERENCE: empty). Construct the empty sequence.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn empty() -> (empty_seq: Self)
+        fn empty() -> (ACCEPTED DIFFERENCE: empty_seq: Self)
             ensures empty_seq.spec_len() == 0;
 
-        /// - Definition 18.1 (singleton). Construct a singleton sequence containing `item`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Definition 18.1 (ACCEPTED DIFFERENCE: singleton). Construct a singleton sequence containing `item`.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn singleton(item: T) -> (singleton: Self)
+        fn singleton(item: T) -> (ACCEPTED DIFFERENCE: singleton: Self)
             ensures
                 singleton.spec_len() == 1,
                 singleton.spec_index(0) == item;
 
-        /// - Definition 18.12 (subseq). Extract a contiguous subsequence.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Definition 18.12 (ACCEPTED DIFFERENCE: subseq). Extract a contiguous subsequence.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j), Span O(j) — ACCEPTED DIFFERENCE: sequential clone loop, not O(1) slice
-        fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)
+        fn subseq(a: &Self, start: usize, length: usize) -> (ACCEPTED DIFFERENCE: subseq: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_full::<T>(),
@@ -370,10 +370,10 @@ pub mod ArraySeq {
                 subseq.spec_len() == length as int,
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
 
-        /// - Definition 18.13 (append). Concatenate two sequences.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(1)
+        /// - Definition 18.13 (ACCEPTED DIFFERENCE: append). Concatenate two sequences.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(|a| + |b|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: span O(|a|+|b|) not O(1), sequential loops
-        fn append(a: &Self, b: &Self) -> (appended: Self)
+        fn append(a: &Self, b: &Self) -> (ACCEPTED DIFFERENCE: appended: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_full::<T>(),
@@ -383,12 +383,12 @@ pub mod ArraySeq {
                 forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.spec_len() ==> appended.spec_index(i) == a.spec_index(i),
                 forall|i: int| #![trigger b.spec_index(i)] 0 <= i < b.spec_len() ==> appended.spec_index(a.spec_len() + i) == b.spec_index(i);
 
-        /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x)))
+        /// - Definition 18.14 (ACCEPTED DIFFERENCE: filter). Keep elements satisfying `pred`.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: span O(n) not O(lg n), sequential loop
         /// - The multiset postcondition captures predicate satisfaction, provenance,
         ///   and completeness in a single statement.
-        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
+        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (ACCEPTED DIFFERENCE: filtered: Self)
             where T: Clone + Eq
             requires 
               obeys_feq_full::<T>(),
@@ -405,11 +405,11 @@ pub mod ArraySeq {
                 // Every element of the filtered result satisfies the predicate.
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
-        /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a|), Span O(1)
-        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
+        /// - Definition 18.16 (ACCEPTED DIFFERENCE: update). Return a copy with the index replaced by the new value.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(|a|), Span O(1)
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch22 CS 22.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: span O(n) not O(1), sequential clone loop
-        fn update(a: &Self, index: usize, item: T) -> (updated: Self)
+        fn update(a: &Self, index: usize, item: T) -> (ACCEPTED DIFFERENCE: updated: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_full::<T>(),
@@ -419,34 +419,34 @@ pub mod ArraySeq {
                 updated.spec_index(index as int) == item,
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.spec_len() && i != index as int ==> updated.spec_index(i) == a.spec_index(i);
 
-        /// - Definition 18.5 (isEmpty). true iff the sequence has length zero.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Definition 18.5 (ACCEPTED DIFFERENCE: isEmpty). true iff the sequence has length zero.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn is_empty(&self) -> (empty: bool)
+        fn is_empty(&self) -> (ACCEPTED DIFFERENCE: empty: bool)
             ensures empty <==> self.spec_len() == 0;
 
-        /// - Definition 18.5 (isSingleton). true iff the sequence has length one.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Definition 18.5 (ACCEPTED DIFFERENCE: isSingleton). true iff the sequence has length one.
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn is_singleton(&self) -> (single: bool)
+        fn is_singleton(&self) -> (ACCEPTED DIFFERENCE: single: bool)
             ensures single <==> self.spec_len() == 1;
 
-        /// - Definition 18.7 (iterate). Left fold with accumulator `start_x`.
+        /// - Definition 18.7 (ACCEPTED DIFFERENCE: iterate). Left fold with accumulator `start_x`.
         /// - The Rust equivalent is `Iterator::fold`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.3): Work O(1 + Sigma W(f)), Span O(1 + Sigma S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) (iterate is sequential)
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (accumulated: A)
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.3): Work O(1 + Sigma W(f)), Span O(1 + Sigma S(f))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) (iterate is sequential)
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (ACCEPTED DIFFERENCE: accumulated: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
                 forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
             ensures
                 accumulated == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, start_x);
 
-        /// - Definition 18.18 (reduce). Combine elements using associative function and identity `id`.
+        /// - Definition 18.18 (ACCEPTED DIFFERENCE: reduce). Combine elements using associative function and identity `id`.
         /// - The Rust equivalent is `Iterator::fold` with the accumulator type equal to the element type.
-        /// - Alg Analysis: APAS (Ch20 CS 20.4): Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f))
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.4): Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: span O(n) not O(lg n), sequential fold
-        fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
+        fn reduce<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (ACCEPTED DIFFERENCE: reduced: T)
             where T: Clone
             requires
                 spec_monoid(spec_f, id),
@@ -456,11 +456,11 @@ pub mod ArraySeq {
                 reduced == spec_iterate(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
 
-        /// - Definition 18.19 (scan). Prefix-reduce returning inclusive prefix sums and total.
+        /// - Definition 18.19 (ACCEPTED DIFFERENCE: scan). Prefix-reduce returning inclusive prefix sums and total.
         /// - The Rust equivalent is `Iterator::scan`, which produces similar intermediate state.
-        /// - Alg Analysis: APAS (Ch20 CS 20.5): Work O(|a|), Span O(lg |a|)
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.5): Work O(|a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: span O(n) not O(lg n), sequential loop
-        fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (Self, T))
+        fn scan<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (ACCEPTED DIFFERENCE: scanned: (Self, T))
             where T: Clone + Eq
             requires
                 spec_monoid(spec_f, id),
@@ -469,19 +469,19 @@ pub mod ArraySeq {
                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
                 scanned.0.spec_len() == a.spec_len(),
-                // Each element is the fold of the first i+1 input elements (inclusive prefix sum).
+                // Each element is the fold of the first i+1 input elements (ACCEPTED DIFFERENCE: inclusive prefix sum).
                 forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < a.spec_len() ==>
                     scanned.0.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f),
                 // The total is the fold of the entire sequence.
                 scanned.1 == spec_iterate(
                     Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);
 
-        /// - Definition 18.16 (inject). Update multiple positions at once; the first update in
+        /// - Definition 18.16 (ACCEPTED DIFFERENCE: inject). Update multiple positions at once; the first update in
         ///   the ordering of `updates` takes effect when positions collide.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(lg(degree(b)))
-        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(|b|), Span O(lg(degree(b)))
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(|a| + |b|), Span O(lg(degree(b)))
+        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch22 CS 22.2): Work O(|b|), Span O(lg(degree(b)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — ACCEPTED DIFFERENCE: span O(n+m) not O(lg degree), sequential loops
-        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
+        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (ACCEPTED DIFFERENCE: injected: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_full::<T>(),
@@ -492,10 +492,10 @@ pub mod ArraySeq {
                         Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
                         updates@);
 
-        /// - Definition 18.19 (scanI). Inclusive prefix-reduce: scanI[i] = reduce f id a[0..i].
+        /// - Definition 18.19 (ACCEPTED DIFFERENCE: scanI). Inclusive prefix-reduce: scanI[i] = reduce f id a[0..i].
         /// - Our `scan` currently computes inclusive prefixes; this function makes the intent explicit.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(1).
-        fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: Self)
+        fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (ACCEPTED DIFFERENCE: scanned: Self)
             where T: Clone + Eq
             requires
                 spec_monoid(spec_f, id),
@@ -507,9 +507,9 @@ pub mod ArraySeq {
                 forall|i: int| #![trigger scanned.spec_index(i)] 0 <= i < a.spec_len() ==>
                     scanned.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f);
 
-        /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
+        /// - Definition 18.12 (ACCEPTED DIFFERENCE: subseq copy). Extract contiguous subsequence with allocation.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(1).
-        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
+        fn subseq_copy(&self, start: usize, length: usize) -> (ACCEPTED DIFFERENCE: subseq: Self)
             where T: Clone + Eq
             requires
                 obeys_feq_full::<T>(),
@@ -521,7 +521,7 @@ pub mod ArraySeq {
 
         /// - Remove the element at `index`, shifting subsequent elements left.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1).
-        fn remove(&mut self, index: usize) -> (element: T)
+        fn remove(&mut self, index: usize) -> (ACCEPTED DIFFERENCE: element: T)
             requires
                 index < old(self).spec_len(),
             ensures
@@ -543,7 +543,7 @@ pub mod ArraySeq {
 
         /// - Create sequence from Vec.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1).
-        fn from_vec(elts: Vec<T>) -> (seq: Self)
+        fn from_vec(elts: Vec<T>) -> (ACCEPTED DIFFERENCE: seq: Self)
             ensures
                 seq.spec_len() == elts@.len(),
                 forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
@@ -553,7 +553,7 @@ pub mod ArraySeq {
         fn find_key<K: View + Eq + PartialEq, V: View>(
             groups: &ArraySeqS<(K, ArraySeqS<V>)>,
             needle: &K,
-        ) -> (found: Option<usize>)
+        ) -> (ACCEPTED DIFFERENCE: found: Option<usize>)
             requires
               obeys_concrete_eq::<K>(),
             ensures
@@ -564,15 +564,15 @@ pub mod ArraySeq {
                    None => forall|m: int| #![trigger groups.seq@[m]] 0 <= m < groups.seq@.len() ==> groups.seq@[m].0 != *needle,
                };
 
-    /// Definition 18.18 (collect). Group key-value pairs by key, preserving value order.
+    /// Definition 18.18 (ACCEPTED DIFFERENCE: collect). Group key-value pairs by key, preserving value order.
     /// This is not Rust style iter().collect(), this is a SQL style collect with group_by.
     /// The Verus limitation of "index for &mut not supported" prevents
     /// groups[idx].1.push(v). So we remove the entry, mutate it, and re-insert.
-    /// - Alg Analysis: APAS (Ch20 CS 20.6): Work O(W(cmp) * |a| * lg |a|), Span O(S(cmp) * lg^2 |a|)
+    /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.6): Work O(W(cmp) * |a| * lg |a|), Span O(S(cmp) * lg^2 |a|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — ACCEPTED DIFFERENCE: linear find_key per pair gives O(n²), sequential
     fn collect<K: DeepView<V = K> + View + Clone + Eq + PartialEq, V: DeepView<V = V> + View + Clone + Eq>(
         pairs: &ArraySeqS<(K, V)>,
-    ) -> (collected: ArraySeqS<(K, ArraySeqS<V>)>)
+    ) -> (ACCEPTED DIFFERENCE: collected: ArraySeqS<(K, ArraySeqS<V>)>)
         requires
             obeys_feq_full::<K>(),
             obeys_feq_full::<V>(),
@@ -598,7 +598,7 @@ pub mod ArraySeq {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn new(length: usize, init_value: T) -> (new_seq: ArraySeqS<T>)
+        fn new(length: usize, init_value: T) -> (ACCEPTED DIFFERENCE: new_seq: ArraySeqS<T>)
             where T: Clone + Eq
         {
             let seq = std::vec::from_elem(init_value, length);
@@ -606,7 +606,7 @@ pub mod ArraySeq {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>) {
+        fn set(&mut self, index: usize, item: T) -> (ACCEPTED DIFFERENCE: success: Result<(), &'static str>) {
             if index < self.seq.len() {
                 self.seq.set(index, item);
                 Ok(())
@@ -616,29 +616,29 @@ pub mod ArraySeq {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn length(&self) -> (len: usize) {
+        fn length(&self) -> (ACCEPTED DIFFERENCE: len: usize) {
             self.seq.len()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn nth(&self, index: usize) -> (nth_elem: &T) {
+        fn nth(&self, index: usize) -> (ACCEPTED DIFFERENCE: nth_elem: &T) {
             &self.seq[index]
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn empty() -> (empty_seq: ArraySeqS<T>) {
+        fn empty() -> (ACCEPTED DIFFERENCE: empty_seq: ArraySeqS<T>) {
             ArraySeqS { seq: Vec::new() }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn singleton(item: T) -> (singleton: ArraySeqS<T>) {
+        fn singleton(item: T) -> (ACCEPTED DIFFERENCE: singleton: ArraySeqS<T>) {
             let mut seq = Vec::with_capacity(1);
             seq.push(item);
             ArraySeqS { seq }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j - i), Span O(j - i)
-        fn subseq(a: &ArraySeqS<T>, start: usize, length: usize) -> (subseq: ArraySeqS<T>)
+        fn subseq(a: &ArraySeqS<T>, start: usize, length: usize) -> (ACCEPTED DIFFERENCE: subseq: ArraySeqS<T>)
             where T: Clone + Eq
         {
             let end = start + length;
@@ -649,7 +649,7 @@ pub mod ArraySeq {
                     start <= i <= end,
                     end == start + length,
                     end <= a.seq@.len(),
-                    seq@.len() == (i - start) as int,
+                    seq@.len() == (ACCEPTED DIFFERENCE: i - start) as int,
                     obeys_feq_full::<T>(),
                     forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> seq@[j] == a.seq@[(start + j) as int],
                 decreases end - i,
@@ -666,7 +666,7 @@ pub mod ArraySeq {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|)
-        fn append(a: &ArraySeqS<T>, b: &ArraySeqS<T>) -> (appended: ArraySeqS<T>)
+        fn append(a: &ArraySeqS<T>, b: &ArraySeqS<T>) -> (ACCEPTED DIFFERENCE: appended: ArraySeqS<T>)
             where T: Clone + Eq
         {
             let a_len = a.seq.len();
@@ -714,7 +714,7 @@ pub mod ArraySeq {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: ArraySeqS<T>)
+        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (ACCEPTED DIFFERENCE: filtered: ArraySeqS<T>)
             where T: Clone + Eq
         {
             let mut seq: Vec<T> = Vec::new();
@@ -767,7 +767,7 @@ pub mod ArraySeq {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn update(a: &ArraySeqS<T>, index: usize, item: T) -> (updated: ArraySeqS<T>)
+        fn update(a: &ArraySeqS<T>, index: usize, item: T) -> (ACCEPTED DIFFERENCE: updated: ArraySeqS<T>)
             where T: Clone + Eq
         {
             let len = a.seq.len();
@@ -805,17 +805,17 @@ pub mod ArraySeq {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn is_empty(&self) -> (empty: bool) {
+        fn is_empty(&self) -> (ACCEPTED DIFFERENCE: empty: bool) {
             self.seq.len() == 0
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn is_singleton(&self) -> (single: bool) {
+        fn is_singleton(&self) -> (ACCEPTED DIFFERENCE: single: bool) {
             self.seq.len() == 1
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (accumulated: A) {
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (ACCEPTED DIFFERENCE: accumulated: A) {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             let mut acc = start_x;
@@ -855,7 +855,7 @@ pub mod ArraySeq {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (ACCEPTED DIFFERENCE: reduced: T)
             where T: Clone
         {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
@@ -897,7 +897,7 @@ pub mod ArraySeq {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqS<T>, T))
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (ACCEPTED DIFFERENCE: scanned: (ArraySeqS<T>, T))
             where T: Clone + Eq
         {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
@@ -958,11 +958,11 @@ pub mod ArraySeq {
                 by {
                 }
             }
-            (scanned_seq, acc)
+            (ACCEPTED DIFFERENCE: scanned_seq, acc)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn inject(a: &ArraySeqS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqS<T>)
+        fn inject(a: &ArraySeqS<T>, updates: &Vec<(usize, T)>) -> (ACCEPTED DIFFERENCE: injected: ArraySeqS<T>)
             where T: Clone + Eq
         {
             let ghost s = a.seq@;
@@ -1042,7 +1042,7 @@ pub mod ArraySeq {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: ArraySeqS<T>)
+        fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (ACCEPTED DIFFERENCE: scanned: ArraySeqS<T>)
             where T: Clone + Eq
         {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
@@ -1097,7 +1097,7 @@ pub mod ArraySeq {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j - i), Span O(j - i)
-        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: ArraySeqS<T>)
+        fn subseq_copy(&self, start: usize, length: usize) -> (ACCEPTED DIFFERENCE: subseq: ArraySeqS<T>)
             where T: Clone + Eq
         {
             let end = start + length;
@@ -1108,7 +1108,7 @@ pub mod ArraySeq {
                     start <= i <= end,
                     end == start + length,
                     end <= self.seq@.len(),
-                    seq@.len() == (i - start) as int,
+                    seq@.len() == (ACCEPTED DIFFERENCE: i - start) as int,
                     obeys_feq_full::<T>(),
                     forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> seq@[j] == self.seq@[(start + j) as int],
                 decreases end - i,
@@ -1125,7 +1125,7 @@ pub mod ArraySeq {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn remove(&mut self, index: usize) -> (element: T) {
+        fn remove(&mut self, index: usize) -> (ACCEPTED DIFFERENCE: element: T) {
             let ghost old_seq = self.seq@;
             let element = self.seq.remove(index);
             // Veracity: NEEDED proof block
@@ -1146,7 +1146,7 @@ pub mod ArraySeq {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn from_vec(elts: Vec<T>) -> (seq: ArraySeqS<T>) {
+        fn from_vec(elts: Vec<T>) -> (ACCEPTED DIFFERENCE: seq: ArraySeqS<T>) {
             ArraySeqS { seq: elts }
         }
 
@@ -1155,7 +1155,7 @@ pub mod ArraySeq {
         fn find_key<K: View + Eq + PartialEq, V: View>(
             groups: &ArraySeqS<(K, ArraySeqS<V>)>,
             needle: &K,
-        ) -> (found: Option<usize>)
+        ) -> (ACCEPTED DIFFERENCE: found: Option<usize>)
         {
             // Veracity: NEEDED proof block
             proof { reveal(obeys_concrete_eq); }
@@ -1178,14 +1178,14 @@ pub mod ArraySeq {
         }
 
 
-        /// Definition 18.18 (collect). Group key-value pairs by key, preserving value order.
+        /// Definition 18.18 (ACCEPTED DIFFERENCE: collect). Group key-value pairs by key, preserving value order.
         /// This is not Rust style iter().collect(), this is a SQL style collect with group_by.
         /// The Verus limitation of "index for &mut not supported" prevents
         /// groups[idx].1.push(v). So we remove the entry, mutate it, and re-insert.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn collect<K: DeepView<V = K> + View + Clone + Eq + PartialEq, V: DeepView<V = V> + View + Clone + Eq>(
             pairs: &ArraySeqS<(K, V)>,
-        ) -> (collected: ArraySeqS<(K, ArraySeqS<V>)>)
+        ) -> (ACCEPTED DIFFERENCE: collected: ArraySeqS<(K, ArraySeqS<V>)>)
         {
             let plen = pairs.seq.len();
             let mut collected: ArraySeqS<(K, ArraySeqS<V>)> = ArraySeqS { seq: Vec::new() };
@@ -1220,7 +1220,7 @@ pub mod ArraySeq {
                             lemma_find_key_some(&collected.seq, k, idx);
                             lemma_spec_collect_step_some(old_collected_dv, pairs.seq@.take(i as int), k, v, idx as int);
                         }
-                        let ghost new_collected_dv = old_collected_dv.remove(idx as int).insert(idx as int, (k, old_collected_dv[idx as int].1.push(v)));
+                        let ghost new_collected_dv = old_collected_dv.remove(idx as int).insert(idx as int, (ACCEPTED DIFFERENCE: k, old_collected_dv[idx as int].1.push(v)));
                         let mut entry = collected.seq.remove(idx);
                         entry.1.seq.push(v);
                         collected.seq.insert(idx, entry);
@@ -1264,13 +1264,13 @@ pub mod ArraySeq {
         }
     }
 
-    /// Algorithm 18.4 (map). Transform each element via `f`.
-    /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
+    /// Algorithm 18.4 (ACCEPTED DIFFERENCE: map). Transform each element via `f`.
+    /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: span O(n) not O(1), sequential loop
-    /// Module-level function because map returns ArraySeqS<U> (different element type),
+    /// Module-level function because map returns ArraySeqS<U> (ACCEPTED DIFFERENCE: different element type),
     /// which creates a Verus cycle error when spec_index/spec_len on the return value
     /// resolve through a concrete impl of the same trait.
-    pub fn map<T: View, U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqS<T>, f: &F) -> (mapped: ArraySeqS<U>)
+    pub fn map<T: View, U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqS<T>, f: &F) -> (ACCEPTED DIFFERENCE: mapped: ArraySeqS<U>)
         requires forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.spec_index(i),))
         ensures
             mapped.spec_len() == a.spec_len(),
@@ -1296,13 +1296,13 @@ pub mod ArraySeq {
         ArraySeqS { seq }
     }
 
-    /// Algorithm 18.3 (tabulate). Build a sequence by applying `f` to each index.
-    /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(i))), Span O(1 + max S(f(i)))
+    /// Algorithm 18.3 (ACCEPTED DIFFERENCE: tabulate). Build a sequence by applying `f` to each index.
+    /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(1 + Sigma W(f(i))), Span O(1 + max S(f(i)))
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: span O(n) not O(1), sequential loop
     /// Module-level function for the same reason as map: the return type ArraySeqS<T>
     /// is concrete, and its spec_len/spec_index in ensures creates a Verus cycle
     /// when tabulate is declared inside a trait that also defines spec_len/spec_index.
-    pub fn tabulate<T: View, F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqS<T>)
+    pub fn tabulate<T: View, F: Fn(usize) -> T>(f: &F, length: usize) -> (ACCEPTED DIFFERENCE: tab_seq: ArraySeqS<T>)
         requires
             length <= usize::MAX,
             forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
@@ -1326,12 +1326,12 @@ pub mod ArraySeq {
         ArraySeqS { seq }
     }
 
-    /// Definition 18.15 (flatten). Concatenate a sequence of sequences.
+    /// Definition 18.15 (ACCEPTED DIFFERENCE: flatten). Concatenate a sequence of sequences.
     /// Module-level function because flatten takes ArraySeqS<ArraySeqS<T>>
-    /// (nested concrete types), which creates Verus cycle issues in traits.
-    /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + sum |a[i]|), Span O(lg |a|)
+    /// (ACCEPTED DIFFERENCE: nested concrete types), which creates Verus cycle issues in traits.
+    /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.2): Work O(|a| + sum |a[i]|), Span O(lg |a|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(Σ|a_i|) — ACCEPTED DIFFERENCE: span O(Σ|a_i|) not O(lg|a|), sequential nested loops
-    pub fn flatten<T: View + Clone + Eq>(a: &ArraySeqS<ArraySeqS<T>>) -> (flattened: ArraySeqS<T>)
+    pub fn flatten<T: View + Clone + Eq>(a: &ArraySeqS<ArraySeqS<T>>) -> (ACCEPTED DIFFERENCE: flattened: ArraySeqS<T>)
         requires
             obeys_feq_full::<T>(),
         ensures
@@ -1386,15 +1386,15 @@ pub mod ArraySeq {
         ArraySeqS { seq }
     }
 
-    /// Definition 18.19 (iteratePrefixes). Return all intermediate accumulator values
-    /// (exclusive prefixes) and the final result.  Module-level because the return type
+    /// Definition 18.19 (ACCEPTED DIFFERENCE: iteratePrefixes). Return all intermediate accumulator values
+    /// (ACCEPTED DIFFERENCE: exclusive prefixes) and the final result.  Module-level because the return type
     /// ArraySeqS<A> differs from Self when A differs from T.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     pub fn iterate_prefixes<T: View, A: View + Clone + Eq, F: Fn(&A, &T) -> A>(
         a: &ArraySeqS<T>, f: &F,
         Ghost(spec_f): Ghost<spec_fn(A, T) -> A>,
         start_x: A,
-    ) -> (prefixes: (ArraySeqS<A>, A))
+    ) -> (ACCEPTED DIFFERENCE: prefixes: (ArraySeqS<A>, A))
         requires
             obeys_feq_full::<A>(),
             forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
@@ -1428,7 +1428,7 @@ pub mod ArraySeq {
                     seq@[k] == s.take(k).fold_left(start_x, spec_f),
             decreases len - i,
         {
-            // Push the current accumulator (exclusive: before processing element i).
+            // Push the current accumulator (ACCEPTED DIFFERENCE: exclusive: before processing element i).
             let cloned = acc.clone();
             // Veracity: NEEDED proof block
             proof {
@@ -1464,7 +1464,7 @@ pub mod ArraySeq {
             by {
             }
         }
-        (prefixes, acc)
+        (ACCEPTED DIFFERENCE: prefixes, acc)
     }
 
     impl<T: View> ArraySeqS<T> {
@@ -1475,7 +1475,7 @@ pub mod ArraySeq {
         {}
 
         /// Returns custom ArraySeqIter following Chap05 pattern.
-        pub fn iter(&self) -> (it: ArraySeqIter<'_, T>)
+        pub fn iter(&self) -> (ACCEPTED DIFFERENCE: it: ArraySeqIter<'_, T>)
             ensures
                 it@.0 == 0,
                 it@.1 == self.seq@,
@@ -1499,7 +1499,7 @@ pub mod ArraySeq {
         pub inner: std::slice::Iter<'a, T>, 
     }
 
-    /// Ghost iterator for ForLoopGhostIterator support (for-iter, for-borrow patterns).
+    /// Ghost iterator for ForLoopGhostIterator support (ACCEPTED DIFFERENCE: for-iter, for-borrow patterns).
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqGhostIterator<'a, T> {
         pub pos: int,
@@ -1508,8 +1508,8 @@ pub mod ArraySeq {
     }
 
     impl<'a, T> View for ArraySeqIter<'a, T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) {
+        type V = (ACCEPTED DIFFERENCE: int, Seq<T>);
+        open spec fn view(&self) -> (ACCEPTED DIFFERENCE: int, Seq<T>) {
             self.inner@
         }
     }
@@ -1530,16 +1530,16 @@ pub mod ArraySeq {
         type Item = &'a T;
 
         // Relies on vstd's assume_specification for slice::Iter::next.
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
+        fn next(&mut self) -> (ACCEPTED DIFFERENCE: next: Option<&'a T>)
+            ensures (ACCEPTED DIFFERENCE: {
+                let (ACCEPTED DIFFERENCE: old_index, old_seq) = old(self)@;
                 match next {
                     None => {
                         &&& self@ == old(self)@
                         &&& old_index >= old_seq.len()
                     },
                     Some(element) => {
-                        let (new_index, new_seq) = self@;
+                        let (ACCEPTED DIFFERENCE: new_index, new_seq) = self@;
                         &&& 0 <= old_index < old_seq.len()
                         &&& new_seq == old_seq
                         &&& new_index == old_index + 1
@@ -1629,7 +1629,7 @@ pub mod ArraySeq {
 
 
     impl<T: Clone> Clone for ArraySeqS<T> {
-        fn clone(&self) -> (res: Self)
+        fn clone(&self) -> (ACCEPTED DIFFERENCE: res: Self)
             ensures
                 res.seq@.len() == self.seq@.len(),
                 forall|i: int| #![trigger res.seq@[i]]
@@ -1642,12 +1642,12 @@ pub mod ArraySeq {
     impl<T: Eq + View> Eq for ArraySeqS<T> {}
 
     impl<T: PartialEq + View> PartialEq for ArraySeqS<T> {
-        fn eq(&self, other: &Self) -> (equal: bool)
-            ensures equal == (self@ == other@)
+        fn eq(&self, other: &Self) -> (ACCEPTED DIFFERENCE: equal: bool)
+            ensures equal == (ACCEPTED DIFFERENCE: self@ == other@)
         {
             let equal = self.seq == other.seq;
             // Veracity: NEEDED proof block
-            proof { assume(equal == (self@ == other@)); }
+            proof { assume(equal == (ACCEPTED DIFFERENCE: self@ == other@)); }
             equal
         }
     }
@@ -1666,7 +1666,7 @@ pub mod ArraySeq {
     impl<T: Display> Display for ArraySeqS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(f, "[")?;
-            for (i, item) in self.seq.iter().enumerate() {
+            for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
                 if i > 0 { write!(f, ", ")?; }
                 write!(f, "{item}")?;
             }

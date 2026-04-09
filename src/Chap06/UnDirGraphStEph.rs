@@ -111,7 +111,7 @@ verus!
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|V| + |E|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
         fn from_sets(vertices: SetStEph<V>, edges: SetStEph<Edge<V>>) -> (g: Self)
             requires
                 forall |u: V::V, w: V::V|
@@ -155,7 +155,7 @@ verus!
             ensures b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)));
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|E|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|E|), Span O(|E|) -- sequential filter
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires 
                 spec_graphview_wf(self@),
@@ -183,7 +183,7 @@ verus!
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|E|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|E|), Span O(|E|) -- sequential filter
         fn degree(&self, v: &V) -> (n: usize)
             requires 
                 spec_graphview_wf(self@),
@@ -233,7 +233,7 @@ verus!
             self.E.mem(&Edge(v.clone_plus(), u.clone_plus()))
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of edges
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|E|), Span O(|E|) -- sequential scan of edges
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
             let mut ng: SetStEph<V> = SetStEph::empty();
             let mut it = self.E.iter();

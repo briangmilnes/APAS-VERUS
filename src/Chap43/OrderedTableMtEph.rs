@@ -202,7 +202,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n^2), Span Θ(n^2) -- delegates to StEph.tabulate (sequential insert loop)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work Θ(n^2), Span Θ(n^2) -- delegates to StEph.tabulate (sequential insert loop)
         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             requires
                 keys.spec_arraysetsteph_wf(),

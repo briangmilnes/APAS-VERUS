@@ -101,7 +101,7 @@ pub mod TopDownDPMtPer {
         }
 
         /// Compute MED using sequential top-down memoization (Algorithm 51.4).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
         fn med_memoized_concurrent(&self) -> (distance: usize) {
             // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -174,7 +174,7 @@ pub mod TopDownDPMtPer {
             requires self.spec_topdowndpmtper_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
         fn med_memoized_concurrent(&self) -> (distance: usize)
             requires
                 self.spec_topdowndpmtper_wf(),
@@ -193,7 +193,7 @@ pub mod TopDownDPMtPer {
 
 
     /// Sequential recursive MED with verified memoization.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential recursion with memo.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — sequential recursion with memo.
     fn med_recursive_sequential(
         seq_s: &ArraySeqMtPerS<char>,
         seq_t: &ArraySeqMtPerS<char>,
