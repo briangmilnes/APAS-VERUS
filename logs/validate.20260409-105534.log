@@ -1,0 +1,159 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+error: postcondition not satisfied
+   --> src/Chap65/UnionFindStEph.rs:286:13
+    |
+273 |       proof fn lemma_insert_preserves_wf<V: StT + Hash>(
+    |  ___________-
+274 | |         uf: UnionFindStEph<V>,
+275 | |         old_uf: UnionFindStEph<V>,
+276 | |         v: V,
+277 | |     )
+    | |_____- at the end of the function body
+...
+286 |               uf.spec_unionfindsteph_wf(),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:273:11
+    |
+273 |       proof fn lemma_insert_preserves_wf<V: StT + Hash>(
+    |  ___________^
+274 | |         uf: UnionFindStEph<V>,
+275 | |         old_uf: UnionFindStEph<V>,
+276 | |         v: V,
+277 | |     )
+    | |_____^
+
+note: diagnostics via expansion
+   --> src/Chap65/UnionFindStEph.rs:247:13
+    |
+247 |         &&& spec_rank_has_predecessor(uf)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(uf).spec_unionfindsteph_wf()
+|   spec_unionfindsteph_wf(old(uf))
+|   |   spec_key_model() ✔
+|   |   spec_feq_full() ✔
+|   |   spec_parent_rank_same_dom(old(uf)) ✔
+|   |   spec_roots_parent_same_dom(old(uf)) ✔
+|   |   spec_roots_idempotent(old(uf)) ✔
+|   |   spec_parent_closed(old(uf)) ✔
+|   |   spec_roots_in_dom(old(uf)) ✔
+|   |   spec_elements_forward(old(uf)) ✔
+|   |   spec_elements_backward(old(uf)) ✔
+|   |   spec_elements_distinct(old(uf)) ✔
+|   |   spec_self_parent_is_root(old(uf)) ✔
+|   |   spec_parent_preserves_root(old(uf)) ✔
+|   |   spec_rank_increases(old(uf)) ✔
+|   |   spec_rank_bounded(old(uf)) ✔
+|   |   spec_rank_has_predecessor(old(uf)) ✘ [rlimit exceeded]
+|   |   |   forall |v|
+|   |   |       old(uf).rank.view().dom().contains(v) && old(uf).rank.view().index(v) > 0 ==>
+|   |   |           (exists |w| old(uf).rank.view().dom().contains(w) && old(uf).roots.index(w) == old(uf).roots.index(v) && old(uf).rank.view().index(w) == clip(usize, old(uf).rank.view().index(v) - 1) && !(w == v)) 
+|   |   +---
+|   |   spec_rank_lt_elements(old(uf)) ✔
+|   +---
++---
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:740:11
+    |
+740 |       proof fn lemma_rank_lt_elements<V: StT + Hash>(
+    |  ___________^
+741 | |         uf: &UnionFindStEph<V>,
+742 | |         v_view: <V as View>::V,
+743 | |     )
+    | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:830:11
+    |
+830 |     proof fn lemma_assemble_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap65/UnionFindStEph.rs:1163:11
+     |
+1163 |       proof fn lemma_union_merge_wf<V: StT + Hash>(
+     |  ___________^
+1164 | |         uf: &UnionFindStEph<V>,
+1165 | |         mid: &UnionFindStEph<V>,
+1166 | |         winner_val: V,
+...    |
+1170 | |         loser_view: <V as View>::V,
+1171 | |     )
+     | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap65/UnionFindStEph.rs:1813:9
+     |
+1813 |         fn union(&mut self, u: &V, v: &V) {
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap65/UnionFindStEph.rs:171:9
+    |
+171 | /         forall|v: <V as View>::V|
+172 | |             uf.rank@.contains_key(v) && uf.rank@[v] > 0usize ==>
+173 | |             exists|w: <V as View>::V|
+174 | |                 #[trigger] uf.rank@.contains_key(w)
+175 | |                 && uf.roots@[w] == uf.roots@[v]
+176 | |                 && uf.rank@[w] == (uf.rank@[v] - 1) as usize
+177 | |                 && w != v
+    | |_________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap65/UnionFindStEph.rs:172:13
+    |
+172 |             uf.rank@.contains_key(v) && uf.rank@[v] > 0usize ==>
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap65/UnionFindStEph.rs:765:21
+    |
+765 |               let w = choose|w: <V as View>::V|
+    |  _____________________^
+766 | |                 uf.rank@.contains_key(w)
+767 | |                 && uf.roots@[w] == uf.roots@[v_view]
+768 | |                 && uf.rank@[w] == (uf.rank@[v_view] - 1) as usize
+769 | |                 && w != v_view;
+    | |______________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap65/UnionFindStEph.rs:767:20
+    |
+767 |                 && uf.roots@[w] == uf.roots@[v_view]
+    |                    ^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap65/UnionFindStEph.rs:765:21
+    |
+765 |               let w = choose|w: <V as View>::V|
+    |  _____________________^
+766 | |                 uf.rank@.contains_key(w)
+767 | |                 && uf.roots@[w] == uf.roots@[v_view]
+768 | |                 && uf.rank@[w] == (uf.rank@[v_view] - 1) as usize
+769 | |                 && w != v_view;
+    | |______________________________^
+
+verification results:: 2586 verified, 5 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 253s
+Sampled Memory Usage: peak rust_verify RSS: 2854MB, peak z3 RSS: 8865MB, min free: 13757MB
+Sampled CPU Usage: rust_verify: 42s, z3 children: 42s

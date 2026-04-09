@@ -1,5 +1,4 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! REVIEWED: NO
 //! Chapter 65: Kruskal's MST Algorithm (Sequential Ephemeral)
 //!
 //! Implements Algorithm 65.2: Kruskal's algorithm for computing Minimum Spanning Trees.
@@ -9,20 +8,7 @@
 //! - opaque_spec_unionfindsteph_wf: removed opaque (R130 — wf is already closed, double opacity unnecessary).
 //! - kruskal_process_edge: PROVED (R130, agent1 — union now proved, wf propagation is automatic).
 
-
-//  Table of Contents
-//	Section 1. module
-//	Section 2. imports
-//	Section 6. spec fns
-//	Section 9. impls
-//	Section 14. derive impls outside verus!
-
-//		Section 1. module
-
 pub mod KruskalStEph {
-
-
-    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap05::SetStEph::SetStEph::*;
@@ -52,22 +38,14 @@ pub mod KruskalStEph {
         use crate::Chap65::UnionFindStEph::UnionFindStEph::*;
         use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
 
-        verus! 
-{
-
-    //		Section 6. spec fns
-
+        verus! {
 
         /// Wrapper for UF well-formedness. Delegates to the closed spec_unionfindsteph_wf.
         pub open spec fn opaque_spec_unionfindsteph_wf<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
             uf.spec_unionfindsteph_wf()
         }
 
-    //		Section 9. impls
-
-
         /// Process one edge: if endpoints are in different components, add to MST and union.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — two finds + conditional union; amortized.
         pub fn kruskal_process_edge<V: HashOrd>(
             uf: &mut UnionFindStEph<V>,
             mst_edges: &mut SetStEph<LabEdge<V, u64>>,
@@ -92,9 +70,6 @@ pub mod KruskalStEph {
         }
 
         } // verus!
-
-    //		Section 14. derive impls outside verus!
-
     }
 
     use uf_opaque_wrappers::*;
@@ -104,6 +79,8 @@ pub mod KruskalStEph {
     broadcast use {
         crate::Types::Types::group_LabEdge_axioms,
     };
+
+    // 3a. proof fns
 
     /// Prove that a sorted edge's endpoints are in the UF domain.
     /// Chains: sort provenance -> pre_sort view -> edge_seq view -> mapped_es -> labeled -> graph@.A -> graph wf -> UF.
@@ -132,24 +109,25 @@ pub mod KruskalStEph {
             uf_parent_dom.contains(edges_vec_i@.0),
             uf_parent_dom.contains(edges_vec_i@.1),
     {
-        // Chain: edges_vec_i in pre_sort → pre_sort[j]@ == edge_seq[j]@ → mapped_es → labeled → graph@.A → wf → UF.
         let j = choose|j: int| 0 <= j < pre_sort.len() && pre_sort[j] == edges_vec_i;
+        assert(j < edge_seq.len());
         assert(pre_sort[j]@ == edge_seq[j]@);
-        let ev = edges_vec_i@;
-        // edge_seq[j]@ is in mapped_es (by map definition).
-        assert(mapped_es[j] == ev);
-        assert(mapped_es.contains(ev));
-        // mapped_es.contains(ev) <==> labeled_view.contains(ev)
-        assert(labeled_view.contains(ev));
-        // labeled_view =~= graph_A
-        assert(graph_A.contains(ev));
-        // spec_labgraphview_wf: endpoints in graph_V
-        assert(graph_V.contains(ev.0));
-        assert(graph_V.contains(ev.1));
+        assert(edges_vec_i@ == edge_seq[j]@);
+        assert(mapped_es[j] == edge_seq[j]@);
+        assert(mapped_es.contains(edge_seq[j]@));
+        assert(labeled_view.contains(edge_seq[j]@));
+        assert(graph_A.contains(edge_seq[j]@));
+        assert(graph_A.contains((edge_seq[j]@.0, edge_seq[j]@.1, edge_seq[j]@.2)));
+        assert(graph_V.contains(edge_seq[j]@.0));
+        assert(graph_V.contains(edge_seq[j]@.1));
     }
+
+    // 4. type definitions
 
     /// Namespace struct for trait impl.
     pub struct KruskalStEph;
+
+    // 8. traits
 
     /// Greedy edge-adding phase of Kruskal's algorithm.
     fn kruskal_greedy_phase<V: HashOrd>(
@@ -184,7 +162,6 @@ pub mod KruskalStEph {
         let ghost initial_dom = uf@.parent.dom();
 
         // Establish opaque wf for the loop invariant.
-        // Veracity: NEEDED proof block
         proof { assert(opaque_spec_unionfindsteph_wf(uf)) by { reveal(opaque_spec_unionfindsteph_wf); }; }
 
         let mut i: usize = 0;
@@ -211,7 +188,6 @@ pub mod KruskalStEph {
             let edge = edges_vec[i].clone_view();
 
             // Prove endpoints are in UF domain.
-            // Veracity: NEEDED proof block
             proof {
                 lemma_sorted_edge_in_uf::<V>(
                     edges_vec@[i as int], pre_sort, edge_seq, mapped_es,
@@ -302,20 +278,21 @@ pub mod KruskalStEph {
             }
 
             // Prove outer invariant for i+1.
-            // Veracity: NEEDED proof block
             proof {
                 let new_i = i as int + 1;
                 // Prefix [0..new_i) sorted.
-                assert forall |a: int, b: int| #![trigger edges@[a], edges@[b]]
-                    0 <= a <= b < new_i implies
-                    edges@[a].2 <= edges@[b].2
+                assert forall|a: int, b: int| #![trigger edges@[a], edges@[b]] 0 <= a <= b < new_i
+                    implies edges@[a].2 <= edges@[b].2
                 by {
+                    if b == i as int && a < i as int {
+                        assert(edges@[a].2 <= edges@[i as int].2);
+                    }
                 };
                 // Prefix [0..new_i) ≤ suffix [new_i..n).
-                assert forall |a: int, b: int| #![trigger edges@[a], edges@[b]]
-                    0 <= a < new_i && new_i <= b < n as int implies
-                    edges@[a].2 <= edges@[b].2
+                assert forall|a: int, b: int| #![trigger edges@[a], edges@[b]] 0 <= a < new_i && new_i <= b < n
+                    implies edges@[a].2 <= edges@[b].2
                 by {
+                    assert(edges@[i as int].2 <= edges@[b].2);
                     if a < i as int {
                         // Transitivity: a < i, so edges[a].2 <= edges[i].2 <= edges[b].2.
                     }
@@ -329,21 +306,23 @@ pub mod KruskalStEph {
     /// Algorithm 65.2: Kruskal's MST Algorithm.
     ///
     /// - Alg Analysis: APAS (Ch65 Alg 65.2): Work O(m lg n), Span O(m lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg m), Span O(m lg m) — sorting dominates.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — matches APAS
+    /// - Claude-Opus-4.6: Work O(m lg m), Span O(m lg m) — sorting dominates.
     #[verifier::rlimit(50)]
     pub fn kruskal_mst<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, u64>,
     ) -> (mst_edges: SetStEph<LabEdge<V, u64>>)
         requires
             spec_labgraphview_wf(graph@),
-            valid_key_type_LabEdge::<V, u64>(),
             obeys_key_model::<V>(),
             obeys_feq_full::<V>(),
             obeys_feq_view_injective::<V>(),
         ensures
             mst_edges.spec_setsteph_wf(),
     {
+        // Trigger LabEdge broadcast axioms for SetStEph::empty precondition.
+        proof { assert(LabEdge_feq_trigger::<V, u64>()); }
+
         let mut mst_edges: SetStEph<LabEdge<V, u64>> = SetStEph::empty();
         let mut uf = UnionFindStEph::new();
 
@@ -369,14 +348,18 @@ pub mod KruskalStEph {
 
         // Bridge: all graph vertices are now in UF.
         // After while: vi >= vertex_seq.len(), so all vertex_seq elements are in UF.
-        // Veracity: NEEDED proof block
         proof {
             let mapped_vs = vertex_seq@.map(|_i: int, t: V| t@);
-            assert forall |v: <V as View>::V| #[trigger] graph@.V.contains(v) implies
+            assert forall|v: <V as View>::V| #[trigger] graph@.V.contains(v) implies
                 uf@.parent.contains_key(v)
             by {
                 // v in graph@.V = graph.vertices()@ <==> mapped_vs.contains(v).
+                assert(mapped_vs.contains(v));
                 let j = choose|j: int| 0 <= j < mapped_vs.len() && mapped_vs[j] == v;
+                assert(mapped_vs.len() == vertex_seq@.len());
+                assert(mapped_vs[j] == vertex_seq@[j]@);
+                assert(0 <= j && j < vertex_seq@.len());
+                assert(uf@.parent.contains_key(vertex_seq@[j]@));
             };
         }
 
@@ -416,8 +399,9 @@ pub mod KruskalStEph {
     }
 
     /// Compute total MST weight.
+    /// - Alg Analysis: APAS: (no cost stated) — utility function
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|MST|), Span O(|MST|) — linear scan over MST edges
+    /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
     /// Overflow-safe: skips edges that would cause u64 overflow (never triggers for MST weights).
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
         requires mst_edges.spec_setsteph_wf(),
@@ -449,8 +433,9 @@ pub mod KruskalStEph {
 
     /// Verify MST has correct number of edges.
     /// A valid MST of n vertices should have n-1 edges.
+    /// - Alg Analysis: APAS: (no cost stated) — validation utility
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)
+    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     pub fn verify_mst_size<V: HashOrd>(
         n_vertices: usize,
         mst_edges: &SetStEph<LabEdge<V, u64>>,

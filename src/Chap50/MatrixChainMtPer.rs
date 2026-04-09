@@ -250,7 +250,6 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Arc and Arc<RwLock>
         fn new() -> (mc: Self) {
-            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 dimensions: Arc::new(Vec::new()),
@@ -260,7 +259,6 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — wrap dimensions in Arc, n = dimensions.len()
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self) {
-            // Veracity: NEEDED proof block
             let ghost gd = dimensions@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -284,7 +282,6 @@ broadcast use {
                     cols: dim_pairs[idx].1,
                 });
                 idx = idx + 1;
-            // Veracity: NEEDED proof block
             }
             let ghost gd = dimensions@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -332,6 +329,7 @@ broadcast use {
             {
                 let rwlock = arc_deref(&self.memo);
                 let handle = rwlock.acquire_read();
+                assert(rwlock.pred().dims =~= self@.dimensions);
                 let found = match handle.borrow().get(&Pair(i, j)) {
                     Some(v) => Some(*v),
                     None => None,
@@ -345,17 +343,17 @@ broadcast use {
             if i == j {
                 let rwlock = arc_deref(&self.memo);
                 let (mut memo, wh) = rwlock.acquire_write();
-// Veracity: NEEDED proof block
+                assert(rwlock.pred().dims =~= self@.dimensions);
                 let ghost pre_insert = memo@;
                 memo.insert(Pair(i, j), 0usize);
                 proof {
-                    // Veracity: NEEDED assert
                     assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
                     implies
                         memo@[(a, b)] as nat == spec_chain_cost(self@.dimensions, a as int, b as int, a as int)
                     by {
                         if a == i && b == j {
                         } else {
+                            assert(pre_insert.contains_key((a, b)));
                         }
                     };
                 }
@@ -386,6 +384,7 @@ broadcast use {
                 let left_cost = self.matrix_chain_rec(i, k);
                 let right_cost = self.matrix_chain_rec(k + 1, j);
                 let split_cost = self.multiply_cost(i, k, j);
+                assert(left_cost as nat + right_cost as nat + split_cost as nat <= usize::MAX as nat);
                 let total = left_cost + right_cost + split_cost;
 
                 if total < best {
@@ -396,18 +395,18 @@ broadcast use {
 
             // Store in memo.
             let rwlock = arc_deref(&self.memo);
-            // Veracity: NEEDED proof block
             let (mut memo, wh) = rwlock.acquire_write();
+            assert(rwlock.pred().dims =~= self@.dimensions);
             let ghost pre_insert = memo@;
             memo.insert(Pair(i, j), best);
             proof {
-                // Veracity: NEEDED assert
                 assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
                 implies
                     memo@[(a, b)] as nat == spec_chain_cost(gdims, a as int, b as int, a as int)
                 by {
                     if a == i && b == j {
                     } else {
+                        assert(pre_insert.contains_key((a, b)));
                     }
                 };
             }
@@ -468,7 +467,6 @@ broadcast use {
     impl Clone for MatrixChainMtPerS {
         fn clone(&self) -> (mc: Self)
             ensures mc@ == self@
-        // Veracity: NEEDED proof block
         {
             let mc = MatrixChainMtPerS {
                 dimensions: self.dimensions.clone(),
@@ -486,7 +484,6 @@ broadcast use {
     }
 
     impl PartialEq for MatrixChainMtPerS {
-        // Veracity: NEEDED proof block
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {

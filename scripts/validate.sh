@@ -86,7 +86,12 @@ fi
 
 LOGDIR="$PROJECT_ROOT/logs"
 mkdir -p "$LOGDIR"
-LOGFILE="$LOGDIR/validate.$(date +%Y%m%d-%H%M%S).log"
+# Detect agent name from worktree path (e.g., APAS-VERUS-agent3 → agent3).
+AGENT_TAG=""
+if [[ "$PROJECT_ROOT" =~ -agent([0-9]+)$ ]]; then
+    AGENT_TAG=".agent${BASH_REMATCH[1]}"
+fi
+LOGFILE="$LOGDIR/validate${AGENT_TAG}.$(date +%Y%m%d-%H%M%S).log"
 
 cd "$PROJECT_ROOT"
 START_SEC=$(date +%s)

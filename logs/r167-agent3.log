@@ -1,0 +1,2399 @@
+nohup: ignoring input
+0
+Verus Library Minimizer
+=======================
+This minimizer is only possible due to the phenomenal speed of verification
+in Verus. Thanks Verus team!
+
+Logging to: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-minimize-proofs.APAS-VERUS-agent3.chapChap42.20260408-173700.log
+
+Arguments:
+  -c, --codebase:     /home/milnes/projects/APAS-VERUS-agent3
+  -l, --library:      /home/milnes/projects/APAS-VERUS-agent3/src/vstdplus
+  -F, --file:         (all files)
+  -n, --dry-run:      false
+  -b, --broadcasts:   false
+  -L, --lib-broadcasts: false
+  -N, --max-lemmas:   all
+  -a, --asserts:      true
+  -A, --max-asserts:  all
+  -p, --proof-blocks: true
+  -P, --max-proof-blocks: all
+  -e, --exclude:      (none)
+  -f, --fail-fast:    false
+  --danger:           false
+  --no-lib-min:       true
+  mode:               resume (preserve markers)
+  --project:          APAS
+  --chapter:          Chap42
+
+Mode: APAS isolate Chap42 (estimated 10-30s per iteration)
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPORTANT: No code will be harmed in the improving of your codebase!
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Codebase is in git and committed. Proceeding safely.
+
+Veracity will repeatedly comment things in and out using // Veracity: lines
+to test and improve your use of vstd. All changes are reversible comments.
+You will need to review each // Veracity: line and decide what to keep.
+
+Phases:
+  Phase 0:  Strip existing Veracity markers (if any)
+  Phase 1:  Analyze and verify codebase
+  Phase 2:  Analyze library structure (lemmas, modules, call sites, spec fns)
+  Phase 3:  Discover vstd broadcast groups from verus installation
+  Phase 4:  Estimate time for testing
+  Phase 5:  Apply broadcast groups to library (-L flag)
+  Phase 6:  Apply broadcast groups to codebase (-b flag)
+  Phase 7:  Test lemma dependence on vstd (can vstd prove it alone?)
+  Phase 8:  Test lemma necessity (can codebase verify without it?)
+  Phase 9:  Test library asserts (can we remove any?)
+  Phase 10: Test codebase asserts (can we remove any?)
+  Phase 11: Test admits (can we remove any? -m flag)
+  Phase 12: Test proof {} blocks (-p flag)
+  Phase 13: Test types (are they used? -t flag)
+  Phase 14: Analyze and verify final codebase
+
+Comment markers inserted:
+  // Veracity: added broadcast group  - Phase 5/6: Inserted broadcast use block
+  // Veracity: DEPENDENT              - Phase 7: Lemma proven by vstd broadcast groups
+  // Veracity: INDEPENDENT            - Phase 7: Lemma provides unique proof logic
+  // Veracity: USED                   - Phase 8: Lemma required, restored after test
+  // Veracity: UNUSED                 - Phase 8: Lemma not needed, left commented out
+  // Veracity: NEEDED assert          - Phase 9/10: Assert required for verification
+  // Veracity: UNNEEDED assert        - Phase 9/10: Assert not needed, left commented
+  // Veracity: NEEDED admit           - Phase 11: Admit still needed (proof hole)
+  // Veracity: UNNEEDED admit         - Phase 11: Admit not needed, left commented
+  // Veracity: NEEDED proof block     - Phase 12: Proof block required
+  // Veracity: UNNEEDED proof block   - Phase 12: Proof block not needed, left commented
+  // Veracity: TYPE USED              - Phase 13: Type is used (verified by removal test)
+  // Veracity: TYPE UNUSED            - Phase 13: Type not used, left commented out
+  // Veracity: UNNEEDED               - Phase 8: Call site not needed, left commented
+
+═══════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 0: Resuming from existing markers
+═══════════════════════════════════════════════════════════════
+
+  Found 5788 existing Veracity markers
+  Checking for incomplete work from prior run...
+  Restored 7 TESTING markers to original code
+  Prior results found:
+    NEEDED assert: 3034
+    NEEDED proof block: 2746
+  These items will be skipped during testing.
+
+═══════════════════════════════════════════════════════════════
+Phase 1: Analyzing and verifying codebase
+═══════════════════════════════════════════════════════════════
+
+  Initial LOC (comments not counted):
+    Spec:       0
+    Proof:      0
+    Exec:       0
+    Total:      0
+
+  Verifying...
+  ✓ Verification passed in 24.9s, 2124 MB. Continuing.
+
+Phase 2: Analyzing library structure...
+  Scanning library for proof functions (lemmas)...
+  Found 305 proof functions
+  In 13 modules
+  Checking which library modules are used in codebase...
+  13 modules used in codebase
+  0 modules NOT used in codebase
+  Scanning for lemma call sites...
+  703 call sites in library
+  11928 call sites in codebase (outside library)
+  Scanning library for spec functions...
+  Found 160 spec functions
+  56 spec functions without explicit calls (excluding type variants where any is used)
+
+Phase 3: Discovering vstd broadcast groups...
+  vstd source: /home/milnes/projects/verus/source/vstd
+  Found 49 broadcast groups
+
+Phase 4: Estimating time...
+  Time per verification:           24.9s
+  Lemmas to test:                  305
+  Est. lib asserts to test:        ~260
+  Est. codebase asserts to test:   ~50
+
+  Estimation formula:
+    Phase 5/6: verification_time × num_files
+    Phase 7:   verification_time × num_lemmas (empty body test)
+    Phase 8:   verification_time × num_lemmas (comment out test)
+    Phase 9/10: verification_time × num_asserts (comment out test)
+
+  Phase 1 (verify codebase):       24.9s (done)
+  Phase 2 (analyze library):       ~0s (no verification)
+  Phase 3 (discover broadcasts):   ~0s (no verification)
+  Phase 4 (estimate time):         ~0s (no verification)
+  Phase 5 (library broadcasts):    skipped (no -L flag)
+  Phase 6 (codebase broadcasts):   skipped (no -b flag)
+  Phase 7 (dependence test):       ~2h 6m 26s (24.9s × 305 lemmas)
+  Phase 8 (necessity test):        ~2h 6m 26s (24.9s × 305 lemmas)
+  Phase 9 (library asserts):       ~0.0s (24.9s × ~260 asserts)
+  Phase 10 (codebase asserts):     ~20m 43s (24.9s × ~50 asserts)
+  ─────────────────────────────────────────
+  TOTAL ESTIMATED TIME:            ~4h 34m 1s
+
+Phase 5: Library broadcast groups...
+  Analyzing library for broadcast group recommendations...
+
+  VecQueue.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  feq.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  float.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  hash_map_with_view_plus.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  hash_set_with_view_plus.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  multiset.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  seq.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  seq_set.rs:
+    In use:
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set_lib::group_set_lib_default
+
+  No new broadcast groups recommended for library.
+  Skipped (use -L flag to add broadcast groups)
+
+Phase 6: Codebase broadcast groups...
+  Analyzing broadcast groups per file...
+
+  src/Chap03/InsertionSortStEph.rs:
+    In use:
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap05/KleeneStPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap05/MappingStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap05/RelationStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap05/SetMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap05/SetStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap06/DirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/DirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/LabDirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/LabDirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/LabUnDirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/LabUnDirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/UnDirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/UnDirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/WeightedDirGraphStEphF64.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI128.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI16.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI32.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI64.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI8.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphIsize.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU128.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU16.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU32.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU64.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU8.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphUsize.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap17/MathSeq.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/ArraySeq.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::multiset::group_multiset_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::seq_lib::group_filter_ensures
+
+  src/Chap18/ArraySeqMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap18/ArraySeqMtEphSlice.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::std_specs::slice::group_slice_axioms
+      ✓ vstd::slice::group_slice_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/ArraySeqMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap18/ArraySeqSpecsAndLemmas.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap18/ArraySeqStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/ArraySeqStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/LinkedListStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/LinkedListStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap19/ArraySeqMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap19/ArraySeqMtEphSlice.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::std_specs::slice::group_slice_axioms
+      ✓ vstd::slice::group_slice_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap19/ArraySeqSpecsAndLemmas.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap19/ArraySeqStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap19/ArraySeqStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap21/Algorithm21_1.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap21/Algorithm21_2.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::arithmetic::power::group_pow_properties
+
+  src/Chap21/Algorithm21_5.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Algorithm21_6.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Exercise21_5.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap21/Exercise21_7.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Exercise21_8.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Problem21_1.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Problem21_3.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Problem21_4.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap23/BalBinTreeStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap23/PrimTreeSeqStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/DivConReduceMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/DivConReduceStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap26/ETSPMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/ETSPStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/MergeSortMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap26/MergeSortStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap26/ScanDCMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/ScanDCStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ContractSpecsAndLemmas.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap27/ReduceContractMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ReduceContractStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ScanContractMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ScanContractStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MCSSSpec.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumDivConOptStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumDivConStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumIterStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumOptStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap35/OrderStatSelectMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap35/OrderStatSelectMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap35/OrderStatSelectStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap35/OrderStatSelectStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap36/QuickSortMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap36/QuickSortMtEphSlice.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap36/QuickSortStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap37/AVLTreeSeqMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap37/AVLTreeSeqStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap37/AVLTreeSeqStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap38/BSTParaMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_properties
+
+  src/Chap38/BSTParaStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTParaTreapMtEph.rs:
+    In use:
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTTreapMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTTreapSpecsAndLemmas.rs:
+    In use:
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTTreapStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_properties
+
+  src/Chap40/BSTKeyValueStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::map_lib::group_map_union
+
+  src/Chap41/AVLTreeSetMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/AVLTreeSetMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/AVLTreeSetStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap41/AVLTreeSetStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap41/ArraySetEnumMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/ArraySetStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/Example41_3.rs:
+    In use:
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap41/OrdKeyMap.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap42/TableMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap42/TableSpecsAndLemmas.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap42/TableStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap42/TableStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap43/AugOrderedTableMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/AugOrderedTableStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/AugOrderedTableStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/OrderedSetMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap43/OrderedSetStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap43/OrderedSetStPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap43/OrderedSpecsAndLemmas.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap43/OrderedTableMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/OrderedTableMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/OrderedTableStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap43/OrderedTableStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap45/BalancedTreePQ.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap45/BinaryHeapPQ.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap45/HeapsortExample.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap45/LeftistHeapPQ.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap45/SortedListPQ.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap45/UnsortedListPQ.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap49/MinEditDistMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/MinEditDistMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/MinEditDistStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/MinEditDistStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap50/MatrixChainMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/MatrixChainMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/MatrixChainStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/MatrixChainStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/OptBinSearchTreeMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap50/OptBinSearchTreeMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap50/OptBinSearchTreeStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap50/OptBinSearchTreeStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap51/SeqSpecsAndLemmas.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap51/TopDownDPMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap51/TopDownDPMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap51/TopDownDPStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap51/TopDownDPStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap52/AdjMatrixGraphMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjMatrixGraphMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjMatrixGraphStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjMatrixGraphStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjTableGraphMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/AdjTableGraphSpecsAndLemmas.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap52/AdjTableGraphStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/AdjTableGraphStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/EdgeSetGraphMtPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/EdgeSetGraphStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/EdgeSetGraphStPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap54/BFSMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vecdeque::group_vec_dequeue_axioms
+
+  src/Chap54/BFSStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vecdeque::group_vec_dequeue_axioms
+
+  src/Chap54/BFSStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vecdeque::group_vec_dequeue_axioms
+
+  src/Chap55/CycleDetectStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/CycleDetectStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/DFSStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/DFSStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/SCCStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap55/SCCStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap55/TopoSortStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap56/SSSPResultStPerF64.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap57/StackStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap66/BoruvkaMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap66/BoruvkaStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/ParaPairs.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Types.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/standards/table_of_contents_standard.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+═══════════════════════════════════════════════════════════════
+Phase 7: Skipped (--no-lib-min)
+═══════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 8: Skipped (--no-lib-min)
+═══════════════════════════════════════════════════════════════
+
+
+Phase 9: Skipped (use -a flag to enable assert minimization)
+
+═══════════════════════════════════════════════════════════════
+Phase 10: Testing codebase asserts
+═══════════════════════════════════════════════════════════════
+
+For each assert: comment out, verify. NEEDED=restored, UNNEEDED=left commented.
+
+Found 814 asserts in codebase, testing 814
+
+[1/814] assert L2115 in entries (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 25.1s (incremental ~0s, 2111 MB)]
+[2/814] assert L2104 in subtract (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 29.2s (incremental -0.0s, 2124 MB)]
+[3/814] assert L2095 in subtract (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 31.6s (incremental +2.3s, 2112 MB)]
+[4/814] assert L2089 in subtract (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 25.3s (incremental ~0s, 2118 MB)]
+[5/814] assert L2082 in subtract (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.7s (incremental +0.5s, 2115 MB)]
+[6/814] assert L2078 in subtract (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[7/814] assert L2068 in subtract (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 36.3s (incremental +7.1s, 2117 MB)]
+[8/814] assert L2066 in subtract (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 30.0s (incremental +0.8s, 2125 MB)]
+[9/814] assert L2059 in subtract (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 323 MB)]
+[10/814] assert L2026 in subtract (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 33.6s (incremental +4.4s, 2117 MB)]
+[11/814] assert L2025 in subtract (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 31.5s (incremental +2.3s, 2116 MB)]
+[12/814] assert L2012 in restrict (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 33.7s (incremental +4.5s, 2114 MB)]
+[13/814] assert L2003 in restrict (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 39.8s (incremental +10.6s, 2109 MB)]
+[14/814] assert L1997 in restrict (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.4s (incremental +0.2s, 2122 MB)]
+[15/814] assert L1990 in restrict (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 34.5s (incremental +5.3s, 2124 MB)]
+[16/814] assert L1986 in restrict (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[17/814] assert L1976 in restrict (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 35.1s (incremental +5.9s, 2110 MB)]
+[18/814] assert L1974 in restrict (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 27.4s (incremental ~0s, 2116 MB)]
+[19/814] assert L1967 in restrict (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 11.6s (incremental ~0s, 322 MB)]
+[20/814] assert L1935 in restrict (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.4s (incremental +9.2s, 2114 MB)]
+[21/814] assert L1934 in restrict (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.0s (incremental +10.8s, 2117 MB)]
+[22/814] assert L1918 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 31.7s (incremental +2.5s, 2107 MB)]
+[23/814] assert L1911 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[24/814] assert L1906 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.6s (incremental +9.4s, 2109 MB)]
+[25/814] assert L1905 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.8s (incremental +9.6s, 2118 MB)]
+[26/814] assert L1903 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.6s (incremental +6.4s, 2116 MB)]
+[27/814] assert L1902 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 33.7s (incremental +4.5s, 2112 MB)]
+[28/814] assert L1900 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 33.8s (incremental +4.6s, 2116 MB)]
+[29/814] assert L1899 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 31.6s (incremental +2.4s, 2110 MB)]
+[30/814] assert L1895 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[31/814] assert L1894 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 33.7s (incremental +4.5s, 2116 MB)]
+[32/814] assert L1889 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.9s (incremental +6.7s, 2116 MB)]
+[33/814] assert L1887 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 27.4s (incremental ~0s, 2112 MB)]
+[34/814] assert L1880 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[35/814] assert L1875 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 31.7s (incremental +2.5s, 2107 MB)]
+[36/814] assert L1866 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 323 MB)]
+[37/814] assert L1863 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.6s (incremental +6.4s, 2108 MB)]
+[38/814] assert L1862 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.6s (incremental +0.4s, 2107 MB)]
+[39/814] assert L1836 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.9s (incremental +6.7s, 2107 MB)]
+[40/814] assert L1835 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.3s (incremental +11.1s, 2111 MB)]
+[41/814] assert L1834 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.4s (incremental +7.2s, 2120 MB)]
+[42/814] assert L1833 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.2s (incremental +9.0s, 2119 MB)]
+[43/814] assert L1832 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 34.5s (incremental +5.3s, 2116 MB)]
+[44/814] assert L1828 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 33.7s (incremental +4.5s, 2115 MB)]
+[45/814] assert L1823 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 31.6s (incremental +2.4s, 2113 MB)]
+[46/814] assert L1822 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 33.4s (incremental +4.2s, 2112 MB)]
+[47/814] assert L1821 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 27.4s (incremental ~0s, 2113 MB)]
+[48/814] assert L1814 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.5s (incremental ~0s, 323 MB)]
+[49/814] assert L1810 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.6s (incremental +6.4s, 2116 MB)]
+[50/814] assert L1809 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 33.6s (incremental +4.4s, 2113 MB)]
+[51/814] assert L1805 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[52/814] assert L1804 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 33.7s (incremental +4.5s, 2110 MB)]
+[53/814] assert L1800 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.8s (incremental +0.6s, 2110 MB)]
+[54/814] assert L1797 in insert<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[55/814] assert L1796 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 33.7s (incremental +4.4s, 2108 MB)]
+[56/814] assert L1789 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.1s (incremental +6.9s, 2117 MB)]
+[57/814] assert L1788 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.6s (incremental +6.4s, 2111 MB)]
+[58/814] assert L1786 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.2s (incremental +11.0s, 2121 MB)]
+[59/814] assert L1785 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 33.7s (incremental +4.4s, 2124 MB)]
+[60/814] assert L1784 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 37.8s (incremental +8.6s, 2110 MB)]
+[61/814] assert L1781 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.8s (incremental +6.6s, 2118 MB)]
+[62/814] assert L1779 in insert<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 43.4s (incremental +14.2s, 2117 MB)]
+[63/814] assert L1704 in delete (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 37.9s (incremental +8.7s, 2107 MB)]
+[64/814] assert L1703 in delete (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.9s (incremental +0.7s, 2117 MB)]
+[65/814] assert L1702 in delete (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.6s (incremental +0.4s, 2119 MB)]
+[66/814] assert L1698 in delete (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 8.7s (incremental ~0s, 322 MB)]
+[67/814] assert L1697 in delete (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.8s (incremental +0.6s, 2092 MB)]
+[68/814] assert L1689 in delete (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 11.2s (incremental ~0s, 322 MB)]
+[69/814] assert L1686 in delete (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 45.0s (incremental +15.8s, 2118 MB)]
+[70/814] assert L1679 in delete (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 10.8s (incremental ~0s, 322 MB)]
+[71/814] assert L1675 in delete (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 44.1s (incremental +14.9s, 2117 MB)]
+[72/814] assert L1669 in delete (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 323 MB)]
+[73/814] assert L1667 in delete (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 36.4s (incremental +7.2s, 2114 MB)]
+[74/814] assert L1663 in delete (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.7s (incremental ~0s, 323 MB)]
+[75/814] assert L1651 in delete (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 31.7s (incremental +2.5s, 2106 MB)]
+[76/814] assert L1649 in delete (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 34.2s (incremental +5.0s, 2112 MB)]
+[77/814] assert L1642 in delete (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[78/814] assert L1607 in delete (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.4s (incremental +11.2s, 2107 MB)]
+[79/814] assert L1606 in delete (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.3s (incremental +9.1s, 2114 MB)]
+[80/814] assert L1605 in delete (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 33.8s (incremental +4.6s, 2117 MB)]
+[81/814] assert L1562 in difference (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.1s (incremental +6.9s, 2110 MB)]
+[82/814] assert L1552 in difference (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.1s (incremental +8.9s, 2104 MB)]
+[83/814] assert L1546 in difference (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 32.1s (incremental +2.8s, 2111 MB)]
+[84/814] assert L1538 in difference (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 36.3s (incremental +7.1s, 2105 MB)]
+[85/814] assert L1534 in difference (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[86/814] assert L1519 in difference (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 36.2s (incremental +7.0s, 2109 MB)]
+[87/814] assert L1517 in difference (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.8s (incremental +0.6s, 2114 MB)]
+[88/814] assert L1509 in difference (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 10.9s (incremental ~0s, 322 MB)]
+[89/814] assert L1440 in difference (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.1s (incremental +6.9s, 2106 MB)]
+[90/814] assert L1439 in difference (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.3s (incremental +7.1s, 2112 MB)]
+[91/814] assert L1438 in difference (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 37.4s (incremental +8.2s, 2104 MB)]
+[92/814] assert L1427 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 34.4s (incremental +5.2s, 2109 MB)]
+[93/814] assert L1426 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.3s (incremental +11.1s, 2112 MB)]
+[94/814] assert L1420 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.8s (incremental +6.6s, 2109 MB)]
+[95/814] assert L1418 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 29.5s (incremental +0.3s, 2101 MB)]
+[96/814] assert L1416 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 27.4s (incremental ~0s, 2112 MB)]
+[97/814] assert L1412 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 10.8s (incremental ~0s, 322 MB)]
+[98/814] assert L1407 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.7s (incremental +6.5s, 2099 MB)]
+[99/814] assert L1404 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.6s (incremental +7.4s, 2108 MB)]
+[100/814] assert L1390 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[101/814] assert L1385 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.7s (incremental +6.5s, 2101 MB)]
+[102/814] assert L1378 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.8s (incremental +6.6s, 2105 MB)]
+[103/814] assert L1376 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 31.6s (incremental +2.4s, 2114 MB)]
+[104/814] assert L1371 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 37.9s (incremental +8.7s, 2112 MB)]
+[105/814] assert L1368 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 34.5s (incremental +5.3s, 2118 MB)]
+[106/814] assert L1367 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 30.0s (incremental +0.8s, 2111 MB)]
+[107/814] assert L1363 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 10.9s (incremental ~0s, 323 MB)]
+[108/814] assert L1362 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.9s (incremental +0.7s, 2114 MB)]
+[109/814] assert L1349 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.2s (incremental +9.0s, 2100 MB)]
+[110/814] assert L1338 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 11.1s (incremental ~0s, 322 MB)]
+[111/814] assert L1335 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.2s (incremental +9.0s, 2104 MB)]
+[112/814] assert L1334 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 27.6s (incremental ~0s, 2109 MB)]
+[113/814] assert L1330 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[114/814] assert L1328 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.7s (incremental +11.4s, 2111 MB)]
+[115/814] assert L1321 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 41.1s (incremental +11.9s, 2108 MB)]
+[116/814] assert L1320 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 31.9s (incremental +2.7s, 2114 MB)]
+[117/814] assert L1317 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 8.7s (incremental ~0s, 321 MB)]
+[118/814] assert L1311 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 8.7s (incremental ~0s, 322 MB)]
+[119/814] assert L1302 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.9s (incremental +0.7s, 2111 MB)]
+[120/814] assert L1301 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 33.9s (incremental +4.7s, 2105 MB)]
+[121/814] assert L1298 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 8.8s (incremental ~0s, 322 MB)]
+[122/814] assert L1295 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 32.2s (incremental +3.0s, 2111 MB)]
+[123/814] assert L1294 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.4s (incremental +11.2s, 2107 MB)]
+[124/814] assert L1291 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 8.7s (incremental ~0s, 323 MB)]
+[125/814] assert L1286 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.2s (incremental +7.0s, 2100 MB)]
+[126/814] assert L1278 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.7s (incremental +0.5s, 2105 MB)]
+[127/814] assert L1274 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.7s (incremental ~0s, 322 MB)]
+[128/814] assert L1268 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 11.0s (incremental ~0s, 322 MB)]
+[129/814] assert L1258 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.9s (incremental +0.7s, 2108 MB)]
+[130/814] assert L1250 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.7s (incremental ~0s, 323 MB)]
+[131/814] assert L1244 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.7s (incremental +0.5s, 2107 MB)]
+[132/814] assert L1236 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 33.8s (incremental +4.6s, 2101 MB)]
+[133/814] assert L1235 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.5s (incremental +9.3s, 2109 MB)]
+[134/814] assert L1221 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[135/814] assert L1217 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 36.2s (incremental +7.0s, 2103 MB)]
+[136/814] assert L1216 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 41.0s (incremental +11.8s, 2110 MB)]
+[137/814] assert L1209 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[138/814] assert L1199 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 33.0s (incremental +3.8s, 2108 MB)]
+[139/814] assert L1194 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.6s (incremental +0.4s, 2103 MB)]
+[140/814] assert L1180 in union<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 11.6s (incremental ~0s, 322 MB)]
+[141/814] assert L992 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.8s (incremental +7.6s, 2100 MB)]
+[142/814] assert L991 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.7s (incremental +11.5s, 2107 MB)]
+[143/814] assert L990 in union<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.3s (incremental +9.0s, 2098 MB)]
+[144/814] assert L976 in intersection<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.3s (incremental +11.1s, 2106 MB)]
+[145/814] assert L972 in intersection<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 27.6s (incremental ~0s, 2110 MB)]
+[146/814] assert L962 in intersection<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.9s (incremental ~0s, 323 MB)]
+[147/814] assert L958 in intersection<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 36.2s (incremental +7.0s, 2117 MB)]
+[148/814] assert L954 in intersection<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 8.9s (incremental ~0s, 322 MB)]
+[149/814] assert L949 in intersection<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 32.5s (incremental +3.3s, 2102 MB)]
+[150/814] assert L934 in intersection<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 23.2s (incremental ~0s, 2100 MB)]
+[151/814] assert L928 in intersection<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 34.4s (incremental +5.2s, 2107 MB)]
+[152/814] assert L913 in intersection<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 31.9s (incremental +2.6s, 2102 MB)]
+[153/814] assert L911 in intersection<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 33.8s (incremental +4.6s, 2105 MB)]
+[154/814] assert L903 in intersection<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.7s (incremental ~0s, 322 MB)]
+[155/814] assert L818 in intersection<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.0s (incremental +6.8s, 2107 MB)]
+[156/814] assert L817 in intersection<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.5s (incremental +11.3s, 2109 MB)]
+[157/814] assert L816 in intersection<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.4s (incremental +11.2s, 2106 MB)]
+[158/814] assert L806 in filter<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.3s (incremental +13.1s, 2109 MB)]
+[159/814] assert L796 in filter<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.7s (incremental ~0s, 322 MB)]
+[160/814] assert L790 in filter<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 34.8s (incremental +5.6s, 2107 MB)]
+[161/814] assert L786 in filter<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[162/814] assert L778 in filter<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.8s (incremental +7.6s, 2115 MB)]
+[163/814] assert L772 in filter<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 33.1s (incremental +3.9s, 2106 MB)]
+[164/814] assert L770 in filter<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 30.2s (incremental +1.0s, 2113 MB)]
+[165/814] assert L763 in filter<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.7s (incremental ~0s, 322 MB)]
+[166/814] assert L716 in map<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.6s (incremental +11.4s, 2110 MB)]
+[167/814] assert L707 in map<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[168/814] assert L704 in map<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.9s (incremental +6.7s, 2114 MB)]
+[169/814] assert L703 in map<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.1s (incremental +6.9s, 2102 MB)]
+[170/814] assert L702 in map<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.3s (incremental +11.1s, 2108 MB)]
+[171/814] assert L698 in map<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 323 MB)]
+[172/814] assert L697 in map<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.0s (incremental +8.8s, 2107 MB)]
+[173/814] assert L693 in map<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 11.2s (incremental ~0s, 322 MB)]
+[174/814] assert L677 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 41.1s (incremental +11.9s, 2110 MB)]
+[175/814] assert L676 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.2s (incremental +7.0s, 2105 MB)]
+[176/814] assert L675 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 33.8s (incremental +4.6s, 2110 MB)]
+[177/814] assert L667 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 323 MB)]
+[178/814] assert L662 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.2s (incremental +9.0s, 2104 MB)]
+[179/814] assert L657 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.6s (incremental +11.4s, 2104 MB)]
+[180/814] assert L650 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 36.7s (incremental +7.5s, 2102 MB)]
+[181/814] assert L646 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.6s (incremental +13.4s, 2105 MB)]
+[182/814] assert L645 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.9s (incremental +6.7s, 2102 MB)]
+[183/814] assert L641 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 16.1s (incremental ~0s, 322 MB)]
+[184/814] assert L640 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.3s (incremental +7.1s, 2101 MB)]
+[185/814] assert L636 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 14.3s (incremental ~0s, 323 MB)]
+[186/814] assert L630 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 43.0s (incremental +13.8s, 2105 MB)]
+[187/814] assert L629 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.7s (incremental +0.5s, 2108 MB)]
+[188/814] assert L628 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 39.3s (incremental +10.1s, 2100 MB)]
+[189/814] assert L627 in tabulate<F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 44.1s (incremental +14.9s, 2107 MB)]
+[190/814] assert L607 in domain (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 30.0s (incremental +0.7s, 2104 MB)]
+[191/814] assert L600 in domain (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 34.3s (incremental +5.1s, 2106 MB)]
+[192/814] assert L598 in domain (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 47.4s (incremental +18.2s, 2103 MB)]
+[193/814] assert L591 in domain (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 8.8s (incremental ~0s, 322 MB)]
+[194/814] assert L588 in domain (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.6s (incremental +13.4s, 2105 MB)]
+[195/814] assert L584 in domain (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.4s (incremental +11.2s, 2106 MB)]
+[196/814] assert L565 in domain (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.4s (incremental +11.2s, 2112 MB)]
+[197/814] assert L554 in singleton (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 45.5s (incremental +16.3s, 2105 MB)]
+[198/814] assert L553 in singleton (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 34.5s (incremental +5.3s, 2104 MB)]
+[199/814] assert L552 in singleton (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.9s (incremental +13.7s, 2103 MB)]
+[200/814] assert L551 in singleton (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.5s (incremental +13.3s, 2101 MB)]
+[201/814] assert L550 in singleton (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 45.6s (incremental +16.4s, 2103 MB)]
+[202/814] assert L549 in singleton (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 51.1s (incremental +21.9s, 2110 MB)]
+[203/814] assert L544 in singleton (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.5s (incremental +13.3s, 2094 MB)]
+[204/814] assert L543 in singleton (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 32.3s (incremental +3.1s, 2104 MB)]
+[205/814] assert L542 in singleton (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 38.9s (incremental +9.7s, 2103 MB)]
+[206/814] assert L541 in singleton (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 32.0s (incremental +2.8s, 2111 MB)]
+[207/814] assert L534 in empty (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.8s (incremental +13.6s, 2102 MB)]
+[208/814] assert L532 in empty (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 40.6s (incremental +11.4s, 2105 MB)]
+[209/814] assert L531 in empty (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 34.9s (incremental +5.7s, 2098 MB)]
+[210/814] assert L530 in empty (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 33.9s (incremental +4.7s, 2101 MB)]
+[211/814] assert L496 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 49.5s (incremental +20.3s, 2108 MB)]
+[212/814] assert L494 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 31.9s (incremental +2.7s, 2113 MB)]
+[213/814] assert L493 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 46.8s (incremental +17.6s, 2100 MB)]
+[214/814] assert L490 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 47.8s (incremental +18.6s, 2108 MB)]
+[215/814] assert L489 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 30.1s (incremental +0.9s, 2114 MB)]
+[216/814] assert L484 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 11.3s (incremental ~0s, 322 MB)]
+[217/814] assert L480 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 32.5s (incremental +3.3s, 2106 MB)]
+[218/814] assert L479 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 46.0s (incremental +16.8s, 2099 MB)]
+[219/814] assert L476 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 25.3s (incremental ~0s, 2099 MB)]
+[220/814] assert L472 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 8.8s (incremental ~0s, 323 MB)]
+[221/814] assert L444 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.5s (incremental +13.3s, 2088 MB)]
+[222/814] assert L443 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.3s (incremental +13.1s, 2090 MB)]
+[223/814] assert L442 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 8.8s (incremental ~0s, 322 MB)]
+[224/814] assert L440 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 12.9s (incremental ~0s, 323 MB)]
+[225/814] assert L439 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 3m 2s (incremental +2m 33s, 323 MB)]
+[226/814] assert L437 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 323 MB)]
+[227/814] assert L420 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.9s (incremental +11.7s, 2090 MB)]
+[228/814] assert L419 in tabulate_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 1m 35s (incremental +1m 5s, 2097 MB)]
+[229/814] assert L381 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 53.8s (incremental +24.6s, 2093 MB)]
+[230/814] assert L380 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 37.4s (incremental +8.2s, 2112 MB)]
+[231/814] assert L377 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 1m 4s (incremental +35.7s, 2096 MB)]
+[232/814] assert L372 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 9.2s (incremental ~0s, 322 MB)]
+[233/814] assert L368 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 34.2s (incremental +4.9s, 2102 MB)]
+[234/814] assert L367 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 44.7s (incremental +15.5s, 2103 MB)]
+[235/814] assert L363 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 36.1s (incremental +6.9s, 2103 MB)]
+[236/814] assert L358 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 39.5s (incremental +10.3s, 322 MB)]
+[237/814] assert L330 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 1m 57s (incremental +1m 27s, 322 MB)]
+[238/814] assert L328 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 1m 29s (incremental +1m 0s, 323 MB)]
+[239/814] assert L327 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 8.8s (incremental ~0s, 322 MB)]
+[240/814] assert L325 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 322 MB)]
+[241/814] assert L324 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 8.8s (incremental ~0s, 322 MB)]
+[242/814] assert L322 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 10.8s (incremental ~0s, 322 MB)]
+[243/814] assert L321 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.7s (incremental ~0s, 322 MB)]
+[244/814] assert L319 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 8.8s (incremental ~0s, 322 MB)]
+[245/814] assert L302 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.3s (incremental +7.1s, 2100 MB)]
+[246/814] assert L301 in map_table_dc<K: MtKey, V: MtVal, F: Fn (src/Chap42/TableMtEph.rs)... NEEDED (restored) [initial 29.2s -> now 1m 17s (incremental +47.9s, 2104 MB)]
+[247/814] assert L533 in lemma_subseq_value_agrees<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 52.5s (incremental +23.3s, 2100 MB)]
+[248/814] assert L530 in lemma_subseq_value_agrees<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 44.6s (incremental +15.4s, 2097 MB)]
+[249/814] assert L528 in lemma_subseq_value_agrees<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.9s (incremental +13.7s, 2106 MB)]
+[250/814] assert L525 in lemma_subseq_value_agrees<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.8s (incremental +13.6s, 2101 MB)]
+[251/814] assert L520 in lemma_subseq_value_agrees<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 1m 5s (incremental +36.4s, 323 MB)]
+[252/814] assert L506 in lemma_subseq_value_agrees<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 19.2s (incremental ~0s, 322 MB)]
+[253/814] assert L470 in lemma_subseq_dom_forward<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 21.4s (incremental ~0s, 322 MB)]
+[254/814] assert L451 in lemma_subseq_no_dups<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.6s (incremental +9.4s, 2105 MB)]
+[255/814] assert L450 in lemma_subseq_no_dups<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.4s (incremental +9.2s, 2105 MB)]
+[256/814] assert L449 in lemma_subseq_no_dups<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 27.6s (incremental ~0s, 2103 MB)]
+[257/814] assert L445 in lemma_subseq_no_dups<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 23.7s (incremental ~0s, 323 MB)]
+[258/814] assert L422 in lemma_entries_to_map_agree_on_key<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.7s (incremental +11.5s, 2103 MB)]
+[259/814] assert L420 in lemma_entries_to_map_agree_on_key<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.2s (incremental +7.0s, 2096 MB)]
+[260/814] assert L419 in lemma_entries_to_map_agree_on_key<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.4s (incremental +9.2s, 2102 MB)]
+[261/814] assert L416 in lemma_entries_to_map_agree_on_key<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 48.6s (incremental +19.4s, 323 MB)]
+[262/814] assert L414 in lemma_entries_to_map_agree_on_key<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 1m 10s (incremental +41.3s, 2106 MB)]
+[263/814] assert L413 in lemma_entries_to_map_agree_on_key<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 1m 21s (incremental +52.3s, 2103 MB)]
+[264/814] assert L410 in lemma_entries_to_map_agree_on_key<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 1m 13s (incremental +44.1s, 322 MB)]
+[265/814] assert L406 in lemma_entries_to_map_agree_on_key<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 1m 3s (incremental +34.0s, 2104 MB)]
+[266/814] assert L404 in lemma_entries_to_map_agree_on_key<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.3s (incremental +11.1s, 2110 MB)]
+[267/814] assert L381 in lemma_entries_to_map_ignore_suffix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 40.7s (incremental +11.5s, 2118 MB)]
+[268/814] assert L378 in lemma_entries_to_map_ignore_suffix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 41.8s (incremental +12.6s, 2115 MB)]
+[269/814] assert L375 in lemma_entries_to_map_ignore_suffix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 16.9s (incremental ~0s, 323 MB)]
+[270/814] assert L374 in lemma_entries_to_map_ignore_suffix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 1m 2s (incremental +32.8s, 2103 MB)]
+[271/814] assert L373 in lemma_entries_to_map_ignore_suffix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 1m 18s (incremental +48.9s, 2106 MB)]
+[272/814] assert L369 in lemma_entries_to_map_ignore_suffix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 25.3s (incremental ~0s, 2110 MB)]
+[273/814] assert L350 in lemma_entries_to_map_skip_prefix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 1m 10s (incremental +41.5s, 2095 MB)]
+[274/814] assert L349 in lemma_entries_to_map_skip_prefix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.4s (incremental +7.2s, 2105 MB)]
+[275/814] assert L347 in lemma_entries_to_map_skip_prefix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 1m 24s (incremental +55.4s, 2104 MB)]
+[276/814] assert L346 in lemma_entries_to_map_skip_prefix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 2m 6s (incremental +1m 36s, 2101 MB)]
+[277/814] assert L345 in lemma_entries_to_map_skip_prefix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.3s (incremental +11.1s, 2104 MB)]
+[278/814] assert L341 in lemma_entries_to_map_skip_prefix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 1m 32s (incremental +1m 2s, 2110 MB)]
+[279/814] assert L338 in lemma_entries_to_map_skip_prefix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.9s (incremental +6.7s, 2096 MB)]
+[280/814] assert L337 in lemma_entries_to_map_skip_prefix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.1s (incremental +6.9s, 2097 MB)]
+[281/814] assert L336 in lemma_entries_to_map_skip_prefix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 1m 4s (incremental +35.3s, 2094 MB)]
+[282/814] assert L335 in lemma_entries_to_map_skip_prefix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 6m 34s (incremental +6m 5s, 2105 MB)]
+[283/814] assert L333 in lemma_entries_to_map_skip_prefix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 3m 59s (incremental +3m 30s, 2101 MB)]
+[284/814] assert L330 in lemma_entries_to_map_skip_prefix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.8s (incremental +6.6s, 2104 MB)]
+[285/814] assert L328 in lemma_entries_to_map_skip_prefix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.7s (incremental +11.5s, 2101 MB)]
+[286/814] assert L324 in lemma_entries_to_map_skip_prefix<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.3s (incremental +9.1s, 2097 MB)]
+[287/814] assert L297 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.8s (incremental +6.6s, 2095 MB)]
+[288/814] assert L296 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 46.3s (incremental +17.1s, 2099 MB)]
+[289/814] assert L292 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 16.9s (incremental ~0s, 323 MB)]
+[290/814] assert L290 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 52.0s (incremental +22.8s, 2107 MB)]
+[291/814] assert L289 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.0s (incremental +6.8s, 2107 MB)]
+[292/814] assert L288 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 34.0s (incremental +4.8s, 2105 MB)]
+[293/814] assert L287 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.5s (incremental +7.3s, 2098 MB)]
+[294/814] assert L284 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 33.7s (incremental +4.5s, 2104 MB)]
+[295/814] assert L280 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 19.4s (incremental ~0s, 323 MB)]
+[296/814] assert L276 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 31.9s (incremental +2.7s, 2091 MB)]
+[297/814] assert L275 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.4s (incremental +9.2s, 2101 MB)]
+[298/814] assert L272 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 2m 14s (incremental +1m 45s, 2100 MB)]
+[299/814] assert L271 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.6s (incremental +7.4s, 2110 MB)]
+[300/814] assert L270 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.2s (incremental +6.9s, 2108 MB)]
+[301/814] assert L269 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 1m 49s (incremental +1m 20s, 2096 MB)]
+[302/814] assert L268 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.6s (incremental +13.4s, 2098 MB)]
+[303/814] assert L266 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 33.8s (incremental +4.6s, 2107 MB)]
+[304/814] assert L264 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.8s (incremental +6.6s, 2104 MB)]
+[305/814] assert L263 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 2m 55s (incremental +2m 26s, 2097 MB)]
+[306/814] assert L259 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 19.1s (incremental ~0s, 322 MB)]
+[307/814] assert L257 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 35.9s (incremental +6.7s, 2107 MB)]
+[308/814] assert L256 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.5s (incremental +11.3s, 2103 MB)]
+[309/814] assert L255 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 46.5s (incremental +17.3s, 2102 MB)]
+[310/814] assert L254 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 1m 10s (incremental +41.4s, 2103 MB)]
+[311/814] assert L251 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 21.4s (incremental ~0s, 322 MB)]
+[312/814] assert L249 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.1s (incremental +10.9s, 2101 MB)]
+[313/814] assert L248 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 34.0s (incremental +4.8s, 2097 MB)]
+[314/814] assert L247 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.6s (incremental +13.4s, 2101 MB)]
+[315/814] assert L246 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.0s (incremental +6.8s, 2098 MB)]
+[316/814] assert L245 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 2m 2s (incremental +1m 33s, 2095 MB)]
+[317/814] assert L244 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.2s (incremental +9.0s, 2102 MB)]
+[318/814] assert L243 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.5s (incremental +13.3s, 2107 MB)]
+[319/814] assert L242 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 1m 7s (incremental +38.5s, 2103 MB)]
+[320/814] assert L241 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 1m 37s (incremental +1m 8s, 2096 MB)]
+[321/814] assert L240 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.6s (incremental +9.4s, 2106 MB)]
+[322/814] assert L236 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 16.9s (incremental ~0s, 323 MB)]
+[323/814] assert L231 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 36.0s (incremental +6.8s, 2098 MB)]
+[324/814] assert L229 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 31.9s (incremental +2.7s, 2111 MB)]
+[325/814] assert L222 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 29.6s (incremental +0.4s, 2098 MB)]
+[326/814] assert L220 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 29.7s (incremental +0.5s, 2107 MB)]
+[327/814] assert L211 in lemma_entries_to_map_subseq_value<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 42.9s (incremental +13.7s, 2108 MB)]
+[328/814] assert L156 in lemma_entries_to_map_dom_subset<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 19.1s (incremental ~0s, 322 MB)]
+[329/814] assert L109 in lemma_entries_to_map_len<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 32.2s (incremental +3.0s, 2104 MB)]
+[330/814] assert L103 in lemma_entries_to_map_len<KV, VV> (src/Chap42/TableSpecsAndLemmas.rs)... NEEDED (restored) [initial 29.2s -> now 1m 58s (incremental +1m 29s, 2103 MB)]
+[331/814] assert L2506 in entries (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[332/814] assert L2493 in subtract (src/Chap42/TableStEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 41.1s (incremental +11.9s, 2088 MB)]
+[333/814] assert L2484 in subtract (src/Chap42/TableStEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 39.1s (incremental +9.9s, 2104 MB)]
+[334/814] assert L2478 in subtract (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 32.1s (incremental +2.9s, 2104 MB)]
+[335/814] assert L2471 in subtract (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 38.6s (incremental +9.4s, 2103 MB)]
+[336/814] assert L2467 in subtract (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 321 MB)]
+[337/814] assert L2456 in subtract (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[338/814] assert L2453 in subtract (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[339/814] assert L2445 in subtract (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[340/814] assert L2401 in restrict (src/Chap42/TableStEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.4s (incremental +13.2s, 2100 MB)]
+[341/814] assert L2392 in restrict (src/Chap42/TableStEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 44.7s (incremental +15.5s, 2109 MB)]
+[342/814] assert L2386 in restrict (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 29.7s (incremental +0.5s, 2094 MB)]
+[343/814] assert L2379 in restrict (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 34.3s (incremental +5.1s, 2103 MB)]
+[344/814] assert L2375 in restrict (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 321 MB)]
+[345/814] assert L2364 in restrict (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[346/814] assert L2361 in restrict (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[347/814] assert L2353 in restrict (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[348/814] assert L2309 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[349/814] assert L2307 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[350/814] assert L2305 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[351/814] assert L2302 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[352/814] assert L2298 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[353/814] assert L2291 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[354/814] assert L2284 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[355/814] assert L2276 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[356/814] assert L2270 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[357/814] assert L2268 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[358/814] assert L2263 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[359/814] assert L2261 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[360/814] assert L2257 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[361/814] assert L2249 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[362/814] assert L2244 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[363/814] assert L2237 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[364/814] assert L2224 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[365/814] assert L2221 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[366/814] assert L2213 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[367/814] assert L2202 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[368/814] assert L2199 in delete_wf (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[369/814] assert L2136 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[370/814] assert L2128 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[371/814] assert L2126 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[372/814] assert L2121 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[373/814] assert L2114 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[374/814] assert L2107 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[375/814] assert L2103 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[376/814] assert L2100 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[377/814] assert L2093 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[378/814] assert L2091 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[379/814] assert L2088 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[380/814] assert L2086 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[381/814] assert L2072 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[382/814] assert L2063 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[383/814] assert L2056 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[384/814] assert L2053 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[385/814] assert L2050 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[386/814] assert L2048 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[387/814] assert L2043 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[388/814] assert L2041 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[389/814] assert L2033 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[390/814] assert L2025 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[391/814] assert L2019 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[392/814] assert L2008 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[393/814] assert L2003 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[394/814] assert L1991 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[395/814] assert L1988 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[396/814] assert L1965 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[397/814] assert L1962 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[398/814] assert L1954 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[399/814] assert L1943 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[400/814] assert L1940 in insert_wf<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[401/814] assert L1869 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[402/814] assert L1866 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[403/814] assert L1859 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[404/814] assert L1857 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[405/814] assert L1854 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[406/814] assert L1839 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[407/814] assert L1830 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[408/814] assert L1823 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[409/814] assert L1820 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[410/814] assert L1817 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[411/814] assert L1815 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[412/814] assert L1810 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[413/814] assert L1808 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[414/814] assert L1800 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[415/814] assert L1792 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[416/814] assert L1786 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[417/814] assert L1775 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[418/814] assert L1770 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[419/814] assert L1742 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[420/814] assert L1739 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[421/814] assert L1731 in insert<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[422/814] assert L1671 in delete (src/Chap42/TableStEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 42.7s (incremental +13.5s, 2097 MB)]
+[423/814] assert L1664 in delete (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 321 MB)]
+[424/814] assert L1659 in delete (src/Chap42/TableStEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.2s (incremental +11.0s, 2099 MB)]
+[425/814] assert L1653 in delete (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 9.2s (incremental ~0s, 321 MB)]
+[426/814] assert L1648 in delete (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 32.2s (incremental +3.0s, 2101 MB)]
+[427/814] assert L1644 in delete (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.8s (incremental ~0s, 321 MB)]
+[428/814] assert L1631 in delete (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[429/814] assert L1628 in delete (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[430/814] assert L1620 in delete (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[431/814] assert L1564 in find_ref (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[432/814] assert L1560 in find_ref (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[433/814] assert L1551 in find_ref (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[434/814] assert L1489 in difference (src/Chap42/TableStEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.3s (incremental +9.1s, 2091 MB)]
+[435/814] assert L1480 in difference (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.7s (incremental ~0s, 321 MB)]
+[436/814] assert L1475 in difference (src/Chap42/TableStEph.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.3s (incremental +11.1s, 2099 MB)]
+[437/814] assert L1467 in difference (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 23.8s (incremental ~0s, 321 MB)]
+[438/814] assert L1462 in difference (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 25.4s (incremental ~0s, 2109 MB)]
+[439/814] assert L1458 in difference (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 6.7s (incremental ~0s, 321 MB)]
+[440/814] assert L1441 in difference (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[441/814] assert L1438 in difference (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[442/814] assert L1429 in difference (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[443/814] assert L1343 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[444/814] assert L1340 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[445/814] assert L1334 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[446/814] assert L1321 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[447/814] assert L1315 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[448/814] assert L1303 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[449/814] assert L1298 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[450/814] assert L1295 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[451/814] assert L1289 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[452/814] assert L1280 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[453/814] assert L1266 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[454/814] assert L1257 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[455/814] assert L1255 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[456/814] assert L1250 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[457/814] assert L1248 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[458/814] assert L1236 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[459/814] assert L1227 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[460/814] assert L1198 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[461/814] assert L1186 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[462/814] assert L1174 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[463/814] assert L1166 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[464/814] assert L1148 in union<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[465/814] assert L940 in intersection<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[466/814] assert L933 in intersection<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[467/814] assert L921 in intersection<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[468/814] assert L916 in intersection<F: Fn (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 32.0s (incremental +2.7s, 2096 MB)]
+[469/814] assert L912 in intersection<F: Fn (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 13.0s (incremental ~0s, 321 MB)]
+[470/814] assert L907 in intersection<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[471/814] assert L891 in intersection<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[472/814] assert L884 in intersection<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[473/814] assert L866 in intersection<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[474/814] assert L863 in intersection<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[475/814] assert L854 in intersection<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[476/814] assert L760 in filter<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[477/814] assert L758 in filter<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[478/814] assert L747 in filter<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[479/814] assert L740 in filter<F: Fn (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 31.9s (incremental +2.7s, 2090 MB)]
+[480/814] assert L736 in filter<F: Fn (src/Chap42/TableStEph.rs)... NEEDED (restored) [initial 29.2s -> now 8.8s (incremental ~0s, 320 MB)]
+[481/814] assert L725 in filter<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[482/814] assert L722 in filter<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[483/814] assert L714 in filter<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[484/814] assert L664 in map<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[485/814] assert L653 in map<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[486/814] assert L646 in map<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[487/814] assert L644 in map<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[488/814] assert L639 in map<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[489/814] assert L635 in map<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[490/814] assert L598 in tabulate<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[491/814] assert L595 in tabulate<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[492/814] assert L585 in tabulate<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[493/814] assert L568 in tabulate<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[494/814] assert L561 in tabulate<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[495/814] assert L559 in tabulate<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[496/814] assert L555 in tabulate<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[497/814] assert L551 in tabulate<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[498/814] assert L520 in tabulate<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[499/814] assert L518 in tabulate<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[500/814] assert L516 in tabulate<F: Fn (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[501/814] assert L494 in domain (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[502/814] assert L485 in domain (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[503/814] assert L476 in domain (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[504/814] assert L472 in domain (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[505/814] assert L467 in domain (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[506/814] assert L437 in singleton (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[507/814] assert L435 in singleton (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[508/814] assert L433 in singleton (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[509/814] assert L431 in singleton (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[510/814] assert L428 in singleton (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[511/814] assert L426 in singleton (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[512/814] assert L424 in singleton (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[513/814] assert L420 in singleton (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[514/814] assert L410 in empty (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[515/814] assert L408 in empty (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[516/814] assert L406 in empty (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[517/814] assert L402 in empty (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[518/814] assert L364 in lemma_spec_stored_value_view (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[519/814] assert L360 in lemma_spec_stored_value_view (src/Chap42/TableStEph.rs)... (from prior run, skipping)
+[520/814] assert L2803 in collect_by_key<K: StT + Ord + Eq, V: StT> (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[521/814] assert L2786 in collect_by_key<K: StT + Ord + Eq, V: StT> (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[522/814] assert L2783 in collect_by_key<K: StT + Ord + Eq, V: StT> (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[523/814] assert L2774 in collect_by_key<K: StT + Ord + Eq, V: StT> (src/Chap42/TableStPer.rs)... UNNEEDED (commented) [initial 29.2s -> now 39.4s (incremental +10.2s, 2096 MB)]
+[524/814] assert L2770 in collect_by_key<K: StT + Ord + Eq, V: StT> (src/Chap42/TableStPer.rs)... UNNEEDED (commented) [initial 29.2s -> now 41.1s (incremental +11.9s, 2098 MB)]
+[525/814] assert L2763 in collect_by_key<K: StT + Ord + Eq, V: StT> (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[526/814] assert L2754 in collect_by_key<K: StT + Ord + Eq, V: StT> (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[527/814] assert L2741 in collect_by_key<K: StT + Ord + Eq, V: StT> (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[528/814] assert L2737 in collect_by_key<K: StT + Ord + Eq, V: StT> (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[529/814] assert L2734 in collect_by_key<K: StT + Ord + Eq, V: StT> (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[530/814] assert L2725 in collect_by_key<K: StT + Ord + Eq, V: StT> (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[531/814] assert L2723 in collect_by_key<K: StT + Ord + Eq, V: StT> (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[532/814] assert L2721 in collect_by_key<K: StT + Ord + Eq, V: StT> (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[533/814] assert L2717 in collect_by_key<K: StT + Ord + Eq, V: StT> (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[534/814] assert L2620 in collect (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[535/814] assert L2605 in subtract (src/Chap42/TableStPer.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.1s (incremental +8.9s, 2098 MB)]
+[536/814] assert L2596 in subtract (src/Chap42/TableStPer.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.2s (incremental +11.0s, 2095 MB)]
+[537/814] assert L2590 in subtract (src/Chap42/TableStPer.rs)... NEEDED (restored) [initial 29.2s -> now 32.1s (incremental +2.9s, 2103 MB)]
+[538/814] assert L2583 in subtract (src/Chap42/TableStPer.rs)... NEEDED (restored) [initial 29.2s -> now 29.9s (incremental +0.6s, 2102 MB)]
+[539/814] assert L2579 in subtract (src/Chap42/TableStPer.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 320 MB)]
+[540/814] assert L2568 in subtract (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[541/814] assert L2565 in subtract (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[542/814] assert L2557 in subtract (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[543/814] assert L2509 in restrict (src/Chap42/TableStPer.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.5s (incremental +7.3s, 2098 MB)]
+[544/814] assert L2500 in restrict (src/Chap42/TableStPer.rs)... UNNEEDED (commented) [initial 29.2s -> now 40.0s (incremental +10.8s, 2098 MB)]
+[545/814] assert L2494 in restrict (src/Chap42/TableStPer.rs)... NEEDED (restored) [initial 29.2s -> now 29.7s (incremental +0.5s, 2096 MB)]
+[546/814] assert L2487 in restrict (src/Chap42/TableStPer.rs)... NEEDED (restored) [initial 29.2s -> now 29.7s (incremental +0.5s, 2108 MB)]
+[547/814] assert L2483 in restrict (src/Chap42/TableStPer.rs)... NEEDED (restored) [initial 29.2s -> now 10.8s (incremental ~0s, 320 MB)]
+[548/814] assert L2472 in restrict (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[549/814] assert L2469 in restrict (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[550/814] assert L2461 in restrict (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[551/814] assert L2413 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[552/814] assert L2411 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[553/814] assert L2408 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[554/814] assert L2406 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[555/814] assert L2402 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[556/814] assert L2392 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[557/814] assert L2389 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[558/814] assert L2386 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[559/814] assert L2381 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[560/814] assert L2374 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[561/814] assert L2370 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[562/814] assert L2364 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[563/814] assert L2360 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[564/814] assert L2355 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[565/814] assert L2348 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[566/814] assert L2342 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[567/814] assert L2340 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[568/814] assert L2338 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[569/814] assert L2336 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[570/814] assert L2334 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[571/814] assert L2332 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[572/814] assert L2327 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[573/814] assert L2325 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[574/814] assert L2321 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[575/814] assert L2319 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[576/814] assert L2315 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[577/814] assert L2306 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[578/814] assert L2298 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[579/814] assert L2295 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[580/814] assert L2286 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[581/814] assert L2275 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[582/814] assert L2273 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[583/814] assert L2271 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[584/814] assert L2269 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[585/814] assert L2267 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[586/814] assert L2264 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[587/814] assert L2262 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[588/814] assert L2259 in delete_wf (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[589/814] assert L2202 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[590/814] assert L2195 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[591/814] assert L2191 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[592/814] assert L2189 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[593/814] assert L2186 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[594/814] assert L2184 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[595/814] assert L2180 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[596/814] assert L2170 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[597/814] assert L2161 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[598/814] assert L2159 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[599/814] assert L2157 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[600/814] assert L2154 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[601/814] assert L2152 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[602/814] assert L2147 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[603/814] assert L2144 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[604/814] assert L2140 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[605/814] assert L2137 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[606/814] assert L2135 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[607/814] assert L2130 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[608/814] assert L2128 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[609/814] assert L2124 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[610/814] assert L2122 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[611/814] assert L2120 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[612/814] assert L2118 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[613/814] assert L2106 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[614/814] assert L2097 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[615/814] assert L2093 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[616/814] assert L2089 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[617/814] assert L2080 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[618/814] assert L2073 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[619/814] assert L2065 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[620/814] assert L2060 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[621/814] assert L2047 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[622/814] assert L2042 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[623/814] assert L2039 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[624/814] assert L2037 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[625/814] assert L2035 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[626/814] assert L2033 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[627/814] assert L2030 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[628/814] assert L2028 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[629/814] assert L2023 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[630/814] assert L2021 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[631/814] assert L2019 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[632/814] assert L2016 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[633/814] assert L1998 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[634/814] assert L1995 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[635/814] assert L1993 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[636/814] assert L1990 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[637/814] assert L1970 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[638/814] assert L1967 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[639/814] assert L1958 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[640/814] assert L1947 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[641/814] assert L1945 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[642/814] assert L1942 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[643/814] assert L1940 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[644/814] assert L1937 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[645/814] assert L1934 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[646/814] assert L1932 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[647/814] assert L1929 in insert_wf<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[648/814] assert L1861 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[649/814] assert L1859 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[650/814] assert L1857 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[651/814] assert L1854 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[652/814] assert L1852 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[653/814] assert L1847 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[654/814] assert L1844 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[655/814] assert L1840 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[656/814] assert L1837 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[657/814] assert L1835 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[658/814] assert L1830 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[659/814] assert L1828 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[660/814] assert L1824 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[661/814] assert L1822 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[662/814] assert L1820 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[663/814] assert L1818 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[664/814] assert L1806 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[665/814] assert L1797 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[666/814] assert L1793 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[667/814] assert L1789 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[668/814] assert L1780 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[669/814] assert L1773 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[670/814] assert L1765 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[671/814] assert L1760 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[672/814] assert L1747 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[673/814] assert L1742 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[674/814] assert L1739 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[675/814] assert L1737 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[676/814] assert L1735 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[677/814] assert L1733 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[678/814] assert L1730 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[679/814] assert L1728 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[680/814] assert L1723 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[681/814] assert L1721 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[682/814] assert L1719 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[683/814] assert L1716 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[684/814] assert L1687 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[685/814] assert L1684 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[686/814] assert L1675 in insert<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[687/814] assert L1621 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[688/814] assert L1618 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[689/814] assert L1613 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[690/814] assert L1606 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[691/814] assert L1601 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[692/814] assert L1595 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[693/814] assert L1591 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[694/814] assert L1585 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[695/814] assert L1578 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[696/814] assert L1570 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[697/814] assert L1568 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[698/814] assert L1566 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[699/814] assert L1564 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[700/814] assert L1562 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[701/814] assert L1560 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[702/814] assert L1555 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[703/814] assert L1553 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[704/814] assert L1548 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[705/814] assert L1546 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[706/814] assert L1542 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[707/814] assert L1533 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[708/814] assert L1525 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[709/814] assert L1522 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[710/814] assert L1513 in delete (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[711/814] assert L1460 in find_ref (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[712/814] assert L1457 in find_ref (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[713/814] assert L1450 in find_ref (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[714/814] assert L1387 in difference (src/Chap42/TableStPer.rs)... UNNEEDED (commented) [initial 29.2s -> now 38.2s (incremental +9.0s, 2097 MB)]
+[715/814] assert L1379 in difference (src/Chap42/TableStPer.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 320 MB)]
+[716/814] assert L1374 in difference (src/Chap42/TableStPer.rs)... UNNEEDED (commented) [initial 29.2s -> now 34.1s (incremental +4.9s, 2099 MB)]
+[717/814] assert L1366 in difference (src/Chap42/TableStPer.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 320 MB)]
+[718/814] assert L1361 in difference (src/Chap42/TableStPer.rs)... NEEDED (restored) [initial 29.2s -> now 34.0s (incremental +4.8s, 2099 MB)]
+[719/814] assert L1357 in difference (src/Chap42/TableStPer.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 321 MB)]
+[720/814] assert L1348 in difference (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[721/814] assert L1339 in difference (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[722/814] assert L1336 in difference (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[723/814] assert L1327 in difference (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[724/814] assert L1240 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[725/814] assert L1229 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[726/814] assert L1215 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[727/814] assert L1201 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[728/814] assert L1190 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[729/814] assert L1188 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[730/814] assert L1184 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[731/814] assert L1182 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[732/814] assert L1180 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[733/814] assert L1169 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[734/814] assert L1164 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[735/814] assert L1161 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[736/814] assert L1153 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[737/814] assert L1145 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[738/814] assert L1143 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[739/814] assert L1136 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[740/814] assert L1132 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[741/814] assert L1130 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[742/814] assert L1122 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[743/814] assert L1118 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[744/814] assert L1109 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[745/814] assert L1103 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[746/814] assert L1096 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[747/814] assert L1089 in union<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[748/814] assert L1023 in intersection<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[749/814] assert L1021 in intersection<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[750/814] assert L1019 in intersection<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[751/814] assert L1015 in intersection<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[752/814] assert L1008 in intersection<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[753/814] assert L998 in intersection<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[754/814] assert L993 in intersection<F: Fn (src/Chap42/TableStPer.rs)... NEEDED (restored) [initial 29.2s -> now 36.1s (incremental +6.9s, 2092 MB)]
+[755/814] assert L989 in intersection<F: Fn (src/Chap42/TableStPer.rs)... NEEDED (restored) [initial 29.2s -> now 6.7s (incremental ~0s, 320 MB)]
+[756/814] assert L985 in intersection<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[757/814] assert L972 in intersection<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[758/814] assert L967 in intersection<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[759/814] assert L963 in intersection<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[760/814] assert L960 in intersection<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[761/814] assert L951 in intersection<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[762/814] assert L934 in intersection<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[763/814] assert L931 in intersection<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[764/814] assert L922 in intersection<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[765/814] assert L834 in filter<F: Fn (src/Chap42/TableStPer.rs)... UNNEEDED (commented) [initial 29.2s -> now 36.7s (incremental +7.4s, 2094 MB)]
+[766/814] assert L824 in filter<F: Fn (src/Chap42/TableStPer.rs)... NEEDED (restored) [initial 29.2s -> now 6.6s (incremental ~0s, 320 MB)]
+[767/814] assert L818 in filter<F: Fn (src/Chap42/TableStPer.rs)... NEEDED (restored) [initial 29.2s -> now 34.2s (incremental +5.0s, 2108 MB)]
+[768/814] assert L814 in filter<F: Fn (src/Chap42/TableStPer.rs)... NEEDED (restored) [initial 29.2s -> now 6.7s (incremental ~0s, 320 MB)]
+[769/814] assert L805 in filter<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[770/814] assert L797 in filter<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[771/814] assert L794 in filter<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[772/814] assert L786 in filter<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[773/814] assert L738 in map<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[774/814] assert L736 in map<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[775/814] assert L732 in map<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[776/814] assert L722 in map<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[777/814] assert L717 in map<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[778/814] assert L715 in map<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[779/814] assert L713 in map<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[780/814] assert L708 in map<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[781/814] assert L706 in map<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[782/814] assert L700 in map<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[783/814] assert L698 in map<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[784/814] assert L694 in map<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[785/814] assert L659 in tabulate<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[786/814] assert L657 in tabulate<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[787/814] assert L655 in tabulate<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[788/814] assert L652 in tabulate<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[789/814] assert L642 in tabulate<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[790/814] assert L636 in tabulate<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[791/814] assert L630 in tabulate<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[792/814] assert L622 in tabulate<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[793/814] assert L618 in tabulate<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[794/814] assert L616 in tabulate<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[795/814] assert L611 in tabulate<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[796/814] assert L609 in tabulate<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[797/814] assert L606 in tabulate<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[798/814] assert L604 in tabulate<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[799/814] assert L600 in tabulate<F: Fn (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[800/814] assert L552 in domain (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[801/814] assert L543 in domain (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[802/814] assert L540 in domain (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[803/814] assert L532 in domain (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[804/814] assert L527 in domain (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[805/814] assert L522 in domain (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[806/814] assert L491 in singleton (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[807/814] assert L489 in singleton (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[808/814] assert L487 in singleton (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[809/814] assert L485 in singleton (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[810/814] assert L480 in singleton (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[811/814] assert L471 in empty (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[812/814] assert L436 in lemma_spec_stored_value_view (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[813/814] assert L133 in lemma_spec_collect_key_step<KV, VV> (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+[814/814] assert L119 in lemma_spec_collect_domain_step<KV, VV> (src/Chap42/TableStPer.rs)... (from prior run, skipping)
+
+Phase 10 Summary: 380 tested, 183 removed (commented), 0.0s time saved
+
+Phase 11: Skipped (use -m flag to enable admit minimization)
+
+═══════════════════════════════════════════════════════════════
+Phase 12: Testing proof {} blocks
+═══════════════════════════════════════════════════════════════
+
+  Found 177 proof {} blocks in 5 files
+  Testing 177 proof blocks...
+
+  [1/177] Testing proof block at src/Chap42/TableMtEph.rs:300-304 in fn map_table_dc<K: MtKey, V: MtVal, F: Fn... NEEDED (restored) [32.3s, 2100 MB]
+  [2/177] Testing proof block at src/Chap42/TableMtEph.rs:319-340 in fn map_table_dc<K: MtKey, V: MtVal, F: Fn... NEEDED (restored) [2.5s, 78 MB]
+  [3/177] Testing proof block at src/Chap42/TableMtEph.rs:366-400 in fn map_table_dc<K: MtKey, V: MtVal, F: Fn... NEEDED (restored) [2.6s, 78 MB]
+  [4/177] Testing proof block at src/Chap42/TableMtEph.rs:433-437 in fn tabulate_table_dc<K: MtKey, V: MtVal, F: Fn... NEEDED (restored) [2.5s, 78 MB]
+  [5/177] Testing proof block at src/Chap42/TableMtEph.rs:452-465 in fn tabulate_table_dc<K: MtKey, V: MtVal, F: Fn... NEEDED (restored) [2.5s, 78 MB]
+  [6/177] Testing proof block at src/Chap42/TableMtEph.rs:491-525 in fn tabulate_table_dc<K: MtKey, V: MtVal, F: Fn... NEEDED (restored) [2.5s, 77 MB]
+  [7/177] Testing proof block at src/Chap42/TableMtEph.rs:547-549 in fn size... NEEDED (restored) [2.5s, 78 MB]
+  [8/177] Testing proof block at src/Chap42/TableMtEph.rs:579-589 in fn singleton... NEEDED (restored) [2.5s, 78 MB]
+  [9/177] Testing proof block at src/Chap42/TableMtEph.rs:616-638 in fn domain... NEEDED (restored) [2.5s, 77 MB]
+  [10/177] Testing proof block at src/Chap42/TableMtEph.rs:641-656 in fn domain... NEEDED (restored) [2.4s, 78 MB]
+  [11/177] Testing proof block at src/Chap42/TableMtEph.rs:671-722 in fn tabulate<F: Fn... NEEDED (restored) [2.6s, 77 MB]
+  [12/177] Testing proof block at src/Chap42/TableMtEph.rs:733-765 in fn map<F: Fn... NEEDED (restored) [2.5s, 78 MB]
+  [13/177] Testing proof block at src/Chap42/TableMtEph.rs:805-823 in fn filter<F: Fn... NEEDED (restored) [2.8s, 78 MB]
+  [14/177] Testing proof block at src/Chap42/TableMtEph.rs:825-827 in fn filter<F: Fn... NEEDED (restored) [2.6s, 78 MB]
+  [15/177] Testing proof block at src/Chap42/TableMtEph.rs:832-860 in fn filter<F: Fn... NEEDED (restored) [2.5s, 78 MB]
+  [16/177] Testing proof block at src/Chap42/TableMtEph.rs:866-870 in fn intersection<F: Fn... NEEDED (restored) [2.6s, 78 MB]
+  [17/177] Testing proof block at src/Chap42/TableMtEph.rs:936-938 in fn intersection<F: Fn... NEEDED (restored) [6.6s, 322 MB]
+  [18/177] Testing proof block at src/Chap42/TableMtEph.rs:950-970 in fn intersection<F: Fn... NEEDED (restored) [2.5s, 78 MB]
+  [19/177] Testing proof block at src/Chap42/TableMtEph.rs:972-974 in fn intersection<F: Fn... NEEDED (restored) [2.6s, 78 MB]
+  [20/177] Testing proof block at src/Chap42/TableMtEph.rs:979-1043 in fn intersection<F: Fn... NEEDED (restored) [2.7s, 82 MB]
+  [21/177] Testing proof block at src/Chap42/TableMtEph.rs:1050-1054 in fn union<F: Fn... NEEDED (restored) [11.2s, 321 MB]
+  [22/177] Testing proof block at src/Chap42/TableMtEph.rs:1117-1119 in fn union<F: Fn... NEEDED (restored) [6.5s, 322 MB]
+  [23/177] Testing proof block at src/Chap42/TableMtEph.rs:1130-1134 in fn union<F: Fn... NEEDED (restored) [56.3s, 2104 MB]
+  [24/177] Testing proof block at src/Chap42/TableMtEph.rs:1138-1142 in fn union<F: Fn... NEEDED (restored) [2.8s, 78 MB]
+  [25/177] Testing proof block at src/Chap42/TableMtEph.rs:1215-1217 in fn union<F: Fn... NEEDED (restored) [34.5s, 2076 MB]
+  [26/177] Testing proof block at src/Chap42/TableMtEph.rs:1220-1220 in fn union<F: Fn... NEEDED (restored) [6.6s, 322 MB]
+  [27/177] Testing proof block at src/Chap42/TableMtEph.rs:1229-1233 in fn union<F: Fn... NEEDED (restored) [34.0s, 2100 MB]
+  [28/177] Testing proof block at src/Chap42/TableMtEph.rs:1235-1238 in fn union<F: Fn... NEEDED (restored) [29.7s, 2107 MB]
+  [29/177] Testing proof block at src/Chap42/TableMtEph.rs:1240-1267 in fn union<F: Fn... NEEDED (restored) [8.7s, 322 MB]
+  [30/177] Testing proof block at src/Chap42/TableMtEph.rs:1271-1521 in fn union<F: Fn... NEEDED (restored) [6.6s, 326 MB]
+  [31/177] Testing proof block at src/Chap42/TableMtEph.rs:1528-1532 in fn difference... NEEDED (restored) [6.6s, 322 MB]
+  [32/177] Testing proof block at src/Chap42/TableMtEph.rs:1583-1585 in fn difference... NEEDED (restored) [8.8s, 321 MB]
+  [33/177] Testing proof block at src/Chap42/TableMtEph.rs:1592-1594 in fn difference... NEEDED (restored) [2.5s, 78 MB]
+  [34/177] Testing proof block at src/Chap42/TableMtEph.rs:1597-1616 in fn difference... NEEDED (restored) [2.5s, 78 MB]
+  [35/177] Testing proof block at src/Chap42/TableMtEph.rs:1618-1621 in fn difference... NEEDED (restored) [25.2s, 2117 MB]
+  [36/177] Testing proof block at src/Chap42/TableMtEph.rs:1626-1663 in fn difference... NEEDED (restored) [19.3s, 1210 MB]
+  [37/177] Testing proof block at src/Chap42/TableMtEph.rs:1681-1681 in fn find... NEEDED (restored) [2.5s, 78 MB]
+  [38/177] Testing proof block at src/Chap42/TableMtEph.rs:1684-1686 in fn find... NEEDED (restored) [6.6s, 322 MB]
+  [39/177] Testing proof block at src/Chap42/TableMtEph.rs:1691-1693 in fn find... NEEDED (restored) [2.5s, 78 MB]
+  [40/177] Testing proof block at src/Chap42/TableMtEph.rs:1701-1705 in fn delete... NEEDED (restored) [2.5s, 78 MB]
+  [41/177] Testing proof block at src/Chap42/TableMtEph.rs:1732-1732 in fn delete... NEEDED (restored) [38.7s, 2097 MB]
+  [42/177] Testing proof block at src/Chap42/TableMtEph.rs:1736-1754 in fn delete... NEEDED (restored) [6.6s, 321 MB]
+  [43/177] Testing proof block at src/Chap42/TableMtEph.rs:1759-1816 in fn delete... NEEDED (restored) [2.5s, 78 MB]
+  [44/177] Testing proof block at src/Chap42/TableMtEph.rs:1844-1844 in fn insert<F: Fn... UNNEEDED (commented) [40.5s, 2102 MB]
+  [45/177] Testing proof block at src/Chap42/TableMtEph.rs:1857-1860 in fn insert<F: Fn... NEEDED (restored) [2.5s, 78 MB]
+  [46/177] Testing proof block at src/Chap42/TableMtEph.rs:1903-1952 in fn insert<F: Fn... NEEDED (restored) [6.7s, 322 MB]
+  [47/177] Testing proof block at src/Chap42/TableMtEph.rs:1975-2051 in fn insert<F: Fn... NEEDED (restored) [2.5s, 77 MB]
+  [48/177] Testing proof block at src/Chap42/TableMtEph.rs:2059-2062 in fn restrict... NEEDED (restored) [2.5s, 78 MB]
+  [49/177] Testing proof block at src/Chap42/TableMtEph.rs:2090-2108 in fn restrict... NEEDED (restored) [2.5s, 78 MB]
+  [50/177] Testing proof block at src/Chap42/TableMtEph.rs:2113-2148 in fn restrict... NEEDED (restored) [2.5s, 78 MB]
+  [51/177] Testing proof block at src/Chap42/TableMtEph.rs:2188-2206 in fn subtract... NEEDED (restored) [2.5s, 78 MB]
+  [52/177] Testing proof block at src/Chap42/TableMtEph.rs:2211-2246 in fn subtract... NEEDED (restored) [2.6s, 78 MB]
+  [53/177] Testing proof block at src/Chap42/TableMtEph.rs:2252-2259 in fn entries... NEEDED (restored) [2.8s, 78 MB]
+  [54/177] Testing proof block at src/Chap42/TableMtEph.rs:2270-2272 in fn from_sorted_entries<K: MtKey, V: MtVal>... NEEDED (restored) [2.8s, 78 MB]
+  [55/177] Testing proof block at src/Chap42/TableMtEph.rs:2292-2292 in fn eq... NEEDED (restored) [9.0s, 322 MB]
+  [56/177] Testing proof block at src/Chap42/TableMtEph.rs:2304-2304 in fn clone... NEEDED (restored) [2.5s, 78 MB]
+  [57/177] proof block at src/Chap42/TableStEph.rs:391-393 in fn size... (from prior run, skipping)
+  [58/177] proof block at src/Chap42/TableStEph.rs:404-411 in fn empty... (from prior run, skipping)
+  [59/177] proof block at src/Chap42/TableStEph.rs:422-438 in fn singleton... (from prior run, skipping)
+  [60/177] proof block at src/Chap42/TableStEph.rs:465-488 in fn domain... (from prior run, skipping)
+  [61/177] proof block at src/Chap42/TableStEph.rs:492-507 in fn domain... (from prior run, skipping)
+  [62/177] proof block at src/Chap42/TableStEph.rs:539-541 in fn tabulate<F: Fn... (from prior run, skipping)
+  [63/177] proof block at src/Chap42/TableStEph.rs:547-600 in fn tabulate<F: Fn... (from prior run, skipping)
+  [64/177] proof block at src/Chap42/TableStEph.rs:633-668 in fn map<F: Fn... (from prior run, skipping)
+  [65/177] proof block at src/Chap42/TableStEph.rs:710-728 in fn filter<F: Fn... (from prior run, skipping)
+  [66/177] proof block at src/Chap42/TableStEph.rs:734-765 in fn filter<F: Fn... (from prior run, skipping)
+  [67/177] proof block at src/Chap42/TableStEph.rs:835-838 in fn intersection<F: Fn... (from prior run, skipping)
+  [68/177] proof block at src/Chap42/TableStEph.rs:851-871 in fn intersection<F: Fn... (from prior run, skipping)
+  [69/177] proof block at src/Chap42/TableStEph.rs:874-876 in fn intersection<F: Fn... (from prior run, skipping)
+  [70/177] proof block at src/Chap42/TableStEph.rs:882-947 in fn intersection<F: Fn... (from prior run, skipping)
+  [71/177] proof block at src/Chap42/TableStEph.rs:1016-1019 in fn union<F: Fn... (from prior run, skipping)
+  [72/177] proof block at src/Chap42/TableStEph.rs:1031-1035 in fn union<F: Fn... (from prior run, skipping)
+  [73/177] proof block at src/Chap42/TableStEph.rs:1040-1044 in fn union<F: Fn... (from prior run, skipping)
+  [74/177] proof block at src/Chap42/TableStEph.rs:1099-1099 in fn union<F: Fn... (from prior run, skipping)
+  [75/177] proof block at src/Chap42/TableStEph.rs:1119-1122 in fn union<F: Fn... (from prior run, skipping)
+  [76/177] proof block at src/Chap42/TableStEph.rs:1126-1126 in fn union<F: Fn... (from prior run, skipping)
+  [77/177] proof block at src/Chap42/TableStEph.rs:1136-1140 in fn union<F: Fn... (from prior run, skipping)
+  [78/177] proof block at src/Chap42/TableStEph.rs:1143-1146 in fn union<F: Fn... (from prior run, skipping)
+  [79/177] proof block at src/Chap42/TableStEph.rs:1149-1182 in fn union<F: Fn... (from prior run, skipping)
+  [80/177] proof block at src/Chap42/TableStEph.rs:1187-1352 in fn union<F: Fn... (from prior run, skipping)
+  [81/177] proof block at src/Chap42/TableStEph.rs:1412-1415 in fn difference... (from prior run, skipping)
+  [82/177] proof block at src/Chap42/TableStEph.rs:1423-1425 in fn difference... (from prior run, skipping)
+  [83/177] proof block at src/Chap42/TableStEph.rs:1429-1448 in fn difference... (from prior run, skipping)
+  [84/177] proof block at src/Chap42/TableStEph.rs:1451-1454 in fn difference... (from prior run, skipping)
+  [85/177] proof block at src/Chap42/TableStEph.rs:1460-1500 in fn difference... (from prior run, skipping)
+  [86/177] proof block at src/Chap42/TableStEph.rs:1519-1519 in fn find... (from prior run, skipping)
+  [87/177] proof block at src/Chap42/TableStEph.rs:1523-1525 in fn find... (from prior run, skipping)
+  [88/177] proof block at src/Chap42/TableStEph.rs:1531-1533 in fn find... (from prior run, skipping)
+  [89/177] proof block at src/Chap42/TableStEph.rs:1552-1552 in fn find_ref... (from prior run, skipping)
+  [90/177] proof block at src/Chap42/TableStEph.rs:1555-1575 in fn find_ref... (from prior run, skipping)
+  [91/177] proof block at src/Chap42/TableStEph.rs:1581-1583 in fn find_ref... (from prior run, skipping)
+  [92/177] proof block at src/Chap42/TableStEph.rs:1619-1619 in fn delete... (from prior run, skipping)
+  [93/177] proof block at src/Chap42/TableStEph.rs:1624-1642 in fn delete... (from prior run, skipping)
+  [94/177] proof block at src/Chap42/TableStEph.rs:1648-1686 in fn delete... (from prior run, skipping)
+  [95/177] proof block at src/Chap42/TableStEph.rs:1730-1730 in fn insert<F: Fn... (from prior run, skipping)
+  [96/177] proof block at src/Chap42/TableStEph.rs:1733-1733 in fn insert<F: Fn... (from prior run, skipping)
+  [97/177] proof block at src/Chap42/TableStEph.rs:1739-1757 in fn insert<F: Fn... (from prior run, skipping)
+  [98/177] proof block at src/Chap42/TableStEph.rs:1767-1771 in fn insert<F: Fn... (from prior run, skipping)
+  [99/177] proof block at src/Chap42/TableStEph.rs:1779-1883 in fn insert<F: Fn... (from prior run, skipping)
+  [100/177] proof block at src/Chap42/TableStEph.rs:1933-1933 in fn insert_wf<F: Fn... (from prior run, skipping)
+  [101/177] proof block at src/Chap42/TableStEph.rs:1936-1936 in fn insert_wf<F: Fn... (from prior run, skipping)
+  [102/177] proof block at src/Chap42/TableStEph.rs:1941-1956 in fn insert_wf<F: Fn... (from prior run, skipping)
+  [103/177] proof block at src/Chap42/TableStEph.rs:1962-1980 in fn insert_wf<F: Fn... (from prior run, skipping)
+  [104/177] proof block at src/Chap42/TableStEph.rs:1990-2004 in fn insert_wf<F: Fn... (from prior run, skipping)
+  [105/177] proof block at src/Chap42/TableStEph.rs:2012-2158 in fn insert_wf<F: Fn... (from prior run, skipping)
+  [106/177] proof block at src/Chap42/TableStEph.rs:2199-2199 in fn delete_wf... (from prior run, skipping)
+  [107/177] proof block at src/Chap42/TableStEph.rs:2203-2215 in fn delete_wf... (from prior run, skipping)
+  [108/177] proof block at src/Chap42/TableStEph.rs:2221-2239 in fn delete_wf... (from prior run, skipping)
+  [109/177] proof block at src/Chap42/TableStEph.rs:2245-2325 in fn delete_wf... (from prior run, skipping)
+  [110/177] proof block at src/Chap42/TableStEph.rs:2361-2379 in fn restrict... (from prior run, skipping)
+  [111/177] proof block at src/Chap42/TableStEph.rs:2385-2420 in fn restrict... (from prior run, skipping)
+  [112/177] proof block at src/Chap42/TableStEph.rs:2456-2474 in fn subtract... (from prior run, skipping)
+  [113/177] proof block at src/Chap42/TableStEph.rs:2480-2515 in fn subtract... (from prior run, skipping)
+  [114/177] proof block at src/Chap42/TableStEph.rs:2522-2529 in fn entries... (from prior run, skipping)
+  [115/177] proof block at src/Chap42/TableStEph.rs:2543-2545 in fn from_sorted_entries<K: StT + Ord, V: StT>... (from prior run, skipping)
+  [116/177] proof block at src/Chap42/TableStEph.rs:2570-2570 in fn eq... (from prior run, skipping)
+  [117/177] proof block at src/Chap42/TableStPer.rs:460-462 in fn size... (from prior run, skipping)
+  [118/177] proof block at src/Chap42/TableStPer.rs:482-492 in fn singleton... (from prior run, skipping)
+  [119/177] proof block at src/Chap42/TableStPer.rs:519-546 in fn domain... (from prior run, skipping)
+  [120/177] proof block at src/Chap42/TableStPer.rs:550-565 in fn domain... (from prior run, skipping)
+  [121/177] proof block at src/Chap42/TableStPer.rs:591-591 in fn tabulate<F: Fn... (from prior run, skipping)
+  [122/177] proof block at src/Chap42/TableStPer.rs:597-661 in fn tabulate<F: Fn... (from prior run, skipping)
+  [123/177] proof block at src/Chap42/TableStPer.rs:692-740 in fn map<F: Fn... (from prior run, skipping)
+  [124/177] proof block at src/Chap42/TableStPer.rs:782-800 in fn filter<F: Fn... (from prior run, skipping)
+  [125/177] proof block at src/Chap42/TableStPer.rs:803-806 in fn filter<F: Fn... (from prior run, skipping)
+  [126/177] proof block at src/Chap42/TableStPer.rs:812-840 in fn filter<F: Fn... (from prior run, skipping)
+  [127/177] proof block at src/Chap42/TableStPer.rs:906-906 in fn intersection<F: Fn... (from prior run, skipping)
+  [128/177] proof block at src/Chap42/TableStPer.rs:919-940 in fn intersection<F: Fn... (from prior run, skipping)
+  [129/177] proof block at src/Chap42/TableStPer.rs:943-945 in fn intersection<F: Fn... (from prior run, skipping)
+  [130/177] proof block at src/Chap42/TableStPer.rs:951-1030 in fn intersection<F: Fn... (from prior run, skipping)
+  [131/177] proof block at src/Chap42/TableStPer.rs:1091-1199 in fn union<F: Fn... (from prior run, skipping)
+  [132/177] proof block at src/Chap42/TableStPer.rs:1203-1257 in fn union<F: Fn... (from prior run, skipping)
+  [133/177] proof block at src/Chap42/TableStPer.rs:1312-1312 in fn difference... (from prior run, skipping)
+  [134/177] proof block at src/Chap42/TableStPer.rs:1316-1316 in fn difference... (from prior run, skipping)
+  [135/177] proof block at src/Chap42/TableStPer.rs:1322-1324 in fn difference... (from prior run, skipping)
+  [136/177] proof block at src/Chap42/TableStPer.rs:1328-1347 in fn difference... (from prior run, skipping)
+  [137/177] proof block at src/Chap42/TableStPer.rs:1350-1354 in fn difference... (from prior run, skipping)
+  [138/177] proof block at src/Chap42/TableStPer.rs:1360-1399 in fn difference... (from prior run, skipping)
+  [139/177] proof block at src/Chap42/TableStPer.rs:1419-1419 in fn find... (from prior run, skipping)
+  [140/177] proof block at src/Chap42/TableStPer.rs:1423-1425 in fn find... (from prior run, skipping)
+  [141/177] proof block at src/Chap42/TableStPer.rs:1431-1433 in fn find... (from prior run, skipping)
+  [142/177] proof block at src/Chap42/TableStPer.rs:1452-1452 in fn find_ref... (from prior run, skipping)
+  [143/177] proof block at src/Chap42/TableStPer.rs:1455-1472 in fn find_ref... (from prior run, skipping)
+  [144/177] proof block at src/Chap42/TableStPer.rs:1478-1480 in fn find_ref... (from prior run, skipping)
+  [145/177] proof block at src/Chap42/TableStPer.rs:1513-1513 in fn delete... (from prior run, skipping)
+  [146/177] proof block at src/Chap42/TableStPer.rs:1518-1537 in fn delete... (from prior run, skipping)
+  [147/177] proof block at src/Chap42/TableStPer.rs:1540-1543 in fn delete... (from prior run, skipping)
+  [148/177] proof block at src/Chap42/TableStPer.rs:1549-1631 in fn delete... (from prior run, skipping)
+  [149/177] proof block at src/Chap42/TableStPer.rs:1673-1673 in fn insert<F: Fn... (from prior run, skipping)
+  [150/177] proof block at src/Chap42/TableStPer.rs:1680-1699 in fn insert<F: Fn... (from prior run, skipping)
+  [151/177] proof block at src/Chap42/TableStPer.rs:1710-1714 in fn insert<F: Fn... (from prior run, skipping)
+  [152/177] proof block at src/Chap42/TableStPer.rs:1722-1877 in fn insert<F: Fn... (from prior run, skipping)
+  [153/177] proof block at src/Chap42/TableStPer.rs:1926-1926 in fn insert_wf<F: Fn... (from prior run, skipping)
+  [154/177] proof block at src/Chap42/TableStPer.rs:1932-1957 in fn insert_wf<F: Fn... (from prior run, skipping)
+  [155/177] proof block at src/Chap42/TableStPer.rs:1963-1982 in fn insert_wf<F: Fn... (from prior run, skipping)
+  [156/177] proof block at src/Chap42/TableStPer.rs:1992-2008 in fn insert_wf<F: Fn... (from prior run, skipping)
+  [157/177] proof block at src/Chap42/TableStPer.rs:2011-2014 in fn insert_wf<F: Fn... (from prior run, skipping)
+  [158/177] proof block at src/Chap42/TableStPer.rs:2022-2218 in fn insert_wf<F: Fn... (from prior run, skipping)
+  [159/177] proof block at src/Chap42/TableStPer.rs:2258-2258 in fn delete_wf... (from prior run, skipping)
+  [160/177] proof block at src/Chap42/TableStPer.rs:2262-2285 in fn delete_wf... (from prior run, skipping)
+  [161/177] proof block at src/Chap42/TableStPer.rs:2291-2310 in fn delete_wf... (from prior run, skipping)
+  [162/177] proof block at src/Chap42/TableStPer.rs:2313-2316 in fn delete_wf... (from prior run, skipping)
+  [163/177] proof block at src/Chap42/TableStPer.rs:2322-2426 in fn delete_wf... (from prior run, skipping)
+  [164/177] proof block at src/Chap42/TableStPer.rs:2466-2484 in fn restrict... (from prior run, skipping)
+  [165/177] proof block at src/Chap42/TableStPer.rs:2490-2525 in fn restrict... (from prior run, skipping)
+  [166/177] proof block at src/Chap42/TableStPer.rs:2565-2583 in fn subtract... (from prior run, skipping)
+  [167/177] proof block at src/Chap42/TableStPer.rs:2589-2624 in fn subtract... (from prior run, skipping)
+  [168/177] proof block at src/Chap42/TableStPer.rs:2633-2640 in fn collect... (from prior run, skipping)
+  [169/177] proof block at src/Chap42/TableStPer.rs:2654-2656 in fn from_sorted_entries<K: StT + Ord, V: StT>... (from prior run, skipping)
+  [170/177] proof block at src/Chap42/TableStPer.rs:2711-2711 in fn collect_by_key<K: StT + Ord + Eq, V: StT>... (from prior run, skipping)
+  [171/177] proof block at src/Chap42/TableStPer.rs:2723-2725 in fn collect_by_key<K: StT + Ord + Eq, V: StT>... (from prior run, skipping)
+  [172/177] proof block at src/Chap42/TableStPer.rs:2728-2758 in fn collect_by_key<K: StT + Ord + Eq, V: StT>... (from prior run, skipping)
+  [173/177] proof block at src/Chap42/TableStPer.rs:2763-2771 in fn collect_by_key<K: StT + Ord + Eq, V: StT>... (from prior run, skipping)
+  [174/177] proof block at src/Chap42/TableStPer.rs:2795-2811 in fn collect_by_key<K: StT + Ord + Eq, V: StT>... (from prior run, skipping)
+  [175/177] proof block at src/Chap42/TableStPer.rs:2816-2819 in fn collect_by_key<K: StT + Ord + Eq, V: StT>... (from prior run, skipping)
+  [176/177] proof block at src/Chap42/TableStPer.rs:2838-2838 in fn eq... (from prior run, skipping)
+  [177/177] proof block at src/Chap42/TableStPer.rs:2849-2855 in fn clone... (from prior run, skipping)
+
+Phase 12 Summary: 56 tested, 1 removed (commented), 0.0s time saved
+
+Phase 13: Skipped (use -t flag to enable type minimization)
+
+═══════════════════════════════════════════════════════════════
+Phase 14: Analyzing and verifying final codebase
+═══════════════════════════════════════════════════════════════
+
+  Final LOC (comments not counted):
+    Spec:       0
+    Proof:      0
+    Exec:       0
+    Total:      0
+
+  LOC change: no change
+  (excluding manual module removal)
+
+  Verifying...
+✓ Final verification: 34.1s, 2094 MB (was 24.9s, +9.3s (37.2% slower))
+
+═══════════════════════════════════════════════════════════════
+MINIMIZATION SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Time:
+  Actual time:             3h 55m 13s
+  Estimated time:          4h 34m 1s
+  Estimation error:        -2327.7s (-14.2%)
+
+Verification:
+  Initial: 24.9s (passed)
+  Final:   34.1s (passed)
+  Change:  +9.3s (37.2% slower)
+
+Lines of Code (comments not counted):
+  Initial:      0 (spec: 0, proof: 0, exec: 0)
+  Final:        0 (spec: 0, proof: 0, exec: 0)
+  Change:  no change (excluding manual module removal)
+
+Phase 7 (dependence): 0 DEPENDENT, 0 INDEPENDENT
+Phase 8 (necessity):  0 USED, 0 UNUSED, 0 skipped
+Combined:             0 DEPENDENT BUT NEEDED (keep these)
+
+┌───────────────────────────────────────────────────────────────┐
+│ DEPENDENT LEMMAS (vstd broadcast groups can prove these)     │
+├───────────────────────────────────────────────────────────────┤
+│ (none)                                                        │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ UNNEEDED LEMMAS (commented out, codebase verifies without)   │
+├───────────────────────────────────────────────────────────────┤
+│ (none - all tested lemmas are needed)                        │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ DEPENDENT BUT NEEDED (guide verification, keep for now)      │
+├───────────────────────────────────────────────────────────────┤
+│ (none - all dependent lemmas were also unneeded)             │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ SPEC FUNCTIONS (160 total, 56 without explicit calls)         │
+├───────────────────────────────────────────────────────────────┤
+│ checked_int.rs             -> spec_is_add_associative
+│ checked_int.rs             -> spec_is_add_commutative
+│ checked_int.rs             -> spec_is_mul_associative
+│ checked_int.rs             -> spec_is_mul_commutative
+│ checked_int.rs             -> spec_mul_distributes_over_add
+│ checked_nat.rs             -> spec_is_add_associative
+│ checked_nat.rs             -> spec_is_add_commutative
+│ checked_nat.rs             -> spec_is_mul_associative
+│ checked_nat.rs             -> spec_is_mul_commutative
+│ checked_nat.rs             -> spec_mul_distributes_over_add
+│ feq.rs                     -> feq_reflexive
+│ feq.rs                     -> feq_symmetric
+│ feq.rs                     -> feq_transitive
+│ feq.rs                     -> obeys_feq<bool, u8, u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize> (13 variants, 0 used)
+│ feq.rs                     -> obeys_feq_clone
+│ feq.rs                     -> obeys_feq_eq
+│ feq.rs                     -> obeys_feq_full
+│ feq.rs                     -> obeys_feq_full_trigger
+│ feq.rs                     -> obeys_feq_fulls
+│ feq.rs                     -> obeys_feq_properties
+│ feq.rs                     -> obeys_feq_view
+│ feq.rs                     -> obeys_feq_view_injective
+│ feq.rs                     -> obeys_view_eq_trigger
+│ float.rs                   -> all_float_wf
+│ float.rs                   -> spec_float_sorted
+│ hash_map_with_view_plus.rs -> exec_invariant
+│ hash_map_with_view_plus.rs -> ghost_advance
+│ hash_map_with_view_plus.rs -> ghost_decrease
+│ hash_map_with_view_plus.rs -> ghost_ensures
+│ hash_map_with_view_plus.rs -> ghost_invariant
+│ hash_map_with_view_plus.rs -> ghost_iter
+│ hash_map_with_view_plus.rs -> ghost_peek_next
+│ hash_set_with_view_plus.rs -> exec_invariant
+│ hash_set_with_view_plus.rs -> ghost_advance
+│ hash_set_with_view_plus.rs -> ghost_decrease
+│ hash_set_with_view_plus.rs -> ghost_ensures
+│ hash_set_with_view_plus.rs -> ghost_invariant
+│ hash_set_with_view_plus.rs -> ghost_iter
+│ hash_set_with_view_plus.rs -> ghost_peek_next
+│ hashed_checked_u32.rs      -> valid_key_type_CheckedU32
+│ partial_order.rs           -> partial_order_ensures
+│ pervasives_plus.rs         -> comment
+│ seq.rs                     -> spec_sum_u32_fold
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ REMOVABLE MODULES (0 can be removed entirely)               │
+├───────────────────────────────────────────────────────────────┤
+│ (none - all modules are needed)                              │
+└───────────────────────────────────────────────────────────────┘
+
+✓ Minimization complete! Codebase still verifies.

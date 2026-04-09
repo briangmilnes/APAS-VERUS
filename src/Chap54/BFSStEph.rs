@@ -139,7 +139,6 @@ pub mod BFSStEph {
         ensures
             spec_parents_bounded(parents, n),
     {
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < parents@.len() implies #[trigger] parents@[i] == parents.spec_index(i) by {};
         lemma_bfs_all_no_parent(parents@, n);
     }
@@ -163,9 +162,7 @@ pub mod BFSStEph {
         ensures
             spec_parents_bounded(parents, n),
     {
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < parents@.len() implies #[trigger] parents@[i] == parents.spec_index(i) by {};
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < old_parents@.len() implies #[trigger] old_parents@[i] == old_parents.spec_index(i) by {};
         lemma_bfs_update_preserves_parents_bounded(parents@, old_parents@, v, new_val, n);
     }
@@ -178,7 +175,6 @@ pub mod BFSStEph {
         ensures
             spec_distances_bounded(distances, n),
     {
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < distances@.len() implies #[trigger] distances@[i] == distances.spec_index(i) by {};
         lemma_bfs_all_unreachable(distances@, n);
     }
@@ -203,9 +199,7 @@ pub mod BFSStEph {
         ensures
             spec_distances_bounded(distances, n),
     {
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < distances@.len() implies #[trigger] distances@[i] == distances.spec_index(i) by {};
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < old_distances@.len() implies #[trigger] old_distances@[i] == old_distances.spec_index(i) by {};
         lemma_bfs_update_preserves_bounded(distances@, old_distances@, v, new_val, n);
     }
@@ -276,20 +270,18 @@ pub mod BFSStEph {
         );
 
         // After tabulate, all entries are UNREACHABLE → bounded.
+        proof { lemma_tabulate_all_unreachable(&distances, n as int); }
 
         let ghost pre_set = *&distances;
         let _ = distances.set(source, 0);
 
         // After setting source to 0: 0 < n, so still bounded.
-        // Veracity: NEEDED proof block
         proof {
             lemma_set_preserves_bounded(&distances, &pre_set, source as int, 0, n as int);
-            // Veracity: NEEDED assert
             assert forall|v: int| 0 <= v < distances.spec_len()
                 && distances.spec_index(v) != UNREACHABLE && v != source as int
             implies distances.spec_index(v) > 0usize
             by {
-                // Veracity: NEEDED assert
                 assert(distances.spec_index(v) == pre_set.spec_index(v));
             }
         }
@@ -355,22 +347,20 @@ pub mod BFSStEph {
                                 let ghost pre_inner_set = *&distances;
                                 let _ = distances.set(v, dist + 1);
                                 queue.push_back(v);
-// Veracity: NEEDED proof block
 
                                 proof {
                                     lemma_set_preserves_bounded(
                                         &distances, &pre_inner_set,
                                         v as int, (dist + 1) as usize, n as int,
                                     );
-                                    // Veracity: NEEDED assert
                                     assert forall|w: int| 0 <= w < distances.spec_len()
                                         && distances.spec_index(w) != UNREACHABLE
                                         && w != source as int
                                     implies distances.spec_index(w) > 0usize
                                     by {
                                         if w == v as int {
+                                            assert(distances.spec_index(w) == dist + 1);
                                         } else {
-                                            // Veracity: NEEDED assert
                                             assert(distances.spec_index(w)
                                                 == pre_inner_set.spec_index(w));
                                         }
@@ -399,12 +389,10 @@ pub mod BFSStEph {
         let mut parents = ArraySeqStEphS::tabulate(
             &|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT },
             n,
-        // Veracity: NEEDED proof block
         );
 
         proof { lemma_tabulate_all_no_parent(&parents, n as int); }
 
-        // Veracity: NEEDED proof block
         let ghost pre_set = *&parents;
         let _ = parents.set(source, source);
 
@@ -473,7 +461,6 @@ pub mod BFSStEph {
 
                         if *parents.nth(v) == NO_PARENT && order.len() < n {
                             let ghost pre_inner = *&parents;
-                            // Veracity: NEEDED proof block
                             let _ = parents.set(v, u);
                             queue.push_back(v);
                             order.push(v);
@@ -484,6 +471,13 @@ pub mod BFSStEph {
                                     v as int, u, n as int,
                                 );
                                 // v != source: parents[source] == source != NO_PARENT
+                                assert(parents.spec_index(source as int) == source) by {
+                                    if v as int == source as int {
+                                        assert(pre_inner.spec_index(source as int) == source);
+                                        assert(source < n);
+                                        assert(n < usize::MAX);
+                                    }
+                                };
                             }
                         }
                         i = i + 1;

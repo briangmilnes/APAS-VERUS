@@ -278,7 +278,6 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Arc<RwLock> wrappers
         fn new() -> (mc: Self) {
-            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 dimensions: new_arc_rwlock(Vec::new(), Ghost(MatrixChainMtEphDimInv { expected_dims: Seq::empty() })),
@@ -290,6 +289,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — wrap dimensions in Arc<RwLock>, n = dimensions.len()
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self) {
             let ghost gd = dimensions@;
+            let _len = dimensions.len();
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 dimensions: new_arc_rwlock(dimensions, Ghost(MatrixChainMtEphDimInv { expected_dims: gd })),
@@ -314,7 +314,6 @@ broadcast use {
                 });
                 idx = idx + 1;
             }
-            // Veracity: NEEDED proof block
             let ghost gd = dimensions@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -329,9 +328,14 @@ broadcast use {
             let rwlock = arc_deref(&self.dimensions);
             let handle = rwlock.acquire_read();
             let dims = handle.borrow();
+            assert(dims@ =~= self.ghost_dimensions@);
             let left_rows = dims[i].rows;
             let split_cols = dims[k].cols;
             let right_cols = dims[j].cols;
+            assert(dims@ =~= self@.dimensions);
+            assert(left_rows == self@.dimensions[i as int].rows);
+            assert(split_cols == self@.dimensions[k as int].cols);
+            assert(right_cols == self@.dimensions[j as int].cols);
             handle.release_read();
             left_rows * split_cols * right_cols
         }
@@ -364,6 +368,7 @@ broadcast use {
             {
                 let rwlock = arc_deref(&self.memo);
                 let handle = rwlock.acquire_read();
+                assert(rwlock.pred().dims =~= self@.dimensions);
                 let found = match handle.borrow().get(&Pair(i, j)) {
                     Some(v) => Some(*v),
                     None => None,
@@ -377,17 +382,17 @@ broadcast use {
             if i == j {
                 let rwlock = arc_deref(&self.memo);
                 let (mut memo, wh) = rwlock.acquire_write();
-                // Veracity: NEEDED proof block
+                assert(rwlock.pred().dims =~= self@.dimensions);
                 let ghost pre_insert = memo@;
                 memo.insert(Pair(i, j), 0usize);
                 proof {
-                    // Veracity: NEEDED assert
                     assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
                     implies
                         memo@[(a, b)] as nat == spec_chain_cost(self@.dimensions, a as int, b as int, a as int)
                     by {
                         if a == i && b == j {
                         } else {
+                            assert(pre_insert.contains_key((a, b)));
                         }
                     };
                 }
@@ -418,6 +423,7 @@ broadcast use {
                 let left_cost = self.matrix_chain_rec(i, k);
                 let right_cost = self.matrix_chain_rec(k + 1, j);
                 let split_cost = self.multiply_cost(i, k, j);
+                assert(left_cost as nat + right_cost as nat + split_cost as nat <= usize::MAX as nat);
                 let total = left_cost + right_cost + split_cost;
 
                 if total < best {
@@ -429,17 +435,17 @@ broadcast use {
             // Store in memo.
             let rwlock = arc_deref(&self.memo);
             let (mut memo, wh) = rwlock.acquire_write();
-// Veracity: NEEDED proof block
+            assert(rwlock.pred().dims =~= self@.dimensions);
             let ghost pre_insert = memo@;
             memo.insert(Pair(i, j), best);
             proof {
-                // Veracity: NEEDED assert
                 assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
                 implies
                     memo@[(a, b)] as nat == spec_chain_cost(gdims, a as int, b as int, a as int)
                 by {
                     if a == i && b == j {
                     } else {
+                        assert(pre_insert.contains_key((a, b)));
                     }
                 };
             }
@@ -451,7 +457,6 @@ broadcast use {
         fn optimal_cost(&mut self) -> (cost: usize) {
             let n = self.num_matrices();
             if n <= 1 {
-                // Veracity: NEEDED proof block
                 return 0;
             }
 
@@ -470,6 +475,7 @@ broadcast use {
             let rwlock = arc_deref(&self.dimensions);
             let handle = rwlock.acquire_read();
             let borrowed = handle.borrow();
+            assert(borrowed@ =~= self.ghost_dimensions@);
             let dims = borrowed.clone();
             handle.release_read();
             dims
@@ -479,7 +485,6 @@ broadcast use {
         fn set_dimension(&mut self, index: usize, dim: MatrixDim) {
             let rwlock = arc_deref(&self.dimensions);
             let handle = rwlock.acquire_read();
-            // Veracity: NEEDED proof block
             let mut dims = handle.borrow().clone();
             handle.release_read();
 
@@ -497,7 +502,6 @@ broadcast use {
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize) {
             let dim = MatrixDim { rows, cols };
             let rwlock = arc_deref(&self.dimensions);
-            // Veracity: NEEDED proof block
             let handle = rwlock.acquire_read();
             let mut dims = handle.borrow().clone();
             handle.release_read();
@@ -517,7 +521,7 @@ broadcast use {
             let rwlock = arc_deref(&self.dimensions);
             let handle = rwlock.acquire_read();
             let dims = handle.borrow();
-            // Veracity: NEEDED proof block
+            assert(dims@ =~= self.ghost_dimensions@);
             let n = dims.len();
             handle.release_read();
             n
@@ -572,7 +576,6 @@ broadcast use {
 
 
     impl Clone for MatrixChainMtEphS {
-        // Veracity: NEEDED proof block
         fn clone(&self) -> (mc: Self)
             ensures mc@ == self@
         {
@@ -594,6 +597,7 @@ broadcast use {
 
     impl PartialEq for MatrixChainMtEphS {
         fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             let self_rwlock = arc_deref(&self.dimensions);
             let other_rwlock = arc_deref(&other.dimensions);

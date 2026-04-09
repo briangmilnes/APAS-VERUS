@@ -23,39 +23,83 @@ Table of Contents:
 ✓ KruskalStEph.rs
    1 clean proof function
 ⚠ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:505: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       500 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:493: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       489 |         fn clone(&self) -> (cloned: Self)
             ...
-       503 |             let cloned = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
-       504 |             // Veracity: NEEDED proof block
-       506 |             cloned
-       507 |         }
-❌ UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:281: error: external_body [blocked_by: union_merge] - #[verifier::external_body]
-       282 |         fn union(&mut self, u: &V, v: &V) {
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:326: error: external_body [blocked_by: find_root_loop] - #[verifier::external_body]
-       327 |         fn num_sets(&mut self) -> (count: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:620: error: external_body - #[verifier::external_body]
-       621 |     proof fn lemma_insert_preserves_wf<V: StT + Hash>(
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:805: error: external_body - #[verifier::external_body]
-       806 |     proof fn lemma_union_wf_parent<V: StT + Hash>(
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:870: error: external_body - #[verifier::external_body]
-       871 |     proof fn lemma_union_wf_ordering<V: StT + Hash>(
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:969: error: external_body - #[verifier::external_body]
-       970 |     proof fn lemma_rank_lt_elements<V: StT + Hash>(
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1056: error: external_body - #[verifier::external_body]
-      1057 |     proof fn lemma_assemble_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1210: error: external_body [blocked_by: lemma_assemble_wf] - #[verifier::external_body]
-      1211 |     proof fn lemma_union_merge_wf<V: StT + Hash>(
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1585: error: external_body - #[verifier::external_body]
-      1586 |     fn find_root_loop<V: StT + Hash>(uf: &UnionFindStEph<V>, v: &V) -> (root: V)
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1660: error: external_body - #[verifier::external_body]
-      1661 |     fn union_merge_exec<V: StT + Hash>(
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1767: error: external_body [blocked_by: lemma_union_merge_wf] - #[verifier::external_body]
-      1768 |     fn union_merge<V: StT + Hash>(
-   Holes: 11 total
-      11 × external_body
-         7 × root cause
-         4 × downstream (blocked by root causes)
-   Proof functions: 24 total (24 clean, 0 holed)
+       491 |         {
+       492 |             let cloned = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
+       494 |             cloned
+       495 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:251: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
+✓ UnionFindStEph.rs
+   24 clean proof functions
 
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+KruskalStEph  depends upon only clean modules
+PrimStEph  depends upon only clean modules
+UnionFindStEph  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+KruskalStEph.rs  depends upon only clean modules
+PrimStEph.rs  depends upon only clean modules
+UnionFindStEph.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
+
+Modules:
+   3 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
+   3 total
+
+Proof Functions:
+   29 clean (100%)
+   0 holed (0%)
+   29 total
+
+Function Specs:
+   32 exec fns with complete spec (requires+ensures) (34%)
+   2 exec fns missing spec (2%)
+   59 proof/spec fns clean (63%)
+   0 proof/spec fns with holes (0%)
+   93 total fns
+
+
+Holes Found: 0 (actionable)
+Real Proof Targets: 0 (all actionable)
+
+Warnings: 1 total
+   1 × assume_eq_clone_workaround
+
+Structural (info only): 1
+   1 × OPAQUE_EXTERNAL
+
+No proof holes found! All proofs are complete.
+
+=================================================================
+5. Started/Ended/Duration
+=================================================================
+
+Started:   2026-04-06 15:36:04 -07:00
+Ended:     2026-04-06 15:36:04 -07:00
+Duration:  80ms
+
+Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+===========
+
+Started:   2026-04-06 15:36:04 -07:00
+Ended:     2026-04-06 15:36:04 -07:00
+Duration:  80ms
+
+Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

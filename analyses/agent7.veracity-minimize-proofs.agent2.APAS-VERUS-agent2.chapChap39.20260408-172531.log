@@ -1,0 +1,732 @@
+Verus Library Minimizer
+=======================
+This minimizer is only possible due to the phenomenal speed of verification
+in Verus. Thanks Verus team!
+
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/analyses/veracity-minimize-proofs.APAS-VERUS-agent2.chapChap39.20260408-172531.log
+
+Arguments:
+  -c, --codebase:     /home/milnes/projects/APAS-VERUS-agent2
+  -l, --library:      /home/milnes/projects/APAS-VERUS-agent2/src/vstdplus
+  -F, --file:         (all files)
+  -n, --dry-run:      false
+  -b, --broadcasts:   false
+  -L, --lib-broadcasts: false
+  -N, --max-lemmas:   all
+  -a, --asserts:      true
+  -A, --max-asserts:  all
+  -p, --proof-blocks: true
+  -P, --max-proof-blocks: all
+  -e, --exclude:      (none)
+  -f, --fail-fast:    false
+  --danger:           false
+  --no-lib-min:       true
+  mode:               resume (preserve markers)
+  --project:          APAS
+  --chapter:          Chap39, Chap40, Chap41
+
+Mode: APAS isolate × 3 chapters: Chap39, Chap40, Chap41 (estimated 10-30s per iteration each)
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPORTANT: No code will be harmed in the improving of your codebase!
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Codebase is in git and committed. Proceeding safely.
+
+Veracity will repeatedly comment things in and out using // Veracity: lines
+to test and improve your use of vstd. All changes are reversible comments.
+You will need to review each // Veracity: line and decide what to keep.
+
+Phases:
+  Phase 0:  Strip existing Veracity markers (if any)
+  Phase 1:  Analyze and verify codebase
+  Phase 2:  Analyze library structure (lemmas, modules, call sites, spec fns)
+  Phase 3:  Discover vstd broadcast groups from verus installation
+  Phase 4:  Estimate time for testing
+  Phase 5:  Apply broadcast groups to library (-L flag)
+  Phase 6:  Apply broadcast groups to codebase (-b flag)
+  Phase 7:  Test lemma dependence on vstd (can vstd prove it alone?)
+  Phase 8:  Test lemma necessity (can codebase verify without it?)
+  Phase 9:  Test library asserts (can we remove any?)
+  Phase 10: Test codebase asserts (can we remove any?)
+  Phase 11: Test admits (can we remove any? -m flag)
+  Phase 12: Test proof {} blocks (-p flag)
+  Phase 13: Test types (are they used? -t flag)
+  Phase 14: Analyze and verify final codebase
+
+Comment markers inserted:
+  // Veracity: added broadcast group  - Phase 5/6: Inserted broadcast use block
+  // Veracity: DEPENDENT              - Phase 7: Lemma proven by vstd broadcast groups
+  // Veracity: INDEPENDENT            - Phase 7: Lemma provides unique proof logic
+  // Veracity: USED                   - Phase 8: Lemma required, restored after test
+  // Veracity: UNUSED                 - Phase 8: Lemma not needed, left commented out
+  // Veracity: NEEDED assert          - Phase 9/10: Assert required for verification
+  // Veracity: UNNEEDED assert        - Phase 9/10: Assert not needed, left commented
+  // Veracity: NEEDED admit           - Phase 11: Admit still needed (proof hole)
+  // Veracity: UNNEEDED admit         - Phase 11: Admit not needed, left commented
+  // Veracity: NEEDED proof block     - Phase 12: Proof block required
+  // Veracity: UNNEEDED proof block   - Phase 12: Proof block not needed, left commented
+  // Veracity: TYPE USED              - Phase 13: Type is used (verified by removal test)
+  // Veracity: TYPE UNUSED            - Phase 13: Type not used, left commented out
+  // Veracity: UNNEEDED               - Phase 8: Call site not needed, left commented
+
+═══════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 0: Resuming from existing markers
+═══════════════════════════════════════════════════════════════
+
+  Found 5788 existing Veracity markers
+  Checking for incomplete work from prior run...
+  Restored 7 TESTING markers to original code
+  Prior results found:
+    NEEDED assert: 3034
+    NEEDED proof block: 2746
+  These items will be skipped during testing.
+
+
+═══════════════════════════════════════════════════════════════
+Chapter 1/3: Chap39
+═══════════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════════
+Phase 1: Analyzing and verifying codebase
+═══════════════════════════════════════════════════════════════
+
+  Initial LOC (comments not counted):
+    Spec:       0
+    Proof:      0
+    Exec:       0
+    Total:      0
+
+  Verifying...
+  ✗ Verification failed. Exiting.
+  Fix verification errors before running Veracity.
+
+Verus output:
+─────────────────────────────────────────────────────────────────
+Isolate: including Chap39 Chap18 Chap02
+Acquired verus lock slot 3/6 (weight 1)
+Starting verification at 17:25:32
+error: expected one of `)`, `,`, `@`, `if`, or `|`, found `DIFFERENCE`
+    --> src/Chap18/ArraySeq.rs:1669:27
+     |
+1669 |             for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
+     |                          -^^^^^^^^^^ expected one of `)`, `,`, `@`, `if`, or `|`
+     |                          |
+     |                          help: missing `,`
+
+error: expected one of `)`, `,`, `@`, `if`, or `|`, found `:`
+    --> src/Chap18/ArraySeq.rs:1669:37
+     |
+1669 |             for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
+     |                                     ^ expected one of `)`, `,`, `@`, `if`, or `|`
+
+error: expected one of `)`, `,`, `@`, `if`, or `|`, found `DIFFERENCE`
+    --> src/Chap18/ArraySeqStPer.rs:1067:27
+     |
+1067 |             for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
+     |                          -^^^^^^^^^^ expected one of `)`, `,`, `@`, `if`, or `|`
+     |                          |
+     |                          help: missing `,`
+
+error: expected one of `)`, `,`, `@`, `if`, or `|`, found `:`
+    --> src/Chap18/ArraySeqStPer.rs:1067:37
+     |
+1067 |             for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
+     |                                     ^ expected one of `)`, `,`, `@`, `if`, or `|`
+
+error: expected one of `)`, `,`, `@`, `if`, or `|`, found `DIFFERENCE`
+    --> src/Chap18/ArraySeqStEph.rs:1092:27
+     |
+1092 |             for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
+     |                          -^^^^^^^^^^ expected one of `)`, `,`, `@`, `if`, or `|`
+     |                          |
+     |                          help: missing `,`
+
+error: expected one of `)`, `,`, `@`, `if`, or `|`, found `:`
+    --> src/Chap18/ArraySeqStEph.rs:1092:37
+     |
+1092 |             for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
+     |                                     ^ expected one of `)`, `,`, `@`, `if`, or `|`
+
+error: expected one of `)`, `,`, `@`, `if`, or `|`, found `DIFFERENCE`
+   --> src/Chap18/LinkedListStPer.rs:900:27
+    |
+900 |             for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
+    |                          -^^^^^^^^^^ expected one of `)`, `,`, `@`, `if`, or `|`
+    |                          |
+    |                          help: missing `,`
+
+error: expected one of `)`, `,`, `@`, `if`, or `|`, found `:`
+   --> src/Chap18/LinkedListStPer.rs:900:37
+    |
+900 |             for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
+    |                                     ^ expected one of `)`, `,`, `@`, `if`, or `|`
+
+error: expected one of `)`, `,`, `@`, `if`, or `|`, found `DIFFERENCE`
+   --> src/Chap18/LinkedListStEph.rs:918:27
+    |
+918 |             for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
+    |                          -^^^^^^^^^^ expected one of `)`, `,`, `@`, `if`, or `|`
+    |                          |
+    |                          help: missing `,`
+
+error: expected one of `)`, `,`, `@`, `if`, or `|`, found `:`
+   --> src/Chap18/LinkedListStEph.rs:918:37
+    |
+918 |             for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
+    |                                     ^ expected one of `)`, `,`, `@`, `if`, or `|`
+
+error: expected one of `)`, `,`, `@`, `if`, or `|`, found `DIFFERENCE`
+    --> src/Chap18/ArraySeqMtEph.rs:1955:27
+     |
+1955 |             for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
+     |                          -^^^^^^^^^^ expected one of `)`, `,`, `@`, `if`, or `|`
+     |                          |
+     |                          help: missing `,`
+
+error: expected one of `)`, `,`, `@`, `if`, or `|`, found `:`
+    --> src/Chap18/ArraySeqMtEph.rs:1955:37
+     |
+1955 |             for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
+     |                                     ^ expected one of `)`, `,`, `@`, `if`, or `|`
+
+error: expected one of `)`, `,`, `@`, `if`, or `|`, found `DIFFERENCE`
+    --> src/Chap18/ArraySeqMtPer.rs:1885:27
+     |
+1885 |             for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
+     |                          -^^^^^^^^^^ expected one of `)`, `,`, `@`, `if`, or `|`
+     |                          |
+     |                          help: missing `,`
+
+error: expected one of `)`, `,`, `@`, `if`, or `|`, found `:`
+    --> src/Chap18/ArraySeqMtPer.rs:1885:37
+     |
+1885 |             for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
+     |                                     ^ expected one of `)`, `,`, `@`, `if`, or `|`
+
+error: expected `,`
+   --> src/Chap18/ArraySeqMtPer.rs:378:45
+    |
+378 |                     seq@.len() == (ACCEPTED DIFFERENCE: i - start) as int,
+    |                                             ^^^^^^^^^^
+
+error: expected `,`
+  --> src/Chap18/ArraySeqMtEphSlice.rs:82:23
+   |
+82 |             (ACCEPTED DIFFERENCE: *self.data)@.map(|_i: int, t: T| t@)
+   |                       ^^^^^^^^^^
+
+error: expected `,`
+   --> src/Chap18/ArraySeqMtEph.rs:150:45
+    |
+150 |                     seq@.len() == (ACCEPTED DIFFERENCE: i - start) as int,
+    |                                             ^^^^^^^^^^
+
+error: expected `,`
+   --> src/Chap18/LinkedListStEph.rs:333:45
+    |
+333 |                     seq@.len() == (ACCEPTED DIFFERENCE: i - start) as int,
+    |                                             ^^^^^^^^^^
+
+error: expected `,`
+   --> src/Chap18/LinkedListStPer.rs:315:45
+    |
+315 |                     seq@.len() == (ACCEPTED DIFFERENCE: i - start) as int,
+    |                                             ^^^^^^^^^^
+
+error: expected `,`
+   --> src/Chap18/ArraySeqStEph.rs:391:45
+    |
+391 |                     seq@.len() == (ACCEPTED DIFFERENCE: i - start) as int,
+    |                                             ^^^^^^^^^^
+
+error: expected `,`
+   --> src/Chap18/ArraySeqStPer.rs:371:45
+    |
+371 |                     seq@.len() == (ACCEPTED DIFFERENCE: i - start) as int,
+    |                                             ^^^^^^^^^^
+
+error: expected `,`
+   --> src/Chap18/ArraySeq.rs:105:19
+    |
+105 | ...   (ACCEPTED DIFFERENCE: Seq::new(s.len(), |i: int| s.take(i).fold_left(x, f)), s.fold_left...
+    |                 ^^^^^^^^^^
+
+error[E0425]: cannot find type `ArraySeqS` in this scope
+    --> src/Chap18/ArraySeq.rs:1660:30
+     |
+1660 |     impl<T: Debug> Debug for ArraySeqS<T> {
+     |                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqS` in this scope
+    --> src/Chap18/ArraySeq.rs:1666:34
+     |
+1666 |     impl<T: Display> Display for ArraySeqS<T> {
+     |                                  ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqIter` in this scope
+    --> src/Chap18/ArraySeq.rs:1677:34
+     |
+1677 |     impl<'a, T: Debug> Debug for ArraySeqIter<'a, T> {
+     |                                  ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqIter` in this scope
+    --> src/Chap18/ArraySeq.rs:1683:29
+     |
+1683 |     impl<'a, T> Display for ArraySeqIter<'a, T> {
+     |                             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqGhostIterator` in this scope
+    --> src/Chap18/ArraySeq.rs:1689:27
+     |
+1689 |     impl<'a, T> Debug for ArraySeqGhostIterator<'a, T> {
+     |                           ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqGhostIterator` in this scope
+    --> src/Chap18/ArraySeq.rs:1695:29
+     |
+1695 |     impl<'a, T> Display for ArraySeqGhostIterator<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1045:49
+     |
+1045 |     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStPerS<T> {
+     |                                                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerIter` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1047:25
+     |
+1047 |         type IntoIter = ArraySeqStPerIter<'a, T>;
+     |                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `ArraySeqStPerIter` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1048:48
+     |
+1048 |         fn into_iter(self) -> Self::IntoIter { ArraySeqStPerIter { inner: self.seq.iter() } }
+     |                                                ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1051:41
+     |
+1051 |     impl<T> std::iter::IntoIterator for ArraySeqStPerS<T> {
+     |                                         ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1058:30
+     |
+1058 |     impl<T: Debug> Debug for ArraySeqStPerS<T> {
+     |                              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1064:34
+     |
+1064 |     impl<T: Display> Display for ArraySeqStPerS<T> {
+     |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerIter` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1075:34
+     |
+1075 |     impl<'a, T: Debug> Debug for ArraySeqStPerIter<'a, T> {
+     |                                  ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerIter` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1081:29
+     |
+1081 |     impl<'a, T> Display for ArraySeqStPerIter<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerGhostIterator` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1087:27
+     |
+1087 |     impl<'a, T> Debug for ArraySeqStPerGhostIterator<'a, T> {
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerGhostIterator` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1093:29
+     |
+1093 |     impl<'a, T> Display for ArraySeqStPerGhostIterator<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphS` in this scope
+    --> src/Chap18/ArraySeqStEph.rs:1083:30
+     |
+1083 |     impl<T: Debug> Debug for ArraySeqStEphS<T> {
+     |                              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphS` in this scope
+    --> src/Chap18/ArraySeqStEph.rs:1089:34
+     |
+1089 |     impl<T: Display> Display for ArraySeqStEphS<T> {
+     |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphIter` in this scope
+    --> src/Chap18/ArraySeqStEph.rs:1100:34
+     |
+1100 |     impl<'a, T: Debug> Debug for ArraySeqStEphIter<'a, T> {
+     |                                  ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphIter` in this scope
+    --> src/Chap18/ArraySeqStEph.rs:1106:29
+     |
+1106 |     impl<'a, T> Display for ArraySeqStEphIter<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphGhostIterator` in this scope
+    --> src/Chap18/ArraySeqStEph.rs:1112:27
+     |
+1112 |     impl<'a, T> Debug for ArraySeqStEphGhostIterator<'a, T> {
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphGhostIterator` in this scope
+    --> src/Chap18/ArraySeqStEph.rs:1118:29
+     |
+1118 |     impl<'a, T> Display for ArraySeqStEphGhostIterator<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStPerS` in this scope
+   --> src/Chap18/LinkedListStPer.rs:891:30
+    |
+891 |     impl<T: Debug> Debug for LinkedListStPerS<T> {
+    |                              ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStPerS` in this scope
+   --> src/Chap18/LinkedListStPer.rs:897:34
+    |
+897 |     impl<T: Display> Display for LinkedListStPerS<T> {
+    |                                  ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStPerIter` in this scope
+   --> src/Chap18/LinkedListStPer.rs:908:34
+    |
+908 |     impl<'a, T: Debug> Debug for LinkedListStPerIter<'a, T> {
+    |                                  ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStPerIter` in this scope
+   --> src/Chap18/LinkedListStPer.rs:914:29
+    |
+914 |     impl<'a, T> Display for LinkedListStPerIter<'a, T> {
+    |                             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStPerGhostIterator` in this scope
+   --> src/Chap18/LinkedListStPer.rs:920:27
+    |
+920 |     impl<'a, T> Debug for LinkedListStPerGhostIterator<'a, T> {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStPerGhostIterator` in this scope
+   --> src/Chap18/LinkedListStPer.rs:926:29
+    |
+926 |     impl<'a, T> Display for LinkedListStPerGhostIterator<'a, T> {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStEphS` in this scope
+   --> src/Chap18/LinkedListStEph.rs:909:30
+    |
+909 |     impl<T: Debug> Debug for LinkedListStEphS<T> {
+    |                              ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStEphS` in this scope
+   --> src/Chap18/LinkedListStEph.rs:915:34
+    |
+915 |     impl<T: Display> Display for LinkedListStEphS<T> {
+    |                                  ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStEphIter` in this scope
+   --> src/Chap18/LinkedListStEph.rs:926:34
+    |
+926 |     impl<'a, T: Debug> Debug for LinkedListStEphIter<'a, T> {
+    |                                  ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStEphIter` in this scope
+   --> src/Chap18/LinkedListStEph.rs:932:29
+    |
+932 |     impl<'a, T> Display for LinkedListStEphIter<'a, T> {
+    |                             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStEphGhostIterator` in this scope
+   --> src/Chap18/LinkedListStEph.rs:938:27
+    |
+938 |     impl<'a, T> Debug for LinkedListStEphGhostIterator<'a, T> {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStEphGhostIterator` in this scope
+   --> src/Chap18/LinkedListStEph.rs:944:29
+    |
+944 |     impl<'a, T> Display for LinkedListStEphGhostIterator<'a, T> {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphIter` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:1918:34
+     |
+1918 |     impl<'a, T: Debug> Debug for ArraySeqMtEphIter<'a, T> {
+     |                                  ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphIter` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:1924:29
+     |
+1924 |     impl<'a, T> Display for ArraySeqMtEphIter<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphGhostIterator` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:1930:27
+     |
+1930 |     impl<'a, T> Debug for ArraySeqMtEphGhostIterator<'a, T> {
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphGhostIterator` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:1936:29
+     |
+1936 |     impl<'a, T> Display for ArraySeqMtEphGhostIterator<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphS` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:1945:30
+     |
+1945 |     impl<T: Debug> Debug for ArraySeqMtEphS<T> {
+     |                              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphS` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:1952:34
+     |
+1952 |     impl<T: Display> Display for ArraySeqMtEphS<T> {
+     |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphInv` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:1965:23
+     |
+1965 |     impl<T> Debug for ArraySeqMtEphInv<T> {
+     |                       ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphInv` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:1971:25
+     |
+1971 |     impl<T> Display for ArraySeqMtEphInv<T> {
+     |                         ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphSliceS` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1711:50
+     |
+1711 |     impl<T: std::fmt::Debug> std::fmt::Debug for ArraySeqMtEphSliceS<T> {
+     |                                                  ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphSliceS` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1719:54
+     |
+1719 |     impl<T: std::fmt::Display> std::fmt::Display for ArraySeqMtEphSliceS<T> {
+     |                                                      ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphSliceIter` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1734:54
+     |
+1734 |     impl<'a, T: std::fmt::Debug> std::fmt::Debug for ArraySeqMtEphSliceIter<'a, T> {
+     |                                                      ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphSliceIter` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1740:39
+     |
+1740 |     impl<'a, T> std::fmt::Display for ArraySeqMtEphSliceIter<'a, T> {
+     |                                       ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphSliceGhostIterator` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1746:37
+     |
+1746 |     impl<'a, T> std::fmt::Debug for ArraySeqMtEphSliceGhostIterator<'a, T> {
+     |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphSliceGhostIterator` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1752:39
+     |
+1752 |     impl<'a, T> std::fmt::Display for ArraySeqMtEphSliceGhostIterator<'a, T> {
+     |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtPerS` in this scope
+    --> src/Chap18/ArraySeqMtPer.rs:1876:30
+     |
+1876 |     impl<T: Debug> Debug for ArraySeqMtPerS<T> {
+     |                              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtPerS` in this scope
+    --> src/Chap18/ArraySeqMtPer.rs:1882:34
+     |
+1882 |     impl<T: Display> Display for ArraySeqMtPerS<T> {
+     |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtPerIter` in this scope
+    --> src/Chap18/ArraySeqMtPer.rs:1893:34
+     |
+1893 |     impl<'a, T: Debug> Debug for ArraySeqMtPerIter<'a, T> {
+     |                                  ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtPerIter` in this scope
+    --> src/Chap18/ArraySeqMtPer.rs:1899:29
+     |
+1899 |     impl<'a, T> Display for ArraySeqMtPerIter<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtPerGhostIterator` in this scope
+    --> src/Chap18/ArraySeqMtPer.rs:1905:27
+     |
+1905 |     impl<'a, T> Debug for ArraySeqMtPerGhostIterator<'a, T> {
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtPerGhostIterator` in this scope
+    --> src/Chap18/ArraySeqMtPer.rs:1911:29
+     |
+1911 |     impl<'a, T> Display for ArraySeqMtPerGhostIterator<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+   --> src/Chap39/BSTTreapStEph.rs:294:53
+    |
+294 |         fn in_order(&self)             -> (ordered: ArraySeqStPerS<T>)
+    |                                                     ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+   --> src/Chap39/BSTTreapStEph.rs:298:56
+    |
+298 |         fn pre_order(&self)            -> (preordered: ArraySeqStPerS<T>)
+    |                                                        ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+   --> src/Chap39/BSTTreapStEph.rs:651:47
+    |
+651 |         fn param_in_order(&self) -> (ordered: ArraySeqStPerS<T>)
+    |                                               ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+   --> src/Chap39/BSTTreapStEph.rs:855:31
+    |
+855 |         fn in_order(&self) -> ArraySeqStPerS<T> {
+    |                               ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+   --> src/Chap39/BSTTreapStEph.rs:860:32
+    |
+860 |         fn pre_order(&self) -> ArraySeqStPerS<T> {
+    |                                ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:1685:47
+     |
+1685 |         fn param_in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
+     |                                               ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap39/BSTTreapMtEph.rs:1038:41
+     |
+1038 |         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
+     |                                         ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap39/BSTTreapMtEph.rs:1042:45
+     |
+1042 |         fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>)
+     |                                             ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap39/BSTTreapMtEph.rs:1262:41
+     |
+1262 |         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
+     |                                         ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap39/BSTTreapMtEph.rs:1276:45
+     |
+1276 |         fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>)
+     |                                             ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:1337:41
+     |
+1337 |         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
+     |                                         ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:1502:41
+     |
+1502 |         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
+     |                                         ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:226:46
+    |
+226 |         fn iter_in_order(&self) -> (ordered: ArraySeqStPerS<T>)
+    |                                              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:415:46
+    |
+415 |         fn iter_in_order(&self) -> (ordered: ArraySeqStPerS<T>) { self.tree.in_order() }
+    |                                              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqStPerS`
+   --> src/Chap39/BSTTreapStEph.rs:856:13
+    |
+856 |             ArraySeqStPerS::from_vec(Self::in_order_vec(&self.root))
+    |             ^^^^^^^^^^^^^^ use of undeclared type `ArraySeqStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqStPerS`
+   --> src/Chap39/BSTTreapStEph.rs:861:13
+    |
+861 |             ArraySeqStPerS::from_vec(Self::pre_order_vec(&self.root))
+    |             ^^^^^^^^^^^^^^ use of undeclared type `ArraySeqStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqStPerS`
+    --> src/Chap39/BSTTreapStEph.rs:1696:13
+     |
+1696 |             ArraySeqStPerS::from_vec(out)
+     |             ^^^^^^^^^^^^^^ use of undeclared type `ArraySeqStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqStPerS`
+    --> src/Chap39/BSTTreapMtEph.rs:1269:27
+     |
+1269 |             let ordered = ArraySeqStPerS::from_vec(out);
+     |                           ^^^^^^^^^^^^^^ use of undeclared type `ArraySeqStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqStPerS`
+    --> src/Chap39/BSTTreapMtEph.rs:1283:30
+     |
+1283 |             let preordered = ArraySeqStPerS::from_vec(out);
+     |                              ^^^^^^^^^^^^^^ use of undeclared type `ArraySeqStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqStPerS`
+    --> src/Chap39/BSTParaTreapMtEph.rs:1505:13
+     |
+1505 |             ArraySeqStPerS::from_vec(out)
+     |             ^^^^^^^^^^^^^^ use of undeclared type `ArraySeqStPerS`
+
+error: aborting due to 96 previous errors
+
+Some errors have detailed explanations: E0422, E0425, E0433.
+For more information about an error, try `rustc --explain E0422`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 26360MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s
+
+Command exited with non-zero status 1
+	Command being timed: "./scripts/validate.sh isolate Chap39"
+	User time (seconds): 1.53
+	System time (seconds): 0.29
+	Percent of CPU this job got: 105%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:01.73
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 169580
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 3
+	Minor (reclaiming a frame) page faults: 112776
+	Voluntary context switches: 1283
+	Involuntary context switches: 149
+	Swaps: 0
+	File system inputs: 656
+	File system outputs: 64
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+─────────────────────────────────────────────────────────────────

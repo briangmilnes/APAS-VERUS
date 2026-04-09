@@ -115,7 +115,6 @@ pub mod BFSMtEph {
         ensures
             spec_parents_bounded(parents, n),
     {
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < parents@.len() implies #[trigger] parents@[i] == parents.spec_index(i) by {};
         lemma_bfs_all_no_parent(parents@, n);
     }
@@ -139,9 +138,7 @@ pub mod BFSMtEph {
         ensures
             spec_parents_bounded(parents, n),
     {
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < parents@.len() implies #[trigger] parents@[i] == parents.spec_index(i) by {};
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < old_parents@.len() implies #[trigger] old_parents@[i] == old_parents.spec_index(i) by {};
         lemma_bfs_update_preserves_parents_bounded(parents@, old_parents@, v, new_val, n);
     }
@@ -159,9 +156,7 @@ pub mod BFSMtEph {
         ensures
             spec_parents_bounded(copy, n),
     {
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < original@.len() implies #[trigger] original@[i] == original.spec_index(i) by {};
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < copy@.len() implies #[trigger] copy@[i] == copy.spec_index(i) by {};
         lemma_bfs_copy_preserves_parents_bounded(original@, copy@, n);
     }
@@ -174,7 +169,6 @@ pub mod BFSMtEph {
         ensures
             spec_distances_bounded(distances, n),
     {
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < distances@.len() implies #[trigger] distances@[i] == distances.spec_index(i) by {};
         lemma_bfs_all_unreachable(distances@, n);
     }
@@ -198,9 +192,7 @@ pub mod BFSMtEph {
         ensures
             spec_distances_bounded(distances, n),
     {
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < distances@.len() implies #[trigger] distances@[i] == distances.spec_index(i) by {};
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < old_distances@.len() implies #[trigger] old_distances@[i] == old_distances.spec_index(i) by {};
         lemma_bfs_update_preserves_bounded(distances@, old_distances@, v, new_val, n);
     }
@@ -220,16 +212,17 @@ pub mod BFSMtEph {
         ensures
             spec_bfsmteph_wf(copy),
     {
-        // Veracity: NEEDED assert
         assert forall|u: int, i: int|
             0 <= u < copy@.len() && 0 <= i < copy@[u].len()
         implies
             #[trigger] copy@[u][i] < copy@.len()
         by {
-            // Veracity: NEEDED assert
+            assert(copy@.len() == copy.spec_len() as int);
             assert(copy@[u].len() == copy.spec_index(u).spec_len() as int);
-            // Veracity: NEEDED assert
             assert(copy@[u][i] == copy.spec_index(u).spec_index(i));
+            assert(original@.len() == original.spec_len() as int);
+            assert(original@[u].len() == original.spec_index(u).spec_len() as int);
+            assert(original@[u][i] == original.spec_index(u).spec_index(i));
         }
     }
 
@@ -246,9 +239,7 @@ pub mod BFSMtEph {
         ensures
             spec_distances_bounded(copy, n),
     {
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < original@.len() implies #[trigger] original@[i] == original.spec_index(i) by {};
-        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < copy@.len() implies #[trigger] copy@[i] == copy.spec_index(i) by {};
         lemma_bfs_copy_preserves_bounded(original@, copy@, n);
     }
@@ -458,6 +449,10 @@ pub mod BFSMtEph {
         let graph_copy = copy_graph(&graph);
         let distances_copy = copy_distances(&distances);
 
+        proof {
+            lemma_copy_preserves_wf(&graph, &graph_copy);
+            lemma_copy_preserves_bounded(&distances, &distances_copy, n as int);
+        }
 
         let ghost n_spec: int = graph.spec_len() as int;
         let ghost dist_fn: spec_fn(int) -> usize = |i: int| distances.spec_index(i);
@@ -471,6 +466,11 @@ pub mod BFSMtEph {
                     && dist_fn((r.1@[j]).0 as int) == UNREACHABLE,
         {
             let r = process_frontier_parallel(graph_copy, distances_copy, left_frontier, next_dist);
+            proof {
+                assert forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len()
+                implies dist_fn((r.1@[j]).0 as int) == UNREACHABLE
+                by {}
+            }
             r
         };
 
@@ -483,6 +483,11 @@ pub mod BFSMtEph {
                     && dist_fn((r.1@[j]).0 as int) == UNREACHABLE,
         {
             let r = process_frontier_parallel(graph, distances, right_frontier, next_dist);
+            proof {
+                assert forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len()
+                implies dist_fn((r.1@[j]).0 as int) == UNREACHABLE
+                by {}
+            }
             r
         };
 
@@ -593,6 +598,10 @@ pub mod BFSMtEph {
         let graph_copy = copy_graph(&graph);
         let parents_copy = copy_distances(&parents);
 
+        proof {
+            lemma_copy_preserves_wf(&graph, &graph_copy);
+            lemma_copy_preserves_parents_bounded(&parents, &parents_copy, n as int);
+        }
 
         let ghost n_spec: int = graph.spec_len() as int;
         let ghost parents_fn: spec_fn(int) -> usize = |i: int| parents.spec_index(i);
@@ -605,6 +614,11 @@ pub mod BFSMtEph {
                     && parents_fn((r@[j]).0 as int) == NO_PARENT,
         {
             let r = process_frontier_tree_parallel(graph_copy, parents_copy, left_frontier);
+            proof {
+                assert forall|j: int| #![trigger r@[j]] 0 <= j < r@.len()
+                implies parents_fn((r@[j]).0 as int) == NO_PARENT
+                by {}
+            }
             r
         };
 
@@ -616,6 +630,11 @@ pub mod BFSMtEph {
                     && parents_fn((r@[j]).0 as int) == NO_PARENT,
         {
             let r = process_frontier_tree_parallel(graph, parents, right_frontier);
+            proof {
+                assert forall|j: int| #![trigger r@[j]] 0 <= j < r@.len()
+                implies parents_fn((r@[j]).0 as int) == NO_PARENT
+                by {}
+            }
             r
         };
 
@@ -658,19 +677,17 @@ pub mod BFSMtEph {
             n,
         );
 
+        proof { lemma_tabulate_all_unreachable(&distances, n as int); }
 
         let ghost pre_set = *&distances;
         let _ = distances.set(source, 0);
 
-        // Veracity: NEEDED proof block
         proof {
             lemma_set_preserves_bounded(&distances, &pre_set, source as int, 0, n as int);
-            // Veracity: NEEDED assert
             assert forall|v: int| 0 <= v < distances.spec_len()
                 && distances.spec_index(v) != UNREACHABLE && v != source as int
             implies distances.spec_index(v) > 0usize
             by {
-                // Veracity: NEEDED assert
                 assert(distances.spec_index(v) == pre_set.spec_index(v));
             }
         }
@@ -699,7 +716,6 @@ pub mod BFSMtEph {
             if current_dist + 1 < n {
                 let graph_owned = copy_graph(graph);
                 let distances_snapshot = copy_distances(&distances);
-// Veracity: NEEDED proof block
 
                 proof {
                     lemma_copy_preserves_wf(graph, &graph_owned);
@@ -709,16 +725,20 @@ pub mod BFSMtEph {
                 let (next_vertices, distance_updates) =
                     process_frontier_parallel(
                         graph_owned, distances_snapshot, current_layer, current_dist + 1
-                    // Veracity: NEEDED proof block
                     );
 
                 proof {
-                    // Veracity: NEEDED assert
                     assert forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len()
                     implies
                         distances.spec_index((distance_updates@[j]).0 as int) == UNREACHABLE
                         && (distance_updates@[j]).0 < n
                         && (distance_updates@[j]).1 == current_dist + 1
+                    by {}
+                }
+
+                proof {
+                    assert forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len()
+                    implies (distance_updates@[j]).0 != source
                     by {
                     }
                 }
@@ -750,7 +770,6 @@ pub mod BFSMtEph {
                     let v = pair.0;
                     let d = pair.1;
 
-                    // Veracity: NEEDED proof block
                     let ghost pre_inner_set = *&distances;
                     let _ = distances.set(v, d);
 
@@ -759,7 +778,6 @@ pub mod BFSMtEph {
                             &distances, &pre_inner_set,
                             v as int, d as usize, n as int,
                         );
-                        // Veracity: NEEDED assert
                         assert forall|w: int| 0 <= w < distances.spec_len()
                             && distances.spec_index(w) != UNREACHABLE
                             && w != source as int
@@ -767,7 +785,6 @@ pub mod BFSMtEph {
                         by {
                             if w == v as int {
                             } else {
-                                // Veracity: NEEDED assert
                                 assert(distances.spec_index(w)
                                     == pre_inner_set.spec_index(w));
                             }
@@ -795,11 +812,11 @@ pub mod BFSMtEph {
         let n = graph.length();
 
         let mut parents = ArraySeqMtEphS::tabulate(
-            // Veracity: NEEDED proof block
             &|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT },
             n,
         );
 
+        proof { lemma_tabulate_all_no_parent(&parents, n as int); }
 
         let ghost pre_set = *&parents;
         let _ = parents.set(source, source);
@@ -829,7 +846,6 @@ pub mod BFSMtEph {
                 order@[0] == source,
                 forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==> order@[j] < n,
                 forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==>
-                    // Veracity: NEEDED proof block
                     parents.spec_index(order@[j] as int) != NO_PARENT,
         {
             let graph_owned = copy_graph(graph);
@@ -839,7 +855,6 @@ pub mod BFSMtEph {
                 lemma_copy_preserves_wf(graph, &graph_owned);
                 lemma_copy_preserves_parents_bounded(&parents, &parents_snapshot, n as int);
             }
-// Veracity: NEEDED proof block
 
             let tree_updates =
                 process_frontier_tree_parallel(
@@ -847,7 +862,6 @@ pub mod BFSMtEph {
                 );
 
             proof {
-                // Veracity: NEEDED assert
                 assert forall|j: int| #![trigger tree_updates@[j]] 0 <= j < tree_updates@.len()
                 implies
                     parents.spec_index((tree_updates@[j]).0 as int) == NO_PARENT
@@ -885,7 +899,6 @@ pub mod BFSMtEph {
                 let pair = &tree_updates[k];
                 let v = pair.0;
                 let u = pair.1;
-// Veracity: NEEDED proof block
 
                 if *parents.nth(v) == NO_PARENT && order.len() < n {
                     let ghost pre_inner = *&parents;
