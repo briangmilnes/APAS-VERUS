@@ -62,6 +62,7 @@ verus!
         reveal(pow2);
         if n == 0 {
         } else if n == 1 {
+            // Veracity: NEEDED assert
             assert(pow2(1) == 2) by(compute_only);
         } else {
             lemma_fib_bound((n - 1) as nat);
@@ -100,6 +101,7 @@ verus!
         if n <= 1 {
             n
         } else {
+            // Veracity: NEEDED proof block
             proof { lemma_fib_sum_fits_u64(n as nat); }
             fib_seq(n - 1) + fib_seq(n - 2)
         }
@@ -127,6 +129,7 @@ verus!
                 ensures r == spec_fib((n - 2) as nat),
             { fib_par(n - 2) };
 
+            // Veracity: NEEDED proof block
             let (a, b) = join(f1, f2);
             proof { lemma_fib_sum_fits_u64(n as nat); }
             a + b

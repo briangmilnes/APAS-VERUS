@@ -363,6 +363,7 @@ assert forall |p: (V::V, u128)| (exists |w: u128| #![trigger wa_view.contains((p
                     },
                     Some(labeled_edge) => {
 // Veracity: NEEDED proof block
+// Veracity: NEEDED assert
 proof { assert(wa_seq.take(it@.0 as int).drop_last() =~= wa_seq.take((it@.0 - 1) as int)); }
                         sum = sum.add_value(labeled_edge.2);
                     },

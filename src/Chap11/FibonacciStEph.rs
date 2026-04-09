@@ -60,6 +60,7 @@ pub mod FibonacciStEph {
             reveal(pow2);
             if n == 0 {
             } else if n == 1 {
+                // Veracity: NEEDED assert
                 assert(pow2(1) == 2) by(compute_only);
             } else {
                 lemma_fib_bound((n - 1) as nat);
@@ -118,6 +119,7 @@ pub mod FibonacciStEph {
                     prev1 == spec_fib((i - 1) as nat),
                 decreases n - i + 1,
             {
+                // Veracity: NEEDED proof block
                 proof { lemma_fib_sum_fits_u64(i as nat); }
                 let next = prev1 + prev2;
                 prev2 = prev1;
@@ -142,6 +144,7 @@ pub mod FibonacciStEph {
                 n
             } else {
                 let left = fib_recursive(n - 1);
+                // Veracity: NEEDED proof block
                 let right = fib_recursive(n - 2);
                 proof { lemma_fib_sum_fits_u64(n as nat); }
                 left + right

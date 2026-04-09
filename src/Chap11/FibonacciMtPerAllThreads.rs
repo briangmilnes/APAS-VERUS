@@ -59,6 +59,7 @@ pub mod FibonacciMtPerAllThreads {
                 let Pair(left, right) = ParaPair!(f1, f2);
 
                 // para_pair ensures the propagation of the closure postconditions.
+                // Veracity: NEEDED proof block
                 proof { lemma_fib_sum_fits_u64(n as nat); }
                 left + right
             }

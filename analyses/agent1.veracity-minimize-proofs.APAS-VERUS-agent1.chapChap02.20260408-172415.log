@@ -1,0 +1,115 @@
+Verus Library Minimizer
+=======================
+This minimizer is only possible due to the phenomenal speed of verification
+in Verus. Thanks Verus team!
+
+Logging to: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-minimize-proofs.APAS-VERUS-agent1.chapChap02.20260408-172415.log
+
+Arguments:
+  -c, --codebase:     /home/milnes/projects/APAS-VERUS-agent1
+  -l, --library:      /home/milnes/projects/APAS-VERUS-agent1/src/vstdplus
+  -F, --file:         (all files)
+  -n, --dry-run:      false
+  -b, --broadcasts:   false
+  -L, --lib-broadcasts: false
+  -N, --max-lemmas:   all
+  -a, --asserts:      true
+  -A, --max-asserts:  all
+  -p, --proof-blocks: true
+  -P, --max-proof-blocks: all
+  -e, --exclude:      (none)
+  -f, --fail-fast:    false
+  --danger:           false
+  --no-lib-min:       true
+  mode:               resume (preserve markers)
+  --project:          APAS
+  --chapter:          Chap02, Chap03, Chap05, Chap06, Chap11, Chap17, Chap18, Chap19, Chap21, Chap23, Chap26, Chap27, Chap28, Chap35, Chap36, Chap37, Chap38
+
+Mode: APAS isolate × 17 chapters: Chap02, Chap03, Chap05, Chap06, Chap11, Chap17, Chap18, Chap19, Chap21, Chap23, Chap26, Chap27, Chap28, Chap35, Chap36, Chap37, Chap38 (estimated 10-30s per iteration each)
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPORTANT: No code will be harmed in the improving of your codebase!
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Codebase is in git and committed. Proceeding safely.
+
+Veracity will repeatedly comment things in and out using // Veracity: lines
+to test and improve your use of vstd. All changes are reversible comments.
+You will need to review each // Veracity: line and decide what to keep.
+
+Phases:
+  Phase 0:  Strip existing Veracity markers (if any)
+  Phase 1:  Analyze and verify codebase
+  Phase 2:  Analyze library structure (lemmas, modules, call sites, spec fns)
+  Phase 3:  Discover vstd broadcast groups from verus installation
+  Phase 4:  Estimate time for testing
+  Phase 5:  Apply broadcast groups to library (-L flag)
+  Phase 6:  Apply broadcast groups to codebase (-b flag)
+  Phase 7:  Test lemma dependence on vstd (can vstd prove it alone?)
+  Phase 8:  Test lemma necessity (can codebase verify without it?)
+  Phase 9:  Test library asserts (can we remove any?)
+  Phase 10: Test codebase asserts (can we remove any?)
+  Phase 11: Test admits (can we remove any? -m flag)
+  Phase 12: Test proof {} blocks (-p flag)
+  Phase 13: Test types (are they used? -t flag)
+  Phase 14: Analyze and verify final codebase
+
+Comment markers inserted:
+  // Veracity: added broadcast group  - Phase 5/6: Inserted broadcast use block
+  // Veracity: DEPENDENT              - Phase 7: Lemma proven by vstd broadcast groups
+  // Veracity: INDEPENDENT            - Phase 7: Lemma provides unique proof logic
+  // Veracity: USED                   - Phase 8: Lemma required, restored after test
+  // Veracity: UNUSED                 - Phase 8: Lemma not needed, left commented out
+  // Veracity: NEEDED assert          - Phase 9/10: Assert required for verification
+  // Veracity: UNNEEDED assert        - Phase 9/10: Assert not needed, left commented
+  // Veracity: NEEDED admit           - Phase 11: Admit still needed (proof hole)
+  // Veracity: UNNEEDED admit         - Phase 11: Admit not needed, left commented
+  // Veracity: NEEDED proof block     - Phase 12: Proof block required
+  // Veracity: UNNEEDED proof block   - Phase 12: Proof block not needed, left commented
+  // Veracity: TYPE USED              - Phase 13: Type is used (verified by removal test)
+  // Veracity: TYPE UNUSED            - Phase 13: Type not used, left commented out
+  // Veracity: UNNEEDED               - Phase 8: Call site not needed, left commented
+
+═══════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 0: Resuming from existing markers
+═══════════════════════════════════════════════════════════════
+
+  Found 5788 existing Veracity markers
+  Checking for incomplete work from prior run...
+  Restored 7 TESTING markers to original code
+  Prior results found:
+    NEEDED assert: 3034
+    NEEDED proof block: 2746
+  These items will be skipped during testing.
+
+
+═══════════════════════════════════════════════════════════════
+Chapter 1/17: Chap02
+═══════════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════════
+Phase 1: Analyzing and verifying codebase
+═══════════════════════════════════════════════════════════════
+
+  Initial LOC (comments not counted):
+    Spec:       0
+    Proof:      0
+    Exec:       0
+    Total:      0
+
+  Verifying...
+  ✓ Verification passed in 4.7s, 491 MB. Continuing.
+
+Phase 2: Analyzing library structure...
+  Scanning library for proof functions (lemmas)...
+  Found 305 proof functions
+  In 13 modules
+  Checking which library modules are used in codebase...
+  13 modules used in codebase
+  0 modules NOT used in codebase
+  Scanning for lemma call sites...
+  703 call sites in library
+  11928 call sites in codebase (outside library)
+  Scanning library for spec functions...
+  Found 160 spec functions

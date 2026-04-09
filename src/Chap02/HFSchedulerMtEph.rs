@@ -160,7 +160,7 @@ pub mod HFSchedulerMtEph {
         let b = match handle.join() {
             Ok(val) => val,
             Err(_) => {
-                proof { assume(false); } // accept hole: thread join error arm unreachable
+// Veracity: UNNEEDED proof block                 proof { assume(false); } // accept hole: thread join error arm unreachable
                 diverge()
             }
         };

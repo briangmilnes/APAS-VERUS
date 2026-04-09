@@ -136,6 +136,7 @@ pub fn fib_2threads(n: u64) -> (fibonacci: u64)
         {
             let tracked mut token = left_done_token;
             let val = fib(n - 1);
+            // Veracity: NEEDED proof block
             proof { instance1.complete_left(&mut token); }
             (val, Tracked(token))
         })
@@ -154,6 +155,7 @@ pub fn fib_2threads(n: u64) -> (fibonacci: u64)
                 out.1@.value() == true,
         {
             let tracked mut token = right_done_token;
+            // Veracity: NEEDED proof block
             let val = fib(n - 2);
             proof { instance2.complete_right(&mut token); }
             (val, Tracked(token))
@@ -161,6 +163,7 @@ pub fn fib_2threads(n: u64) -> (fibonacci: u64)
     );
 
     // Join thread 1
+    // Veracity: NEEDED proof block
     let left_out = match join_handle1.join() {
         Result::Ok(out) => out,
         Result::Err(_) => { proof { assume(false); }; diverge() } // accept hole: thread join error arm unreachable
@@ -168,12 +171,13 @@ pub fn fib_2threads(n: u64) -> (fibonacci: u64)
     let left_val = left_out.0;
     let tracked left_token = left_out.1.get();
 
-    // Join thread 2
+// Veracity: UNNEEDED proof block     // Join thread 2
     let right_out = match join_handle2.join() {
         Result::Ok(out) => out,
         Result::Err(_) => { proof { assume(false); }; diverge() } // accept hole: thread join error arm unreachable
     };
     let right_val = right_out.0;
+    // Veracity: NEEDED proof block
     let tracked right_token = right_out.1.get();
 
     // Use finalize property to prove left + right == fib(n)

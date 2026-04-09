@@ -100,12 +100,15 @@ pub fn insertion_sort<T: TotalOrder + Copy>(a: &mut [T]) -> (sorted: &[T])
                         down -= 1;
                     }
                     _ => {
+                        // Veracity: NEEDED proof block
                         proof { T::reflexive(a@[down as int - 1]); }
                         swapped = false;
                     }
                 }
+            // Veracity: NEEDED proof block
             }
             proof {
+                // Veracity: NEEDED assert
                 assert forall|k: int, l: int| 0 <= k < l <= up as int
                     implies T::le(#[trigger] a@[k], #[trigger] a@[l]) by {
                     if down as int == 0 {

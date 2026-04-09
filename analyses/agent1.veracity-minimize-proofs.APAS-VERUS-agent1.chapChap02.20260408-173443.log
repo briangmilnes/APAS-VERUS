@@ -1,0 +1,39 @@
+Verus Library Minimizer
+=======================
+This minimizer is only possible due to the phenomenal speed of verification
+in Verus. Thanks Verus team!
+
+Logging to: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-minimize-proofs.APAS-VERUS-agent1.chapChap02.20260408-173443.log
+
+Arguments:
+  -c, --codebase:     /home/milnes/projects/APAS-VERUS-agent1
+  -l, --library:      /home/milnes/projects/APAS-VERUS-agent1/src/vstdplus
+  -F, --file:         (all files)
+  -n, --dry-run:      false
+  -b, --broadcasts:   false
+  -L, --lib-broadcasts: false
+  -N, --max-lemmas:   all
+  -a, --asserts:      true
+  -A, --max-asserts:  all
+  -p, --proof-blocks: true
+  -P, --max-proof-blocks: all
+  -e, --exclude:      (none)
+  -f, --fail-fast:    false
+  --danger:           false
+  --no-lib-min:       true
+  mode:               resume (preserve markers)
+  --project:          APAS
+  --chapter:          Chap02, Chap03, Chap05, Chap06, Chap11, Chap17, Chap18, Chap19, Chap21, Chap23, Chap26, Chap27, Chap28, Chap35, Chap36, Chap37, Chap38
+
+Mode: APAS isolate × 17 chapters: Chap02, Chap03, Chap05, Chap06, Chap11, Chap17, Chap18, Chap19, Chap21, Chap23, Chap26, Chap27, Chap28, Chap35, Chap36, Chap37, Chap38 (estimated 10-30s per iteration each)
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPORTANT: No code will be harmed in the improving of your codebase!
+═══════════════════════════════════════════════════════════════════════════════
+
+✗ Codebase is in git but has uncommitted changes.
+
+  Please commit your changes first:
+    cd /home/milnes/projects/APAS-VERUS-agent1 && git add -A && git commit -m 'Before Veracity'
+
+  Exiting. Use --danger to proceed anyway (not recommended).
