@@ -123,7 +123,7 @@ pub mod OrderStatSelectStEph {
     /// Recursive contraction-based selection. Fully verified: the only external_body
     /// in the call chain is vstdplus::rand::random_usize_range.
     /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n) expected, Span O(lg^2 n) w.h.p.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(n) expected — DIFFERS: St sequential, APAS Span O(lg^2 n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(n) expected — ACCEPTED DIFFERENCE: St sequential, APAS Span O(lg^2 n)
     fn select_inner<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>, k: usize) -> (found: Option<T>)
         requires
             a.spec_len() <= usize::MAX,

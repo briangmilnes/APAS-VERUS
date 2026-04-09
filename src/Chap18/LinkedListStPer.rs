@@ -92,7 +92,7 @@ pub mod LinkedListStPer {
         spec fn spec_index(&self, i: int) -> T
             recommends i < self.spec_len();
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: St sequential, APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: St sequential, APAS parallel.
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -127,7 +127,7 @@ pub mod LinkedListStPer {
                 subseq.spec_len() == length as int,
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: St sequential, APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: St sequential, APAS parallel.
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_linkedliststper_wf(),
@@ -202,7 +202,7 @@ pub mod LinkedListStPer {
                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(Σ|a_i|) — DIFFERS: St sequential, APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(Σ|a_i|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel.
         fn flatten(a: &LinkedListStPerS<LinkedListStPerS<T>>) -> (flattened: LinkedListStPerS<T>)
             where T: Clone + Eq
             requires
@@ -231,7 +231,7 @@ pub mod LinkedListStPer {
         fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.spec_len() == 1;
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — DIFFERS: St sequential, APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel.
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),

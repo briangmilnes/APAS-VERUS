@@ -146,13 +146,13 @@ verus!
             ensures functional == is_functional_seq(v@);
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|v|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — DIFFERS: St sequential, APAS parallel. Scans vec for duplicate domain key at p.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel. Scans vec for duplicate domain key at p.
         fn is_functional_vec_at(v: &Vec<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool)
             requires Self::spec_valid_key_type()
             ensures functional == is_functional_seq_at(v@, p@);
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|s|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|) — DIFFERS: St sequential, APAS parallel. Iterates set, checks domain key at p.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel. Iterates set, checks domain key at p.
         fn is_functional_SetStEph_at(s: &SetStEph<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool)
             requires Self::spec_valid_key_type()
             ensures functional == is_functional_set_at(s@, p@);
@@ -178,7 +178,7 @@ verus!
                 empty@ == Map::<X::V, Y::V>::empty();
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|v|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
         fn from_vec(v: Vec<Pair<X, Y>>) -> (mapping: Self)
             requires Self::spec_valid_key_type(), is_functional_seq(v@)
             ensures
@@ -187,7 +187,7 @@ verus!
                     mapping@.dom().contains(v@[i]@.0) && mapping@[v@[i]@.0] == v@[i]@.1;
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|r|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|), Span O(|r|) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|), Span O(|r|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
         fn from_relation(r: &RelationStEph<X, Y>) -> (mapping: Self)
             requires Self::spec_valid_key_type(), is_functional_relation(*r)
             ensures
@@ -202,7 +202,7 @@ verus!
             ensures size == self@.dom().len();
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|m|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
         fn domain(&self) -> (domain: SetStEph<X>)
             requires self.spec_mappingsteph_wf()
             ensures domain@.finite(), domain@ == self@.dom();

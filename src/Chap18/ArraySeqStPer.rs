@@ -93,7 +93,7 @@ pub mod ArraySeqStPer {
             recommends i < self.spec_len();
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — DIFFERS: St sequential, APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — ACCEPTED DIFFERENCE: St sequential, APAS parallel.
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -119,7 +119,7 @@ pub mod ArraySeqStPer {
             ensures *nth_elem == self.spec_index(index as int);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — DIFFERS: St sequential, APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — ACCEPTED DIFFERENCE: St sequential, APAS parallel.
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -146,7 +146,7 @@ pub mod ArraySeqStPer {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
 
         /// - Create sequence from Vec.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(n) worst case, O(1) best case — DIFFERS: St sequential, APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(n) worst case, O(1) best case — ACCEPTED DIFFERENCE: St sequential, APAS parallel.
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_arrayseqstper_wf(),

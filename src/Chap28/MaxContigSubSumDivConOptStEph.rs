@@ -298,7 +298,7 @@ broadcast use {
 
     /// Auxiliary function: returns (mcss, max_prefix, max_suffix, total).
     /// - Alg Analysis: APAS (Ch28 Alg 28.19): Work O(n), Span O(lg^2 n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — DIFFERS: St sequential, APAS parallel. subseq_copy O(n) per level
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — ACCEPTED DIFFERENCE: St sequential, APAS parallel. subseq_copy O(n) per level
     fn max_contig_sub_sum_aux(a: &ArraySeqStEphS<i32>) -> (mcss: StrengthResult)
         requires
             a.seq@.len() > 0,

@@ -132,7 +132,7 @@ pub mod ArraySeqStPer {
             recommends i < self.spec_len();
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — DIFFERS: St sequential, APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — ACCEPTED DIFFERENCE: St sequential, APAS parallel.
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -158,7 +158,7 @@ pub mod ArraySeqStPer {
             ensures *nth_elem == self.spec_index(index as int);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — DIFFERS: St sequential, APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — ACCEPTED DIFFERENCE: St sequential, APAS parallel.
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -297,7 +297,7 @@ pub mod ArraySeqStPer {
 
         /// - Algorithm 19.8 (iterate). iterate f x a = if |a|=0 then x else iterate f (f(x,a[0])) a[1..|a|-1].
         /// - Alg Analysis: APAS (Ch20 CS 20.3): Work O(1 + Sigma W(f)), Span O(1 + Sigma S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f)) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f)) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             where T: Clone + Eq
             requires

@@ -107,13 +107,13 @@ verus!
             ensures empty.spec_relationsteph_wf(), empty@ == Set::<(<X as View>::V, <Y as View>::V)>::empty();
 
         /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(|pairs|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|pairs|), Span O(|pairs|) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|pairs|), Span O(|pairs|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
         fn from_set(pairs: SetStEph<Pair<X, Y>>) -> (relation: Self)
             requires Self::spec_valid_key_type()
             ensures relation.spec_relationsteph_wf(), relation@ == pairs@;
 
         /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(|pairs|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|pairs|), Span O(|pairs|) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|pairs|), Span O(|pairs|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
         fn from_vec(v: Vec<Pair<X, Y>>) -> (relation: Self)
             requires Self::spec_valid_key_type()
             ensures relation.spec_relationsteph_wf(), relation@ == v@.map(|i: int, p: Pair<X, Y>| p@).to_set();
@@ -125,13 +125,13 @@ verus!
             ensures size == self@.len();
 
         /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(|R|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|R|), Span O(|R|) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|R|), Span O(|R|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
         fn domain(&self) -> (domain: SetStEph<X>)
             requires self.spec_relationsteph_wf()
             ensures domain@.finite(), domain@ == Set::<X::V>::new(|x: X::V| exists |y: Y::V| self@.contains((x, y)));
 
         /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(|R|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|R|), Span O(|R|) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|R|), Span O(|R|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
         fn range(&self) -> (range: SetStEph<Y>)
             requires self.spec_relationsteph_wf()
             ensures range@.finite(), range@ == Set::<Y::V>::new(|y: Y::V| exists |x: X::V| self@.contains((x, y)));
