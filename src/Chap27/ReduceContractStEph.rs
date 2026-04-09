@@ -67,7 +67,7 @@ pub mod ReduceContractStEph {
 
 
     impl<T: StT + Clone> ReduceContractStEphTrait<T> for ArraySeqStEphS<T> {
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — recursive contraction halving n each step; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive contraction halving n each step; St sequential.
         fn reduce_contract<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             f: &F,

@@ -404,7 +404,7 @@ pub mod QuickSortMtEph {
             out
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n^2) worst, Span O(n) — parallel recursion via ParaPair!, sequential O(n) partition; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n) — parallel recursion via ParaPair!, sequential O(n) partition; Mt parallel.
         fn quick_sort_first(a: &mut ArraySeqMtEphS<T>)
             decreases old(a).spec_len(),
         {

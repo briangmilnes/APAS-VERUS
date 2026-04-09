@@ -128,14 +128,14 @@ pub mod TopDownDPStPer {
                 dp.spec_s() == self.spec_s(),
                 dp.spec_t() == self.spec_t();
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — top-down DP with memoization; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — top-down DP with memoization; St sequential.
         fn med_memoized(&self) -> (distance: usize)
             requires
                 self.spec_topdowndpstper_wf(),
                 self.spec_s_len() + self.spec_t_len() < usize::MAX,
             ensures distance as nat == self.spec_med(self.spec_s_len(), self.spec_t_len());
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — memoized recursion filling n*m table; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — memoized recursion filling n*m table; St sequential.
         fn med_recursive(
             &self,
             i: usize,
@@ -236,7 +236,7 @@ pub mod TopDownDPStPer {
         }
 
         /// Compute MED using top-down memoization (Algorithm 51.4).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — top-down DP with memoization; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — top-down DP with memoization; St sequential.
         fn med_memoized(&self) -> (distance: usize) {
             // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -247,7 +247,7 @@ pub mod TopDownDPStPer {
         }
 
         /// Recursive MED with memoization (medOne from Algorithm 51.4).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — memoized recursion filling n*m table; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — memoized recursion filling n*m table; St sequential.
         fn med_recursive(
             &self,
             i: usize,

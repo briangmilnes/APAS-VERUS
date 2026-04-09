@@ -87,7 +87,7 @@ pub mod MaxContigSubSumDivConOptMtEph {
 
     /// Auxiliary function: returns (mcss, max_prefix, max_suffix, total).
     /// - Alg Analysis: APAS (Ch28 Alg 28.19): Work O(n), Span O(lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n log n), Span O(n) — subseq_copy O(n) per level; sequential
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n) — subseq_copy O(n) per level; sequential
     fn max_contig_sub_sum_aux(a: &ArraySeqMtEphS<i32>) -> (mcss: StrengthResult)
         requires a.seq@.len() > 0, sums_fit_i32(a.seq@), obeys_feq_clone::<i32>(),
         ensures

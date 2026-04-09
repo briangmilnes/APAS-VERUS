@@ -532,7 +532,7 @@ pub mod StarPartitionMtEph {
     ///
     /// Maps each vertex to its position in the vertex sequence.
     /// Work O(n lg n), Span O(lg n) — binary fork-join via ParaPair!, sequential merge.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n lg n), Span O(lg n) — D&C fork-join + sequential merge of hashmaps; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg n) — D&C fork-join + sequential merge of hashmaps; Mt parallel.
     fn build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         vertices: Arc<Vec<V>>,
         start: usize,
@@ -704,7 +704,7 @@ pub mod StarPartitionMtEph {
     /// For each (idx, head) in th_edges[start..end], inserts (vertices[idx], head) into map.
     /// Deduplicates naturally (HashMap last-write-wins; any center is acceptable per APAS).
     /// Work O(m lg m), Span O(lg m) — binary fork-join via ParaPair!, sequential merge.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m lg m), Span O(lg m) — D&C fork-join + sequential merge of hashmaps; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg m), Span O(lg m) — D&C fork-join + sequential merge of hashmaps; Mt parallel.
     fn build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         th_edges: Arc<Vec<(usize, V)>>,
         vertices: Arc<Vec<V>>,
@@ -1167,7 +1167,7 @@ pub mod StarPartitionMtEph {
     /// Parallel build of partition_map (vertex → center) using D&C + join.
     ///
     /// Work O(n lg n), Span O(lg n) — binary fork-join via ParaPair!, sequential merge.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n lg n), Span O(lg n) — D&C fork-join + sequential merge of hashmaps; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg n) — D&C fork-join + sequential merge of hashmaps; Mt parallel.
     fn build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         vertices: Arc<Vec<V>>,
         p_vec: Arc<Vec<V>>,

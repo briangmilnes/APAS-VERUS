@@ -148,7 +148,7 @@ pub mod TopDownDPStEph {
                 self.spec_t() == t@;
 
         /// - Alg Analysis: APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|+|T|) (Algorithm 51.4)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo.
         fn med_memoized(&mut self) -> (distance: usize)
             requires
                 old(self).spec_topdowndpsteph_wf(),
@@ -163,7 +163,7 @@ pub mod TopDownDPStEph {
                 self.spec_t() == old(self).spec_t();
 
         /// - Alg Analysis: APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|+|T|) (medOne from Algorithm 51.4)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo.
         fn med_recursive(&mut self, i: usize, j: usize) -> (distance: usize)
             requires
                 i <= old(self).spec_s_len(),
@@ -269,7 +269,7 @@ pub mod TopDownDPStEph {
         }
 
         /// Compute MED using top-down memoization (Algorithm 51.4).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — top-down DP with memoization; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — top-down DP with memoization; St sequential.
         fn med_memoized(&mut self) -> (distance: usize) {
             self.memo_table.clear();
             let s_len = self.seq_s.length();
@@ -278,7 +278,7 @@ pub mod TopDownDPStEph {
         }
 
         /// Recursive MED with memoization (medOne from Algorithm 51.4).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — memoized recursion filling n×m table; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — memoized recursion filling n×m table; St sequential.
         fn med_recursive(&mut self, i: usize, j: usize) -> (distance: usize)
             decreases i + j,
         {

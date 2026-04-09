@@ -140,13 +140,13 @@ broadcast use {
             requires self.spec_edgesetgraphstper_wf();
         /// Work Theta(|E| log |V|), Span Theta(|E| log |V|)
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m), Span O(m) work; sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) work; sequential filter
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
             requires self.spec_edgesetgraphstper_wf()
             ensures neighbors@ == self.spec_out_neighbors(u@), neighbors.spec_avltreesetstper_wf();
         /// Work Theta(|E|), Span Theta(|E|)
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m), Span O(m) work; sequential filter then len
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) work; sequential filter then len
         fn out_degree(&self, u: &V) -> usize
             requires self.spec_edgesetgraphstper_wf();
         /// Work Theta(log |V|), Span Theta(log |V|)
@@ -318,7 +318,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work Θ(m), Span Θ(m) — delegates to out_neighbors which is sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m), Span Θ(m) — delegates to out_neighbors which is sequential.
         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)

@@ -54,7 +54,7 @@ pub mod MaxContigSubSumReducedMcsseStEph {
         /// Compute MCSS by enumerating all MCSSE instances (Algorithm 28.14).
         /// Returns None for empty sequence (representing -infinity).
         /// - Alg Analysis: APAS (Ch28 Alg 28.14): Work O(n^2), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n²), Span O(n²) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — sequential
         fn max_contig_sub_sum_reduced_mcsse(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),
@@ -84,7 +84,7 @@ pub mod MaxContigSubSumReducedMcsseStEph {
     }
 
     impl MaxContigSubSumReducedMcsseTrait for ArraySeqStEphS<i32> {
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — single-pass reduction using MCSSE 4-tuple; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass reduction using MCSSE 4-tuple; St sequential.
         fn max_contig_sub_sum_reduced_mcsse(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();
             if n == 0 {

@@ -142,7 +142,7 @@ broadcast use {
 
         /// Work Theta(n), Span Theta(n)
         /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(n), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) work; sequential row scan
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) work; sequential row scan
         fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqMtPerS<usize>)
             requires self.spec_adjmatrixgraphmtper_wf()
             ensures
@@ -158,7 +158,7 @@ broadcast use {
 
         /// Work Theta(n), Span Theta(n)
         /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) work; sequential count
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) work; sequential count
         fn out_degree(&self, u: usize) -> (d: usize)
             requires self.spec_adjmatrixgraphmtper_wf()
             ensures

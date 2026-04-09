@@ -296,7 +296,7 @@ pub mod BSTParaMtEph {
             ensures joined@.finite(), joined@ =~= self@.union(other@);
         /// Joins two disjoint BSTs where all elements of self are less than all elements of right.
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — sequential join by exposing right subtree
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — sequential join by exposing right subtree
         fn join_pair_inner(&self, right: &Self) -> (joined: Self)
             requires
                 self@.finite(), right@.finite(),
@@ -386,7 +386,7 @@ pub mod BSTParaMtEph {
                     exists|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() && out@[i]@ == v,
                 forall|i: int, j: int| #![trigger out@[i], out@[j]] old(out)@.len() <= i < j < out@.len() ==> out@[i]@ != out@[j]@;
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(|t|), Span O(|t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|t|), Span O(|t|) — agrees with APAS; sequential DFS traversal.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|), Span O(|t|) — agrees with APAS; sequential DFS traversal.
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
             ensures
                 seq@.len() == self@.len(),

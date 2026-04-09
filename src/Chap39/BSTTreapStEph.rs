@@ -570,7 +570,7 @@ pub mod BSTTreapStEph {
                 joined.spec_parambsttreapsteph_wf();
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(m · lg(n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m · lg(n/m)) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)) — DIFFERS: St sequential, APAS parallel
         fn param_union(&self, other: &Self) -> (combined: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -584,7 +584,7 @@ pub mod BSTTreapStEph {
                 combined.spec_parambsttreapsteph_wf();
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(m · lg(n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m · lg(n/m)) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)) — DIFFERS: St sequential, APAS parallel
         fn param_intersect(&self, other: &Self) -> (common: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -598,7 +598,7 @@ pub mod BSTTreapStEph {
                 common.spec_parambsttreapsteph_wf();
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(m · lg(n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m · lg(n/m)) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)) — DIFFERS: St sequential, APAS parallel
         fn param_difference(&self, other: &Self) -> (diff: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -612,7 +612,7 @@ pub mod BSTTreapStEph {
                 diff.spec_parambsttreapsteph_wf();
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(|t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|t|) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|) — DIFFERS: St sequential, APAS parallel
         fn param_filter<F: Fn(&T) -> bool>(
             &self,
             predicate: F,
@@ -636,7 +636,7 @@ pub mod BSTTreapStEph {
                 filtered.spec_parambsttreapsteph_wf();
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(|t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|t|) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|) — DIFFERS: St sequential, APAS parallel
         fn param_reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -1623,7 +1623,7 @@ pub mod BSTTreapStEph {
             join_pair_inner_st(cloned, other)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
         fn param_union(&self, other: &Self) -> (combined: Self) {
             // Veracity: NEEDED proof block
             proof {
@@ -1635,7 +1635,7 @@ pub mod BSTTreapStEph {
             union_inner_st(a, b)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
         fn param_intersect(&self, other: &Self) -> (common: Self) {
             // Veracity: NEEDED proof block
             proof {
@@ -1647,7 +1647,7 @@ pub mod BSTTreapStEph {
             intersect_inner_st(a, b)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
         fn param_difference(&self, other: &Self) -> (diff: Self) {
             // Veracity: NEEDED proof block
             proof {
@@ -1659,7 +1659,7 @@ pub mod BSTTreapStEph {
             difference_inner_st(a, b)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
         fn param_filter<F: Fn(&T) -> bool>(
             &self,
             predicate: F,
@@ -2320,7 +2320,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
     ) -> (combined: BSTTreapStEph<T>)
@@ -2406,7 +2406,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
     ) -> (common: BSTTreapStEph<T>)
@@ -2503,7 +2503,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
     fn difference_inner_st<T: StT + Ord + IsLtTransitive>(
         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
     ) -> (remaining: BSTTreapStEph<T>)
@@ -2696,7 +2696,7 @@ pub mod BSTTreapStEph {
         }
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
     fn filter_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(&T) -> bool>(
         tree: BSTTreapStEph<T>,
         predicate: &F,

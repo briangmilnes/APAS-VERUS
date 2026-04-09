@@ -190,7 +190,7 @@ broadcast use {
     /// max over lo in 0..n of range_sum(a, lo, n).
     /// Uses prefix-sum approach: result = total - min(prefix(0), ..., prefix(n-1)).
     /// - Alg Analysis: APAS (Ch28 Alg 28.18): Work O(n), Span O(lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — sequential loop
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop
     fn max_suffix_sum(a: &ArraySeqStEphS<i32>) -> (mss: i32)
         requires
             a.seq@.len() > 0,
@@ -268,7 +268,7 @@ broadcast use {
     /// Find max prefix sum (MCSSS problem, Algorithm 28.11).
     /// max over hi in 1..=n of range_sum(a, 0, hi).
     /// - Alg Analysis: APAS (Ch28 Alg 28.18): Work O(n), Span O(lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — sequential loop
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop
     fn max_prefix_sum(a: &ArraySeqStEphS<i32>) -> (mps: i32)
         requires
             a.seq@.len() > 0,
@@ -311,7 +311,7 @@ broadcast use {
     }
 
     impl MaxContigSubSumDivConTrait for ArraySeqStEphS<i32> {
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n log n), Span O(n log n) — D&C with O(n) merge at each level; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — D&C with O(n) merge at each level; St sequential.
         fn max_contig_sub_sum_divcon(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             decreases a.seq@.len(),
         {

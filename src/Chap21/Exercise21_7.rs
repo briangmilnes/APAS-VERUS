@@ -80,7 +80,7 @@ pub mod Exercise21_7 {
     ///
     /// Pairs even elements of a with vowels of b.
     /// - Alg Analysis: APAS (Ch21 Ex 21.7): Work O(|a|·|b|), Span O(lg |a|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|a|·|b|), Span O(|a|·|b|) — sequential StPer filter + tabulate + flatten.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|·|b|), Span O(|a|·|b|) — sequential StPer filter + tabulate + flatten.
     pub fn pair_even_with_vowels(
         a: &ArraySeqStPerS<usize>,
         b: &ArraySeqStPerS<char>,

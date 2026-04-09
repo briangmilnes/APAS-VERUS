@@ -228,7 +228,7 @@ pub mod BFSStEph {
 
         /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
         /// - Alg Analysis: APAS (Ch54 Alg 54.6): Work O(n + m), Span O(d lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n+m), Span O(n+m) work; sequential BFS tree with array seqs
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) work; sequential BFS tree with array seqs
         fn bfs_tree(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (traversal: BFSTreeS)
             requires
                 source < graph.spec_len(),
@@ -378,7 +378,7 @@ pub mod BFSStEph {
     }
 
     /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — standard BFS with VecDeque frontier; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — standard BFS with VecDeque frontier; St sequential.
     #[verifier::exec_allows_no_decreases_clause]
     fn bfs_tree(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (traversal: BFSTreeS)
     {

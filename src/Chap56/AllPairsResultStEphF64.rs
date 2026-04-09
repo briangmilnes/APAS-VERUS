@@ -251,7 +251,7 @@ pub mod AllPairsResultStEphF64 {
             self.get_distance(u, v).is_finite()
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|), Span O(|V|) — follows predecessor chain then reverses; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — follows predecessor chain then reverses; St sequential.
         fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>) {
             if u >= self.predecessors.length() || v >= self.predecessors.length() {
                 return None;

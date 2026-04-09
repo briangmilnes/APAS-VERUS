@@ -209,7 +209,7 @@ pub mod MinEditDistStPer {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|S|*|T|), Span O(|S|*|T|) — clones + memoized recursive DP; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) — clones + memoized recursive DP; St sequential.
         fn min_edit_distance(&self) -> (dist: usize) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let mut solver = MinEditDistStPerS {

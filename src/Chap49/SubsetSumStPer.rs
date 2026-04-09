@@ -176,7 +176,7 @@ pub mod SubsetSumStPer {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(k*|S|), Span O(k*|S|) — clones + memoized recursive DP; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k*|S|), Span O(k*|S|) — clones + memoized recursive DP; St sequential.
         fn subset_sum(&self, target: i32) -> (found: bool)
         where
             T: Into<i32> + Copy,

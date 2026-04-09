@@ -128,7 +128,7 @@ verus!
         spec fn spec_valid_key_type() -> bool;
 
         /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|v|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|v|), Span O(|v|) — DIFFERS: St sequential, APAS parallel. Iterates vec, O(1) hash insert each.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — DIFFERS: St sequential, APAS parallel. Iterates vec, O(1) hash insert each.
         fn from_vec(v: Vec<T>) -> (s: Self)
             requires Self::spec_valid_key_type()
             ensures s.spec_setsteph_wf(), s@ == v@.map(|i: int, x: T| x@).to_set();
@@ -185,7 +185,7 @@ verus!
                 inserted == !old(self)@.contains(x@);
 
         /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|a| + |b|), Span O(|a| + |b|) — DIFFERS: St sequential, APAS parallel. Clone one, iterate other, insert all.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — DIFFERS: St sequential, APAS parallel. Clone one, iterate other, insert all.
         fn union(&self, s2: &Self) -> (union: Self)
             requires
                self.spec_setsteph_wf(),
@@ -194,7 +194,7 @@ verus!
 
         /// - Disjoint union: union of two sets known to be disjoint.
         /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|a| + |b|), Span O(|a| + |b|) — DIFFERS: St sequential, APAS parallel. Same as union, disjointness is a precondition only.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — DIFFERS: St sequential, APAS parallel. Same as union, disjointness is a precondition only.
         fn disjoint_union(&self, s2: &Self) -> (union: Self)
             requires
                self.spec_setsteph_wf(),
@@ -206,7 +206,7 @@ verus!
                union@.len() == self@.len() + s2@.len();
 
         /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|a|), Span O(|a|) — DIFFERS: St sequential + only iterates self (not both). APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — DIFFERS: St sequential + only iterates self (not both). APAS parallel.
         fn intersection(&self, s2: &Self) -> (intersection: Self)
             requires
                 self.spec_setsteph_wf(),
@@ -224,7 +224,7 @@ verus!
                forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (av == a@ && s2@.contains(bv));
 
         /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| × |b|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|a| × |b|), Span O(|a| × |b|) — DIFFERS: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| × |b|), Span O(|a| × |b|) — DIFFERS: St sequential, APAS parallel
         fn cartesian_product<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
             requires
                 self.spec_setsteph_wf(),
@@ -257,7 +257,7 @@ verus!
                 );
 
         /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| × |parts|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|a| × |parts|), Span O(|a| × |parts|) — DIFFERS: St sequential, APAS parallel. Outer loop over |a|, inner partition_on_elt scans |parts| with O(1) hash lookups.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| × |parts|), Span O(|a| × |parts|) — DIFFERS: St sequential, APAS parallel. Outer loop over |a|, inner partition_on_elt scans |parts| with O(1) hash lookups.
         fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> (partition: bool)
             requires
                 self.spec_setsteph_wf(),

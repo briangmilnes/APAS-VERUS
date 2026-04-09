@@ -235,7 +235,7 @@ pub mod MinEditDistStEph {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|S|*|T|), Span O(|S|*|T|) — memoized recursive DP; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) — memoized recursive DP; St sequential.
         fn min_edit_distance(&mut self) -> (dist: usize) {
             self.memo.clear();
 

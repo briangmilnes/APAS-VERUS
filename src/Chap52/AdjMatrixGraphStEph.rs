@@ -127,7 +127,7 @@ broadcast use {
             ensures found == self.spec_edge(u as int, v as int);
 
         /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(n), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) work; sequential row scan
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) work; sequential row scan
         fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqStEphS<usize>)
             requires self.spec_adjmatrixgraphsteph_wf(), u < self.spec_n()
             ensures
@@ -139,7 +139,7 @@ broadcast use {
                         0 <= k < neighbors.spec_len() && #[trigger] neighbors.spec_index(k) == v as usize;
 
         /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) work; sequential count
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) work; sequential count
         fn out_degree(&self, u: usize) -> (d: usize)
             requires self.spec_adjmatrixgraphsteph_wf(), u < self.spec_n()
             ensures d as nat == spec_count_true(

@@ -192,7 +192,7 @@ pub mod UnionFindStEph {
 
         /// Count distinct sets.
         /// APAS: Work O(n alpha(n)), Span O(n alpha(n))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n alpha(n)), Span O(n alpha(n)) — find root for each element + set insertion; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n alpha(n)), Span O(n alpha(n)) — find root for each element + set insertion; St sequential.
         fn num_sets(&mut self) -> (count: usize)
             requires
                 old(self).spec_unionfindsteph_wf(),

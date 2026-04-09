@@ -53,7 +53,7 @@ pub mod ScanContractMtEph {
         /// Exclusive scan using parallel contraction: contract→solve→expand.
         /// Returns prefixes where result[i] = fold_left(input[0..i], id, spec_f).
         /// - Alg Analysis: APAS (Ch27 Alg 27.3): Work O(n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — contraction parallel via one-level join; expansion sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — contraction parallel via one-level join; expansion sequential.
         fn scan_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: Arc<F>,
@@ -74,7 +74,7 @@ pub mod ScanContractMtEph {
 
         /// Expand phase: interleave contracted scan results into full scan output.
         /// - Alg Analysis: APAS (Ch27 Alg 27.3): Work O(n), Span O(1) — parallel tabulate (expansion step).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — sequential loop, no parallelism.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop, no parallelism.
         fn expand_scan_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             b: &ArraySeqMtEphS<T>,

@@ -63,7 +63,7 @@ pub mod SCCStPer {
     pub trait SCCStPerTrait {
         /// Finds strongly connected components in a directed graph (Algorithm 55.18)
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — Kosaraju's algorithm; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — Kosaraju's algorithm; St sequential.
         fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (components: AVLTreeSeqStPerS<AVLTreeSetStPer<usize>>)
             requires
                 spec_toposortstper_wf(graph),
@@ -77,7 +77,7 @@ pub mod SCCStPer {
 
 
     /// Recursive DFS that appends vertices in finish order.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — DFS appending vertices at finish time; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS appending vertices at finish time; St sequential.
     fn dfs_finish_order(
         graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         visited: &mut Vec<bool>,
@@ -171,7 +171,7 @@ pub mod SCCStPer {
     }
 
     /// Computes the finish order for SCC (decreasing finish times).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — full DFS + reverse; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — full DFS + reverse; St sequential.
     fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (finish_order: AVLTreeSeqStPerS<usize>)
         requires
             spec_toposortstper_wf(graph),
@@ -260,7 +260,7 @@ pub mod SCCStPer {
     }
 
     /// Transposes a directed graph (reverses all edges).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — iterates all edges; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — iterates all edges; St sequential.
     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<usize>>)
         requires spec_toposortstper_wf(graph),
         ensures
@@ -386,7 +386,7 @@ pub mod SCCStPer {
     }
 
     /// Runtime check that all neighbor indices are valid vertex indices.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — checks all edges; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — checks all edges; St sequential.
     // veracity: no_requires
     fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (valid: bool)
         ensures valid ==> spec_toposortstper_wf(graph),
@@ -443,7 +443,7 @@ pub mod SCCStPer {
 
     /// DFS reachability using Vec<bool> for termination and persistent set
     /// for component accumulation (same pattern as DFSStPer::dfs_recursive).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — DFS collecting component; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS collecting component; St sequential.
     fn dfs_reach(
         graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         visited_bool: &mut Vec<bool>,
@@ -546,7 +546,7 @@ pub mod SCCStPer {
 
     impl SCCStPerTrait for SCCStPer {
         /// Finds strongly connected components in a directed graph.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — Kosaraju's: finish-order DFS + transpose + component DFS; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — Kosaraju's: finish-order DFS + transpose + component DFS; St sequential.
         fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<usize>>
         {
             let finish_order = compute_finish_order(graph);

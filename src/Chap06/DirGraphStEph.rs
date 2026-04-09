@@ -125,7 +125,7 @@ verus!
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
 
         /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|V| + |A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V| + |A|), Span O(|V| + |A|) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |A|), Span O(|V| + |A|) — sequential
         fn from_sets(vertices: SetStEph<V>, arcs: SetStEph<Edge<V>>) -> (g: Self)
             requires
                 forall |u: V::V, w: V::V|
@@ -166,7 +166,7 @@ verus!
             ensures b == self@.A.contains((u@, v@));
 
         /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures neighbors@ == self.spec_ng(v@);
@@ -178,13 +178,13 @@ verus!
             ensures neighbors@ == self.spec_ng_of_vertices(vertices@);
 
         /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures out_neighbors@ == self.spec_n_plus(v@);
 
         /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures in_neighbors@ == self.spec_n_minus(v@);
@@ -208,19 +208,19 @@ verus!
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
         /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
         fn degree(&self, v: &V) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures n == self.spec_degree(v@);
 
         /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
         fn in_degree(&self, v: &V) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures n == self.spec_n_minus(v@).len();
 
         /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) — sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
         fn out_degree(&self, v: &V) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures n == self.spec_n_plus(v@).len();
@@ -339,7 +339,7 @@ verus!
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential scan of arcs
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of arcs
         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)
             ensures out_neighbors@ == self.spec_n_plus(v@)
         {
@@ -394,7 +394,7 @@ verus!
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|A|), Span O(|A|) -- sequential scan of arcs
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of arcs
         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)
             ensures in_neighbors@ == self.spec_n_minus(v@)
         {

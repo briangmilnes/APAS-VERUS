@@ -273,7 +273,7 @@ broadcast use {
             ensures self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) -- iterates all entries applying f sequentially
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- iterates all entries applying f sequentially
         fn reduce<R: StTInMtT + 'static, G: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: G) -> (reduced: R)
             requires forall|r: R, k: &K, v: &V| f.requires((r, k, v))
             ensures self@.dom().finite();

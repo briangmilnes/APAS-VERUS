@@ -214,7 +214,7 @@ broadcast use {
                 cost as nat == spec_chain_cost(self@.dimensions, i as int, j as int, i as int),
             decreases j - i;
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — sequential linear scan for minimum
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential linear scan for minimum
         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize)
             requires costs@.len() > 0,
             ensures
@@ -301,7 +301,7 @@ broadcast use {
             intermediate * right_cols
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — sequential linear scan for minimum
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential linear scan for minimum
         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize) {
             let mut best: usize = costs[0];
             let mut idx: usize = 1;

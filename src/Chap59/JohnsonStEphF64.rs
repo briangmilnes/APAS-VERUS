@@ -63,7 +63,7 @@ pub mod JohnsonStEphF64 {
     pub trait JohnsonStEphF64Trait {
         /// Johnson's all-pairs shortest path algorithm.
         /// - Alg Analysis: APAS (Ch59 Alg 59.1): Work O(mn lg n), Span O(m lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(mn lg n), Span O(mn lg n) work; sequential: 1x BF O(nm) + n x Dijkstra O(m lg n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(mn lg n), Span O(mn lg n) work; sequential: 1x BF O(nm) + n x Dijkstra O(m lg n)
         fn johnson_apsp(graph: &WeightedDirGraphStEphF64<usize>)
             -> (apsp: AllPairsResultStEphF64)
             requires
@@ -347,7 +347,7 @@ pub mod JohnsonStEphF64 {
     /// Phase 3: Run Dijkstra from each vertex on reweighted graph, adjust distances back.
     ///
     /// - Alg Analysis: APAS (Ch59 Alg 59.1): Work O(mn lg n), Span O(m lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(mn lg n), Span O(mn lg n) work; sequential: 1x BF + n x Dijkstra
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(mn lg n), Span O(mn lg n) work; sequential: 1x BF + n x Dijkstra
     pub fn johnson_apsp(graph: &WeightedDirGraphStEphF64<usize>)
         -> (apsp: AllPairsResultStEphF64)
         requires

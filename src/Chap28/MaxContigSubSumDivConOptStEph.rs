@@ -298,7 +298,7 @@ broadcast use {
 
     /// Auxiliary function: returns (mcss, max_prefix, max_suffix, total).
     /// - Alg Analysis: APAS (Ch28 Alg 28.19): Work O(n), Span O(lg^2 n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n log n), Span O(n log n) — DIFFERS: St sequential, APAS parallel. subseq_copy O(n) per level
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — DIFFERS: St sequential, APAS parallel. subseq_copy O(n) per level
     fn max_contig_sub_sum_aux(a: &ArraySeqStEphS<i32>) -> (mcss: StrengthResult)
         requires
             a.seq@.len() > 0,
@@ -395,7 +395,7 @@ broadcast use {
     }
 
     impl MaxContigSubSumDivConOptTrait for ArraySeqStEphS<i32> {
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — D&C with O(1) merge returning 4-tuple; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — D&C with O(1) merge returning 4-tuple; St sequential.
         fn max_contig_sub_sum_divcon_opt(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             if a.length() == 0 {
                 return None;

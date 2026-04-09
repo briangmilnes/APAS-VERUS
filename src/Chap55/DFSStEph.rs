@@ -208,7 +208,7 @@ broadcast use vstd::seq::group_seq_axioms;
     /// Ghost parameter `gray` tracks vertices on the recursion stack (visited but not yet
     /// fully processed). Neighbor-closure and visited-reachable are guaranteed for all
     /// visited vertices NOT in gray.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — visits each vertex and edge once; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — visits each vertex and edge once; St sequential.
     fn dfs_recursive(
         graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: &mut ArraySeqStEphS<bool>,
@@ -448,7 +448,7 @@ broadcast use vstd::seq::group_seq_axioms;
     impl DFSStEphTrait for DFSStEph {
         /// Performs DFS from source vertex s on adjacency list graph G.
         /// Returns the set of all vertices reachable from s.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|V|+|E|), Span O(|V|+|E|) — initializes visited + delegates to dfs_recursive; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — initializes visited + delegates to dfs_recursive; St sequential.
         fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (reachable: AVLTreeSetStEph<usize>)
         {
             let n = graph.length();

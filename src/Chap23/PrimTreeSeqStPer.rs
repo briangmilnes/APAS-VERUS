@@ -1,4 +1,4 @@
-//! Copyright (ACCEPTED DIFFERENCE: C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! REVIEWED: NO
 
 //! Primitive tree sequence implementation for Chapter 23. Verusified.
@@ -94,7 +94,7 @@ pub mod PrimTreeSeqStPer {
     //		Section 8a. traits
 
 
-    /// Spec functions for the primitive tree sequence (ACCEPTED DIFFERENCE: spec-only, no exec methods).
+    /// Spec functions for the primitive tree sequence (spec-only, no exec methods).
     pub trait PrimTreeSeqStSpec<T>: Sized + View<V = Seq<T>> {
         spec fn spec_len(&self) -> nat;
         spec fn spec_index(&self, i: int) -> T
@@ -107,7 +107,7 @@ pub mod PrimTreeSeqStPer {
     impl<T> PrimTreeSeqStS<T> {
         /// Returns a borrow iterator over the sequence elements.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — wraps slice::Iter.
-        pub fn iter(&self) -> (ACCEPTED DIFFERENCE: it: PrimTreeSeqStIter<'_, T>)
+        pub fn iter(&self) -> (it: PrimTreeSeqStIter<'_, T>)
             ensures
                 it@.0 == 0,
                 it@.1 == self.seq@,
@@ -134,13 +134,13 @@ pub mod PrimTreeSeqStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty Vec allocation.
-        fn empty() -> (ACCEPTED DIFFERENCE: empty_seq: Self)
+        fn empty() -> (empty_seq: Self)
         {
             PrimTreeSeqStS { seq: Vec::new() }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single-element Vec.
-        fn singleton(value: T) -> (ACCEPTED DIFFERENCE: single: Self)
+        fn singleton(value: T) -> (single: Self)
         {
             let mut v = Vec::new();
             v.push(value);
@@ -148,7 +148,7 @@ pub mod PrimTreeSeqStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — moves ownership, no copy.
-        fn from_vec(vec: Vec<T>) -> (ACCEPTED DIFFERENCE: seq: Self)
+        fn from_vec(vec: Vec<T>) -> (seq: Self)
         {
             // Veracity: NEEDED proof block
             proof { axiom_spec_len(&vec); }
@@ -156,18 +156,18 @@ pub mod PrimTreeSeqStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec len.
-        fn length(&self) -> (ACCEPTED DIFFERENCE: len: usize)
+        fn length(&self) -> (len: usize)
         {
             self.seq.len()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index.
-        fn nth(&self, index: usize) -> (ACCEPTED DIFFERENCE: nth_elem: &T) {
+        fn nth(&self, index: usize) -> (nth_elem: &T) {
             &self.seq[index]
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — clones all elements into left/right halves; St sequential.
-        fn expose(&self) -> (ACCEPTED DIFFERENCE: tree: PrimTreeSeqStTree<T>)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones all elements into left/right halves; St sequential.
+        fn expose(&self) -> (tree: PrimTreeSeqStTree<T>)
             where T: Clone + Eq
         {
             let len = self.seq.len();
@@ -231,8 +231,8 @@ pub mod PrimTreeSeqStPer {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — Vec append of two halves; St sequential.
-        fn join(tree: PrimTreeSeqStTree<T>) -> (ACCEPTED DIFFERENCE: joined: PrimTreeSeqStS<T>)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — Vec append of two halves; St sequential.
+        fn join(tree: PrimTreeSeqStTree<T>) -> (joined: PrimTreeSeqStS<T>)
             ensures
                 tree@ is Zero ==> joined@ =~= Seq::<T>::empty(),
                 tree@ is One ==> joined@ =~= seq![tree@->One_0],
@@ -252,8 +252,8 @@ pub mod PrimTreeSeqStPer {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n + m), Span O(n + m) — clones + concatenates two sequences; St sequential.
-        fn append(a: &Self, b: &Self) -> (ACCEPTED DIFFERENCE: appended: PrimTreeSeqStS<T>)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — clones + concatenates two sequences; St sequential.
+        fn append(a: &Self, b: &Self) -> (appended: PrimTreeSeqStS<T>)
             where T: Clone + Eq
         {
             let a_len = a.seq.len();
@@ -300,8 +300,8 @@ pub mod PrimTreeSeqStPer {
             PrimTreeSeqStS { seq }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(k), Span O(k) — clones k = length elements; St sequential.
-        fn subseq(&self, start: usize, length: usize) -> (ACCEPTED DIFFERENCE: subseq: PrimTreeSeqStS<T>)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — clones k = length elements; St sequential.
+        fn subseq(&self, start: usize, length: usize) -> (subseq: PrimTreeSeqStS<T>)
             where T: Clone + Eq
         {
             let end = start + length;
@@ -312,7 +312,7 @@ pub mod PrimTreeSeqStPer {
                     start <= i <= end,
                     end == start + length,
                     end <= self.seq@.len(),
-                    seq@.len() == (ACCEPTED DIFFERENCE: i - start) as int,
+                    seq@.len() == (i - start) as int,
                     obeys_feq_clone::<T>(),
                     forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> seq@[j] == self.seq@[(start + j) as int],
                 decreases end - i,
@@ -328,8 +328,8 @@ pub mod PrimTreeSeqStPer {
             PrimTreeSeqStS { seq }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — clones all n elements, replacing one; St sequential.
-        fn update(a: &Self, index: usize, item: T) -> (ACCEPTED DIFFERENCE: updated: PrimTreeSeqStS<T>)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones all n elements, replacing one; St sequential.
+        fn update(a: &Self, index: usize, item: T) -> (updated: PrimTreeSeqStS<T>)
             where T: Clone + Eq
         {
             let len = a.seq.len();
@@ -366,8 +366,8 @@ pub mod PrimTreeSeqStPer {
             PrimTreeSeqStS { seq }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n * W(f)), Span O(n * W(f)) — applies f to each of n elements; St sequential.
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &PrimTreeSeqStS<T>, f: &F) -> (ACCEPTED DIFFERENCE: mapped: PrimTreeSeqStS<U>)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * W(f)), Span O(n * W(f)) — applies f to each of n elements; St sequential.
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &PrimTreeSeqStS<T>, f: &F) -> (mapped: PrimTreeSeqStS<U>)
         {
             let len = a.seq.len();
             let mut seq: Vec<U> = Vec::with_capacity(len);
@@ -395,8 +395,8 @@ pub mod PrimTreeSeqStPer {
             PrimTreeSeqStS { seq }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n * W(f)), Span O(n * W(f)) — calls f for each index 0..n; St sequential.
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (ACCEPTED DIFFERENCE: tab_seq: PrimTreeSeqStS<T>)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * W(f)), Span O(n * W(f)) — calls f for each index 0..n; St sequential.
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: PrimTreeSeqStS<T>)
         {
             let mut seq = Vec::with_capacity(length);
             let mut i: usize = 0;
@@ -414,8 +414,8 @@ pub mod PrimTreeSeqStPer {
             PrimTreeSeqStS { seq }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — single-pass filter over n elements; St sequential.
-        fn filter<F: Fn(&T) -> bool>(a: &PrimTreeSeqStS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (ACCEPTED DIFFERENCE: filtered: PrimTreeSeqStS<T>)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass filter over n elements; St sequential.
+        fn filter<F: Fn(&T) -> bool>(a: &PrimTreeSeqStS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: PrimTreeSeqStS<T>)
             where T: Clone + Eq
         {
             let len = a.seq.len();
@@ -472,7 +472,7 @@ pub mod PrimTreeSeqStPer {
             filtered
         }
 
-        fn drop(&self, n: usize) -> (ACCEPTED DIFFERENCE: dropped: PrimTreeSeqStS<T>)
+        fn drop(&self, n: usize) -> (dropped: PrimTreeSeqStS<T>)
             where T: Clone + Eq
         {
             let len = self.seq.len();
@@ -480,8 +480,8 @@ pub mod PrimTreeSeqStPer {
             self.subseq(n, remaining)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(N), Span O(N) — nested loop over total N elements across all inner seqs; St sequential.
-        fn flatten(a: &PrimTreeSeqStS<PrimTreeSeqStS<T>>) -> (ACCEPTED DIFFERENCE: flattened: PrimTreeSeqStS<T>)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(N), Span O(N) — nested loop over total N elements across all inner seqs; St sequential.
+        fn flatten(a: &PrimTreeSeqStS<PrimTreeSeqStS<T>>) -> (flattened: PrimTreeSeqStS<T>)
             where T: Clone + Eq
         {
             let outer_len = a.seq.len();
@@ -534,10 +534,10 @@ pub mod PrimTreeSeqStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns slice reference.
-        fn as_slice(&self) -> (ACCEPTED DIFFERENCE: slice: &[T]) { &self.seq }
+        fn as_slice(&self) -> (slice: &[T]) { &self.seq }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — moves ownership.
-        fn into_vec(self) -> (ACCEPTED DIFFERENCE: vec: Vec<T>) { self.seq }
+        fn into_vec(self) -> (vec: Vec<T>) { self.seq }
     }
 
     //		Section 10a. iterators
@@ -547,7 +547,7 @@ pub mod PrimTreeSeqStPer {
         type Item = T;
         type IntoIter = IntoIter<T>;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — consumes Vec into IntoIter.
-        fn into_iter(self) -> (ACCEPTED DIFFERENCE: it: Self::IntoIter)
+        fn into_iter(self) -> (it: Self::IntoIter)
             ensures
                 it@.0 == 0,
                 it@.1 == self.seq@,
@@ -559,7 +559,7 @@ pub mod PrimTreeSeqStPer {
     //		Section 4b. type definitions
 
 
-    /// Exposed tree structure: Zero (ACCEPTED DIFFERENCE: empty), One (single element), or Two (split halves).
+    /// Exposed tree structure: Zero (empty), One (single element), or Two (split halves).
     #[verifier::reject_recursive_types(T)]
     pub enum PrimTreeSeqStTree<T> {
         Zero,
@@ -591,8 +591,8 @@ pub mod PrimTreeSeqStPer {
     }
 
     impl<'a, T> View for PrimTreeSeqStIter<'a, T> {
-        type V = (ACCEPTED DIFFERENCE: int, Seq<T>);
-        open spec fn view(&self) -> (ACCEPTED DIFFERENCE: int, Seq<T>) { self.inner@ }
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
     }
 
     /// Ghost iterator for ForLoopGhostIterator support.
@@ -612,16 +612,16 @@ pub mod PrimTreeSeqStPer {
         type Item = &'a T;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — delegates to slice::Iter::next.
-        fn next(&mut self) -> (ACCEPTED DIFFERENCE: next: Option<&'a T>)
-            ensures (ACCEPTED DIFFERENCE: {
-                let (ACCEPTED DIFFERENCE: old_index, old_seq) = old(self)@;
+        fn next(&mut self) -> (next: Option<&'a T>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
                 match next {
                     None => {
                         &&& self@ == old(self)@
                         &&& old_index >= old_seq.len()
                     },
                     Some(element) => {
-                        let (ACCEPTED DIFFERENCE: new_index, new_seq) = self@;
+                        let (new_index, new_seq) = self@;
                         &&& 0 <= old_index < old_seq.len()
                         &&& new_seq == old_seq
                         &&& new_index == old_index + 1
@@ -680,7 +680,7 @@ pub mod PrimTreeSeqStPer {
         type Item = &'a T;
         type IntoIter = PrimTreeSeqStIter<'a, T>;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — wraps slice::Iter.
-        fn into_iter(self) -> (ACCEPTED DIFFERENCE: it: Self::IntoIter)
+        fn into_iter(self) -> (it: Self::IntoIter)
             ensures
                 it@.0 == 0,
                 it@.1 == self.seq@,
@@ -715,16 +715,16 @@ pub mod PrimTreeSeqStPer {
         spec fn spec_primtreeseqstper_wf(&self) -> bool;
 
         /// Creates an empty sequence.
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch23 Alg 23.3): Work O(1), Span O(1).
+        /// - Alg Analysis: APAS (Ch23 Alg 23.3): Work O(1), Span O(1).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn empty() -> (ACCEPTED DIFFERENCE: empty_seq: Self)
+        fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_primtreeseqstper_wf(),
                     empty_seq.spec_len() == 0;
 
         /// Builds a sequence containing a single element.
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch23 Alg 23.3): Work O(1), Span O(1).
+        /// - Alg Analysis: APAS (Ch23 Alg 23.3): Work O(1), Span O(1).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn singleton(value: T) -> (ACCEPTED DIFFERENCE: single: Self)
+        fn singleton(value: T) -> (single: Self)
             ensures
                 single.spec_primtreeseqstper_wf(),
                 single.spec_len() == 1,
@@ -732,32 +732,32 @@ pub mod PrimTreeSeqStPer {
 
         /// Constructs a sequence from the provided vector.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — wraps existing Vec.
-        fn from_vec(vec: Vec<T>) -> (ACCEPTED DIFFERENCE: seq: Self)
+        fn from_vec(vec: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_primtreeseqstper_wf(),
                 seq.spec_len() == vec@.len(),
                 forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < vec@.len() ==> seq.spec_index(i) == vec@[i];
 
         /// Returns the number of elements in the sequence.
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch23 CS 23.2): Work O(1), Span O(1)
+        /// - Alg Analysis: APAS (Ch23 CS 23.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn length(&self) -> (ACCEPTED DIFFERENCE: len: usize)
+        fn length(&self) -> (len: usize)
             requires self.spec_primtreeseqstper_wf(),
             ensures len == self.spec_len();
 
-        /// Algorithm 23.3 (ACCEPTED DIFFERENCE: nth). Return a reference to the element at `index`.
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.6): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch22 CS 22.2): Work O(1), Span O(1)
+        /// Algorithm 23.3 (nth). Return a reference to the element at `index`.
+        /// - Alg Analysis: APAS (Ch20 CS 20.6): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — ACCEPTED DIFFERENCE from CS 20.6 O(lg n) but matches CS 22.2 O(1); Vec-backed, direct array index
-        fn nth(&self, index: usize) -> (ACCEPTED DIFFERENCE: nth_elem: &T)
+        fn nth(&self, index: usize) -> (nth_elem: &T)
             requires self.spec_primtreeseqstper_wf(),
                      index < self.spec_len(),
             ensures *nth_elem == self.spec_index(index as int);
 
         /// Exposes the internal structure as Zero, One, or Two parts.
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch23 CS 23.2): Work O(1), Span O(1)
+        /// - Alg Analysis: APAS (Ch23 CS 23.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — ACCEPTED DIFFERENCE: Vec-backed, copies elements into left/right halves
-        fn expose(&self) -> (ACCEPTED DIFFERENCE: tree: PrimTreeSeqStTree<T>)
+        fn expose(&self) -> (tree: PrimTreeSeqStTree<T>)
             where T: Clone + Eq
             requires
                 self.spec_primtreeseqstper_wf(),
@@ -778,19 +778,19 @@ pub mod PrimTreeSeqStPer {
                 };
 
         /// Reassembles a primitive tree sequence from an exposed tree.
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch23 CS 23.2): Work O(1 + |r(L) − r(R)|), Span O(1 + |r(L) − r(R)|) for Two; O(1) for Zero/One.
+        /// - Alg Analysis: APAS (Ch23 CS 23.2): Work O(1 + |r(L) − r(R)|), Span O(1 + |r(L) − r(R)|) for Two; O(1) for Zero/One.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|L| + |R|), Span O(|L| + |R|) for Two; O(1) for Zero/One — ACCEPTED DIFFERENCE: Vec append vs APAS O(1 + |r(L) - r(R)|)
-        fn join(tree: PrimTreeSeqStTree<T>) -> (ACCEPTED DIFFERENCE: joined: Self)
+        fn join(tree: PrimTreeSeqStTree<T>) -> (joined: Self)
             ensures
                 joined.spec_primtreeseqstper_wf(),
                 tree@ is Zero ==> joined@ =~= Seq::<T>::empty(),
                 tree@ is One ==> joined@ =~= seq![tree@->One_0],
                 tree@ is Two ==> joined@ =~= tree@->Two_0 + tree@->Two_1;
 
-        /// Definition 18.13 (ACCEPTED DIFFERENCE: append). Concatenate two sequences.
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.6): Work O(|lg(|a|/|b|)|), Span O(|lg(|a|/|b|)|)
+        /// Definition 18.13 (append). Concatenate two sequences.
+        /// - Alg Analysis: APAS (Ch20 CS 20.6): Work O(|lg(|a|/|b|)|), Span O(|lg(|a|/|b|)|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: Vec-backed, copies both arrays sequentially
-        fn append(a: &Self, b: &Self) -> (ACCEPTED DIFFERENCE: appended: Self)
+        fn append(a: &Self, b: &Self) -> (appended: Self)
             where T: Clone + Eq
             requires
                 a.spec_primtreeseqstper_wf(),
@@ -803,10 +803,10 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.spec_len() ==> appended.spec_index(i) == a.spec_index(i),
                 forall|i: int| #![trigger b.spec_index(i)] 0 <= i < b.spec_len() ==> appended.spec_index(a.spec_len() as int + i) == b.spec_index(i);
 
-        /// Definition 18.12 (ACCEPTED DIFFERENCE: subseq). Extract a contiguous subsequence.
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.6): Work O(lg |a|), Span O(lg |a|)
+        /// Definition 18.12 (subseq). Extract a contiguous subsequence.
+        /// - Alg Analysis: APAS (Ch20 CS 20.6): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — ACCEPTED DIFFERENCE: Vec-backed, copies elements sequentially
-        fn subseq(&self, start: usize, length: usize) -> (ACCEPTED DIFFERENCE: subseq: Self)
+        fn subseq(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
                 self.spec_primtreeseqstper_wf(),
@@ -818,11 +818,11 @@ pub mod PrimTreeSeqStPer {
                 subseq.spec_len() == length as int,
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
-        /// Definition 18.16 (ACCEPTED DIFFERENCE: update). Return a copy with the element at `index` replaced.
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch20 CS 20.6): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch22 CS 22.2): Work O(1), Span O(1)
+        /// Definition 18.16 (update). Return a copy with the element at `index` replaced.
+        /// - Alg Analysis: APAS (Ch20 CS 20.6): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — ACCEPTED DIFFERENCE: Vec-backed, copies entire array with replacement
-        fn update(a: &Self, index: usize, item: T) -> (ACCEPTED DIFFERENCE: updated: Self)
+        fn update(a: &Self, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires
                 a.spec_primtreeseqstper_wf(),
@@ -834,20 +834,20 @@ pub mod PrimTreeSeqStPer {
                 updated.spec_index(index as int) == item,
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.spec_len() && i != index as int ==> updated.spec_index(i) == a.spec_index(i);
 
-        /// Algorithm 23.3 (ACCEPTED DIFFERENCE: map). Transform each element via `f`.
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch23 Alg 23.3): Work O(n), Span O(log n) — parallel tree-based.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — sequential loop.
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &PrimTreeSeqStS<T>, f: &F) -> (ACCEPTED DIFFERENCE: mapped: PrimTreeSeqStS<U>)
+        /// Algorithm 23.3 (map). Transform each element via `f`.
+        /// - Alg Analysis: APAS (Ch23 Alg 23.3): Work O(n), Span O(log n) — parallel tree-based.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop.
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &PrimTreeSeqStS<T>, f: &F) -> (mapped: PrimTreeSeqStS<U>)
             requires
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.spec_index(i),)),
             ensures
                 mapped.spec_len() == a.spec_len(),
                 forall|i: int| #![trigger mapped.spec_index(i)] 0 <= i < a.spec_len() ==> f.ensures((&a.spec_index(i),), mapped.spec_index(i));
 
-        /// Algorithm 23.3 (ACCEPTED DIFFERENCE: tabulate). Build a sequence by applying `f` to each index.
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch23 Alg 23.3): Work O(n), Span O(log n) — parallel tree-based.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — sequential loop.
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (ACCEPTED DIFFERENCE: tab_seq: Self)
+        /// Algorithm 23.3 (tabulate). Build a sequence by applying `f` to each index.
+        /// - Alg Analysis: APAS (Ch23 Alg 23.3): Work O(n), Span O(log n) — parallel tree-based.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop.
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: Self)
             requires
                 length <= usize::MAX,
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
@@ -856,10 +856,10 @@ pub mod PrimTreeSeqStPer {
                 tab_seq.spec_len() == length,
                 forall|i: int| #![trigger tab_seq.spec_index(i)] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.spec_index(i));
 
-        /// Algorithm 23.3 (ACCEPTED DIFFERENCE: filter). Keep elements satisfying the predicate.
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch23 Alg 23.3): Work O(n), Span O(log² n) — parallel tree-based with rebalancing.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — sequential loop.
-        fn filter<F: Fn(&T) -> bool>(a: &PrimTreeSeqStS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (ACCEPTED DIFFERENCE: filtered: PrimTreeSeqStS<T>)
+        /// Algorithm 23.3 (filter). Keep elements satisfying the predicate.
+        /// - Alg Analysis: APAS (Ch23 Alg 23.3): Work O(n), Span O(log² n) — parallel tree-based with rebalancing.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop.
+        fn filter<F: Fn(&T) -> bool>(a: &PrimTreeSeqStS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: PrimTreeSeqStS<T>)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
@@ -873,10 +873,10 @@ pub mod PrimTreeSeqStPer {
                     =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)).to_multiset().filter(spec_pred),
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
-        /// Algorithm 23.3 (ACCEPTED DIFFERENCE: drop). Drop the first `n` elements.
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch23 Alg 23.3): Tree-based Work O(log² n), Span O(log² n).
+        /// Algorithm 23.3 (drop). Drop the first `n` elements.
+        /// - Alg Analysis: APAS (Ch23 Alg 23.3): Tree-based Work O(log² n), Span O(log² n).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| − n), Span O(|a| − n) — delegates to subseq.
-        fn drop(&self, n: usize) -> (ACCEPTED DIFFERENCE: dropped: Self)
+        fn drop(&self, n: usize) -> (dropped: Self)
             where T: Clone + Eq
             requires
                 self.spec_primtreeseqstper_wf(),
@@ -888,10 +888,10 @@ pub mod PrimTreeSeqStPer {
                 dropped.spec_len() == self.spec_len() - n,
                 forall|i: int| #![trigger dropped.spec_index(i)] 0 <= i < dropped.spec_len() ==> dropped.spec_index(i) == self.spec_index(n as int + i);
 
-        /// Algorithm 23.3 (ACCEPTED DIFFERENCE: flatten). Concatenate a sequence of sequences.
-        /// - Alg Analysis: APAS (ACCEPTED DIFFERENCE: Ch23 Alg 23.3): flatten = reduce append empty. Tree-based cost depends on reduce+append.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(Σ|a_i|) — ACCEPTED DIFFERENCE: nested sequential loops.
-        fn flatten(a: &PrimTreeSeqStS<PrimTreeSeqStS<T>>) -> (ACCEPTED DIFFERENCE: flattened: PrimTreeSeqStS<T>)
+        /// Algorithm 23.3 (flatten). Concatenate a sequence of sequences.
+        /// - Alg Analysis: APAS (Ch23 Alg 23.3): flatten = reduce append empty. Tree-based cost depends on reduce+append.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(Σ|a_i|) — nested sequential loops.
+        fn flatten(a: &PrimTreeSeqStS<PrimTreeSeqStS<T>>) -> (flattened: PrimTreeSeqStS<T>)
             where T: Clone + Eq
             requires
                 obeys_feq_clone::<T>(),
@@ -900,13 +900,13 @@ pub mod PrimTreeSeqStPer {
 
         /// Borrows the inner slice.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn as_slice(&self) -> (ACCEPTED DIFFERENCE: slice: &[T])
+        fn as_slice(&self) -> (slice: &[T])
             requires self.spec_primtreeseqstper_wf(),
             ensures slice@ =~= self@;
 
         /// Unwraps into the inner Vec.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn into_vec(self) -> (ACCEPTED DIFFERENCE: vec: Vec<T>)
+        fn into_vec(self) -> (vec: Vec<T>)
             requires self.spec_primtreeseqstper_wf(),
             ensures vec@ =~= self@;
     }
@@ -923,7 +923,7 @@ pub mod PrimTreeSeqStPer {
 
     impl<T: Clone> Clone for PrimTreeSeqStS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — clones inner Vec.
-        fn clone(&self) -> (ACCEPTED DIFFERENCE: cloned: Self)
+        fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
             let cloned = PrimTreeSeqStS { seq: self.seq.clone() };
@@ -935,12 +935,12 @@ pub mod PrimTreeSeqStPer {
 
     impl<T: PartialEq + View> PartialEq for PrimTreeSeqStS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — delegates to Vec::eq.
-        fn eq(&self, other: &Self) -> (ACCEPTED DIFFERENCE: equal: bool)
-            ensures equal == (ACCEPTED DIFFERENCE: self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             let equal = self.seq == other.seq;
             // Veracity: NEEDED proof block
-            proof { assume(equal == (ACCEPTED DIFFERENCE: self@ == other@)); }
+            proof { assume(equal == (self@ == other@)); }
             equal
         }
     }
@@ -958,7 +958,7 @@ pub mod PrimTreeSeqStPer {
 
     impl<T: Clone> Clone for PrimTreeSeqStTree<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — clones variant contents.
-        fn clone(&self) -> (ACCEPTED DIFFERENCE: cloned: Self)
+        fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
             let cloned = match self {
@@ -974,23 +974,23 @@ pub mod PrimTreeSeqStPer {
 
     impl<T: PartialEq + View> PartialEq for PrimTreeSeqStTree<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — compares variant contents.
-        fn eq(&self, other: &Self) -> (ACCEPTED DIFFERENCE: equal: bool)
-            ensures equal == (ACCEPTED DIFFERENCE: self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
-            match (ACCEPTED DIFFERENCE: self, other) {
-                (ACCEPTED DIFFERENCE: PrimTreeSeqStTree::Zero, PrimTreeSeqStTree::Zero) => {
+            match (self, other) {
+                (PrimTreeSeqStTree::Zero, PrimTreeSeqStTree::Zero) => {
                     true
                 },
-                (ACCEPTED DIFFERENCE: PrimTreeSeqStTree::One(a), PrimTreeSeqStTree::One(b)) => {
+                (PrimTreeSeqStTree::One(a), PrimTreeSeqStTree::One(b)) => {
                     let equal = *a == *b;
                     // Veracity: NEEDED proof block
-                    proof { assume(equal == (ACCEPTED DIFFERENCE: self@ == other@)); }
+                    proof { assume(equal == (self@ == other@)); }
                     equal
                 },
-                (ACCEPTED DIFFERENCE: PrimTreeSeqStTree::Two(l1, r1), PrimTreeSeqStTree::Two(l2, r2)) => {
+                (PrimTreeSeqStTree::Two(l1, r1), PrimTreeSeqStTree::Two(l2, r2)) => {
                     let equal = *l1 == *l2 && *r1 == *r2;
                     // Veracity: NEEDED proof block
-                    proof { assume(equal == (ACCEPTED DIFFERENCE: self@ == other@)); }
+                    proof { assume(equal == (self@ == other@)); }
                     equal
                 },
                 _ => {
@@ -1042,7 +1042,7 @@ pub mod PrimTreeSeqStPer {
     impl<T: Display> Display for PrimTreeSeqStS<T> {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
             write!(f, "[")?;
-            for (ACCEPTED DIFFERENCE: i, item) in self.seq.iter().enumerate() {
+            for (i, item) in self.seq.iter().enumerate() {
                 if i > 0 { write!(f, ", ")?; }
                 write!(f, "{}", item)?;
             }

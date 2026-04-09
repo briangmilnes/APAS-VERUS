@@ -113,7 +113,7 @@ pub mod GraphSearchMtPer {
 
     pub trait GraphSearchMtPerTrait<V: StTInMtT + Ord + TotalOrder + 'static> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — neighbor loop is sequential despite parallel set ops.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — neighbor loop is sequential despite parallel set ops.
         fn graph_search<G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>,
@@ -130,7 +130,7 @@ pub mod GraphSearchMtPer {
             ensures search.visited@.contains(source@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — neighbor loop is sequential despite parallel set ops.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — neighbor loop is sequential despite parallel set ops.
         fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetMtPer<V>, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>,
@@ -148,7 +148,7 @@ pub mod GraphSearchMtPer {
             ensures sources@.subset_of(search.visited@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential control flow; uses SelectAll (BFS).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential control flow; uses SelectAll (BFS).
         fn reachable<G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetMtPer<V>)
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>,
@@ -191,7 +191,7 @@ pub mod GraphSearchMtPer {
         }
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to graph_search_multi; sequential despite Mt module (no join).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to graph_search_multi; sequential despite Mt module (no join).
     pub fn graph_search<V: StTInMtT + Ord + TotalOrder + 'static, G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,
@@ -215,7 +215,7 @@ pub mod GraphSearchMtPer {
     }
 
     /// Graph exploration loop (Algorithm 53.4).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — ≤|V| rounds with AVL set ops; sequential despite Mt module (no join).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — ≤|V| rounds with AVL set ops; sequential despite Mt module (no join).
     #[verifier::exec_allows_no_decreases_clause]
     fn graph_search_explore<V: StTInMtT + Ord + TotalOrder + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
         graph: &G,
@@ -317,7 +317,7 @@ pub mod GraphSearchMtPer {
     }
 
     /// Generic graph search starting from multiple sources (Exercise 53.3).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to graph_search_explore; sequential despite Mt module.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to graph_search_explore; sequential despite Mt module.
     pub fn graph_search_multi<V: StTInMtT + Ord + TotalOrder + 'static, G, S>(
         graph: &G,
         sources: AVLTreeSetMtPer<V>,

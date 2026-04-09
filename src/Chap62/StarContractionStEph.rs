@@ -87,7 +87,7 @@ pub mod StarContractionStEph {
 
         /// Contract graph to just vertices (no edges).
         /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O((n + m) lg n), Span O((n + m) lg n) — recursive star contraction halving vertices; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — recursive star contraction halving vertices; St sequential.
         fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V>
             requires
                 Self::spec_starcontractionsteph_wf(graph),
@@ -98,7 +98,7 @@ pub mod StarContractionStEph {
 
 
     /// Inner recursive star contraction with fuel for termination.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O((n + m) lg n), Span O((n + m) lg n) — recursive: O(n + m) per level × O(lg n) levels; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — recursive: O(n + m) per level × O(lg n) levels; St sequential.
     fn star_contract_fuel<V, R, F, G>(
         graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,
         Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
@@ -225,7 +225,7 @@ pub mod StarContractionStEph {
     /// Uses ClonePreservesView for view-preserving vertex clones.
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m), Span O(m) — sequential loop over all edges.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — sequential loop over all edges.
     fn build_quotient_graph<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         centers: &SetStEph<V>,

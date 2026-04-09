@@ -80,7 +80,7 @@ pub mod BottomUpDPMtPer {
             requires self.spec_bottomupdpmtper_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — sequential row fill despite Mt name; no parallelism.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential row fill despite Mt name; no parallelism.
         fn med_bottom_up_parallel(&self) -> (distance: usize)
             requires
                 self.spec_bottomupdpmtper_wf(),
@@ -91,7 +91,7 @@ pub mod BottomUpDPMtPer {
                     self.spec_t_len()
                 );
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — allocates (n+1)*(m+1) table; sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — allocates (n+1)*(m+1) table; sequential.
         fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>)
             requires
                 self.spec_bottomupdpmtper_wf(),
@@ -189,7 +189,7 @@ pub mod BottomUpDPMtPer {
         }
 
         /// Compute MED using bottom-up row-by-row fill (Algorithm 51.1).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — sequential row fill despite Mt name; no parallelism.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential row fill despite Mt name; no parallelism.
         fn med_bottom_up_parallel(&self) -> (distance: usize) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -312,7 +312,7 @@ pub mod BottomUpDPMtPer {
             table[s_len][t_len]
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n*m), Span O(n*m) — allocates (n+1)*(m+1) table; sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — allocates (n+1)*(m+1) table; sequential.
         fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();

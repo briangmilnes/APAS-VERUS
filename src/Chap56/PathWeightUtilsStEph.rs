@@ -124,7 +124,7 @@ pub mod PathWeightUtilsStEph {
         }
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|path|), Span O(|path|) — sums edge weights along path; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|path|), Span O(|path|) — sums edge weights along path; St sequential.
     fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStEphS<ArraySeqStEphS<i64>>) -> (weight: Option<i64>) {
         let k = path.length();
         if k < 2 {
@@ -158,7 +158,7 @@ pub mod PathWeightUtilsStEph {
         Some(total)
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(|path|), Span O(|path|) — sums edge weights along path; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|path|), Span O(|path|) — sums edge weights along path; St sequential.
     fn path_weight_float(
         path: &ArraySeqStPerS<usize>,
         weights: &ArraySeqStEphS<ArraySeqStEphS<WrappedF64>>,

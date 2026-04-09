@@ -132,7 +132,7 @@ pub mod DivConReduceStPer {
 
 
     impl DivConReduceStTrait for ArraySeqStPerS<usize> {
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — single-pass max scan; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass max scan; St sequential.
         fn max_element(a: &ArraySeqStPerS<usize>) -> (max: Option<usize>) {
             let len = a.length();
             if len == 0 {
@@ -161,7 +161,7 @@ pub mod DivConReduceStPer {
             Some(best)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — delegates to reduce; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to reduce; St sequential.
         fn sum(a: &ArraySeqStPerS<usize>) -> (total: usize) {
             ArraySeqStPerS::reduce(a,
                 &(|x: &usize, y: &usize| -> (ret: usize)
@@ -170,7 +170,7 @@ pub mod DivConReduceStPer {
                 Ghost(spec_sum_fn()), 0)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — delegates to reduce; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to reduce; St sequential.
         fn product(a: &ArraySeqStPerS<usize>) -> (total: usize) {
             ArraySeqStPerS::reduce(a,
                 &(|x: &usize, y: &usize| -> (ret: usize)
@@ -179,7 +179,7 @@ pub mod DivConReduceStPer {
                 Ghost(spec_product_fn()), 1)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — delegates to reduce; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to reduce; St sequential.
         fn any(a: &ArraySeqStPerS<bool>) -> (found: bool) {
             ArraySeqStPerS::reduce(a,
                 &(|x: &bool, y: &bool| -> (ret: bool)
@@ -188,7 +188,7 @@ pub mod DivConReduceStPer {
                 Ghost(spec_or_fn()), false)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(n), Span O(n) — delegates to reduce; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to reduce; St sequential.
         fn all(a: &ArraySeqStPerS<bool>) -> (all_true: bool) {
             ArraySeqStPerS::reduce(a,
                 &(|x: &bool, y: &bool| -> (ret: bool)

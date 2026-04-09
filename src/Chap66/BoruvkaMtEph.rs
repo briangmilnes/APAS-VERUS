@@ -145,7 +145,7 @@ pub mod BoruvkaMtEph {
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m), Span O(m) — iterates over edges filtering by labels; sequential despite Mt module.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — iterates over edges filtering by labels; sequential despite Mt module.
         fn mst_weight<V: StTInMtT + Hash + Ord + Copy + 'static>(
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: &SetStEph<usize>,
@@ -1060,7 +1060,7 @@ pub mod BoruvkaMtEph {
 
     /// Compute MST weight from edge labels.
     ///
-    /// - Alg Analysis: Code review (Claude Opus 4.6): ACCEPTED DIFFERENCE: Work O(m), Span O(m) — sequential scan of edges.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — sequential scan of edges.
     pub fn mst_weight<V: StTInMtT + Hash + Ord + Copy + 'static>(
         edges: &SetStEph<LabeledEdge<V>>,
         mst_labels: &SetStEph<usize>,
