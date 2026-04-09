@@ -28,6 +28,7 @@ _verus_acquired=0
 
 if [ "$VERUS_LOCK_WEIGHT" -le 1 ]; then
     # Weight 1: grab any single slot on fd 9.
+    # Try all slots non-blocking first.
     for (( _slot=1; _slot<=VERUS_LOCK_SLOTS; _slot++ )); do
         exec 9>"$VERUS_LOCK_DIR/verus-slot-${_slot}.lock"
         if flock -n 9; then
@@ -36,14 +37,30 @@ if [ "$VERUS_LOCK_WEIGHT" -le 1 ]; then
             break
         fi
     done
+    # If all busy, retry with exponential backoff on random slots.
     if [ "$_verus_acquired" -eq 0 ]; then
-        echo "All ${VERUS_LOCK_SLOTS} verus slots busy. Waiting up to ${VERUS_LOCK_TIMEOUT}s..."
-        exec 9>"$VERUS_LOCK_DIR/verus-slot-1.lock"
-        if ! flock -w "$VERUS_LOCK_TIMEOUT" 9; then
+        _wait=5
+        _elapsed=0
+        echo "All ${VERUS_LOCK_SLOTS} verus slots busy. Retrying with backoff (max ${VERUS_LOCK_TIMEOUT}s)..."
+        while [ "$_elapsed" -lt "$VERUS_LOCK_TIMEOUT" ]; do
+            # Pick a random slot to avoid thundering herd on slot 1.
+            _slot=$(( (RANDOM % VERUS_LOCK_SLOTS) + 1 ))
+            exec 9>"$VERUS_LOCK_DIR/verus-slot-${_slot}.lock"
+            if flock -w "$_wait" 9; then
+                _verus_acquired=1
+                echo "Acquired verus lock slot ${_slot}/${VERUS_LOCK_SLOTS} (weight 1, after ${_elapsed}s)"
+                break
+            fi
+            _elapsed=$((_elapsed + _wait))
+            # Exponential backoff: 5, 10, 20, 40, capped at 60.
+            _wait=$((_wait * 2))
+            [ "$_wait" -gt 60 ] && _wait=60
+            echo "  Slot ${_slot} busy, waited ${_elapsed}s so far, next wait ${_wait}s..."
+        done
+        if [ "$_verus_acquired" -eq 0 ]; then
             echo "ERROR: Could not acquire verus lock after ${VERUS_LOCK_TIMEOUT}s. Aborting."
             exit 1
         fi
-        echo "Acquired verus lock slot 1/${VERUS_LOCK_SLOTS} (weight 1, after waiting)"
     fi
 else
     # Weight 2: grab two slots (fd 8 + fd 9). Try non-blocking pairs first.
