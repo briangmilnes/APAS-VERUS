@@ -132,7 +132,20 @@ pub mod KruskalStEph {
             uf_parent_dom.contains(edges_vec_i@.0),
             uf_parent_dom.contains(edges_vec_i@.1),
     {
+        // Chain: edges_vec_i in pre_sort → pre_sort[j]@ == edge_seq[j]@ → mapped_es → labeled → graph@.A → wf → UF.
         let j = choose|j: int| 0 <= j < pre_sort.len() && pre_sort[j] == edges_vec_i;
+        assert(pre_sort[j]@ == edge_seq[j]@);
+        let ev = edges_vec_i@;
+        // edge_seq[j]@ is in mapped_es (by map definition).
+        assert(mapped_es[j] == ev);
+        assert(mapped_es.contains(ev));
+        // mapped_es.contains(ev) <==> labeled_view.contains(ev)
+        assert(labeled_view.contains(ev));
+        // labeled_view =~= graph_A
+        assert(graph_A.contains(ev));
+        // spec_labgraphview_wf: endpoints in graph_V
+        assert(graph_V.contains(ev.0));
+        assert(graph_V.contains(ev.1));
     }
 
     /// Namespace struct for trait impl.
@@ -293,9 +306,16 @@ pub mod KruskalStEph {
             proof {
                 let new_i = i as int + 1;
                 // Prefix [0..new_i) sorted.
-                    }
+                assert forall |a: int, b: int| #![trigger edges@[a], edges@[b]]
+                    0 <= a <= b < new_i implies
+                    edges@[a].2 <= edges@[b].2
+                by {
                 };
                 // Prefix [0..new_i) ≤ suffix [new_i..n).
+                assert forall |a: int, b: int| #![trigger edges@[a], edges@[b]]
+                    0 <= a < new_i && new_i <= b < n as int implies
+                    edges@[a].2 <= edges@[b].2
+                by {
                     if a < i as int {
                         // Transitivity: a < i, so edges[a].2 <= edges[i].2 <= edges[b].2.
                     }
@@ -317,14 +337,13 @@ pub mod KruskalStEph {
     ) -> (mst_edges: SetStEph<LabEdge<V, u64>>)
         requires
             spec_labgraphview_wf(graph@),
+            valid_key_type_LabEdge::<V, u64>(),
             obeys_key_model::<V>(),
             obeys_feq_full::<V>(),
             obeys_feq_view_injective::<V>(),
         ensures
             mst_edges.spec_setsteph_wf(),
     {
-        // Trigger LabEdge broadcast axioms for SetStEph::empty precondition.
-
         let mut mst_edges: SetStEph<LabEdge<V, u64>> = SetStEph::empty();
         let mut uf = UnionFindStEph::new();
 
@@ -353,6 +372,7 @@ pub mod KruskalStEph {
         // Veracity: NEEDED proof block
         proof {
             let mapped_vs = vertex_seq@.map(|_i: int, t: V| t@);
+            assert forall |v: <V as View>::V| #[trigger] graph@.V.contains(v) implies
                 uf@.parent.contains_key(v)
             by {
                 // v in graph@.V = graph.vertices()@ <==> mapped_vs.contains(v).

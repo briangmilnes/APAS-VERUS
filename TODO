@@ -13,4 +13,22 @@
 
 4) ACCEPTED DIFFERENCE review
 
+5) accept for clone/eq issues.
+
+6) nassert for needed assert.
+
+7) The two external bodies for r186
+plans/r168-prompt-a-agent1-chap26-etsp-matching-loop.md
+plans/r168-prompt-b-agent2-chap65-prim.md
+
+8) [148/169] assert L135 in prefix_sums_dc_inner (src/Chap26/ScanDCMtPer.rs)... UNNEEDED (commented) [initial 24.9s -> now 52.1s (incremental +27.2s, 901 MB)]
+
+And timeout of the child process.
+
+How do we go back and put them in from the logs?
+
+~/projects/veracity/plans/minimize-proofs-time-guard.md
+
+
+
 

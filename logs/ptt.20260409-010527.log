@@ -1,0 +1,537 @@
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:328:13
+    |
+328 |             broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:330:21
+    |
+330 |             proof { reveal(spec_unionfindsteph_wf); reveal(spec_elements_forward); }
+    |                     ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:330:53
+    |
+330 |             proof { reveal(spec_unionfindsteph_wf); reveal(spec_elements_forward); }
+    |                                                     ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:638:9
+    |
+638 |         reveal(spec_unionfindsteph_wf);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:639:9
+    |
+639 |         reveal(spec_roots_idempotent);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:640:9
+    |
+640 |         reveal(spec_parent_closed);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:641:9
+    |
+641 |         reveal(spec_roots_in_dom);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:642:9
+    |
+642 |         reveal(spec_elements_forward);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:643:9
+    |
+643 |         reveal(spec_elements_backward);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:644:9
+    |
+644 |         reveal(spec_elements_distinct);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:645:9
+    |
+645 |         reveal(spec_self_parent_is_root);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:646:9
+    |
+646 |         reveal(spec_parent_preserves_root);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:647:9
+    |
+647 |         reveal(spec_rank_increases);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:648:9
+    |
+648 |         reveal(spec_rank_bounded);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:649:9
+    |
+649 |         reveal(spec_rank_has_predecessor);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:821:9
+    |
+821 |         reveal(spec_union_lemma_pre);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:822:9
+    |
+822 |         reveal(spec_parent_closed);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:823:9
+    |
+823 |         reveal(spec_self_parent_is_root);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:824:9
+    |
+824 |         reveal(spec_parent_preserves_root);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:885:9
+    |
+885 |         reveal(spec_union_lemma_pre);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:886:9
+    |
+886 |         reveal(spec_rank_increases);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:887:9
+    |
+887 |         reveal(spec_rank_bounded);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:888:9
+    |
+888 |         reveal(spec_roots_idempotent);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:981:9
+    |
+981 |         reveal(spec_unionfindsteph_wf);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:982:9
+    |
+982 |         reveal(spec_rank_has_predecessor);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:983:9
+    |
+983 |         reveal(spec_elements_backward);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:984:9
+    |
+984 |         reveal(spec_elements_distinct);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1077:9
+     |
+1077 |         reveal(spec_unionfindsteph_wf);
+     |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1258:9
+     |
+1258 |         reveal(spec_unionfindsteph_wf);
+     |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1596:9
+     |
+1596 |         broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1599:13
+     |
+1599 |             reveal(spec_unionfindsteph_wf);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1600:13
+     |
+1600 |             reveal(spec_parent_closed);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1601:13
+     |
+1601 |             reveal(spec_rank_increases);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1602:13
+     |
+1602 |             reveal(spec_rank_bounded);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1603:13
+     |
+1603 |             reveal(spec_parent_preserves_root);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1604:13
+     |
+1604 |             reveal(spec_self_parent_is_root);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1709:9
+     |
+1709 |         broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1795:9
+     |
+1795 |         broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:1467:17
+     |
+1467 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap42/TableStEph.rs:1469:29
+     |
+1469 |                     implies spec_entries_to_map(old_self_view).dom().contains(k)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap42/TableStEph.rs:1470:29
+     |
+1470 |                         && !other@.dom().contains(k)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:1480:17
+     |
+1480 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap42/TableStEph.rs:1481:21
+     |
+1481 |                     spec_entries_to_map(old_self_view).dom().contains(k)
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap42/TableStEph.rs:1482:25
+     |
+1482 |                     && !other@.dom().contains(k)
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap65/UnionFindStEph.rs:460:9
+    |
+460 | /         forall|v: <V as View>::V|
+461 | |             uf.rank@.contains_key(v) && uf.rank@[v] > 0usize ==>
+462 | |             exists|w: <V as View>::V|
+463 | |                 #[trigger] uf.rank@.contains_key(w)
+464 | |                 && uf.roots@[w] == uf.roots@[v]
+465 | |                 && uf.rank@[w] == (uf.rank@[v] - 1) as usize
+466 | |                 && w != v
+    | |_________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap65/UnionFindStEph.rs:461:13
+    |
+461 |             uf.rank@.contains_key(v) && uf.rank@[v] > 0usize ==>
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap65/UnionFindStEph.rs:460:9
+    |
+460 | /         forall|v: <V as View>::V|
+461 | |             uf.rank@.contains_key(v) && uf.rank@[v] > 0usize ==>
+462 | |             exists|w: <V as View>::V|
+463 | |                 #[trigger] uf.rank@.contains_key(w)
+464 | |                 && uf.roots@[w] == uf.roots@[v]
+465 | |                 && uf.rank@[w] == (uf.rank@[v] - 1) as usize
+466 | |                 && w != v
+    | |_________________________^
+
+verification results:: 5634 verified, 0 errors
+warning: 38 warnings emitted
+
+    Finished `release` profile [optimized] target(s) in 0.04s
+────────────
+ Nextest run ID 3711b5e9-58d0-4c73-9483-feb1744a2c9f with nextest profile: default
+    Starting 221 tests across 48 binaries
+        PASS [   1.462s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_for_iter
+        PASS [   1.473s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_loop_loop
+        PASS [   1.517s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_loop_loop
+        PASS [   1.564s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_for_iter
+        PASS [   1.728s] rust_verify_test::MappingStEph mapping_st_eph_loop_loop
+        PASS [   1.929s] rust_verify_test::MappingStEph mapping_st_eph_for_iter
+        PASS [   1.616s] rust_verify_test::ProveAVLTreeSeq avltreeseq_for_borrow_into
+        PASS [   1.528s] rust_verify_test::ProveAVLTreeSeq avltreeseq_loop_borrow_iter
+        PASS [   1.687s] rust_verify_test::ProveAVLTreeSeq avltreeseq_for_borrow_iter
+        PASS [   1.717s] rust_verify_test::ProveAVLTreeSeq avltreeseq_loop_borrow_into
+        PASS [   1.459s] rust_verify_test::ProveAVLTreeSeqMtPer avltreeseqmtper_for_borrow_iter
+        PASS [   1.760s] rust_verify_test::ProveAVLTreeSeqMtPer avltreeseqmtper_for_borrow_into
+        PASS [   1.570s] rust_verify_test::ProveAVLTreeSeqMtPer avltreeseqmtper_loop_borrow_iter
+        PASS [   1.669s] rust_verify_test::ProveAVLTreeSeqMtPer avltreeseqmtper_loop_borrow_into
+        PASS [   1.539s] rust_verify_test::ProveAVLTreeSeqStEph avltreeseqsteph_for_borrow_iter
+        PASS [   1.636s] rust_verify_test::ProveAVLTreeSeqStEph avltreeseqsteph_loop_borrow_into
+        PASS [   1.891s] rust_verify_test::ProveAVLTreeSeqStEph avltreeseqsteph_for_borrow_into
+        PASS [   1.564s] rust_verify_test::ProveAVLTreeSeqStEph avltreeseqsteph_loop_borrow_iter
+        PASS [   1.451s] rust_verify_test::ProveAVLTreeSeqStPer avltreeseqstper_for_borrow_into
+        PASS [   1.427s] rust_verify_test::ProveAVLTreeSeqStPer avltreeseqstper_loop_borrow_into
+        PASS [   1.490s] rust_verify_test::ProveAVLTreeSeqStPer avltreeseqstper_for_borrow_iter
+        PASS [   1.437s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_iter
+        PASS [   1.592s] rust_verify_test::ProveAVLTreeSeqStPer avltreeseqstper_loop_borrow_iter
+        PASS [   1.854s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_into
+        PASS [   1.417s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_loop_borrow_iter
+        PASS [   1.509s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_loop_borrow_into
+        PASS [   1.515s] rust_verify_test::ProveArraySeq arrayseq_filter
+        PASS [   1.364s] rust_verify_test::ProveArraySeq arrayseq_iterate
+        PASS [   1.602s] rust_verify_test::ProveArraySeq arrayseq_for_iter
+        PASS [   1.511s] rust_verify_test::ProveArraySeq arrayseq_iterate_prefixes
+        PASS [   1.363s] rust_verify_test::ProveArraySeq arrayseq_loop_loop
+        PASS [   1.375s] rust_verify_test::ProveArraySeq arrayseq_map
+        PASS [   1.820s] rust_verify_test::ProveArraySeq arrayseq_reduce
+        PASS [   1.654s] rust_verify_test::ProveArraySeq arrayseq_scan
+        PASS [   1.613s] rust_verify_test::ProveArraySeq arrayseq_scan_inclusive
+        PASS [   1.294s] rust_verify_test::ProveArraySeq arrayseq_tabulate
+        PASS [   1.501s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_for_borrow_into
+        PASS [   1.614s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_for_consume
+        PASS [   1.374s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_loop_borrow_into
+        PASS [   1.444s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_for_iter
+        PASS [   1.427s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_loop_loop
+        PASS [   1.583s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_loop_consume
+        PASS [   1.448s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_for_borrow_into
+        PASS [   1.426s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_for_consume
+        PASS [   1.490s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_for_iter
+        PASS [   1.547s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_loop_borrow_into
+        PASS [   1.447s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_loop_consume
+        PASS [   1.459s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_loop_loop
+        PASS [   1.576s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_into
+        PASS [   1.842s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_iter
+        PASS [   1.524s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_consume
+        PASS [   1.493s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_iter
+        PASS [   1.528s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_into
+        PASS [   1.409s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_consume
+        PASS [   1.552s] rust_verify_test::ProveArraySeqStPer arrayseqstper_for_iter
+        PASS [   1.472s] rust_verify_test::ProveArraySeqStPer arrayseqstper_loop_loop
+        PASS [   1.373s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_top_down_loop
+        PASS [   1.521s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_bottom_up_for
+        PASS [   1.516s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_bottom_up_loop
+        PASS [   1.546s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_top_down_for
+        PASS [   1.385s] rust_verify_test::ProveBFSStEph chap54_bfssteph_bottom_up_for
+        PASS [   1.419s] rust_verify_test::ProveBFSStEph chap54_bfssteph_bottom_up_loop
+        PASS [   1.347s] rust_verify_test::ProveBFSStEph chap54_bfssteph_top_down_loop
+        PASS [   1.483s] rust_verify_test::ProveBFSStEph chap54_bfssteph_top_down_for
+        PASS [   1.488s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_for_borrow_into
+        PASS [   1.594s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_for_borrow_iter
+        PASS [   1.458s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_for_consume
+        PASS [   1.546s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_loop_borrow_iter
+        PASS [   1.530s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_loop_consume
+        PASS [   1.588s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_for_borrow_into
+        PASS [   1.933s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_loop_borrow_into
+        PASS [   1.555s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_for_borrow_iter
+        PASS [   1.459s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_loop_borrow_into
+        PASS [   1.491s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_for_borrow_into
+        PASS [   1.435s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_loop_borrow_into
+        PASS [   1.493s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_for_borrow_iter
+        PASS [   1.807s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_loop_borrow_iter
+        PASS [   1.520s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_loop_borrow_iter
+        PASS [   1.598s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_for_borrow_into
+        PASS [   1.560s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_loop_borrow_into
+        PASS [   1.701s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_for_borrow_iter
+        PASS [   1.602s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_for_consume
+        PASS [   1.606s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_loop_consume
+        PASS [   1.717s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_loop_borrow_iter
+        PASS [   1.984s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_for_borrow_into
+        PASS [   2.233s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_for_consume
+        PASS [   2.313s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_loop_borrow_into
+        PASS [   2.145s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_loop_borrow_iter
+        PASS [   2.159s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_loop_consume
+        PASS [   2.703s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_for_borrow_iter
+        PASS [   2.726s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_inorder
+        PASS [   2.551s] rust_verify_test::ProveBalBinTreeStEph balbintree_inorder_spec_match
+        PASS [   2.582s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_iter_exhausted
+        PASS [   2.910s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_preorder
+        PASS [   2.997s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_postorder
+        PASS [   2.662s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_traversals_empty
+        PASS [   2.603s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_inorder
+        PASS [   2.640s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_postorder
+        PASS [   2.545s] rust_verify_test::ProveBalBinTreeStEph balbintree_preorder_spec_match
+        PASS [   2.553s] rust_verify_test::ProveBalBinTreeStEph balbintree_postorder_spec_match
+        PASS [   2.752s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_into
+        PASS [   3.223s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_preorder
+        PASS [   2.650s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_iter
+        PASS [   2.494s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_consume
+        PASS [   2.424s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_into
+        PASS [   2.758s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_iter
+        PASS [   2.627s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_consume
+        PASS [   2.882s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_into
+        PASS [   2.661s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_iter
+        PASS [   2.651s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_iter_over_subslice
+        PASS [   2.631s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_loop_borrow_iter
+        PASS [   2.650s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_operations
+        PASS [   2.721s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_into
+        PASS [   2.635s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_iter
+        PASS [   2.342s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_consume
+        PASS [   2.343s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_into
+        PASS [   2.199s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_iter
+        PASS [   2.041s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_consume
+        PASS [   2.037s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_into
+        PASS [   2.387s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_iter
+        PASS [   2.331s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_consume
+        PASS [   1.895s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_iter
+        PASS [   2.076s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_into
+        PASS [   2.138s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_consume
+        PASS [   1.907s] rust_verify_test::ProveKleeneStPer kleene_alphabet
+        PASS [   2.197s] rust_verify_test::ProveKleeneStPer kleene_mem_plus
+        PASS [   2.056s] rust_verify_test::ProveKleeneStPer kleene_mem_star
+        PASS [   1.747s] rust_verify_test::ProveLinkedListStEph linkedliststeph_loop_loop
+        PASS [   2.060s] rust_verify_test::ProveLinkedListStEph linkedliststeph_for_iter
+        PASS [   1.631s] rust_verify_test::ProveLinkedListStPer linkedliststper_loop_loop
+        PASS [   1.753s] rust_verify_test::ProveLinkedListStPer linkedliststper_for_iter
+        PASS [   1.538s] rust_verify_test::ProveMathSeq mathseq_for_borrow_into
+        PASS [   1.452s] rust_verify_test::ProveMathSeq mathseq_for_consume
+        PASS [   1.726s] rust_verify_test::ProveMathSeq mathseq_for_borrow_iter
+        PASS [   1.501s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_into
+        PASS [   1.525s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_iter
+        PASS [   1.488s] rust_verify_test::ProveMathSeq mathseq_loop_consume
+        PASS [   1.517s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_into
+        PASS [   1.528s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_into
+        PASS [   1.419s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_iter
+        PASS [   1.788s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_iter
+        PASS [   1.531s] rust_verify_test::ProveOrderedSetStPer chap43_orderedsetstper_for_borrow_iter
+        PASS [   1.572s] rust_verify_test::ProveOrderedSetStPer chap43_orderedsetstper_loop_borrow_iter
+        PASS [   1.483s] rust_verify_test::ProveOrderedTableMtEph chap43_orderedtablemteph_for_borrow_into
+        PASS [   1.559s] rust_verify_test::ProveOrderedTableMtEph chap43_orderedtablemteph_for_borrow_iter
+        PASS [   1.553s] rust_verify_test::ProveOrderedTableMtEph chap43_orderedtablemteph_loop_borrow_into
+        PASS [   1.550s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_into
+        PASS [   1.501s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_iter
+        PASS [   1.795s] rust_verify_test::ProveOrderedTableMtEph chap43_orderedtablemteph_loop_borrow_iter
+        PASS [   1.730s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_into
+        PASS [   1.553s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_iter
+        PASS [   1.713s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_into
+        PASS [   1.559s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_iter
+        PASS [   1.492s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_iter
+        PASS [   1.669s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_into
+        PASS [   1.608s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_into
+        PASS [   1.453s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_iter
+        PASS [   1.428s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_consume
+        PASS [   1.410s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_into
+        PASS [   1.406s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_consume
+        PASS [   1.925s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_iter
+        PASS [   1.730s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_into
+        PASS [   1.551s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_iter
+        PASS [   1.476s] rust_verify_test::ProveSetMtEph set_mt_eph_loop_borrow_into
+        PASS [   1.571s] rust_verify_test::ProveSetMtEph set_mt_eph_loop_borrow_iter
+        PASS [   1.564s] rust_verify_test::ProveSetStEph setsteph_for_borrow_into
+        PASS [   1.448s] rust_verify_test::ProveSetStEph setsteph_for_borrow_iter
+        PASS [   1.434s] rust_verify_test::ProveSetStEph setsteph_loop_borrow_into
+        PASS [   1.550s] rust_verify_test::ProveSetStEph setsteph_loop_borrow_iter
+        PASS [   1.496s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_into
+        PASS [   1.525s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_iter
+        PASS [   1.383s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_consume
+        PASS [   1.360s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_into
+        PASS [   1.341s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_iter
+        PASS [   1.470s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_consume
+        PASS [   1.436s] rust_verify_test::Provedeep_view_standard deep_view_standard_simple
+        PASS [   1.393s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_iter
+        PASS [   1.688s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_into
+        PASS [   1.413s] rust_verify_test::Proveiterators_standard iterators_standard_for_consume
+        PASS [   1.313s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_into
+        PASS [   1.370s] rust_verify_test::Proveiterators_standard iterators_standard_loop_consume
+        PASS [   1.612s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_iter
+        PASS [   1.657s] rust_verify_test::Provemod_standard mod_standard_for_borrow_into
+        PASS [   1.422s] rust_verify_test::Provemod_standard mod_standard_for_borrow_iter
+        PASS [   1.425s] rust_verify_test::Provemod_standard mod_standard_for_consume
+        PASS [   1.416s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_into
+        PASS [   1.448s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_iter
+        PASS [   1.415s] rust_verify_test::Provemod_standard mod_standard_loop_consume
+        PASS [   1.384s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_into
+        PASS [   1.586s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_iter
+        PASS [   1.490s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_consume
+        PASS [   1.378s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_into
+        PASS [   1.428s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_iter
+        PASS [   1.357s] rust_verify_test::Proveusing_closures_standard closures_ghost_spec_fn
+        PASS [   1.530s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_consume
+        PASS [   1.438s] rust_verify_test::Proveusing_closures_standard closures_inline_requires_ensures
+        PASS [   1.429s] rust_verify_test::Proveusing_closures_standard closures_let_bind_ensures
+        PASS [   1.335s] rust_verify_test::Proveusing_closures_standard closures_map_apply
+        PASS [   1.354s] rust_verify_test::Proveview_standard view_standard_collection
+        PASS [   1.336s] rust_verify_test::Proveview_standard view_standard_for_borrow_into
+        PASS [   1.485s] rust_verify_test::Proveview_standard view_standard_for_borrow_iter
+        PASS [   1.438s] rust_verify_test::Proveview_standard view_standard_loop_borrow_into
+        PASS [   1.333s] rust_verify_test::Proveview_standard view_standard_loop_borrow_iter
+        PASS [   1.674s] rust_verify_test::Proveview_standard view_standard_for_consume
+        PASS [   1.336s] rust_verify_test::Proveview_standard view_standard_loop_consume
+        PASS [   1.343s] rust_verify_test::Proveview_standard view_standard_simple
+        PASS [   1.494s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_into
+        PASS [   1.348s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_iter
+        PASS [   1.402s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_iter
+        PASS [   1.526s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_into
+        PASS [   1.646s] rust_verify_test::RelationStEph relation_st_eph_for_iter
+        PASS [   1.668s] rust_verify_test::RelationStEph relation_st_eph_loop_loop
+        PASS [   1.515s] rust_verify_test::SetMtEph set_mt_eph_for_iter
+        PASS [   1.498s] rust_verify_test::SetMtEph set_mt_eph_from_vec
+        PASS [   1.637s] rust_verify_test::SetStEph set_st_eph_for_iter
+        PASS [   1.708s] rust_verify_test::SetMtEph set_mt_eph_loop_loop
+        PASS [   1.750s] rust_verify_test::SetStEph set_st_eph_from_vec
+        PASS [   1.612s] rust_verify_test::prove_MathSeq_iters mathseq_iter_consuming
+        PASS [   1.794s] rust_verify_test::SetStEph set_st_eph_loop_loop
+        PASS [   1.851s] rust_verify_test::prove_MathSeq_iters mathseq_iter_nested
+        PASS [   1.907s] rust_verify_test::prove_MathSeq_iters mathseq_iter_range
+────────────
+     Summary [  64.254s] 221 tests run: 221 passed, 0 skipped
+Elapsed: 201s

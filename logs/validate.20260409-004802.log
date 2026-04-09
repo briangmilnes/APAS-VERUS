@@ -1,0 +1,406 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:635:9
+    |
+635 |         reveal(spec_unionfindsteph_wf);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:636:9
+    |
+636 |         reveal(spec_roots_idempotent);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:637:9
+    |
+637 |         reveal(spec_parent_closed);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:638:9
+    |
+638 |         reveal(spec_roots_in_dom);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:639:9
+    |
+639 |         reveal(spec_elements_forward);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:640:9
+    |
+640 |         reveal(spec_elements_backward);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:641:9
+    |
+641 |         reveal(spec_elements_distinct);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:642:9
+    |
+642 |         reveal(spec_self_parent_is_root);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:643:9
+    |
+643 |         reveal(spec_parent_preserves_root);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:644:9
+    |
+644 |         reveal(spec_rank_increases);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:645:9
+    |
+645 |         reveal(spec_rank_bounded);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:646:9
+    |
+646 |         reveal(spec_rank_has_predecessor);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:818:9
+    |
+818 |         reveal(spec_union_lemma_pre);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:819:9
+    |
+819 |         reveal(spec_parent_closed);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:820:9
+    |
+820 |         reveal(spec_self_parent_is_root);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:821:9
+    |
+821 |         reveal(spec_parent_preserves_root);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:882:9
+    |
+882 |         reveal(spec_union_lemma_pre);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:883:9
+    |
+883 |         reveal(spec_rank_increases);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:884:9
+    |
+884 |         reveal(spec_rank_bounded);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:885:9
+    |
+885 |         reveal(spec_roots_idempotent);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:978:9
+    |
+978 |         reveal(spec_unionfindsteph_wf);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:979:9
+    |
+979 |         reveal(spec_rank_has_predecessor);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:980:9
+    |
+980 |         reveal(spec_elements_backward);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:981:9
+    |
+981 |         reveal(spec_elements_distinct);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1074:9
+     |
+1074 |         reveal(spec_unionfindsteph_wf);
+     |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1255:9
+     |
+1255 |         reveal(spec_unionfindsteph_wf);
+     |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1593:9
+     |
+1593 |         broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1596:13
+     |
+1596 |             reveal(spec_unionfindsteph_wf);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1597:13
+     |
+1597 |             reveal(spec_parent_closed);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1598:13
+     |
+1598 |             reveal(spec_rank_increases);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1599:13
+     |
+1599 |             reveal(spec_rank_bounded);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1600:13
+     |
+1600 |             reveal(spec_parent_preserves_root);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1601:13
+     |
+1601 |             reveal(spec_self_parent_is_root);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1790:9
+     |
+1790 |         broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap65/PrimStEph.rs:344:28
+    |
+344 |                     assert(visited@.contains(u@));
+    |                            ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+visited.view().contains(u.view()) 
+    function is uninterpreted
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:280:9
+    |
+280 |         fn union(&mut self, u: &V, v: &V) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap65/UnionFindStEph.rs:340:28
+     |
+ 340 |                 let root = find_root_loop(self, &v);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1586 |             uf@.parent.contains_key(v@),
+     |             --------------------------- failed precondition
+
+note: diagnostics via expansion
+    --> src/Chap65/UnionFindStEph.rs:1586:13
+     |
+1586 |             uf@.parent.contains_key(v@),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_unionfindsteph_wf() ✔
+self.view().parent.dom().contains(v.view()) ✘
+    function is uninterpreted
+
+error: postcondition not satisfied
+    --> src/Chap65/UnionFindStEph.rs:1681:13
+     |
+1681 |             info@.winner_val@ == info@.winner_view,
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1752 |         Ghost(UnionMergeInfo { winner_view, loser_view, winner_val: winner_v })
+     |               ---------------------------------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap65/UnionFindStEph.rs:1682:13
+     |
+1682 |             uf.parent@.dom() =~= old(uf).parent@.dom(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1752 |         Ghost(UnionMergeInfo { winner_view, loser_view, winner_val: winner_v })
+     |               ---------------------------------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap65/UnionFindStEph.rs:1683:13
+     |
+1683 |             uf.parent@[info@.loser_view] == info@.winner_val,
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1752 |         Ghost(UnionMergeInfo { winner_view, loser_view, winner_val: winner_v })
+     |               ---------------------------------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap65/UnionFindStEph.rs:1684:13
+     |
+1684 | /             forall|k: <V as View>::V| old(uf).parent@.contains_key(k) && k != info@.loser_view ==>
+1685 | |                 #[trigger] uf.parent@[k] == old(uf).parent@[k],
+     | |______________________________________________________________^ failed this postcondition
+...
+1752 |           Ghost(UnionMergeInfo { winner_view, loser_view, winner_val: winner_v })
+     |                 ---------------------------------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap65/UnionFindStEph.rs:1686:13
+     |
+1686 |             uf.rank@.dom() =~= old(uf).rank@.dom(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1752 |         Ghost(UnionMergeInfo { winner_view, loser_view, winner_val: winner_v })
+     |               ---------------------------------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap65/UnionFindStEph.rs:1687:13
+     |
+1687 | /             forall|k: <V as View>::V| old(uf).rank@.contains_key(k) && k != info@.winner_view ==>
+1688 | |                 #[trigger] uf.rank@[k] == old(uf).rank@[k],
+     | |__________________________________________________________^ failed this postcondition
+...
+1752 |           Ghost(UnionMergeInfo { winner_view, loser_view, winner_val: winner_v })
+     |                 ---------------------------------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap65/UnionFindStEph.rs:1691:13
+     |
+1691 |             old(uf).rank@[info@.loser_view] < uf.rank@[info@.winner_view],
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1752 |         Ghost(UnionMergeInfo { winner_view, loser_view, winner_val: winner_v })
+     |               ---------------------------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap65/UnionFindStEph.rs:1681:13
+     |
+1681 |             info@.winner_val@ == info@.winner_view,
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1682 |             uf.parent@.dom() =~= old(uf).parent@.dom(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1683 |             uf.parent@[info@.loser_view] == info@.winner_val,
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1686 |             uf.rank@.dom() =~= old(uf).rank@.dom(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+!(info.winner_view == old(root_u).view() && info.loser_view == old(root_v).view()) ==>
+    info.winner_view == old(root_v).view() ✔
+    info.loser_view == old(root_u).view() ✔
+info.winner_val.view() == info.winner_view ✘
+uf.parent.view().dom() =~= old(uf).parent.view().dom() ✘
+uf.parent.view().index(info.loser_view) == info.winner_val ✘
+forall |k|
+    old(uf).parent.view().dom().contains(k) && !(k == info.loser_view) ==>
+        uf.parent.view().index(k) == old(uf).parent.view().index(k) ✔
+uf.rank.view().dom() =~= old(uf).rank.view().dom() ✘
+forall |k|
+    old(uf).rank.view().dom().contains(k) && !(k == info.winner_view) ==>
+        uf.rank.view().index(k) == old(uf).rank.view().index(k) 
+uf.rank.view().index(info.winner_view) >= old(uf).rank.view().index(info.winner_view) 
+uf.rank.view().index(info.winner_view) >= old(uf).rank.view().index(info.loser_view) 
+old(uf).rank.view().index(info.loser_view) < uf.rank.view().index(info.winner_view) 
+uf.elements.view() =~= old(uf).elements.view() 
+uf.roots.dom() =~= old(uf).roots.dom() 
+forall |k|
+    old(uf).roots.dom().contains(k) ==>
+        uf.roots.index(k) == if old(uf).roots.index(k) == old(root_u).view() || old(uf).roots.index(k) == old(root_v).view() { info.winner_view } else { old(uf).roots.index(k) } 
+
+note: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap65/UnionFindStEph.rs:1656:5
+     |
+1656 | /     fn union_merge_exec<V: StT + Hash>(
+1657 | |         uf: &mut UnionFindStEph<V>,
+1658 | |         root_u: V,
+1659 | |         root_v: V,
+1660 | |     ) -> (info: Ghost<UnionMergeInfo<V>>)
+     | |________________________________________^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap65/UnionFindStEph.rs:457:9
+    |
+457 | /         forall|v: <V as View>::V|
+458 | |             uf.rank@.contains_key(v) && uf.rank@[v] > 0usize ==>
+459 | |             exists|w: <V as View>::V|
+460 | |                 #[trigger] uf.rank@.contains_key(w)
+461 | |                 && uf.roots@[w] == uf.roots@[v]
+462 | |                 && uf.rank@[w] == (uf.rank@[v] - 1) as usize
+463 | |                 && w != v
+    | |_________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap65/UnionFindStEph.rs:458:13
+    |
+458 |             uf.rank@.contains_key(v) && uf.rank@[v] > 0usize ==>
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap65/UnionFindStEph.rs:457:9
+    |
+457 | /         forall|v: <V as View>::V|
+458 | |             uf.rank@.contains_key(v) && uf.rank@[v] > 0usize ==>
+459 | |             exists|w: <V as View>::V|
+460 | |                 #[trigger] uf.rank@.contains_key(w)
+461 | |                 && uf.roots@[w] == uf.roots@[v]
+462 | |                 && uf.rank@[w] == (uf.rank@[v] - 1) as usize
+463 | |                 && w != v
+    | |_________________________^
+
+verification results:: 2578 verified, 4 errors
+error: aborting due to 10 previous errors; 34 warnings emitted
+
+Elapsed: 145s
+Sampled Memory Usage: peak rust_verify RSS: 7453MB, peak z3 RSS: 4036MB, min free: 14472MB
+Sampled CPU Usage: rust_verify: 160s, z3 children: 194s

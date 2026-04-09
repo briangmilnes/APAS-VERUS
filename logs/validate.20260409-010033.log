@@ -1,0 +1,19 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+error[E0425]: cannot find function `strictly_cloned` in this scope
+   --> src/Chap65/PrimStEph.rs:347:28
+    |
+347 |                     assert(strictly_cloned(u, uc));
+    |                            ^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 29 +     use vstd::pervasive::strictly_cloned;
+    |
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 3746MB, peak z3 RSS: 350MB, min free: 21520MB
+Sampled CPU Usage: rust_verify: 52s, z3 children: 40s

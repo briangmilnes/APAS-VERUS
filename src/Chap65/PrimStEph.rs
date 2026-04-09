@@ -42,11 +42,26 @@ pub mod PrimStEph {
     use crate::vstdplus::feq::feq::obeys_feq_clone;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full;
+    #[cfg(verus_keep_ghost)]
+    use vstd::pervasive::strictly_cloned;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
 
     pub type T<V> = PQEntry<V>;
 
-    verus! 
+    verus!
 {
+
+    //		Section 3. broadcast use
+
+
+    broadcast use {
+        crate::vstdplus::feq::feq::group_feq_axioms,
+        crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
+        vstd::set::group_set_axioms,
+    };
 
     //		Section 4a. type definitions
 
@@ -257,6 +272,8 @@ pub mod PrimStEph {
         requires
             spec_labgraphview_wf(graph@),
             valid_key_type_LabEdge::<V, u64>(),
+            obeys_feq_full::<V>(),
+            obeys_feq_clone::<PQEntry<V>>(),
             graph@.A.len() * 4 + 4 <= usize::MAX as int,
         ensures
             mst.spec_setsteph_wf(),
@@ -281,6 +298,11 @@ pub mod PrimStEph {
 
         let mut mst_edges = SetLit![];
         let mut visited = HashSetWithViewPlus::<V>::new();
+        // Trigger broadcast axioms for feq on PQEntry<V> and V.
+        proof {
+            assert(obeys_feq_full_trigger::<PQEntry<V>>());
+            assert(obeys_feq_full_trigger::<V>());
+        }
         let mut pq = BinaryHeapPQ::<PQEntry<V>>::singleton(pq_entry_new(0u64, start.clone(), None));
         let ghost mut remaining_budget: int = 2 * m as int;
         let ghost mut used_pairs: Set<(V::V, V::V)> = Set::empty();
@@ -322,7 +344,13 @@ pub mod PrimStEph {
                     continue;
                 }
 
-                let _ = visited.insert(u.clone());
+                let uc = u.clone();
+                proof {
+                    assert(strictly_cloned(u, uc));
+                    assert(obeys_feq_clone::<V>());
+                    assert(uc@ == u@);
+                }
+                let _ = visited.insert(uc);
 
                 if let Some(parent_v) = parent_u {
                     if let Some(weight) = graph.get_edge_label(&parent_v, &u) {
@@ -398,9 +426,20 @@ pub mod PrimStEph {
                                 // Current element is at position it@.0 - 1 (after next() advanced).
                                 let ghost pos = (it@.0 - 1) as int;
                                 let new_pair: (V::V, V::V) = (u@, v@);
-                                // From inner invariant at top (pos = old it@.0):
-                                // all (u@, b) in used_pairs have j < pos. Combined with
-                                // no_duplicates, the current element at pos can't be in used_pairs.
+
+                                // Prove new_pair is NOT in used_pairs.
+                                // Inner invariant: any (u@, y) in used_pairs has y at some j < pos.
+                                // v@ = it@.1[pos]@. By view injectivity + no_duplicates, contradiction.
+                                assert(obeys_feq_full_trigger::<V>());
+                                lemma_reveal_view_injective::<V>();
+                                if used_pairs.contains(new_pair) {
+                                    let j = choose |j: int| 0 <= j < pos &&
+                                        #[trigger] it@.1[j]@ == v@;
+                                    // view injectivity: it@.1[j]@ == it@.1[pos]@ ==> it@.1[j] == it@.1[pos]
+                                    // no_duplicates: j != pos ==> it@.1[j] != it@.1[pos]
+                                    assert(false);
+                                }
+
                                 let new_used = used_pairs.insert(new_pair);
                                 vstd::set_lib::lemma_len_subset(new_used, DA);
                                 used_pairs = new_used;

@@ -1,0 +1,331 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+error: postcondition not satisfied
+   --> src/Chap65/KruskalStEph.rs:132:13
+    |
+111 |       proof fn lemma_sorted_edge_in_uf<V: HashOrd>(
+    |  ___________-
+112 | |         edges_vec_i: LabEdge<V, u64>,
+113 | |         pre_sort: Seq<LabEdge<V, u64>>,
+114 | |         edge_seq: Seq<LabEdge<V, u64>>,
+...   |
+119 | |         uf_parent_dom: Set<<V as View>::V>,
+120 | |     )
+    | |_____- at the end of the function body
+...
+132 |               uf_parent_dom.contains(edges_vec_i@.0),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+error: postcondition not satisfied
+   --> src/Chap65/KruskalStEph.rs:133:13
+    |
+111 |       proof fn lemma_sorted_edge_in_uf<V: HashOrd>(
+    |  ___________-
+112 | |         edges_vec_i: LabEdge<V, u64>,
+113 | |         pre_sort: Seq<LabEdge<V, u64>>,
+114 | |         edge_seq: Seq<LabEdge<V, u64>>,
+...   |
+119 | |         uf_parent_dom: Set<<V as View>::V>,
+120 | |     )
+    | |_____- at the end of the function body
+...
+133 |               uf_parent_dom.contains(edges_vec_i@.1),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+   --> src/Chap65/KruskalStEph.rs:132:13
+    |
+132 |             uf_parent_dom.contains(edges_vec_i@.0),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+133 |             uf_parent_dom.contains(edges_vec_i@.1),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(uf_parent_dom).contains(old(edges_vec_i).view().0) ✘
+    function is uninterpreted
+old(uf_parent_dom).contains(old(edges_vec_i).view().1) ✘
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap65/KruskalStEph.rs:335:56
+    |
+335 |         let mut mst_edges: SetStEph<LabEdge<V, u64>> = SetStEph::empty();
+    |                                                        ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:157:22
+    |
+157 |             requires Self::spec_valid_key_type()
+    |                      --------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+spec_valid_key_type() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+   --> src/Chap65/PrimStEph.rs:284:22
+    |
+284 |         let mut pq = BinaryHeapPQ::<PQEntry<V>>::singleton(pq_entry_new(0u64, start.clone(), None));
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap45/BinaryHeapPQ.rs:232:26
+    |
+232 |                 requires obeys_feq_clone::<T>(),
+    |                          ---------------------- failed precondition
+
+error: invariant not satisfied before loop
+   --> src/Chap65/PrimStEph.rs:293:17
+    |
+293 |                 obeys_feq_clone::<PQEntry<V>>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap65/PrimStEph.rs:374:25
+    |
+374 |                         remaining_budget >= 0,
+    |                         ^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap65/PrimStEph.rs:379:25
+    |
+379 |                         used_pairs.len() as int == 2 * m as int - remaining_budget,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/PrimStEph.rs:383:25
+    |
+383 |                         visited@.contains(u@),
+    |                         ^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+  --> src/vstdplus/feq.rs:60:61
+   |
+60 |         &&& forall|x: T, y: T|  #[trigger] cloned(x, y) ==> x.eq_spec(&y)
+   |                                                             ^^^^^^^^^^^^^
+61 |         &&& forall|x: &T, y: T| #[trigger] cloned(*x, y) ==> x.eq_spec(&y)
+62 |         &&& forall|x: T, y: T|  #[trigger] strictly_cloned(x, y) ==> x.eq_spec(&y)
+   |                                                                      ^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:665:13
+    |
+665 |             exists|i: int| 0 <= i < uf.elements@.len() as int && #[trigger] uf.elements@[i]@ == w
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: postcondition not satisfied
+   --> src/Chap65/UnionFindStEph.rs:629:13
+    |
+616 |       proof fn lemma_insert_preserves_wf<V: StT + Hash>(
+    |  ___________-
+617 | |         uf: UnionFindStEph<V>,
+618 | |         old_uf: UnionFindStEph<V>,
+619 | |         v: V,
+620 | |     )
+    | |_____- at the end of the function body
+...
+629 |               uf.spec_unionfindsteph_wf(),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+(exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = uf.elements.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && uf.elements.view().index(i).view() == w) 
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap65/UnionFindStEph.rs:1601:9
+     |
+1601 |         while !feq(&p, &current)
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap65/UnionFindStEph.rs:1604:17
+     |
+1604 |                 uf@.parent.contains_key(current@),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap65/UnionFindStEph.rs:1605:17
+     |
+1605 |                 uf@.roots.contains_key(current@),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap65/UnionFindStEph.rs:1607:17
+     |
+1607 |                 uf@.rank.contains_key(current@),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap65/UnionFindStEph.rs:1608:17
+     |
+1608 |                 uf@.roots[current@] == uf@.roots[v@],
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap65/UnionFindStEph.rs:1609:17
+     |
+1609 |                 p@ == uf@.parent[current@]@,
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap65/UnionFindStEph.rs:1610:17
+     |
+1610 |                 uf@.parent.contains_key(p@),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap65/UnionFindStEph.rs:1595:21
+     |
+1595 |         let mut p = uf.parent.get(&current).unwrap().clone();
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/std_specs/option.rs:161:8
+     |
+     = note: failed precondition
+
+note: 
+
+tmp% is Some 
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:959:11
+    |
+959 |       proof fn lemma_rank_lt_elements<V: StT + Hash>(
+    |  ___________^
+960 | |         uf: &UnionFindStEph<V>,
+961 | |         v_view: <V as View>::V,
+962 | |     )
+    | |_____^
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:824:13
+    |
+824 |             uf.parent@[k]@ == mp[k]@
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+uf.parent.view().index(k).view() == mp.index(k).view() 
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:887:13
+    |
+887 |             uf.parent@[k]@ == mp[k]@
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+uf.parent.view().index(k).view() == mp.index(k).view() 
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap65/UnionFindStEph.rs:1044:11
+     |
+1044 |     proof fn lemma_assemble_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap65/UnionFindStEph.rs:1196:11
+     |
+1196 |       proof fn lemma_union_merge_wf<V: StT + Hash>(
+     |  ___________^
+1197 | |         uf: &UnionFindStEph<V>,
+1198 | |         mid: &UnionFindStEph<V>,
+1199 | |         winner_val: V,
+...    |
+1203 | |         loser_view: <V as View>::V,
+1204 | |     )
+     | |_____^
+
+error: precondition not satisfied
+    --> src/Chap65/UnionFindStEph.rs:1836:13
+     |
+1216 |               winner_val@ == winner_view,
+     |               -------------------------- failed precondition
+...
+1836 | /             lemma_union_merge_wf(
+1837 | |                 &(*uf), &mid_uf, info@.winner_val,
+1838 | |                 root_u@, root_v@,
+1839 | |                 info@.winner_view, info@.loser_view,
+1840 | |             );
+     | |_____________^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap65/UnionFindStEph.rs:1747:5
+     |
+1747 | /     fn union_merge<V: StT + Hash>(
+1748 | |         uf: &mut UnionFindStEph<V>,
+1749 | |         root_u: V,
+1750 | |         root_v: V,
+1751 | |     ) -> (info: Ghost<UnionMergeInfo<V>>)
+     | |________________________________________^
+
+note: diagnostics via expansion
+    --> src/Chap65/UnionFindStEph.rs:1216:13
+     |
+1216 |             winner_val@ == winner_view,
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+1217 |             // Pointwise parent facts (avoids Map =~= in caller's Z3 context).
+1218 |             uf.parent@.dom() =~= mid.parent@.dom(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1219 |             uf.parent@[loser_view] == winner_val,
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1222 |             uf.rank@.dom() =~= mid.rank@.dom(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+mid_uf.spec_unionfindsteph_wf() ✔
+!(tmp% == tmp%) ✔
+mid_uf.roots.dom().contains(tmp%) ✔
+mid_uf.roots.dom().contains(tmp%) ✔
+mid_uf.roots.index(tmp%) == tmp% ✔
+mid_uf.roots.index(tmp%) == tmp% ✔
+mid_uf.parent.view().index(tmp%).view() == tmp% ✔
+mid_uf.parent.view().index(tmp%).view() == tmp% ✔
+!(tmp% == tmp% && tmp% == tmp%) ==>
+    tmp% == tmp% ✔
+    tmp% == tmp% ✔
+tmp%.view() == tmp% ✘
+uf.parent.view().dom() =~= mid_uf.parent.view().dom() ✘
+uf.parent.view().index(tmp%) == tmp% ✘
+forall |k|
+    mid_uf.parent.view().dom().contains(k) && !(k == tmp%) ==>
+        uf.parent.view().index(k) == mid_uf.parent.view().index(k) ✔
+uf.rank.view().dom() =~= mid_uf.rank.view().dom() ✘
+forall |k|
+    mid_uf.rank.view().dom().contains(k) && !(k == tmp%) ==>
+        uf.rank.view().index(k) == mid_uf.rank.view().index(k) 
+uf.rank.view().index(tmp%) >= mid_uf.rank.view().index(tmp%) 
+uf.rank.view().index(tmp%) >= mid_uf.rank.view().index(tmp%) 
+mid_uf.rank.view().index(tmp%) < uf.rank.view().index(tmp%) 
+uf.elements.view() == mid_uf.elements.view() 
+uf.roots.dom() =~= mid_uf.roots.dom() 
+forall |k|
+    mid_uf.roots.dom().contains(k) ==>
+        uf.roots.index(k) == if mid_uf.roots.index(k) == tmp% || mid_uf.roots.index(k) == tmp% { tmp% } else { mid_uf.roots.index(k) } 
+
+Elapsed: 300s
+Sampled Memory Usage: peak rust_verify RSS: 7462MB, peak z3 RSS: 9217MB, min free: 9281MB
+Sampled CPU Usage: rust_verify: 165s, z3 children: 197s

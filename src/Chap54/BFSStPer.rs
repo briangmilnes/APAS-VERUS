@@ -139,6 +139,7 @@ pub mod BFSStPer {
         ensures
             spec_parents_bounded(parents, n),
     {
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < parents@.len() implies #[trigger] parents@[i] == parents.spec_index(i) by {};
         lemma_bfs_all_no_parent(parents@, n);
     }
@@ -162,7 +163,9 @@ pub mod BFSStPer {
         ensures
             spec_parents_bounded(parents, n),
     {
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < parents@.len() implies #[trigger] parents@[i] == parents.spec_index(i) by {};
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < old_parents@.len() implies #[trigger] old_parents@[i] == old_parents.spec_index(i) by {};
         lemma_bfs_update_preserves_parents_bounded(parents@, old_parents@, v, new_val, n);
     }
@@ -175,6 +178,7 @@ pub mod BFSStPer {
         ensures
             spec_distances_bounded(distances, n),
     {
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < distances@.len() implies #[trigger] distances@[i] == distances.spec_index(i) by {};
         lemma_bfs_all_unreachable(distances@, n);
     }
@@ -198,7 +202,9 @@ pub mod BFSStPer {
         ensures
             spec_distances_bounded(distances, n),
     {
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < distances@.len() implies #[trigger] distances@[i] == distances.spec_index(i) by {};
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < old_distances@.len() implies #[trigger] old_distances@[i] == old_distances.spec_index(i) by {};
         lemma_bfs_update_preserves_bounded(distances@, old_distances@, v, new_val, n);
     }
@@ -269,12 +275,10 @@ pub mod BFSStPer {
             n,
         );
 
-        proof { lemma_tabulate_all_unreachable(&distances, n as int); }
 
         let old_d = distances;
         distances = ArraySeqStPerS::update(&old_d, source, 0);
 
-        proof { lemma_update_preserves_bounded(&distances, &old_d, source as int, 0, n as int); }
 
         let mut queue: VecDeque<usize> = VecDeque::new();
         queue.push_back(source);
@@ -338,19 +342,21 @@ pub mod BFSStPer {
                                 distances = ArraySeqStPerS::update(&old_d_inner, v, dist + 1);
                                 queue.push_back(v);
 
+                                // Veracity: NEEDED proof block
                                 proof {
                                     lemma_update_preserves_bounded(
                                         &distances, &old_d_inner,
                                         v as int, (dist + 1) as usize, n as int,
                                     );
+                                    // Veracity: NEEDED assert
                                     assert forall|w: int| 0 <= w < distances.spec_len()
                                         && distances.spec_index(w) != UNREACHABLE
                                         && w != source as int
                                     implies distances.spec_index(w) > 0usize
                                     by {
                                         if w == v as int {
-                                            assert(distances.spec_index(w) == dist + 1);
                                         } else {
+                                            // Veracity: NEEDED assert
                                             assert(distances.spec_index(w)
                                                 == old_d_inner.spec_index(w));
                                         }
@@ -380,12 +386,10 @@ pub mod BFSStPer {
             &|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT },
             n,
         );
-
         proof { lemma_tabulate_all_no_parent(&parents, n as int); }
 
         let old_p = parents;
         parents = ArraySeqStPerS::update(&old_p, source, source);
-
         proof { lemma_update_preserves_parents_bounded(&parents, &old_p, source as int, source, n as int); }
 
         let mut queue: VecDeque<usize> = VecDeque::new();
@@ -454,19 +458,13 @@ pub mod BFSStPer {
                             parents = ArraySeqStPerS::update(&old_p_inner, v, u);
                             queue.push_back(v);
                             order.push(v);
+// Veracity: NEEDED proof block
 
                             proof {
                                 lemma_update_preserves_parents_bounded(
                                     &parents, &old_p_inner,
                                     v as int, u, n as int,
                                 );
-                                assert(parents.spec_index(source as int) == source) by {
-                                    if v as int == source as int {
-                                        assert(old_p_inner.spec_index(source as int) == source);
-                                        assert(source < n);
-                                        assert(n < usize::MAX);
-                                    }
-                                };
                             }
                         }
                         i = i + 1;

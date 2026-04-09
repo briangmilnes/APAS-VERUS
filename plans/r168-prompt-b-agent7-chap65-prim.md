@@ -28,6 +28,7 @@ the original author couldn't fix.
    - Loop invariants about `spec_labgraphview_wf`, `valid_key_type_LabEdge`
    - Ghost state: `remaining_budget`, `used_pairs`, `DA` directed adjacency
    - Proof blocks for finiteness and map bounds
+4. **Prove big or go home. We need this done.**
 
 ## Attitude
 

@@ -1,0 +1,283 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:639:9
+    |
+639 |         reveal(spec_unionfindsteph_wf);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:640:9
+    |
+640 |         reveal(spec_roots_idempotent);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:641:9
+    |
+641 |         reveal(spec_parent_closed);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:642:9
+    |
+642 |         reveal(spec_roots_in_dom);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:643:9
+    |
+643 |         reveal(spec_elements_forward);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:644:9
+    |
+644 |         reveal(spec_elements_backward);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:645:9
+    |
+645 |         reveal(spec_elements_distinct);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:646:9
+    |
+646 |         reveal(spec_self_parent_is_root);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:647:9
+    |
+647 |         reveal(spec_parent_preserves_root);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:648:9
+    |
+648 |         reveal(spec_rank_increases);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:649:9
+    |
+649 |         reveal(spec_rank_bounded);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:650:9
+    |
+650 |         reveal(spec_rank_has_predecessor);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:822:9
+    |
+822 |         reveal(spec_union_lemma_pre);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:823:9
+    |
+823 |         reveal(spec_parent_closed);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:824:9
+    |
+824 |         reveal(spec_self_parent_is_root);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:825:9
+    |
+825 |         reveal(spec_parent_preserves_root);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:886:9
+    |
+886 |         reveal(spec_union_lemma_pre);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:887:9
+    |
+887 |         reveal(spec_rank_increases);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:888:9
+    |
+888 |         reveal(spec_rank_bounded);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:889:9
+    |
+889 |         reveal(spec_roots_idempotent);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:982:9
+    |
+982 |         reveal(spec_unionfindsteph_wf);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:983:9
+    |
+983 |         reveal(spec_rank_has_predecessor);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:984:9
+    |
+984 |         reveal(spec_elements_backward);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap65/UnionFindStEph.rs:985:9
+    |
+985 |         reveal(spec_elements_distinct);
+    |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1078:9
+     |
+1078 |         reveal(spec_unionfindsteph_wf);
+     |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1259:9
+     |
+1259 |         reveal(spec_unionfindsteph_wf);
+     |         ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1597:9
+     |
+1597 |         broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1600:13
+     |
+1600 |             reveal(spec_unionfindsteph_wf);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1601:13
+     |
+1601 |             reveal(spec_parent_closed);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1602:13
+     |
+1602 |             reveal(spec_rank_increases);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1603:13
+     |
+1603 |             reveal(spec_rank_bounded);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1604:13
+     |
+1604 |             reveal(spec_parent_preserves_root);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1605:13
+     |
+1605 |             reveal(spec_self_parent_is_root);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1710:9
+     |
+1710 |         broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1796:9
+     |
+1796 |         broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap65/PrimStEph.rs:345:28
+    |
+345 |                     assert(u_clone@ == u@);
+    |                            ^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+u_clone.view() == u.view() 
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:342:28
+    |
+342 |                     assert(self@.parent.contains_key(v@));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+self.view().parent.dom().contains(v.view()) 
+    function is uninterpreted
+
+note: automatically chose triggers for this expression:
+   --> src/Chap65/UnionFindStEph.rs:461:9
+    |
+461 | /         forall|v: <V as View>::V|
+462 | |             uf.rank@.contains_key(v) && uf.rank@[v] > 0usize ==>
+463 | |             exists|w: <V as View>::V|
+464 | |                 #[trigger] uf.rank@.contains_key(w)
+465 | |                 && uf.roots@[w] == uf.roots@[v]
+466 | |                 && uf.rank@[w] == (uf.rank@[v] - 1) as usize
+467 | |                 && w != v
+    | |_________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap65/UnionFindStEph.rs:462:13
+    |
+462 |             uf.rank@.contains_key(v) && uf.rank@[v] > 0usize ==>
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap65/UnionFindStEph.rs:461:9
+    |
+461 | /         forall|v: <V as View>::V|
+462 | |             uf.rank@.contains_key(v) && uf.rank@[v] > 0usize ==>
+463 | |             exists|w: <V as View>::V|
+464 | |                 #[trigger] uf.rank@.contains_key(w)
+465 | |                 && uf.roots@[w] == uf.roots@[v]
+466 | |                 && uf.rank@[w] == (uf.rank@[v] - 1) as usize
+467 | |                 && w != v
+    | |_________________________^
+
+verification results:: 2578 verified, 2 errors
+error: aborting due to 2 previous errors; 35 warnings emitted
+
+Elapsed: 58s
+Sampled Memory Usage: peak rust_verify RSS: 5825MB, peak z3 RSS: 1514MB, min free: 18771MB
+Sampled CPU Usage: rust_verify: 126s, z3 children: 126s
