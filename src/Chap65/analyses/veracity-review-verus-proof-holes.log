@@ -23,16 +23,15 @@ Table of Contents:
 ✓ KruskalStEph.rs
    1 clean proof function
 ⚠ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:493: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       489 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS-agent7/src/Chap65/PrimStEph.rs:466: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       461 |         fn clone(&self) -> (cloned: Self)
             ...
-       491 |         {
-       492 |             let cloned = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
-       494 |             cloned
-       495 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:251: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
+       464 |             let cloned = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
+       465 |             // Veracity: NEEDED proof block
+       467 |             cloned
+       468 |         }
 ✓ UnionFindStEph.rs
-   24 clean proof functions
+   2 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -64,16 +63,16 @@ Modules:
    3 total
 
 Proof Functions:
-   29 clean (100%)
+   7 clean (100%)
    0 holed (0%)
-   29 total
+   7 total
 
 Function Specs:
-   32 exec fns with complete spec (requires+ensures) (34%)
-   2 exec fns missing spec (2%)
-   59 proof/spec fns clean (63%)
+   7 exec fns with complete spec (requires+ensures) (41%)
+   1 exec fns missing spec (5%)
+   9 proof/spec fns clean (52%)
    0 proof/spec fns with holes (0%)
-   93 total fns
+   17 total fns
 
 
 Holes Found: 0 (actionable)
@@ -82,24 +81,14 @@ Real Proof Targets: 0 (all actionable)
 Warnings: 1 total
    1 × assume_eq_clone_workaround
 
-Structural (info only): 1
-   1 × OPAQUE_EXTERNAL
-
 No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 15:36:04 -07:00
-Ended:     2026-04-06 15:36:04 -07:00
-Duration:  80ms
-
-Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-===========
-
-Started:   2026-04-06 15:36:04 -07:00
-Ended:     2026-04-06 15:36:04 -07:00
-Duration:  80ms
+Started:   2026-04-08 21:56:37 -07:00
+Ended:     2026-04-08 21:56:37 -07:00
+Duration:  22ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

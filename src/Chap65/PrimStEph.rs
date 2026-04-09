@@ -250,7 +250,6 @@ pub mod PrimStEph {
     ///   work across all vertices is O(nm) = O(m^2) in a dense graph. With an adjacency-list
     ///   graph representation this would be O(m lg n) as textbook states.
     #[verifier::exec_allows_no_decreases_clause]
-    #[verifier::external_body]
     pub fn prim_mst<V: HashOrd + Display + TotalOrder>(
         graph: &LabUnDirGraphStEph<V, u64>,
         start: &V,
@@ -338,36 +337,26 @@ pub mod PrimStEph {
 
                 let neighbors = graph.ng(&u);
 
-                // Prove neighbors.spec_setsteph_wf() so we can call iter().
-                // Veracity: NEEDED proof block
-                proof {
-                    // Veracity: NEEDED assert
-                    assert(neighbors.spec_setsteph_wf()) by {
-                            implies graph@.V.contains(w)
-                        by {
-                            let l = choose |l: u64|
-                                graph@.A.contains((u@, w, l)) || graph@.A.contains((w, u@, l));
-                            if graph@.A.contains((u@, w, l)) {
-                            } else {
-                            }
-                        };
-                        vstd::set_lib::lemma_set_subset_finite(graph@.V, neighbors@);
-                    };
-                }
+                // neighbors.spec_setsteph_wf() already ensured by ng() postcondition.
 
                 let mut it = neighbors.iter();
 
                 // Every element in ng(u) is a directed adjacency pair (u@, v@) in DA.
                 // Veracity: NEEDED proof block
                 proof {
+                    assert forall |j: int| 0 <= j < it@.1.len()
                         implies DA.contains((u@, (#[trigger] it@.1[j])@))
                     by {
                         let w: V::V = it@.1[j]@;
+                        // w is in neighbors@ == spec_ng(u@), so there exists l with edge in A.
                         let l = choose |l: u64|
-                            #![trigger graph@.A.contains((u@, w, l))]
                             graph@.A.contains((u@, w, l)) || graph@.A.contains((w, u@, l));
                         if graph@.A.contains((u@, w, l)) {
+                            // (u@, w) is in DA_fwd = A.map(|e| (e.0, e.1)).
+                            assert(DA_fwd.contains((u@, w)));
                         } else {
+                            // A.contains((w, u@, l)), so (u@, w) is in DA_rev = A.map(|e| (e.1, e.0)).
+                            assert(DA_rev.contains((u@, w)));
                         }
                     };
                 }
