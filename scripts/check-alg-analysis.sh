@@ -56,8 +56,11 @@ for dir in $DIRS; do
         /Alg Analysis: APAS/ {
             apas_line = NR
             apas_text = $0
-            # Strip leading comment/whitespace
-            sub(/^[[:space:]]*\/\/\/? *- *Alg Analysis: APAS[^:]*: */, "", apas_text)
+            # Strip leading comment/whitespace and "Alg Analysis: APAS (ChNN ...): "
+            # The APAS ref can contain colons, so strip everything up to "): " then
+            # the remaining prefix.
+            sub(/^[[:space:]]*\/\/\/? *- *Alg Analysis: APAS */, "", apas_text)
+            sub(/^\([^)]*\): */, "", apas_text)
             next
         }
         /Alg Analysis: Code review/ {
