@@ -1,0 +1,24 @@
+I'm using % for section slides, 
++ for slide titles and indented,
+** for slide lines, 
+-- for revealing the slide lines one at a time
+*** for a second indented slide line and a 
+And for code formatting: ``code`` 
+
+
+% APAS-VERUS: AI Paired Proof Engineering Techniques and Experience
+% Outline of the talk
+% Poll: Get a feel for my audience
+% Background
+% Algorithms Parallel and Sequential
+% APAS-AI
+% APAS-VERUS
+% Rust
+% Rusticate - sending Python back to the family estate
+% Verus
+% Veracity - driving proof.
+% Software Engineering in AI Paired Proving
+% The Internet Apocalypse
+% Review of the Talk
+% Questions
+% An Encylopedia of Cautionary Tales

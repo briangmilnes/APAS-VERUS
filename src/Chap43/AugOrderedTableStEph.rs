@@ -611,7 +611,7 @@ broadcast use {
                 reducer,
                 identity,
             };
-            proof { lemma_aug_view(&r); }
+// Veracity: UNNEEDED proof block             proof { lemma_aug_view(&r); }
             r
         }
 
@@ -627,6 +627,7 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); lemma_aug_view(&r); }
             r
         }
@@ -643,6 +644,7 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(&r); }
             r
         }
@@ -651,6 +653,7 @@ broadcast use {
         fn reduce<R, G: Fn(R, &K, &V) -> R>(&self, init: R, f: G) -> (reduced: R)
             ensures self@.dom().finite()
         {
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.reduce(init, f)
         }
@@ -660,6 +663,7 @@ broadcast use {
         {
             self.base_table.intersection(&other.base_table, f);
             self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
 
@@ -668,6 +672,7 @@ broadcast use {
         {
             self.base_table.union(&other.base_table, f);
             self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
 
@@ -676,6 +681,7 @@ broadcast use {
         {
             self.base_table.difference(&other.base_table);
             self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
 
@@ -684,6 +690,7 @@ broadcast use {
         {
             self.base_table.restrict(keys);
             self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
 
@@ -692,6 +699,7 @@ broadcast use {
         {
             self.base_table.subtract(keys);
             self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
 
@@ -699,6 +707,7 @@ broadcast use {
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len()
         {
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.collect()
         }
@@ -712,6 +721,7 @@ broadcast use {
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t),
         {
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.first_key()
         }
@@ -725,6 +735,7 @@ broadcast use {
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v),
         {
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.last_key()
         }
@@ -738,6 +749,7 @@ broadcast use {
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
         {
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.previous_key(k)
         }
@@ -751,6 +763,7 @@ broadcast use {
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
         {
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.next_key(k)
         }
@@ -784,6 +797,7 @@ broadcast use {
                 identity: self.identity.clone(),
             };
 
+            // Veracity: NEEDED proof block (speed hint)
             proof {
                 lemma_aug_view(self);
                 lemma_aug_view(&left);
@@ -809,6 +823,7 @@ broadcast use {
             } else {
                 self.cached_reduction = (self.reducer)(&old_reduction, &other_reduction);
             }
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
 
@@ -827,6 +842,7 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
+            // Veracity: NEEDED proof block (speed hint)
             proof {
                 lemma_aug_view(self);
                 lemma_aug_view(&r);
@@ -842,6 +858,7 @@ broadcast use {
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len(),
         {
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.rank_key(k)
         }
@@ -855,6 +872,7 @@ broadcast use {
                 selected matches Some(k) ==> self@.dom().contains(k@),
                 selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int,
         {
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.select_key(i)
         }
@@ -888,6 +906,7 @@ broadcast use {
                 identity: self.identity.clone(),
             };
 
+            // Veracity: NEEDED proof block (speed hint)
             proof {
                 lemma_aug_view(self);
                 lemma_aug_view(&left);
@@ -900,6 +919,7 @@ broadcast use {
         fn reduce_val(&self) -> (reduced: V)
             ensures self@.dom().finite()
         {
+            // Veracity: NEEDED proof block
             proof {
                 lemma_aug_view(self);
                 // wf chain: aug_wf → orderedtable_wf → bst_wf → tree@.finite().
@@ -912,6 +932,7 @@ broadcast use {
         fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
             ensures self@.dom().finite()
         {
+            // Veracity: NEEDED proof block
             proof {
                 lemma_aug_view(self);
                 // wf chain: aug_wf → orderedtable_wf → bst_wf → tree@.finite().
@@ -964,6 +985,7 @@ broadcast use {
             ensures cloned@ == self@
         {
             let base_cloned = self.base_table.clone();
+            // Veracity: NEEDED proof block
             proof { accept(base_cloned@ == self.base_table@); }
             Self {
                 base_table: base_cloned,

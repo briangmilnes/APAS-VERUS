@@ -1,0 +1,150 @@
+Verus Library Minimizer
+=======================
+This minimizer is only possible due to the phenomenal speed of verification
+in Verus. Thanks Verus team!
+
+Logging to: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-minimize-proofs.unknown.Chap43.20260410-145839.log
+
+Arguments:
+  -c, --codebase:     .
+  -l, --library:      src/vstdplus
+  -F, --file:         src/Chap43/AugOrderedTableMtEph.rs
+  -n, --dry-run:      false
+  -b, --broadcasts:   false
+  -L, --lib-broadcasts: false
+  -N, --max-lemmas:   all
+  -a, --asserts:      true
+  -A, --max-asserts:  all
+  -p, --proof-blocks: true
+  -P, --max-proof-blocks: all
+  -e, --exclude:      (none)
+  -f, --fail-fast:    false
+  --danger:           true
+  --no-lib-min:       true
+  mode:               resume (preserve markers)
+  --project:          APAS
+  --chapter:          Chap43
+  --timeout-factor:   1.5 
+  --max-incremental:  0 (disabled)
+  --max-memory-increase: 0 (disabled)
+
+Mode: APAS isolate Chap43 (estimated 10-30s per iteration)
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPORTANT: No code will be harmed in the improving of your codebase!
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Codebase is in git and committed. Proceeding safely.
+
+Veracity will repeatedly comment things in and out using // Veracity: lines
+to test and improve your use of vstd. All changes are reversible comments.
+You will need to review each // Veracity: line and decide what to keep.
+
+Phases:
+  Phase 0:  Strip existing Veracity markers (if any)
+  Phase 1:  Analyze and verify codebase
+  Phase 2:  Analyze library structure (lemmas, modules, call sites, spec fns)
+  Phase 3:  Discover vstd broadcast groups from verus installation
+  Phase 4:  Estimate time for testing
+  Phase 5:  Apply broadcast groups to library (-L flag)
+  Phase 6:  Apply broadcast groups to codebase (-b flag)
+  Phase 7:  Test lemma dependence on vstd (can vstd prove it alone?)
+  Phase 8:  Test lemma necessity (can codebase verify without it?)
+  Phase 9:  Test library asserts (can we remove any?)
+  Phase 10: Test codebase asserts (can we remove any?)
+  Phase 11: Test admits (can we remove any? -m flag)
+  Phase 12: Test proof {} blocks (-p flag)
+  Phase 13: Test types (are they used? -t flag)
+  Phase 14: Analyze and verify final codebase
+
+Comment markers inserted:
+  // Veracity: added broadcast group  - Phase 5/6: Inserted broadcast use block
+  // Veracity: DEPENDENT              - Phase 7: Lemma proven by vstd broadcast groups
+  // Veracity: INDEPENDENT            - Phase 7: Lemma provides unique proof logic
+  // Veracity: USED                   - Phase 8: Lemma required, restored after test
+  // Veracity: UNUSED                 - Phase 8: Lemma not needed, left commented out
+  // Veracity: NEEDED assert          - Phase 9/10: Assert required for verification
+  // Veracity: UNNEEDED assert        - Phase 9/10: Assert not needed, left commented
+  // Veracity: NEEDED admit           - Phase 11: Admit still needed (proof hole)
+  // Veracity: UNNEEDED admit         - Phase 11: Admit not needed, left commented
+  // Veracity: NEEDED proof block     - Phase 12: Proof block required
+  // Veracity: UNNEEDED proof block   - Phase 12: Proof block not needed, left commented
+  // Veracity: TYPE USED              - Phase 13: Type is used (verified by removal test)
+  // Veracity: TYPE UNUSED            - Phase 13: Type not used, left commented out
+  // Veracity: UNNEEDED               - Phase 8: Call site not needed, left commented
+
+═══════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 0: Resuming from existing markers
+═══════════════════════════════════════════════════════════════
+
+  Found 12071 existing Veracity markers
+  Checking for incomplete work from prior run...
+  Restored 1 TESTING markers to original code
+  Prior results found:
+    NEEDED assert: 4557
+    UNNEEDED: 1439
+    NEEDED proof block: 4473
+  These items will be skipped during testing.
+
+═══════════════════════════════════════════════════════════════
+Phase 1: Analyzing and verifying codebase
+═══════════════════════════════════════════════════════════════
+
+  Initial LOC (comments not counted):
+    Spec:    2677
+    Proof:   2097
+    Exec:    3699
+    Total:   8473
+
+  Verifying...
+  ✓ Verification passed. cpu: 170s (2m 50s), z3 RSS: 634 MB, wall: 35s. Continuing.
+
+═══════════════════════════════════════════════════════════════
+Single-file mode: Skipping phases 2-8 (library analysis)
+═══════════════════════════════════════════════════════════════
+
+Target file: src/Chap43/AugOrderedTableMtEph.rs
+
+Found 0 assert statements
+Found 30 proof {} blocks
+
+═══════════════════════════════════════════════════════════════
+Testing proof {} blocks
+═══════════════════════════════════════════════════════════════
+
+  [1/30] lines 835-835 in fn reduce_range... (from prior run, skipping)
+  [2/30] lines 826-826 in fn reduce_val... (from prior run, skipping)
+  [3/30] lines 817-817 in fn split_rank_key... (from prior run, skipping)
+  [4/30] lines 789-789 in fn select_key... (from prior run, skipping)
+  [5/30] lines 780-780 in fn rank_key... (from prior run, skipping)
+  [6/30] lines 771-771 in fn get_key_range... (from prior run, skipping)
+  [7/30] lines 754-754 in fn join_key... (from prior run, skipping)
+  [8/30] lines 743-743 in fn split_key... (from prior run, skipping)
+  [9/30] lines 715-715 in fn next_key... (from prior run, skipping)
+  [10/30] lines 706-706 in fn previous_key... (from prior run, skipping)
+  [11/30] lines 697-697 in fn last_key... (from prior run, skipping)
+  [12/30] lines 688-688 in fn first_key... (from prior run, skipping)
+  [13/30] lines 679-679 in fn collect... (from prior run, skipping)
+  [14/30] lines 670-670 in fn reduce... (from prior run, skipping)
+  [15/30] lines 662-662 in fn subtract... (from prior run, skipping)
+  [16/30] lines 652-652 in fn restrict... (from prior run, skipping)
+  [17/30] lines 642-642 in fn difference... (from prior run, skipping)
+  [18/30] lines 632-632 in fn union... (from prior run, skipping)
+  [19/30] lines 622-622 in fn intersection... (from prior run, skipping)
+  [20/30] lines 611-611 in fn filter... (from prior run, skipping)
+  [21/30] lines 593-593 in fn map... (from prior run, skipping)
+  [22/30] lines 575-575 in fn tabulate... (from prior run, skipping)
+  [23/30] lines 552-552 in fn domain... (from prior run, skipping)
+  [24/30] lines 543-543 in fn delete... (from prior run, skipping)
+  [25/30] lines 533-533 in fn insert... (from prior run, skipping)
+  [26/30] lines 522-522 in fn is_empty... (from prior run, skipping)
+  [27/30] lines 503-503 in fn singleton... (from prior run, skipping)
+  [28/30] lines 487-487 in fn empty... (from prior run, skipping)
+  [29/30] lines 471-471 in fn size... (from prior run, skipping)
+  [30/30] lines 422-422 in fn recalculate_reduction... (from prior run, skipping)
+
+Proof block summary: 0 tested, 0 removed
+
+✓ Single-file mode complete in 0.0s.

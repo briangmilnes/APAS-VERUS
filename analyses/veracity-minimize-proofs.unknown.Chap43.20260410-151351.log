@@ -1,0 +1,212 @@
+Verus Library Minimizer
+=======================
+This minimizer is only possible due to the phenomenal speed of verification
+in Verus. Thanks Verus team!
+
+Logging to: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-minimize-proofs.unknown.Chap43.20260410-151351.log
+
+Arguments:
+  -c, --codebase:     .
+  -l, --library:      src/vstdplus
+  -F, --file:         src/Chap43/OrderedTableMtEph.rs
+  -n, --dry-run:      false
+  -b, --broadcasts:   false
+  -L, --lib-broadcasts: false
+  -N, --max-lemmas:   all
+  -a, --asserts:      true
+  -A, --max-asserts:  all
+  -p, --proof-blocks: true
+  -P, --max-proof-blocks: all
+  -e, --exclude:      (none)
+  -f, --fail-fast:    false
+  --danger:           true
+  --no-lib-min:       true
+  mode:               resume (preserve markers)
+  --project:          APAS
+  --chapter:          Chap43
+  --timeout-factor:   1.5 
+  --max-incremental:  0 (disabled)
+  --max-memory-increase: 0 (disabled)
+
+Mode: APAS isolate Chap43 (estimated 10-30s per iteration)
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPORTANT: No code will be harmed in the improving of your codebase!
+═══════════════════════════════════════════════════════════════════════════════
+
+✗ Codebase is in git but has uncommitted changes.
+
+  Please commit your changes first:
+    cd . && git add -A && git commit -m 'Before Veracity'
+
+  ╔════════════════════════════════════════════════════════════╗
+  ║  !!!  DANGER MODE - UNCOMMITTED CHANGES AT RISK!  !!!      ║
+  ║                                                            ║
+  ║  You have uncommitted changes. Veracity will modify files. ║
+  ║  If something goes wrong, you may LOSE YOUR WORK!          ║
+  ║                                                            ║
+  ║  Proceeding anyway because you asked for --danger...       ║
+  ╚════════════════════════════════════════════════════════════╝
+
+Veracity will repeatedly comment things in and out using // Veracity: lines
+to test and improve your use of vstd. All changes are reversible comments.
+You will need to review each // Veracity: line and decide what to keep.
+
+Phases:
+  Phase 0:  Strip existing Veracity markers (if any)
+  Phase 1:  Analyze and verify codebase
+  Phase 2:  Analyze library structure (lemmas, modules, call sites, spec fns)
+  Phase 3:  Discover vstd broadcast groups from verus installation
+  Phase 4:  Estimate time for testing
+  Phase 5:  Apply broadcast groups to library (-L flag)
+  Phase 6:  Apply broadcast groups to codebase (-b flag)
+  Phase 7:  Test lemma dependence on vstd (can vstd prove it alone?)
+  Phase 8:  Test lemma necessity (can codebase verify without it?)
+  Phase 9:  Test library asserts (can we remove any?)
+  Phase 10: Test codebase asserts (can we remove any?)
+  Phase 11: Test admits (can we remove any? -m flag)
+  Phase 12: Test proof {} blocks (-p flag)
+  Phase 13: Test types (are they used? -t flag)
+  Phase 14: Analyze and verify final codebase
+
+Comment markers inserted:
+  // Veracity: added broadcast group  - Phase 5/6: Inserted broadcast use block
+  // Veracity: DEPENDENT              - Phase 7: Lemma proven by vstd broadcast groups
+  // Veracity: INDEPENDENT            - Phase 7: Lemma provides unique proof logic
+  // Veracity: USED                   - Phase 8: Lemma required, restored after test
+  // Veracity: UNUSED                 - Phase 8: Lemma not needed, left commented out
+  // Veracity: NEEDED assert          - Phase 9/10: Assert required for verification
+  // Veracity: UNNEEDED assert        - Phase 9/10: Assert not needed, left commented
+  // Veracity: NEEDED admit           - Phase 11: Admit still needed (proof hole)
+  // Veracity: UNNEEDED admit         - Phase 11: Admit not needed, left commented
+  // Veracity: NEEDED proof block     - Phase 12: Proof block required
+  // Veracity: UNNEEDED proof block   - Phase 12: Proof block not needed, left commented
+  // Veracity: TYPE USED              - Phase 13: Type is used (verified by removal test)
+  // Veracity: TYPE UNUSED            - Phase 13: Type not used, left commented out
+  // Veracity: UNNEEDED               - Phase 8: Call site not needed, left commented
+
+═══════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 0: Resuming from existing markers
+═══════════════════════════════════════════════════════════════
+
+  Found 12093 existing Veracity markers
+  Checking for incomplete work from prior run...
+  Prior results found:
+    NEEDED assert: 4557
+    UNNEEDED: 1440
+    NEEDED proof block: 4476
+  These items will be skipped during testing.
+
+═══════════════════════════════════════════════════════════════
+Phase 1: Analyzing and verifying codebase
+═══════════════════════════════════════════════════════════════
+
+  Initial LOC (comments not counted):
+    Spec:    2677
+    Proof:   2096
+    Exec:    3722
+    Total:   8495
+
+  Verifying...
+  ✓ Verification passed. cpu: 219s (3m 39s), z3 RSS: 4118 MB, wall: 37s. Continuing.
+
+═══════════════════════════════════════════════════════════════
+Single-file mode: Skipping phases 2-8 (library analysis)
+═══════════════════════════════════════════════════════════════
+
+Target file: src/Chap43/OrderedTableMtEph.rs
+
+Found 28 assert statements
+Found 46 proof {} blocks
+
+═══════════════════════════════════════════════════════════════
+Testing asserts
+═══════════════════════════════════════════════════════════════
+
+  [1/28] assert at line 848 in fn from_sorted_entries<K: MtKey, V: MtVal + Ord>... NEEDED (mem hint: +96%) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -26s, mem: +3951MB, real: 28s]
+  [2/28] assert at line 847 in fn from_sorted_entries<K: MtKey, V: MtVal + Ord>... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 190s, mem: 8171MB, real: 24s]
+  [3/28] assert at line 846 in fn from_sorted_entries<K: MtKey, V: MtVal + Ord>... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 87s, mem: 346MB, real: 23s]
+  [4/28] assert at line 820 in fn from_st<K: MtKey, V: MtVal + Ord>... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -27s, mem: -1114MB, real: 32s]
+  [5/28] assert at line 819 in fn from_st<K: MtKey, V: MtVal + Ord>... NEEDED (mem hint: +92%) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -33s, mem: +3796MB, real: 27s]
+  [6/28] assert at line 818 in fn from_st<K: MtKey, V: MtVal + Ord>... NEEDED (mem hint: +100%) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -33s, mem: +4130MB, real: 27s]
+  [7/28] assert at line 733 in fn get_key_range... NEEDED (cpu hint: +21%) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: +46s, mem: +4268MB, real: 27s]
+  [8/28] assert at line 732 in fn get_key_range... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -135s, mem: -3699MB, real: 26s]
+  [9/28] assert at line 731 in fn get_key_range... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -110s, mem: -3685MB, real: 28s]
+  [10/28] assert at line 708 in fn split_key... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -105s, mem: -3737MB, real: 32s]
+  [11/28] assert at line 621 in fn subtract... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -131s, mem: -3816MB, real: 26s]
+  [12/28] assert at line 607 in fn restrict... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -134s, mem: -3739MB, real: 26s]
+  [13/28] assert at line 589 in fn difference... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 77s, mem: 355MB, real: 22s]
+  [14/28] assert at line 588 in fn difference... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -137s, mem: -3769MB, real: 25s]
+  [15/28] assert at line 570 in fn union<F: Fn... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 78s, mem: 411MB, real: 21s]
+  [16/28] assert at line 569 in fn union<F: Fn... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -136s, mem: -3700MB, real: 25s]
+  [17/28] assert at line 568 in fn union<F: Fn... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -137s, mem: -3741MB, real: 26s]
+  [18/28] assert at line 551 in fn intersection<F: Fn... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 78s, mem: 404MB, real: 22s]
+  [19/28] assert at line 550 in fn intersection<F: Fn... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -136s, mem: -3716MB, real: 26s]
+  [20/28] assert at line 523 in fn map<F: Fn... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -136s, mem: -3732MB, real: 26s]
+  [21/28] assert at line 503 in fn domain... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -102s, mem: -3774MB, real: 27s]
+  [22/28] assert at line 487 in fn delete... NEEDED (cpu hint: +76%) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: +166s, mem: -3463MB, real: 37s]
+  [23/28] assert at line 443 in fn singleton... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 482s, mem: 325MB, real: 27s]
+  [24/28] assert at line 442 in fn singleton... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -118s, mem: -3729MB, real: 27s]
+  [25/28] assert at line 441 in fn singleton... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -87s, mem: -3689MB, real: 28s]
+  [26/28] assert at line 434 in fn empty... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 476s, mem: 585MB, real: 38s]
+  [27/28] assert at line 433 in fn empty... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 421s, mem: 372MB, real: 23s]
+  [28/28] assert at line 432 in fn empty... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 97s, mem: 387MB, real: 28s]
+
+Assert summary: 28 tested, 14 removed
+
+═══════════════════════════════════════════════════════════════
+Testing proof {} blocks
+═══════════════════════════════════════════════════════════════
+
+  [1/46] lines 987-990 in fn clone... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 0s, mem: 0MB, real: 0s]
+  [2/46] lines 984-984 in fn clone... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 0s, mem: 0MB, real: 0s]
+  [3/46] lines 822-822 in fn from_st... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -134s, mem: -3781MB, real: 27s]
+  [4/46] lines 790-790 in fn iter... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -133s, mem: -3754MB, real: 27s]
+  [5/46] lines 779-782 in fn split_rank_key... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 0s, mem: 0MB, real: 0s]
+  [6/46] lines 777-777 in fn split_rank_key... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -124s, mem: -3765MB, real: 28s]
+  [7/46] lines 764-764 in fn select_key... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -92s, mem: -3779MB, real: 28s]
+  [8/46] lines 751-751 in fn rank_key... NEEDED (cpu hint: +126%) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: +277s, mem: -3468MB, real: 43s]
+  [9/46] lines 739-739 in fn get_key_range... NEEDED (cpu hint: +78%) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: +170s, mem: -3724MB, real: 28s]
+  [10/46] lines 736-736 in fn get_key_range... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -130s, mem: -3706MB, real: 30s]
+  [11/46] lines 716-719 in fn split_key... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 4s, mem: 0MB, real: 5s]
+  [12/46] lines 714-714 in fn split_key... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -137s, mem: -3709MB, real: 26s]
+  [13/46] lines 708-708 in fn split_key... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -137s, mem: -3701MB, real: 26s]
+  [14/46] lines 699-699 in fn next_key... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -137s, mem: -3688MB, real: 26s]
+  [15/46] lines 697-697 in fn next_key... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 0s, mem: 0MB, real: 1s]
+  [16/46] lines 686-686 in fn previous_key... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -137s, mem: -3701MB, real: 25s]
+  [17/46] lines 684-684 in fn previous_key... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 0s, mem: 0MB, real: 0s]
+  [18/46] lines 673-673 in fn last_key... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -138s, mem: -3745MB, real: 25s]
+  [19/46] lines 671-671 in fn last_key... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 0s, mem: 0MB, real: 0s]
+  [20/46] lines 660-660 in fn first_key... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -139s, mem: -3702MB, real: 25s]
+  [21/46] lines 658-658 in fn first_key... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 0s, mem: 0MB, real: 0s]
+  [22/46] lines 644-644 in fn collect... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -138s, mem: -3695MB, real: 25s]
+  [23/46] lines 636-636 in fn reduce... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -135s, mem: -3698MB, real: 26s]
+  [24/46] lines 633-633 in fn reduce... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -138s, mem: -3706MB, real: 26s]
+  [25/46] lines 625-625 in fn subtract... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -139s, mem: -3701MB, real: 26s]
+  [26/46] lines 619-622 in fn subtract... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -138s, mem: -3769MB, real: 25s]
+  [27/46] lines 611-611 in fn restrict... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -137s, mem: -3734MB, real: 26s]
+  [28/46] lines 605-608 in fn restrict... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -136s, mem: -3705MB, real: 26s]
+  [29/46] lines 596-596 in fn difference... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -137s, mem: -3699MB, real: 26s]
+  [30/46] lines 594-594 in fn difference... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -137s, mem: -3681MB, real: 26s]
+  [31/46] lines 586-590 in fn difference... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 0s, mem: 0MB, real: 0s]
+  [32/46] lines 577-577 in fn union... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 223s, mem: 797MB, real: 26s]
+  [33/46] lines 575-575 in fn union... (from prior run, skipping)
+  [34/46] lines 566-571 in fn union... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 121s, mem: 2220MB, real: 7s]
+  [35/46] lines 557-557 in fn intersection... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 201s, mem: 7396MB, real: 22s]
+  [36/46] lines 548-552 in fn intersection... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 119s, mem: 7596MB, real: 4s]
+  [37/46] lines 521-524 in fn map... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 0s, mem: 0MB, real: 0s]
+  [38/46] lines 507-507 in fn domain... NEEDED (mem hint: +91%) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -98s, mem: +3746MB, real: 27s]
+  [39/46] lines 501-504 in fn domain... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 0s, mem: 0MB, real: 0s]
+  [40/46] lines 493-493 in fn delete... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 0s, mem: 0MB, real: 1s]
+  [41/46] lines 485-488 in fn delete... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 6s, mem: 0MB, real: 7s]
+  [42/46] lines 477-477 in fn insert... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -136s, mem: -3778MB, real: 26s]
+  [43/46] lines 475-475 in fn insert... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -136s, mem: -3756MB, real: 26s]
+  [44/46] lines 454-454 in fn find... UNNEEDED (commented) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: -137s, mem: -3693MB, real: 26s]
+  [45/46] lines 443-443 in fn singleton... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 0s, mem: 0MB, real: 1s]
+  [46/46] lines 425-425 in fn size... NEEDED (restored) [baseline cpu: 219s, mem: 4118MB, real: 37s | cpu: 78s, mem: 421MB, real: 22s]
+
+Proof block summary: 45 tested, 23 removed
+
+✓ Single-file mode complete in 27m 52s.

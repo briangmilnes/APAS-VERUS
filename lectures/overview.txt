@@ -1,5 +1,8 @@
-I'm using + for slide titles and indented ** for slide lines, *** for a second indented
-slide line and a -- for revealing the slide lines one at a time. 
+I'm using % for section slides, 
++ for slide titles and indented,
+** for slide lines, 
+-- for revealing the slide lines one at a time
+*** for a second indented slide line and a 
 And for code formatting: ``code`` 
 
 + APAS-VERUS: AI Paired Proof Engineering Techniques and Experience

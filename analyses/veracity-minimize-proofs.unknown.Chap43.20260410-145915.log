@@ -1,0 +1,161 @@
+Verus Library Minimizer
+=======================
+This minimizer is only possible due to the phenomenal speed of verification
+in Verus. Thanks Verus team!
+
+Logging to: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-minimize-proofs.unknown.Chap43.20260410-145915.log
+
+Arguments:
+  -c, --codebase:     .
+  -l, --library:      src/vstdplus
+  -F, --file:         src/Chap43/AugOrderedTableStEph.rs
+  -n, --dry-run:      false
+  -b, --broadcasts:   false
+  -L, --lib-broadcasts: false
+  -N, --max-lemmas:   all
+  -a, --asserts:      true
+  -A, --max-asserts:  all
+  -p, --proof-blocks: true
+  -P, --max-proof-blocks: all
+  -e, --exclude:      (none)
+  -f, --fail-fast:    false
+  --danger:           true
+  --no-lib-min:       true
+  mode:               resume (preserve markers)
+  --project:          APAS
+  --chapter:          Chap43
+  --timeout-factor:   1.5 
+  --max-incremental:  0 (disabled)
+  --max-memory-increase: 0 (disabled)
+
+Mode: APAS isolate Chap43 (estimated 10-30s per iteration)
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPORTANT: No code will be harmed in the improving of your codebase!
+═══════════════════════════════════════════════════════════════════════════════
+
+✗ Codebase is in git but has uncommitted changes.
+
+  Please commit your changes first:
+    cd . && git add -A && git commit -m 'Before Veracity'
+
+  ╔════════════════════════════════════════════════════════════╗
+  ║  !!!  DANGER MODE - UNCOMMITTED CHANGES AT RISK!  !!!      ║
+  ║                                                            ║
+  ║  You have uncommitted changes. Veracity will modify files. ║
+  ║  If something goes wrong, you may LOSE YOUR WORK!          ║
+  ║                                                            ║
+  ║  Proceeding anyway because you asked for --danger...       ║
+  ╚════════════════════════════════════════════════════════════╝
+
+Veracity will repeatedly comment things in and out using // Veracity: lines
+to test and improve your use of vstd. All changes are reversible comments.
+You will need to review each // Veracity: line and decide what to keep.
+
+Phases:
+  Phase 0:  Strip existing Veracity markers (if any)
+  Phase 1:  Analyze and verify codebase
+  Phase 2:  Analyze library structure (lemmas, modules, call sites, spec fns)
+  Phase 3:  Discover vstd broadcast groups from verus installation
+  Phase 4:  Estimate time for testing
+  Phase 5:  Apply broadcast groups to library (-L flag)
+  Phase 6:  Apply broadcast groups to codebase (-b flag)
+  Phase 7:  Test lemma dependence on vstd (can vstd prove it alone?)
+  Phase 8:  Test lemma necessity (can codebase verify without it?)
+  Phase 9:  Test library asserts (can we remove any?)
+  Phase 10: Test codebase asserts (can we remove any?)
+  Phase 11: Test admits (can we remove any? -m flag)
+  Phase 12: Test proof {} blocks (-p flag)
+  Phase 13: Test types (are they used? -t flag)
+  Phase 14: Analyze and verify final codebase
+
+Comment markers inserted:
+  // Veracity: added broadcast group  - Phase 5/6: Inserted broadcast use block
+  // Veracity: DEPENDENT              - Phase 7: Lemma proven by vstd broadcast groups
+  // Veracity: INDEPENDENT            - Phase 7: Lemma provides unique proof logic
+  // Veracity: USED                   - Phase 8: Lemma required, restored after test
+  // Veracity: UNUSED                 - Phase 8: Lemma not needed, left commented out
+  // Veracity: NEEDED assert          - Phase 9/10: Assert required for verification
+  // Veracity: UNNEEDED assert        - Phase 9/10: Assert not needed, left commented
+  // Veracity: NEEDED admit           - Phase 11: Admit still needed (proof hole)
+  // Veracity: UNNEEDED admit         - Phase 11: Admit not needed, left commented
+  // Veracity: NEEDED proof block     - Phase 12: Proof block required
+  // Veracity: UNNEEDED proof block   - Phase 12: Proof block not needed, left commented
+  // Veracity: TYPE USED              - Phase 13: Type is used (verified by removal test)
+  // Veracity: TYPE UNUSED            - Phase 13: Type not used, left commented out
+  // Veracity: UNNEEDED               - Phase 8: Call site not needed, left commented
+
+═══════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 0: Resuming from existing markers
+═══════════════════════════════════════════════════════════════
+
+  Found 12070 existing Veracity markers
+  Checking for incomplete work from prior run...
+  Prior results found:
+    NEEDED assert: 4557
+    UNNEEDED: 1439
+    NEEDED proof block: 4473
+  These items will be skipped during testing.
+
+═══════════════════════════════════════════════════════════════
+Phase 1: Analyzing and verifying codebase
+═══════════════════════════════════════════════════════════════
+
+  Initial LOC (comments not counted):
+    Spec:    2677
+    Proof:   2097
+    Exec:    3699
+    Total:   8473
+
+  Verifying...
+  ✓ Verification passed. cpu: 145s (2m 25s), z3 RSS: 406 MB, wall: 33s. Continuing.
+
+═══════════════════════════════════════════════════════════════
+Single-file mode: Skipping phases 2-8 (library analysis)
+═══════════════════════════════════════════════════════════════
+
+Target file: src/Chap43/AugOrderedTableStEph.rs
+
+Found 0 assert statements
+Found 30 proof {} blocks
+
+═══════════════════════════════════════════════════════════════
+Testing proof {} blocks
+═══════════════════════════════════════════════════════════════
+
+  [1/30] lines 967-967 in fn clone... NEEDED (restored) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: 194s, mem: 367MB, real: 28s]
+  [2/30] lines 915-919 in fn reduce_range... NEEDED (restored) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: 251s, mem: 748MB, real: 28s]
+  [3/30] lines 903-907 in fn reduce_val... NEEDED (restored) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: 101s, mem: 386MB, real: 24s]
+  [4/30] lines 891-895 in fn split_rank_key... NEEDED (cpu hint: +3%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +4s, mem: +22MB, real: 34s]
+  [5/30] lines 858-858 in fn select_key... NEEDED (cpu hint: +23%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +33s, mem: -21MB, real: 36s]
+  [6/30] lines 845-845 in fn rank_key... NEEDED (cpu hint: +109%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +158s, mem: +306MB, real: 37s]
+  [7/30] lines 830-833 in fn get_key_range... NEEDED (cpu hint: +119%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +172s, mem: +296MB, real: 39s]
+  [8/30] lines 812-812 in fn join_key... NEEDED (cpu hint: +125%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +181s, mem: +303MB, real: 39s]
+  [9/30] lines 787-791 in fn split_key... NEEDED (cpu hint: +112%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +162s, mem: +280MB, real: 38s]
+  [10/30] lines 754-754 in fn next_key... NEEDED (cpu hint: +38%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +55s, mem: +16MB, real: 40s]
+  [11/30] lines 741-741 in fn previous_key... NEEDED (cpu hint: +55%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +80s, mem: +158MB, real: 38s]
+  [12/30] lines 728-728 in fn last_key... NEEDED (cpu hint: +43%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +62s, mem: +305MB, real: 38s]
+  [13/30] lines 715-715 in fn first_key... NEEDED (cpu hint: +50%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +72s, mem: +137MB, real: 37s]
+  [14/30] lines 702-702 in fn collect... NEEDED (cpu hint: +110%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +159s, mem: +347MB, real: 37s]
+  [15/30] lines 695-695 in fn subtract... NEEDED (cpu hint: +87%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +126s, mem: +412MB, real: 37s]
+  [16/30] lines 687-687 in fn restrict... NEEDED (cpu hint: +64%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +93s, mem: +282MB, real: 37s]
+  [17/30] lines 679-679 in fn difference... NEEDED (cpu hint: +66%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +95s, mem: +311MB, real: 39s]
+  [18/30] lines 671-671 in fn union... NEEDED (cpu hint: +23%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +34s, mem: +281MB, real: 36s]
+  [19/30] lines 663-663 in fn intersection... NEEDED (cpu hint: +97%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +141s, mem: +148MB, real: 39s]
+  [20/30] lines 654-654 in fn reduce... NEEDED (cpu hint: +153%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +222s, mem: +7322MB, real: 37s]
+  [21/30] lines 646-646 in fn filter... NEEDED (cpu hint: +61%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +88s, mem: +7755MB, real: 32s]
+  [22/30] lines 630-630 in fn map... NEEDED (cpu hint: +57%) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: +83s, mem: +8102MB, real: 31s]
+  [23/30] lines 614-614 in fn tabulate... UNNEEDED (commented) [baseline cpu: 145s, mem: 406MB, real: 33s | cpu: -19s, mem: -16MB, real: 29s]
+  [24/30] lines 598-598 in fn domain... (from prior run, skipping)
+  [25/30] lines 590-590 in fn delete... (from prior run, skipping)
+  [26/30] lines 580-580 in fn insert... (from prior run, skipping)
+  [27/30] lines 567-570 in fn is_empty... (from prior run, skipping)
+  [28/30] lines 536-536 in fn singleton... (from prior run, skipping)
+  [29/30] lines 520-520 in fn empty... (from prior run, skipping)
+  [30/30] lines 504-504 in fn size... (from prior run, skipping)
+
+Proof block summary: 23 tested, 1 removed
+
+✓ Single-file mode complete in 14m 1s.
