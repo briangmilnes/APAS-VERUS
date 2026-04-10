@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:230:41
+    |
+230 | ...                   implies !#[trigger] spec_flat_has_key(table.table@[j], k) by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(spec_flat_has_key(table.table.view().index(j), k)) 
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 3923MB, peak z3 RSS: 609MB, min free: 18022MB
+Sampled CPU Usage: rust_verify: 53s, z3 children: 48s

@@ -1,0 +1,72 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:847:45
+    |
+847 | ...                   implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(*key) by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:870:45
+    |
+870 |   ...                   implies ({
+    |  _______________________________^
+871 | | ...                       let hk = (table.spec_hash@)(k) as int % m as int;
+872 | | ...                       exists |n: int| #![trigger table.table@[spec_tri_probe(hk, n, m as int)]]
+873 | | ...                           0 <= n < m as int
+...   |
+876 | | ...                               ==> !(#[trigger] table.table@[spec_tri_probe(hk, j, m as int)] is Empty)
+877 | | ...                   }) by {
+    | |________________________^ assertion failed
+
+error: assertion failed
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:898:41
+    |
+898 | ...                   implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:483:17
+    |
+483 |                 Self::spec_parahashtablesteph_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/QuadProbFlatHashTableStEph.rs:886:29
+    |
+886 | ...                   return true;
+    |                       ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:483:17
+    |
+483 |                 Self::spec_parahashtablesteph_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/QuadProbFlatHashTableStEph.rs:904:25
+    |
+904 |                         return false;
+    |                         ------------ at this exit
+
+note: diagnostics via expansion
+
+note: 
+
+!(old_table_seq.index(j).spec_entry_to_map().dom().contains(key)) 
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:879:45
+    |
+879 |   ...                   let n = choose |n: int| #![trigger old_table_seq[spec_tri_probe(hk, n, m as int)]]
+    |  _______________________________^
+880 | | ...                       0 <= n < m as int
+881 | | ...                       && spec_tri_probe(hk, n, m as int) == i
+882 | | ...                       && forall |j: int| 0 <= j < n
+883 | | ...                           ==> !(#[trigger] old_table_seq[spec_tri_probe(hk, j, m as int)] is Empty);
+    | |_______________________________________________________________________________________________________^
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 4864MB, peak z3 RSS: 737MB, min free: 16945MB
+Sampled CPU Usage: rust_verify: 82s, z3 children: 71s

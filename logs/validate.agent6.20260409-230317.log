@@ -1,0 +1,43 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: precondition not satisfied
+   --> src/Chap45/UnsortedListPQ.rs:368:39
+    |
+368 |                 let mut min_element = self.elements.nth(0);
+    |                                       ^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:157:22
+    |
+157 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+error: invariant not satisfied before loop
+   --> src/Chap45/UnsortedListPQ.rs:374:26
+    |
+374 |                 for i in 1..n
+    |                          ^^^^ Automatically generated loop invariant failed. You can disable the automatic generation by adding #[verifier::no_auto_loop_invariant] to the loop. You might also try storing the loop expression in a variable outside the loop (e.g. `let e = 0..10; for x in e { ... }`).
+
+error: invariant not satisfied before loop
+   --> src/Chap45/UnsortedListPQ.rs:377:25
+    |
+377 |                         n > 0,
+    |                         ^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap45/UnsortedListPQ.rs:378:25
+    |
+378 |                         (min_index as int) < n,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+0 < tmp%.spec_len() 
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 5649MB, peak z3 RSS: 853MB, min free: 16062MB
+Sampled CPU Usage: rust_verify: 82s, z3 children: 62s

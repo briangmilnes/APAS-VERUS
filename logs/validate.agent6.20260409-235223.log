@@ -1,0 +1,33 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:358:17
+    |
+339 | /     pub proof fn lemma_empty_slot_reachable<Key, Value, Metrics, H>(
+340 | |         table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+341 | |         key: &Key,
+342 | |         h: usize,
+343 | |     )
+    | |_____- at the end of the function body
+...
+358 |           ensures false,
+    |                   ^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+false 
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:411:35
+    |
+411 |         let d_s = choose |d: int| 0 <= d < m && probes[d] == s;
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 4875MB, peak z3 RSS: 1010MB, min free: 16618MB
+Sampled CPU Usage: rust_verify: 75s, z3 children: 68s

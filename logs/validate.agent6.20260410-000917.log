@@ -1,0 +1,36 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap47/FlatHashTable.rs:258:21
+    |
+258 |             ensures cloned == *self,
+    |                     ^^^^^^^^^^^^^^^ failed this postcondition
+...
+267 |             c
+    |             - at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/FlatHashTable.rs:258:21
+    |
+258 |             ensures cloned == *self,
+    |                     ^^^^^^
+
+note: 
+
+cloned == old(self)
+|   cloned is Empty ==>
+|       old(self) is Empty ✔
+|   cloned is Occupied ==>
+|       old(self) is Occupied ✔
+|       cloned.0 == old(self).0 ✘
+|       cloned.1 == old(self).1 ✘
+|   cloned is Deleted ==>
+|       old(self) is Deleted ✔
++---
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 4586MB, peak z3 RSS: 777MB, min free: 17555MB
+Sampled CPU Usage: rust_verify: 104s, z3 children: 123s

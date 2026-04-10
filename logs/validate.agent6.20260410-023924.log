@@ -1,0 +1,104 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: postcondition not satisfied
+   --> src/Chap52/AdjSeqGraphMtEph.rs:199:17
+    |
+199 | /                 exists ==> (exists|j: int|
+200 | |                     0 <= j < self.spec_degree(u as int)
+201 | |                     && #[trigger] self.spec_neighbor(u as int, j) == v),
+    | |_______________________________________________________________________^ failed this postcondition
+...
+384 | /             if exists {
+385 | |                 let old_len = self.adj.nth(u).length();
+386 | |                 let mut found = false;
+387 | |                 let mut i: usize = 0;
+...   |
+519 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjSeqGraphMtEph.rs:199:28
+    |
+199 |                   exists ==> (exists|j: int|
+    |  ____________________________^
+200 | |                     0 <= j < self.spec_degree(u as int)
+201 | |                     && #[trigger] self.spec_neighbor(u as int, j) == v),
+    | |_______________________________________________________________________^
+
+note: 
+
+self.spec_adjseqgraphmteph_wf() ✔
+self.spec_num_vertices() == old(self).spec_num_vertices() ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = old(self).spec_num_vertices() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == old(u)) ==>
+        self.spec_degree(i) == old(self).spec_degree(i) ✔
+forall |i, j|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = old(self).spec_num_vertices() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == old(u)) && let tmp%% = 0 in let tmp%% = j in let tmp%% = old(self).spec_degree(i) in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j) ✔
+old(exists) ==>
+    (exists |j| let tmp%% = 0 in let tmp%% = j in let tmp%% = self.spec_degree(old(u)) in tmp%% <= tmp%% && tmp%% < tmp%% && self.spec_neighbor(old(u), j) == old(v)) ✘
+!old(exists) ==>
+    forall |j|
+        let tmp%% = 0 in let tmp%% = j in let tmp%% = self.spec_degree(old(u)) in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+            !(self.spec_neighbor(old(u), j) == old(v)) ✔
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:1467:17
+     |
+1467 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap42/TableStEph.rs:1469:29
+     |
+1469 |                     implies spec_entries_to_map(old_self_view).dom().contains(k)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap42/TableStEph.rs:1470:29
+     |
+1470 |                         && !other@.dom().contains(k)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:1480:17
+     |
+1480 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap42/TableStEph.rs:1481:21
+     |
+1481 |                     spec_entries_to_map(old_self_view).dom().contains(k)
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap42/TableStEph.rs:1482:25
+     |
+1482 |                     && !other@.dom().contains(k)
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+    --> src/Chap42/TableStEph.rs:1480:17
+     |
+1480 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+verification results:: 3020 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 34s
+Sampled Memory Usage: peak rust_verify RSS: 5397MB, peak z3 RSS: 433MB, min free: 16908MB
+Sampled CPU Usage: rust_verify: 86s, z3 children: 71s

@@ -1,0 +1,39 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:456:17
+    |
+456 | /                 exists |s: int| #[trigger] spec_other_slots_preserved(
+457 | |                     old(table).table@, table.table@, s);
+    | |_______________________________________________________^ failed this postcondition
+    |
+   ::: src/Chap47/VecChainedHashTableStEph.rs:271:17
+    |
+271 | /                 if !existed {
+...   |
+278 | |                     assert(spec_other_slots_preserved(old(table).table@, table.table@, index as int));
+279 | |                 }
+    | |_________________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:456:17
+    |
+456 | /                 exists |s: int| #[trigger] spec_other_slots_preserved(
+457 | |                     old(table).table@, table.table@, s);
+    | |_______________________________________________________^
+
+note: 
+
+table.view() =~= old(table).view().insert(old(key), old(value)) ✔
+spec_parahashtablesteph_wf(table) ✔
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+table.num_elements <= old(table).num_elements + 1 ✔
+(exists |s| spec_other_slots_preserved(old(table).table.view(), table.table.view(), s)) ✘
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3502MB, peak z3 RSS: 352MB, min free: 18646MB
+Sampled CPU Usage: rust_verify: 61s, z3 children: 49s

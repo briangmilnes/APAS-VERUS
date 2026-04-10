@@ -1,0 +1,40 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/StructChainedHashTable.rs:596:95
+    |
+596 |                           assert forall |k: Key| #[trigger] pairs_map.dom().contains(k) implies (
+    |  _______________________________________________________________________________________________^
+597 | |                             (table.spec_hash@)(k) as int % (table.current_size as int)
+598 | |                                 < ((i + 1) as int)
+599 | |                             && table.table@[
+...   |
+604 | |                             ].spec_entry_to_map()[k]
+605 | |                         ) by {
+    | |_________________________^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap47/StructChainedHashTable.rs:597:29
+    |
+597 | / ...                   (table.spec_hash@)(k) as int % (table.current_size as int)
+598 | | ...                       < ((i + 1) as int)
+    | |____________________________________________^
+599 |   ...                   && table.table@[
+    |  __________________________^
+600 | | ...                       (table.spec_hash@)(k) as int % (table.current_size as int)
+601 | | ...                   ].spec_entry_to_map().dom().contains(k)
+    | |_____________________________________________________________^
+
+note: 
+
+table.spec_hash(k) % table.current_size < i + 1 ✘
+table.table.view().index(table.spec_hash(k) % table.current_size).spec_entry_to_map().dom().contains(k) ✘
+    function is uninterpreted
+pairs_map.index(k) == table.table.view().index(table.spec_hash(k) % table.current_size).spec_entry_to_map().index(k) ✔
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 5137MB, peak z3 RSS: 908MB, min free: 16655MB
+Sampled CPU Usage: rust_verify: 87s, z3 children: 68s

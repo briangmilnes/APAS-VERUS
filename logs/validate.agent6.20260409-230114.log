@@ -1,0 +1,37 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: mismatched closing delimiter: `}`
+    --> src/Chap45/SortedListPQ.rs:1056:31
+     |
+1001 |             fn delete_max(&self) -> (max_and_rest: (Self, Option<T>)) {
+     |                                                                       - closing delimiter possibly meant for this
+...
+1056 |                         assert(new_elements.spec_index(i)
+     |                               ^ unclosed delimiter
+...
+1089 |             }
+     |             ^ mismatched closing delimiter
+
+error: this file contains an unclosed delimiter
+    --> src/Chap45/SortedListPQ.rs:1306:3
+     |
+  21 | pub mod SortedListPQ {
+     |                      - unclosed delimiter
+...
+  39 | {
+     | - unclosed delimiter
+...
+1053 |                     by {
+     |                        - this delimiter might not be properly closed...
+...
+1089 |             }
+     |             - ...as it matches this but it has different indentation
+...
+1306 | }
+     |  ^
+
+error: aborting due to 2 previous errors
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 17073MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

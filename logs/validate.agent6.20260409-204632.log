@@ -1,0 +1,30 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+    --> src/Chap45/BinaryHeapPQ.rs:235:21
+     |
+ 235 |                     pq@.to_multiset() =~= Multiset::empty().insert(element@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1147 |                 pq
+     |                 -- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap45/BinaryHeapPQ.rs:235:21
+    |
+235 |                     pq@.to_multiset() =~= Multiset::empty().insert(element@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().len() == 1 ✔
+%return.view().to_multiset() =~= empty().insert(old(element).view()) ✘
+%return.spec_binaryheappq_wf() ✔
+spec_is_exec_heap(%return.spec_seq()) ✔
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 28s
+Sampled Memory Usage: peak rust_verify RSS: 5726MB, peak z3 RSS: 939MB, min free: 15799MB
+Sampled CPU Usage: rust_verify: 101s, z3 children: 78s

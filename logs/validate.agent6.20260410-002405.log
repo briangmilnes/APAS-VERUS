@@ -1,0 +1,91 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: precondition not satisfied
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1074:27
+     |
+1074 |                 let key = clone_elem(&pairs[j].0);
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap47/ParaHashTableStEph.rs:537:18
+     |
+ 537 |         requires obeys_feq_clone::<T>(),
+     |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1075:29
+     |
+1075 |                 let value = clone_elem(&pairs[j].1);
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap47/ParaHashTableStEph.rs:537:18
+     |
+ 537 |         requires obeys_feq_clone::<T>(),
+     |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1079:21
+     |
+1079 | /                     lemma_empties_positive_implies_exists_empty::<Key, Value>(
+1080 | |                         new_table.table@);
+     | |_________________________________________^
+     |
+    ::: src/Chap47/FlatHashTable.rs:86:18
+     |
+  86 |           requires spec_count_empties(table) > 0,
+     |                    ----------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1083:17
+     |
+1083 |                 Self::insert(&mut new_table, key, value);
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap47/ParaHashTableStEph.rs:448:17
+     |
+ 448 |                 obeys_feq_clone::<Key>(),
+     |                 ------------------------ failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/feq.rs:60:61
+   |
+60 |         &&& forall|x: T, y: T|  #[trigger] cloned(x, y) ==> x.eq_spec(&y)
+   |                                                             ^^^^^^^^^^^^^
+61 |         &&& forall|x: &T, y: T| #[trigger] cloned(*x, y) ==> x.eq_spec(&y)
+62 |         &&& forall|x: T, y: T|  #[trigger] strictly_cloned(x, y) ==> x.eq_spec(&y)
+   |                                                                      ^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+note: recommendation not met
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1001:28
+     |
+1001 |                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
+     |                            ^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq_lib.rs:492:12
+     |
+     = note: recommendation not met
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 4160MB, peak z3 RSS: 662MB, min free: 18155MB
+Sampled CPU Usage: rust_verify: 70s, z3 children: 42s

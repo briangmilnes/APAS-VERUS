@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find value `element` in this scope
+   --> src/Chap45/BalancedTreePQ.rs:734:36
+    |
+734 |                     if *current < *element {
+    |                                    ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `element` in this scope
+   --> src/Chap45/BalancedTreePQ.rs:737:41
+    |
+737 |                         if *current == *element {
+    |                                         ^^^^^^^ not found in this scope
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 3791MB, peak z3 RSS: 0MB, min free: 18441MB
+Sampled CPU Usage: rust_verify: 63s, z3 children: 49s

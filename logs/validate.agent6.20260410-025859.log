@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: unexpected token, expected `;`
+   --> src/Chap52/AdjSeqGraphMtPer.rs:540:13
+    |
+540 |             implies #[trigger] result_adj.spec_index(u2).spec_index(j2) < result_adj.spec_len()
+    |             ^^^^^^^
+
+error[E0425]: cannot find type `AdjSeqGraphMtPer` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:604:30
+    |
+604 |     impl std::fmt::Debug for AdjSeqGraphMtPer {
+    |                              ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AdjSeqGraphMtPer` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:613:32
+    |
+613 |     impl std::fmt::Display for AdjSeqGraphMtPer {
+    |                                ^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 1084MB, peak z3 RSS: 0MB, min free: 20091MB
+Sampled CPU Usage: rust_verify: 12s, z3 children: 0s

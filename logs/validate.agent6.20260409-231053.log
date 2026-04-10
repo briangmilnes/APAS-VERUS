@@ -1,0 +1,74 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+  --> src/Chap47/ChainedHashTable.rs:38:17
+   |
+38 | /                 spec_seq_pairs_to_map(pairs.remove(i)).dom().contains(k)
+39 | |                     == spec_seq_pairs_to_map(pairs).dom().contains(k),
+   | |_____________________________________________________________________^ failed this postcondition
+...
+45 | /             if pairs.len() == 1 {
+46 | |             } else if i == pairs.len() - 1 {
+47 | |             } else {
+...  |
+50 | |                 lemma_seq_pairs_to_map_remove_preserves_other_keys(pairs.drop_last(), i, k);
+51 | |             }
+   | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+  --> src/Chap47/ChainedHashTable.rs:40:17
+   |
+40 | /                 spec_seq_pairs_to_map(pairs.remove(i)).dom().contains(k) ==>
+41 | |                     spec_seq_pairs_to_map(pairs.remove(i))[k]
+42 | |                         == spec_seq_pairs_to_map(pairs)[k],
+   | |__________________________________________________________^ failed this postcondition
+...
+45 | /             if pairs.len() == 1 {
+46 | |             } else if i == pairs.len() - 1 {
+47 | |             } else {
+...  |
+50 | |                 lemma_seq_pairs_to_map_remove_preserves_other_keys(pairs.drop_last(), i, k);
+51 | |             }
+   | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap47/ChainedHashTable.rs:38:17
+   |
+38 |                   spec_seq_pairs_to_map(pairs.remove(i)).dom().contains(k)
+   |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+39 |                       == spec_seq_pairs_to_map(pairs).dom().contains(k),
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+40 |                   spec_seq_pairs_to_map(pairs.remove(i)).dom().contains(k) ==>
+41 | /                     spec_seq_pairs_to_map(pairs.remove(i))[k]
+42 | |                         == spec_seq_pairs_to_map(pairs)[k],
+   | |__________________________________________________________^
+
+note: 
+
+spec_seq_pairs_to_map(old(pairs).remove(old(i))).dom().contains(old(k)) == spec_seq_pairs_to_map(old(pairs)).dom().contains(old(k)) ✘
+|   spec_seq_pairs_to_map(old(pairs).remove(old(i))).dom().contains(old(k)) ==>
+|       spec_seq_pairs_to_map(old(pairs)).dom().contains(old(k)) ✘
+|           function is uninterpreted
+|   spec_seq_pairs_to_map(old(pairs)).dom().contains(old(k)) ==>
+|       spec_seq_pairs_to_map(old(pairs).remove(old(i))).dom().contains(old(k)) ✘
+|           function is uninterpreted
++---
+spec_seq_pairs_to_map(old(pairs).remove(old(i))).dom().contains(old(k)) ==>
+    spec_seq_pairs_to_map(old(pairs).remove(old(i))).index(old(k)) == spec_seq_pairs_to_map(old(pairs)).index(old(k)) ✘
+
+note: recommendation not met
+  --> src/Chap47/ChainedHashTable.rs:42:28
+   |
+42 |                         == spec_seq_pairs_to_map(pairs)[k],
+   |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> vstd/map.rs:72:12
+   |
+   = note: recommendation not met
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 3411MB, peak z3 RSS: 317MB, min free: 18855MB
+Sampled CPU Usage: rust_verify: 45s, z3 children: 39s

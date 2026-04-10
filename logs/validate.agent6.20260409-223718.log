@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap45/UnsortedListPQ.rs:96:21
+    |
+ 96 |                     pq@.to_multiset() =~= Multiset::empty().insert(element@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+256 |                 pq
+    |                 -- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap45/UnsortedListPQ.rs:96:21
+   |
+96 |                     pq@.to_multiset() =~= Multiset::empty().insert(element@),
+   |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().len() == 1 ✔
+%return.view().to_multiset() =~= empty().insert(old(element).view()) ✘
+%return.spec_unsortedlistpq_wf() ✔
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 4923MB, peak z3 RSS: 678MB, min free: 16918MB
+Sampled CPU Usage: rust_verify: 97s, z3 children: 105s

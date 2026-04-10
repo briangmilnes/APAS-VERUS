@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap45/SortedListPQ.rs:957:36
+    |
+957 |                           #[trigger] TotalOrder::le(
+    |  ____________________________________^
+958 | |                             new_elements.seq@[i], new_elements.seq@[j])
+    | |_______________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+new_elements.seq.view().index(i).le(new_elements.seq.view().index(j)) 
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 28s
+Sampled Memory Usage: peak rust_verify RSS: 5419MB, peak z3 RSS: 923MB, min free: 16212MB
+Sampled CPU Usage: rust_verify: 117s, z3 children: 111s

@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap45/UnsortedListPQ.rs:610:33
+    |
+610 | ...                   #[trigger] old_result_seq[idx] == result.seq@[idx] by {
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+old_result_seq.index(idx) == result.seq.view().index(idx) 
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 25s
+Sampled Memory Usage: peak rust_verify RSS: 7149MB, peak z3 RSS: 768MB, min free: 14648MB
+Sampled CPU Usage: rust_verify: 151s, z3 children: 152s

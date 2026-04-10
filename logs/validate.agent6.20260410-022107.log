@@ -1,0 +1,211 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: precondition not satisfied
+   --> src/Chap52/AdjMatrixGraphStPer.rs:506:21
+    |
+506 |                     lemma_sum_of_change_one(n as int, old_row_count, new_row_count, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap52/AdjTableGraphSpecsAndLemmas.rs:230:13
+    |
+230 |             forall|i: int| 0 <= i < n && i != k ==> #[trigger] old_f(i) == new_f(i),
+    |             ----------------------------------------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjMatrixGraphStPer.rs:510:21
+    |
+510 |                     lemma_sum_of_change_one(n as int, old_row_count, new_row_count, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap52/AdjTableGraphSpecsAndLemmas.rs:230:13
+    |
+230 |             forall|i: int| 0 <= i < n && i != k ==> #[trigger] old_f(i) == new_f(i),
+    |             ----------------------------------------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjMatrixGraphStPer.rs:515:21
+    |
+515 |                     lemma_sum_of_ext(old_row_count, new_row_count, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap52/AdjTableGraphSpecsAndLemmas.rs:216:18
+    |
+216 |         requires forall|i: int| 0 <= i < n ==> #[trigger] f(i) == g(i)
+    |                  ----------------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        old_row_count(i) == new_row_count(i) 
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStPer.rs:421:29
+    |
+421 | ...                   self.matrix.spec_index(u as int).spec_index(j as int)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:93:24
+    |
+ 93 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStPer.rs:421:29
+    |
+421 | ...                   self.matrix.spec_index(u as int).spec_index(j as int)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:93:24
+    |
+ 93 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStPer.rs:453:46
+    |
+453 | ...                   ensures r == row.spec_index(j as int)
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:93:24
+    |
+ 93 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStPer.rs:438:40
+    |
+438 | ...                   #[trigger] r.spec_index(j) == (if j == v as int {
+    |                                  ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:93:24
+    |
+ 93 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStPer.rs:441:33
+    |
+441 | ...                   self.matrix.spec_index(u as int).spec_index(j)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:93:24
+    |
+ 93 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStPer.rs:441:33
+    |
+441 | ...                   self.matrix.spec_index(u as int).spec_index(j)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:93:24
+    |
+ 93 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStPer.rs:444:40
+    |
+444 | ...                   #[trigger] r.spec_index(j) == self.matrix.spec_index(i as int).spec_index(j)
+    |                                  ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:93:24
+    |
+ 93 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStPer.rs:444:59
+    |
+444 | ...                   #[trigger] r.spec_index(j) == self.matrix.spec_index(i as int).spec_index(j)
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:93:24
+    |
+ 93 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStPer.rs:444:59
+    |
+444 | ...                   #[trigger] r.spec_index(j) == self.matrix.spec_index(i as int).spec_index(j)
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:93:24
+    |
+ 93 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStPer.rs:178:17
+    |
+ 90 |             recommends 0 <= u < self.spec_n(), 0 <= v < self.spec_n();
+    |                        ---------------------- recommendation not met
+...
+178 |                 updated.spec_edge(u as int, v as int) == exists,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:1467:17
+     |
+1467 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap42/TableStEph.rs:1469:29
+     |
+1469 |                     implies spec_entries_to_map(old_self_view).dom().contains(k)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap42/TableStEph.rs:1470:29
+     |
+1470 |                         && !other@.dom().contains(k)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:1480:17
+     |
+1480 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap42/TableStEph.rs:1481:21
+     |
+1481 |                     spec_entries_to_map(old_self_view).dom().contains(k)
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap42/TableStEph.rs:1482:25
+     |
+1482 |                     && !other@.dom().contains(k)
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+    --> src/Chap42/TableStEph.rs:1480:17
+     |
+1480 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+verification results:: 3020 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 35s
+Sampled Memory Usage: peak rust_verify RSS: 6203MB, peak z3 RSS: 645MB, min free: 15752MB
+Sampled CPU Usage: rust_verify: 124s, z3 children: 121s

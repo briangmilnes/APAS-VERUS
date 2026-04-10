@@ -1,0 +1,61 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: precondition not satisfied
+    --> src/Chap45/BinaryHeapPQ.rs:1361:21
+     |
+ 188 | /                 forall|j: int| 0 <= j < a.len() ==>
+ 189 | |                     #[trigger] TotalOrder::le(min_elem, a[j]),
+     | |_____________________________________________________________- failed precondition
+...
+1361 |                       lemma_le_preserved_by_multiset_eq(min_element, new_elem_seq, heapified.seq@);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap45/BinaryHeapPQ.rs:189:32
+    |
+189 |                     #[trigger] TotalOrder::le(min_elem, a[j]),
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+new_elem_seq.to_multiset() =~= tmp%.to_multiset() ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = new_elem_seq.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        min_element.le(new_elem_seq.index(j)) ✘
+
+note: recommendation not met
+    --> src/Chap45/BinaryHeapPQ.rs:1370:59
+     |
+1370 |                     let first = Seq::<T::V>::empty().push(sr.last());
+     |                                                           ^^^^^^^^^
+     |
+    --> vstd/seq.rs:154:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap45/BinaryHeapPQ.rs:1371:32
+     |
+1371 |                     let rest = sr.subrange(0, sr.len() - 1);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:116:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap45/BinaryHeapPQ.rs:1386:45
+     |
+1386 |                     assert(sr =~= rest.push(sr.last())) by {
+     |                                             ^^^^^^^^^
+     |
+    --> vstd/seq.rs:154:12
+     |
+     = note: recommendation not met
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 3083MB, peak z3 RSS: 768MB, min free: 18575MB
+Sampled CPU Usage: rust_verify: 53s, z3 children: 55s

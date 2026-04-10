@@ -1,0 +1,105 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: unexpected token, expected `;`
+  --> src/Chap47/ChainedHashTable.rs:83:13
+   |
+83 |             by {
+   |             ^^
+
+error[E0405]: cannot find trait `ChainedHashTable` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:795:13
+    |
+795 |             ChainedHashTable<Key, Value, ChainList<Key, Value>, Metrics, H>
+    |             ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `ChainedHashTable` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:615:13
+    |
+615 |             ChainedHashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>
+    |             ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `ChainedHashTable` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:617:13
+    |
+617 |             ChainedHashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>
+    |             ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_seq_pairs_remove_key_then_push` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:230:25
+    |
+230 |                         lemma_seq_pairs_remove_key_then_push::<Key, Value>(
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_seq_pairs_no_key_not_in_map` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:283:25
+    |
+283 |                         lemma_seq_pairs_no_key_not_in_map::<Key, Value>(bv, *key);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_seq_pairs_last_key_gives_value` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:313:29
+    |
+313 | ...                   lemma_seq_pairs_last_key_gives_value::<Key, Value>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_seq_pairs_no_key_not_in_map` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:328:21
+    |
+328 |                     lemma_seq_pairs_no_key_not_in_map::<Key, Value>(bv, *key);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_seq_pairs_has_key_in_map` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:438:25
+    |
+438 |                         lemma_seq_pairs_has_key_in_map::<Key, Value>(original, *key, j_witness);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_seq_pairs_no_key_not_in_map` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:444:25
+    |
+444 |                         lemma_seq_pairs_no_key_not_in_map::<Key, Value>(original, *key);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_seq_pairs_remove_key_then_push` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:231:25
+    |
+231 |                         lemma_seq_pairs_remove_key_then_push::<Key, Value>(
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_seq_pairs_no_key_not_in_map` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:285:25
+    |
+285 |                         lemma_seq_pairs_no_key_not_in_map::<Key, Value>(bv, *key);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_seq_pairs_last_key_gives_value` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:313:29
+    |
+313 | ...                   lemma_seq_pairs_last_key_gives_value::<Key, Value>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_seq_pairs_no_key_not_in_map` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:328:21
+    |
+328 |                     lemma_seq_pairs_no_key_not_in_map::<Key, Value>(bv, *key);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_seq_pairs_has_key_in_map` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:439:25
+    |
+439 |                         lemma_seq_pairs_has_key_in_map::<Key, Value>(original, *key, j_witness);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_seq_pairs_no_key_not_in_map` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:445:25
+    |
+445 |                         lemma_seq_pairs_no_key_not_in_map::<Key, Value>(original, *key);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 16 previous errors
+
+Some errors have detailed explanations: E0405, E0425.
+For more information about an error, try `rustc --explain E0405`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 3287MB, peak z3 RSS: 352MB, min free: 18713MB
+Sampled CPU Usage: rust_verify: 42s, z3 children: 13s

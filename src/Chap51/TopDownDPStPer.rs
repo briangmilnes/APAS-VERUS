@@ -183,6 +183,7 @@ pub mod TopDownDPStPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> (dp: Self) {
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             TopDownDPStPerS {
                 seq_s: s,
@@ -226,6 +227,7 @@ pub mod TopDownDPStPer {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct reconstruction with empty memo.
         fn clear_memo(self) -> (dp: Self) {
+            // Veracity: NEEDED proof block (speed hint)
             // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             TopDownDPStPerS {
@@ -237,6 +239,7 @@ pub mod TopDownDPStPer {
 
         /// Compute MED using top-down memoization (Algorithm 51.4).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — top-down DP with memoization; St sequential.
+        // Veracity: NEEDED proof block
         fn med_memoized(&self) -> (distance: usize) {
             // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -273,6 +276,7 @@ pub mod TopDownDPStPer {
                 if s_char == t_char {
                     self.med_recursive(i - 1, j - 1, memo)
                 } else {
+                    // Veracity: NEEDED proof block
                     let del_cost = self.med_recursive(i - 1, j, memo);
                     let ins_cost = self.med_recursive(i, j - 1, memo);
                     // Veracity: NEEDED proof block
@@ -287,11 +291,13 @@ pub mod TopDownDPStPer {
                     }
                 }
             };
+// Veracity: NEEDED proof block
 
             let ghost pre_memo = memo@;
             memo.insert(Pair(i, j), result);
             // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
                 implies
@@ -343,6 +349,7 @@ pub mod TopDownDPStPer {
     }
 
     impl PartialEq for TopDownDPStPerS {
+        // Veracity: NEEDED proof block
         fn eq(&self, other: &Self) -> (eq: bool)
             ensures eq == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)
         {

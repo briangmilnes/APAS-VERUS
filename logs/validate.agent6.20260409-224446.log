@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find value `right` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:662:24
+    |
+662 |                     if right < n {
+    |                        ^^^^^ not found in this scope
+
+error[E0425]: cannot find value `right` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:664:53
+    |
+664 |                         let c2 = TotalOrder::cmp(&v[right], &v[smallest]);
+    |                                                     ^^^^^ not found in this scope
+
+error[E0425]: cannot find value `right` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:674:59
+    |
+674 | ...                   T::transitive(pre[right as int], pre[left as int], pre[idx as int]);
+    |                                         ^^^^^ not found in this scope
+
+error[E0425]: cannot find value `right` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:682:63
+    |
+682 | ...                   T::transitive(pre[right as int], pre[idx as int], pre[left as int]);
+    |                                         ^^^^^ not found in this scope
+
+error[E0425]: cannot find value `right` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:685:54
+    |
+685 | ...                   T::reflexive(pre[right as int]);
+    |                                        ^^^^^ not found in this scope
+
+error[E0425]: cannot find value `right` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:687:44
+    |
+687 | ...                   smallest = right;
+    |                                  ^^^^^ not found in this scope
+
+error[E0425]: cannot find value `right` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:700:32
+    |
+700 | ...                   if right < n {
+    |                          ^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 999MB, peak z3 RSS: 0MB, min free: 19668MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s

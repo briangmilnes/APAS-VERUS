@@ -278,6 +278,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Arc<RwLock> wrappers
         fn new() -> (mc: Self) {
+            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 dimensions: new_arc_rwlock(Vec::new(), Ghost(MatrixChainMtEphDimInv { expected_dims: Seq::empty() })),
@@ -289,6 +290,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — wrap dimensions in Arc<RwLock>, n = dimensions.len()
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self) {
             let ghost gd = dimensions@;
+            // Veracity: NEEDED proof block (speed hint)
             let _len = dimensions.len();
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -313,6 +315,7 @@ broadcast use {
                     cols: dim_pairs[idx].1,
                 });
                 idx = idx + 1;
+            // Veracity: NEEDED proof block
             }
             let ghost gd = dimensions@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -328,13 +331,16 @@ broadcast use {
             let rwlock = arc_deref(&self.dimensions);
             let handle = rwlock.acquire_read();
             let dims = handle.borrow();
-            assert(dims@ =~= self.ghost_dimensions@);
+// Veracity: UNNEEDED assert             assert(dims@ =~= self.ghost_dimensions@);
             let left_rows = dims[i].rows;
             let split_cols = dims[k].cols;
             let right_cols = dims[j].cols;
+            // Veracity: NEEDED assert (speed hint)
             assert(dims@ =~= self@.dimensions);
+            // Veracity: NEEDED assert (speed hint)
             assert(left_rows == self@.dimensions[i as int].rows);
-            assert(split_cols == self@.dimensions[k as int].cols);
+// Veracity: UNNEEDED assert             assert(split_cols == self@.dimensions[k as int].cols);
+            // Veracity: NEEDED assert (speed hint)
             assert(right_cols == self@.dimensions[j as int].cols);
             handle.release_read();
             left_rows * split_cols * right_cols
@@ -368,6 +374,7 @@ broadcast use {
             {
                 let rwlock = arc_deref(&self.memo);
                 let handle = rwlock.acquire_read();
+                // Veracity: NEEDED assert (speed hint)
                 assert(rwlock.pred().dims =~= self@.dimensions);
                 let found = match handle.borrow().get(&Pair(i, j)) {
                     Some(v) => Some(*v),
@@ -382,17 +389,20 @@ broadcast use {
             if i == j {
                 let rwlock = arc_deref(&self.memo);
                 let (mut memo, wh) = rwlock.acquire_write();
+                // Veracity: NEEDED assert (speed hint)
+                // Veracity: NEEDED proof block
                 assert(rwlock.pred().dims =~= self@.dimensions);
                 let ghost pre_insert = memo@;
                 memo.insert(Pair(i, j), 0usize);
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
                     implies
                         memo@[(a, b)] as nat == spec_chain_cost(self@.dimensions, a as int, b as int, a as int)
                     by {
                         if a == i && b == j {
                         } else {
-                            assert(pre_insert.contains_key((a, b)));
+// Veracity: UNNEEDED assert                             assert(pre_insert.contains_key((a, b)));
                         }
                     };
                 }
@@ -423,6 +433,7 @@ broadcast use {
                 let left_cost = self.matrix_chain_rec(i, k);
                 let right_cost = self.matrix_chain_rec(k + 1, j);
                 let split_cost = self.multiply_cost(i, k, j);
+                // Veracity: NEEDED assert (speed hint)
                 assert(left_cost as nat + right_cost as nat + split_cost as nat <= usize::MAX as nat);
                 let total = left_cost + right_cost + split_cost;
 
@@ -434,17 +445,20 @@ broadcast use {
 
             // Store in memo.
             let rwlock = arc_deref(&self.memo);
+            // Veracity: NEEDED proof block
             let (mut memo, wh) = rwlock.acquire_write();
-            assert(rwlock.pred().dims =~= self@.dimensions);
+// Veracity: UNNEEDED assert             assert(rwlock.pred().dims =~= self@.dimensions);
             let ghost pre_insert = memo@;
             memo.insert(Pair(i, j), best);
             proof {
+                // Veracity: NEEDED assert
                 assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
                 implies
                     memo@[(a, b)] as nat == spec_chain_cost(gdims, a as int, b as int, a as int)
                 by {
                     if a == i && b == j {
                     } else {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(pre_insert.contains_key((a, b)));
                     }
                 };
@@ -456,6 +470,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — clear memo then run memoized DP
         fn optimal_cost(&mut self) -> (cost: usize) {
             let n = self.num_matrices();
+            // Veracity: NEEDED proof block
             if n <= 1 {
                 return 0;
             }
@@ -475,6 +490,7 @@ broadcast use {
             let rwlock = arc_deref(&self.dimensions);
             let handle = rwlock.acquire_read();
             let borrowed = handle.borrow();
+            // Veracity: NEEDED assert (speed hint)
             assert(borrowed@ =~= self.ghost_dimensions@);
             let dims = borrowed.clone();
             handle.release_read();
@@ -484,6 +500,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone dims, rebuild struct with new Arc<RwLock>
         fn set_dimension(&mut self, index: usize, dim: MatrixDim) {
             let rwlock = arc_deref(&self.dimensions);
+            // Veracity: NEEDED proof block
             let handle = rwlock.acquire_read();
             let mut dims = handle.borrow().clone();
             handle.release_read();
@@ -501,6 +518,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone dims, rebuild struct with new Arc<RwLock>
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize) {
             let dim = MatrixDim { rows, cols };
+            // Veracity: NEEDED proof block
             let rwlock = arc_deref(&self.dimensions);
             let handle = rwlock.acquire_read();
             let mut dims = handle.borrow().clone();
@@ -521,6 +539,8 @@ broadcast use {
             let rwlock = arc_deref(&self.dimensions);
             let handle = rwlock.acquire_read();
             let dims = handle.borrow();
+            // Veracity: NEEDED assert (speed hint)
+            // Veracity: NEEDED proof block (speed hint)
             assert(dims@ =~= self.ghost_dimensions@);
             let n = dims.len();
             handle.release_read();
@@ -575,6 +595,7 @@ broadcast use {
     //		Section 12d. derive impls in verus!
 
 
+    // Veracity: NEEDED proof block
     impl Clone for MatrixChainMtEphS {
         fn clone(&self) -> (mc: Self)
             ensures mc@ == self@
@@ -596,6 +617,7 @@ broadcast use {
     }
 
     impl PartialEq for MatrixChainMtEphS {
+        // Veracity: NEEDED proof block
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {

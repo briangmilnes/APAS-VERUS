@@ -1,0 +1,38 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap51
+error: unexpected token, expected `;`
+   --> src/Chap51/TopDownDPMtPer.rs:254:17
+    |
+254 |                 pre_memo[(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
+    |                 ^^^^^^^^
+
+error[E0425]: cannot find type `TopDownDPMtPerS` in this scope
+   --> src/Chap51/TopDownDPMtPer.rs:472:20
+    |
+472 |     impl Debug for TopDownDPMtPerS {
+    |                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `TopDownDPMtPerS` in this scope
+   --> src/Chap51/TopDownDPMtPer.rs:481:22
+    |
+481 |     impl Display for TopDownDPMtPerS {
+    |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `TopDownDPMtPerInv` in this scope
+   --> src/Chap51/TopDownDPMtPer.rs:494:20
+    |
+494 |     impl Debug for TopDownDPMtPerInv {
+    |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `TopDownDPMtPerInv` in this scope
+   --> src/Chap51/TopDownDPMtPer.rs:500:22
+    |
+500 |     impl Display for TopDownDPMtPerInv {
+    |                      ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 2201MB, peak z3 RSS: 260MB, min free: 19896MB
+Sampled CPU Usage: rust_verify: 20s, z3 children: 2s

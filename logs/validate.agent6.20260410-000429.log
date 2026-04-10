@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/VecChainedHashTableStEph.rs:244:28
+    |
+244 |                       assert(table.table@[index as int].spec_entry_to_map()
+    |  ____________________________^
+245 | |                         =~= old_table[index as int].spec_entry_to_map().insert(key, value));
+    | |__________________________________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+table.table.view().index(index).spec_entry_to_map() =~= old_table.index(index).spec_entry_to_map().insert(key, value) 
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 6733MB, peak z3 RSS: 1157MB, min free: 14897MB
+Sampled CPU Usage: rust_verify: 131s, z3 children: 153s

@@ -1,0 +1,39 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap45/LeftistHeapPQ.rs:594:21
+    |
+594 |                     pq.spec_leftistheappq_wf(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+795 |                 pq
+    |                 -- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap45/LeftistHeapPQ.rs:595:21
+    |
+595 |                     pq.spec_size() == 1,
+    |                     ^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+795 |                 pq
+    |                 -- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap45/LeftistHeapPQ.rs:594:21
+    |
+594 |                     pq.spec_leftistheappq_wf(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.spec_leftistheappq_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+%return.spec_size() == 1 ✔
+%return.view() =~= empty().insert(old(element)) ✔
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 25s
+Sampled Memory Usage: peak rust_verify RSS: 5726MB, peak z3 RSS: 668MB, min free: 16236MB
+Sampled CPU Usage: rust_verify: 106s, z3 children: 95s

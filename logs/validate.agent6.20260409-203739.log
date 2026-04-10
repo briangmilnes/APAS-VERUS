@@ -1,0 +1,77 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+    --> src/Chap45/BinaryHeapPQ.rs:274:21
+     |
+ 274 | /                     self@.len() > 0 ==> self@.to_multiset() =~=
+ 275 | |                         min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@),
+     | |______________________________________________________________________________________^ failed this postcondition
+...
+1427 |                   (new_pq, Some(min_element))
+     |                   --------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap45/BinaryHeapPQ.rs:274:41
+    |
+274 |                       self@.len() > 0 ==> self@.to_multiset() =~=
+    |  _________________________________________^
+275 | |                         min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@),
+    | |______________________________________________________________________________________^
+
+note: 
+
+old(self).view().len() > 0 ==>
+    %return.1 is Some ✔
+old(self).view().len() > 0 ==>
+    %return.0.view().len() == old(self).view().len() - 1 ✔
+old(self).view().len() == 0 ==>
+    %return.1 is None ✔
+old(self).view().len() == 0 ==>
+    %return.0.view().len() == 0 ✔
+old(self).view().len() > 0 ==>
+    old(self).view().to_multiset() =~= %return.0.view().to_multiset().insert(%return.1.0.view()) ✘
+old(self).view().len() > 0 ==>
+    spec_is_exec_heap(%return.0.spec_seq()) ✔
+old(self).view().len() > 0 ==>
+    %return.1.0 == old(self).spec_seq().index(0) ✔
+old(self).view().len() > 0 ==>
+    forall |i|
+        let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.0.spec_seq().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+            %return.1.0.le(%return.0.spec_seq().index(i)) ✔
+
+note: recommendation not met
+    --> src/Chap45/BinaryHeapPQ.rs:1370:59
+     |
+1370 |                     let first = Seq::<T::V>::empty().push(sr.last());
+     |                                                           ^^^^^^^^^
+     |
+    --> vstd/seq.rs:154:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap45/BinaryHeapPQ.rs:1371:32
+     |
+1371 |                     let rest = sr.subrange(0, sr.len() - 1);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:116:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap45/BinaryHeapPQ.rs:1385:45
+     |
+1385 |                     assert(sr =~= rest.push(sr.last())) by {
+     |                                             ^^^^^^^^^
+     |
+    --> vstd/seq.rs:154:12
+     |
+     = note: recommendation not met
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 3384MB, peak z3 RSS: 712MB, min free: 18478MB
+Sampled CPU Usage: rust_verify: 64s, z3 children: 75s

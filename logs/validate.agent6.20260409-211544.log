@@ -1,0 +1,31 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: precondition not satisfied
+   --> src/Chap45/LeftistHeapPQ.rs:554:37
+    |
+554 | ...                   TotalOrder::transitive(*key, *rk, rs[ri]);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/total_order.rs:42:13
+    |
+ 42 |             Self::le(y, z),
+    |             -------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/total_order.rs:42:13
+   |
+42 |             Self::le(y, z),
+   |             ^^^^^^^^^^^^^^
+
+note: 
+
+key.le(rk) ✔
+rk.le(tmp%) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 23s
+Sampled Memory Usage: peak rust_verify RSS: 5098MB, peak z3 RSS: 817MB, min free: 16668MB
+Sampled CPU Usage: rust_verify: 81s, z3 children: 59s

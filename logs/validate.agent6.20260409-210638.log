@@ -1,0 +1,37 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap45/LeftistHeapPQ.rs:656:25
+    |
+656 |                   ensures is_empty == (self.spec_size() == 0);
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+928 | /                 match &self.root {
+929 | |                     LeftistHeapNode::Leaf => {
+930 | |                         // Veracity: NEEDED assert
+931 | |                         assert(self.root.spec_size() == 0);
+...   |
+939 | |                 }
+    | |_________________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap45/LeftistHeapPQ.rs:656:25
+    |
+656 |                 ensures is_empty == (self.spec_size() == 0);
+    |                         ^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == (old(self).spec_size() == 0)
+|   %return ==>
+|       old(self).spec_size() == 0 ✘
+|   old(self).spec_size() == 0 ==>
+|       %return ✘
++---
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 4126MB, peak z3 RSS: 734MB, min free: 17505MB
+Sampled CPU Usage: rust_verify: 68s, z3 children: 66s

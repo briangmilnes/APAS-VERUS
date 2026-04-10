@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find value `n` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1127:29
+     |
+1127 |                 for i in 0..n
+     |                             ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1129:25
+     |
+1129 |                         n == heaps@.len(),
+     |                         ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1135:84
+     |
+1135 |                     proof { lemma_total_size_monotone::<T>(heaps@, (i + 1) as int, n as int); }
+     |                                                                                    ^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 3225MB, peak z3 RSS: 670MB, min free: 18463MB
+Sampled CPU Usage: rust_verify: 63s, z3 children: 49s

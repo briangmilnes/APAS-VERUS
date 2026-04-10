@@ -1,0 +1,34 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: this file contains an unclosed delimiter
+   --> src/Chap45/UnsortedListPQ.rs:896:3
+    |
+ 21 | pub mod UnsortedListPQ {
+    |                        - unclosed delimiter
+...
+ 39 | {
+    | - unclosed delimiter
+...
+210 |         impl<T: StT + Ord + TotalOrder> UnsortedListPQTrait<T> for UnsortedListPQ<T> {
+    |                                                                                      - unclosed delimiter
+...
+363 |             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
+    |                                                                       - unclosed delimiter
+...
+496 |                                 } else {
+    |                                        - this delimiter might not be properly closed...
+...
+530 |                         returned_min, new_pq.spec_seq()[j]) by {};
+    |                                                                -- block is empty, you might have not meant to close it
+531 |                     // #7: multiset from broadcast to_multiset_remove.
+532 |                 }
+    |                 - ...as it matches this but it has different indentation
+...
+896 | }
+    |  ^
+
+error: aborting due to 1 previous error
+
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 20421MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

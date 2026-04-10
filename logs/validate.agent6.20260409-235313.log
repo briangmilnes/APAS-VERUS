@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:141:13
+    |
+141 |               b % pow(2, n) == 0,
+    |               ^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+145 | /         if n == 1 {
+146 | |             vstd::arithmetic::div_mod::lemma_mul_mod_noop(a, b, 2);
+147 | |             vstd::arithmetic::div_mod::lemma_mod_bound(b, 2);
+148 | |             if b % 2 == 1 {
+...   |
+205 | |             vstd::arithmetic::div_mod::lemma_mod_multiples_basic(d, two_pn1);
+206 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+old(b) % pow(2, old(n)) == 0 
+
+verification results:: 1236 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 3895MB, peak z3 RSS: 354MB, min free: 18220MB
+Sampled CPU Usage: rust_verify: 72s, z3 children: 58s

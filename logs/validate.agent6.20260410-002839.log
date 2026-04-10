@@ -1,0 +1,15 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: loop must have a decreases clause
+   --> src/Chap47/VecChainedHashTableStEph.rs:303:17
+    |
+303 |                 while i > 0
+    |                 ^^^^^^^^^^^
+    |
+    = help: to disable this check, use #[verifier::exec_allows_no_decreases_clause] on the function
+
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 3991MB, peak z3 RSS: 650MB, min free: 18313MB
+Sampled CPU Usage: rust_verify: 57s, z3 children: 41s

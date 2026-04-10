@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: expected curly braces
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1022:54
+     |
+1022 |                         == Map::<Key, Value>::empty(),
+     |                                                      ^
+
+error[E0425]: cannot find type `QuadProbFlatHashTableStEph` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1151:30
+     |
+1151 |     impl std::fmt::Debug for QuadProbFlatHashTableStEph {
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `QuadProbFlatHashTableStEph` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1157:32
+     |
+1157 |     impl std::fmt::Display for QuadProbFlatHashTableStEph {
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 3155MB, peak z3 RSS: 357MB, min free: 18962MB
+Sampled CPU Usage: rust_verify: 59s, z3 children: 33s

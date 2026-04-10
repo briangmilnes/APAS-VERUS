@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: unexpected token, expected `;`
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1064:87
+     |
+1064 |                     new_table@ =~= spec_seq_pairs_to_map(pairs@.subrange(0, j as int)),
+     |                                                                                       ^
+
+error[E0425]: cannot find type `QuadProbFlatHashTableStEph` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1153:30
+     |
+1153 |     impl std::fmt::Debug for QuadProbFlatHashTableStEph {
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `QuadProbFlatHashTableStEph` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1159:32
+     |
+1159 |     impl std::fmt::Display for QuadProbFlatHashTableStEph {
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 2790MB, peak z3 RSS: 357MB, min free: 19444MB
+Sampled CPU Usage: rust_verify: 40s, z3 children: 10s

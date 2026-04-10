@@ -1,0 +1,19 @@
+Mode: isolate
+Isolate: including Chap30 Chap02 Chap50
+error: unexpected closing delimiter: `}`
+   --> src/Chap50/OptBinSearchTreeMtPer.rs:512:1
+    |
+401 |         {
+    |         - this delimiter might not be properly closed...
+...
+405 |             };
+    |             - ...as it matches this but it has different indentation
+...
+512 | }
+    | ^ unexpected closing delimiter
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 19038MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:512:40
+    |
+512 | ...                   }) by {
+    |                          ^^
+
+error[E0425]: cannot find type `LinProbFlatHashTableStEph` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:767:30
+    |
+767 |     impl std::fmt::Debug for LinProbFlatHashTableStEph {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinProbFlatHashTableStEph` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:773:32
+    |
+773 |     impl std::fmt::Display for LinProbFlatHashTableStEph {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 18439MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

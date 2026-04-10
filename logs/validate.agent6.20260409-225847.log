@@ -1,0 +1,16 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error[E0046]: not all trait items implemented, missing: `eq_spec`
+    --> src/Chap45/LeftistHeapPQ.rs:1228:9
+     |
+1228 |         impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for LeftistHeapPQ<T> {
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `eq_spec` in implementation
+     |
+     = help: implement the missing item: `fn eq_spec(&self, _: &Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapPQ<T>) -> bool { todo!() }`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0046`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 4225MB, peak z3 RSS: 1880MB, min free: 16192MB
+Sampled CPU Usage: rust_verify: 92s, z3 children: 97s

@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: expected delimiter
+   --> src/Chap47/StructChainedHashTable.rs:652:42
+    |
+652 | ...                   implies !#[trigger] table.table@[jj]
+    |                                ^
+
+error[E0425]: cannot find type `Node` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:910:76
+    |
+910 |     impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Debug for Node<Key, Value> {
+    |                                                                            ^^^^ not found in this scope
+
+error[E0425]: cannot find type `Node` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:920:78
+    |
+920 |     impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Display for Node<Key, Value> {
+    |                                                                              ^^^^ not found in this scope
+
+error[E0425]: cannot find type `ChainList` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:928:76
+    |
+928 |     impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Debug for ChainList<Key, Value> {
+    |                                                                            ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ChainList` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:936:78
+    |
+936 |     impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Display for ChainList<Key, Value> {
+    |                                                                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `StructChainedHashTableStEph` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:944:30
+    |
+944 |     impl std::fmt::Debug for StructChainedHashTableStEph {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `StructChainedHashTableStEph` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:950:32
+    |
+950 |     impl std::fmt::Display for StructChainedHashTableStEph {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 21062MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

@@ -1,0 +1,19 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: unexpected closing delimiter: `}`
+   --> src/Chap47/VecChainedHashTableStEph.rs:664:1
+    |
+182 |             fn insert(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
+    |                                                                                                                 - this delimiter might not be properly closed...
+...
+239 |                 }
+    |                 - ...as it matches this but it has different indentation
+...
+664 | }
+    | ^ unexpected closing delimiter
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 17908MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

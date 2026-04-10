@@ -1,0 +1,62 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap42 Chap41 Chap44 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find value `set3` in this scope
+   --> src/Chap44/DocumentIndex.rs:584:43
+    |
+584 |             let right_side = self.and_not(set3, set4);
+    |                                           ^^^^
+    |
+help: a local variable with a similar name exists
+    |
+584 -             let right_side = self.and_not(set3, set4);
+584 +             let right_side = self.and_not(set1, set4);
+    |
+
+error[E0425]: cannot find value `set4` in this scope
+   --> src/Chap44/DocumentIndex.rs:584:49
+    |
+584 |             let right_side = self.and_not(set3, set4);
+    |                                                 ^^^^
+    |
+help: a local variable with a similar name exists
+    |
+584 -             let right_side = self.and_not(set3, set4);
+584 +             let right_side = self.and_not(set3, set1);
+    |
+
+error[E0425]: cannot find value `set3` in this scope
+   --> src/Chap44/DocumentIndex.rs:588:66
+    |
+588 |                 vstd::set_lib::lemma_len_difference::<Seq<char>>(set3@, set4@);
+    |                                                                  ^^^^
+    |
+help: a local variable with a similar name exists
+    |
+588 -                 vstd::set_lib::lemma_len_difference::<Seq<char>>(set3@, set4@);
+588 +                 vstd::set_lib::lemma_len_difference::<Seq<char>>(set1@, set4@);
+    |
+
+error[E0425]: cannot find value `set4` in this scope
+   --> src/Chap44/DocumentIndex.rs:588:73
+    |
+588 |                 vstd::set_lib::lemma_len_difference::<Seq<char>>(set3@, set4@);
+    |                                                                         ^^^^
+    |
+help: a local variable with a similar name exists
+    |
+588 -                 vstd::set_lib::lemma_len_difference::<Seq<char>>(set3@, set4@);
+588 +                 vstd::set_lib::lemma_len_difference::<Seq<char>>(set3@, set1@);
+    |
+
+error[E0425]: cannot find value `left_side` in this scope
+   --> src/Chap44/DocumentIndex.rs:591:21
+    |
+591 |             self.or(left_side, right_side)
+    |                     ^^^^^^^^^ not found in this scope
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 789MB, peak z3 RSS: 0MB, min free: 21388MB
+Sampled CPU Usage: rust_verify: 7s, z3 children: 0s

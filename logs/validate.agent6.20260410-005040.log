@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap30 Chap02 Chap50
+error[E0425]: cannot find value `gd` in this scope
+   --> src/Chap50/MatrixChainMtPer.rs:267:104
+    |
+267 |                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtPerMemoInv { dims: gd })),
+    |                                                                                                        ^^ not found in this scope
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 16248MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

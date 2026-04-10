@@ -1,0 +1,18 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: unexpected closing delimiter: `}`
+    --> src/Chap45/BinaryHeapPQ.rs:1833:1
+     |
+1203 |                         implies #[trigger] ne_view[k] == self@[k] by {
+     |                                                                      - this delimiter might not be properly closed...
+1204 |                     }
+     |                     - ...as it matches this but it has different indentation
+...
+1833 | }
+     | ^ unexpected closing delimiter
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 20402MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

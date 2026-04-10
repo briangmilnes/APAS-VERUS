@@ -1,0 +1,185 @@
+Mode: isolate
+Isolate: including Chap30 Chap02 Chap50
+error: expected `!`
+   --> src/Chap50/MatrixChainMtEph.rs:621:21
+    |
+621 |             ensures equal == (self@ == other@)
+    |                     ^^^^^
+
+error[E0425]: cannot find type `MatrixChainMtEphS` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:656:28
+    |
+656 |     impl IntoIterator for &MatrixChainMtEphS {
+    |                            ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `MatrixDim` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:657:21
+    |
+657 |         type Item = MatrixDim;
+    |                     ^^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these structs
+    |
+ 41 +     use crate::Chap50::MatrixChainMtPer::MatrixChainMtPer::MatrixDim;
+    |
+ 41 +     use crate::Chap50::MatrixChainStEph::MatrixChainStEph::MatrixDim;
+    |
+ 41 +     use crate::Chap50::MatrixChainStPer::MatrixChainStPer::MatrixDim;
+    |
+
+error[E0425]: cannot find type `MatrixDim` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:658:34
+    |
+658 |         type IntoIter = IntoIter<MatrixDim>;
+    |                                  ^^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these structs
+    |
+ 41 +     use crate::Chap50::MatrixChainMtPer::MatrixChainMtPer::MatrixDim;
+    |
+ 41 +     use crate::Chap50::MatrixChainStEph::MatrixChainStEph::MatrixDim;
+    |
+ 41 +     use crate::Chap50::MatrixChainStPer::MatrixChainStPer::MatrixDim;
+    |
+
+error[E0425]: cannot find type `MatrixChainMtEphS` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:670:32
+    |
+670 |     impl IntoIterator for &mut MatrixChainMtEphS {
+    |                                ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `MatrixDim` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:671:21
+    |
+671 |         type Item = MatrixDim;
+    |                     ^^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these structs
+    |
+ 41 +     use crate::Chap50::MatrixChainMtPer::MatrixChainMtPer::MatrixDim;
+    |
+ 41 +     use crate::Chap50::MatrixChainStEph::MatrixChainStEph::MatrixDim;
+    |
+ 41 +     use crate::Chap50::MatrixChainStPer::MatrixChainStPer::MatrixDim;
+    |
+
+error[E0425]: cannot find type `MatrixDim` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:672:34
+    |
+672 |         type IntoIter = IntoIter<MatrixDim>;
+    |                                  ^^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these structs
+    |
+ 41 +     use crate::Chap50::MatrixChainMtPer::MatrixChainMtPer::MatrixDim;
+    |
+ 41 +     use crate::Chap50::MatrixChainStEph::MatrixChainStEph::MatrixDim;
+    |
+ 41 +     use crate::Chap50::MatrixChainStPer::MatrixChainStPer::MatrixDim;
+    |
+
+error[E0425]: cannot find type `MatrixDim` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:686:22
+    |
+686 |     impl Display for MatrixDim {
+    |                      ^^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these structs
+    |
+ 41 +     use crate::Chap50::MatrixChainMtPer::MatrixChainMtPer::MatrixDim;
+    |
+ 41 +     use crate::Chap50::MatrixChainStEph::MatrixChainStEph::MatrixDim;
+    |
+ 41 +     use crate::Chap50::MatrixChainStPer::MatrixChainStPer::MatrixDim;
+    |
+
+error[E0425]: cannot find type `MatrixChainMtEphDimInv` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:694:20
+    |
+694 |     impl Debug for MatrixChainMtEphDimInv {
+    |                    ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `MatrixChainMtEphDimInv` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:698:22
+    |
+698 |     impl Display for MatrixChainMtEphDimInv {
+    |                      ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `MatrixChainMtEphMemoInv` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:704:20
+    |
+704 |     impl Debug for MatrixChainMtEphMemoInv {
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `MatrixChainMtEphMemoInv` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:708:22
+    |
+708 |     impl Display for MatrixChainMtEphMemoInv {
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `MatrixChainMtEphS` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:714:20
+    |
+714 |     impl Debug for MatrixChainMtEphS {
+    |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `MatrixChainMtEphS` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:718:22
+    |
+718 |     impl Display for MatrixChainMtEphS {
+    |                      ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `MatrixChainMtEphS` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:735:27
+    |
+735 |     impl IntoIterator for MatrixChainMtEphS {
+    |                           ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `MatrixDim` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:736:21
+    |
+736 |         type Item = MatrixDim;
+    |                     ^^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these structs
+    |
+ 41 +     use crate::Chap50::MatrixChainMtPer::MatrixChainMtPer::MatrixDim;
+    |
+ 41 +     use crate::Chap50::MatrixChainStEph::MatrixChainStEph::MatrixDim;
+    |
+ 41 +     use crate::Chap50::MatrixChainStPer::MatrixChainStPer::MatrixDim;
+    |
+
+error[E0425]: cannot find type `MatrixDim` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:737:34
+    |
+737 |         type IntoIter = IntoIter<MatrixDim>;
+    |                                  ^^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these structs
+    |
+ 41 +     use crate::Chap50::MatrixChainMtPer::MatrixChainMtPer::MatrixDim;
+    |
+ 41 +     use crate::Chap50::MatrixChainStEph::MatrixChainStEph::MatrixDim;
+    |
+ 41 +     use crate::Chap50::MatrixChainStPer::MatrixChainStPer::MatrixDim;
+    |
+
+error[E0425]: cannot find type `MatrixChainMtEphV` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:751:20
+    |
+751 |     impl Debug for MatrixChainMtEphV {
+    |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `MatrixChainMtEphV` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:755:22
+    |
+755 |     impl Display for MatrixChainMtEphV {
+    |                      ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 19 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 19155MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

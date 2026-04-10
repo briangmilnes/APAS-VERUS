@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap42 Chap41 Chap44 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find value `doc_id_view` in this scope
+   --> src/Chap44/DocumentIndex.rs:255:38
+    |
+255 |                         gds.contains(doc_id_view),
+    |                                      ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `doc_id_view` in this scope
+   --> src/Chap44/DocumentIndex.rs:256:36
+    |
+256 |                         doc_id@ == doc_id_view,
+    |                                    ^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 1726MB, peak z3 RSS: 229MB, min free: 20289MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 0s

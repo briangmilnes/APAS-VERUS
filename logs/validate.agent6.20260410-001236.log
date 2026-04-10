@@ -1,0 +1,31 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: mismatched closing delimiter: `}`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:621:18
+    |
+621 |         fn resize(
+    |                  ^ unclosed delimiter
+...
+767 |         }
+    |         ^ mismatched closing delimiter
+
+error: unexpected closing delimiter: `}`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:825:1
+    |
+ 90 |     {
+    |     - this delimiter might not be properly closed...
+...
+169 |                                     if spec_flat_has_key(old_table_seq[j], key) {}
+    |                                                                                 -- block is empty, you might have not meant to close it
+...
+767 |         }
+    |         - ...as it matches this but it has different indentation
+...
+825 | }
+    | ^ unexpected closing delimiter
+
+error: aborting due to 2 previous errors
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 19890MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

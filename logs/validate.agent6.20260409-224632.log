@@ -1,0 +1,16 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: mismatched closing delimiter: `}`
+    --> src/Chap45/BinaryHeapPQ.rs:798:24
+     |
+ 798 |                     && (2 * (i as int) + 2 < heap.seq@.len()
+     |                        ^ unclosed delimiter
+...
+1838 |     }
+     |     ^ mismatched closing delimiter
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 21394MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

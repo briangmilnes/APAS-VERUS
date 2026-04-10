@@ -1,0 +1,1849 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: expected delimiter
+   --> src/Chap47/ParaHashTableStEph.rs:317:26
+    |
+317 |                 implies !#[trigger] table.drop_last()[j].spec_entry_to_map().dom().contains(key) by {
+    |                          ^
+
+error[E0405]: cannot find trait `EntryTrait` in this scope
+   --> src/Chap47/ChainedHashTable.rs:159:65
+    |
+159 |         pub trait ChainedHashTable<Key: StT, Value: StT, Entry: EntryTrait<Key, Value>, Metrics: Default, H: Fn(&Key, usize) -> usize + Clone>:
+    |                                                                 ^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `ParaHashTableStEphTrait` in this scope
+   --> src/Chap47/ChainedHashTable.rs:160:13
+    |
+160 |             ParaHashTableStEphTrait<Key, Value, Entry, Metrics, H>
+    |             ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/ChainedHashTable.rs:165:35
+    |
+165 |             fn hash_index(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (index: usize)
+    |                                   ^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `EntryTrait` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:240:64
+    |
+240 |         impl<Key: Eq + View + Clone, Value: Eq + View + Clone> EntryTrait<Key, Value> for ChainList<Key, Value> {
+    |                                                                ^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `ParaHashTableStEphTrait` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:330:13
+    |
+330 |             ParaHashTableStEphTrait<Key, Value, ChainList<Key, Value>, Metrics, H>
+    |             ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:334:61
+    |
+334 |             open spec fn spec_parahashtablesteph_wf(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>) -> bool {
+    |                                                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:342:35
+    |
+342 |             fn insert(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: Key, value: Value) {
+    |                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:385:31
+    |
+385 |             fn lookup(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
+    |                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:410:35
+    |
+410 |             fn delete(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+    |                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:463:25
+    |
+463 |                 table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>,
+    |                         ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:465:28
+    |
+465 |             ) -> (resized: HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>) {
+    |                            ^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `HashTable` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:727:37
+    |
+727 |                 let mut new_table = HashTable {
+    |                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:800:35
+    |
+800 |             fn hash_index(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (index: usize) {
+    |                                   ^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `EntryTrait` in this scope
+  --> src/Chap47/VecChainedHashTableStEph.rs:82:52
+   |
+82 |         impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for Vec<(Key, Value)> {
+   |                                                    ^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `ParaHashTableStEphTrait` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:177:13
+    |
+177 |             ParaHashTableStEphTrait<Key, Value, Vec<(Key, Value)>, Metrics, H>
+    |             ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:182:35
+    |
+182 |             fn insert(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
+    |                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:275:31
+    |
+275 |             fn lookup(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
+    |                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:337:35
+    |
+337 |             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
+    |                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:458:25
+    |
+458 |                 table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>,
+    |                         ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:460:28
+    |
+460 |             ) -> (resized: HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>) {
+    |                            ^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `HashTable` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:552:37
+    |
+552 |                 let mut new_table = HashTable {
+    |                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:620:35
+    |
+620 |             fn hash_index(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (index: usize) {
+    |                                   ^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `EntryTrait` in this scope
+  --> src/Chap47/LinkedListChainedHashTableStEph.rs:85:52
+   |
+85 |         impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for LinkedListStEphS<(Key, Value)> {
+   |                                                    ^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `ParaHashTableStEphTrait` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:177:13
+    |
+177 |             ParaHashTableStEphTrait<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>
+    |             ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:182:35
+    |
+182 |             fn insert(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
+    |                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:283:31
+    |
+283 |             fn lookup(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
+    |                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:345:35
+    |
+345 |             fn delete(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
+    |                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:475:25
+    |
+475 |                 table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>,
+    |                         ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:477:28
+    |
+477 |             ) -> (resized: HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>) {
+    |                            ^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `HashTable` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:575:37
+    |
+575 |                 let mut new_table = HashTable {
+    |                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:646:35
+    |
+646 |             fn hash_index(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (index: usize) {
+    |                                   ^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `EntryTrait` in this scope
+   --> src/Chap47/FlatHashTable.rs:158:58
+    |
+158 |     pub trait FlatHashTable<Key: StT, Value: StT, Entry: EntryTrait<Key, Value>, Metrics: Default, H: Fn(&Key, usize) -> usize + Clone>:
+    |                                                          ^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `ParaHashTableStEphTrait` in this scope
+   --> src/Chap47/FlatHashTable.rs:159:9
+    |
+159 |         ParaHashTableStEphTrait<Key, Value, Entry, Metrics, H>
+    |         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/FlatHashTable.rs:164:26
+    |
+164 |         fn probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize)
+    |                          ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/FlatHashTable.rs:174:30
+    |
+174 |         fn find_slot(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (slot: usize)
+    |                              ^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `EntryTrait` in this scope
+   --> src/Chap47/FlatHashTable.rs:187:48
+    |
+187 |     impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for FlatEntry<Key, Value> {
+    |                                                ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+  --> src/Chap47/LinProbFlatHashTableStEph.rs:56:17
+   |
+56 |         table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+   |                 ^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `ParaHashTableStEphTrait` in this scope
+  --> src/Chap47/LinProbFlatHashTableStEph.rs:88:9
+   |
+88 |         ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics, H>
+   |         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+  --> src/Chap47/LinProbFlatHashTableStEph.rs:91:57
+   |
+91 |         open spec fn spec_parahashtablesteph_wf(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+   |                                                         ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+  --> src/Chap47/LinProbFlatHashTableStEph.rs:97:55
+   |
+97 |         open spec fn spec_has_insert_capacity(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+   |                                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:103:45
+    |
+103 |         open spec fn spec_resize_ok(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, new_size: usize) -> bool {
+    |                                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:109:31
+    |
+109 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+    |                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:339:27
+    |
+339 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
+    |                           ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:454:31
+    |
+454 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+    |                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:601:21
+    |
+601 |             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+    |                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:603:24
+    |
+603 |         ) -> (resized: HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) {
+    |                        ^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `HashTable` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:675:33
+    |
+675 |             let mut new_table = HashTable {
+    |                                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:755:26
+    |
+755 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {
+    |                          ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:762:30
+    |
+762 |         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (slot: usize) {
+    |                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+  --> src/Chap47/QuadProbFlatHashTableStEph.rs:76:17
+   |
+76 |         table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+   |                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:340:17
+    |
+340 |         table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+    |                 ^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `ParaHashTableStEphTrait` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:422:9
+    |
+422 |         ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics, H>
+    |         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:425:57
+    |
+425 |         open spec fn spec_parahashtablesteph_wf(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+    |                                                         ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:431:55
+    |
+431 |         open spec fn spec_has_insert_capacity(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+    |                                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:437:45
+    |
+437 |         open spec fn spec_resize_ok(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, new_size: usize) -> bool {
+    |                                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:444:31
+    |
+444 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+    |                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:638:27
+    |
+638 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
+    |                           ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:755:31
+    |
+755 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+    |                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:903:21
+    |
+903 |             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+    |                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:905:24
+    |
+905 |         ) -> (resized: HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) {
+    |                        ^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `HashTable` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:971:33
+    |
+971 |             let mut new_table = HashTable {
+    |                                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1047:26
+     |
+1047 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {
+     |                          ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1055:30
+     |
+1055 |         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (slot: usize) {
+     |                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+  --> src/Chap47/DoubleHashFlatHashTableStEph.rs:62:17
+   |
+62 |         table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+   |                 ^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `ParaHashTableStEphTrait` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:130:9
+    |
+130 |         ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics, H>
+    |         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:133:57
+    |
+133 |         open spec fn spec_parahashtablesteph_wf(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+    |                                                         ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:139:55
+    |
+139 |         open spec fn spec_has_insert_capacity(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+    |                                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:145:45
+    |
+145 |         open spec fn spec_resize_ok(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, new_size: usize) -> bool {
+    |                                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:151:31
+    |
+151 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+    |                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:348:27
+    |
+348 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
+    |                           ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:481:31
+    |
+481 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+    |                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:638:21
+    |
+638 |             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+    |                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:640:24
+    |
+640 |         ) -> (resized: HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) {
+    |                        ^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `HashTable` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:710:33
+    |
+710 |             let mut new_table = HashTable {
+    |                                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:788:26
+    |
+788 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {
+    |                          ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:796:30
+    |
+796 |         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (slot: usize) {
+    |                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LoadAndSize` in this scope
+   --> src/Chap47/ParaHashTableStEph.rs:555:30
+    |
+555 |     impl std::fmt::Debug for LoadAndSize {
+    |                              ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LoadAndSize` in this scope
+   --> src/Chap47/ParaHashTableStEph.rs:564:32
+    |
+564 |     impl std::fmt::Display for LoadAndSize {
+    |                                ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/ParaHashTableStEph.rs:574:13
+    |
+574 |         for HashTable<Key, Value, Entry, Metrics, H>
+    |             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashTable` in this scope
+   --> src/Chap47/ParaHashTableStEph.rs:586:13
+    |
+586 |         for HashTable<Key, Value, Entry, Metrics, H>
+    |             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+  --> src/Chap47/ChainedHashTable.rs:38:17
+   |
+38 |                 spec_seq_pairs_to_map(pairs.remove(i)).dom().contains(k)
+   |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+  --> src/Chap47/ChainedHashTable.rs:39:24
+   |
+39 |                     == spec_seq_pairs_to_map(pairs).dom().contains(k),
+   |                        ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+  --> src/Chap47/ChainedHashTable.rs:40:17
+   |
+40 |                 spec_seq_pairs_to_map(pairs.remove(i)).dom().contains(k) ==>
+   |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+  --> src/Chap47/ChainedHashTable.rs:41:21
+   |
+41 |                     spec_seq_pairs_to_map(pairs.remove(i))[k]
+   |                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+  --> src/Chap47/ChainedHashTable.rs:42:28
+   |
+42 |                         == spec_seq_pairs_to_map(pairs)[k],
+   |                            ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+  --> src/Chap47/ChainedHashTable.rs:67:17
+   |
+67 |                 spec_seq_pairs_to_map(pairs.remove(i).push((key, value)))
+   |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+  --> src/Chap47/ChainedHashTable.rs:68:25
+   |
+68 |                     =~= spec_seq_pairs_to_map(pairs).insert(key, value),
+   |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+  --> src/Chap47/ChainedHashTable.rs:78:17
+   |
+78 |                 spec_seq_pairs_to_map(removed).dom().contains(k)
+   |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+  --> src/Chap47/ChainedHashTable.rs:79:24
+   |
+79 |                     == spec_seq_pairs_to_map(pairs).dom().contains(k)
+   |                        ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+  --> src/Chap47/ChainedHashTable.rs:85:59
+   |
+85 |             assert forall |k: Key| k != key && #[trigger] spec_seq_pairs_to_map(removed).dom().contains(k) implies
+   |                                                           ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+  --> src/Chap47/ChainedHashTable.rs:86:17
+   |
+86 |                 spec_seq_pairs_to_map(removed)[k] == spec_seq_pairs_to_map(pairs)[k]
+   |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+  --> src/Chap47/ChainedHashTable.rs:86:54
+   |
+86 |                 spec_seq_pairs_to_map(removed)[k] == spec_seq_pairs_to_map(pairs)[k]
+   |                                                      ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/ChainedHashTable.rs:100:18
+    |
+100 |                 !spec_seq_pairs_to_map(pairs).dom().contains(key),
+    |                  ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/ChainedHashTable.rs:118:17
+    |
+118 |                 spec_seq_pairs_to_map(pairs).dom().contains(key),
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/ChainedHashTable.rs:140:17
+    |
+140 |                 spec_seq_pairs_to_map(pairs).dom().contains(key),
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/ChainedHashTable.rs:141:17
+    |
+141 |                 spec_seq_pairs_to_map(pairs)[key] == pairs[i].1,
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hashtable_wf` in this scope
+   --> src/Chap47/ChainedHashTable.rs:167:21
+    |
+167 |                     spec_hashtable_wf(table),
+    |                     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:172:33
+    |
+172 |                         let v = clone_elem(&node.value);
+    |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hashtable_wf` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:335:17
+    |
+335 |                 spec_hashtable_wf(table)
+    |                 ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:343:29
+    |
+343 |                 let index = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
+    |                             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_insert` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:362:21
+    |
+362 |                     lemma_table_to_map_update_insert::<Key, Value, ChainList<Key, Value>>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_other_slots_preserved` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:375:28
+    |
+375 |                     assert(spec_other_slots_preserved(old(table).table@, table.table@, index as int));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:386:29
+    |
+386 |                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_unique_entry_value` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:397:25
+    |
+397 |                         lemma_table_to_map_unique_entry_value::<Key, Value, ChainList<Key, Value>>(
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:401:25
+    |
+401 |                         lemma_table_to_map_not_contains::<Key, Value, ChainList<Key, Value>>(
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:411:29
+    |
+411 |                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_remove` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:430:21
+    |
+430 |                     lemma_table_to_map_update_remove::<Key, Value, ChainList<Key, Value>>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_contains` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:445:25
+    |
+445 |                         lemma_table_to_map_update_contains::<Key, Value, ChainList<Key, Value>>(
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:450:25
+    |
+450 |                         lemma_table_to_map_not_contains::<Key, Value, ChainList<Key, Value>>(old_table, *key);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:477:39
+    |
+295 | /         pub open spec fn spec_chain_to_map<Key, Value>(
+296 | |             chain: Option<Box<Node<Key, Value>>>,
+297 | |         ) -> Map<Key, Value>
+298 | |             decreases chain,
+...   |
+304 | |         }
+    | |_________- similarly named function `spec_chain_to_map` defined here
+...
+477 |                           pairs_map =~= spec_seq_pairs_to_map::<Key, Value>(pairs@),
+    |                                         ^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+477 -                         pairs_map =~= spec_seq_pairs_to_map::<Key, Value>(pairs@),
+477 +                         pairs_map =~= spec_chain_to_map::<Key, Value>(pairs@),
+    |
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:506:43
+    |
+295 | /         pub open spec fn spec_chain_to_map<Key, Value>(
+296 | |             chain: Option<Box<Node<Key, Value>>>,
+297 | |         ) -> Map<Key, Value>
+298 | |             decreases chain,
+...   |
+304 | |         }
+    | |_________- similarly named function `spec_chain_to_map` defined here
+...
+506 |                               pairs_map =~= spec_seq_pairs_to_map::<Key, Value>(pairs@),
+    |                                             ^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+506 -                             pairs_map =~= spec_seq_pairs_to_map::<Key, Value>(pairs@),
+506 +                             pairs_map =~= spec_chain_to_map::<Key, Value>(pairs@),
+    |
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:535:34
+    |
+535 |                         let ck = clone_elem(&nk);
+    |                                  ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:536:34
+    |
+536 |                         let cv = clone_elem(&nv);
+    |                                  ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_table_to_map` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:642:37
+    |
+295 | /         pub open spec fn spec_chain_to_map<Key, Value>(
+296 | |             chain: Option<Box<Node<Key, Value>>>,
+297 | |         ) -> Map<Key, Value>
+298 | |             decreases chain,
+...   |
+304 | |         }
+    | |_________- similarly named function `spec_chain_to_map` defined here
+...
+642 |                           (#[trigger] spec_table_to_map::<Key, Value, ChainList<Key, Value>>(
+    |                                       ^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+642 -                         (#[trigger] spec_table_to_map::<Key, Value, ChainList<Key, Value>>(
+642 +                         (#[trigger] spec_chain_to_map::<Key, Value, ChainList<Key, Value>>(
+    |
+
+error[E0425]: cannot find function `lemma_table_to_map_unique_entry_value` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:655:29
+    |
+655 | ...                   lemma_table_to_map_unique_entry_value::<
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_table_to_map` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:659:28
+    |
+295 | /         pub open spec fn spec_chain_to_map<Key, Value>(
+296 | |             chain: Option<Box<Node<Key, Value>>>,
+297 | |         ) -> Map<Key, Value>
+298 | |             decreases chain,
+...   |
+304 | |         }
+    | |_________- similarly named function `spec_chain_to_map` defined here
+...
+659 |                           if spec_table_to_map::<Key, Value, ChainList<Key, Value>>(
+    |                              ^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+659 -                         if spec_table_to_map::<Key, Value, ChainList<Key, Value>>(
+659 +                         if spec_chain_to_map::<Key, Value, ChainList<Key, Value>>(
+    |
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:669:29
+    |
+669 | ...                   lemma_table_to_map_not_contains::<
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_table_to_map` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:677:28
+    |
+295 | /         pub open spec fn spec_chain_to_map<Key, Value>(
+296 | |             chain: Option<Box<Node<Key, Value>>>,
+297 | |         ) -> Map<Key, Value>
+298 | |             decreases chain,
+...   |
+304 | |         }
+    | |_________- similarly named function `spec_chain_to_map` defined here
+...
+677 |                           && spec_table_to_map::<Key, Value, ChainList<Key, Value>>(
+    |                              ^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+677 -                         && spec_table_to_map::<Key, Value, ChainList<Key, Value>>(
+677 +                         && spec_chain_to_map::<Key, Value, ChainList<Key, Value>>(
+    |
+
+error[E0425]: cannot find function `spec_table_to_map` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:680:49
+    |
+295 | /         pub open spec fn spec_chain_to_map<Key, Value>(
+296 | |             chain: Option<Box<Node<Key, Value>>>,
+297 | |         ) -> Map<Key, Value>
+298 | |             decreases chain,
+...   |
+304 | |         }
+    | |_________- similarly named function `spec_chain_to_map` defined here
+...
+680 |                           implies pairs_map[k] == spec_table_to_map::<
+    |                                                   ^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+680 -                         implies pairs_map[k] == spec_table_to_map::<
+680 +                         implies pairs_map[k] == spec_chain_to_map::<
+    |
+
+error[E0425]: cannot find function `lemma_table_to_map_unique_entry_value` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:692:25
+    |
+692 |                         lemma_table_to_map_unique_entry_value::<
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_table_to_map` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:705:25
+    |
+295 | /         pub open spec fn spec_chain_to_map<Key, Value>(
+296 | |             chain: Option<Box<Node<Key, Value>>>,
+297 | |         ) -> Map<Key, Value>
+298 | |             decreases chain,
+...   |
+304 | |         }
+    | |_________- similarly named function `spec_chain_to_map` defined here
+...
+705 |                           spec_table_to_map::<Key, Value, ChainList<Key, Value>>(new_table_vec@)
+    |                           ^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+705 -                         spec_table_to_map::<Key, Value, ChainList<Key, Value>>(new_table_vec@)
+705 +                         spec_chain_to_map::<Key, Value, ChainList<Key, Value>>(new_table_vec@)
+    |
+
+error[E0425]: cannot find function `lemma_table_to_map_push_empty` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:720:25
+    |
+720 |                         lemma_table_to_map_push_empty::<Key, Value, ChainList<Key, Value>>(
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:762:40
+    |
+295 | /         pub open spec fn spec_chain_to_map<Key, Value>(
+296 | |             chain: Option<Box<Node<Key, Value>>>,
+297 | |         ) -> Map<Key, Value>
+298 | |             decreases chain,
+...   |
+304 | |         }
+    | |_________- similarly named function `spec_chain_to_map` defined here
+...
+762 |                           new_table@ =~= spec_seq_pairs_to_map::<Key, Value>(
+    |                                          ^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+762 -                         new_table@ =~= spec_seq_pairs_to_map::<Key, Value>(
+762 +                         new_table@ =~= spec_chain_to_map::<Key, Value>(
+    |
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:769:31
+    |
+769 |                     let key = clone_elem(&pairs[m].0);
+    |                               ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:770:33
+    |
+770 |                     let value = clone_elem(&pairs[m].1);
+    |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:801:17
+    |
+801 |                 call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash)
+    |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+  --> src/Chap47/VecChainedHashTableStEph.rs:73:25
+   |
+73 |                 let k = clone_elem(&pairs[i].0);
+   |                         ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+  --> src/Chap47/VecChainedHashTableStEph.rs:74:25
+   |
+74 |                 let v = clone_elem(&pairs[i].1);
+   |                         ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+  --> src/Chap47/VecChainedHashTableStEph.rs:84:17
+   |
+84 |                 spec_seq_pairs_to_map(self@)
+   |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:183:29
+    |
+183 |                 let index = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
+    |                             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_insert` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:250:21
+    |
+250 |                     lemma_table_to_map_update_insert::<Key, Value, Vec<(Key, Value)>>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_other_slots_preserved` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:269:28
+    |
+269 |                     assert(spec_other_slots_preserved(old(table).table@, table.table@, index as int));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:276:29
+    |
+276 |                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:284:25
+    |
+284 |                         lemma_table_to_map_not_contains::<Key, Value, Vec<(Key, Value)>>(
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hashtable_wf` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:298:25
+    |
+298 |                         spec_hashtable_wf(table),
+    |                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:310:33
+    |
+310 |                         let v = clone_elem(&table.table[index][i].1);
+    |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_unique_entry_value` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:320:29
+    |
+320 | ...                   lemma_table_to_map_unique_entry_value::<Key, Value, Vec<(Key, Value)>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:329:21
+    |
+329 |                     lemma_table_to_map_not_contains::<Key, Value, Vec<(Key, Value)>>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:338:29
+    |
+338 |                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:360:40
+    |
+360 |                         prefix_map =~= spec_seq_pairs_to_map(original.subrange(0, i as int)),
+    |                                        ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:361:25
+    |
+361 |                         spec_seq_pairs_to_map(new_bucket@) =~= prefix_map.remove(*key),
+    |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:382:33
+    |
+382 |                         let k = clone_elem(&bucket[i].0);
+    |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:383:33
+    |
+383 |                         let v = clone_elem(&bucket[i].1);
+    |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_remove` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:423:21
+    |
+423 |                     lemma_table_to_map_update_remove::<Key, Value, Vec<(Key, Value)>>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_contains` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:439:25
+    |
+439 |                         lemma_table_to_map_update_contains::<Key, Value, Vec<(Key, Value)>>(
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:445:25
+    |
+445 |                         lemma_table_to_map_not_contains::<Key, Value, Vec<(Key, Value)>>(old_table, *key);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:468:25
+    |
+468 |                         spec_seq_pairs_to_map(pairs@) =~=
+    |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_table_to_map` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:469:29
+    |
+469 | ...                   spec_table_to_map::<Key, Value, Vec<(Key, Value)>>(
+    |                       ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:475:43
+    |
+475 |                     let ghost outer_map = spec_seq_pairs_to_map(pairs@);
+    |                                           ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:483:29
+    |
+483 | ...                   spec_seq_pairs_to_map(pairs@) =~=
+    |                       ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:485:37
+    |
+485 | ...                   spec_seq_pairs_to_map(
+    |                       ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:492:45
+    |
+492 |                         let ghost old_map = spec_seq_pairs_to_map(old_pairs);
+    |                                             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:494:33
+    |
+494 |                         let k = clone_elem(&table.table[i][j].0);
+    |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:495:33
+    |
+495 |                         let v = clone_elem(&table.table[i][j].1);
+    |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:505:43
+    |
+505 | ...                   let ghost n = spec_seq_pairs_to_map(chain_sub);
+    |                                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_table_to_map` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:538:25
+    |
+538 |                         spec_table_to_map::<Key, Value, Vec<(Key, Value)>>(new_table_vec@)
+    |                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_push_empty` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:547:25
+    |
+547 |                         lemma_table_to_map_push_empty::<Key, Value, Vec<(Key, Value)>>(
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hashtable_wf` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:573:28
+    |
+573 |                     assert(spec_hashtable_wf(&new_table));
+    |                            ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:586:40
+    |
+586 |                         new_table@ =~= spec_seq_pairs_to_map(
+    |                                        ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:593:31
+    |
+593 |                     let key = clone_elem(&pairs[m].0);
+    |                               ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:594:33
+    |
+594 |                     let value = clone_elem(&pairs[m].1);
+    |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:621:17
+    |
+621 |                 call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash)
+    |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+  --> src/Chap47/LinkedListChainedHashTableStEph.rs:76:25
+   |
+76 |                 let k = clone_elem(&entry.seq[i].0);
+   |                         ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+  --> src/Chap47/LinkedListChainedHashTableStEph.rs:77:25
+   |
+77 |                 let v = clone_elem(&entry.seq[i].1);
+   |                         ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+  --> src/Chap47/LinkedListChainedHashTableStEph.rs:87:17
+   |
+87 |                 spec_seq_pairs_to_map(self.seq@)
+   |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:183:29
+    |
+183 |                 let index = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
+    |                             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_insert` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:256:21
+    |
+256 |                     lemma_table_to_map_update_insert::<Key, Value, LinkedListStEphS<(Key, Value)>>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_other_slots_preserved` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:277:28
+    |
+277 |                     assert(spec_other_slots_preserved(old(table).table@, table.table@, index as int));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:284:29
+    |
+284 |                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:292:25
+    |
+292 |                         lemma_table_to_map_not_contains::<Key, Value, LinkedListStEphS<(Key, Value)>>(
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hashtable_wf` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:304:25
+    |
+304 |                         spec_hashtable_wf(table),
+    |                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:317:33
+    |
+317 |                         let v = clone_elem(&table.table[index].seq[i].1);
+    |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_unique_entry_value` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:328:29
+    |
+328 | ...                   lemma_table_to_map_unique_entry_value::<Key, Value, LinkedListStEphS<(Key, Value)>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:337:21
+    |
+337 |                     lemma_table_to_map_not_contains::<Key, Value, LinkedListStEphS<(Key, Value)>>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:346:29
+    |
+346 |                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:369:40
+    |
+369 |                         prefix_map =~= spec_seq_pairs_to_map(original.subrange(0, i as int)),
+    |                                        ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:370:25
+    |
+370 |                         spec_seq_pairs_to_map(new_seq@) =~= prefix_map.remove(*key),
+    |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:393:33
+    |
+393 |                         let k = clone_elem(&bucket_seq[i].0);
+    |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:394:33
+    |
+394 |                         let v = clone_elem(&bucket_seq[i].1);
+    |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_remove` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:435:21
+    |
+435 |                     lemma_table_to_map_update_remove::<Key, Value, LinkedListStEphS<(Key, Value)>>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_contains` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:455:25
+    |
+455 |                         lemma_table_to_map_update_contains::<Key, Value, LinkedListStEphS<(Key, Value)>>(
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:462:25
+    |
+462 |                         lemma_table_to_map_not_contains::<Key, Value, LinkedListStEphS<(Key, Value)>>(old_table, *key);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:485:25
+    |
+485 |                         spec_seq_pairs_to_map(pairs@) =~=
+    |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_table_to_map` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:486:29
+    |
+486 | ...                   spec_table_to_map::<Key, Value, LinkedListStEphS<(Key, Value)>>(
+    |                       ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:492:43
+    |
+492 |                     let ghost outer_map = spec_seq_pairs_to_map(pairs@);
+    |                                           ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:500:29
+    |
+500 | ...                   spec_seq_pairs_to_map(pairs@) =~=
+    |                       ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:502:37
+    |
+502 | ...                   spec_seq_pairs_to_map(
+    |                       ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:509:45
+    |
+509 |                         let ghost old_map = spec_seq_pairs_to_map(old_pairs);
+    |                                             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:511:33
+    |
+511 |                         let k = clone_elem(&table.table[i].seq[j].0);
+    |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:512:33
+    |
+512 |                         let v = clone_elem(&table.table[i].seq[j].1);
+    |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:524:43
+    |
+524 | ...                   let ghost n = spec_seq_pairs_to_map(chain_sub);
+    |                                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_table_to_map` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:560:25
+    |
+560 |                         spec_table_to_map::<Key, Value, LinkedListStEphS<(Key, Value)>>(
+    |                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_push_empty` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:569:25
+    |
+569 |                         lemma_table_to_map_push_empty::<
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hashtable_wf` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:597:28
+    |
+597 |                     assert(spec_hashtable_wf(&new_table));
+    |                            ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:610:40
+    |
+610 |                         new_table@ =~= spec_seq_pairs_to_map(
+    |                                        ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:617:31
+    |
+617 |                     let key = clone_elem(&pairs[m].0);
+    |                               ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:618:33
+    |
+618 |                     let value = clone_elem(&pairs[m].1);
+    |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:647:17
+    |
+647 |                 call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash)
+    |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hash_fn_valid` in this scope
+   --> src/Chap47/FlatHashTable.rs:167:17
+    |
+167 |                 spec_hash_fn_valid::<Key, H>(table.spec_hash@),
+    |                 ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hash_fn_valid` in this scope
+   --> src/Chap47/FlatHashTable.rs:178:17
+    |
+178 |                 spec_hash_fn_valid::<Key, H>(table.spec_hash@),
+    |                 ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hash_fn_valid` in this scope
+  --> src/Chap47/LinProbFlatHashTableStEph.rs:93:16
+   |
+93 |             && spec_hash_fn_valid::<Key, H>(table.spec_hash@)
+   |                ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:110:21
+    |
+110 |             let h = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hash_fn_valid` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:123:21
+    |
+123 |                     spec_hash_fn_valid::<Key, H>(table.spec_hash@),
+    |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_insert` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:173:33
+    |
+173 | ...                   lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_other_slots_preserved` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:203:40
+    |
+203 | ...                   assert(spec_other_slots_preserved(
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:229:29
+    |
+229 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(old_table_seq, key);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_insert` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:231:29
+    |
+231 | ...                   lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_other_slots_preserved` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:308:36
+    |
+308 | ...                   assert(spec_other_slots_preserved(
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:340:21
+    |
+340 |             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_unique_entry_value` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:395:33
+    |
+395 | ...                   lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:422:29
+    |
+422 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:447:17
+    |
+447 |                 lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:455:21
+    |
+455 |             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hash_fn_valid` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:468:21
+    |
+468 |                     spec_hash_fn_valid::<Key, H>(table.spec_hash@),
+    |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_remove` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:522:33
+    |
+522 | ...                   lemma_table_to_map_update_remove::<Key, Value, FlatEntry<Key, Value>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_unique_entry_value` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:525:33
+    |
+525 | ...                   lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:570:29
+    |
+570 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:593:17
+    |
+593 |                 lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:612:21
+    |
+612 |                     spec_seq_pairs_to_map(pairs@) =~=
+    |                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_table_to_map` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:613:25
+    |
+613 |                         spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(
+    |                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:618:37
+    |
+618 |                 let ghost old_map = spec_seq_pairs_to_map(old_pairs);
+    |                                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_table_to_map` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:662:21
+    |
+662 |                     spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(new_table_vec@)
+    |                     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_push_empty` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:670:21
+    |
+670 |                     lemma_table_to_map_push_empty::<Key, Value, FlatEntry<Key, Value>>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:705:36
+    |
+705 |                     new_table@ =~= spec_seq_pairs_to_map(pairs@.subrange(0, j as int)),
+    |                                    ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:714:27
+    |
+714 |                 let key = clone_elem(&pairs[j].0);
+    |                           ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:715:29
+    |
+715 |                 let value = clone_elem(&pairs[j].1);
+    |                             ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_other_slots_preserved` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:727:56
+    |
+727 |                     let s = choose |s: int| #[trigger] spec_other_slots_preserved(
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:756:28
+    |
+756 |             let hash_val = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                            ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hash_fn_valid` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:769:21
+    |
+769 |                     spec_hash_fn_valid::<Key, H>(table.spec_hash@),
+    |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hash_fn_valid` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:427:16
+    |
+427 |             && spec_hash_fn_valid::<Key, H>(table.spec_hash@)
+    |                ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:445:21
+    |
+445 |             let h = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hash_fn_valid` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:465:21
+    |
+465 |                     spec_hash_fn_valid::<Key, H>(table.spec_hash@),
+    |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_insert` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:501:33
+    |
+501 | ...                   lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_other_slots_preserved` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:528:40
+    |
+528 | ...                   assert(spec_other_slots_preserved(old(table).table@, table.table@, slot as int));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:550:29
+    |
+550 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(old_table_seq, key);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_insert` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:552:29
+    |
+552 | ...                   lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_other_slots_preserved` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:583:36
+    |
+583 | ...                   assert(spec_other_slots_preserved(old(table).table@, table.table@, slot as int));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:639:21
+    |
+639 |             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_unique_entry_value` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:683:33
+    |
+683 | ...                   lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:707:29
+    |
+707 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:748:17
+    |
+748 |                 lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:756:21
+    |
+756 |             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hash_fn_valid` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:776:21
+    |
+776 |                     spec_hash_fn_valid::<Key, H>(table.spec_hash@),
+    |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_remove` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:814:33
+    |
+814 | ...                   lemma_table_to_map_update_remove::<Key, Value, FlatEntry<Key, Value>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_unique_entry_value` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:816:33
+    |
+816 | ...                   lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:855:29
+    |
+855 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:895:17
+    |
+895 |                 lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:914:21
+    |
+914 |                     spec_seq_pairs_to_map(pairs@) =~=
+    |                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_table_to_map` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:915:25
+    |
+915 |                         spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(
+    |                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:920:37
+    |
+920 |                 let ghost old_map = spec_seq_pairs_to_map(old_pairs);
+    |                                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_table_to_map` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:958:21
+    |
+958 |                     spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(new_table_vec@)
+    |                     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_push_empty` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:966:21
+    |
+966 |                     lemma_table_to_map_push_empty::<Key, Value, FlatEntry<Key, Value>>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:999:36
+    |
+999 |                     new_table@ =~= spec_seq_pairs_to_map(pairs@.subrange(0, j as int)),
+    |                                    ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1008:27
+     |
+1008 |                 let key = clone_elem(&pairs[j].0);
+     |                           ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1009:29
+     |
+1009 |                 let value = clone_elem(&pairs[j].1);
+     |                             ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_other_slots_preserved` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1021:56
+     |
+1021 |                     let s = choose |s: int| #[trigger] spec_other_slots_preserved(
+     |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1048:28
+     |
+1048 |             let hash_val = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+     |                            ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hash_fn_valid` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1062:21
+     |
+1062 |                     spec_hash_fn_valid::<Key, H>(table.spec_hash@),
+     |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hash_fn_valid` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:135:16
+    |
+135 |             && spec_hash_fn_valid::<Key, H>(table.spec_hash@)
+    |                ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:152:21
+    |
+152 |             let h = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hash_fn_valid` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:176:21
+    |
+176 |                     spec_hash_fn_valid::<Key, H>(table.spec_hash@),
+    |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_insert` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:215:33
+    |
+215 | ...                   lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_other_slots_preserved` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:240:40
+    |
+240 | ...                   assert(spec_other_slots_preserved(
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:264:29
+    |
+264 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(old_table_seq, key);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_insert` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:266:29
+    |
+266 | ...                   lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_other_slots_preserved` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:293:36
+    |
+293 | ...                   assert(spec_other_slots_preserved(
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:349:21
+    |
+349 |             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_unique_entry_value` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:401:33
+    |
+401 | ...                   lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:424:29
+    |
+424 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:474:17
+    |
+474 |                 lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:482:21
+    |
+482 |             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hash_fn_valid` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:506:21
+    |
+506 |                     spec_hash_fn_valid::<Key, H>(table.spec_hash@),
+    |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_update_remove` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:547:33
+    |
+547 | ...                   lemma_table_to_map_update_remove::<Key, Value, FlatEntry<Key, Value>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_unique_entry_value` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:549:33
+    |
+549 | ...                   lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:588:29
+    |
+588 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_not_contains` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:630:17
+    |
+630 |                 lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:649:21
+    |
+649 |                     spec_seq_pairs_to_map(pairs@) =~=
+    |                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_table_to_map` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:650:25
+    |
+650 |                         spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(
+    |                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:655:37
+    |
+655 |                 let ghost old_map = spec_seq_pairs_to_map(old_pairs);
+    |                                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_table_to_map` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:697:21
+    |
+697 |                     spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(new_table_vec@)
+    |                     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_table_to_map_push_empty` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:705:21
+    |
+705 |                     lemma_table_to_map_push_empty::<Key, Value, FlatEntry<Key, Value>>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_seq_pairs_to_map` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:740:36
+    |
+740 |                     new_table@ =~= spec_seq_pairs_to_map(pairs@.subrange(0, j as int)),
+    |                                    ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:749:27
+    |
+749 |                 let key = clone_elem(&pairs[j].0);
+    |                           ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `clone_elem` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:750:29
+    |
+750 |                 let value = clone_elem(&pairs[j].1);
+    |                             ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_other_slots_preserved` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:760:56
+    |
+760 |                     let s = choose |s: int| #[trigger] spec_other_slots_preserved(
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `call_hash_fn` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:789:25
+    |
+789 |             let hash1 = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                         ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_hash_fn_valid` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:803:21
+    |
+803 |                     spec_hash_fn_valid::<Key, H>(table.spec_hash@),
+    |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 288 previous errors
+
+Some errors have detailed explanations: E0405, E0422, E0425.
+For more information about an error, try `rustc --explain E0405`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 2240MB, peak z3 RSS: 0MB, min free: 19080MB
+Sampled CPU Usage: rust_verify: 49s, z3 children: 41s

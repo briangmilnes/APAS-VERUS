@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: expected an expression
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:489:25
+    |
+489 |                         ==> !(#[trigger] table.table@[(h as int + d) % (m as int)] is Empty),
+    |                         ^
+
+error[E0425]: cannot find type `LinProbFlatHashTableStEph` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:807:30
+    |
+807 |     impl std::fmt::Debug for LinProbFlatHashTableStEph {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinProbFlatHashTableStEph` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:813:32
+    |
+813 |     impl std::fmt::Display for LinProbFlatHashTableStEph {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 3160MB, peak z3 RSS: 518MB, min free: 18721MB
+Sampled CPU Usage: rust_verify: 58s, z3 children: 41s

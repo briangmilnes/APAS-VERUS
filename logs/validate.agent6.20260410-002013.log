@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: invariant not satisfied before loop
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:472:21
+    |
+472 |                     slot as int == spec_tri_probe(h as int, attempt as int, m as int),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:649:29
+    |
+649 |                   let s_wit = choose |s: int| #![trigger old(table).table@[s]]
+    |  _____________________________^
+650 | |                     0 <= s < old(table).table@.len() && old(table).table@[s] is Empty;
+    | |_____________________________________________________________________________________^
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 2555MB, peak z3 RSS: 304MB, min free: 19601MB
+Sampled CPU Usage: rust_verify: 24s, z3 children: 6s

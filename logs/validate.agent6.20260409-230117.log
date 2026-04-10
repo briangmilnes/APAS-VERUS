@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find value `v` in this scope
+    --> src/Chap45/SortedListPQ.rs:1115:25
+     |
+1115 |                         v@.len() == i as int,
+     |                         ^ not found in this scope
+
+error[E0425]: cannot find value `v` in this scope
+    --> src/Chap45/SortedListPQ.rs:1117:40
+     |
+1117 | ...                   #[trigger] v@[k] == self.elements.seq@[k],
+     |                                  ^ not found in this scope
+
+error[E0425]: cannot find value `v` in this scope
+    --> src/Chap45/SortedListPQ.rs:1128:21
+     |
+1128 |                     v.push(elem);
+     |                     ^ not found in this scope
+
+error[E0425]: cannot find value `v` in this scope
+    --> src/Chap45/SortedListPQ.rs:1135:38
+     |
+1135 |                         0 <= i < j < v@.len() implies
+     |                                      ^ not found in this scope
+
+error[E0425]: cannot find value `v` in this scope
+    --> src/Chap45/SortedListPQ.rs:1136:51
+     |
+1136 |                         #[trigger] TotalOrder::le(v@[i], v@[j])
+     |                                                   ^ not found in this scope
+
+error[E0425]: cannot find value `v` in this scope
+    --> src/Chap45/SortedListPQ.rs:1136:58
+     |
+1136 |                         #[trigger] TotalOrder::le(v@[i], v@[j])
+     |                                                          ^ not found in this scope
+
+error[E0425]: cannot find value `v` in this scope
+    --> src/Chap45/SortedListPQ.rs:1139:17
+     |
+1139 |                 v
+     |                 ^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 4021MB, peak z3 RSS: 437MB, min free: 18035MB
+Sampled CPU Usage: rust_verify: 69s, z3 children: 59s

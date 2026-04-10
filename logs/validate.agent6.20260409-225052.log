@@ -1,0 +1,19 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error[E0308]: mismatched types
+    --> src/Chap45/BinaryHeapPQ.rs:1761:41
+     |
+1761 |             fn from_vec(vec: Vec<T>) -> Self {
+     |                --------                 ^^^^ expected `BinaryHeapPQ<T>`, found `()`
+     |                |
+     |                implicitly returns `()` as its body has no tail or `return` expression
+     |
+     = note: expected struct `Chap45::BinaryHeapPQ::BinaryHeapPQ::BinaryHeapPQ<T>`
+             found unit type `()`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0308`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 4132MB, peak z3 RSS: 621MB, min free: 17907MB
+Sampled CPU Usage: rust_verify: 50s, z3 children: 14s

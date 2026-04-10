@@ -1,0 +1,19 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: unexpected closing delimiter: `}`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:808:1
+    |
+216 |                     FlatEntry::Empty => {
+    |                                         - this delimiter might not be properly closed...
+...
+314 |                         }
+    |                         - ...as it matches this but it has different indentation
+...
+808 | }
+    | ^ unexpected closing delimiter
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 17893MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

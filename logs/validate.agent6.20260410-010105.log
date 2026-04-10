@@ -1,0 +1,38 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap51
+error: unexpected token, expected `;`
+   --> src/Chap51/TopDownDPMtEph.rs:427:21
+    |
+427 |                     current@[(a, b)] as nat == spec_med_fn(seq_s@, seq_t@, a as nat, b as nat)
+    |                     ^^^^^^^
+
+error[E0425]: cannot find type `TopDownDPMtEphS` in this scope
+   --> src/Chap51/TopDownDPMtEph.rs:505:20
+    |
+505 |     impl Debug for TopDownDPMtEphS {
+    |                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `TopDownDPMtEphS` in this scope
+   --> src/Chap51/TopDownDPMtEph.rs:514:22
+    |
+514 |     impl Display for TopDownDPMtEphS {
+    |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `TopDownDPMtEphInv` in this scope
+   --> src/Chap51/TopDownDPMtEph.rs:527:20
+    |
+527 |     impl Debug for TopDownDPMtEphInv {
+    |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `TopDownDPMtEphInv` in this scope
+   --> src/Chap51/TopDownDPMtEph.rs:533:22
+    |
+533 |     impl Display for TopDownDPMtEphInv {
+    |                      ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 2843MB, peak z3 RSS: 0MB, min free: 19724MB
+Sampled CPU Usage: rust_verify: 30s, z3 children: 0s

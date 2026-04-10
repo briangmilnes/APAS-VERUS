@@ -1,0 +1,37 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:163:45
+    |
+163 | ...                   implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:192:49
+    |
+192 | ...                   implies !(#[trigger] table.table@[(hk + d) % m as int] is Empty) by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:439:17
+    |
+439 |                 Self::spec_parahashtablesteph_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/LinProbFlatHashTableStEph.rs:204:29
+    |
+204 | ...                   return;
+    |                       ------ at this exit
+
+note: diagnostics via expansion
+
+note: 
+
+!(old_table_seq.index(j).spec_entry_to_map().dom().contains(key)) 
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 4924MB, peak z3 RSS: 792MB, min free: 16929MB
+Sampled CPU Usage: rust_verify: 82s, z3 children: 72s

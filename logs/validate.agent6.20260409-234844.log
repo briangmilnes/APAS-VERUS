@@ -1,0 +1,49 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: precondition not satisfied
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:550:29
+    |
+550 |   ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(old_table_seq, key);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:206:13
+    |
+206 | /             forall |j: int| 0 <= j < table.len()
+207 | |                 ==> !#[trigger] table[j].spec_entry_to_map().dom().contains(key),
+    | |________________________________________________________________________________- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:552:29
+    |
+552 | / ...                   lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+553 | | ...                       old_table_seq, slot as int, new_entry, key, value);
+    | |____________________________________________________________________________^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:229:13
+    |
+229 | /             forall |j: int| 0 <= j < table.len() && j != index
+230 | |                 ==> !#[trigger] table[j].spec_entry_to_map().dom().contains(key),
+    | |________________________________________________________________________________- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = old_table_seq.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        !(old_table_seq.index(j).spec_entry_to_map().dom().contains(key)) 
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:633:29
+    |
+633 |                   let s_wit = choose |s: int| #![trigger old(table).table@[s]]
+    |  _____________________________^
+634 | |                     0 <= s < old(table).table@.len() && old(table).table@[s] is Empty;
+    | |_____________________________________________________________________________________^
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3453MB, peak z3 RSS: 307MB, min free: 18598MB
+Sampled CPU Usage: rust_verify: 42s, z3 children: 23s

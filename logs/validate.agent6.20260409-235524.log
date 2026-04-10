@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/StructChainedHashTable.rs:478:25
+    |
+478 | /                         forall |k: Key| #[trigger] pairs_map.dom().contains(k) ==> (
+479 | |                             (table.spec_hash@)(k) as int % (table.current_size as int) < (i as int)
+480 | |                             && table.table@[(table.spec_hash@)(k) as int % (table.current_size as int)]
+481 | |                                 .spec_entry_to_map().dom().contains(k)
+...   |
+484 | |                             ].spec_entry_to_map()[k]
+485 | |                         ),
+    | |_________________________^
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 2289MB, peak z3 RSS: 290MB, min free: 19225MB
+Sampled CPU Usage: rust_verify: 47s, z3 children: 51s

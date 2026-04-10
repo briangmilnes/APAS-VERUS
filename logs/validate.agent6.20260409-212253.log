@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap45/SortedListPQ.rs:273:21
+    |
+273 |                     pq@.to_multiset() =~= vec@.map(|_i: int, t: T| t@).to_multiset(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+991 |                 pq
+    |                 -- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap45/SortedListPQ.rs:273:21
+    |
+273 |                     pq@.to_multiset() =~= vec@.map(|_i: int, t: T| t@).to_multiset(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().len() == old(vec).view().len() ✔
+%return.view().to_multiset() =~= old(vec).view().map((|_i, t| t.view())).to_multiset() ✘
+spec_sorted(%return.spec_seq()) ✔
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 6405MB, peak z3 RSS: 1156MB, min free: 15595MB
+Sampled CPU Usage: rust_verify: 105s, z3 children: 105s

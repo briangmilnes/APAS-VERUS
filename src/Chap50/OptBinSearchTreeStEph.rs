@@ -153,6 +153,7 @@ broadcast use {
     impl<T: StT> OBSTStEphTrait<T> for OBSTStEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self) {
+            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 keys: Vec::new(),
@@ -175,6 +176,7 @@ broadcast use {
             {
                 key_probs.push(KeyProb { key: keys[i].clone(), prob: probs[i] });
                 i += 1;
+            // Veracity: NEEDED proof block
             }
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -183,7 +185,7 @@ broadcast use {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+// Veracity: UNNEEDED proof block         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -315,6 +317,7 @@ broadcast use {
     impl<T: StT> Clone for KeyProb<T> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned == *self,
+        // Veracity: NEEDED proof block
         {
             let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
             proof { assume(cloned == *self); }  // accept hole: T::clone external_body
@@ -332,6 +335,7 @@ broadcast use {
             ensures cloned@ == self@,
         {
             let cloned = OBSTStEphS {
+                // Veracity: NEEDED proof block
                 keys: self.keys.clone(),
                 memo: self.memo.clone(),
             };

@@ -1,0 +1,16 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:626:21
+    |
+626 | /                     spec_seq_pairs_to_map(pairs@) =~=
+627 | |                         spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(
+628 | |                             table.table@.subrange(0, i as int)),
+    | |_______________________________________________________________^
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 6455MB, peak z3 RSS: 601MB, min free: 15457MB
+Sampled CPU Usage: rust_verify: 98s, z3 children: 70s

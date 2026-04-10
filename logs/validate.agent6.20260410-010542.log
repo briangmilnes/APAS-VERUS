@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap51
+error: unexpected token, expected `;`
+   --> src/Chap51/TopDownDPStPer.rs:298:21
+    |
+298 |                     memo@[(a, b)] as nat == self.spec_med(a as nat, b as nat)
+    |                     ^^^^
+
+error[E0425]: cannot find type `TopDownDPStPerS` in this scope
+   --> src/Chap51/TopDownDPStPer.rs:361:20
+    |
+361 |     impl Debug for TopDownDPStPerS {
+    |                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `TopDownDPStPerS` in this scope
+   --> src/Chap51/TopDownDPStPer.rs:371:22
+    |
+371 |     impl Display for TopDownDPStPerS {
+    |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 3421MB, peak z3 RSS: 203MB, min free: 18660MB
+Sampled CPU Usage: rust_verify: 68s, z3 children: 68s

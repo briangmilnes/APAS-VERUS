@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: expected curly braces
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:725:68
+    |
+725 |                         ==> (#[trigger] new_table_vec@[j]) is Empty,
+    |                                                                    ^
+
+error[E0425]: cannot find type `DoubleHashFlatHashTableStEph` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:856:30
+    |
+856 |     impl std::fmt::Debug for DoubleHashFlatHashTableStEph {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `DoubleHashFlatHashTableStEph` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:862:32
+    |
+862 |     impl std::fmt::Display for DoubleHashFlatHashTableStEph {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 3274MB, peak z3 RSS: 383MB, min free: 18916MB
+Sampled CPU Usage: rust_verify: 38s, z3 children: 12s

@@ -1,0 +1,16 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap51
+error: invariant not satisfied at end of loop body
+   --> src/Chap51/BottomUpDPStPer.rs:270:25
+    |
+270 | /                         forall|c: int| #![trigger row@[c]]
+271 | |                             1 <= c < j as int ==>
+272 | |                             row@[c] as nat == self.spec_med(i as nat, c as nat),
+    | |_______________________________________________________________________________^
+
+verification results:: 1413 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 5939MB, peak z3 RSS: 305MB, min free: 15804MB
+Sampled CPU Usage: rust_verify: 130s, z3 children: 180s

@@ -1,0 +1,34 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:128:21
+    |
+128 | /                     forall |d: int| 0 <= d < attempt as int
+129 | |                         ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d) % (m as int)], key),
+    | |_________________________________________________________________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:130:21
+    |
+130 | /                     forall |d: int| 0 <= d < attempt as int
+131 | |                         ==> !(#[trigger] table.table@[(h as int + d) % (m as int)] is Empty),
+    | |____________________________________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:224:41
+    |
+224 | ...                   implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(old_table_seq.index(j).spec_entry_to_map().dom().contains(key)) 
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 6706MB, peak z3 RSS: 888MB, min free: 15196MB
+Sampled CPU Usage: rust_verify: 158s, z3 children: 201s

@@ -1,0 +1,34 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap45/HeapsortExample.rs:102:25
+    |
+102 |                 ensures cloned@ == self@
+    |                         ^^^^^^^^^^^^^^^^ failed this postcondition
+...
+114 |                 cloned
+    |                 ------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap45/HeapsortExample.rs:102:25
+    |
+102 |                 ensures cloned@ == self@
+    |                         ^^^^^^^
+
+note: 
+
+cloned.view() =~= old(self).view()
+|   cloned.view().0 =~= old(self).view().0 ✘
+|   cloned.view().1 =~= old(self).view().1 ✘
+|   cloned.view().2 =~= old(self).view().2 ✘
+|   cloned.view().3 =~= old(self).view().3 ✘
+|   cloned.view().4 =~= old(self).view().4 
+|   cloned.view().5 =~= old(self).view().5 
++---
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 6380MB, peak z3 RSS: 908MB, min free: 15713MB
+Sampled CPU Usage: rust_verify: 113s, z3 children: 121s

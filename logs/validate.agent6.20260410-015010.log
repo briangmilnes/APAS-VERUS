@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: unexpected token, expected `;`
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:366:33
+    |
+366 |                         implies exists|k: int| 0 <= k < nvec@.len() as int && nvec@[k] == j as usize
+    |                                 ^^^^^^
+
+error[E0425]: cannot find type `AdjMatrixGraphMtPer` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:650:30
+    |
+650 |     impl std::fmt::Debug for AdjMatrixGraphMtPer {
+    |                              ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AdjMatrixGraphMtPer` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:660:32
+    |
+660 |     impl std::fmt::Display for AdjMatrixGraphMtPer {
+    |                                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 3682MB, peak z3 RSS: 218MB, min free: 18397MB
+Sampled CPU Usage: rust_verify: 78s, z3 children: 68s

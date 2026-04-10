@@ -1,0 +1,42 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap45/SortedListPQ.rs:882:21
+    |
+882 |                     by {
+    |                     ^^
+
+error[E0432]: unresolved import `crate::Chap45::SortedListPQ::SortedListPQ::SortedListPQ`
+  --> src/Chap45/HeapsortExample.rs:35:9
+   |
+35 |     use crate::Chap45::SortedListPQ::SortedListPQ::SortedListPQ;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `SortedListPQ` in `Chap45::SortedListPQ::SortedListPQ`
+   |
+help: consider importing one of these modules instead
+   |
+35 -     use crate::Chap45::SortedListPQ::SortedListPQ::SortedListPQ;
+35 +     use crate::Chap45::SortedListPQ;
+   |
+35 -     use crate::Chap45::SortedListPQ::SortedListPQ::SortedListPQ;
+35 +     use crate::Chap45::SortedListPQ::SortedListPQ;
+   |
+
+error[E0425]: cannot find type `SortedListPQ` in this scope
+    --> src/Chap45/SortedListPQ.rs:1207:75
+     |
+1207 |     impl<T: StT + Ord + TotalOrder + std::fmt::Debug> std::fmt::Debug for SortedListPQ<T> {
+     |                                                                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SortedListPQ` in this scope
+    --> src/Chap45/SortedListPQ.rs:1213:49
+     |
+1213 |     impl<T: StT + Ord + TotalOrder> Display for SortedListPQ<T> {
+     |                                                 ^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 4 previous errors
+
+Some errors have detailed explanations: E0425, E0432.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 6064MB, peak z3 RSS: 937MB, min free: 15821MB
+Sampled CPU Usage: rust_verify: 142s, z3 children: 189s

@@ -1,0 +1,232 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap42 Chap41 Chap44 Chap18 Chap19 Chap23 Chap02
+error: expected identifier or integer
+   --> src/Chap44/DocumentIndex.rs:293:33
+    |
+293 | ...                   let ds = table.spec_stored_value(k);
+    |                       ^^^
+
+error[E0425]: cannot find type `DocumentIndex` in this scope
+   --> src/Chap44/DocumentIndex.rs:672:34
+    |
+ 46 |     pub type DocumentId = String;
+    |     ----------------------------- similarly named type alias `DocumentId` defined here
+...
+672 |     pub fn create_finder(index: &DocumentIndex) -> impl Fn(&Word) -> DocumentSet + '_ {
+    |                                  ^^^^^^^^^^^^^
+    |
+help: a type alias with a similar name exists
+    |
+672 -     pub fn create_finder(index: &DocumentIndex) -> impl Fn(&Word) -> DocumentSet + '_ {
+672 +     pub fn create_finder(index: &DocumentId) -> impl Fn(&Word) -> DocumentSet + '_ {
+    |
+
+error[E0425]: cannot find type `DocumentIndex` in this scope
+   --> src/Chap44/DocumentIndex.rs:678:22
+    |
+ 46 |     pub type DocumentId = String;
+    |     ----------------------------- similarly named type alias `DocumentId` defined here
+...
+678 |     impl Display for DocumentIndex {
+    |                      ^^^^^^^^^^^^^
+    |
+help: a type alias with a similar name exists
+    |
+678 -     impl Display for DocumentIndex {
+678 +     impl Display for DocumentId {
+    |
+
+error[E0425]: cannot find type `DocumentIndex` in this scope
+   --> src/Chap44/DocumentIndex.rs:689:20
+    |
+ 46 |     pub type DocumentId = String;
+    |     ----------------------------- similarly named type alias `DocumentId` defined here
+...
+689 |     impl Debug for DocumentIndex {
+    |                    ^^^^^^^^^^^^^
+    |
+help: a type alias with a similar name exists
+    |
+689 -     impl Debug for DocumentIndex {
+689 +     impl Debug for DocumentId {
+    |
+
+error[E0425]: cannot find type `QueryBuilder` in this scope
+   --> src/Chap44/DocumentIndex.rs:700:24
+    |
+700 |     impl<'a> Debug for QueryBuilder<'a> {
+    |                        ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `QueryBuilder` in this scope
+   --> src/Chap44/DocumentIndex.rs:706:26
+    |
+706 |     impl<'a> Display for QueryBuilder<'a> {
+    |                          ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `DocumentIndex` in this scope
+  --> src/Chap44/Example44_1.rs:32:36
+   |
+32 |     pub fn create_tweet_index() -> DocumentIndex {
+   |                                    ^^^^^^^^^^^^^
+   |
+  ::: src/Chap44/DocumentIndex.rs:46:5
+   |
+46 |     pub type DocumentId = String;
+   |     ----------------------------- similarly named type alias `DocumentId` defined here
+   |
+help: a type alias with a similar name exists
+   |
+32 -     pub fn create_tweet_index() -> DocumentIndex {
+32 +     pub fn create_tweet_index() -> DocumentId {
+   |
+
+error[E0425]: cannot find type `DocumentIndex` in this scope
+  --> src/Chap44/Example44_1.rs:48:20
+   |
+48 |         pub index: DocumentIndex,
+   |                    ^^^^^^^^^^^^^
+   |
+  ::: src/Chap44/DocumentIndex.rs:46:5
+   |
+46 |     pub type DocumentId = String;
+   |     ----------------------------- similarly named type alias `DocumentId` defined here
+   |
+help: a type alias with a similar name exists
+   |
+48 -         pub index: DocumentIndex,
+48 +         pub index: DocumentId,
+   |
+
+error[E0433]: failed to resolve: use of undeclared type `DocumentIndex`
+  --> src/Chap44/Example44_1.rs:34:9
+   |
+34 |         DocumentIndex::make_index(&tweets)
+   |         ^^^^^^^^^^^^^ use of undeclared type `DocumentIndex`
+   |
+help: a type alias with a similar name exists
+   |
+34 -         DocumentIndex::make_index(&tweets)
+34 +         DocumentId::make_index(&tweets)
+   |
+
+error[E0433]: failed to resolve: use of undeclared type `DocumentIndex`
+  --> src/Chap44/Example44_1.rs:91:33
+   |
+91 |             let food_or_chess = DocumentIndex::query_or(&food_docs, &chess_docs);
+   |                                 ^^^^^^^^^^^^^ use of undeclared type `DocumentIndex`
+   |
+help: a type alias with a similar name exists
+   |
+91 -             let food_or_chess = DocumentIndex::query_or(&food_docs, &chess_docs);
+91 +             let food_or_chess = DocumentId::query_or(&food_docs, &chess_docs);
+   |
+
+error[E0433]: failed to resolve: use of undeclared type `DocumentIndex`
+  --> src/Chap44/Example44_1.rs:92:26
+   |
+92 |             let result = DocumentIndex::query_and(&fun_docs, &food_or_chess);
+   |                          ^^^^^^^^^^^^^ use of undeclared type `DocumentIndex`
+   |
+help: a type alias with a similar name exists
+   |
+92 -             let result = DocumentIndex::query_and(&fun_docs, &food_or_chess);
+92 +             let result = DocumentId::query_and(&fun_docs, &food_or_chess);
+   |
+
+error[E0433]: failed to resolve: use of undeclared type `DocumentIndex`
+  --> src/Chap44/Example44_1.rs:94:13
+   |
+94 |             DocumentIndex::to_seq(&result)
+   |             ^^^^^^^^^^^^^ use of undeclared type `DocumentIndex`
+   |
+help: a type alias with a similar name exists
+   |
+94 -             DocumentIndex::to_seq(&result)
+94 +             DocumentId::to_seq(&result)
+   |
+
+error[E0433]: failed to resolve: use of undeclared type `DocumentIndex`
+   --> src/Chap44/Example44_1.rs:105:26
+    |
+105 |             let result = DocumentIndex::query_and_not(&fun_docs, &chess_docs);
+    |                          ^^^^^^^^^^^^^ use of undeclared type `DocumentIndex`
+    |
+help: a type alias with a similar name exists
+    |
+105 -             let result = DocumentIndex::query_and_not(&fun_docs, &chess_docs);
+105 +             let result = DocumentId::query_and_not(&fun_docs, &chess_docs);
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `DocumentIndex`
+   --> src/Chap44/Example44_1.rs:106:13
+    |
+106 |             DocumentIndex::size(&result)
+    |             ^^^^^^^^^^^^^ use of undeclared type `DocumentIndex`
+    |
+help: a type alias with a similar name exists
+    |
+106 -             DocumentIndex::size(&result)
+106 +             DocumentId::size(&result)
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `DocumentIndex`
+   --> src/Chap44/Example44_1.rs:115:13
+    |
+115 |             DocumentIndex::query_or(&food_docs, &fun_docs)
+    |             ^^^^^^^^^^^^^ use of undeclared type `DocumentIndex`
+    |
+help: a type alias with a similar name exists
+    |
+115 -             DocumentIndex::query_or(&food_docs, &fun_docs)
+115 +             DocumentId::query_or(&food_docs, &fun_docs)
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `DocumentIndex`
+   --> src/Chap44/Example44_1.rs:124:13
+    |
+124 |             DocumentIndex::query_and(&party_docs, &food_docs)
+    |             ^^^^^^^^^^^^^ use of undeclared type `DocumentIndex`
+    |
+help: a type alias with a similar name exists
+    |
+124 -             DocumentIndex::query_and(&party_docs, &food_docs)
+124 +             DocumentId::query_and(&party_docs, &food_docs)
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `QueryBuilder`
+   --> src/Chap44/Example44_1.rs:138:27
+    |
+138 |             let builder = QueryBuilder::new(&self.index);
+    |                           ^^^^^^^^^^^^ use of undeclared type `QueryBuilder`
+
+error[E0433]: failed to resolve: use of undeclared type `DocumentIndex`
+   --> src/Chap44/Example44_1.rs:152:19
+    |
+152 |         let seq = DocumentIndex::to_seq(docs);
+    |                   ^^^^^^^^^^^^^ use of undeclared type `DocumentIndex`
+    |
+help: a type alias with a similar name exists
+    |
+152 -         let seq = DocumentIndex::to_seq(docs);
+152 +         let seq = DocumentId::to_seq(docs);
+    |
+
+error[E0425]: cannot find function `tokens` in this scope
+   --> src/Chap44/Example44_1.rs:238:9
+    |
+238 |         tokens(&sample_content.to_string())
+    |         ^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `tokens` in this scope
+   --> src/Chap44/Example44_1.rs:254:31
+    |
+254 |             let word_tokens = tokens(&doc.1);
+    |                               ^^^^^^ not found in this scope
+
+error: aborting due to 20 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 3217MB, peak z3 RSS: 384MB, min free: 18638MB
+Sampled CPU Usage: rust_verify: 44s, z3 children: 12s

@@ -1,0 +1,19 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: unexpected closing delimiter: `}`
+   --> src/Chap45/UnsortedListPQ.rs:903:1
+    |
+778 |             fn to_sorted_vec(&self) -> Vec<T> {
+    |                                               - this delimiter might not be properly closed...
+...
+801 |                 }
+    |                 - ...as it matches this but it has different indentation
+...
+903 | }
+    | ^ unexpected closing delimiter
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 20449MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

@@ -1,0 +1,33 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:522:17
+    |
+522 |                 resized@ == table@,
+    |                 ^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/StructChainedHashTable.rs:790:17
+    |
+790 |                 new_table
+    |                 --------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:522:17
+    |
+522 |                 resized@ == table@,
+    |                 ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= old(table).view() ✘
+%return.current_size == old(new_size) ✔
+%return.table.view().len() == old(new_size) ✔
+spec_parahashtablesteph_wf(%return) ✔
+%return.spec_hash =~= old(table).spec_hash ✔
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 5884MB, peak z3 RSS: 529MB, min free: 15910MB
+Sampled CPU Usage: rust_verify: 109s, z3 children: 123s

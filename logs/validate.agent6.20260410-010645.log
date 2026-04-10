@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap51
+error[E0425]: cannot find value `r` in this scope
+   --> src/Chap51/BottomUpDPMtPer.rs:455:28
+    |
+455 |             proof { assume(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
+    |                            ^ not found in this scope
+
+error[E0425]: cannot find value `r` in this scope
+   --> src/Chap51/BottomUpDPMtPer.rs:456:13
+    |
+456 |             r
+    |             ^ not found in this scope
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 2472MB, peak z3 RSS: 380MB, min free: 19613MB
+Sampled CPU Usage: rust_verify: 38s, z3 children: 18s

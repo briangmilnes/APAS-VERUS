@@ -1,0 +1,34 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap45/LeftistHeapPQ.rs:120:21
+    |
+120 |                     node@ =~= Multiset::empty().insert(key).add(left@).add(right@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+299 |                 node
+    |                 ---- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap45/LeftistHeapPQ.rs:120:21
+    |
+120 |                     node@ =~= Multiset::empty().insert(key).add(left@).add(right@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.spec_size() == clip(nat, clip(nat, old(left).spec_size() + old(right).spec_size()) + 1) ✔
+%return.spec_is_leftist() ✔
+%return.spec_is_heap() ✔
+%return.spec_rank_bounded() ✔
+%return.view() =~= empty().insert(old(key)).add(old(left).view()).add(old(right).view()) ✘
+forall |x|
+    x.le(old(key)) ==>
+        %return.spec_key_le_root(x) ✔
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 22s
+Sampled Memory Usage: peak rust_verify RSS: 5224MB, peak z3 RSS: 636MB, min free: 16880MB
+Sampled CPU Usage: rust_verify: 89s, z3 children: 59s

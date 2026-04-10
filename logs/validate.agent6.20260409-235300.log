@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: requires not satisfied
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:251:26
+    |
+251 |                 requires prod == j * (j + 1) - i * (i + 1),
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+prod == j * (j + 1) - i * (i + 1) 
+
+verification results:: 1236 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 4417MB, peak z3 RSS: 560MB, min free: 17705MB
+Sampled CPU Usage: rust_verify: 76s, z3 children: 63s

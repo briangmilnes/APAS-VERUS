@@ -1,0 +1,25 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: this file contains an unclosed delimiter
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:866:3
+    |
+ 18 | pub mod DoubleHashFlatHashTableStEph {
+    |                                      - unclosed delimiter
+...
+ 34 | {
+    | - unclosed delimiter
+...
+700 |                 proof {
+    |                       - this delimiter might not be properly closed...
+...
+807 |         }
+    |         - ...as it matches this but it has different indentation
+...
+866 | }
+    |  ^
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 20354MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

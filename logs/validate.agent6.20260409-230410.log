@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: unexpected closing delimiter: `}`
+   --> src/Chap45/UnsortedListPQ.rs:902:1
+    |
+210 |         impl<T: StT + Ord + TotalOrder> UnsortedListPQTrait<T> for UnsortedListPQ<T> {
+    |                                                                                      - this delimiter might not be properly closed...
+...
+531 |                         returned_min, new_pq.spec_seq()[j]) by {};
+    |                                                                -- block is empty, you might have not meant to close it
+...
+818 |             }
+    |             - ...as it matches this but it has different indentation
+...
+902 | }
+    | ^ unexpected closing delimiter
+
+error: aborting due to 1 previous error
+
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 19691MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

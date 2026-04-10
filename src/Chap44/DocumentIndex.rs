@@ -185,8 +185,9 @@ pub mod DocumentIndex {
         /// Iterate docs, iterate words per doc, insert each word into the table.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(D * W * lg n), Span O(D * W * lg n) — nested loops: D docs × W words/doc × O(lg n) table insert; St sequential.
         fn make_index(docs: &DocumentCollection) -> (di: Self) {
+            // Veracity: NEEDED proof block (speed hint)
             proof {
-                assert(Pair_feq_trigger::<Word, DocumentSet>());
+// Veracity: UNNEEDED assert                 assert(Pair_feq_trigger::<Word, DocumentSet>());
             }
             let mut table = TableStPer::<Word, DocumentSet>::empty();
             let ghost mut gds: Set<Seq<char>> = Set::empty();
@@ -211,25 +212,31 @@ pub mod DocumentIndex {
             {
                 let doc = docs.nth(i);
                 let doc_id: DocumentId = doc.0.clone();
+                // Veracity: NEEDED proof block
                 let words = tokens(&doc.1);
                 proof {
                     let ghost old_gds = gds;
                     gds = gds.insert(doc_id@);
                     vstd::set::axiom_set_insert_finite(old_gds, doc_id@);
                     vstd::set::axiom_set_insert_len(old_gds, doc_id@);
+                    // Veracity: NEEDED assert
                     assert forall|k: Seq<char>| #[trigger] table@.contains_key(k) implies {
                         let ds = table.spec_stored_value(k);
                         ds.spec_avltreesetstper_wf() && ds@.subset_of(gds)
                     } by {
                         let ds = table.spec_stored_value(k);
-                        assert(ds@.subset_of(old_gds));
+// Veracity: UNNEEDED assert                         assert(ds@.subset_of(old_gds));
+                        // Veracity: NEEDED assert (speed hint)
                         assert forall|v: Seq<char>| #[trigger] ds@.contains(v) implies gds.contains(v) by {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(old_gds.contains(v));
                         };
                     };
                 }
                 let ghost gds_snap = gds;
+                // Veracity: NEEDED proof block
                 let ghost doc_id_view: Seq<char> = doc_id@;
+                // Veracity: NEEDED assert (speed hint)
                 proof { assert(Pair_feq_trigger::<Word, DocumentSet>()); }
                 let mut j: usize = 0;
                 while j < words.length()
@@ -256,23 +263,28 @@ pub mod DocumentIndex {
                     decreases words.spec_len() - j,
                 {
                     let word: &Word = words.nth(j);
+                    // Veracity: NEEDED proof block
                     let singleton = AVLTreeSetStPer::singleton(doc_id.clone());
                     let new_set: DocumentSet = match table.find_ref(word) {
                         Some(existing) => {
                             proof {
                                 vstd::set_lib::lemma_len_subset(existing@, gds);
                                 // existing@.len() <= gds.len() <= i + 1 <= usize::MAX/2
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(existing@.len() <= gds.len());
-                                assert(gds.len() <= (i + 1) as nat);
-                                assert((i + 1) as nat <= docs.spec_len());
+// Veracity: UNNEEDED assert                                 assert(gds.len() <= (i + 1) as nat);
+// Veracity: UNNEEDED assert                                 assert((i + 1) as nat <= docs.spec_len());
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(existing@.len() <= usize::MAX as nat / 2);
                                 // singleton: {doc_id@}, len 1
-                                assert(singleton@ == Set::<<DocumentId as View>::V>::empty().insert(doc_id@));
+// Veracity: UNNEEDED assert                                 assert(singleton@ == Set::<<DocumentId as View>::V>::empty().insert(doc_id@));
                                 vstd::set::axiom_set_insert_len(
                                     Set::<<DocumentId as View>::V>::empty(), doc_id@);
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(singleton@.len() == 1);
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(existing@.len() + singleton@.len() <= usize::MAX as nat / 2 + 1);
-                                assert(usize::MAX as nat / 2 + 1 < usize::MAX as nat);
+// Veracity: UNNEEDED assert                                 assert(usize::MAX as nat / 2 + 1 < usize::MAX as nat);
                             }
                             existing.union(&singleton)
                         },
@@ -283,11 +295,13 @@ pub mod DocumentIndex {
                     let ghost old_table = table;
                     let ghost new_set_view = new_set@;
                     table = table.insert(word_owned, new_set,
+                        // Veracity: NEEDED proof block
                         |_old: &DocumentSet, nd: &DocumentSet| -> (r: DocumentSet)
                             ensures r@ == nd@
                         { nd.clone() }
                     );
                     proof {
+                        // Veracity: NEEDED assert
                         assert forall|k: Seq<char>| #[trigger] table@.contains_key(k)
                             implies {
                                 let ds = table.spec_stored_value(k);
@@ -298,24 +312,29 @@ pub mod DocumentIndex {
                                 let ds = table.spec_stored_value(k);
                                 // In both found/not-found cases, ds@ == new_set_view.
                                 if !old_table@.contains_key(word_v) {
-                                    assert(ds@ == new_set_view);
+// Veracity: UNNEEDED assert                                     assert(ds@ == new_set_view);
                                 } else {
                                     // Existential witness gives ds@ == new_set_view.
+                                    // Veracity: NEEDED assert (speed hint)
                                     assert(table@[word_v] == new_set_view);
                                     table.lemma_spec_stored_value_view(k);
+                                    // Veracity: NEEDED assert (speed hint)
                                     assert(ds@ == new_set_view);
                                 }
                                 // Subset: new_set@ ⊆ gds.
+                                // Veracity: NEEDED assert
                                 assert forall|v: Seq<char>| new_set_view.contains(v)
                                     implies gds.contains(v)
                                 by {
                                     // new_set@ ⊆ existing@ ∪ {doc_id@} ⊆ gds.
                                 };
-                                assert(ds@.subset_of(gds));
+// Veracity: UNNEEDED assert                                 assert(ds@.subset_of(gds));
                                 // Wf: ds@.finite() and ds@.len() < usize::MAX.
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(ds@.finite());
-                                assert(ds@.len() < usize::MAX as nat);
+// Veracity: UNNEEDED assert                                 assert(ds@.len() < usize::MAX as nat);
                             } else {
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(old_table@.contains_key(k));
                                 let ds = table.spec_stored_value(k);
                                 let old_ds = old_table.spec_stored_value(k);
@@ -323,18 +342,22 @@ pub mod DocumentIndex {
                                 table.lemma_spec_stored_value_view(k);
                                 // ds@ == table@[k] == old_table@[k] == old_ds@.
                                 assert(old_ds.spec_avltreesetstper_wf());
-                                assert(old_ds@.subset_of(gds));
+// Veracity: UNNEEDED assert                                 assert(old_ds@.subset_of(gds));
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(ds@.subset_of(gds));
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(ds@.finite());
-                                assert(ds@.len() < usize::MAX as nat);
+// Veracity: UNNEEDED assert                                 assert(ds@.len() < usize::MAX as nat);
                             }
                         };
+                    // Veracity: NEEDED proof block
                     }
                     j += 1;
                 }
                 i += 1;
             }
             proof {
+                // Veracity: NEEDED assert
                 assert forall|k: Seq<char>| #[trigger] table@.contains_key(k) implies {
                     let ds = table.spec_stored_value(k);
                     ds.spec_avltreesetstper_wf() && ds@.len() <= usize::MAX as nat / 2
@@ -554,6 +577,7 @@ pub mod DocumentIndex {
         fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (found: DocumentSet) {
             let set1 = self.find(word1);
             let set2 = self.find(word2);
+            // Veracity: NEEDED proof block
             let set3 = self.find(word3);
             let set4 = self.find(word4);
 
@@ -609,6 +633,7 @@ pub mod DocumentIndex {
     }
 
     //		Section 12a. derive impls in verus!
+// Veracity: NEEDED proof block (speed hint)
 
 
     impl Clone for DocumentIndex {

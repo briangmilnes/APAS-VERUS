@@ -1,0 +1,77 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+    --> src/Chap45/BinaryHeapPQ.rs:1550:41
+     |
+1550 | ...                   implies #[trigger] TotalOrder::le(
+     |                               ^
+
+error[E0425]: cannot find type `BinaryHeapPQ` in this scope
+    --> src/Chap45/BinaryHeapPQ.rs:1790:75
+     |
+1790 |     impl<T: StT + Ord + TotalOrder + std::fmt::Debug> std::fmt::Debug for BinaryHeapPQ<T> {
+     |                                                                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+    --> src/Chap45/BinaryHeapPQ.rs:1790:13
+     |
+1790 |     impl<T: StT + Ord + TotalOrder + std::fmt::Debug> std::fmt::Debug for BinaryHeapPQ<T> {
+     |             ^^^ not found in this scope
+     |
+help: consider importing this trait
+     |
+  28 +     use crate::Types::Types::StT;
+     |
+
+error[E0405]: cannot find trait `TotalOrder` in this scope
+    --> src/Chap45/BinaryHeapPQ.rs:1790:25
+     |
+1790 |     impl<T: StT + Ord + TotalOrder + std::fmt::Debug> std::fmt::Debug for BinaryHeapPQ<T> {
+     |                         ^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this trait
+     |
+  28 +     use crate::vstdplus::total_order::total_order::TotalOrder;
+     |
+
+error[E0425]: cannot find type `BinaryHeapPQ` in this scope
+    --> src/Chap45/BinaryHeapPQ.rs:1796:49
+     |
+1796 |     impl<T: StT + Ord + TotalOrder> Display for BinaryHeapPQ<T> {
+     |                                                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+    --> src/Chap45/BinaryHeapPQ.rs:1796:13
+     |
+1796 |     impl<T: StT + Ord + TotalOrder> Display for BinaryHeapPQ<T> {
+     |             ^^^ not found in this scope
+     |
+help: consider importing this trait
+     |
+  28 +     use crate::Types::Types::StT;
+     |
+
+error[E0405]: cannot find trait `TotalOrder` in this scope
+    --> src/Chap45/BinaryHeapPQ.rs:1796:25
+     |
+1796 |     impl<T: StT + Ord + TotalOrder> Display for BinaryHeapPQ<T> {
+     |                         ^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this trait
+     |
+  28 +     use crate::vstdplus::total_order::total_order::TotalOrder;
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `BinaryHeapPQ`
+   --> src/Chap45/HeapsortExample.rs:248:22
+    |
+248 |         let mut pq = BinaryHeapPQ::empty();
+    |                      ^^^^^^^^^^^^ use of undeclared type `BinaryHeapPQ`
+
+error: aborting due to 8 previous errors
+
+Some errors have detailed explanations: E0405, E0425, E0433.
+For more information about an error, try `rustc --explain E0405`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 3086MB, peak z3 RSS: 350MB, min free: 18931MB
+Sampled CPU Usage: rust_verify: 36s, z3 children: 11s

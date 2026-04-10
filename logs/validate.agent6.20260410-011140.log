@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap51
+error: expected `!`
+   --> src/Chap51/TopDownDPStPer.rs:353:21
+    |
+353 |             ensures eq == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)
+    |                     ^^
+
+error[E0425]: cannot find type `TopDownDPStPerS` in this scope
+   --> src/Chap51/TopDownDPStPer.rs:367:20
+    |
+367 |     impl Debug for TopDownDPStPerS {
+    |                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `TopDownDPStPerS` in this scope
+   --> src/Chap51/TopDownDPStPer.rs:377:22
+    |
+377 |     impl Display for TopDownDPStPerS {
+    |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 905MB, peak z3 RSS: 0MB, min free: 19708MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 0s

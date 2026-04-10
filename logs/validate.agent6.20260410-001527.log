@@ -1,0 +1,64 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: precondition not satisfied
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:696:21
+    |
+696 | /                     lemma_table_to_map_push_empty::<Key, Value, FlatEntry<Key, Value>>(
+697 | |                         old_vec, FlatEntry::Empty);
+    | |__________________________________________________^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:157:13
+    |
+157 |               spec_table_to_map(table) == Map::<Key, Value>::empty(),
+    |               ------------------------------------------------------ failed precondition
+
+error: assertion failed
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:714:24
+    |
+714 |                 assert(spec_linprobflathashsteph_wf(&new_table));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:721:17
+    |
+721 |                 lemma_all_empties_count::<Key, Value>(new_table.table@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/FlatHashTable.rs:73:18
+    |
+ 73 |         requires forall |j: int| 0 <= j < table.len() ==> (#[trigger] table[j]) is Empty,
+    |                  ----------------------------------------------------------------------- failed precondition
+
+error: invariant not satisfied before loop
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:731:21
+    |
+731 |                     new_table@ =~= spec_seq_pairs_to_map(pairs@.subrange(0, j as int)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:157:13
+    |
+157 |             spec_table_to_map(table) == Map::<Key, Value>::empty(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_table_to_map(old_vec) == empty() ✘
+tmp%.spec_entry_to_map() == empty() ✔
+
+note: recommendation not met
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:666:28
+    |
+666 |                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
+    |                            ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+verification results:: 1236 verified, 2 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3244MB, peak z3 RSS: 395MB, min free: 19029MB
+Sampled CPU Usage: rust_verify: 38s, z3 children: 13s

@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: expected an expression
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:386:25
+    |
+386 |                         ==> !(#[trigger] table.table@[(h as int + d * step as int) % (m as int)] is Empty),
+    |                         ^
+
+error[E0425]: cannot find type `DoubleHashFlatHashTableStEph` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:836:30
+    |
+836 |     impl std::fmt::Debug for DoubleHashFlatHashTableStEph {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `DoubleHashFlatHashTableStEph` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:842:32
+    |
+842 |     impl std::fmt::Display for DoubleHashFlatHashTableStEph {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 19523MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

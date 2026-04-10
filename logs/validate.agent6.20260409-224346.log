@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: decreases not satisfied at end of loop
+   --> src/Chap45/BinaryHeapPQ.rs:556:13
+    |
+556 |             while !done
+    |             ^^^^^^^^^^^
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 5455MB, peak z3 RSS: 679MB, min free: 16395MB
+Sampled CPU Usage: rust_verify: 101s, z3 children: 87s

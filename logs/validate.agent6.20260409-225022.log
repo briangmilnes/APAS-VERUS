@@ -1,0 +1,55 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find value `i` in this scope
+    --> src/Chap45/BinaryHeapPQ.rs:1740:23
+     |
+1740 |                 while i < end_idx
+     |                       ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+    --> src/Chap45/BinaryHeapPQ.rs:1742:38
+     |
+1742 |                         start_idx <= i,
+     |                                      ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+    --> src/Chap45/BinaryHeapPQ.rs:1745:43
+     |
+1745 |                         result@.len() == (i - start_idx) as int,
+     |                                           ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+    --> src/Chap45/BinaryHeapPQ.rs:1747:41
+     |
+1747 |                     decreases end_idx - i,
+     |                                         ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+    --> src/Chap45/BinaryHeapPQ.rs:1749:50
+     |
+1749 |                     let elem = self.elements.nth(i);
+     |                                                  ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+    --> src/Chap45/BinaryHeapPQ.rs:1752:21
+     |
+1752 |                     i = i + 1;
+     |                     ^
+     |
+help: you might have meant to introduce a new binding
+     |
+1752 |                     let i = i + 1;
+     |                     +++
+
+error[E0425]: cannot find value `i` in this scope
+    --> src/Chap45/BinaryHeapPQ.rs:1752:25
+     |
+1752 |                     i = i + 1;
+     |                         ^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 4741MB, peak z3 RSS: 551MB, min free: 17325MB
+Sampled CPU Usage: rust_verify: 68s, z3 children: 39s

@@ -1,0 +1,19 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: unexpected closing delimiter: `}`
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1136:5
+     |
+ 837 |                         if eq {
+     |                               - the nearest open delimiter
+...
+ 879 |                                     }) by {
+     |                                      - missing open `(` for this delimiter
+...
+1136 |     } // verus!
+     |     ^ unexpected closing delimiter
+
+error: aborting due to 1 previous error
+
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 17990MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

@@ -1,0 +1,25 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: this file contains an unclosed delimiter
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:852:3
+    |
+ 18 | pub mod DoubleHashFlatHashTableStEph {
+    |                                      - unclosed delimiter
+...
+ 34 | {
+    | - unclosed delimiter
+...
+429 |                                 implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
+    |                                                                                                                 - this delimiter might not be properly closed...
+...
+437 |                             }
+    |                             - ...as it matches this but it has different indentation
+...
+852 | }
+    |  ^
+
+error: aborting due to 1 previous error
+
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 19602MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

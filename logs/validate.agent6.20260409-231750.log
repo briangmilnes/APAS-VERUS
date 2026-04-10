@@ -1,0 +1,38 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: precondition not satisfied
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:527:33
+    |
+527 | / ...                   lemma_table_to_map_update_remove::<Key, Value, FlatEntry<Key, Value>>(
+528 | | ...                       old_table_seq, slot as int, new_entry, *key);
+    | |______________________________________________________________________^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:270:13
+    |
+270 |               new_entry.spec_entry_to_map() == table[index].spec_entry_to_map().remove(key),
+    |               ----------------------------------------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:270:13
+    |
+270 |             new_entry.spec_entry_to_map() == table[index].spec_entry_to_map().remove(key),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+let tmp%% = 0;
+    let tmp%% = slot;
+        let tmp%% = old_table_seq.len();
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+new_entry.spec_entry_to_map() == old_table_seq.index(slot).spec_entry_to_map().remove(key) ✘
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = old_table_seq.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == slot) ==>
+        !(old_table_seq.index(j).spec_entry_to_map().dom().contains(key)) ✔
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 5208MB, peak z3 RSS: 579MB, min free: 17245MB
+Sampled CPU Usage: rust_verify: 112s, z3 children: 118s

@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: invariant not satisfied before loop
+   --> src/Chap45/BinaryHeapPQ.rs:549:21
+    |
+549 |                     result@.to_multiset() =~= heap@.to_multiset(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 22s
+Sampled Memory Usage: peak rust_verify RSS: 3888MB, peak z3 RSS: 484MB, min free: 18108MB
+Sampled CPU Usage: rust_verify: 72s, z3 children: 48s

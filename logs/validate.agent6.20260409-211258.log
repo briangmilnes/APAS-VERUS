@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap45/LeftistHeapPQ.rs:811:44
+    |
+811 | ...                   #[trigger] TotalOrder::le(*key, e)
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+key.le(e) 
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 25s
+Sampled Memory Usage: peak rust_verify RSS: 5452MB, peak z3 RSS: 798MB, min free: 16311MB
+Sampled CPU Usage: rust_verify: 95s, z3 children: 83s

@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: decreases not satisfied at end of loop
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:113:13
+    |
+113 |             while attempt < m
+    |             ^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:336:29
+    |
+336 |                     implies !(#[trigger] table.table@[j] is Empty) by {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(table.table.view().index(j) is Empty) 
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 4701MB, peak z3 RSS: 352MB, min free: 17066MB
+Sampled CPU Usage: rust_verify: 96s, z3 children: 119s

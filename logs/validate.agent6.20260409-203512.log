@@ -1,0 +1,28 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+    --> src/Chap45/BinaryHeapPQ.rs:292:21
+     |
+ 292 |                     pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset());
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1456 |                 pq
+     |                 -- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap45/BinaryHeapPQ.rs:292:21
+    |
+292 |                     pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset());
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().len() == clip(nat, old(self).view().len() + old(other).view().len()) ✔
+%return.view().to_multiset() =~= old(self).view().to_multiset().add(old(other).view().to_multiset()) ✘
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 3220MB, peak z3 RSS: 414MB, min free: 18692MB
+Sampled CPU Usage: rust_verify: 49s, z3 children: 36s

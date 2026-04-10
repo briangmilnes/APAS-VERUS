@@ -1,0 +1,15 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/StructChainedHashTable.rs:508:29
+    |
+508 | / ...                   forall |k: Key| #[trigger] inner_collected.dom().contains(k)
+509 | | ...                       ==> !old_outer_pairs_map.dom().contains(k),
+    | |____________________________________________________________________^
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 4702MB, peak z3 RSS: 308MB, min free: 17437MB
+Sampled CPU Usage: rust_verify: 74s, z3 children: 51s

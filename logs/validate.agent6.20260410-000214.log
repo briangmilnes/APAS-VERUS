@@ -1,0 +1,44 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: precondition not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:424:21
+    |
+424 | /                     lemma_table_to_map_update_remove::<Key, Value, Vec<(Key, Value)>>(
+425 | |                         old_table, index as int, table.table@[index as int], *key);
+    | |__________________________________________________________________________________^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:276:13
+    |
+276 |               new_entry.spec_entry_to_map() == table[index].spec_entry_to_map().remove(key),
+    |               ----------------------------------------------------------------------------- failed precondition
+
+error: assertion failed
+   --> src/Chap47/VecChainedHashTableStEph.rs:431:33
+    |
+431 |                         implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:276:13
+    |
+276 |             new_entry.spec_entry_to_map() == table[index].spec_entry_to_map().remove(key),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+let tmp%% = 0;
+    let tmp%% = index;
+        let tmp%% = old_table.len();
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+tmp%.spec_entry_to_map() == old_table.index(index).spec_entry_to_map().remove(key) ✘
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = old_table.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == index) ==>
+        !(old_table.index(j).spec_entry_to_map().dom().contains(key)) ✔
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 4351MB, peak z3 RSS: 670MB, min free: 17697MB
+Sampled CPU Usage: rust_verify: 76s, z3 children: 62s

@@ -1,0 +1,33 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap45/LeftistHeapPQ.rs:603:21
+    |
+603 |                       self.spec_size() > 0 ==> self@.count(*min_elem.unwrap()) > 0,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+798 | /                 match &self.root {
+799 | |                     LeftistHeapNode::Leaf => {
+800 | |                         None
+...   |
+822 | |                 }
+    | |_________________- at the end of the function body
+
+error: assertion failed
+   --> src/Chap45/LeftistHeapPQ.rs:812:44
+    |
+812 | ...                   #[trigger] TotalOrder::le(*key, e)
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+key.le(e) 
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 4208MB, peak z3 RSS: 685MB, min free: 17658MB
+Sampled CPU Usage: rust_verify: 100s, z3 children: 62s

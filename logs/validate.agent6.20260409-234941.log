@@ -1,0 +1,39 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:495:45
+    |
+495 | ...                   implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:450:17
+    |
+450 |                 Self::spec_parahashtablesteph_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/QuadProbFlatHashTableStEph.rs:534:29
+    |
+534 | ...                   return;
+    |                       ------ at this exit
+
+note: diagnostics via expansion
+
+note: 
+
+!(old_table_seq.index(j).spec_entry_to_map().dom().contains(key)) 
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:638:29
+    |
+638 |                   let s_wit = choose |s: int| #![trigger old(table).table@[s]]
+    |  _____________________________^
+639 | |                     0 <= s < old(table).table@.len() && old(table).table@[s] is Empty;
+    | |_____________________________________________________________________________________^
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 2469MB, peak z3 RSS: 321MB, min free: 18958MB
+Sampled CPU Usage: rust_verify: 49s, z3 children: 51s

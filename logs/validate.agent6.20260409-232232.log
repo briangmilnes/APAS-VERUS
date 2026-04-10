@@ -1,0 +1,1443 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap47/FlatHashTable.rs:124:25
+    |
+124 |                 implies #[trigger] new_table.drop_last()[j] == old_table.drop_last()[j] by {
+    |                         ^
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/FlatHashTable.rs:272:76
+    |
+272 |     impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Debug for FlatEntry<Key, Value> {
+    |                                                                            ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/FlatHashTable.rs:282:78
+    |
+282 |     impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Display for FlatEntry<Key, Value> {
+    |                                                                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+  --> src/Chap47/LinProbFlatHashTableStEph.rs:56:39
+   |
+56 |         table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+   |                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+  --> src/Chap47/LinProbFlatHashTableStEph.rs:88:45
+   |
+88 |         ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics, H>
+   |                                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+  --> src/Chap47/LinProbFlatHashTableStEph.rs:91:79
+   |
+91 |         open spec fn spec_parahashtablesteph_wf(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+   |                                                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+  --> src/Chap47/LinProbFlatHashTableStEph.rs:97:77
+   |
+97 |         open spec fn spec_has_insert_capacity(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+   |                                                                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:103:67
+    |
+103 |         open spec fn spec_resize_ok(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, new_size: usize) -> bool {
+    |                                                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:109:53
+    |
+109 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+    |                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:169:80
+    |
+169 | ...                   lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                      ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:221:75
+    |
+221 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(old_table_seq, key);
+    |                                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:223:76
+    |
+223 | ...                   lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                      ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:323:49
+    |
+323 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
+    |                                                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:376:85
+    |
+376 | ...                   lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                           ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:402:75
+    |
+402 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:426:63
+    |
+426 |                 lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:433:53
+    |
+433 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+    |                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:497:80
+    |
+497 | ...                   lemma_table_to_map_update_remove::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                      ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:500:85
+    |
+500 | ...                   lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                           ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:542:75
+    |
+542 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:564:63
+    |
+564 |                 lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:572:43
+    |
+572 |             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+    |                                           ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:574:46
+    |
+574 |         ) -> (resized: HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) {
+    |                                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:584:57
+    |
+584 |                         spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                         ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:622:40
+    |
+622 |             let mut new_table_vec: Vec<FlatEntry<Key, Value>> = Vec::new();
+    |                                        ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:630:53
+    |
+630 |                     spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(new_table_vec@)
+    |                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:638:65
+    |
+638 |                     lemma_table_to_map_push_empty::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                 ^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `FlatHashTable` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:716:9
+    |
+716 |         FlatHashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>
+    |         ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:716:35
+    |
+716 |         FlatHashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>
+    |                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:721:48
+    |
+721 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {
+    |                                                ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:728:52
+    |
+728 |         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (slot: usize) {
+    |                                                    ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+  --> src/Chap47/QuadProbFlatHashTableStEph.rs:76:39
+   |
+76 |         table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+   |                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:340:39
+    |
+340 |         table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+    |                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:422:45
+    |
+422 |         ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics, H>
+    |                                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:425:79
+    |
+425 |         open spec fn spec_parahashtablesteph_wf(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+    |                                                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:431:77
+    |
+431 |         open spec fn spec_has_insert_capacity(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+    |                                                                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:437:67
+    |
+437 |         open spec fn spec_resize_ok(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, new_size: usize) -> bool {
+    |                                                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:444:53
+    |
+444 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+    |                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:501:80
+    |
+501 | ...                   lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                      ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:550:75
+    |
+550 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(old_table_seq, key);
+    |                                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:552:76
+    |
+552 | ...                   lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                      ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:638:49
+    |
+638 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
+    |                                                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:683:85
+    |
+683 | ...                   lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                           ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:707:75
+    |
+707 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:748:63
+    |
+748 |                 lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:755:53
+    |
+755 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+    |                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:814:80
+    |
+814 | ...                   lemma_table_to_map_update_remove::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                      ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:816:85
+    |
+816 | ...                   lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                           ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:855:75
+    |
+855 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:895:63
+    |
+895 |                 lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:903:43
+    |
+903 |             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+    |                                           ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:905:46
+    |
+905 |         ) -> (resized: HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) {
+    |                                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:915:57
+    |
+915 |                         spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                         ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:950:40
+    |
+950 |             let mut new_table_vec: Vec<FlatEntry<Key, Value>> = Vec::new();
+    |                                        ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:958:53
+    |
+958 |                     spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(new_table_vec@)
+    |                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:966:65
+    |
+966 |                     lemma_table_to_map_push_empty::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                 ^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `FlatHashTable` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1042:9
+     |
+1042 |         FlatHashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>
+     |         ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1042:35
+     |
+1042 |         FlatHashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>
+     |                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1047:48
+     |
+1047 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {
+     |                                                ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1055:52
+     |
+1055 |         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (slot: usize) {
+     |                                                    ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+  --> src/Chap47/DoubleHashFlatHashTableStEph.rs:62:39
+   |
+62 |         table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+   |                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:130:45
+    |
+130 |         ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics, H>
+    |                                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:133:79
+    |
+133 |         open spec fn spec_parahashtablesteph_wf(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+    |                                                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:139:77
+    |
+139 |         open spec fn spec_has_insert_capacity(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+    |                                                                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:145:67
+    |
+145 |         open spec fn spec_resize_ok(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, new_size: usize) -> bool {
+    |                                                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:151:53
+    |
+151 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
+    |                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:215:80
+    |
+215 | ...                   lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                      ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:264:75
+    |
+264 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(old_table_seq, key);
+    |                                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:266:76
+    |
+266 | ...                   lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                      ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:348:49
+    |
+348 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
+    |                                                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:401:85
+    |
+401 | ...                   lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                           ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:424:75
+    |
+424 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:474:63
+    |
+474 |                 lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:481:53
+    |
+481 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
+    |                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:547:80
+    |
+547 | ...                   lemma_table_to_map_update_remove::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                      ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:549:85
+    |
+549 | ...                   lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                           ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:588:75
+    |
+588 | ...                   lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:630:63
+    |
+630 |                 lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+    |                                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:638:43
+    |
+638 |             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+    |                                           ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:640:46
+    |
+640 |         ) -> (resized: HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) {
+    |                                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:650:57
+    |
+650 |                         spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                         ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:689:40
+    |
+689 |             let mut new_table_vec: Vec<FlatEntry<Key, Value>> = Vec::new();
+    |                                        ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:697:53
+    |
+697 |                     spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(new_table_vec@)
+    |                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:705:65
+    |
+705 |                     lemma_table_to_map_push_empty::<Key, Value, FlatEntry<Key, Value>>(
+    |                                                                 ^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `FlatHashTable` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:783:9
+    |
+783 |         FlatHashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>
+    |         ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:783:35
+    |
+783 |         FlatHashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>
+    |                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:788:48
+    |
+788 |         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {
+    |                                                ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `FlatEntry` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:796:52
+    |
+796 |         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (slot: usize) {
+    |                                                    ^^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/FlatHashTable.rs:275:17
+    |
+275 |                 FlatEntry::Empty => write!(f, "Empty"),
+    |                 ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/FlatHashTable.rs:276:17
+    |
+276 |                 FlatEntry::Occupied(k, v) => f.debug_tuple("Occupied").field(k).field(v).finish(),
+    |                 ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/FlatHashTable.rs:277:17
+    |
+277 |                 FlatEntry::Deleted => write!(f, "Deleted"),
+    |                 ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:147:21
+    |
+147 |                     FlatEntry::Occupied(k, _v) => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:154:51
+    |
+154 | ...                   table.table.set(slot, FlatEntry::Occupied(key, value));
+    |                                             ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:165:49
+    |
+165 | ...                   let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
+    |                                       ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:205:21
+    |
+205 |                     FlatEntry::Empty => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:208:47
+    |
+208 |                         table.table.set(slot, FlatEntry::Occupied(key, value));
+    |                                               ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:222:45
+    |
+222 | ...                   let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
+    |                                       ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:298:21
+    |
+298 |                     FlatEntry::Deleted => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:358:21
+    |
+358 |                     FlatEntry::Occupied(k, v) => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:385:21
+    |
+385 |                     FlatEntry::Empty => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:406:21
+    |
+406 |                     FlatEntry::Deleted => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:470:21
+    |
+470 |                     FlatEntry::Occupied(k, _v) => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:476:51
+    |
+476 | ...                   table.table.set(slot, FlatEntry::Deleted);
+    |                                             ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:493:49
+    |
+493 | ...                   let new_entry = FlatEntry::<Key, Value>::Deleted;
+    |                                       ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:531:21
+    |
+531 |                     FlatEntry::Empty => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:546:21
+    |
+546 |                     FlatEntry::Deleted => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:591:24
+    |
+591 |                 if let FlatEntry::Occupied(k, v) = entry {
+    |                        ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:635:36
+    |
+635 |                 new_table_vec.push(FlatEntry::Empty);
+    |                                    ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:639:34
+    |
+639 |                         old_vec, FlatEntry::Empty);
+    |                                  ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:741:21
+    |
+741 |                     FlatEntry::Empty | FlatEntry::Deleted => { return slot; },
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:741:40
+    |
+741 |                     FlatEntry::Empty | FlatEntry::Deleted => { return slot; },
+    |                                        ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:742:21
+    |
+742 |                     FlatEntry::Occupied(k, _) => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:479:21
+    |
+479 |                     FlatEntry::Occupied(k, _v) => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:486:51
+    |
+486 | ...                   table.table.set(slot, FlatEntry::Occupied(key, value));
+    |                                             ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:497:49
+    |
+497 | ...                   let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
+    |                                       ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:536:21
+    |
+536 |                     FlatEntry::Empty => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:539:47
+    |
+539 |                         table.table.set(slot, FlatEntry::Occupied(key, value));
+    |                                               ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:551:45
+    |
+551 | ...                   let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
+    |                                       ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:587:21
+    |
+587 |                     FlatEntry::Deleted => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:667:21
+    |
+667 |                     FlatEntry::Occupied(k, v) => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:692:21
+    |
+692 |                     FlatEntry::Empty => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:711:21
+    |
+711 |                     FlatEntry::Deleted => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:789:21
+    |
+789 |                     FlatEntry::Occupied(k, _v) => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:795:51
+    |
+795 | ...                   table.table.set(slot, FlatEntry::Deleted);
+    |                                             ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:810:49
+    |
+810 | ...                   let new_entry = FlatEntry::<Key, Value>::Deleted;
+    |                                       ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:846:21
+    |
+846 |                     FlatEntry::Empty => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:859:21
+    |
+859 |                     FlatEntry::Deleted => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:922:24
+    |
+922 |                 if let FlatEntry::Occupied(k, v) = entry {
+    |                        ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:963:36
+    |
+963 |                 new_table_vec.push(FlatEntry::Empty);
+    |                                    ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:967:34
+    |
+967 |                         old_vec, FlatEntry::Empty);
+    |                                  ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1068:21
+     |
+1068 |                     FlatEntry::Empty | FlatEntry::Deleted => { return slot; },
+     |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1068:40
+     |
+1068 |                     FlatEntry::Empty | FlatEntry::Deleted => { return slot; },
+     |                                        ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1069:21
+     |
+1069 |                     FlatEntry::Occupied(k, _) => {
+     |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:189:21
+    |
+189 |                     FlatEntry::Occupied(k, _v) => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:197:51
+    |
+197 | ...                   table.table.set(slot, FlatEntry::Occupied(key, value));
+    |                                             ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:210:49
+    |
+210 | ...                   let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
+    |                                       ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:249:21
+    |
+249 |                     FlatEntry::Empty => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:252:47
+    |
+252 |                         table.table.set(slot, FlatEntry::Occupied(key, value));
+    |                                               ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:265:45
+    |
+265 | ...                   let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
+    |                                       ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:298:21
+    |
+298 |                     FlatEntry::Deleted => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:382:21
+    |
+382 |                     FlatEntry::Occupied(k, v) => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:410:21
+    |
+410 |                     FlatEntry::Empty => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:428:21
+    |
+428 |                     FlatEntry::Deleted => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:518:21
+    |
+518 |                     FlatEntry::Occupied(k, _v) => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:525:51
+    |
+525 | ...                   table.table.set(slot, FlatEntry::Deleted);
+    |                                             ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:542:49
+    |
+542 | ...                   let new_entry = FlatEntry::<Key, Value>::Deleted;
+    |                                       ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:578:21
+    |
+578 |                     FlatEntry::Empty => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:592:21
+    |
+592 |                     FlatEntry::Deleted => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:657:24
+    |
+657 |                 if let FlatEntry::Occupied(k, v) = entry {
+    |                        ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:702:36
+    |
+702 |                 new_table_vec.push(FlatEntry::Empty);
+    |                                    ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:706:34
+    |
+706 |                         old_vec, FlatEntry::Empty);
+    |                                  ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:809:21
+    |
+809 |                     FlatEntry::Empty | FlatEntry::Deleted => { return slot; },
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:809:40
+    |
+809 |                     FlatEntry::Empty | FlatEntry::Deleted => { return slot; },
+    |                                        ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0433]: failed to resolve: use of undeclared type `FlatEntry`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:810:21
+    |
+810 |                     FlatEntry::Occupied(k, _) => {
+    |                     ^^^^^^^^^ use of undeclared type `FlatEntry`
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+  --> src/Chap47/LinProbFlatHashTableStEph.rs:65:27
+   |
+65 |             && #[trigger] spec_flat_has_key(table.table@[i], k)
+   |                           ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+  --> src/Chap47/LinProbFlatHashTableStEph.rs:66:29
+   |
+66 |             ==> !#[trigger] spec_flat_has_key(table.table@[j], k))
+   |                             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+  --> src/Chap47/LinProbFlatHashTableStEph.rs:72:27
+   |
+72 |             && #[trigger] spec_flat_has_key(table.table@[i], k)
+   |                           ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:129:41
+    |
+129 |                         ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d) % (m as int)], key),
+    |                                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:159:40
+    |
+159 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], key));
+    |                              ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:163:40
+    |
+163 | ...                   if spec_flat_has_key(old_table_seq[j], key) {}
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:176:51
+    |
+176 | ...                   && #[trigger] spec_flat_has_key(table.table@[i], k)
+    |                                     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:217:36
+    |
+217 | ...                   if spec_flat_has_key(old_table_seq[j], key) {
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_probe_mod_identity` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:218:37
+    |
+218 | ...                   lemma_probe_mod_identity(h as int, j, m as int);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:229:47
+    |
+229 | ...                   && #[trigger] spec_flat_has_key(table.table@[i], k)
+    |                                     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:230:53
+    |
+230 | ...                   implies !#[trigger] spec_flat_has_key(table.table@[j], k) by {
+    |                                           ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:235:44
+    |
+235 | ...                   if spec_flat_has_key(old_table_seq[j], key) {}
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:242:48
+    |
+242 | ...                   if spec_flat_has_key(old_table_seq[i], key) {}
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:252:47
+    |
+252 | ...                   && #[trigger] spec_flat_has_key(table.table@[i], k)
+    |                                     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_probe_mod_identity` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:315:21
+    |
+315 |                     lemma_probe_mod_identity(h as int, j, m as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:338:41
+    |
+338 |                         ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d) % (m as int)], *key),
+    |                                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:370:40
+    |
+370 | ...                   if spec_flat_has_key(table.table@[j], *key) {
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:373:48
+    |
+373 | ...                   assert(spec_flat_has_key(table.table@[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:391:36
+    |
+391 | ...                   if spec_flat_has_key(table.table@[j], *key) {
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_probe_mod_identity` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:393:37
+    |
+393 | ...                   lemma_probe_mod_identity(h as int, j, m as int);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:420:24
+    |
+420 |                     if spec_flat_has_key(table.table@[j], *key) {
+    |                        ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_probe_mod_identity` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:422:25
+    |
+422 |                         lemma_probe_mod_identity(h as int, j, m as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:452:41
+    |
+452 |                         ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d) % (m as int)], *key),
+    |                                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:487:40
+    |
+487 | ...                   if spec_flat_has_key(old_table_seq[j], *key) {
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:489:48
+    |
+489 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:507:51
+    |
+507 | ...                   && #[trigger] spec_flat_has_key(table.table@[i], k)
+    |                                     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:537:36
+    |
+537 | ...                   if spec_flat_has_key(table.table@[j], *key) {
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_probe_mod_identity` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:539:37
+    |
+539 | ...                   lemma_probe_mod_identity(h as int, j, m as int);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:559:24
+    |
+559 |                     if spec_flat_has_key(table.table@[j], *key) {
+    |                        ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_probe_mod_identity` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:561:25
+    |
+561 |                         lemma_probe_mod_identity(h as int, j, m as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_all_empties_count` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:663:17
+    |
+663 |                 lemma_all_empties_count::<Key, Value>(new_table.table@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_empties` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:677:21
+    |
+677 |                     spec_count_empties(new_table.table@) >= (new_size - j) as int,
+    |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_empties_positive_implies_exists_empty` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:687:21
+    |
+687 |                     lemma_empties_positive_implies_exists_empty::<Key, Value>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_one_slot_change_empties` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:697:21
+    |
+697 |                     lemma_one_slot_change_empties::<Key, Value>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+  --> src/Chap47/QuadProbFlatHashTableStEph.rs:85:27
+   |
+85 |             && #[trigger] spec_flat_has_key(table.table@[i], k)
+   |                           ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+  --> src/Chap47/QuadProbFlatHashTableStEph.rs:86:29
+   |
+86 |             ==> !#[trigger] spec_flat_has_key(table.table@[j], k))
+   |                             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+  --> src/Chap47/QuadProbFlatHashTableStEph.rs:90:27
+   |
+90 |             && #[trigger] spec_flat_has_key(table.table@[i], k)
+   |                           ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:352:22
+    |
+352 |                 ==> !spec_flat_has_key(
+    |                      ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:471:41
+    |
+471 |                         ==> !#[trigger] spec_flat_has_key(
+    |                                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:491:40
+    |
+491 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], key));
+    |                              ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:495:40
+    |
+495 | ...                   if spec_flat_has_key(old_table_seq[j], key) {}
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:508:51
+    |
+508 | ...                   && #[trigger] spec_flat_has_key(table.table@[i], k)
+    |                                     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:548:36
+    |
+548 | ...                   if spec_flat_has_key(old_table_seq[j], key) {}
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:561:47
+    |
+561 | ...                   && #[trigger] spec_flat_has_key(table.table@[i], k)
+    |                                     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:625:30
+    |
+625 |                     implies !spec_flat_has_key(
+    |                              ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:659:41
+    |
+659 |                         ==> !#[trigger] spec_flat_has_key(
+    |                                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:678:40
+    |
+678 | ...                   if spec_flat_has_key(table.table@[j], *key) {
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:680:48
+    |
+680 | ...                   assert(spec_flat_has_key(table.table@[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:700:36
+    |
+700 | ...                   if spec_flat_has_key(table.table@[j], *key) {
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:744:24
+    |
+744 |                     if spec_flat_has_key(table.table@[j], *key) {
+    |                        ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:781:41
+    |
+781 |                         ==> !#[trigger] spec_flat_has_key(
+    |                                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:805:40
+    |
+805 | ...                   if spec_flat_has_key(old_table_seq[j], *key) {
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:807:48
+    |
+807 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:823:51
+    |
+823 | ...                   && #[trigger] spec_flat_has_key(table.table@[i], k)
+    |                                     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:852:36
+    |
+852 | ...                   if spec_flat_has_key(table.table@[j], *key) {
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:892:24
+    |
+892 |                     if spec_flat_has_key(table.table@[j], *key) {
+    |                        ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_all_empties_count` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:986:17
+    |
+986 |                 lemma_all_empties_count::<Key, Value>(new_table.table@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_empties` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1003:21
+     |
+1003 |                     spec_count_empties(new_table.table@) >= (new_size - j) as int,
+     |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_empties_positive_implies_exists_empty` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1013:21
+     |
+1013 |                     lemma_empties_positive_implies_exists_empty::<Key, Value>(
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_one_slot_change_empties` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1023:21
+     |
+1023 |                     lemma_one_slot_change_empties::<Key, Value>(
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+  --> src/Chap47/DoubleHashFlatHashTableStEph.rs:70:27
+   |
+70 |             && #[trigger] spec_flat_has_key(table.table@[i], k)
+   |                           ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+  --> src/Chap47/DoubleHashFlatHashTableStEph.rs:71:29
+   |
+71 |             ==> !#[trigger] spec_flat_has_key(table.table@[j], k))
+   |                             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+  --> src/Chap47/DoubleHashFlatHashTableStEph.rs:75:27
+   |
+75 |             && #[trigger] spec_flat_has_key(table.table@[i], k)
+   |                           ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:182:41
+    |
+182 |                         ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d * step as int) % (m as int)], key),
+    |                                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:203:40
+    |
+203 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], key));
+    |                              ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:208:40
+    |
+208 | ...                   if spec_flat_has_key(old_table_seq[j], key) {}
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:223:51
+    |
+223 | ...                   && #[trigger] spec_flat_has_key(table.table@[i], k)
+    |                                     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:262:36
+    |
+262 | ...                   if spec_flat_has_key(old_table_seq[j], key) {}
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:274:47
+    |
+274 | ...                   && #[trigger] spec_flat_has_key(table.table@[i], k)
+    |                                     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_probe_mod_identity` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:336:21
+    |
+336 |                     lemma_probe_mod_identity(h as int, j, m as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:374:41
+    |
+374 |                         ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d * step as int) % (m as int)], *key),
+    |                                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:395:40
+    |
+395 | ...                   if spec_flat_has_key(table.table@[j], *key) {
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:398:48
+    |
+398 | ...                   assert(spec_flat_has_key(table.table@[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:417:36
+    |
+417 | ...                   if spec_flat_has_key(table.table@[j], *key) {
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:469:24
+    |
+469 |                     if spec_flat_has_key(table.table@[j], *key) {
+    |                        ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:511:41
+    |
+511 |                         ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d * step as int) % (m as int)], *key),
+    |                                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:536:40
+    |
+536 | ...                   if spec_flat_has_key(old_table_seq[j], *key) {
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:539:48
+    |
+539 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:557:51
+    |
+557 | ...                   && #[trigger] spec_flat_has_key(table.table@[i], k)
+    |                                     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:585:36
+    |
+585 | ...                   if spec_flat_has_key(table.table@[j], *key) {
+    |                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_flat_has_key` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:627:24
+    |
+627 |                     if spec_flat_has_key(table.table@[j], *key) {
+    |                        ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_all_empties_count` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:730:17
+    |
+730 |                 lemma_all_empties_count::<Key, Value>(new_table.table@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_empties` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:744:21
+    |
+744 |                     spec_count_empties(new_table.table@) >= (new_size - j) as int,
+    |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_empties_positive_implies_exists_empty` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:753:21
+    |
+753 |                     lemma_empties_positive_implies_exists_empty::<Key, Value>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_one_slot_change_empties` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:762:21
+    |
+762 |                     lemma_one_slot_change_empties::<Key, Value>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 239 previous errors
+
+Some errors have detailed explanations: E0405, E0425, E0433.
+For more information about an error, try `rustc --explain E0405`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 1021MB, peak z3 RSS: 0MB, min free: 19573MB
+Sampled CPU Usage: rust_verify: 74s, z3 children: 61s

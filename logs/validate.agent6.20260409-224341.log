@@ -1,0 +1,192 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:549:24
+    |
+549 |                 assert(result@ =~= heap@);
+    |                        ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `idx` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:553:42
+    |
+553 |             let ghost mut old_idx: int = idx as int;
+    |                                          ^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:557:21
+    |
+557 |                     result@.len() == heap@.len(),
+    |                     ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:558:21
+    |
+558 |                     result@.len() == n,
+    |                     ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:558:38
+    |
+558 |                     result@.len() == n,
+    |                                      ^ not found in this scope
+
+error[E0425]: cannot find value `idx` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:559:22
+    |
+559 |                     (idx as int) < n,
+    |                      ^^^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:559:36
+    |
+559 |                     (idx as int) < n,
+    |                                    ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:560:21
+    |
+560 |                     n <= usize::MAX as int,
+    |                     ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:561:21
+    |
+561 |                     n * 2 <= usize::MAX as int,
+    |                     ^ not found in this scope
+
+error[E0425]: cannot find value `idx` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:563:42
+    |
+563 |                     !done ==> old_idx == idx as int,
+    |                                          ^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:564:21
+    |
+564 |                     result@.to_multiset() =~= heap@.to_multiset(),
+    |                     ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:565:62
+    |
+565 |                 decreases (if !done { 1int } else { 0int }), n - idx,
+    |                                                              ^ not found in this scope
+
+error[E0425]: cannot find value `idx` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:565:66
+    |
+565 |                 decreases (if !done { 1int } else { 0int }), n - idx,
+    |                                                                  ^^^ not found in this scope
+
+error[E0425]: cannot find value `idx` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:567:39
+    |
+567 |                 let left = left_child(idx);
+    |                                       ^^^ not found in this scope
+
+error[E0425]: cannot find value `idx` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:568:41
+    |
+568 |                 let right = right_child(idx);
+    |                                         ^^^ not found in this scope
+
+error[E0425]: cannot find value `idx` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:569:36
+    |
+569 |                 let mut smallest = idx;
+    |                                    ^^^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:571:27
+    |
+571 |                 if left < n && *result.nth(left) < *result.nth(smallest) {
+    |                           ^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:571:33
+    |
+571 |                 if left < n && *result.nth(left) < *result.nth(smallest) {
+    |                                 ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:571:53
+    |
+571 |                 if left < n && *result.nth(left) < *result.nth(smallest) {
+    |                                                     ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:575:28
+    |
+575 |                 if right < n && *result.nth(right) < *result.nth(smallest) {
+    |                            ^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:575:34
+    |
+575 |                 if right < n && *result.nth(right) < *result.nth(smallest) {
+    |                                  ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:575:55
+    |
+575 |                 if right < n && *result.nth(right) < *result.nth(smallest) {
+    |                                                       ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `idx` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:579:32
+    |
+579 |                 if smallest == idx {
+    |                                ^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:582:21
+    |
+582 |                     result = swap_elements(&result, idx, smallest);
+    |                     ^^^^^^
+    |
+help: you might have meant to introduce a new binding
+    |
+582 |                     let result = swap_elements(&result, idx, smallest);
+    |                     +++
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:582:45
+    |
+582 |                     result = swap_elements(&result, idx, smallest);
+    |                                             ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `idx` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:582:53
+    |
+582 |                     result = swap_elements(&result, idx, smallest);
+    |                                                     ^^^ not found in this scope
+
+error[E0425]: cannot find value `idx` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:583:21
+    |
+583 |                     idx = smallest;
+    |                     ^^^
+    |
+help: you might have meant to introduce a new binding
+    |
+583 |                     let idx = smallest;
+    |                     +++
+
+error[E0425]: cannot find value `idx` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:586:35
+    |
+586 |                 proof { old_idx = idx as int; }
+    |                                   ^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap45/BinaryHeapPQ.rs:589:13
+    |
+589 |             result
+    |             ^^^^^^ not found in this scope
+
+error: aborting due to 29 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 1001MB, peak z3 RSS: 0MB, min free: 21435MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 0s

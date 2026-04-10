@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap45/UnsortedListPQ.rs:511:28
+    |
+511 |                     assert(pq@ =~= self@ + other@) by {
+    |                            ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+pq.view() =~= self.view().add(other.view()) 
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 5469MB, peak z3 RSS: 839MB, min free: 16373MB
+Sampled CPU Usage: rust_verify: 107s, z3 children: 120s

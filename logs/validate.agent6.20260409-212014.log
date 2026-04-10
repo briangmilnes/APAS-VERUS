@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+    --> src/Chap45/SortedListPQ.rs:293:21
+     |
+ 293 |                     sorted == Self::spec_sorted(self.spec_seq()),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1071 |                             return false;
+     |                             ------------ at this exit
+
+note: diagnostics via expansion
+   --> src/Chap45/SortedListPQ.rs:293:21
+    |
+293 |                     sorted == Self::spec_sorted(self.spec_seq()),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == spec_sorted(old(self).spec_seq()) ✘
+old(self).view().len() <= 1 ==>
+    %return ✔
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 6725MB, peak z3 RSS: 1173MB, min free: 14718MB
+Sampled CPU Usage: rust_verify: 157s, z3 children: 180s

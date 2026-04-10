@@ -1,0 +1,19 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: mismatched closing delimiter: `}`
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:578:45
+    |
+549 | ...                   proof {
+    |                             - closing delimiter possibly meant for this
+...
+578 | ...                           implies ({
+    |                                       ^ unclosed delimiter
+...
+591 | ...                   }
+    |                       ^ mismatched closing delimiter
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 19495MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

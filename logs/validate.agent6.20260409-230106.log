@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find value `new_elements` in this scope
+    --> src/Chap45/SortedListPQ.rs:1049:38
+     |
+1049 |                         0 <= i < j < new_elements.seq@.len() implies
+     |                                      ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `new_elements` in this scope
+    --> src/Chap45/SortedListPQ.rs:1051:29
+     |
+1051 | ...                   new_elements.seq@[i], new_elements.seq@[j])
+     |                       ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `new_elements` in this scope
+    --> src/Chap45/SortedListPQ.rs:1051:51
+     |
+1051 | ...                   new_elements.seq@[i], new_elements.seq@[j])
+     |                                             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `new_elements` in this scope
+    --> src/Chap45/SortedListPQ.rs:1055:32
+     |
+1055 |                         assert(new_elements.spec_index(i)
+     |                                ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `new_elements` in this scope
+    --> src/Chap45/SortedListPQ.rs:1059:32
+     |
+1059 |                         assert(new_elements.spec_index(j)
+     |                                ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `new_pq` in this scope
+    --> src/Chap45/SortedListPQ.rs:1063:18
+     |
+1063 |                 (new_pq, Some(max_element))
+     |                  ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `max_element` in this scope
+    --> src/Chap45/SortedListPQ.rs:1063:31
+     |
+1063 |                 (new_pq, Some(max_element))
+     |                               ^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 4754MB, peak z3 RSS: 498MB, min free: 17216MB
+Sampled CPU Usage: rust_verify: 93s, z3 children: 90s

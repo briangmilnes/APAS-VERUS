@@ -10615,4 +10615,11 @@ Found 681 asserts in codebase, testing 681
 [347/681] assert L451 in insert_vertex (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +25%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +69s, mem: +80MB, real: 62s]
 [348/681] assert L449 in insert_vertex (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +79%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +215s, mem: +267MB, real: 61s]
 [349/681] assert L448 in insert_vertex (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +72%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +197s, mem: +302MB, real: 58s]
-[350/681] assert L445 in insert_vertex (src/Chap52/AdjTableGraphMtPer.rs)... 
+[350/681] assert L445 in insert_vertex (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +41%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +112s, mem: -66MB, real: 56s]
+[351/681] assert L438 in insert_vertex (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 105s, mem: 360MB, real: 10s]
+[352/681] assert L435 in insert_vertex (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 266s, mem: 828MB, real: 42s]
+[353/681] assert L434 in insert_vertex (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +7%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +20s, mem: +135MB, real: 50s]
+[354/681] assert L382 in out_neighbors (src/Chap52/AdjTableGraphMtPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -89s, mem: -291MB, real: 47s]
+[355/681] assert L379 in out_neighbors (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 14s, mem: 0MB, real: 6s]
+[356/681] assert L378 in out_neighbors (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +34%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +92s, mem: +136MB, real: 57s]
+[357/681] assert L353 in has_edge (src/Chap52/AdjTableGraphMtPer.rs)... 

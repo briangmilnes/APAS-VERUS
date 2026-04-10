@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap45/UnsortedListPQ.rs:677:33
+    |
+677 |                         implies #[trigger] seq.seq@[i] == vec_view[i] by {
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+seq.seq.view().index(i) == vec_view.index(i) 
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 6000MB, peak z3 RSS: 527MB, min free: 15887MB
+Sampled CPU Usage: rust_verify: 123s, z3 children: 108s

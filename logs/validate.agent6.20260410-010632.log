@@ -1,0 +1,37 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap51
+error: invariant not satisfied at end of loop body
+   --> src/Chap51/BottomUpDPMtPer.rs:264:25
+    |
+264 | /                         forall|c: int| #![trigger row@[c]]
+265 | |                             1 <= c < j as int ==>
+266 | |                             row@[c] as nat == self.spec_med(i as nat, c as nat),
+    | |_______________________________________________________________________________^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap51/BottomUpDPMtPer.rs:302:25
+    |
+302 |                         1 + if above <= left { above } else { left }
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap51/BottomUpDPMtPer.rs:302:25
+    |
+302 |                         1 + if above <= left { above } else { left }
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+usize::BITS == 32 ==>
+    0 <= 1 + if above <= left { above } else { left } ✔
+    1 + if above <= left { above } else { left } < 4294967296 ✘
+usize::BITS == 64 ==>
+    0 <= 1 + if above <= left { above } else { left } ✔
+    1 + if above <= left { above } else { left } < 18446744073709551616 ✘
+
+verification results:: 1413 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 4256MB, peak z3 RSS: 218MB, min free: 18012MB
+Sampled CPU Usage: rust_verify: 71s, z3 children: 55s

@@ -1,0 +1,30 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap51
+error: precondition not satisfied
+   --> src/Chap51/TopDownDPMtPer.rs:362:44
+    |
+362 |                 let (del_cost, ins_cost) = join(f1, f2);
+    |                                            ^^^^^^^^^^^^
+    |
+   ::: src/Chap02/HFSchedulerMtEph.rs:127:13
+    |
+127 |             fb.requires(()),
+    |             --------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap02/HFSchedulerMtEph.rs:127:13
+    |
+127 |             fb.requires(()),
+    |             ^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(f1, ()) ✔
+ClosureReq(f2, ()) ✘
+
+verification results:: 1413 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 2738MB, peak z3 RSS: 363MB, min free: 18705MB
+Sampled CPU Usage: rust_verify: 48s, z3 children: 41s

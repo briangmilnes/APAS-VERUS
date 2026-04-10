@@ -1,0 +1,34 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap51
+error: precondition not satisfied
+   --> src/Chap51/TopDownDPStPer.rs:190:29
+    |
+190 |                 memo_table: HashMapWithViewPlus::new(),
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/hash_map_with_view_plus.rs:68:13
+    |
+ 68 |             obeys_key_model::<Key>(),
+    |             ------------------------ failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/hash_map_with_view_plus.rs:68:13
+   |
+68 |             obeys_key_model::<Key>(),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^
+69 |             obeys_feq_view_injective::<Key>(),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_key_model() ✘
+    function is uninterpreted
+obeys_feq_view_injective() ✘
+    function is uninterpreted
+
+verification results:: 1413 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 3489MB, peak z3 RSS: 262MB, min free: 18571MB
+Sampled CPU Usage: rust_verify: 62s, z3 children: 53s

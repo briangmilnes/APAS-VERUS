@@ -1,0 +1,32 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find value `oj` in this scope
+   --> src/Chap45/SortedListPQ.rs:696:47
+    |
+696 |                     match TotalOrder::cmp(si, oj) {
+    |                                               ^^
+    |
+help: a local variable with a similar name exists
+    |
+696 -                     match TotalOrder::cmp(si, oj) {
+696 +                     match TotalOrder::cmp(si, j) {
+    |
+
+error[E0425]: cannot find value `oj` in this scope
+   --> src/Chap45/SortedListPQ.rs:737:59
+    |
+737 | ...                   ArraySeqStPerS::singleton(oj.clone());
+    |                                                 ^^
+    |
+help: a local variable with a similar name exists
+    |
+737 -                                 ArraySeqStPerS::singleton(oj.clone());
+737 +                                 ArraySeqStPerS::singleton(j.clone());
+    |
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 3398MB, peak z3 RSS: 0MB, min free: 18975MB
+Sampled CPU Usage: rust_verify: 64s, z3 children: 44s

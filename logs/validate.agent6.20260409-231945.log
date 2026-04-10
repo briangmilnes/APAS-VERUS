@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: expected delimiter
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:381:46
+    |
+381 | ...                   implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
+    |                                ^
+
+error[E0425]: cannot find type `DoubleHashFlatHashTableStEph` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:814:30
+    |
+814 |     impl std::fmt::Debug for DoubleHashFlatHashTableStEph {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `DoubleHashFlatHashTableStEph` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:820:32
+    |
+820 |     impl std::fmt::Display for DoubleHashFlatHashTableStEph {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 2874MB, peak z3 RSS: 213MB, min free: 19215MB
+Sampled CPU Usage: rust_verify: 60s, z3 children: 33s

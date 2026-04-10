@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: invariant not satisfied at end of loop body
+    --> src/Chap45/BinaryHeapPQ.rs:1281:25
+     |
+1281 |                         new_elements@[0] == self@[n as int - 1],
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap45/BinaryHeapPQ.rs:1285:25
+     |
+1285 |                         new_elements.seq@[0] == last_element,
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+    --> src/Chap45/BinaryHeapPQ.rs:1376:59
+     |
+1376 |                     let first = Seq::<T::V>::empty().push(sr.last());
+     |                                                           ^^^^^^^^^
+     |
+    --> vstd/seq.rs:154:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap45/BinaryHeapPQ.rs:1377:32
+     |
+1377 |                     let rest = sr.subrange(0, sr.len() - 1);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:116:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap45/BinaryHeapPQ.rs:1392:45
+     |
+1392 |                     assert(sr =~= rest.push(sr.last())) by {
+     |                                             ^^^^^^^^^
+     |
+    --> vstd/seq.rs:154:12
+     |
+     = note: recommendation not met
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 2613MB, peak z3 RSS: 448MB, min free: 19196MB
+Sampled CPU Usage: rust_verify: 43s, z3 children: 33s

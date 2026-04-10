@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error[E0608]: cannot index into a value of type `vstd::seq::Seq<Chap47::FlatHashTable::FlatHashTable::FlatEntry<Key, Value>>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:656:73
+    |
+656 |                 let s_wit = choose |s: int| #![trigger old(table).table@[s]]
+    |                                                                         ^^^
+
+error[E0608]: cannot index into a value of type `vstd::seq::Seq<Chap47::FlatHashTable::FlatHashTable::FlatEntry<Key, Value>>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:657:74
+    |
+657 |                     0 <= s < old(table).table@.len() && old(table).table@[s] is Empty;
+    |                                                                          ^^^
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0608`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 3071MB, peak z3 RSS: 348MB, min free: 19387MB
+Sampled CPU Usage: rust_verify: 27s, z3 children: 0s

@@ -1,0 +1,123 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap45/LeftistHeapPQ.rs:528:21
+    |
+528 |                     by {
+    |                     ^^
+
+error[E0425]: cannot find type `LeftistHeapPQ` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1265:28
+     |
+1265 |             .collect::<Vec<LeftistHeapPQ<T>>>();
+     |                            ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LeftistHeapPQ` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1271:87
+     |
+1271 |     pub fn parallel_heap_construction<T: StT + Ord + TotalOrder>(elements: Vec<T>) -> LeftistHeapPQ<T> {
+     |                                                                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LeftistHeapNode` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1277:55
+     |
+1277 |     impl<T: StT + Ord + TotalOrder + Debug> Debug for LeftistHeapNode<T> {
+     |                                                       ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LeftistHeapNode` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1288:49
+     |
+1288 |     impl<T: StT + Ord + TotalOrder> Display for LeftistHeapNode<T> {
+     |                                                 ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LeftistHeapNode` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1290:62
+     |
+1290 |             fn format_node<T: StT + Ord + TotalOrder>(node: &LeftistHeapNode<T>, f: &mut Formatter<'_>, depth: usize) -> Result {
+     |                                                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LeftistHeapPQ` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1307:55
+     |
+1307 |     impl<T: StT + Ord + TotalOrder + Debug> Debug for LeftistHeapPQ<T> {
+     |                                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LeftistHeapPQ` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1313:49
+     |
+1313 |     impl<T: StT + Ord + TotalOrder> Display for LeftistHeapPQ<T> {
+     |                                                 ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LeftistHeapNode` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1315:62
+     |
+1315 |             fn format_node<T: StT + Ord + TotalOrder>(node: &LeftistHeapNode<T>, f: &mut Formatter<'_>, depth: usize) -> Result {
+     |                                                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapPQ`
+    --> src/Chap45/LeftistHeapPQ.rs:1264:24
+     |
+1264 |             .map(|seq| LeftistHeapPQ::from_vec(seq))
+     |                        ^^^^^^^^^^^^^ use of undeclared type `LeftistHeapPQ`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapPQ`
+    --> src/Chap45/LeftistHeapPQ.rs:1266:27
+     |
+1266 |         let merged_heap = LeftistHeapPQ::meld_multiple(&heaps);
+     |                           ^^^^^^^^^^^^^ use of undeclared type `LeftistHeapPQ`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapPQ`
+    --> src/Chap45/LeftistHeapPQ.rs:1272:9
+     |
+1272 |         LeftistHeapPQ::from_vec(elements)
+     |         ^^^^^^^^^^^^^ use of undeclared type `LeftistHeapPQ`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapNode`
+    --> src/Chap45/LeftistHeapPQ.rs:1280:17
+     |
+1280 |                 LeftistHeapNode::Leaf => write!(f, "Leaf"),
+     |                 ^^^^^^^^^^^^^^^ use of undeclared type `LeftistHeapNode`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapNode`
+    --> src/Chap45/LeftistHeapPQ.rs:1281:17
+     |
+1281 |                 LeftistHeapNode::Node { key, left, right, rank } => {
+     |                 ^^^^^^^^^^^^^^^ use of undeclared type `LeftistHeapNode`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapNode`
+    --> src/Chap45/LeftistHeapPQ.rs:1292:21
+     |
+1292 |                     LeftistHeapNode::Leaf => Ok(()),
+     |                     ^^^^^^^^^^^^^^^ use of undeclared type `LeftistHeapNode`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapNode`
+    --> src/Chap45/LeftistHeapPQ.rs:1293:21
+     |
+1293 |                     LeftistHeapNode::Node { key, left, right, rank } => {
+     |                     ^^^^^^^^^^^^^^^ use of undeclared type `LeftistHeapNode`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapNode`
+    --> src/Chap45/LeftistHeapPQ.rs:1317:21
+     |
+1317 |                     LeftistHeapNode::Leaf => Ok(()),
+     |                     ^^^^^^^^^^^^^^^ use of undeclared type `LeftistHeapNode`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapNode`
+    --> src/Chap45/LeftistHeapPQ.rs:1318:21
+     |
+1318 |                     LeftistHeapNode::Node { key, left, right, rank } => {
+     |                     ^^^^^^^^^^^^^^^ use of undeclared type `LeftistHeapNode`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapPQ`
+   --> src/Chap45/HeapsortExample.rs:266:22
+    |
+266 |         let mut pq = LeftistHeapPQ::empty();
+    |                      ^^^^^^^^^^^^^ use of undeclared type `LeftistHeapPQ`
+
+error: aborting due to 19 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 3248MB, peak z3 RSS: 262MB, min free: 19034MB
+Sampled CPU Usage: rust_verify: 40s, z3 children: 12s

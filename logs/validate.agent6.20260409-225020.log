@@ -1,0 +1,34 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: this file contains an unclosed delimiter
+    --> src/Chap45/BinaryHeapPQ.rs:1904:3
+     |
+  23 | pub mod BinaryHeapPQ {
+     |                      - unclosed delimiter
+...
+  41 | {
+     | - unclosed delimiter
+...
+1116 |         impl<T: StT + Ord + TotalOrder> BinaryHeapPQTrait<T> for BinaryHeapPQ<T> {
+     |                                                                                  - unclosed delimiter
+...
+1586 |             fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
+     |                                                               - unclosed delimiter
+...
+1624 |                 {
+     |                 - unclosed delimiter
+...
+1673 |                                     new_heap.spec_seq()[h]) by {
+     |                                                                - this delimiter might not be properly closed...
+...
+1812 |         }
+     |         - ...as it matches this but it has different indentation
+...
+1904 | }
+     |  ^
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 20121MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

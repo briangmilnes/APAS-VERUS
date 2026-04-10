@@ -1,0 +1,28 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap47/FlatHashTable.rs:110:13
+    |
+110 |               spec_count_empties(new_table) >= spec_count_empties(old_table) - 1,
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+113 | /         if old_table.len() == 1 {
+114 | |             // Veracity: NEEDED assert
+115 | |             assert(spec_count_empties::<Key, Value>(old_table.drop_last()) == 0);
+...   |
+129 | |                 old_table.drop_last(), new_table.drop_last(), s);
+130 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+spec_count_empties(old(new_table)) >= spec_count_empties(old(old_table)) - 1 
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 4742MB, peak z3 RSS: 578MB, min free: 17438MB
+Sampled CPU Usage: rust_verify: 108s, z3 children: 130s

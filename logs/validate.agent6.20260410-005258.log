@@ -1,0 +1,30 @@
+Mode: isolate
+Isolate: including Chap30 Chap02 Chap50
+error[E0425]: cannot find value `keys` in this scope
+   --> src/Chap50/OptBinSearchTreeMtEph.rs:413:13
+    |
+413 |             keys.set(index, key_prob);
+    |             ^^^^
+    |
+help: you might have meant to use the available field
+    |
+413 |             self.keys.set(index, key_prob);
+    |             +++++
+
+error[E0425]: cannot find value `keys` in this scope
+   --> src/Chap50/OptBinSearchTreeMtEph.rs:416:38
+    |
+416 |                 keys: new_arc_rwlock(keys, Ghost(OptBSTMtEphKeysInv { expected_keys: new_keys_ghost })),
+    |                                      ^^^^
+    |
+help: you might have meant to use the available field
+    |
+416 |                 keys: new_arc_rwlock(self.keys, Ghost(OptBSTMtEphKeysInv { expected_keys: new_keys_ghost })),
+    |                                      +++++
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 17113MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

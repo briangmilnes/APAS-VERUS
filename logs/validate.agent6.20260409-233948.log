@@ -1,0 +1,44 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:423:21
+    |
+423 | /                     lemma_table_to_map_update_remove::<Key, Value, LinkedListStEphS<(Key, Value)>>(
+424 | |                         old_table, index as int, table.table@[index as int], *key);
+    | |__________________________________________________________________________________^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:270:13
+    |
+270 |               new_entry.spec_entry_to_map() == table[index].spec_entry_to_map().remove(key),
+    |               ----------------------------------------------------------------------------- failed precondition
+
+error: assertion failed
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:430:33
+    |
+430 |                         implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:270:13
+    |
+270 |             new_entry.spec_entry_to_map() == table[index].spec_entry_to_map().remove(key),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+let tmp%% = 0;
+    let tmp%% = index;
+        let tmp%% = old_table.len();
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+tmp%.spec_entry_to_map() == old_table.index(index).spec_entry_to_map().remove(key) ✘
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = old_table.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == index) ==>
+        !(old_table.index(j).spec_entry_to_map().dom().contains(key)) ✔
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 5871MB, peak z3 RSS: 977MB, min free: 16247MB
+Sampled CPU Usage: rust_verify: 141s, z3 children: 174s

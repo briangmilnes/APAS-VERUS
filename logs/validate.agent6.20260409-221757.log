@@ -1,0 +1,42 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap45/UnsortedListPQ.rs:628:33
+    |
+628 | ...                   #[trigger] TotalOrder::le(result.seq@[i], result.seq@[j])
+    |                       ^
+
+error[E0432]: unresolved import `crate::Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ`
+  --> src/Chap45/HeapsortExample.rs:37:9
+   |
+37 |     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `UnsortedListPQ` in `Chap45::UnsortedListPQ::UnsortedListPQ`
+   |
+help: consider importing one of these modules instead
+   |
+37 -     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ;
+37 +     use crate::Chap45::UnsortedListPQ;
+   |
+37 -     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ;
+37 +     use crate::Chap45::UnsortedListPQ::UnsortedListPQ;
+   |
+
+error[E0425]: cannot find type `UnsortedListPQ` in this scope
+   --> src/Chap45/UnsortedListPQ.rs:832:75
+    |
+832 |     impl<T: StT + Ord + TotalOrder + std::fmt::Debug> std::fmt::Debug for UnsortedListPQ<T> {
+    |                                                                           ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnsortedListPQ` in this scope
+   --> src/Chap45/UnsortedListPQ.rs:838:49
+    |
+838 |     impl<T: StT + Ord + TotalOrder> Display for UnsortedListPQ<T> {
+    |                                                 ^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 4 previous errors
+
+Some errors have detailed explanations: E0425, E0432.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 5903MB, peak z3 RSS: 392MB, min free: 16153MB
+Sampled CPU Usage: rust_verify: 117s, z3 children: 128s

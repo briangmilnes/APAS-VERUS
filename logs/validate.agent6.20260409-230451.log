@@ -1,0 +1,27 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error[E0609]: no field `elements` on type `fn(_, _) -> bool {vstd::pervasive::cloned::<_>}`
+   --> src/Chap45/UnsortedListPQ.rs:847:32
+    |
+847 |                         cloned.elements.seq@,
+    |                                ^^^^^^^^ unknown field
+
+error[E0308]: mismatched types
+   --> src/Chap45/UnsortedListPQ.rs:850:17
+    |
+838 |             fn clone(&self) -> (cloned: Self)
+    |                                         ---- expected `Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ<T>` because of return type
+...
+850 |                 cloned
+    |                 ^^^^^^ expected `UnsortedListPQ<T>`, found fn item
+    |
+    = note: expected struct `Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ<T>`
+              found fn item `fn(_, _) -> bool {vstd::pervasive::cloned::<_>}`
+
+error: aborting due to 2 previous errors
+
+Some errors have detailed explanations: E0308, E0609.
+For more information about an error, try `rustc --explain E0308`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 4004MB, peak z3 RSS: 671MB, min free: 18308MB
+Sampled CPU Usage: rust_verify: 43s, z3 children: 9s

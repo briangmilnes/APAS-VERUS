@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap45/BinaryHeapPQ.rs:1550:52
+     |
+1550 |   ...                   implies #[trigger] TotalOrder::le(
+     |  __________________________________________^
+1551 | | ...                       result.seq@[i], result.seq@[j]) by {
+     | |_________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+result.seq.view().index(i).le(result.seq.view().index(j)) 
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 23s
+Sampled Memory Usage: peak rust_verify RSS: 3594MB, peak z3 RSS: 610MB, min free: 17916MB
+Sampled CPU Usage: rust_verify: 59s, z3 children: 49s

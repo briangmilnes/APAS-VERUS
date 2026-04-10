@@ -1,0 +1,38 @@
+Mode: isolate
+Isolate: including Chap30 Chap02 Chap50
+error[E0425]: cannot find value `gk` in this scope
+   --> src/Chap50/OptBinSearchTreeMtEph.rs:326:91
+    |
+326 |                 keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv { expected_keys: gk })),
+    |                                                                                           ^^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/result.rs:561:4
+    |
+    = note: similarly named tuple variant `Ok` defined here
+help: a tuple variant with a similar name exists
+    |
+326 -                 keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv { expected_keys: gk })),
+326 +                 keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv { expected_keys: Ok })),
+    |
+
+error[E0425]: cannot find value `gk` in this scope
+   --> src/Chap50/OptBinSearchTreeMtEph.rs:328:35
+    |
+328 |                 ghost_keys: Ghost(gk),
+    |                                   ^^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/result.rs:561:4
+    |
+    = note: similarly named tuple variant `Ok` defined here
+help: a tuple variant with a similar name exists
+    |
+328 -                 ghost_keys: Ghost(gk),
+328 +                 ghost_keys: Ghost(Ok),
+    |
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 19483MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

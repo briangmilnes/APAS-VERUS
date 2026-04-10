@@ -1,0 +1,18 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error[E0308]: mismatched types
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:635:25
+    |
+635 | /                         spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(
+636 | |                             table.table@.subrange(0, i as int)),
+    | |_______________________________________________________________^ expected `bool`, found `Map<Key, Value>`
+    |
+    = note: expected type `bool`
+             found struct `vstd::map::Map<Key, Value>`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0308`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 1648MB, peak z3 RSS: 0MB, min free: 20761MB
+Sampled CPU Usage: rust_verify: 18s, z3 children: 0s

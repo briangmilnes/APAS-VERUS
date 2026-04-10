@@ -1,0 +1,42 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+    --> src/Chap45/BinaryHeapPQ.rs:246:21
+     |
+ 246 |                       self@.len() > 0 ==> self@.to_multiset().count(min_elem.unwrap()@) > 0,
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1153 | /                 if self.elements.length() == 0 {
+1154 | |                     None
+1155 | |                 } else {
+1156 | |                     let root = self.elements.nth(0);
+...    |
+1171 | |                     Some(root)
+1172 | |                 }
+     | |_________________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap45/BinaryHeapPQ.rs:246:41
+    |
+246 |                     self@.len() > 0 ==> self@.to_multiset().count(min_elem.unwrap()@) > 0,
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().len() == 0 ==>
+    %return is None ✔
+old(self).view().len() > 0 ==>
+    %return is Some ✔
+old(self).view().len() > 0 ==>
+    old(self).view().to_multiset().count(%return.0.view()) > 0 ✘
+old(self).view().len() > 0 ==>
+    forall |i|
+        let tmp%% = 0 in let tmp%% = i in let tmp%% = old(self).spec_seq().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+            %return.0.le(old(self).spec_seq().index(i)) ✔
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 23s
+Sampled Memory Usage: peak rust_verify RSS: 3834MB, peak z3 RSS: 453MB, min free: 17935MB
+Sampled CPU Usage: rust_verify: 60s, z3 children: 48s

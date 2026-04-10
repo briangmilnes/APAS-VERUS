@@ -1,0 +1,93 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:155:17
+    |
+155 | /                 spec_chain_to_map(*chain).dom().contains(*key)
+156 | |                     ==> found == Some(spec_chain_to_map(*chain)[*key]),
+    | |______________________________________________________________________^ failed this postcondition
+...
+161 | /             match chain {
+162 | |                 None => {
+163 | |                     // Veracity: NEEDED proof block
+164 | |                     proof { reveal_with_fuel(spec_chain_to_map, 1); }
+...   |
+189 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:157:17
+    |
+157 | /                 !spec_chain_to_map(*chain).dom().contains(*key)
+158 | |                     ==> found is None,
+    | |_____________________________________^ failed this postcondition
+...
+161 | /             match chain {
+162 | |                 None => {
+163 | |                     // Veracity: NEEDED proof block
+164 | |                     proof { reveal_with_fuel(spec_chain_to_map, 1); }
+...   |
+189 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:170:30
+    |
+170 |                     let eq = feq(&node.key, key);
+    |                              ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:289:18
+    |
+289 |         requires obeys_feq_full::<T>()
+    |                  --------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/feq.rs:50:13
+   |
+50 |         &&& feq_reflexive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+51 |         &&& feq_symmetric::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+52 |         &&& feq_transitive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+...
+77 |         &&& obeys_feq_properties::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+78 |         &&& obeys_feq_view::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_full()
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 2746MB, peak z3 RSS: 264MB, min free: 19537MB
+Sampled CPU Usage: rust_verify: 34s, z3 children: 15s

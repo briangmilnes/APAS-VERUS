@@ -1,0 +1,59 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:479:17
+    |
+479 |                 deleted == old(table)@.dom().contains(*key),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/StructChainedHashTable.rs:457:17
+    |
+457 |                 found
+    |                 ----- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:479:28
+    |
+479 |                 deleted == old(table)@.dom().contains(*key),
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == old(table).view().dom().contains(old(key)) ✘
+|   %return ==>
+|       old(table).view().dom().contains(old(key)) ✘
+|           function is uninterpreted
+|   old(table).view().dom().contains(old(key)) ==>
+|       %return ✔
++---
+table.view() =~= old(table).view().remove(old(key)) ✔
+spec_parahashtablesteph_wf(table) ✔
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+
+note: recommendation not met
+   --> src/Chap47/StructChainedHashTable.rs:431:50
+    |
+431 |                         old_table, index as int, table.table@[index as int], *key);
+    |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/StructChainedHashTable.rs:446:54
+    |
+446 | ...                   old_table, index as int, old_table[index as int], *key);
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 5426MB, peak z3 RSS: 750MB, min free: 16929MB
+Sampled CPU Usage: rust_verify: 86s, z3 children: 55s

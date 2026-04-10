@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:361:25
+    |
+361 |                         prefix_map =~= spec_seq_pairs_to_map(original.subrange(0, i as int)),
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 5776MB, peak z3 RSS: 683MB, min free: 16475MB
+Sampled CPU Usage: rust_verify: 123s, z3 children: 153s

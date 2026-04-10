@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap45/BinaryHeapPQ.rs:1318:37
+     |
+1318 | ...                   implies #[trigger] new_elements.seq@[m] == self.elements.seq@[m] by {
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+new_elements.seq.view().index(m) == self.elements.seq.view().index(m) 
+
+note: recommendation not met
+    --> src/Chap45/BinaryHeapPQ.rs:1373:59
+     |
+1373 |                     let first = Seq::<T::V>::empty().push(sr.last());
+     |                                                           ^^^^^^^^^
+     |
+    --> vstd/seq.rs:154:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap45/BinaryHeapPQ.rs:1374:32
+     |
+1374 |                     let rest = sr.subrange(0, sr.len() - 1);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:116:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap45/BinaryHeapPQ.rs:1389:45
+     |
+1389 |                     assert(sr =~= rest.push(sr.last())) by {
+     |                                             ^^^^^^^^^
+     |
+    --> vstd/seq.rs:154:12
+     |
+     = note: recommendation not met
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 2819MB, peak z3 RSS: 497MB, min free: 19307MB
+Sampled CPU Usage: rust_verify: 53s, z3 children: 54s

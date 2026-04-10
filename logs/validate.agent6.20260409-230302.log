@@ -1,0 +1,61 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find value `min_element` in this scope
+   --> src/Chap45/UnsortedListPQ.rs:273:39
+    |
+273 |                 proof { T::reflexive(*min_element); }
+    |                                       ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `min_element` in this scope
+   --> src/Chap45/UnsortedListPQ.rs:280:56
+    |
+280 | ...                   #[trigger] TotalOrder::le(*min_element, self.elements.seq@[j]),
+    |                                                  ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `min_element` in this scope
+   --> src/Chap45/UnsortedListPQ.rs:283:61
+    |
+283 |                     let c = <T as TotalOrder>::cmp(current, min_element);
+    |                                                             ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `min_element` in this scope
+   --> src/Chap45/UnsortedListPQ.rs:288:54
+    |
+288 | ...                   let ghost old_min = *min_element;
+    |                                            ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `min_element` in this scope
+   --> src/Chap45/UnsortedListPQ.rs:300:29
+    |
+300 | ...                   min_element = current;
+    |                       ^^^^^^^^^^^
+    |
+help: you might have meant to introduce a new binding
+    |
+300 |                             let min_element = current;
+    |                             +++
+
+error[E0425]: cannot find value `min_element` in this scope
+   --> src/Chap45/UnsortedListPQ.rs:306:43
+    |
+306 | ...                   T::total(*min_element, *current);
+    |                                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `min_element` in this scope
+   --> src/Chap45/UnsortedListPQ.rs:309:56
+    |
+309 | ...                   assert(TotalOrder::le(*min_element, self.elements.seq@[i as int]));
+    |                                              ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `min_element` in this scope
+   --> src/Chap45/UnsortedListPQ.rs:314:22
+    |
+314 |                 Some(min_element)
+    |                      ^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 8 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 4113MB, peak z3 RSS: 444MB, min free: 17794MB
+Sampled CPU Usage: rust_verify: 70s, z3 children: 43s

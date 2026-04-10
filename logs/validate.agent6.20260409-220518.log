@@ -1,0 +1,80 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap45/SortedListPQ.rs:102:25
+    |
+102 |                 implies #[trigger] result.seq@[k] == old_result_seq.push(elem_raw)[k]
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+result.seq.view().index(k) == old_result_seq.push(elem_raw).index(k) 
+
+note: recommendation not met
+  --> src/Chap45/SortedListPQ.rs:90:67
+   |
+90 |                 result.spec_index(old_result_seq.len() as int) == single_seq.seq@[0],
+   |                                                                   ^^^^^^^^^^^^^^^^^^
+   |
+  --> vstd/seq.rs:62:12
+   |
+   = note: recommendation not met
+
+note: recommendation not met
+  --> src/Chap45/SortedListPQ.rs:91:17
+   |
+91 |                 single_seq.seq@[0] == elem_raw,
+   |                 ^^^^^^^^^^^^^^^^^^
+   |
+  --> vstd/seq.rs:62:12
+   |
+   = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap45/SortedListPQ.rs:108:78
+    |
+108 |                     assert(result.spec_index(old_result_seq.len() as int) == single_seq.seq@[0]);
+    |                                                                              ^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap45/SortedListPQ.rs:110:28
+    |
+110 |                     assert(single_seq.seq@[0] == elem_raw);
+    |                            ^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap45/SortedListPQ.rs:124:78
+    |
+124 |                     assert(result.spec_index(old_result_seq.len() as int) == single_seq.seq@[0]);
+    |                                                                              ^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap45/SortedListPQ.rs:126:28
+    |
+126 |                     assert(single_seq.seq@[0] == elem_raw);
+    |                            ^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2123 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 4362MB, peak z3 RSS: 388MB, min free: 17540MB
+Sampled CPU Usage: rust_verify: 90s, z3 children: 71s

@@ -1,0 +1,35 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+note: recommendation not met
+   --> src/Chap47/VecChainedHashTableStEph.rs:504:36
+    |
+504 | ...                   assert(chain_sub_next.drop_last() =~= chain_sub);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/VecChainedHashTableStEph.rs:517:32
+    |
+517 |                         assert(sub_next.drop_last()
+    |                                ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/VecChainedHashTableStEph.rs:586:25
+    |
+586 | /                         new_table@ =~= spec_seq_pairs_to_map(
+587 | |                             pairs@.subrange(0, m as int)),
+    | |_________________________________________________________^
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 3674MB, peak z3 RSS: 179MB, min free: 18676MB
+Sampled CPU Usage: rust_verify: 41s, z3 children: 13s

@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: invariant not satisfied before loop
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:173:21
+    |
+173 |                     slot as int == (h as int + attempt as int * step as int) % (m as int),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1237 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 6731MB, peak z3 RSS: 1158MB, min free: 15233MB
+Sampled CPU Usage: rust_verify: 145s, z3 children: 179s
