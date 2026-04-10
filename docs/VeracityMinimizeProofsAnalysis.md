@@ -181,6 +181,39 @@ As of commit `9950c339a` (2026-04-10):
 - **66,874 exec lines** — 44% of code. The actual algorithms.
 - **11,801 rust lines** — 8% of code. Outside verus! (Debug, Display, macros, tests).
 
+### LOC history: before and after minimize
+
+| When | Commit | Spec | Proof | Exec | Rust | Total Lines |
+|------|--------|------|-------|------|------|-------------|
+| Pre-minimize (TOCIFY) | `89fc924de` | 30,416 | 47,761 | 62,693 | 10,932 | 192,979 |
+| Pre-R170 (after R162 minimize + compression) | `4c0da8636` | 30,347 | 37,451 | 65,347 | 11,749 | 194,586 |
+| Post-R170 (current) | `9950c339a` | 31,172 | 40,314 | 66,874 | 11,801 | 200,482 |
+
+Between TOCIFY and pre-R170, proof lines dropped from 47,761 to 37,451 (**-10,310
+lines, -22%**) — from R162 minimize runs plus manual compression work (SpecsAndLemmas
+extraction, ugly function compression). Exec grew +2,654 from new algorithm files.
+
+Post-R170 proof lines rose from 37,451 to 40,314 (+2,863). This is entirely from
+Veracity `NEEDED` comment markers being counted as proof lines. The actual proof
+code shrank — 915 UNNEEDED asserts/proof blocks were commented out.
+
+### Not yet minimized
+
+7 chapters have zero Veracity markers:
+
+| # | Chap | Reason |
+|---|------|--------|
+| 1 | 12 | Never assigned |
+| 2 | 30 | Assigned to agent 2 but produced 0 markers (no asserts) |
+| 3 | 52 | Agent 6 still running (72% done) |
+| 4 | 58 | Failed (stale Chap19 dep) |
+| 5 | 61 | Ran but had 0 asserts to test |
+| 6 | 63 | Ran but had 0 asserts to test |
+| 7 | 64 | Ran but had 0 asserts to test |
+
+Chap43 (agent 5, 64% done) and Chap52 (agent 6, 72% done) are still running.
+Chap65 was not assigned (UnionFindStEph/KruskalStEph commented out in lib.rs).
+
 ### Veracity marker overhead
 
 The minimize run added 10,529 `// Veracity:` comment lines to the codebase:
