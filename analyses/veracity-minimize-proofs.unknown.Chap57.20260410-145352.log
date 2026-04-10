@@ -1,0 +1,133 @@
+Verus Library Minimizer
+=======================
+This minimizer is only possible due to the phenomenal speed of verification
+in Verus. Thanks Verus team!
+
+Logging to: /home/milnes/projects/APAS-VERUS-agent5/analyses/veracity-minimize-proofs.unknown.Chap57.20260410-145352.log
+
+Arguments:
+  -c, --codebase:     .
+  -l, --library:      src/vstdplus
+  -F, --file:         src/Chap57/DijkstraStEphF64.rs
+  -n, --dry-run:      false
+  -b, --broadcasts:   false
+  -L, --lib-broadcasts: false
+  -N, --max-lemmas:   all
+  -a, --asserts:      true
+  -A, --max-asserts:  all
+  -p, --proof-blocks: true
+  -P, --max-proof-blocks: all
+  -e, --exclude:      (none)
+  -f, --fail-fast:    false
+  --danger:           true
+  --no-lib-min:       true
+  mode:               fresh (strip all markers)
+  --project:          APAS
+  --chapter:          Chap57
+  --timeout-factor:   1.5 
+  --max-incremental:  0 (disabled)
+  --max-memory-increase: 0 (disabled)
+
+Mode: APAS isolate Chap57 (estimated 10-30s per iteration)
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPORTANT: No code will be harmed in the improving of your codebase!
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Codebase is in git and committed. Proceeding safely.
+
+Veracity will repeatedly comment things in and out using // Veracity: lines
+to test and improve your use of vstd. All changes are reversible comments.
+You will need to review each // Veracity: line and decide what to keep.
+
+Phases:
+  Phase 0:  Strip existing Veracity markers (if any)
+  Phase 1:  Analyze and verify codebase
+  Phase 2:  Analyze library structure (lemmas, modules, call sites, spec fns)
+  Phase 3:  Discover vstd broadcast groups from verus installation
+  Phase 4:  Estimate time for testing
+  Phase 5:  Apply broadcast groups to library (-L flag)
+  Phase 6:  Apply broadcast groups to codebase (-b flag)
+  Phase 7:  Test lemma dependence on vstd (can vstd prove it alone?)
+  Phase 8:  Test lemma necessity (can codebase verify without it?)
+  Phase 9:  Test library asserts (can we remove any?)
+  Phase 10: Test codebase asserts (can we remove any?)
+  Phase 11: Test admits (can we remove any? -m flag)
+  Phase 12: Test proof {} blocks (-p flag)
+  Phase 13: Test types (are they used? -t flag)
+  Phase 14: Analyze and verify final codebase
+
+Comment markers inserted:
+  // Veracity: added broadcast group  - Phase 5/6: Inserted broadcast use block
+  // Veracity: DEPENDENT              - Phase 7: Lemma proven by vstd broadcast groups
+  // Veracity: INDEPENDENT            - Phase 7: Lemma provides unique proof logic
+  // Veracity: USED                   - Phase 8: Lemma required, restored after test
+  // Veracity: UNUSED                 - Phase 8: Lemma not needed, left commented out
+  // Veracity: NEEDED assert          - Phase 9/10: Assert required for verification
+  // Veracity: UNNEEDED assert        - Phase 9/10: Assert not needed, left commented
+  // Veracity: NEEDED admit           - Phase 11: Admit still needed (proof hole)
+  // Veracity: UNNEEDED admit         - Phase 11: Admit not needed, left commented
+  // Veracity: NEEDED proof block     - Phase 12: Proof block required
+  // Veracity: UNNEEDED proof block   - Phase 12: Proof block not needed, left commented
+  // Veracity: TYPE USED              - Phase 13: Type is used (verified by removal test)
+  // Veracity: TYPE UNUSED            - Phase 13: Type not used, left commented out
+  // Veracity: UNNEEDED               - Phase 8: Call site not needed, left commented
+
+═══════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 0: Stripping ALL existing Veracity markers (--fresh)
+═══════════════════════════════════════════════════════════════
+
+  Found 12071 existing Veracity markers
+  Cleaning up for fresh analysis...
+  (chapter mode: stripping only in src/Chap57)
+  ✓ Removed 10 markers
+
+═══════════════════════════════════════════════════════════════
+Phase 1: Analyzing and verifying codebase
+═══════════════════════════════════════════════════════════════
+
+  Initial LOC (comments not counted):
+    Spec:      82
+    Proof:     51
+    Exec:     315
+    Total:    448
+
+  Verifying...
+  ✓ Verification passed. cpu: 101s (1m 41s), z3 RSS: 433 MB, wall: 31s. Continuing.
+
+═══════════════════════════════════════════════════════════════
+Single-file mode: Skipping phases 2-8 (library analysis)
+═══════════════════════════════════════════════════════════════
+
+Target file: src/Chap57/DijkstraStEphF64.rs
+
+Found 1 assert statements
+Found 4 proof {} blocks
+
+═══════════════════════════════════════════════════════════════
+Testing asserts
+═══════════════════════════════════════════════════════════════
+
+  [1/1] assert at line 249 in fn dijkstra... NEEDED (restored) [baseline cpu: 101s, mem: 433MB, real: 31s | cpu: 5s, mem: 0MB, real: 5s]
+
+Assert summary: 1 tested, 0 removed
+
+═══════════════════════════════════════════════════════════════
+Testing proof {} blocks
+═══════════════════════════════════════════════════════════════
+
+  lines 302-305 in fn dijkstra // used_edges = used_edges.insert((v, *u, weight@));
+  lines 295-300 in fn dijkstra // let new_edge: (usize, usize, f64) = (v, *u, weight...
+  lines 248-253 in fn dijkstra // assert forall |j: int| 0 <= j < it@.1.len()
+  lines 197-198 in fn dijkstra // (empty or single-line)
+
+  [1/4] lines 302-305 in fn dijkstra... NEEDED (restored) [baseline cpu: 101s, mem: 433MB, real: 31s | cpu: 0s, mem: 0MB, real: 0s]
+  [2/4] lines 295-300 in fn dijkstra... NEEDED (restored) [baseline cpu: 101s, mem: 433MB, real: 31s | cpu: 0s, mem: 0MB, real: 0s]
+  [3/4] lines 248-253 in fn dijkstra... NEEDED (restored) [baseline cpu: 101s, mem: 433MB, real: 31s | cpu: 0s, mem: 0MB, real: 0s]
+  [4/4] lines 197-198 in fn dijkstra... NEEDED (cpu hint: +69%) [baseline cpu: 101s, mem: 433MB, real: 31s | cpu: +70s, mem: -3MB, real: 35s]
+
+Proof block summary: 4 tested, 0 removed
+
+✓ Single-file mode complete in 49.2s.

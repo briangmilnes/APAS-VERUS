@@ -1,0 +1,158 @@
+Verus Library Minimizer
+=======================
+This minimizer is only possible due to the phenomenal speed of verification
+in Verus. Thanks Verus team!
+
+Logging to: /home/milnes/projects/APAS-VERUS-agent4/analyses/veracity-minimize-proofs.unknown.Chap53.20260410-145346.log
+
+Arguments:
+  -c, --codebase:     .
+  -l, --library:      src/vstdplus
+  -F, --file:         src/Chap53/PQMinStPer.rs
+  -n, --dry-run:      false
+  -b, --broadcasts:   false
+  -L, --lib-broadcasts: false
+  -N, --max-lemmas:   all
+  -a, --asserts:      true
+  -A, --max-asserts:  all
+  -p, --proof-blocks: true
+  -P, --max-proof-blocks: all
+  -e, --exclude:      (none)
+  -f, --fail-fast:    false
+  --danger:           true
+  --no-lib-min:       true
+  mode:               fresh (strip all markers)
+  --project:          APAS
+  --chapter:          Chap53
+  --timeout-factor:   1.5 
+  --max-incremental:  0 (disabled)
+  --max-memory-increase: 0 (disabled)
+
+Mode: APAS isolate Chap53 (estimated 10-30s per iteration)
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPORTANT: No code will be harmed in the improving of your codebase!
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Codebase is in git and committed. Proceeding safely.
+
+Veracity will repeatedly comment things in and out using // Veracity: lines
+to test and improve your use of vstd. All changes are reversible comments.
+You will need to review each // Veracity: line and decide what to keep.
+
+Phases:
+  Phase 0:  Strip existing Veracity markers (if any)
+  Phase 1:  Analyze and verify codebase
+  Phase 2:  Analyze library structure (lemmas, modules, call sites, spec fns)
+  Phase 3:  Discover vstd broadcast groups from verus installation
+  Phase 4:  Estimate time for testing
+  Phase 5:  Apply broadcast groups to library (-L flag)
+  Phase 6:  Apply broadcast groups to codebase (-b flag)
+  Phase 7:  Test lemma dependence on vstd (can vstd prove it alone?)
+  Phase 8:  Test lemma necessity (can codebase verify without it?)
+  Phase 9:  Test library asserts (can we remove any?)
+  Phase 10: Test codebase asserts (can we remove any?)
+  Phase 11: Test admits (can we remove any? -m flag)
+  Phase 12: Test proof {} blocks (-p flag)
+  Phase 13: Test types (are they used? -t flag)
+  Phase 14: Analyze and verify final codebase
+
+Comment markers inserted:
+  // Veracity: added broadcast group  - Phase 5/6: Inserted broadcast use block
+  // Veracity: DEPENDENT              - Phase 7: Lemma proven by vstd broadcast groups
+  // Veracity: INDEPENDENT            - Phase 7: Lemma provides unique proof logic
+  // Veracity: USED                   - Phase 8: Lemma required, restored after test
+  // Veracity: UNUSED                 - Phase 8: Lemma not needed, left commented out
+  // Veracity: NEEDED assert          - Phase 9/10: Assert required for verification
+  // Veracity: UNNEEDED assert        - Phase 9/10: Assert not needed, left commented
+  // Veracity: NEEDED admit           - Phase 11: Admit still needed (proof hole)
+  // Veracity: UNNEEDED admit         - Phase 11: Admit not needed, left commented
+  // Veracity: NEEDED proof block     - Phase 12: Proof block required
+  // Veracity: UNNEEDED proof block   - Phase 12: Proof block not needed, left commented
+  // Veracity: TYPE USED              - Phase 13: Type is used (verified by removal test)
+  // Veracity: TYPE UNUSED            - Phase 13: Type not used, left commented out
+  // Veracity: UNNEEDED               - Phase 8: Call site not needed, left commented
+
+═══════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 0: Stripping ALL existing Veracity markers (--fresh)
+═══════════════════════════════════════════════════════════════
+
+  Found 12071 existing Veracity markers
+  Cleaning up for fresh analysis...
+  (chapter mode: stripping only in src/Chap53)
+  ✓ Removed 68 markers
+
+═══════════════════════════════════════════════════════════════
+Phase 1: Analyzing and verifying codebase
+═══════════════════════════════════════════════════════════════
+
+  Initial LOC (comments not counted):
+    Spec:     504
+    Proof:    215
+    Exec:     930
+    Total:   1649
+
+  Verifying...
+  ✓ Verification passed. cpu: 86s (1m 26s), z3 RSS: 417 MB, wall: 22s. Continuing.
+
+═══════════════════════════════════════════════════════════════
+Single-file mode: Skipping phases 2-8 (library analysis)
+═══════════════════════════════════════════════════════════════
+
+Target file: src/Chap53/PQMinStPer.rs
+
+Found 8 assert statements
+Found 13 proof {} blocks
+
+═══════════════════════════════════════════════════════════════
+Testing asserts
+═══════════════════════════════════════════════════════════════
+
+  [1/8] assert at line 507 in fn pq_min_multi<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G, PF>... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 81s, mem: 326MB, real: 7s]
+  [2/8] assert at line 501 in fn pq_min_multi<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G, PF>... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 99s, mem: 0MB, real: 3s]
+  [3/8] assert at line 368 in fn pq_explore<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G: Fn... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 2s, mem: 0MB, real: 4s]
+  [4/8] assert at line 363 in fn pq_explore<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G: Fn... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 1s, mem: 0MB, real: 4s]
+  [5/8] assert at line 362 in fn pq_explore<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G: Fn... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 71s, mem: 378MB, real: 18s]
+  [6/8] assert at line 299 in fn pq_explore<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G: Fn... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 173s, mem: 390MB, real: 22s]
+  [7/8] assert at line 280 in fn pq_explore<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G: Fn... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 121s, mem: 635MB, real: 21s]
+  [8/8] assert at line 198 in fn pq_find_min_priority<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder>... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 124s, mem: 384MB, real: 21s]
+
+Assert summary: 8 tested, 0 removed
+
+═══════════════════════════════════════════════════════════════
+Testing proof {} blocks
+═══════════════════════════════════════════════════════════════
+
+  lines 498-512 in fn pq_min_multi // vstd::set_lib::lemma_len_union(old_if, Set::empty(...
+  lines 491-495 in fn pq_min_multi // lemma_wf_implies_len_bound_stper(sources_seq);
+  lines 454-455 in fn pq_min_multi // (empty or single-line)
+  lines 409-411 in fn pq_explore // vstd::set_lib::lemma_len_union(old_pri, Set::empty...
+  lines 404-406 in fn pq_explore // lemma_wf_implies_len_bound_stper(visited_seq);
+  lines 361-373 in fn pq_explore // assert(vertex_universe.contains(neighbors_seq@[i a...
+  lines 345-358 in fn pq_explore // let f = |e: ((<P as View>::V, <V as View>::V), <V ...
+  lines 308-309 in fn pq_explore // (empty or single-line)
+  lines 298-300 in fn pq_explore // assert(frontier@.contains(frontier_seq@[0 as int])...
+  lines 292-294 in fn pq_explore // vstd::set_lib::lemma_len_subset(visited@, vertex_u...
+  lines 277-282 in fn pq_explore // if frontier_seq@.len() == 0 {
+  lines 196-200 in fn pq_find_min_priority // if seq@.len() == 0 {
+  lines 176-177 in fn pq_min // (empty or single-line)
+
+  [1/13] lines 498-512 in fn pq_min_multi... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 1s, mem: 0MB, real: 4s]
+  [2/13] lines 491-495 in fn pq_min_multi... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 0s, mem: 0MB, real: 0s]
+  [3/13] lines 454-455 in fn pq_min_multi... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 0s, mem: 0MB, real: 1s]
+  [4/13] lines 409-411 in fn pq_explore... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 0s, mem: 0MB, real: 0s]
+  [5/13] lines 404-406 in fn pq_explore... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 0s, mem: 0MB, real: 0s]
+  [6/13] lines 361-373 in fn pq_explore... NEEDED (cpu hint: +105%) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: +90s, mem: -25MB, real: 26s]
+  [7/13] lines 345-358 in fn pq_explore... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 0s, mem: 0MB, real: 0s]
+  [8/13] lines 308-309 in fn pq_explore... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 9s, mem: 0MB, real: 4s]
+  [9/13] lines 298-300 in fn pq_explore... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 0s, mem: 0MB, real: 0s]
+  [10/13] lines 292-294 in fn pq_explore... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 0s, mem: 0MB, real: 0s]
+  [11/13] lines 277-282 in fn pq_explore... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 0s, mem: 0MB, real: 0s]
+  [12/13] lines 196-200 in fn pq_find_min_priority... NEEDED (restored) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: 0s, mem: 0MB, real: 0s]
+  [13/13] lines 176-177 in fn pq_min... NEEDED (cpu hint: +37%) [baseline cpu: 86s, mem: 417MB, real: 22s | cpu: +32s, mem: -3MB, real: 23s]
+
+Proof block summary: 13 tested, 0 removed
+
+✓ Single-file mode complete in 3m 9s.

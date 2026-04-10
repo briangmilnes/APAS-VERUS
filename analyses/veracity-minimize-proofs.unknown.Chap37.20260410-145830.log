@@ -1,0 +1,219 @@
+Verus Library Minimizer
+=======================
+This minimizer is only possible due to the phenomenal speed of verification
+in Verus. Thanks Verus team!
+
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/analyses/veracity-minimize-proofs.unknown.Chap37.20260410-145830.log
+
+Arguments:
+  -c, --codebase:     .
+  -l, --library:      src/vstdplus
+  -F, --file:         src/Chap37/BSTRBMtEph.rs
+  -n, --dry-run:      false
+  -b, --broadcasts:   false
+  -L, --lib-broadcasts: false
+  -N, --max-lemmas:   all
+  -a, --asserts:      true
+  -A, --max-asserts:  all
+  -p, --proof-blocks: true
+  -P, --max-proof-blocks: all
+  -e, --exclude:      (none)
+  -f, --fail-fast:    false
+  --danger:           true
+  --no-lib-min:       true
+  mode:               resume (preserve markers)
+  --project:          APAS
+  --chapter:          Chap37
+  --timeout-factor:   1.5 
+  --max-incremental:  0 (disabled)
+  --max-memory-increase: 0 (disabled)
+
+Mode: APAS isolate Chap37 (estimated 10-30s per iteration)
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPORTANT: No code will be harmed in the improving of your codebase!
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Codebase is in git and committed. Proceeding safely.
+
+Veracity will repeatedly comment things in and out using // Veracity: lines
+to test and improve your use of vstd. All changes are reversible comments.
+You will need to review each // Veracity: line and decide what to keep.
+
+Phases:
+  Phase 0:  Strip existing Veracity markers (if any)
+  Phase 1:  Analyze and verify codebase
+  Phase 2:  Analyze library structure (lemmas, modules, call sites, spec fns)
+  Phase 3:  Discover vstd broadcast groups from verus installation
+  Phase 4:  Estimate time for testing
+  Phase 5:  Apply broadcast groups to library (-L flag)
+  Phase 6:  Apply broadcast groups to codebase (-b flag)
+  Phase 7:  Test lemma dependence on vstd (can vstd prove it alone?)
+  Phase 8:  Test lemma necessity (can codebase verify without it?)
+  Phase 9:  Test library asserts (can we remove any?)
+  Phase 10: Test codebase asserts (can we remove any?)
+  Phase 11: Test admits (can we remove any? -m flag)
+  Phase 12: Test proof {} blocks (-p flag)
+  Phase 13: Test types (are they used? -t flag)
+  Phase 14: Analyze and verify final codebase
+
+Comment markers inserted:
+  // Veracity: added broadcast group  - Phase 5/6: Inserted broadcast use block
+  // Veracity: DEPENDENT              - Phase 7: Lemma proven by vstd broadcast groups
+  // Veracity: INDEPENDENT            - Phase 7: Lemma provides unique proof logic
+  // Veracity: USED                   - Phase 8: Lemma required, restored after test
+  // Veracity: UNUSED                 - Phase 8: Lemma not needed, left commented out
+  // Veracity: NEEDED assert          - Phase 9/10: Assert required for verification
+  // Veracity: UNNEEDED assert        - Phase 9/10: Assert not needed, left commented
+  // Veracity: NEEDED admit           - Phase 11: Admit still needed (proof hole)
+  // Veracity: UNNEEDED admit         - Phase 11: Admit not needed, left commented
+  // Veracity: NEEDED proof block     - Phase 12: Proof block required
+  // Veracity: UNNEEDED proof block   - Phase 12: Proof block not needed, left commented
+  // Veracity: TYPE USED              - Phase 13: Type is used (verified by removal test)
+  // Veracity: TYPE UNUSED            - Phase 13: Type not used, left commented out
+  // Veracity: UNNEEDED               - Phase 8: Call site not needed, left commented
+
+═══════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 0: Resuming from existing markers
+═══════════════════════════════════════════════════════════════
+
+  Found 12071 existing Veracity markers
+  Checking for incomplete work from prior run...
+  Restored 1 TESTING markers to original code
+  Prior results found:
+    NEEDED assert: 4557
+    UNNEEDED: 1439
+    NEEDED proof block: 4473
+  These items will be skipped during testing.
+
+═══════════════════════════════════════════════════════════════
+Phase 1: Analyzing and verifying codebase
+═══════════════════════════════════════════════════════════════
+
+  Initial LOC (comments not counted):
+    Spec:    3403
+    Proof:   4302
+    Exec:    7069
+    Total:  14774
+
+  Verifying...
+  ✓ Verification passed. cpu: 168s (2m 48s), z3 RSS: 673 MB, wall: 19s. Continuing.
+
+═══════════════════════════════════════════════════════════════
+Single-file mode: Skipping phases 2-8 (library analysis)
+═══════════════════════════════════════════════════════════════
+
+Target file: src/Chap37/BSTRBMtEph.rs
+
+Found 55 assert statements
+Found 37 proof {} blocks
+
+═══════════════════════════════════════════════════════════════
+Testing asserts
+═══════════════════════════════════════════════════════════════
+
+  [1/55] assert at line 1352 in fn insert... (from prior run, skipping)
+  [2/55] assert at line 1343 in fn insert... (from prior run, skipping)
+  [3/55] assert at line 1338 in fn insert... (from prior run, skipping)
+  [4/55] assert at line 1333 in fn insert... (from prior run, skipping)
+  [5/55] assert at line 1329 in fn insert... (from prior run, skipping)
+  [6/55] assert at line 1325 in fn insert... (from prior run, skipping)
+  [7/55] assert at line 985 in fn max_link... (from prior run, skipping)
+  [8/55] assert at line 981 in fn max_link... (from prior run, skipping)
+  [9/55] assert at line 976 in fn max_link... (from prior run, skipping)
+  [10/55] assert at line 962 in fn max_link... (from prior run, skipping)
+  [11/55] assert at line 955 in fn max_link... (from prior run, skipping)
+  [12/55] assert at line 933 in fn min_link... (from prior run, skipping)
+  [13/55] assert at line 929 in fn min_link... (from prior run, skipping)
+  [14/55] assert at line 924 in fn min_link... (from prior run, skipping)
+  [15/55] assert at line 910 in fn min_link... (from prior run, skipping)
+  [16/55] assert at line 903 in fn min_link... (from prior run, skipping)
+  [17/55] assert at line 879 in fn find_link... (from prior run, skipping)
+  [18/55] assert at line 867 in fn find_link... (from prior run, skipping)
+  [19/55] assert at line 831 in fn insert_link... (from prior run, skipping)
+  [20/55] assert at line 823 in fn insert_link... (from prior run, skipping)
+  [21/55] assert at line 818 in fn insert_link... (from prior run, skipping)
+  [22/55] assert at line 810 in fn insert_link... (from prior run, skipping)
+  [23/55] assert at line 804 in fn insert_link... (from prior run, skipping)
+  [24/55] assert at line 799 in fn insert_link... (from prior run, skipping)
+  [25/55] assert at line 792 in fn insert_link... (from prior run, skipping)
+  [26/55] assert at line 775 in fn insert_link... (from prior run, skipping)
+  [27/55] assert at line 767 in fn insert_link... (from prior run, skipping)
+  [28/55] assert at line 762 in fn insert_link... (from prior run, skipping)
+  [29/55] assert at line 754 in fn insert_link... (from prior run, skipping)
+  [30/55] assert at line 748 in fn insert_link... (from prior run, skipping)
+  [31/55] assert at line 743 in fn insert_link... (from prior run, skipping)
+  [32/55] assert at line 736 in fn insert_link... (from prior run, skipping)
+  [33/55] assert at line 627 in fn flip_colors... (from prior run, skipping)
+  [34/55] assert at line 623 in fn flip_colors... (from prior run, skipping)
+  [35/55] assert at line 620 in fn flip_colors... (from prior run, skipping)
+  [36/55] assert at line 617 in fn flip_colors... (from prior run, skipping)
+  [37/55] assert at line 614 in fn flip_colors... (from prior run, skipping)
+  [38/55] assert at line 565 in fn rotate_right... (from prior run, skipping)
+  [39/55] assert at line 553 in fn rotate_right... (from prior run, skipping)
+  [40/55] assert at line 537 in fn rotate_right... (from prior run, skipping)
+  [41/55] assert at line 534 in fn rotate_right... (from prior run, skipping)
+  [42/55] assert at line 531 in fn rotate_right... (from prior run, skipping)
+  [43/55] assert at line 529 in fn rotate_right... (from prior run, skipping)
+  [44/55] assert at line 517 in fn rotate_right... (from prior run, skipping)
+  [45/55] assert at line 514 in fn rotate_right... (from prior run, skipping)
+  [46/55] assert at line 489 in fn rotate_left... (from prior run, skipping)
+  [47/55] assert at line 476 in fn rotate_left... (from prior run, skipping)
+  [48/55] assert at line 460 in fn rotate_left... (from prior run, skipping)
+  [49/55] assert at line 457 in fn rotate_left... (from prior run, skipping)
+  [50/55] assert at line 454 in fn rotate_left... (from prior run, skipping)
+  [51/55] assert at line 452 in fn rotate_left... (from prior run, skipping)
+  [52/55] assert at line 440 in fn rotate_left... (from prior run, skipping)
+  [53/55] assert at line 437 in fn rotate_left... (from prior run, skipping)
+  [54/55] assert at line 214 in fn lemma_link_to_bbt_is_bst<T: StTInMtT + Ord + TotalOrder>... (from prior run, skipping)
+  [55/55] assert at line 208 in fn lemma_link_to_bbt_is_bst<T: StTInMtT + Ord + TotalOrder>... (from prior run, skipping)
+
+Assert summary: 0 tested, 0 removed
+
+═══════════════════════════════════════════════════════════════
+Testing proof {} blocks
+═══════════════════════════════════════════════════════════════
+
+  [1/37] lines 1432-1435 in fn find... (from prior run, skipping)
+  [2/37] lines 1420-1420 in fn height... (from prior run, skipping)
+  [3/37] lines 1413-1417 in fn height... (from prior run, skipping)
+  [4/37] lines 1402-1402 in fn is_empty... (from prior run, skipping)
+  [5/37] lines 1391-1391 in fn size... (from prior run, skipping)
+  [6/37] lines 1378-1378 in fn contains... (from prior run, skipping)
+  [7/37] lines 1318-1360 in fn insert... (from prior run, skipping)
+  [8/37] lines 1304-1304 in fn insert... (from prior run, skipping)
+  [9/37] lines 1287-1292 in fn from_sorted_slice... (from prior run, skipping)
+  [10/37] lines 1135-1137 in fn build_balanced... (from prior run, skipping)
+  [11/37] lines 1089-1091 in fn height_rec... (from prior run, skipping)
+  [12/37] lines 1069-1071 in fn reduce_parallel... (from prior run, skipping)
+  [13/37] lines 1044-1046 in fn filter_parallel... (from prior run, skipping)
+  [14/37] lines 971-989 in fn max_link... (from prior run, skipping)
+  [15/37] lines 953-965 in fn max_link... (from prior run, skipping)
+  [16/37] lines 919-937 in fn min_link... (from prior run, skipping)
+  [17/37] lines 901-913 in fn min_link... (from prior run, skipping)
+  [18/37] lines 877-884 in fn find_link... (from prior run, skipping)
+  [19/37] lines 865-872 in fn find_link... (from prior run, skipping)
+  [20/37] lines 842-845 in fn insert_link... (from prior run, skipping)
+  [21/37] lines 788-837 in fn insert_link... (from prior run, skipping)
+  [22/37] lines 732-781 in fn insert_link... (from prior run, skipping)
+  [23/37] lines 716-719 in fn insert_link... (from prior run, skipping)
+  [24/37] lines 699-704 in fn fix_up... (from prior run, skipping)
+  [25/37] lines 689-690 in fn fix_up... (from prior run, skipping)
+  [26/37] lines 673-674 in fn fix_up... (from prior run, skipping)
+  [27/37] lines 652-653 in fn fix_up... (from prior run, skipping)
+  [28/37] lines 609-630 in fn flip_colors... (from prior run, skipping)
+  [29/37] lines 586-588 in fn flip_colors... (from prior run, skipping)
+  [30/37] lines 572-572 in fn rotate_right... (from prior run, skipping)
+  [31/37] lines 549-568 in fn rotate_right... (from prior run, skipping)
+  [32/37] lines 525-540 in fn rotate_right... (from prior run, skipping)
+  [33/37] lines 510-519 in fn rotate_right... (from prior run, skipping)
+  [34/37] lines 496-496 in fn rotate_left... (from prior run, skipping)
+  [35/37] lines 472-492 in fn rotate_left... (from prior run, skipping)
+  [36/37] lines 448-463 in fn rotate_left... (from prior run, skipping)
+  [37/37] lines 433-442 in fn rotate_left... (from prior run, skipping)
+
+Proof block summary: 0 tested, 0 removed
+
+✓ Single-file mode complete in 0.0s.
