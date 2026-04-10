@@ -314,6 +314,7 @@ broadcast use {
                 vals.insert(pos, element);
 
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block (speed hint)
                 proof {
                     // vals@.len() = n + 1 = self@.len() + 1 < usize::MAX (from requires).
                     // n = old_vals.len(), and old_vals.map_values(..) =~= self.elements.spec_seq()
@@ -322,6 +323,7 @@ broadcast use {
                 let result = BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::from_vec(vals),
                 };
+                // Veracity: NEEDED proof block
                 // Veracity: NEEDED proof block
                 proof {
                     // vals@ == old_vals.insert(pos, element)  (from Vec::insert)
@@ -335,6 +337,7 @@ broadcast use {
                     self@.insert_ensures(pos as int, element@);
                     let view_fn = |t: T| t@;
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert forall|k: int| 0 <= k < vals@.map_values(view_fn).len()
                         implies #[trigger] vals@.map_values(view_fn)[k]
                             == self@.insert(pos as int, element@)[k] by {
@@ -343,6 +346,7 @@ broadcast use {
                         } else {
                         }
                     }
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(result@ =~= self@.insert(pos as int, element@));
                     // to_multiset_insert (broadcast): s.insert(i, a).to_multiset() == s.to_multiset().insert(a)
@@ -424,11 +428,11 @@ broadcast use {
                 {
                     values.push(other.elements.nth(j).clone());
                     j = j + 1;
-                }
-                // Veracity: NEEDED proof block
-                proof {
-                    // n1 = self.elements.length() ensures n1 as nat == self@.len().
-                    // n2 = other.elements.length() ensures n2 as nat == other@.len().
+// Veracity: UNNEEDED proof block                 }
+// Veracity: UNNEEDED proof block                 // Veracity: NEEDED proof block
+// Veracity: UNNEEDED proof block                 proof {
+// Veracity: UNNEEDED proof block                     // n1 = self.elements.length() ensures n1 as nat == self@.len().
+// Veracity: UNNEEDED proof block                     // n2 = other.elements.length() ensures n2 as nat == other@.len().
                     // values@.len() = n1 + n2 = self@.len() + other@.len() < usize::MAX (from requires).
                 }
                 BalancedTreePQ {
@@ -440,6 +444,7 @@ broadcast use {
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — ACCEPTED DIFFERENCE: n calls to insert, each O(n).
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
                 let mut result = Self::empty();
+                // Veracity: NEEDED proof block
                 let n = seq.length();
                 // Veracity: NEEDED proof block
                 proof {
@@ -453,6 +458,7 @@ broadcast use {
                         result.spec_balancedtreepq_wf(),
                         n as nat == seq.spec_seq().len(),
                         n < usize::MAX,
+                        // Veracity: NEEDED proof block
                         seq.spec_avltreeseqstper_wf(),
                 {
                     // Veracity: NEEDED proof block
@@ -498,6 +504,7 @@ broadcast use {
                         n == self.elements.spec_seq().len(),
                         n >= 1,
                         self.elements.spec_avltreeseqstper_wf(),
+                // Veracity: NEEDED proof block
                 {
                     values.push(self.elements.nth(i).clone());
                 }
@@ -511,6 +518,7 @@ broadcast use {
                 let remaining = AVLTreeSeqStPerS::from_vec(values);
                 (BalancedTreePQ { elements: remaining }, Some(max_element))
             }
+// Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg(1+n/m)), Span O(m lg(1+n/m))
             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self {
@@ -565,6 +573,7 @@ broadcast use {
                 {
                     let current = self.elements.nth(i);
                     if !found && *current == *element {
+                        // Veracity: NEEDED proof block
                         found = true;
                     } else {
                         values.push(current.clone());
@@ -589,6 +598,7 @@ broadcast use {
                         values@.len() <= i as int,
                         n == self.elements.spec_seq().len(),
                         self.elements.spec_avltreeseqstper_wf(),
+                // Veracity: NEEDED proof block
                 {
                     let current = self.elements.nth(i);
                     if *current >= *min_val && *current <= *max_val {
@@ -601,6 +611,7 @@ broadcast use {
                     lemma_size_lt_usize_max::<T>(&self.elements.root);
                     lemma_size_eq_inorder_len::<T>(&self.elements.root);
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert (speed hint)
                     assert(values@.len() < usize::MAX);
                 }
                 AVLTreeSeqStPerS::from_vec(values)
@@ -611,6 +622,7 @@ broadcast use {
                 let mut result = Self::empty();
                 let n = elements.len();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                // Veracity: NEEDED proof block
                 for i in 0..n
                     invariant
                         result@.len() == i as int,
@@ -691,6 +703,7 @@ broadcast use {
                     h = h + 1;
                 }
                 if h == 0 { 1 } else { h }
+            // Veracity: NEEDED proof block
             }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
@@ -705,6 +718,7 @@ broadcast use {
                     lemma_size_eq_inorder_len::<T>(&self.elements.root);
                 }
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                // Veracity: NEEDED proof block
                 for i in 0..n
                     invariant
                         left@.len() + right@.len() == i as int,
@@ -731,6 +745,7 @@ broadcast use {
                 (left, found, right)
             }
 
+        // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg(1+n/m)), Span O(m lg(1+n/m))
             fn join(left: &Self, right: &Self) -> Self { left.meld(right) }
         }
@@ -747,6 +762,7 @@ broadcast use {
                     lemma_size_eq_inorder_len::<T>(&self.elements.root);
                 }
                 let mut i: usize = 0;
+                // Veracity: NEEDED proof block
                 while i < n
                     invariant
                         i <= n,
@@ -764,6 +780,7 @@ broadcast use {
                     }
                     let current = self.elements.nth(i);
                     if predicate(current) {
+                        // Veracity: NEEDED proof block
                         result = result.insert(current.clone());
                     }
                     i = i + 1;
@@ -780,6 +797,7 @@ broadcast use {
                 proof {
                     lemma_size_lt_usize_max::<T>(&self.elements.root);
                     lemma_size_eq_inorder_len::<T>(&self.elements.root);
+                // Veracity: NEEDED proof block
                 }
                 let mut i: usize = 0;
                 while i < n
@@ -821,6 +839,7 @@ broadcast use {
             open spec fn obeys_eq_spec() -> bool { true }
             open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
         }
+// Veracity: NEEDED proof block (speed hint)
 
         impl<T: StT + Ord + TotalOrder> Clone for BalancedTreePQ<T> {
             fn clone(&self) -> (cloned: Self)

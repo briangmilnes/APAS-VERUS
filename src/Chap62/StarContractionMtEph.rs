@@ -146,11 +146,13 @@ pub mod StarContractionMtEph {
         if graph.sizeE() == 0 || fuel == 0 {
             let verts = graph.vertices();
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof {
                 // Veracity: NEEDED assert
                 assert(verts.spec_setsteph_wf());
             }
             let result = base(verts);
+            // Veracity: NEEDED proof block
             // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
@@ -171,6 +173,7 @@ pub mod StarContractionMtEph {
 
         // Prove expand's guarded requires: v, e, c are wf; r_inv(r) from induction.
         let verts = graph.vertices();
+        // Veracity: NEEDED proof block
         let eds = graph.edges();
         // Veracity: NEEDED proof block
         proof {
@@ -180,6 +183,7 @@ pub mod StarContractionMtEph {
             assert(eds.spec_setsteph_wf());
             // Veracity: NEEDED assert
             assert(centers.spec_setsteph_wf());
+        // Veracity: NEEDED proof block
         }
         let result = expand(verts, eds, &centers, &partition_map, r);
         // Veracity: NEEDED proof block
@@ -228,6 +232,7 @@ pub mod StarContractionMtEph {
         r_inv(contracted),
         graph@.A.is_empty() ==>
             exists|s: &SetStEph<V>| #[trigger] s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), contracted),
+    // Veracity: NEEDED proof block
     {
         let fuel = graph.sizeV();
         let result = star_contract_mt_fuel(graph, seed, base, expand, fuel, Ghost(r_inv));
@@ -265,12 +270,14 @@ pub mod StarContractionMtEph {
         let n_edges = edges_seq.length();
         let edges_arc = Arc::new(edges_seq);
 
+        // Veracity: NEEDED proof block
         let part_map_arc = Arc::new(partition_map.clone());
 
         // Establish that all edges in the array are graph edges with endpoints in graph@.V.
         // Uses spec_index (returns exec Edge<V>) to avoid view-of-view confusion.
         // Veracity: NEEDED proof block
         proof {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall |j: int| 0 <= j < n_edges as int implies
                 graph@.V.contains(#[trigger] (*edges_arc).spec_index(j)@.0) &&
@@ -279,7 +286,9 @@ pub mod StarContractionMtEph {
                 // from_vec postcondition: edges_seq.spec_index(j) == edges_vec@[j]
                 // to_seq postcondition: graph.E@.contains(edges_vec@[j]@)
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert(edges_vec@.map(|_i: int, t: Edge<V>| t@)[j] == edges_vec@[j]@);
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(graph@.A.contains(edges_vec@[j]@));
                 // spec_graphview_wf: endpoints are vertices
@@ -288,6 +297,7 @@ pub mod StarContractionMtEph {
             };
         }
 
+        // Veracity: NEEDED proof block
         let quotient_edges = route_edges_parallel(
             edges_arc, part_map_arc, Ghost(graph@.V), Ghost(centers@), 0, n_edges
         );
@@ -336,6 +346,7 @@ pub mod StarContractionMtEph {
         if size == 0 {
             return SetLit![];
         }
+// Veracity: NEEDED proof block
 
         if size == 1 {
             let edge = edges.nth(start as usize);
@@ -349,6 +360,8 @@ pub mod StarContractionMtEph {
                 // (*edge)@ == ((*u)@, (*v)@) from Edge<V> view
                 // From requires: graph_v_view.contains(spec_index(start)@.0)
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED proof block
+                // Veracity: NEEDED assert
                 assert(graph_v_view.contains((*edges).spec_index(start as int)@.0));
                 // spec_valid_partition_map part 1: all graph vertices are in partition_map
             }
@@ -357,6 +370,7 @@ pub mod StarContractionMtEph {
                 let c = val.clone_view();
                 // Veracity: NEEDED proof block
                 proof {
+                // Veracity: NEEDED proof block
                 }
                 c
             } else {
@@ -372,6 +386,7 @@ pub mod StarContractionMtEph {
             } else {
                 v.clone_view()
             };
+// Veracity: NEEDED proof block
 
             if u_center != v_center {
                 let new_edge = if u_center < v_center {

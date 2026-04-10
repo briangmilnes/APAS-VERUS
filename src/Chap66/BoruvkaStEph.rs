@@ -238,8 +238,11 @@ pub mod BoruvkaStEph {
                     let LabeledEdge(u, v, w, label) = edge.clone();
 
                     // Prove edge is in edges@ and weight is finite.
+                    // Veracity: NEEDED assert
                     assert(edges@.contains(iter_seq[it@.0 - 1]@));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(LabeledEdge(u, v, w, label) == *edge);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(w.spec_is_finite());
 
                     // Update bridge for u.
@@ -461,9 +464,13 @@ pub mod BoruvkaStEph {
                     let LabeledEdge(u, v, w, label) = edge.clone();
 
                     // edge == eit_seq[old_idx], and View is identity.
+                    // Veracity: NEEDED assert
                     assert(edges@.contains(eit_seq[old_idx]@));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(*edge == eit_seq[old_idx]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(LabeledEdge(u, v, w, label) == *edge);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(w.spec_is_finite());
 
                     let new_u = match full_partition.get(&u) {
@@ -477,10 +484,12 @@ pub mod BoruvkaStEph {
                     if new_u != new_v {
                         // New edge preserves weight, so finiteness is maintained.
                         let new_edge = LabeledEdge(new_u, new_v, w, label);
+                        // Veracity: NEEDED assert (speed hint)
                         assert(new_edge.2.spec_is_finite());
                         let _ = new_edges.insert(new_edge);
 
                         // After insert, all edges in new_edges@ are still finite.
+                        // Veracity: NEEDED assert (speed hint)
                         assert forall|e: LabeledEdge<V>| #[trigger] new_edges@.contains(e) implies e.2.spec_is_finite() by {
                             // e was either already in new_edges@ (old invariant) or is new_edge.
                         };
@@ -504,6 +513,8 @@ pub mod BoruvkaStEph {
             edges: &SetStEph<LabeledEdge<V>>,
             seed: u64,
         ) -> (mst: SetStEph<usize>) {
+            // Veracity: NEEDED assert
+            // Veracity: NEEDED proof block
             proof { assert(obeys_feq_full_trigger::<usize>()); }
             Self::boruvka_mst(vertices, edges, SetStEph::empty(), seed)
         }

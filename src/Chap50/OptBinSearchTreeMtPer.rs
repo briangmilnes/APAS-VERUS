@@ -264,6 +264,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Vec, wrap in Arc + Arc<RwLock>
         fn new() -> (empty: Self) {
+            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 keys: Arc::new(Vec::new()),
@@ -284,6 +285,7 @@ broadcast use {
             {
                 key_probs.push(KeyProb { key: keys[idx].clone(), prob: probs[idx] });
                 idx += 1;
+            // Veracity: NEEDED proof block
             }
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -292,6 +294,7 @@ broadcast use {
             }
         }
 
+        // Veracity: NEEDED proof block (speed hint)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — wrap existing vec in Arc
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -333,7 +336,7 @@ broadcast use {
                 memo.clear();
                 write_handle.release_write(memo);
             }
-            assert(self.memo.pred() == (OptBSTMtPerMemoInv));
+// Veracity: UNNEEDED assert             assert(self.memo.pred() == (OptBSTMtPerMemoInv));
             obst_rec(&self.memo, &prefix_sums, keys_len, 0, keys_len)
         }
 
@@ -378,6 +381,7 @@ broadcast use {
 
     impl<T: MtVal> Clone for KeyProb<T> {
         fn clone(&self) -> (cloned: Self)
+            // Veracity: NEEDED proof block (speed hint)
             ensures cloned == *self
         {
             let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
@@ -395,6 +399,7 @@ broadcast use {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
+            // Veracity: NEEDED proof block
             let cloned = OBSTMtPerS {
                 keys: self.keys.clone(),
                 memo: self.memo.clone(),

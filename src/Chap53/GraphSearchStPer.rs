@@ -184,7 +184,7 @@ pub mod GraphSearchStPer {
                 }
                 let first_ref = seq.nth(0);
                 let first = first_ref.clone();
-                // Veracity: NEEDED proof block
+// Veracity: UNNEEDED proof block                 // Veracity: NEEDED assert
                 proof { assert(cloned(*first_ref, first)); }
                 let result = AVLTreeSetStPer::singleton(first);
                 (result, false)
@@ -211,8 +211,8 @@ pub mod GraphSearchStPer {
             view_ord_consistent::<V>(),
         ensures search.visited@.contains(source@),
     {
-        let sources = AVLTreeSetStPer::singleton(source);
         // Veracity: NEEDED proof block
+        let sources = AVLTreeSetStPer::singleton(source);
         proof {
         }
         graph_search_multi(graph, sources, strategy, Ghost(vertex_universe))
@@ -261,9 +261,9 @@ pub mod GraphSearchStPer {
                 frontier@.subset_of(vertex_universe),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
                 vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                // Veracity: NEEDED proof block
                 view_ord_consistent::<V>(),
         {
-            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_len_subset(visited@, vertex_universe);
                 vstd::set_lib::lemma_len_subset(frontier@, vertex_universe);
@@ -289,21 +289,21 @@ pub mod GraphSearchStPer {
                     vstd::laws_cmp::obeys_cmp_spec::<V>(),
                     view_ord_consistent::<V>(),
                 decreases nlen - i,
+            // Veracity: NEEDED proof block
             {
                 let v = frontier_seq.nth(i);
                 let neighbors = graph(v);
-                // Veracity: NEEDED proof block
                 proof {
                     vstd::set_lib::lemma_len_subset(new_neighbors@, vertex_universe);
                     vstd::set_lib::lemma_len_subset(neighbors@, vertex_universe);
                 }
                 new_neighbors = new_neighbors.union(&neighbors);
                 i = i + 1;
+            // Veracity: NEEDED proof block
             }
 
             let frontier_new = new_neighbors.difference(&visited_new);
 
-            // Veracity: NEEDED proof block
             proof {
             }
 

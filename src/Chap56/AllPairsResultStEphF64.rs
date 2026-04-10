@@ -195,13 +195,16 @@ pub mod AllPairsResultStEphF64 {
                     let ghost n = self.n;
                     let mut row = row_ref.clone();
                     let _ = row.set(v, dist);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(row.spec_len() == n as nat);
                     let _ = self.distances.set(u, row);
+                    // Veracity: NEEDED assert
                     assert forall|r: int| 0 <= r < n
                         implies #[trigger] self.distances.spec_index(r).spec_len() == n as nat
                     by {
                         if r == u as int {
                         } else {
+                            // Veracity: NEEDED assert
                             assert(self.distances.spec_index(r) == old_distances.spec_index(r));
                         }
                     };
@@ -232,13 +235,16 @@ pub mod AllPairsResultStEphF64 {
                     let ghost n = self.n;
                     let mut row = row_ref.clone();
                     let _ = row.set(v, pred);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(row.spec_len() == n as nat);
                     let _ = self.predecessors.set(u, row);
+                    // Veracity: NEEDED assert
                     assert forall|r: int| 0 <= r < n
                         implies #[trigger] self.predecessors.spec_index(r).spec_len() == n as nat
                     by {
                         if r == u as int {
                         } else {
+                            // Veracity: NEEDED assert
                             assert(self.predecessors.spec_index(r) == old_predecessors.spec_index(r));
                         }
                     };

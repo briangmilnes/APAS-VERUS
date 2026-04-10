@@ -282,12 +282,14 @@ pub mod BottomUpDPStPer {
                     let left: usize = row[j - 1];
 
                     // Veracity: NEEDED proof block
+                    // Veracity: NEEDED proof block
                     proof {
                         // diag = table[i-1][j-1] = spec_med(i-1, j-1).
                         if (i - 1) as nat == 0 {
                         } else if (j - 1) as nat == 0 {
                         } else {
                         }
+                        // Veracity: NEEDED assert
                         // Veracity: NEEDED assert
                         assert(diag as nat == self.spec_med((i - 1) as nat, (j - 1) as nat));
 
@@ -407,6 +409,7 @@ pub mod BottomUpDPStPer {
                 let delete_cost = table[i - 1][j];
                 let insert_cost = table[i][j - 1];
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof {
                     self.lemma_spec_med_bounded((i - 1) as nat, j as nat);
                     self.lemma_spec_med_bounded(i as nat, (j - 1) as nat);
@@ -459,6 +462,7 @@ pub mod BottomUpDPStPer {
         fn eq(&self, other: &Self) -> (eq: bool)
             ensures eq == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)
         {
+            // Veracity: NEEDED proof block
             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
             // Veracity: NEEDED proof block
             proof { assume(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }

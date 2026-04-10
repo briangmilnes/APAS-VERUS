@@ -191,6 +191,7 @@ pub mod MinEditDistStPer {
         where
             T: Default,
         {
+            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 source: ArraySeqStPerS::new(0, T::default()),
@@ -200,6 +201,7 @@ pub mod MinEditDistStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
+        // Veracity: NEEDED proof block
         fn from_sequences(source: ArraySeqStPerS<T>, target: ArraySeqStPerS<T>) -> Self {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -209,6 +211,7 @@ pub mod MinEditDistStPer {
             }
         }
 
+        // Veracity: NEEDED proof block (speed hint)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) — clones + memoized recursive DP; St sequential.
         fn min_edit_distance(&self) -> (dist: usize) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }

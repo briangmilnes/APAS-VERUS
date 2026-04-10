@@ -114,6 +114,7 @@ pub mod BFSMtPer {
         ensures
             spec_parents_bounded(parents, n),
     {
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < parents@.len() implies #[trigger] parents@[i] == parents.spec_index(i) by {};
         lemma_bfs_all_no_parent(parents@, n);
     }
@@ -137,7 +138,9 @@ pub mod BFSMtPer {
         ensures
             spec_parents_bounded(parents, n),
     {
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < parents@.len() implies #[trigger] parents@[i] == parents.spec_index(i) by {};
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < old_parents@.len() implies #[trigger] old_parents@[i] == old_parents.spec_index(i) by {};
         lemma_bfs_update_preserves_parents_bounded(parents@, old_parents@, v, new_val, n);
     }
@@ -155,7 +158,9 @@ pub mod BFSMtPer {
         ensures
             spec_parents_bounded(copy, n),
     {
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < original@.len() implies #[trigger] original@[i] == original.spec_index(i) by {};
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < copy@.len() implies #[trigger] copy@[i] == copy.spec_index(i) by {};
         lemma_bfs_copy_preserves_parents_bounded(original@, copy@, n);
     }
@@ -168,6 +173,7 @@ pub mod BFSMtPer {
         ensures
             spec_distances_bounded(distances, n),
     {
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < distances@.len() implies #[trigger] distances@[i] == distances.spec_index(i) by {};
         lemma_bfs_all_unreachable(distances@, n);
     }
@@ -191,7 +197,9 @@ pub mod BFSMtPer {
         ensures
             spec_distances_bounded(distances, n),
     {
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < distances@.len() implies #[trigger] distances@[i] == distances.spec_index(i) by {};
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < old_distances@.len() implies #[trigger] old_distances@[i] == old_distances.spec_index(i) by {};
         lemma_bfs_update_preserves_bounded(distances@, old_distances@, v, new_val, n);
     }
@@ -212,17 +220,21 @@ pub mod BFSMtPer {
         ensures
             spec_bfsmtper_wf(copy),
     {
+        // Veracity: NEEDED assert
         assert forall|u: int, i: int|
             0 <= u < copy@.len() && 0 <= i < copy@[u].len()
         implies
             #[trigger] copy@[u][i] < copy@.len()
         by {
-            assert(copy@.len() == copy.spec_len() as int);
+// Veracity: UNNEEDED assert             assert(copy@.len() == copy.spec_len() as int);
+            // Veracity: NEEDED assert
             assert(copy@[u].len() == copy.spec_index(u).spec_len() as int);
+            // Veracity: NEEDED assert
             assert(copy@[u][i] == copy.spec_index(u).spec_index(i));
-            assert(original@.len() == original.spec_len() as int);
+// Veracity: UNNEEDED assert             assert(original@.len() == original.spec_len() as int);
+            // Veracity: NEEDED assert (speed hint)
             assert(original@[u].len() == original.spec_index(u).spec_len() as int);
-            assert(original@[u][i] == original.spec_index(u).spec_index(i));
+// Veracity: UNNEEDED assert             assert(original@[u][i] == original.spec_index(u).spec_index(i));
         }
     }
 
@@ -240,7 +252,9 @@ pub mod BFSMtPer {
         ensures
             spec_distances_bounded(copy, n),
     {
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < original@.len() implies #[trigger] original@[i] == original.spec_index(i) by {};
+        // Veracity: NEEDED assert
         assert forall|i: int| 0 <= i < copy@.len() implies #[trigger] copy@[i] == copy.spec_index(i) by {};
         lemma_bfs_copy_preserves_bounded(original@, copy@, n);
     }
@@ -452,6 +466,7 @@ pub mod BFSMtPer {
         let graph_copy = copy_graph(&graph);
         let distances_copy = copy_distances(&distances);
 
+        // Veracity: NEEDED proof block (speed hint)
         proof {
             lemma_copy_preserves_wf(&graph, &graph_copy);
             lemma_copy_preserves_bounded(&distances, &distances_copy, n as int);
@@ -470,11 +485,13 @@ pub mod BFSMtPer {
                     && r.1@[j].1 == next_dist
                     && dist_fn(r.1@[j].0 as int) == UNREACHABLE,
         {
+            // Veracity: NEEDED proof block
             let r = process_frontier_parallel(graph_copy, distances_copy, left_frontier, next_dist);
             proof {
                 // process_frontier_parallel ensures facts about distances_copy.
                 // We proved distances_copy.spec_index(i) == distances.spec_index(i),
                 // and dist_fn(i) == distances.spec_index(i) by definition.
+                // Veracity: NEEDED assert
                 assert forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len()
                 implies dist_fn(r.1@[j].0 as int) == UNREACHABLE
                 by {}
@@ -490,9 +507,11 @@ pub mod BFSMtPer {
                     (r.1@[j].0 as int) < n_spec
                     && r.1@[j].1 == next_dist
                     && dist_fn(r.1@[j].0 as int) == UNREACHABLE,
+        // Veracity: NEEDED proof block
         {
             let r = process_frontier_parallel(graph, distances, right_frontier, next_dist);
             proof {
+                // Veracity: NEEDED assert
                 assert forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len()
                 implies dist_fn(r.1@[j].0 as int) == UNREACHABLE
                 by {}
@@ -606,6 +625,7 @@ pub mod BFSMtPer {
         let mid = left_frontier.len() / 2;
         let right_frontier = left_frontier.split_off(mid);
 
+        // Veracity: NEEDED proof block
         let graph_copy = copy_graph(&graph);
         let parents_copy = copy_distances(&parents);
 
@@ -621,11 +641,13 @@ pub mod BFSMtPer {
             ensures
                 forall|j: int| #![trigger r@[j]] 0 <= j < r@.len() ==>
                     (r@[j].0 as int) < n_spec
+                    // Veracity: NEEDED proof block
                     && (r@[j].1 as int) < n_spec
                     && parents_fn(r@[j].0 as int) == NO_PARENT,
         {
             let r = process_frontier_tree_parallel(graph_copy, parents_copy, left_frontier);
             proof {
+                // Veracity: NEEDED assert
                 assert forall|j: int| #![trigger r@[j]] 0 <= j < r@.len()
                 implies parents_fn(r@[j].0 as int) == NO_PARENT
                 by {}
@@ -636,12 +658,14 @@ pub mod BFSMtPer {
         let f2 = move || -> (r: Vec<Pair<usize, usize>>)
             ensures
                 forall|j: int| #![trigger r@[j]] 0 <= j < r@.len() ==>
+                    // Veracity: NEEDED proof block
                     (r@[j].0 as int) < n_spec
                     && (r@[j].1 as int) < n_spec
                     && parents_fn(r@[j].0 as int) == NO_PARENT,
         {
             let r = process_frontier_tree_parallel(graph, parents, right_frontier);
             proof {
+                // Veracity: NEEDED assert
                 assert forall|j: int| #![trigger r@[j]] 0 <= j < r@.len()
                 implies parents_fn(r@[j].0 as int) == NO_PARENT
                 by {}
@@ -680,10 +704,12 @@ pub mod BFSMtPer {
     fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>, source: usize) -> (traversal: ArraySeqMtPerS<usize>)
     {
         let n = graph.length();
+// Veracity: NEEDED proof block (speed hint)
 
         let mut distances = ArraySeqMtPerS::tabulate(
             &|_idx: usize| -> (r: usize) ensures r == UNREACHABLE { UNREACHABLE },
             n,
+        // Veracity: NEEDED proof block
         );
 
         proof { lemma_tabulate_all_unreachable(&distances, n as int); }
@@ -711,6 +737,7 @@ pub mod BFSMtPer {
                     && #[trigger] distances.spec_index(v) != UNREACHABLE && v != source as int
                     ==> distances.spec_index(v) > 0usize,
                 forall|j: int| 0 <= j < current_layer@.len() ==>
+                    // Veracity: NEEDED proof block
                     #[trigger] current_layer@[j] < n,
                 current_dist < n,
         {
@@ -722,6 +749,7 @@ pub mod BFSMtPer {
                 proof {
                     lemma_copy_preserves_wf(graph, &graph_owned);
                     lemma_copy_preserves_bounded(&distances, &distances_snapshot, n as int);
+                // Veracity: NEEDED proof block
                 }
 
                 let (next_vertices, distance_updates) =
@@ -732,8 +760,10 @@ pub mod BFSMtPer {
                 // The ensures of process_frontier_parallel gives us facts about
                 // distances_snapshot. Connect back to the actual distances.
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len()
                     implies
+                        // Veracity: NEEDED proof block
                         distances.spec_index(distance_updates@[j].0 as int) == UNREACHABLE
                         && distance_updates@[j].0 < n
                         && distance_updates@[j].1 == current_dist + 1
@@ -745,6 +775,7 @@ pub mod BFSMtPer {
 
                 // All update vertices are distinct from source.
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len()
                     implies distance_updates@[j].0 != source
                     by {
@@ -770,6 +801,7 @@ pub mod BFSMtPer {
                         current_dist + 1 < n,
                         forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len() ==>
                             distance_updates@[j].0 < graph.spec_len()
+                            // Veracity: NEEDED proof block
                             && distance_updates@[j].1 == current_dist + 1
                             && distance_updates@[j].0 != source,
                     decreases distance_updates@.len() - k
@@ -786,6 +818,7 @@ pub mod BFSMtPer {
                             &distances, &old_d_inner,
                             v as int, d, n as int,
                         );
+                        // Veracity: NEEDED assert
                         assert forall|w: int| 0 <= w < distances.spec_len()
                             && distances.spec_index(w) != UNREACHABLE
                             && w != source as int
@@ -793,6 +826,7 @@ pub mod BFSMtPer {
                         by {
                             if w == v as int {
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(distances.spec_index(w)
                                     == old_d_inner.spec_index(w));
                             }
@@ -812,10 +846,12 @@ pub mod BFSMtPer {
         distances
     }
 
+    // Veracity: NEEDED proof block (speed hint)
     /// Algorithm 54.6: BFS Tree with parallel frontier processing.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(diam * lg |V|) — parallel BFS tree with D&C frontier; Mt parallel.
     #[verifier::exec_allows_no_decreases_clause]
     fn bfs_tree(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>, source: usize) -> (traversal: BFSTreeS)
+    // Veracity: NEEDED proof block
     {
         let n = graph.length();
 
@@ -845,6 +881,7 @@ pub mod BFSMtPer {
                 n > 0,
                 n < usize::MAX,
                 spec_bfsmtper_wf(graph),
+                // Veracity: NEEDED proof block
                 parents.spec_index(source as int) == source,
                 spec_parents_bounded(&parents, n as int),
                 forall|j: int| 0 <= j < current_layer@.len() ==>
@@ -854,6 +891,7 @@ pub mod BFSMtPer {
                 order@[0] == source,
                 forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==> order@[j] < n,
                 forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==>
+                    // Veracity: NEEDED proof block
                     parents.spec_index(order@[j] as int) != NO_PARENT,
         {
             let graph_owned = copy_graph(graph);
@@ -870,6 +908,7 @@ pub mod BFSMtPer {
                 );
 
             proof {
+                // Veracity: NEEDED assert
                 assert forall|j: int| #![trigger tree_updates@[j]] 0 <= j < tree_updates@.len()
                 implies
                     parents.spec_index(tree_updates@[j].0 as int) == NO_PARENT
@@ -898,6 +937,7 @@ pub mod BFSMtPer {
                         #[trigger] next_layer@[j] < n,
                     order@.len() > 0,
                     order@.len() <= n as int,
+                    // Veracity: NEEDED proof block
                     order@[0] == source,
                     forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==> order@[j] < n,
                     forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==>

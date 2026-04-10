@@ -133,6 +133,7 @@ broadcast use {
     impl<T: StT> OBSTStPerTrait<T> for OBSTStPerS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self) {
+            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 keys: Vec::new(),
@@ -155,6 +156,7 @@ broadcast use {
             {
                 key_probs.push(KeyProb { key: keys[i].clone(), prob: probs[i] });
                 i += 1;
+            // Veracity: NEEDED proof block
             }
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -163,6 +165,7 @@ broadcast use {
             }
         }
 
+        // Veracity: NEEDED proof block (speed hint)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -279,6 +282,7 @@ broadcast use {
 
     impl<T: StT> Clone for KeyProb<T> {
         fn clone(&self) -> (cloned: Self)
+            // Veracity: NEEDED proof block (speed hint)
             ensures cloned == *self,
         {
             let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
@@ -296,6 +300,7 @@ broadcast use {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@,
         {
+            // Veracity: NEEDED proof block
             let cloned = OBSTStPerS {
                 keys: self.keys.clone(),
                 memo: self.memo.clone(),

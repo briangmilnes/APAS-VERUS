@@ -186,20 +186,24 @@ pub mod AllPairsResultStPerF64 {
             if u >= self.distances.seq.len() || v >= self.n { return self; }
             let ghost old_distances = self.distances;
             let ghost n = self.n;
+            // Veracity: NEEDED assert
             assert(self.distances.spec_index(u as int).spec_len() == n as nat);
             let mut row_vec = self.distances.seq[u].seq.clone();
             if v < row_vec.len() {
                 row_vec.set(v, dist);
             }
             let updated_row = ArraySeqStPerS { seq: row_vec };
+            // Veracity: NEEDED assert (speed hint)
             assert(updated_row.spec_len() == n as nat);
             let mut dist_vec = self.distances.seq;
             dist_vec.set(u, updated_row);
+            // Veracity: NEEDED assert
             assert forall|r: int| 0 <= r < n
                 implies #[trigger] dist_vec@[r].spec_len() == n as nat
             by {
                 if r == u as int {
                 } else {
+                    // Veracity: NEEDED assert
                     assert(dist_vec@[r] == old_distances.spec_index(r));
                 }
             };
@@ -229,20 +233,24 @@ pub mod AllPairsResultStPerF64 {
             if u >= self.predecessors.seq.len() || v >= self.n { return self; }
             let ghost old_predecessors = self.predecessors;
             let ghost n = self.n;
+            // Veracity: NEEDED assert
             assert(self.predecessors.spec_index(u as int).spec_len() == n as nat);
             let mut row_vec = self.predecessors.seq[u].seq.clone();
             if v < row_vec.len() {
                 row_vec.set(v, pred);
             }
             let updated_row = ArraySeqStPerS { seq: row_vec };
+            // Veracity: NEEDED assert (speed hint)
             assert(updated_row.spec_len() == n as nat);
             let mut pred_vec = self.predecessors.seq;
             pred_vec.set(u, updated_row);
+            // Veracity: NEEDED assert
             assert forall|r: int| 0 <= r < n
                 implies #[trigger] pred_vec@[r].spec_len() == n as nat
             by {
                 if r == u as int {
                 } else {
+                    // Veracity: NEEDED assert
                     assert(pred_vec@[r] == old_predecessors.spec_index(r));
                 }
             };

@@ -98,13 +98,15 @@ pub mod SCCStEph {
         let mut visited = ArraySeqStEphS::tabulate(&init_false, n);
         let mut finish_order: Vec<usize> = Vec::new();
 
+        // Veracity: NEEDED proof block
         proof {
-            assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
-                // tabulate ensures: init_false.ensures((j as usize,), visited.seq@[j])
-                // which means !visited.seq@[j].
-                lemma_bool_view_eq_spec_index(&visited);
-                assert(!visited.spec_index(j));
-            }
+// Veracity: UNNEEDED assert             assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
+// Veracity: UNNEEDED assert                 // tabulate ensures: init_false.ensures((j as usize,), visited.seq@[j])
+// Veracity: UNNEEDED assert                 // which means !visited.seq@[j].
+// Veracity: UNNEEDED assert                 lemma_bool_view_eq_spec_index(&visited);
+// Veracity: UNNEEDED assert                 // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                 assert(!visited.spec_index(j));
+// Veracity: UNNEEDED assert             }
             lemma_all_false_num_false_eq_len(visited@);
         }
 
@@ -122,27 +124,33 @@ pub mod SCCStEph {
                 forall|j: int| 0 <= j < start as int ==> #[trigger] visited@[j],
                 finish_order@.len() + spec_num_false(visited@) == n,
             decreases n - start,
+        // Veracity: NEEDED proof block
         {
             proof { lemma_bool_view_eq_spec_index(&visited); }
-            assert(start < visited.spec_len());
+// Veracity: UNNEEDED assert             assert(start < visited.spec_len());
             if !*visited.nth(start) {
                 let ghost pre_vis = visited@;
+                // Veracity: NEEDED proof block
                 dfs_finish_order(graph, &mut visited, &mut finish_order, start);
                 // dfs_finish_order ensures visited@[start as int] and monotonicity.
                 proof {
                     lemma_bool_view_eq_spec_index(&visited);
+                    // Veracity: NEEDED assert
                     assert forall|j: int| 0 <= j < start as int + 1
                         implies #[trigger] visited@[j] by {
                         if j < start as int {
                             // pre_vis[j] was true (from invariant), monotonicity preserves it.
+                            // Veracity: NEEDED assert
                             assert(pre_vis[j]);
                         }
                         // j == start: ensured by dfs_finish_order.
+                    // Veracity: NEEDED proof block
                     };
                 }
             } else {
                 proof { lemma_bool_view_eq_spec_index(&visited); }
-                assert(visited@[start as int]);
+// Veracity: NEEDED proof block
+// Veracity: UNNEEDED assert                 assert(visited@[start as int]);
             }
             start = start + 1;
         }
@@ -167,9 +175,12 @@ pub mod SCCStEph {
             decreases k,
         {
             k = k - 1;
+            // Veracity: NEEDED proof block
             reversed.push(finish_order[k]);
         }
+        // Veracity: NEEDED assert (speed hint)
         assert(reversed@.len() < usize::MAX);
+        // Veracity: NEEDED assert
         proof { assert(obeys_feq_full_trigger::<usize>()); }
         AVLTreeSeqStEphS::from_vec(reversed)
     }
@@ -210,14 +221,18 @@ pub mod SCCStEph {
                     ==> (#[trigger] adj_vecs@[w][j] as int) < n,
             decreases n - u,
         {
+            // Veracity: NEEDED assert (speed hint)
             assert((u as int) < graph@.len());
             let neighbors = graph.nth(u);
             let neighbors_len = neighbors.length();
+// Veracity: UNNEEDED proof block             // Veracity: NEEDED assert (speed hint)
             assert(neighbors_len as int == neighbors.spec_len());
-            assert(neighbors_len == graph@[u as int].len());
+// Veracity: UNNEEDED assert             assert(neighbors_len == graph@[u as int].len());
             // Bridge neighbors to graph view.
+            // Veracity: NEEDED assert (speed hint)
             assert(*neighbors == graph.spec_index(u as int));
             proof { lemma_graph_view_bridge(graph, neighbors, u as int); }
+            // Veracity: NEEDED assert (speed hint)
             assert(neighbors@ =~= graph@[u as int]);
             let mut i: usize = 0;
             while i < neighbors_len
@@ -232,6 +247,7 @@ pub mod SCCStEph {
                     adj_vecs@.len() == n,
                     n == graph@.len(),
                     spec_toposortsteph_wf(graph),
+                    // Veracity: NEEDED proof block
                     forall|w: int, j: int|
                         0 <= w < n as int && 0 <= j < adj_vecs@[w].len()
                         ==> (#[trigger] adj_vecs@[w][j] as int) < n,
@@ -239,16 +255,17 @@ pub mod SCCStEph {
             {
                 let v = *neighbors.nth(i);
                 proof { lemma_usize_view_eq_spec_index(neighbors); }
-                assert(v == neighbors@[i as int]);
-                assert(v == graph@[u as int][i as int]);
+// Veracity: UNNEEDED assert                 assert(v == neighbors@[i as int]);
+// Veracity: UNNEEDED assert                 assert(v == graph@[u as int][i as int]);
+                // Veracity: NEEDED assert (speed hint)
                 assert(graph@[u as int][i as int] < graph@.len());
-                assert(v < n);
+// Veracity: UNNEEDED assert                 assert(v < n);
                 let mut temp = adj_vecs.remove(v);
                 temp.push(u);
                 adj_vecs.insert(v, temp);
-                assert(forall|w: int, j: int|
-                    0 <= w < n as int && 0 <= j < adj_vecs@[w].len()
-                    ==> (#[trigger] adj_vecs@[w][j] as int) < n);
+// Veracity: UNNEEDED assert                 assert(forall|w: int, j: int|
+// Veracity: UNNEEDED assert                     0 <= w < n as int && 0 <= j < adj_vecs@[w].len()
+// Veracity: UNNEEDED assert                     ==> (#[trigger] adj_vecs@[w][j] as int) < n);
                 i = i + 1;
             }
             u = u + 1;
@@ -266,6 +283,7 @@ pub mod SCCStEph {
                     0 <= w < n as int && 0 <= j < adj_vecs@[w].len()
                     ==> (#[trigger] adj_vecs@[w][j] as int) < n,
                 forall|r: int, j: int|
+                    // Veracity: NEEDED proof block
                     0 <= r < m as int && 0 <= j < result_vecs@[r]@.len()
                     ==> (#[trigger] result_vecs@[r]@[j]) < graph@.len(),
             decreases n - m,
@@ -275,11 +293,16 @@ pub mod SCCStEph {
             let new_arr = ArraySeqStEphS::from_vec(cloned_vec);
             proof {
                 lemma_usize_view_eq_spec_index(&new_arr);
-                assert(cv_view =~= adj_vecs@[m as int]@);
+// Veracity: UNNEEDED assert                 assert(cv_view =~= adj_vecs@[m as int]@);
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|j: int| 0 <= j < new_arr@.len()
                     implies (#[trigger] new_arr@[j]) < graph@.len() by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_arr@[j] == new_arr.spec_index(j));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_arr.spec_index(j) == cv_view[j]);
+                    // Veracity: NEEDED proof block
+                    // Veracity: NEEDED assert (speed hint)
                     assert((adj_vecs@[m as int][j] as int) < (n as int));
                 };
             }
@@ -288,16 +311,19 @@ pub mod SCCStEph {
         }
         let transposed = ArraySeqStEphS::from_vec(result_vecs);
         proof {
+            // Veracity: NEEDED assert (speed hint)
             assert(transposed@.len() == n as nat);
             // Bridge: transposed@[v] == result_vecs@[v]@ for each vertex.
+            // Veracity: NEEDED assert
             assert forall|v: int, i: int|
                 0 <= v < transposed@.len() && 0 <= i < transposed@[v].len()
                 implies (#[trigger] transposed@[v][i]) < transposed@.len() by {
                 // transposed.spec_index(v) == result_vecs@[v]
+                // Veracity: NEEDED assert
                 assert(transposed.spec_index(v) == result_vecs@[v]);
                 // transposed@[v] == transposed.spec_index(v)@
                 // result_vecs@[v]@[i] < graph@.len() from invariant
-                assert(result_vecs@[v]@[i] < graph@.len());
+// Veracity: UNNEEDED assert                 assert(result_vecs@[v]@[i] < graph@.len());
             };
         }
         assert(spec_toposortsteph_wf(&transposed));
@@ -319,15 +345,18 @@ pub mod SCCStEph {
                 forall|v: int, i: int|
                     0 <= v < u as int && 0 <= i < graph@[v].len()
                     ==> (#[trigger] graph@[v][i]) < graph@.len(),
+            // Veracity: NEEDED proof block
             decreases n - u,
         {
             let neighbors = graph.nth(u);
             let neighbors_len = neighbors.length();
-            assert(neighbors_len as int == neighbors.spec_len());
+// Veracity: UNNEEDED assert             assert(neighbors_len as int == neighbors.spec_len());
+            // Veracity: NEEDED assert (speed hint)
             assert(neighbors_len == graph@[u as int].len());
             // Bridge neighbors to graph view.
-            assert(*neighbors == graph.spec_index(u as int));
+// Veracity: UNNEEDED assert             assert(*neighbors == graph.spec_index(u as int));
             proof { lemma_graph_view_bridge(graph, neighbors, u as int); }
+            // Veracity: NEEDED assert (speed hint)
             assert(neighbors@ =~= graph@[u as int]);
             let mut i: usize = 0;
             while i < neighbors_len
@@ -338,7 +367,7 @@ pub mod SCCStEph {
                     n == graph@.len(),
                     neighbors_len == graph@[u as int].len(),
                     neighbors@ =~= graph@[u as int],
-                    *neighbors == graph.spec_index(u as int),
+// Veracity: UNNEEDED proof block                     *neighbors == graph.spec_index(u as int),
                     forall|v: int, j: int|
                         0 <= v < u as int && 0 <= j < graph@[v].len()
                         ==> (#[trigger] graph@[v][j]) < graph@.len(),
@@ -349,7 +378,7 @@ pub mod SCCStEph {
             {
                 let neighbor = *neighbors.nth(i);
                 proof { lemma_usize_view_eq_spec_index(neighbors); }
-                assert(neighbor == graph@[u as int][i as int]);
+// Veracity: UNNEEDED assert                 assert(neighbor == graph@[u as int][i as int]);
                 if neighbor >= n {
                     return false;
                 }
@@ -374,6 +403,7 @@ pub mod SCCStEph {
             old(component).spec_avltreesetsteph_wf(),
             old(component)@.len() + spec_num_false(old(visited)@) < usize::MAX as nat,
         ensures
+            // Veracity: NEEDED proof block
             visited@.len() == graph@.len(),
             forall|j: int|
                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
@@ -385,15 +415,21 @@ pub mod SCCStEph {
         decreases spec_num_false(old(visited)@),
     {
         proof { lemma_bool_view_eq_spec_index(visited); }
+        // Veracity: NEEDED assert (speed hint)
         assert(visited.spec_len() == visited@.len());
+        // Veracity: NEEDED assert (speed hint)
         assert(vertex < visited.spec_len());
+        // Veracity: NEEDED proof block
         if *visited.nth(vertex) {
-            assert(visited@[vertex as int]);
+// Veracity: UNNEEDED assert             assert(visited@[vertex as int]);
             return;
         }
-        assert(!old(visited)@[vertex as int]);
+        // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED proof block         assert(!old(visited)@[vertex as int]);
+        // Veracity: NEEDED assert (speed hint)
         assert(vertex < visited.spec_len());
         let set_ok = visited.set(vertex, true);
+        // Veracity: NEEDED assert (speed hint)
         assert(set_ok.is_ok());
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
@@ -402,42 +438,58 @@ pub mod SCCStEph {
 
         // Establish visited@ == old(visited)@.update(vertex, true).
         proof { lemma_bool_view_eq_spec_index(visited); }
-        assert forall|j: int| 0 <= j < visited@.len()
-            implies #[trigger] visited@[j] == old(visited)@.update(vertex as int, true)[j] by {
-            assert(visited@[j] == visited.spec_index(j));
-            if j == vertex as int {
-                assert(visited.spec_index(j) == true);
-            } else {
-                assert(visited.spec_index(j) == old(visited).spec_index(j));
-            }
-        };
+// Veracity: UNNEEDED assert         assert forall|j: int| 0 <= j < visited@.len()
+// Veracity: UNNEEDED assert             implies #[trigger] visited@[j] == old(visited)@.update(vertex as int, true)[j] by {
+// Veracity: UNNEEDED assert             // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert             assert(visited@[j] == visited.spec_index(j));
+// Veracity: UNNEEDED assert             if j == vertex as int {
+// Veracity: UNNEEDED assert                 // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                 assert(visited.spec_index(j) == true);
+// Veracity: UNNEEDED assert             } else {
+// Veracity: UNNEEDED assert                 // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                 assert(visited.spec_index(j) == old(visited).spec_index(j));
+// Veracity: UNNEEDED assert             }
+// Veracity: UNNEEDED assert         };
+        // Veracity: NEEDED assert
         assert(visited@ =~= old(visited)@.update(vertex as int, true));
+        // Veracity: NEEDED assert (speed hint)
         assert(visited@[vertex as int]);
+        // Veracity: NEEDED assert (speed hint)
         assert(spec_num_false(visited@) < spec_num_false(old(visited)@));
+        // Veracity: NEEDED assert (speed hint)
         assert(visited@.len() == graph@.len());
 
         // Monotonicity.
+        // Veracity: NEEDED assert
         assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
             implies visited@[j] by {};
 
         // Combined bound: spec_num_false decreased by 1, so component can grow by 1.
-        assert(spec_num_false(visited@) == spec_num_false(old(visited)@) - 1);
+// Veracity: UNNEEDED assert         assert(spec_num_false(visited@) == spec_num_false(old(visited)@) - 1);
+        // Veracity: NEEDED assert (speed hint)
         assert(old(component)@.len() + 1 < usize::MAX as nat);
         component.insert(vertex);
         // After insert: component@.len() increased by at most 1.
         // component@.len() + spec_num_false(visited@) <= old(component)@.len() + 1 + spec_num_false(old(visited)@) - 1
+        // Veracity: NEEDED assert (speed hint)
         assert(component@.len() + spec_num_false(visited@) <= old(component)@.len() + spec_num_false(old(visited)@));
 
+        // Veracity: NEEDED assert (speed hint)
         assert((vertex as int) < graph@.len());
+// Veracity: UNNEEDED proof block         // Veracity: NEEDED assert (speed hint)
         assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
+        // Veracity: NEEDED assert (speed hint)
         assert(neighbors_len as int == neighbors.spec_len());
+        // Veracity: NEEDED assert (speed hint)
         assert(neighbors_len == graph@[vertex as int].len());
 
         // Bridge neighbors to graph view.
+        // Veracity: NEEDED assert (speed hint)
         assert(*neighbors == graph.spec_index(vertex as int));
         proof { lemma_graph_view_bridge(graph, neighbors, vertex as int); }
+        // Veracity: NEEDED assert (speed hint)
         assert(neighbors@ =~= graph@[vertex as int]);
 
         let mut i: usize = 0;
@@ -451,6 +503,7 @@ pub mod SCCStEph {
                 (vertex as int) < graph@.len(),
                 visited@.len() == graph@.len(),
                 visited.spec_len() == graph@.len(),
+                // Veracity: NEEDED proof block
                 spec_toposortsteph_wf(graph),
                 component.spec_avltreesetsteph_wf(),
                 component@.len() + spec_num_false(visited@) < usize::MAX as nat,
@@ -464,22 +517,27 @@ pub mod SCCStEph {
         {
             let neighbor = *neighbors.nth(i);
             proof { lemma_usize_view_eq_spec_index(neighbors); }
+            // Veracity: NEEDED assert (speed hint)
             assert(neighbor == neighbors@[i as int]);
-            assert(neighbor == graph@[vertex as int][i as int]);
+// Veracity: UNNEEDED assert             assert(neighbor == graph@[vertex as int][i as int]);
+            // Veracity: NEEDED assert (speed hint)
             assert(graph@[vertex as int][i as int] < graph@.len());
+            // Veracity: NEEDED assert (speed hint)
             assert(neighbor < graph@.len());
             let ghost pre_vis = visited@;
             dfs_reach(graph, visited, component, neighbor);
             // visited@[vertex] maintained: pre_vis[vertex] was true, monotonicity preserves it.
-            assert(visited@[vertex as int]) by {
-                assert(pre_vis[vertex as int]);
-            };
+// Veracity: UNNEEDED assert             assert(visited@[vertex as int]) by {
+// Veracity: UNNEEDED assert                 // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                 assert(pre_vis[vertex as int]);
+// Veracity: UNNEEDED assert             };
             i = i + 1;
         }
     }
 
     impl SCCStEphTrait for SCCStEph {
         /// Finds strongly connected components in a directed graph.
+        // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — Kosaraju's: two DFS passes + transpose; St sequential.
         fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<usize>>
         {
@@ -494,8 +552,10 @@ pub mod SCCStEph {
             let mut components_vec: Vec<AVLTreeSetStEph<usize>> = Vec::new();
 
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
                     lemma_bool_view_eq_spec_index(&visited);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(!visited.spec_index(j));
                 }
                 lemma_all_false_num_false_eq_len(visited@);
@@ -506,12 +566,15 @@ pub mod SCCStEph {
             if finish_len > 0 {
                 // Handle first vertex to guarantee at least one component.
                 let vertex = *finish_order.nth(0usize);
+                // Veracity: NEEDED assert (speed hint)
                 assert((vertex as int) < n);
+                // Veracity: NEEDED assert (speed hint)
                 assert(vertex < visited.spec_len());
                 let mut component = AVLTreeSetStEph::empty();
+                // Veracity: NEEDED assert (speed hint)
                 assert(component@.len() + spec_num_false(visited@) < usize::MAX as nat) by {
-                    assert(component@.len() == 0nat);
-                    assert(spec_num_false(visited@) <= n as nat);
+// Veracity: UNNEEDED assert                     assert(component@.len() == 0nat);
+// Veracity: UNNEEDED assert                     assert(spec_num_false(visited@) <= n as nat);
                 };
                 dfs_reach(&transposed, &mut visited, &mut component, vertex);
                 components_vec.push(component);
@@ -528,7 +591,7 @@ pub mod SCCStEph {
                         visited@.len() == n,
                         visited.spec_len() == n,
                         n == transposed@.len(),
-                        n == graph@.len(),
+// Veracity: UNNEEDED proof block                         n == graph@.len(),
                         n < usize::MAX,
                         spec_toposortsteph_wf(&transposed),
                         spec_num_false(visited@) <= n,
@@ -538,16 +601,19 @@ pub mod SCCStEph {
                         components_vec@.len() <= i,
                     decreases finish_len - i,
                 {
-                    assert((i as int) < finish_order@.len());
+// Veracity: UNNEEDED assert                     assert((i as int) < finish_order@.len());
                     let vertex = *finish_order.nth(i);
-                    assert((vertex as int) < n);
-                    assert(vertex < visited.spec_len());
+// Veracity: UNNEEDED assert                     assert((vertex as int) < n);
+// Veracity: UNNEEDED assert                     assert(vertex < visited.spec_len());
                     proof { lemma_bool_view_eq_spec_index(&visited); }
                     if !*visited.nth(vertex) {
                         let mut component = AVLTreeSetStEph::empty();
+                        // Veracity: NEEDED assert (speed hint)
                         assert(component@.len() + spec_num_false(visited@) < usize::MAX as nat) by {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(component@.len() == 0nat);
-                            assert(spec_num_false(visited@) <= n as nat);
+                            // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED proof block                             assert(spec_num_false(visited@) <= n as nat);
                         };
                         dfs_reach(&transposed, &mut visited, &mut component, vertex);
                         if component.size() > 0 {
@@ -557,8 +623,10 @@ pub mod SCCStEph {
                     i = i + 1;
                 }
             }
-            assert(components_vec@.len() >= 1 || graph@.len() == 0);
+// Veracity: UNNEEDED assert             assert(components_vec@.len() >= 1 || graph@.len() == 0);
+            // Veracity: NEEDED assert (speed hint)
             assert(components_vec@.len() < usize::MAX);
+            // Veracity: NEEDED assert
             proof { assert(obeys_feq_full_trigger::<AVLTreeSetStEph<usize>>()); }
             AVLTreeSeqStEphS::from_vec(components_vec)
         }

@@ -56,10 +56,13 @@ broadcast use vstd::seq::group_seq_axioms;
         ensures spec_reachable(graph, v, v),
     {
         let path = seq![v];
+        // Veracity: NEEDED assert (speed hint)
         assert(path.len() == 1);
-        assert(path[0] == v);
+// Veracity: UNNEEDED assert         assert(path[0] == v);
+        // Veracity: NEEDED assert
         assert(path.last() == v);
-        assert forall|k: int| 0 <= k < path.len() implies 0 <= #[trigger] path[k] < graph@.len() by {};
+// Veracity: UNNEEDED assert         assert forall|k: int| 0 <= k < path.len() implies 0 <= #[trigger] path[k] < graph@.len() by {};
+        // Veracity: NEEDED assert (speed hint)
         assert(spec_is_path(graph, path));
     }
 
@@ -78,28 +81,36 @@ broadcast use vstd::seq::group_seq_axioms;
         let path_vw = choose|path: Seq<int>|
             spec_is_path(graph, path) && path[0] == v && #[trigger] path.last() == w;
         let path_uw = seq![u] + path_vw;
+        // Veracity: NEEDED assert (speed hint)
         assert(path_uw.len() >= 2);
+        // Veracity: NEEDED assert (speed hint)
         assert(path_uw[0] == u);
-        assert forall|k: int| 0 <= k < path_uw.len()
-            implies 0 <= #[trigger] path_uw[k] < graph@.len() by {
-            if k == 0 {
-            } else {
-                assert(path_uw[k] == path_vw[k - 1]);
-            }
-        };
+// Veracity: UNNEEDED assert         assert forall|k: int| 0 <= k < path_uw.len()
+// Veracity: UNNEEDED assert             implies 0 <= #[trigger] path_uw[k] < graph@.len() by {
+// Veracity: UNNEEDED assert             if k == 0 {
+// Veracity: UNNEEDED assert             } else {
+// Veracity: UNNEEDED assert                 // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                 assert(path_uw[k] == path_vw[k - 1]);
+// Veracity: UNNEEDED assert             }
+// Veracity: UNNEEDED assert         };
+        // Veracity: NEEDED assert
         assert forall|k: int| 0 <= k < path_uw.len() - 1
             implies #[trigger] spec_has_edge(graph, path_uw[k], path_uw[k + 1]) by {
             if k == 0 {
+                // Veracity: NEEDED assert (speed hint)
                 assert(path_uw[0] == u);
-                assert(path_uw[1] == path_vw[0]);
+// Veracity: UNNEEDED assert                 assert(path_uw[1] == path_vw[0]);
+                // Veracity: NEEDED assert (speed hint)
                 assert(path_vw[0] == v);
             } else {
+                // Veracity: NEEDED assert (speed hint)
                 assert(path_uw[k] == path_vw[k - 1]);
-                assert(path_uw[k + 1] == path_vw[k]);
+// Veracity: UNNEEDED assert                 assert(path_uw[k + 1] == path_vw[k]);
             }
         };
-        assert(spec_is_path(graph, path_uw));
-        assert(path_uw.last() == path_vw.last());
+// Veracity: UNNEEDED assert         assert(spec_is_path(graph, path_uw));
+// Veracity: UNNEEDED assert         assert(path_uw.last() == path_vw.last());
+        // Veracity: NEEDED assert (speed hint)
         assert(path_uw.last() == w);
     }
 
@@ -123,30 +134,38 @@ broadcast use vstd::seq::group_seq_axioms;
         decreases path.len(),
     {
         if path.len() > 1 {
+            // Veracity: NEEDED assert (speed hint)
             assert(spec_has_edge(graph, path[0], path[1]));
             let edge_idx = choose|i: int|
                 0 <= i < graph@[path[0]].len() && (#[trigger] graph@[path[0]][i]) == path[1];
-            assert(visited[graph@[path[0]][edge_idx] as int]);
+// Veracity: UNNEEDED assert             assert(visited[graph@[path[0]][edge_idx] as int]);
+            // Veracity: NEEDED assert (speed hint)
             assert(visited[path[1]]);
 
             let path_tail = path.subrange(1, path.len() as int);
+            // Veracity: NEEDED assert (speed hint)
             assert(path_tail.len() >= 1);
+            // Veracity: NEEDED assert (speed hint)
             assert(path_tail[0] == path[1]);
-            assert forall|k: int| 0 <= k < path_tail.len()
-                implies 0 <= #[trigger] path_tail[k] < graph@.len() by {
-                assert(path_tail[k] == path[k + 1]);
-            };
+// Veracity: UNNEEDED assert             assert forall|k: int| 0 <= k < path_tail.len()
+// Veracity: UNNEEDED assert                 implies 0 <= #[trigger] path_tail[k] < graph@.len() by {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                 assert(path_tail[k] == path[k + 1]);
+// Veracity: UNNEEDED assert             };
+            // Veracity: NEEDED assert
             assert forall|k: int| 0 <= k < path_tail.len() - 1
                 implies #[trigger] spec_has_edge(graph, path_tail[k], path_tail[k + 1]) by {
-                assert(path_tail[k] == path[k + 1]);
+// Veracity: UNNEEDED assert                 assert(path_tail[k] == path[k + 1]);
+                // Veracity: NEEDED assert (speed hint)
                 assert(path_tail[k + 1] == path[k + 2]);
             };
-            assert(spec_is_path(graph, path_tail));
+// Veracity: UNNEEDED assert             assert(spec_is_path(graph, path_tail));
             lemma_neighbor_closed_path(graph, visited, path_tail);
+            // Veracity: NEEDED assert
             assert forall|k: int| 0 <= k < path.len()
                 implies visited[#[trigger] path[k]] by {
                 if k == 0 {
                 } else {
+                    // Veracity: NEEDED assert
                     assert(path[k] == path_tail[k - 1]);
                 }
             };
@@ -262,85 +281,105 @@ broadcast use vstd::seq::group_seq_axioms;
         decreases spec_num_false(old(visited)@),
     {
         // Bridge: visited@[j] == visited.spec_index(j) for bool arrays.
-        proof { lemma_bool_view_eq_spec_index(visited); }
+// Veracity: UNNEEDED proof block         proof { lemma_bool_view_eq_spec_index(visited); }
+        // Veracity: NEEDED assert (speed hint)
         assert(visited.spec_len() == visited@.len());
 
         if *visited.nth(vertex) {
             // Early return: vertex already visited. Nothing changes.
+            // Veracity: NEEDED proof block
             proof {
                 // vertex is visited, not in gray → reachable@.contains(vertex).
+                // Veracity: NEEDED assert
                 assert(old(visited)@[vertex as int]);
-                assert(!gray.contains(vertex as int));
+// Veracity: UNNEEDED assert                 assert(!gray.contains(vertex as int));
+                // Veracity: NEEDED assert (speed hint)
                 assert(old(reachable)@.contains(vertex as usize));
                 // Establish each postcondition explicitly to avoid conjunction flakiness.
-                assert(visited@[vertex as int]);
+// Veracity: UNNEEDED assert                 assert(visited@[vertex as int]);
+                // Veracity: NEEDED assert (speed hint)
                 assert(reachable@.contains(vertex));
             }
             return;
         }
         // vertex was not visited — old(visited)@[vertex as int] is false.
-        assert(!old(visited)@[vertex as int]);
-        assert(vertex < visited.spec_len());
+// Veracity: UNNEEDED assert         assert(!old(visited)@[vertex as int]);
+// Veracity: UNNEEDED assert         assert(vertex < visited.spec_len());
 
         let set_ok = visited.set(vertex, true);
-        assert(set_ok.is_ok());
+// Veracity: UNNEEDED assert         assert(set_ok.is_ok());
+// Veracity: NEEDED proof block
 
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
             lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
-
+// Veracity: UNNEEDED proof block 
         // Re-establish bridge for the new visited state.
         proof { lemma_bool_view_eq_spec_index(visited); }
-        assert(visited@.len() == old(visited)@.len());
+// Veracity: UNNEEDED assert         assert(visited@.len() == old(visited)@.len());
 
         // Establish visited@ == old(visited)@.update(vertex, true).
+        // Veracity: NEEDED assert (speed hint)
         assert forall|j: int| 0 <= j < visited@.len()
             implies #[trigger] visited@[j] == old(visited)@.update(vertex as int, true)[j] by {
+            // Veracity: NEEDED assert (speed hint)
             assert(visited@[j] == visited.spec_index(j));
+            // Veracity: NEEDED assert (speed hint)
             assert(old(visited)@[j] == old(visited).spec_index(j));
             if j == vertex as int {
+                // Veracity: NEEDED assert (speed hint)
                 assert(visited.spec_index(j) == true);
             } else {
+                // Veracity: NEEDED assert (speed hint)
                 assert(visited.spec_index(j) == old(visited).spec_index(j));
             }
         };
+        // Veracity: NEEDED assert
         assert(visited@ =~= old(visited)@.update(vertex as int, true));
 
+        // Veracity: NEEDED assert (speed hint)
         assert(spec_num_false(visited@) < spec_num_false(old(visited)@));
-        assert(spec_num_false(visited@) == spec_num_false(old(visited)@) - 1);
+// Veracity: UNNEEDED assert         assert(spec_num_false(visited@) == spec_num_false(old(visited)@) - 1);
 
         // Monotonicity: old(visited)@[j] ==> visited@[j].
+        // Veracity: NEEDED assert
         assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
             implies visited@[j] by {};
 
         // Combined bound: spec_num_false decreased by 1 and reachable unchanged.
-        assert(reachable@.len() + spec_num_false(visited@)
-            == reachable@.len() + spec_num_false(old(visited)@) - 1);
-        assert(reachable@.len() + spec_num_false(visited@) <= graph@.len() - 1);
-        assert(reachable@.len() + 1 <= graph@.len());
+// Veracity: UNNEEDED assert         assert(reachable@.len() + spec_num_false(visited@)
+// Veracity: UNNEEDED assert             == reachable@.len() + spec_num_false(old(visited)@) - 1);
+// Veracity: UNNEEDED assert         assert(reachable@.len() + spec_num_false(visited@) <= graph@.len() - 1);
+// Veracity: UNNEEDED assert         assert(reachable@.len() + 1 <= graph@.len());
+        // Veracity: NEEDED assert (speed hint)
         assert(graph@.len() < usize::MAX);
-        assert(reachable@.len() + 1 < usize::MAX as nat);
-
+// Veracity: UNNEEDED assert         assert(reachable@.len() + 1 < usize::MAX as nat);
+// Veracity: UNNEEDED proof block 
         // Soundness: vertex is reachable from vertex.
         proof { lemma_reachable_self(graph, vertex as int); }
 
         let ghost old_reachable_snap = reachable@;
         reachable.insert(vertex);
         assert(reachable.spec_avltreesetsteph_wf());
-        assert(reachable@.len() + spec_num_false(visited@) <= graph@.len());
+// Veracity: UNNEEDED assert         assert(reachable@.len() + spec_num_false(visited@) <= graph@.len());
 
-        assert((vertex as int) < graph@.len());
+// Veracity: UNNEEDED assert         assert((vertex as int) < graph@.len());
+        // Veracity: NEEDED assert (speed hint)
         assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
+        // Veracity: NEEDED assert (speed hint)
         assert(neighbors_len as int == neighbors.spec_len());
 
         // Establish graph/neighbors bridge before the loop.
+        // Veracity: NEEDED proof block
+        // Veracity: NEEDED assert (speed hint)
         assert(*neighbors == graph.spec_index(vertex as int));
         proof {
             lemma_graph_view_bridge(graph, neighbors, vertex as int);
         }
+        // Veracity: NEEDED assert (speed hint)
         assert(neighbors@ =~= graph@[vertex as int]);
 
         let ghost gray_inner = gray.insert(vertex as int);
@@ -385,60 +424,75 @@ broadcast use vstd::seq::group_seq_axioms;
                     old(reachable)@.contains(v) || spec_reachable(graph, vertex as int, v as int),
                 // All neighbors 0..i are visited.
                 forall|j: int| 0 <= j < i ==> visited@[(#[trigger] graph@[vertex as int][j]) as int],
+            // Veracity: NEEDED proof block
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
             proof { lemma_usize_view_eq_spec_index(neighbors); }
+            // Veracity: NEEDED assert (speed hint)
             assert(neighbor == neighbors@[i as int]);
+            // Veracity: NEEDED assert (speed hint)
             assert(neighbor == graph@[vertex as int][i as int]);
-            assert(graph@[vertex as int][i as int] < graph@.len());
+            // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED proof block             assert(graph@[vertex as int][i as int] < graph@.len());
+            // Veracity: NEEDED assert (speed hint)
             assert(neighbor < graph@.len());
 
             proof { lemma_bool_view_eq_spec_index(visited); }
             if !*visited.nth(neighbor) {
                 // neighbor is unvisited => not in gray (gray ⊆ old(visited) ⊆ visited).
                 // Also neighbor != vertex (vertex is visited, neighbor is not).
+                // Veracity: NEEDED assert (speed hint)
                 assert(!gray_inner.contains(neighbor as int));
 
+                // Veracity: NEEDED proof block
                 let ghost reachable_before = reachable@;
                 dfs_recursive(graph, visited, reachable, neighbor, Ghost(gray_inner));
 
                 // Chain soundness: new entries reachable from neighbor, hence from vertex.
                 proof {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(spec_has_edge(graph, vertex as int, neighbor as int));
+                    // Veracity: NEEDED assert
                     assert forall|v: usize| (#[trigger] reachable@.contains(v)) implies
                         old(reachable)@.contains(v) || spec_reachable(graph, vertex as int, v as int) by {
                         if !reachable_before.contains(v) {
                             // Added during this recursive call: reachable from neighbor.
-                            assert(spec_reachable(graph, neighbor as int, v as int));
+// Veracity: UNNEEDED assert                             assert(spec_reachable(graph, neighbor as int, v as int));
                             lemma_reachable_step(graph, vertex as int, neighbor as int, v as int);
                         }
                     };
                 }
             }
+            // Veracity: NEEDED proof block
             i = i + 1;
         }
         // After loop: all of vertex's neighbors are visited.
         // vertex is not in gray, so vertex is now neighbor-closed.
         // The postcondition neighbor-closure with gray (not gray_inner) follows.
         proof {
+            // Veracity: NEEDED assert
             assert forall|u: int, j: int| #![trigger graph@[u][j]]
                 0 <= u < graph@.len() && 0 <= j < graph@[u].len()
                 && visited@[u] && !gray.contains(u)
                 implies visited@[graph@[u][j] as int] by {
                 if u == vertex as int {
                     // vertex: all neighbors visited (from loop).
-                    assert(visited@[graph@[vertex as int][j] as int]);
+// Veracity: UNNEEDED assert                     assert(visited@[graph@[vertex as int][j] as int]);
                 } else {
                     // non-vertex, non-gray: already covered by loop invariant with gray_inner.
+                    // Veracity: NEEDED assert (speed hint)
                     assert(!gray_inner.contains(u));
                 }
             };
+            // Veracity: NEEDED assert (speed hint)
             assert forall|v: int| 0 <= v < visited@.len() && (#[trigger] visited@[v]) && !gray.contains(v)
                 implies reachable@.contains(v as usize) by {
                 if v == vertex as int {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(reachable@.contains(vertex));
                 } else {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(!gray_inner.contains(v));
                 }
             };
@@ -452,6 +506,7 @@ broadcast use vstd::seq::group_seq_axioms;
         fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (reachable: AVLTreeSetStEph<usize>)
         {
             let n = graph.length();
+            // Veracity: NEEDED proof block
             let init_false = |_x: usize| -> (r: bool)
                 ensures !r
             { false };
@@ -461,11 +516,12 @@ broadcast use vstd::seq::group_seq_axioms;
             proof {
                 // Tabulate ensures: init_false.ensures((j as usize,), visited.seq@[j]) for j in range.
                 // The closure ensures !r, so !visited.seq@[j] for each j.
-                assert forall|j: int| 0 <= j < visited@.len() implies !(#[trigger] visited@[j]) by {
-                    assert(init_false.ensures((j as usize,), visited.seq@[j]));
-                    assert(!visited.seq@[j]);
-                    assert(visited@[j] == visited.seq@[j]@);
-                };
+// Veracity: UNNEEDED assert                 assert forall|j: int| 0 <= j < visited@.len() implies !(#[trigger] visited@[j]) by {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                     assert(init_false.ensures((j as usize,), visited.seq@[j]));
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                     assert(!visited.seq@[j]);
+// Veracity: NEEDED proof block
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                     assert(visited@[j] == visited.seq@[j]@);
+// Veracity: UNNEEDED assert                 };
                 lemma_all_false_num_false_eq_len(visited@);
             }
 
@@ -479,20 +535,25 @@ broadcast use vstd::seq::group_seq_axioms;
                 //   (old(reachable) was empty).
                 // Completeness: everything reachable from source is visited (by lemma),
                 //   and all visited vertices are in reachable (visited-reachable with empty gray).
+                // Veracity: NEEDED assert
                 assert forall|v: int| 0 <= v < graph@.len()
                     && spec_reachable(graph, source as int, v)
                     implies reachable@.contains(v as usize) by {
                     lemma_neighbor_closed_implies_reachable(graph, visited@, source as int, v);
-                    assert(visited@[v]);
+// Veracity: UNNEEDED assert                     assert(visited@[v]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(!Set::<int>::empty().contains(v));
                 };
+                // Veracity: NEEDED assert
                 assert forall|v: int| 0 <= v < graph@.len()
                     implies (reachable@.contains(v as usize) <==>
                         #[trigger] spec_reachable(graph, source as int, v)) by {
                     if reachable@.contains(v as usize) {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(spec_reachable(graph, source as int, v as int));
                     }
                     if spec_reachable(graph, source as int, v) {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(reachable@.contains(v as usize));
                     }
                 };

@@ -133,6 +133,7 @@ pub mod LinProbFlatHashTableStEph {
             {
                 let slot: usize = if attempt < m - h { h + attempt } else { attempt - (m - h) };
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof {
                     let sum = h as int + attempt as int;
                     if sum < m as int {
@@ -146,17 +147,22 @@ pub mod LinProbFlatHashTableStEph {
                 match entry {
                     FlatEntry::Occupied(k, _v) => {
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED proof block (speed hint)
+                        // Veracity: NEEDED assert
                         proof { assert(obeys_feq_full_trigger::<Key>()); }
                         let eq = feq(&k, &key);
                         if eq {
                             // Overwrite existing key at this slot.
                             let ghost old_table_seq = table.table@;
+                            // Veracity: NEEDED proof block
                             table.table.set(slot, FlatEntry::Occupied(key, value));
                             // Veracity: NEEDED proof block
                             proof {
                                 lemma_reveal_view_injective::<Key>();
                                 // Veracity: NEEDED assert
+                                // Veracity: NEEDED assert
                                 assert(spec_flat_has_key(old_table_seq[slot as int], key));
+                                // Veracity: NEEDED assert
                                 // Veracity: NEEDED assert
                                 assert forall |j: int| 0 <= j < old_table_seq.len() && j != slot as int
                                     implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
@@ -164,12 +170,14 @@ pub mod LinProbFlatHashTableStEph {
                                 }
                                 let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
                                 // Veracity: NEEDED assert
+                                // Veracity: NEEDED assert
                                 assert(new_entry.spec_entry_to_map() =~=
                                     old_table_seq[slot as int].spec_entry_to_map().insert(key, value));
                                 lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
                                     old_table_seq, slot as int, new_entry, key, value);
                                 // Wf: no-dup.
                                 // Probe chain.
+                                // Veracity: NEEDED assert
                                 // Veracity: NEEDED assert
                                 assert forall |i: int, k: Key|
                                     0 <= i < m as int
@@ -184,6 +192,7 @@ pub mod LinProbFlatHashTableStEph {
                                     }
                                     let hk = (table.spec_hash@)(k) as int % m as int;
                                     // Veracity: NEEDED assert
+                                    // Veracity: NEEDED assert
                                     assert forall |d: int| 0 <= d < (i - hk + m as int) % m as int
                                         implies !(#[trigger] table.table@[(hk + d) % m as int] is Empty) by {
                                         let pos = (hk + d) % m as int;
@@ -193,9 +202,11 @@ pub mod LinProbFlatHashTableStEph {
                                     }
                                 }
                                 // Veracity: NEEDED assert
+                                // Veracity: NEEDED assert
                                 assert(spec_other_slots_preserved(
                                     old(table).table@, table.table@, slot as int));
                             }
+                            // Veracity: NEEDED proof block
                             return;
                         }
                         // Veracity: NEEDED proof block
@@ -206,11 +217,13 @@ pub mod LinProbFlatHashTableStEph {
                         // New key insertion at empty slot.
                         let ghost old_table_seq = table.table@;
                         table.table.set(slot, FlatEntry::Occupied(key, value));
+                        // Veracity: NEEDED proof block
                         if table.num_elements < usize::MAX {
                             table.num_elements = table.num_elements + 1;
                         }
                         // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |j: int| 0 <= j < old_table_seq.len()
                                 implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
@@ -224,6 +237,7 @@ pub mod LinProbFlatHashTableStEph {
                                 old_table_seq, slot as int, new_entry, key, value);
                             // Wf: no-dup.
                             // Veracity: NEEDED assert
+                            // Veracity: NEEDED assert
                             assert forall |i: int, j: int, k: Key|
                                 0 <= i < m as int && 0 <= j < m as int && i != j
                                 && #[trigger] spec_flat_has_key(table.table@[i], k)
@@ -231,12 +245,14 @@ pub mod LinProbFlatHashTableStEph {
                                 if i == slot as int {
                                     if k == key && j != slot as int {
                                         // Veracity: NEEDED assert
+                                        // Veracity: NEEDED assert
                                         assert(!old_table_seq[j].spec_entry_to_map().dom().contains(key));
                                         if spec_flat_has_key(old_table_seq[j], key) {}
                                     }
                                 } else {
                                     if j == slot as int {
                                         if k == key {
+                                            // Veracity: NEEDED assert
                                             // Veracity: NEEDED assert
                                             assert(!old_table_seq[i].spec_entry_to_map().dom().contains(key));
                                             if spec_flat_has_key(old_table_seq[i], key) {}
@@ -246,6 +262,7 @@ pub mod LinProbFlatHashTableStEph {
                                 }
                             }
                             // Wf: probe chain.
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |i: int, k: Key|
                                 0 <= i < m as int
@@ -258,6 +275,7 @@ pub mod LinProbFlatHashTableStEph {
                                 let hk = (table.spec_hash@)(k) as int % m as int;
                                 if i == slot as int {
                                     if k == key {
+                                        // Veracity: NEEDED assert
                                         // Veracity: NEEDED assert
                                         assert forall |d: int| 0 <= d < (slot as int - h as int + m as int) % m as int
                                             implies !(#[trigger] table.table@[(h as int + d) % m as int] is Empty) by {
@@ -280,6 +298,7 @@ pub mod LinProbFlatHashTableStEph {
                                     }
                                 } else {
                                     // Veracity: NEEDED assert
+                                    // Veracity: NEEDED assert
                                     assert forall |d: int| 0 <= d < (i - hk + m as int) % m as int
                                         implies !(#[trigger] table.table@[(hk + d) % m as int] is Empty) by {
                                         let pos = (hk + d) % m as int;
@@ -290,9 +309,11 @@ pub mod LinProbFlatHashTableStEph {
                                 }
                             }
                             // Veracity: NEEDED assert
+                            // Veracity: NEEDED assert
                             assert(spec_other_slots_preserved(
                                 old(table).table@, table.table@, slot as int));
                         }
+                        // Veracity: NEEDED proof block
                         return;
                     }
                     FlatEntry::Deleted => {
@@ -302,6 +323,7 @@ pub mod LinProbFlatHashTableStEph {
                         }
                     }
                 }
+                // Veracity: NEEDED proof block
                 attempt = attempt + 1;
             }
             // Exhausted all m positions — unreachable given spec_has_insert_capacity.
@@ -309,6 +331,7 @@ pub mod LinProbFlatHashTableStEph {
             // But the precondition guarantees an Empty slot exists. Contradiction.
             // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert forall |j: int| 0 <= j < m as int
                     implies !(#[trigger] table.table@[j] is Empty) by {
@@ -337,6 +360,7 @@ pub mod LinProbFlatHashTableStEph {
                     forall |d: int| 0 <= d < attempt as int
                         ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d) % (m as int)], *key),
                     // Probe positions 0..attempt are not Empty.
+                    // Veracity: NEEDED proof block
                     forall |d: int| 0 <= d < attempt as int
                         ==> !(#[trigger] table.table@[(h as int + d) % (m as int)] is Empty),
                 decreases m - attempt,
@@ -350,13 +374,16 @@ pub mod LinProbFlatHashTableStEph {
                         vstd::arithmetic::div_mod::lemma_small_mod(sum as nat, m as nat);
                     } else {
                         vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum - m as int, m as int);
+                        // Veracity: NEEDED proof block
                         vstd::arithmetic::div_mod::lemma_small_mod((sum - m as int) as nat, m as nat);
                     }
                 }
+                // Veracity: NEEDED proof block
                 let entry = table.table[slot].clone();
                 match entry {
                     FlatEntry::Occupied(k, v) => {
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED assert
                         proof { assert(obeys_feq_full_trigger::<Key>()); }
                         let eq = feq(&k, key);
                         if eq {
@@ -365,14 +392,18 @@ pub mod LinProbFlatHashTableStEph {
                                 lemma_reveal_view_injective::<Key>();
                                 // No other slot has this key: contradiction via wf no-dup multi-trigger.
                                 // Veracity: NEEDED assert
+                                // Veracity: NEEDED assert
                                 assert forall |j: int| 0 <= j < table.table@.len() && j != slot as int
                                     implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                                     if spec_flat_has_key(table.table@[j], *key) {
                                         // Both triggers in E-graph: table[slot] and table[j].
                                         // Veracity: NEEDED assert
+                                        // Veracity: NEEDED proof block
+                                        // Veracity: NEEDED assert
                                         assert(spec_flat_has_key(table.table@[slot as int], *key));
                                     }
                                 }
+                                // Veracity: NEEDED proof block
                                 lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
                                     table.table@, slot as int, *key);
                             }
@@ -386,6 +417,7 @@ pub mod LinProbFlatHashTableStEph {
                         // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
+                            // Veracity: NEEDED assert
                             assert forall |j: int| 0 <= j < table.table@.len()
                                 implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                                 if spec_flat_has_key(table.table@[j], *key) {
@@ -393,6 +425,7 @@ pub mod LinProbFlatHashTableStEph {
                                     lemma_probe_mod_identity(h as int, j, m as int);
                                     if dj > attempt as int {
                                         // wf: probe position attempt non-Empty, but slot is Empty.
+                                    // Veracity: NEEDED proof block (speed hint)
                                     } else if dj < attempt as int {
                                         // Invariant: !spec_flat_has_key at (h+dj)%m == j.
                                     }
@@ -400,6 +433,7 @@ pub mod LinProbFlatHashTableStEph {
                                 }
                             }
                             lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
+                        // Veracity: NEEDED proof block
                         }
                         return None;
                     }
@@ -414,6 +448,7 @@ pub mod LinProbFlatHashTableStEph {
             // Exhausted all m positions without finding key.
             // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert forall |j: int| 0 <= j < table.table@.len()
                     implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
@@ -442,6 +477,7 @@ pub mod LinProbFlatHashTableStEph {
                     m > 0,
                     h < m,
                     table.table@.len() == m as int,
+                    // Veracity: NEEDED proof block
                     h as nat == (table.spec_hash@)(*key) % (m as nat),
                     spec_linprobflathashsteph_wf(table),
                     spec_hash_fn_valid::<Key, H>(table.spec_hash@),
@@ -455,6 +491,7 @@ pub mod LinProbFlatHashTableStEph {
                 decreases m - attempt,
             {
                 let slot: usize = if attempt < m - h { h + attempt } else { attempt - (m - h) };
+                // Veracity: NEEDED proof block (speed hint)
                 // Veracity: NEEDED proof block
                 proof {
                     let sum = h as int + attempt as int;
@@ -463,12 +500,14 @@ pub mod LinProbFlatHashTableStEph {
                     } else {
                         vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum - m as int, m as int);
                         vstd::arithmetic::div_mod::lemma_small_mod((sum - m as int) as nat, m as nat);
+                    // Veracity: NEEDED proof block
                     }
                 }
                 let entry = table.table[slot].clone();
                 match entry {
                     FlatEntry::Occupied(k, _v) => {
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED assert
                         proof { assert(obeys_feq_full_trigger::<Key>()); }
                         let eq = feq(&k, key);
                         if eq {
@@ -482,15 +521,18 @@ pub mod LinProbFlatHashTableStEph {
                                 lemma_reveal_view_injective::<Key>();
                                 // No other slot has *key (old wf no-dup).
                                 // Veracity: NEEDED assert
+                                // Veracity: NEEDED assert
                                 assert forall |j: int| 0 <= j < old_table_seq.len() && j != slot as int
                                     implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(*key) by {
                                     if spec_flat_has_key(old_table_seq[j], *key) {
+                                        // Veracity: NEEDED assert
                                         // Veracity: NEEDED assert
                                         assert(spec_flat_has_key(old_table_seq[slot as int], *key));
                                     }
                                 }
                                 // Map update: Deleted has empty map = old entry map with key removed.
                                 let new_entry = FlatEntry::<Key, Value>::Deleted;
+                                // Veracity: NEEDED assert
                                 // Veracity: NEEDED assert
                                 assert(new_entry.spec_entry_to_map() =~=
                                     old_table_seq[slot as int].spec_entry_to_map().remove(*key));
@@ -502,6 +544,7 @@ pub mod LinProbFlatHashTableStEph {
                                 // Wf preservation: no-dup.
                                 // Wf preservation: probe chain integrity.
                                 // Veracity: NEEDED assert
+                                // Veracity: NEEDED assert
                                 assert forall |i: int, k: Key|
                                     0 <= i < m as int
                                     && #[trigger] spec_flat_has_key(table.table@[i], k)
@@ -509,9 +552,12 @@ pub mod LinProbFlatHashTableStEph {
                                         let hk = (table.spec_hash@)(k) as int % m as int;
                                         forall |d: int| 0 <= d < (i - hk + m as int) % m as int
                                             ==> !(#[trigger] table.table@[(hk + d) % m as int] is Empty)
+                                    // Veracity: NEEDED proof block
                                     }) by {
                                     let hk = (table.spec_hash@)(k) as int % m as int;
                                     // Veracity: NEEDED assert
+                                    // Veracity: NEEDED assert
+                                    // Veracity: NEEDED proof block
                                     assert forall |d: int| 0 <= d < (i - hk + m as int) % m as int
                                         implies !(#[trigger] table.table@[(hk + d) % m as int] is Empty) by {
                                         let pos = (hk + d) % m as int;
@@ -527,11 +573,14 @@ pub mod LinProbFlatHashTableStEph {
                         // Veracity: NEEDED proof block
                         proof {
                         }
+                    // Veracity: NEEDED proof block
                     }
                     FlatEntry::Empty => {
                         // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
+                            // Veracity: NEEDED assert
+                            // Veracity: NEEDED proof block
                             assert forall |j: int| 0 <= j < table.table@.len()
                                 implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                                 if spec_flat_has_key(table.table@[j], *key) {
@@ -554,6 +603,7 @@ pub mod LinProbFlatHashTableStEph {
             // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert forall |j: int| 0 <= j < table.table@.len()
                     implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                     if spec_flat_has_key(table.table@[j], *key) {
@@ -570,6 +620,7 @@ pub mod LinProbFlatHashTableStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m + m'), Span O(n + m + m') — collects n pairs from m slots, creates m' new slots, reinserts n pairs.
         fn resize(
             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+            // Veracity: NEEDED proof block
             new_size: usize,
         ) -> (resized: HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) {
             // Phase 1: collect occupied pairs.
@@ -579,9 +630,11 @@ pub mod LinProbFlatHashTableStEph {
                 invariant
                     i <= table.table@.len(),
                     table.table@.len() == table.current_size as int,
+                    // Veracity: NEEDED proof block
                     pairs@.len() <= i as int,
                     spec_seq_pairs_to_map(pairs@) =~=
                         spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(
+                            // Veracity: NEEDED proof block
                             table.table@.subrange(0, i as int)),
                 decreases table.table.len() - i,
             {
@@ -591,8 +644,10 @@ pub mod LinProbFlatHashTableStEph {
                 if let FlatEntry::Occupied(k, v) = entry {
                     pairs.push((k, v));
                     // Veracity: NEEDED proof block
+                    // Veracity: NEEDED proof block
                     proof {
                         // Help Z3 unfold spec_seq_pairs_to_map after push.
+                        // Veracity: NEEDED assert
                         // Veracity: NEEDED assert
                         assert(pairs@.drop_last() =~= old_pairs);
                         // Connect to spec_table_to_map via union_prefer_right.
@@ -607,12 +662,15 @@ pub mod LinProbFlatHashTableStEph {
                 proof {
                     let ghost sub_next = table.table@.subrange(0, (i + 1) as int);
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
                 }
                 i = i + 1;
+            // Veracity: NEEDED proof block
             }
             // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(table.table@.subrange(0, table.table@.len() as int)
                     =~= table.table@);
@@ -625,6 +683,7 @@ pub mod LinProbFlatHashTableStEph {
                 invariant
                     k <= new_size,
                     new_table_vec@.len() == k as int,
+                    // Veracity: NEEDED proof block
                     forall |j: int| 0 <= j < new_table_vec@.len()
                         ==> (#[trigger] new_table_vec@[j]) is Empty,
                     spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(new_table_vec@)
@@ -632,6 +691,7 @@ pub mod LinProbFlatHashTableStEph {
                 decreases new_size - k,
             {
                 let ghost old_vec = new_table_vec@;
+                // Veracity: NEEDED proof block
                 new_table_vec.push(FlatEntry::Empty);
                 // Veracity: NEEDED proof block
                 proof {
@@ -654,6 +714,7 @@ pub mod LinProbFlatHashTableStEph {
             proof {
                 // Veracity: NEEDED assert
                 assert(spec_linprobflathashsteph_wf(&new_table));
+            // Veracity: NEEDED proof block
             }
 
             // Phase 3: reinsert all pairs.
@@ -661,6 +722,7 @@ pub mod LinProbFlatHashTableStEph {
             // Veracity: NEEDED proof block
             proof {
                 lemma_all_empties_count::<Key, Value>(new_table.table@);
+            // Veracity: NEEDED proof block
             }
             while j < pairs.len()
                 invariant
@@ -674,6 +736,7 @@ pub mod LinProbFlatHashTableStEph {
                     new_table.spec_hash == table.spec_hash,
                     pairs@.len() <= table.current_size as int,
                     new_size as int > table.current_size as int,
+                    // Veracity: NEEDED proof block
                     spec_count_empties(new_table.table@) >= (new_size - j) as int,
                     obeys_feq_clone::<Key>(),
                     obeys_feq_clone::<Value>(),
@@ -697,6 +760,7 @@ pub mod LinProbFlatHashTableStEph {
                     lemma_one_slot_change_empties::<Key, Value>(
                         old_new_table_seq, new_table.table@, s);
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert(pairs@.subrange(0, (j + 1) as int).drop_last()
                         =~= pairs@.subrange(0, j as int));
                 }
@@ -704,6 +768,7 @@ pub mod LinProbFlatHashTableStEph {
             }
             // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(pairs@.subrange(0, pairs@.len() as int) =~= pairs@);
             }

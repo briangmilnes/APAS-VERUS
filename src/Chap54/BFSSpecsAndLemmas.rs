@@ -91,6 +91,7 @@ pub mod BFSSpecsAndLemmas {
         ensures
             spec_bfs_distances_bounded(distances, n),
     {
+        // Veracity: NEEDED assert
         assert forall|j: int| 0 <= j < distances.len()
         implies
             distances[j] == UNREACHABLE || distances[j] < n
@@ -113,6 +114,7 @@ pub mod BFSSpecsAndLemmas {
         ensures
             spec_bfs_distances_bounded(copy, n),
     {
+        // Veracity: NEEDED assert
         assert forall|j: int| 0 <= j < copy.len()
         implies
             copy[j] == UNREACHABLE || copy[j] < n
@@ -139,6 +141,7 @@ pub mod BFSSpecsAndLemmas {
         ensures
             spec_bfs_parents_bounded(parents, n),
     {
+        // Veracity: NEEDED assert
         assert forall|j: int| 0 <= j < parents.len()
         implies
             parents[j] == NO_PARENT || parents[j] < n
@@ -161,6 +164,7 @@ pub mod BFSSpecsAndLemmas {
         ensures
             spec_bfs_parents_bounded(copy, n),
     {
+        // Veracity: NEEDED assert
         assert forall|j: int| 0 <= j < copy.len()
         implies
             copy[j] == NO_PARENT || copy[j] < n

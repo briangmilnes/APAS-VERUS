@@ -117,30 +117,39 @@ broadcast use vstd::seq::group_seq_axioms;
         let i = choose|i: int| 0 <= i < dfs_path.len() && dfs_path[i] == vertex;
         let cycle = dfs_path.subrange(i, dfs_path.len() as int).push(vertex);
         // cycle[0] == dfs_path[i] == vertex, cycle.last() == vertex.
+        // Veracity: NEEDED assert (speed hint)
         assert(cycle[0] == vertex);
+        // Veracity: NEEDED assert
         assert(cycle.last() == vertex);
-        assert(cycle.len() >= 2);
+// Veracity: UNNEEDED assert         assert(cycle.len() >= 2);
         // All vertices are valid graph vertices.
+        // Veracity: NEEDED assert (speed hint)
         assert forall|k: int| 0 <= k < cycle.len()
             implies 0 <= #[trigger] cycle[k] < graph@.len() by {
             if k < cycle.len() - 1 {
-                assert(cycle[k] == dfs_path[i + k]);
+// Veracity: UNNEEDED assert                 assert(cycle[k] == dfs_path[i + k]);
             }
         };
         // Consecutive edges exist.
+        // Veracity: NEEDED assert
         assert forall|k: int| 0 <= k < cycle.len() - 1
             implies #[trigger] spec_has_edge(graph, cycle[k], cycle[k + 1]) by {
             if k < cycle.len() - 2 {
+                // Veracity: NEEDED assert (speed hint)
                 assert(cycle[k] == dfs_path[i + k]);
+                // Veracity: NEEDED assert
                 assert(cycle[k + 1] == dfs_path[i + k + 1]);
+                // Veracity: NEEDED assert (speed hint)
                 assert(i + k >= 0 && i + k < dfs_path.len() - 1);
             } else {
                 // Last edge: dfs_path.last() → vertex.
+                // Veracity: NEEDED assert (speed hint)
                 assert(cycle[k] == dfs_path[dfs_path.len() - 1]);
+                // Veracity: NEEDED assert (speed hint)
                 assert(cycle[k + 1] == vertex);
             }
         };
-        assert(spec_is_path(graph, cycle));
+// Veracity: UNNEEDED assert         assert(spec_is_path(graph, cycle));
     }
 
     /// Along any valid path where all vertices are in an acyclic ordering,
@@ -160,29 +169,36 @@ broadcast use vstd::seq::group_seq_axioms;
             ord[path[0]] > ord[path.last()],
         decreases path.len(),
     {
+        // Veracity: NEEDED assert (speed hint)
         assert(spec_has_edge(graph, path[0], path[1]));
         if path.len() == 2 {
-            assert(path.last() == path[1]);
+// Veracity: UNNEEDED assert             assert(path.last() == path[1]);
         } else {
             let sub = path.subrange(1, path.len() as int);
-            assert(sub.len() >= 2);
-            assert(sub[0] == path[1]);
+// Veracity: UNNEEDED assert             assert(sub.len() >= 2);
+// Veracity: UNNEEDED assert             assert(sub[0] == path[1]);
+            // Veracity: NEEDED assert (speed hint)
             assert(sub.last() == path.last());
+            // Veracity: NEEDED assert (speed hint)
             assert(spec_is_path(graph, sub)) by {
-                assert(sub.len() >= 1);
-                assert forall|k: int| 0 <= k < sub.len()
-                    implies 0 <= #[trigger] sub[k] < graph@.len() by {
-                    assert(sub[k] == path[k + 1]);
-                };
+// Veracity: UNNEEDED assert                 assert(sub.len() >= 1);
+// Veracity: UNNEEDED assert                 assert forall|k: int| 0 <= k < sub.len()
+// Veracity: UNNEEDED assert                     implies 0 <= #[trigger] sub[k] < graph@.len() by {
+// Veracity: UNNEEDED assert                     // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                     assert(sub[k] == path[k + 1]);
+// Veracity: UNNEEDED assert                 };
+                // Veracity: NEEDED assert
                 assert forall|k: int| #![trigger sub[k]]
                     0 <= k < sub.len() - 1
                     implies spec_has_edge(graph, sub[k], sub[k + 1]) by {
-                    assert(sub[k] == path[k + 1]);
-                    assert(sub[k + 1] == path[k + 2]);
+// Veracity: UNNEEDED assert                     assert(sub[k] == path[k + 1]);
+// Veracity: UNNEEDED assert                     assert(sub[k + 1] == path[k + 2]);
                 };
             };
+            // Veracity: NEEDED assert (speed hint)
             assert forall|k: int| 0 <= k < sub.len()
                 implies #[trigger] ord.contains_key(sub[k]) by {
+                // Veracity: NEEDED assert (speed hint)
                 assert(sub[k] == path[k + 1]);
             };
             lemma_path_ord_decreases(graph, ord, next_time, sub);
@@ -241,11 +257,13 @@ broadcast use vstd::seq::group_seq_axioms;
         if !spec_is_dag(graph) {
             let path: Seq<int> = choose|p: Seq<int>|
                 spec_is_path(graph, p) && p.len() >= 2 && p[0] == #[trigger] p.last();
-            assert forall|k: int| 0 <= k < path.len()
-                implies #[trigger] ord.contains_key(path[k]) by {
-                assert(0 <= path[k] < graph@.len());
-            };
+// Veracity: UNNEEDED assert             assert forall|k: int| 0 <= k < path.len()
+// Veracity: UNNEEDED assert                 implies #[trigger] ord.contains_key(path[k]) by {
+// Veracity: UNNEEDED assert                 // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                 assert(0 <= path[k] < graph@.len());
+// Veracity: UNNEEDED assert             };
             lemma_path_ord_decreases(graph, ord, next_time, path);
+            // Veracity: NEEDED assert (speed hint)
             assert(false);
         }
     }
@@ -319,90 +337,112 @@ broadcast use vstd::seq::group_seq_axioms;
                 #[trigger] spec_is_valid_ord(graph, visited@, ancestors@, ord, next_time, ord_out),
         decreases spec_num_false(old(visited)@),
     {
-        proof { lemma_bool_view_eq_spec_index(visited); }
+// Veracity: UNNEEDED proof block         proof { lemma_bool_view_eq_spec_index(visited); }
 
         if *ancestors.nth(vertex) {
             // ancestors[vertex] is true → vertex is in dfs_path → cycle exists.
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(old(ancestors)@[vertex as int]);
-                assert(spec_in_path(dfs_path, vertex as int));
+// Veracity: UNNEEDED assert                 assert(spec_in_path(dfs_path, vertex as int));
                 lemma_cycle_not_dag(graph, dfs_path, vertex as int);
             }
             return true;
         }
         if *visited.nth(vertex) {
+            // Veracity: NEEDED proof block
             // vertex visited, not ancestor → in ord. Witness: ord itself.
             proof {
+                // Veracity: NEEDED assert
                 assert(old(visited)@[vertex as int]);
+                // Veracity: NEEDED assert (speed hint)
                 assert(!old(ancestors)@[vertex as int]);
+                // Veracity: NEEDED assert (speed hint)
                 assert(ord.contains_key(vertex as int));
                 // Prove spec_is_valid_ord with ord as the witness.
+                // Veracity: NEEDED assert
                 assert(spec_is_valid_ord(graph, visited@, ancestors@, ord, next_time, ord));
             }
             return false;
         }
 
         // vertex is not an ancestor and not visited.
+        // Veracity: NEEDED assert (speed hint)
         assert(!old(visited)@[vertex as int]);
-        assert(!old(ancestors)@[vertex as int]);
-        assert(vertex < visited.spec_len());
-        assert(vertex < ancestors.spec_len());
+// Veracity: UNNEEDED assert         assert(!old(ancestors)@[vertex as int]);
+// Veracity: UNNEEDED assert         assert(vertex < visited.spec_len());
+// Veracity: NEEDED proof block
+// Veracity: UNNEEDED assert         assert(vertex < ancestors.spec_len());
         // Pre-set bridge: lets Z3 connect old state spec_index to old state view.
         proof {
             lemma_bool_view_eq_spec_index(visited);
             lemma_bool_view_eq_spec_index(ancestors);
+        // Veracity: NEEDED proof block
         }
         let ok1 = visited.set(vertex, true);
         let ok2 = ancestors.set(vertex, true);
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
-            lemma_set_true_num_false_eq(old(visited)@, vertex as int);
+// Veracity: UNNEEDED proof block             lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
 
         // Establish visited@ == old(visited)@.update(vertex, true) after BOTH sets.
         proof { lemma_bool_array_set_view(visited, old(visited)@, vertex as int, true); }
-        assert(visited@ =~= old(visited)@.update(vertex as int, true));
+// Veracity: UNNEEDED assert         assert(visited@ =~= old(visited)@.update(vertex as int, true));
+        // Veracity: NEEDED assert (speed hint)
         assert(spec_num_false(visited@) < spec_num_false(old(visited)@));
 
         // Monotonicity.
+        // Veracity: NEEDED assert
+        // Veracity: NEEDED proof block
         assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
             implies visited@[j] by {};
 
         // Bridge ancestors@ after set.
         proof { lemma_bool_array_set_view(ancestors, old(ancestors)@, vertex as int, true); }
+        // Veracity: NEEDED assert (speed hint)
         assert(ancestors@ =~= old(ancestors)@.update(vertex as int, true));
+// Veracity: NEEDED proof block
 
         // Ghost: extended path includes vertex.
         let ghost ext_path = dfs_path.push(vertex as int);
 
         // Prove ancestors <==> ext_path.
         proof {
+            // Veracity: NEEDED assert
             assert forall|v: int| 0 <= v < ancestors@.len()
                 implies #[trigger] ancestors@[v] == spec_in_path(ext_path, v) by {
                 if v == vertex as int {
                     // ancestors@[vertex] == true, and vertex is at ext_path[dfs_path.len()].
+                    // Veracity: NEEDED assert
                     assert(ext_path[dfs_path.len() as int] == vertex as int);
-                    assert(spec_in_path(ext_path, vertex as int));
+// Veracity: UNNEEDED assert                     assert(spec_in_path(ext_path, vertex as int));
                 } else {
                     // ancestors@[v] == old(ancestors)@[v] == spec_in_path(dfs_path, v).
                     // spec_in_path(ext_path, v) == spec_in_path(dfs_path, v) since the push only adds vertex != v.
-                    assert(ancestors@[v] == old(ancestors)@[v]);
+// Veracity: UNNEEDED assert                     assert(ancestors@[v] == old(ancestors)@[v]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(old(ancestors)@[v] == spec_in_path(dfs_path, v));
                     // ext_path = dfs_path.push(vertex). For v != vertex:
                     // spec_in_path(ext_path, v) <==> spec_in_path(dfs_path, v).
                     if spec_in_path(dfs_path, v) {
                         let k = choose|k: int| 0 <= k < dfs_path.len() && dfs_path[k] == v;
+                        // Veracity: NEEDED assert
                         assert(ext_path[k] == v);
-                        assert(spec_in_path(ext_path, v));
+// Veracity: UNNEEDED assert                         assert(spec_in_path(ext_path, v));
                     }
                     if spec_in_path(ext_path, v) {
                         let k = choose|k: int| 0 <= k < ext_path.len() && ext_path[k] == v;
                         if k < dfs_path.len() {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(dfs_path[k] == v);
-                            assert(spec_in_path(dfs_path, v));
+// Veracity: UNNEEDED assert                             assert(spec_in_path(dfs_path, v));
                         } else {
                             // k == dfs_path.len(), ext_path[k] == vertex != v, contradiction.
+                            // Veracity: NEEDED assert (speed hint)
                             assert(ext_path[k] == vertex as int);
+                            // Veracity: NEEDED assert (speed hint)
                             assert(false);
                         }
                     }
@@ -410,13 +450,18 @@ broadcast use vstd::seq::group_seq_axioms;
             };
         }
 
+        // Veracity: NEEDED assert (speed hint)
         assert(vertex < graph.spec_len());
+        // Veracity: NEEDED proof block
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
 
         // Bridge neighbors to graph view.
+        // Veracity: NEEDED assert (speed hint)
         assert(*neighbors == graph.spec_index(vertex as int));
         proof { lemma_graph_view_bridge(graph, neighbors, vertex as int); }
+        // Veracity: NEEDED assert (speed hint)
+        // Veracity: NEEDED proof block
         assert(neighbors@ =~= graph@[vertex as int]);
 
         // Ghost: track the acyclic ordering through the neighbor loop.
@@ -426,10 +471,13 @@ broadcast use vstd::seq::group_seq_axioms;
         // Prove initial ordering invariants hold after setting visited/ancestors.
         proof {
             // vertex is now visited AND ancestor → not in ord (by converse requires).
+            // Veracity: NEEDED assert (speed hint)
             assert(!ord.contains_key(vertex as int)) by {
                 if ord.contains_key(vertex as int) {
                     // requires: ord.contains_key(v) ==> old(visited)[v] && !old(ancestors)[v]
+                    // Veracity: NEEDED assert (speed hint)
                     assert(old(visited)@[vertex as int]); // but vertex was not visited
+                    // Veracity: NEEDED assert (speed hint)
                     assert(false);
                 }
             };
@@ -483,44 +531,53 @@ broadcast use vstd::seq::group_seq_axioms;
                 visited@[vertex as int],
                 // All processed neighbors are visited, not old ancestors, and not vertex.
                 forall|j: int| 0 <= j < i as int
+                    // Veracity: NEEDED proof block
                     ==> #[trigger] visited@[graph@[vertex as int][j] as int],
                 forall|j: int| 0 <= j < i as int
                     ==> !old(ancestors)@[#[trigger] graph@[vertex as int][j] as int],
+                // Veracity: NEEDED proof block
                 forall|j: int| 0 <= j < i as int
                     ==> graph@[vertex as int][j] != vertex as int,
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
             proof { lemma_usize_view_eq_spec_index(neighbors); }
+            // Veracity: NEEDED assert
             assert(neighbor == neighbors@[i as int]);
             // Edge vertex → neighbor for ghost path last-to-vertex requires.
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(spec_has_edge(graph, vertex as int, neighbor as int));
                 // ext_path = dfs_path.push(vertex). Its last element is vertex.
+                // Veracity: NEEDED assert (speed hint)
                 assert(ext_path.len() == dfs_path.len() + 1);
+                // Veracity: NEEDED assert (speed hint)
                 assert(ext_path[ext_path.len() - 1] == vertex as int);
             }
             // Snapshot visited for monotonicity proof after the call.
             let ghost visited_pre_call = visited@;
             if dfs_check_cycle(graph, visited, ancestors, neighbor, Ghost(ext_path), Ghost(cur_ord), Ghost(cur_next)) {
+                // Veracity: NEEDED proof block
                 // Cycle found. dfs_check_cycle ensures !spec_is_dag(graph).
                 let ok3 = ancestors.set(vertex, false);
                 return true;
             }
             // dfs_check_cycle returned false: ancestors restored, vertex visited.
+            // Veracity: NEEDED assert (speed hint)
             assert(ancestors@ =~= old(ancestors)@.update(vertex as int, true));
+            // Veracity: NEEDED assert (speed hint)
             assert(visited@[neighbor as int]);
             // neighbor is not vertex (self-loop would cause back-edge detection).
             proof {
-                assert(neighbor != vertex) by {
-                    if neighbor == vertex {
-                        // DFS(vertex) was called with ancestors[vertex] = true at callsite.
-                        // ensures: !has_cycle ==> !old(ancestors at callsite)@[vertex].
-                        // old(ancestors at callsite)@[vertex] = ancestors@[vertex] before call
-                        //   = old(ancestors)@.update(vertex, true)[vertex] = true.
-                        // So !has_cycle ==> false. But DFS returned false. Contradiction.
-                    }
-                };
+// Veracity: UNNEEDED assert                 assert(neighbor != vertex) by {
+// Veracity: UNNEEDED assert                     if neighbor == vertex {
+// Veracity: UNNEEDED assert                         // DFS(vertex) was called with ancestors[vertex] = true at callsite.
+// Veracity: UNNEEDED assert                         // ensures: !has_cycle ==> !old(ancestors at callsite)@[vertex].
+// Veracity: UNNEEDED assert                         // old(ancestors at callsite)@[vertex] = ancestors@[vertex] before call
+// Veracity: UNNEEDED assert                         //   = old(ancestors)@.update(vertex, true)[vertex] = true.
+// Veracity: UNNEEDED assert                         // So !has_cycle ==> false. But DFS returned false. Contradiction.
+// Veracity: UNNEEDED assert                     }
+// Veracity: UNNEEDED assert                 };
                 // neighbor is not an old ancestor.
                 // DFS callee's old(ancestors) = ancestors at callsite.
                 // Loop invariant: ancestors@ =~= old(ancestors)@.update(vertex, true).
@@ -531,21 +588,29 @@ broadcast use vstd::seq::group_seq_axioms;
                 // old_callee(ancestors) = pre-call ancestors = caller's ancestors at call site.
                 // Restoration: post-call ancestors@ =~= pre-call ancestors@.
                 // So: !ancestors@[neighbor] (post-call).
+                // Veracity: NEEDED assert (speed hint)
                 assert(!ancestors@[neighbor as int]);
                 // Use the ancestors-ext_path biconditional to avoid seq update axiom.
                 // !ancestors@[neighbor] (from DFS ensures + restoration).
                 // Loop invariant: ancestors@[v] == spec_in_path(ext_path, v).
+                // Veracity: NEEDED assert (speed hint)
                 assert(!spec_in_path(ext_path, neighbor as int));
                 // ext_path = dfs_path.push(vertex), neighbor != vertex.
+                // Veracity: NEEDED assert
                 assert(!spec_in_path(dfs_path, neighbor as int)) by {
                     if spec_in_path(dfs_path, neighbor as int) {
                         let k = choose|k: int| 0 <= k < dfs_path.len() && dfs_path[k] == neighbor as int;
+                        // Veracity: NEEDED assert
                         assert(ext_path[k] == neighbor as int);
+                        // Veracity: NEEDED proof block
+                        // Veracity: NEEDED assert (speed hint)
                         assert(spec_in_path(ext_path, neighbor as int));
                     }
                 };
                 // Function requires biconditional: old(ancestors)@[v] == spec_in_path(dfs_path, v).
+                // Veracity: NEEDED assert (speed hint)
                 assert(old(ancestors)@[neighbor as int] == spec_in_path(dfs_path, neighbor as int));
+                // Veracity: NEEDED assert (speed hint)
                 assert(!old(ancestors)@[neighbor as int]);
             }
             // Extract the ordering witness via proof function (avoids choose trigger issues).
@@ -554,11 +619,17 @@ broadcast use vstd::seq::group_seq_axioms;
                     graph, visited@, ancestors@, cur_ord, cur_next,
                 );
                 // Prove extends from ord: by transitivity.
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|v: int| #[trigger] ord.contains_key(v)
                     implies new_ord.contains_key(v) && new_ord[v] == ord[v] by {
+                    // Veracity: NEEDED assert (speed hint)
+                    // Veracity: NEEDED proof block
                     assert(cur_ord.contains_key(v));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(cur_ord[v] == ord[v]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_ord.contains_key(v));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_ord[v] == cur_ord[v]);
                 };
                 cur_ord = new_ord;
@@ -566,9 +637,12 @@ broadcast use vstd::seq::group_seq_axioms;
             }
             // Monotonicity for previously processed neighbors.
             proof {
+                // Veracity: NEEDED assert
                 assert forall|k: int| 0 <= k < i as int
+                    // Veracity: NEEDED proof block
                     implies #[trigger] visited@[graph@[vertex as int][k] as int] by {
                     // Before the call, this was true (loop invariant).
+                    // Veracity: NEEDED assert
                     assert(visited_pre_call[graph@[vertex as int][k] as int]);
                     // DFS monotonicity: pre_call[j] ==> post_call[j].
                 };
@@ -580,25 +654,32 @@ broadcast use vstd::seq::group_seq_axioms;
         // Ghost: bridge spec_has_edge to the visited loop invariant.
         // vertex is NOT in cur_ord (it was an ancestor during the loop).
         proof {
+            // Veracity: NEEDED assert (speed hint)
             assert(!cur_ord.contains_key(vertex as int)) by {
                 if cur_ord.contains_key(vertex as int) {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(false);
                 }
             };
             // !old(ancestors)@[vertex as int] from function entry check.
+            // Veracity: NEEDED assert (speed hint)
             assert(!old(ancestors)@[vertex as int]);
             // For every neighbor v of vertex, v is visited and was not an old ancestor.
             // Uses loop invariants at exit (i == neighbors_len).
+            // Veracity: NEEDED assert
             assert forall|v: int| #[trigger] spec_has_edge(graph, vertex as int, v)
                 && 0 <= v < graph@.len()
                 implies visited@[v] && !old(ancestors)@[v] by {
+                // Veracity: NEEDED proof block
                 let idx = choose|idx: int| 0 <= idx < graph@[vertex as int].len()
                     && graph@[vertex as int][idx] == v;
+                // Veracity: NEEDED proof block
                 // From loop invariant: all neighbors visited.
-                assert(visited@[graph@[vertex as int][idx] as int]);
+// Veracity: UNNEEDED assert                 assert(visited@[graph@[vertex as int][idx] as int]);
                 // From loop invariant: all neighbors not old ancestors.
-                assert(!old(ancestors)@[graph@[vertex as int][idx] as int]);
+// Veracity: UNNEEDED assert                 assert(!old(ancestors)@[graph@[vertex as int][idx] as int]);
                 // From loop invariant: no neighbor equals vertex (no self-loop).
+                // Veracity: NEEDED assert (speed hint)
                 assert(graph@[vertex as int][idx] != vertex as int);
             };
         }
@@ -610,17 +691,22 @@ broadcast use vstd::seq::group_seq_axioms;
         let ok3 = ancestors.set(vertex, false);
         proof {
             lemma_bool_array_set_view(ancestors, pre_set_view, vertex as int, false);
+            // Veracity: NEEDED assert (speed hint)
+            // Veracity: NEEDED proof block
             assert(ancestors@ =~= pre_set_view.update(vertex as int, false));
+            // Veracity: NEEDED assert (speed hint)
             assert forall|j: int| 0 <= j < ancestors@.len()
                 implies #[trigger] ancestors@[j] == old(ancestors)@[j] by {
                 if j == vertex as int {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(!old(ancestors)@[vertex as int]);
                 } else {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(pre_set_view[j] == old(ancestors)@[j]);
                 }
             };
         }
-        assert(ancestors@ =~= old(ancestors)@);
+// Veracity: UNNEEDED assert         assert(ancestors@ =~= old(ancestors)@);
 
         // Build the final ordering: add vertex with finish time cur_next.
         proof {
@@ -628,14 +714,17 @@ broadcast use vstd::seq::group_seq_axioms;
             let final_next: nat = (cur_next + 1) as nat;
 
             // Prove spec_acyclic_ord(graph, final_ord, final_next).
-            assert forall|v: int| #[trigger] final_ord.contains_key(v)
-                implies final_ord[v] < final_next && 0 <= v < graph@.len() by {
-                if v == vertex as int {
-                    assert(final_ord[v] == cur_next);
-                } else {
-                    assert(cur_ord.contains_key(v));
-                }
-            };
+// Veracity: UNNEEDED assert             assert forall|v: int| #[trigger] final_ord.contains_key(v)
+// Veracity: UNNEEDED assert                 implies final_ord[v] < final_next && 0 <= v < graph@.len() by {
+// Veracity: UNNEEDED assert                 if v == vertex as int {
+// Veracity: UNNEEDED assert                     // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                     assert(final_ord[v] == cur_next);
+// Veracity: UNNEEDED assert                 } else {
+// Veracity: UNNEEDED assert                     // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                     assert(cur_ord.contains_key(v));
+// Veracity: UNNEEDED assert                 }
+// Veracity: UNNEEDED assert             };
+            // Veracity: NEEDED assert
             assert forall|u: int, v: int|
                 final_ord.contains_key(u) && #[trigger] spec_has_edge(graph, u, v)
                     && 0 <= v < graph@.len()
@@ -643,66 +732,86 @@ broadcast use vstd::seq::group_seq_axioms;
                 if u == vertex as int {
                     // Vertex→v: v is visited, !old(ancestors)[v] (proved above).
                     // No self-loop: v != vertex (proved above).
+                    // Veracity: NEEDED assert (speed hint)
                     assert(visited@[v]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(!old(ancestors)@[v]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(v != vertex as int) by {
                         // No self-loop from the bridging proof above.
                     };
+                    // Veracity: NEEDED assert (speed hint)
                     assert(!ancestors@[v]);
                     // v is visited, not ancestor (during loop: ancestors = old.update(vertex,true),
                     // for v != vertex: ancestors[v] = old(ancestors)[v] = false).
                     // After restoration: same. So v was in cur_ord.
-                    assert(cur_ord.contains_key(v));
-                    assert(final_ord.contains_key(v));
+// Veracity: UNNEEDED assert                     assert(cur_ord.contains_key(v));
+// Veracity: UNNEEDED assert                     assert(final_ord.contains_key(v));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(final_ord[vertex as int] == cur_next);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(final_ord[v] == cur_ord[v]);
                 } else {
-                    assert(cur_ord.contains_key(u));
+// Veracity: UNNEEDED assert                     assert(cur_ord.contains_key(u));
                     if v == vertex as int {
                         // Edge closure on cur_ord: u in cur_ord → v in cur_ord.
                         // But vertex NOT in cur_ord. Contradiction.
+                        // Veracity: NEEDED assert (speed hint)
                         assert(false);
                     } else {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(final_ord[u] == cur_ord[u]);
-                        assert(final_ord[v] == cur_ord[v]);
+// Veracity: UNNEEDED assert                         assert(final_ord[v] == cur_ord[v]);
                     }
                 }
             };
+            // Veracity: NEEDED assert
             assert(spec_acyclic_ord(graph, final_ord, final_next));
 
             // All visited non-ancestor vertices are in final_ord.
+            // Veracity: NEEDED assert
             assert forall|v: int| 0 <= v < visited@.len()
                 && #[trigger] visited@[v] && !ancestors@[v]
                 implies final_ord.contains_key(v) by {
                 if v == vertex as int {
                 } else {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(cur_ord.contains_key(v));
                 }
             };
             // final_ord keys are visited non-ancestor.
-            assert forall|v: int| #[trigger] final_ord.contains_key(v)
-                implies visited@[v] && !ancestors@[v] by {
-                if v == vertex as int {
-                    assert(visited@[vertex as int]);
-                    assert(!ancestors@[vertex as int]);
-                } else {
-                    assert(cur_ord.contains_key(v));
-                }
-            };
+// Veracity: UNNEEDED assert             assert forall|v: int| #[trigger] final_ord.contains_key(v)
+// Veracity: UNNEEDED assert                 implies visited@[v] && !ancestors@[v] by {
+// Veracity: UNNEEDED assert                 if v == vertex as int {
+// Veracity: UNNEEDED assert                     // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                     assert(visited@[vertex as int]);
+// Veracity: UNNEEDED assert                     // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                     assert(!ancestors@[vertex as int]);
+// Veracity: UNNEEDED assert                 } else {
+// Veracity: UNNEEDED assert                     // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                     assert(cur_ord.contains_key(v));
+// Veracity: UNNEEDED assert                 }
+// Veracity: UNNEEDED assert             };
             // Extends from ord.
+            // Veracity: NEEDED assert (speed hint)
             assert forall|v: int| #[trigger] ord.contains_key(v)
                 implies final_ord.contains_key(v) && final_ord[v] == ord[v] by {
+                // Veracity: NEEDED assert (speed hint)
                 assert(cur_ord.contains_key(v));
+                // Veracity: NEEDED assert (speed hint)
                 assert(cur_ord[v] == ord[v]);
+                // Veracity: NEEDED assert (speed hint)
                 assert(v != vertex as int) by {
                     if v == vertex as int {
-                        assert(old(visited)@[v]);
-                        assert(false);
+// Veracity: UNNEEDED assert                         assert(old(visited)@[v]);
+// Veracity: UNNEEDED assert                         assert(false);
                     }
                 };
-                assert(final_ord[v] == cur_ord[v]);
+// Veracity: UNNEEDED assert                 assert(final_ord[v] == cur_ord[v]);
             };
             // Prove spec_is_valid_ord to satisfy the ensures existential.
+            // Veracity: NEEDED assert
+            // Veracity: NEEDED proof block
             assert(spec_is_valid_ord(graph, visited@, ancestors@, ord, next_time, final_ord));
         }
         false
@@ -721,12 +830,17 @@ broadcast use vstd::seq::group_seq_axioms;
 
             // Prove ancestors and visited are all false initially.
             proof {
-                assert forall|j: int| 0 <= j < ancestors@.len() implies !#[trigger] ancestors@[j] by {
-                    assert(!ancestors.seq@[j]);
-                    assert(ancestors@[j] == ancestors.seq@[j]@);
-                };
+// Veracity: UNNEEDED assert                 assert forall|j: int| 0 <= j < ancestors@.len() implies !#[trigger] ancestors@[j] by {
+// Veracity: UNNEEDED assert                     // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                     assert(!ancestors.seq@[j]);
+// Veracity: UNNEEDED assert                     // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                     assert(ancestors@[j] == ancestors.seq@[j]@);
+// Veracity: UNNEEDED assert                 };
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|j: int| 0 <= j < visited@.len() implies !#[trigger] visited@[j] by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(!visited.seq@[j]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(visited@[j] == visited.seq@[j]@);
                 };
             }
@@ -737,8 +851,10 @@ broadcast use vstd::seq::group_seq_axioms;
 
             let mut start: usize = 0;
             while start < n
+                // Veracity: NEEDED proof block
                 invariant
                     start <= n,
+                    // Veracity: NEEDED proof block
                     n == graph@.len(),
                     visited@.len() == n,
                     ancestors@.len() == n,
@@ -759,17 +875,24 @@ broadcast use vstd::seq::group_seq_axioms;
                 if !*visited.nth(start) {
                     // Prove ghost path requires for empty path.
                     proof {
+                        // Veracity: NEEDED assert (speed hint)
                         assert forall|v: int| 0 <= v < ancestors@.len()
                             implies #[trigger] ancestors@[v] == spec_in_path(Seq::<int>::empty(), v) by {
-                            assert(!ancestors@[v]);
+// Veracity: UNNEEDED assert                             assert(!ancestors@[v]);
+                            // Veracity: NEEDED assert (speed hint)
+                            // Veracity: NEEDED proof block
                             assert(!spec_in_path(Seq::<int>::empty(), v));
                         };
                         // Ordering requires: visited && !ancestors ==> in ord.
                         // Since ancestors all false: visited ==> in ord. ✓ (loop invariant)
                         // Converse: in ord ==> visited && !ancestors. ✓
+                        // Veracity: NEEDED assert (speed hint)
                         assert forall|v: int| #[trigger] cur_ord.contains_key(v)
                             implies visited@[v] && !ancestors@[v] by {
+                            // Veracity: NEEDED assert (speed hint)
+                            // Veracity: NEEDED proof block
                             assert(visited@[v]);
+                            // Veracity: NEEDED assert (speed hint)
                             assert(!ancestors@[v]);
                         };
                     }
@@ -780,25 +903,31 @@ broadcast use vstd::seq::group_seq_axioms;
                     // dfs_check_cycle returned false: ancestors restored, start visited.
                     // Monotonicity: vertices visited before are still visited.
                     proof {
+                        // Veracity: NEEDED assert
                         assert forall|j: int| 0 <= j < start as int
                             implies #[trigger] visited@[j] by {
+                            // Veracity: NEEDED assert
                             assert(visited_pre[j]); // was true (loop invariant)
                             // DFS monotonicity: pre_call[j] ==> post_call[j].
+                        // Veracity: NEEDED proof block
                         };
                     }
                     // Extract the ordering via proof function.
                     proof {
                         let (new_ord, new_next) = lemma_extract_ord(
                             graph, visited@, ancestors@, cur_ord, cur_next,
+                        // Veracity: NEEDED proof block
                         );
                         // Since ancestors are all false: visited && !ancestors <==> visited.
+                        // Veracity: NEEDED assert
                         assert forall|v: int| 0 <= v < visited@.len()
                             && #[trigger] visited@[v]
                             implies new_ord.contains_key(v) by {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(!ancestors@[v]);
                         };
-                        assert forall|v: int| #[trigger] new_ord.contains_key(v)
-                            implies visited@[v] by {};
+// Veracity: UNNEEDED assert                         assert forall|v: int| #[trigger] new_ord.contains_key(v)
+// Veracity: UNNEEDED assert                             implies visited@[v] by {};
                         cur_ord = new_ord;
                         cur_next = new_next;
                     }
@@ -806,14 +935,16 @@ broadcast use vstd::seq::group_seq_axioms;
                 // After if: start is visited (either was already, or DFS visited it).
                 proof {
                     lemma_bool_view_eq_spec_index(&visited);
-                    assert(visited@[start as int]);
+// Veracity: UNNEEDED assert                     assert(visited@[start as int]);
                 }
                 start = start + 1;
             }
             // After loop: all vertices visited, ordering covers all vertices → DAG.
             proof {
+                // Veracity: NEEDED assert
                 assert forall|v: int| 0 <= v < graph@.len()
                     implies #[trigger] cur_ord.contains_key(v) by {
+                    // Veracity: NEEDED assert
                     assert(visited@[v]);
                 };
                 lemma_acyclic_ord_implies_dag(graph, cur_ord, cur_next);

@@ -518,6 +518,7 @@ pub mod BoruvkaMtEph {
         if size == 1 {
             let es = arc_deref(&edges);
             let LabeledEdge(u, v, w, label) = es[start];
+            // Veracity: NEEDED assert (speed hint)
             assert(w.spec_is_finite());
             let mut min_edges: HashMapWithViewPlus<V, (V, WrappedF64, usize)> = HashMapWithViewPlus::new();
             min_edges.insert(u.clone(), (v.clone(), w, label));
@@ -574,15 +575,20 @@ pub mod BoruvkaMtEph {
             if let Some((v, entry)) = it.next() {
                 let (neighbor, w, label) = entry;
                 // From iterator: (*v, *entry) is in it_seq.to_set(), so right_bridges has the entry.
+                // Veracity: NEEDED assert (speed hint)
                 assert(it_seq.to_set().contains((*v, *entry)));
+                // Veracity: NEEDED assert (speed hint)
                 assert(right_bridges@.contains_key(v@));
+                // Veracity: NEEDED assert (speed hint)
                 assert(right_bridges@[v@] == *entry);
+                // Veracity: NEEDED assert (speed hint)
                 assert(w.spec_is_finite());
                 match merged.get(v) {
                     None => {
                         merged.insert(v.clone(), (neighbor.clone(), *w, *label));
                     }
                     Some((_, existing_w, _)) => {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(existing_w.spec_is_finite());
                         if w.dist_lt(existing_w) {
                             merged.insert(v.clone(), (neighbor.clone(), *w, *label));
@@ -1047,7 +1053,9 @@ pub mod BoruvkaMtEph {
         {
             if let Some(e) = eit.next() {
                 // e is from edges@, so its weight is finite.
+                // Veracity: NEEDED assert
                 assert(edges@.contains(eseq[eit@.0 - 1]@));
+                // Veracity: NEEDED assert (speed hint)
                 assert((*e).2.spec_is_finite());
                 edges_vec.push(*e);
             } else {
@@ -1116,6 +1124,7 @@ pub mod BoruvkaMtEph {
             ensures equal == (self@ == other@)
         {
             let equal = self.0 == other.0 && self.1 == other.1 && self.2.eq(&other.2) && self.3 == other.3;
+            // Veracity: NEEDED proof block
             proof { assume(equal == (self@ == other@)); }
             equal
         }

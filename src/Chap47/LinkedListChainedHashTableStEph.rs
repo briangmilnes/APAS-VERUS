@@ -207,6 +207,8 @@ pub mod LinkedListChainedHashTableStEph {
                     decreases bucket_len - scan_i,
                 {
                     // Veracity: NEEDED proof block
+                    // Veracity: NEEDED assert
+                    // Veracity: NEEDED proof block
                     proof { assert(obeys_feq_full_trigger::<Key>()); lemma_reveal_view_injective::<Key>(); }
                     let eq = feq(&bucket_seq[scan_i].0, &key);
                     if eq {
@@ -226,11 +228,13 @@ pub mod LinkedListChainedHashTableStEph {
                 let ghost new_bucket_seq = bucket_seq@;
 
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof {
                     if existed {
                         lemma_seq_pairs_remove_key_then_push::<Key, Value>(
                             original, found_idx as int, key, value);
                     } else {
+                        // Veracity: NEEDED assert
                         // Veracity: NEEDED assert
                         assert(new_bucket_seq.drop_last() =~= original);
                     }
@@ -238,13 +242,16 @@ pub mod LinkedListChainedHashTableStEph {
 
                 let new_entry = LinkedListStEphS { seq: bucket_seq };
                 table.table.set(index, new_entry);
+// Veracity: NEEDED proof block
 
                 // Veracity: NEEDED proof block
                 proof {
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert(table.table@[index as int].spec_entry_to_map()
                         =~= old_table[index as int].spec_entry_to_map().insert(key, value));
 
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert forall |j: int| 0 <= j < old_table.len() && j != index as int
                         implies !#[trigger] old_table[j].spec_entry_to_map().dom().contains(key) by {}
@@ -252,6 +259,7 @@ pub mod LinkedListChainedHashTableStEph {
                     lemma_table_to_map_update_insert::<Key, Value, LinkedListStEphS<(Key, Value)>>(
                         old_table, index as int, table.table@[index as int], key, value);
 
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert forall |j: int, k: Key| 0 <= j < table.table@.len()
                         && j != (table.spec_hash@)(k) as int % table.current_size as int
@@ -263,10 +271,12 @@ pub mod LinkedListChainedHashTableStEph {
                 }
 
                 if !existed {
+                    // Veracity: NEEDED proof block
                     table.num_elements = table.num_elements + 1;
                 }
                 // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(spec_other_slots_preserved(old(table).table@, table.table@, index as int));
                 }
@@ -277,6 +287,7 @@ pub mod LinkedListChainedHashTableStEph {
             fn lookup(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 let bucket_len = table.table[index].seq.len();
+                // Veracity: NEEDED proof block
                 // Ghost alias: definitionally == table.table@[index].seq@.
                 let ghost bv: Seq<(Key, Value)> = table.table@[index as int].seq@;
                 if bucket_len == 0 {
@@ -300,10 +311,13 @@ pub mod LinkedListChainedHashTableStEph {
                         forall |j: int| i as int <= j < bv.len()
                             ==> (#[trigger] bv[j]).0 != *key,
                         obeys_feq_clone::<Value>(),
+                    // Veracity: NEEDED proof block
                     decreases i,
                 {
                     i = i - 1;
                     // Veracity: NEEDED proof block
+                    // Veracity: NEEDED proof block
+                    // Veracity: NEEDED assert
                     proof { assert(obeys_feq_full_trigger::<Key>()); lemma_reveal_view_injective::<Key>(); }
                     let eq = feq(&table.table[index].seq[i].0, key);
                     if eq {
@@ -315,8 +329,10 @@ pub mod LinkedListChainedHashTableStEph {
                             // bv == table.table@[index].seq@ by definition, so
                             // spec_entry_to_map (= spec_seq_pairs_to_map(self.seq@)) matches.
                             // Veracity: NEEDED assert
+                            // Veracity: NEEDED assert
                             assert forall |j: int| 0 <= j < table.table@.len() && j != index as int
                                 implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {}
+                            // Veracity: NEEDED proof block
                             lemma_table_to_map_unique_entry_value::<Key, Value, LinkedListStEphS<(Key, Value)>>(
                                 table.table@, index as int, *key);
                         }
@@ -362,19 +378,24 @@ pub mod LinkedListChainedHashTableStEph {
                         spec_seq_pairs_to_map(new_seq@) =~= prefix_map.remove(*key),
                         !deleted ==> forall |j: int| 0 <= j < i as int
                             ==> (#[trigger] original[j]).0 != *key,
+                        // Veracity: NEEDED proof block
                         deleted ==> exists |j: int| 0 <= j < i as int
                             && (#[trigger] original[j]).0 == *key,
                         obeys_feq_clone::<Key>(),
+                        // Veracity: NEEDED proof block
                         obeys_feq_clone::<Value>(),
                     decreases bucket_len - i,
                 {
                     // Veracity: NEEDED proof block
+                    // Veracity: NEEDED assert
                     proof { assert(obeys_feq_full_trigger::<Key>()); lemma_reveal_view_injective::<Key>(); }
                     let eq = feq(&bucket_seq[i].0, key);
 
                     // Veracity: NEEDED proof block
                     proof {
                         // Veracity: NEEDED assert
+                        // Veracity: NEEDED assert
+                        // Veracity: NEEDED proof block
                         assert(original.subrange(0, (i + 1) as int).drop_last()
                             =~= original.subrange(0, i as int));
                     }
@@ -385,13 +406,16 @@ pub mod LinkedListChainedHashTableStEph {
                         let ghost old_new_seq = new_seq@;
                         new_seq.push((k, v));
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED proof block
                         proof {
                             let ghost pair_key = original[i as int].0;
                             let ghost pair_val = original[i as int].1;
                             // Veracity: NEEDED assert
+                            // Veracity: NEEDED assert
                             assert(new_seq@.drop_last() =~= old_new_seq);
                             prefix_map = prefix_map.insert(pair_key, pair_val);
                         }
+                    // Veracity: NEEDED proof block
                     } else {
                         // Veracity: NEEDED proof block
                         proof {
@@ -401,10 +425,12 @@ pub mod LinkedListChainedHashTableStEph {
                         deleted = true;
                     }
                     i += 1;
+                // Veracity: NEEDED proof block
                 }
 
                 // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(original.subrange(0, bucket_len as int) =~= original);
                 }
@@ -416,6 +442,7 @@ pub mod LinkedListChainedHashTableStEph {
                 proof {
 
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert forall |j: int| 0 <= j < old_table.len() && j != index as int
                         implies !#[trigger] old_table[j].spec_entry_to_map().dom().contains(*key) by {}
 
@@ -423,10 +450,12 @@ pub mod LinkedListChainedHashTableStEph {
                         old_table, index as int, table.table@[index as int], *key);
 
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert forall |j: int, k: Key| 0 <= j < table.table@.len()
                         && j != (table.spec_hash@)(k) as int % table.current_size as int
                         implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
                         if j == index as int {
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert(!old_table[j].spec_entry_to_map().dom().contains(k));
                         } else {
@@ -439,6 +468,7 @@ pub mod LinkedListChainedHashTableStEph {
                         lemma_seq_pairs_has_key_in_map::<Key, Value>(original, *key, j_witness);
                         lemma_table_to_map_update_contains::<Key, Value, LinkedListStEphS<(Key, Value)>>(
                             old_table, index as int, old_table[index as int], *key);
+                        // Veracity: NEEDED assert
                         // Veracity: NEEDED assert
                         assert(old_table.update(index as int, old_table[index as int]) =~= old_table);
                     } else {
@@ -482,6 +512,7 @@ pub mod LinkedListChainedHashTableStEph {
                             j <= chain_len,
                             chain_len == table.table@[i as int].seq@.len(),
                             spec_seq_pairs_to_map(pairs@) =~=
+                                // Veracity: NEEDED proof block
                                 outer_map.union_prefer_right(
                                     spec_seq_pairs_to_map(
                                         table.table@[i as int].seq@.subrange(0, j as int))),
@@ -496,11 +527,14 @@ pub mod LinkedListChainedHashTableStEph {
                         let v = clone_elem(&table.table[i].seq[j].1);
                         pairs.push((k, v));
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert(pairs@.drop_last() =~= old_pairs);
                             let ghost chain_sub = chain.subrange(0, j as int);
                             let ghost chain_sub_next = chain.subrange(0, (j + 1) as int);
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert(chain_sub_next.drop_last() =~= chain_sub);
                             let ghost n = spec_seq_pairs_to_map(chain_sub);
@@ -508,12 +542,15 @@ pub mod LinkedListChainedHashTableStEph {
                         j = j + 1;
                     }
                     // Veracity: NEEDED proof block
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         // Veracity: NEEDED assert
                         assert(table.table@[i as int].seq@.subrange(
                             0, table.table@[i as int].seq@.len() as int)
                             =~= table.table@[i as int].seq@);
                         let ghost sub_next = table.table@.subrange(0, (i + 1) as int);
+                        // Veracity: NEEDED assert
                         // Veracity: NEEDED assert
                         assert(sub_next.drop_last()
                             =~= table.table@.subrange(0, i as int));
@@ -523,10 +560,12 @@ pub mod LinkedListChainedHashTableStEph {
                 // Veracity: NEEDED proof block
                 proof {
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert(table.table@.subrange(0, table.table@.len() as int)
                         =~= table.table@);
                 }
 
+                // Veracity: NEEDED proof block
                 // Phase 2: create new table with empty entries.
                 let mut new_table_vec: Vec<LinkedListStEphS<(Key, Value)>> = Vec::new();
                 let mut k: usize = 0;
@@ -543,6 +582,7 @@ pub mod LinkedListChainedHashTableStEph {
                     let ghost old_vec = new_table_vec@;
                     let empty_chain = LinkedListStEphS { seq: Vec::new() };
                     new_table_vec.push(empty_chain);
+                    // Veracity: NEEDED proof block
                     // Veracity: NEEDED proof block
                     proof {
                         lemma_table_to_map_push_empty::<
@@ -564,6 +604,7 @@ pub mod LinkedListChainedHashTableStEph {
                 // Veracity: NEEDED proof block
                 proof {
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert forall |key: Key, idx: int|
                         0 <= idx < new_table.table@.len()
                         && idx != (new_table.spec_hash@)(key) as int
@@ -577,6 +618,7 @@ pub mod LinkedListChainedHashTableStEph {
 
                 // Phase 3: reinsert all pairs.
                 let mut m: usize = 0;
+                // Veracity: NEEDED proof block
                 while m < pairs.len()
                     invariant
                         m <= pairs@.len(),
@@ -585,6 +627,7 @@ pub mod LinkedListChainedHashTableStEph {
                         new_table.table@.len() == new_table.current_size as int,
                         new_table.num_elements <= m,
                         Self::spec_parahashtablesteph_wf(&new_table),
+                        // Veracity: NEEDED proof block
                         new_table@ =~= spec_seq_pairs_to_map(
                             pairs@.subrange(0, m as int)),
                         new_table.spec_hash == table.spec_hash,
@@ -598,6 +641,7 @@ pub mod LinkedListChainedHashTableStEph {
                     // Veracity: NEEDED proof block
                     proof {
                         // Veracity: NEEDED assert
+                        // Veracity: NEEDED assert
                         assert(pairs@.subrange(0, (m + 1) as int).drop_last()
                             =~= pairs@.subrange(0, m as int));
                     }
@@ -605,6 +649,7 @@ pub mod LinkedListChainedHashTableStEph {
                 }
                 // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(pairs@.subrange(0, pairs@.len() as int) =~= pairs@);
                 }

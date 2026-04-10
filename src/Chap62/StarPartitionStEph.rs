@@ -149,18 +149,18 @@ pub mod StarPartitionStEph {
 
                 // Prove inner loop invariants from outer loop inv + insert ensures.
                 // Veracity: NEEDED proof block
-                proof {
-                    // From insert ensures and clone_view@ == vv:
-                    // partition_map stores vc_val at key vv; vc_val@ == vv.
-                    // vertex was not in processed (from !processed.mem check).
-
-                    // Domain invariant: processed@.contains(w) => partition_map@.contains_key(w).
-
-                    // Range invariant: partition_map@.contains_key(v) => centers@.contains(pm@[v]@).
-
-                    // Prefix invariant: prior vertices (j < vi) are still in processed.
-                    // processed@ = pre_proc.insert(vv), and pre_proc already had them.
-                }
+// Veracity: UNNEEDED proof block                 proof {
+// Veracity: UNNEEDED proof block                     // From insert ensures and clone_view@ == vv:
+// Veracity: UNNEEDED proof block                     // partition_map stores vc_val at key vv; vc_val@ == vv.
+// Veracity: UNNEEDED proof block                     // vertex was not in processed (from !processed.mem check).
+// Veracity: UNNEEDED proof block 
+// Veracity: UNNEEDED proof block                     // Domain invariant: processed@.contains(w) => partition_map@.contains_key(w).
+// Veracity: UNNEEDED proof block 
+// Veracity: UNNEEDED proof block                     // Range invariant: partition_map@.contains_key(v) => centers@.contains(pm@[v]@).
+// Veracity: UNNEEDED proof block 
+// Veracity: UNNEEDED proof block                     // Prefix invariant: prior vertices (j < vi) are still in processed.
+// Veracity: UNNEEDED proof block                     // processed@ = pre_proc.insert(vv), and pre_proc already had them.
+// Veracity: UNNEEDED proof block                 }
 
                 let mut ei: usize = 0;
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
@@ -196,6 +196,7 @@ pub mod StarPartitionStEph {
                             partition_map.insert(b.clone_view(), vertex.clone_view());
                             let _ = processed.insert(b.clone_view());
                             // Veracity: NEEDED proof block
+                            // Veracity: NEEDED proof block (speed hint)
                             proof {
                                 // Prefix invariant maintained (insert only adds bv, old j<vi still covered).
                             }
@@ -209,6 +210,7 @@ pub mod StarPartitionStEph {
                             partition_map.insert(a.clone_view(), vertex.clone_view());
                             let _ = processed.insert(a.clone_view());
                             // Veracity: NEEDED proof block
+                            // Veracity: NEEDED proof block
                             proof {
                                 // Prefix invariant maintained.
                             }
@@ -218,6 +220,7 @@ pub mod StarPartitionStEph {
                 }
             }
 
+            // Veracity: NEEDED proof block
             // Prove forall j <= vi: processed@.contains(vert_vec@[j]@) (before incrementing vi).
             // Veracity: NEEDED proof block
             proof {
@@ -230,10 +233,12 @@ pub mod StarPartitionStEph {
             }
             vi = vi + 1;
         }
+// Veracity: NEEDED proof block
 
         // Post-loop: connect graph.V@ to partition_map domain via to_seq ensures.
         // Veracity: NEEDED proof block
         proof {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|v_view: V::V| #[trigger] graph.V@.contains(v_view)
                 implies partition_map@.contains_key(v_view) by {
@@ -242,6 +247,7 @@ pub mod StarPartitionStEph {
                 // trigger on vert_vec@[j]@ avoids lambda-in-trigger error.
                 let j = choose|j: int| 0 <= j < nv as int && #[trigger] vert_vec@[j]@ == v_view;
                 // vi == nv after loop: loop invariant gives processed@.contains(vert_vec@[j]@).
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(processed@.contains(v_view));
             };

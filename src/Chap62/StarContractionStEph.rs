@@ -126,11 +126,13 @@ pub mod StarContractionStEph {
         if graph.sizeE() == 0 || fuel == 0 {
             let verts = graph.vertices();
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof {
                 // Veracity: NEEDED assert
                 assert(verts.spec_setsteph_wf());
             }
             let result = base(verts);
+            // Veracity: NEEDED proof block
             // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
@@ -152,6 +154,7 @@ pub mod StarContractionStEph {
 
         // Prove expand's guarded requires: v, e, c are wf; r_inv(r) from induction.
         let verts = graph.vertices();
+        // Veracity: NEEDED proof block
         let eds = graph.edges();
         // Veracity: NEEDED proof block
         proof {
@@ -161,6 +164,7 @@ pub mod StarContractionStEph {
             assert(eds.spec_setsteph_wf());
             // Veracity: NEEDED assert
             assert(centers.spec_setsteph_wf());
+        // Veracity: NEEDED proof block
         }
         let result = expand(verts, eds, &centers, &partition_map, r);
         // Veracity: NEEDED proof block
@@ -207,6 +211,7 @@ pub mod StarContractionStEph {
         r_inv(contracted),
         graph@.A.is_empty() ==>
             exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), contracted),
+    // Veracity: NEEDED proof block
     {
         let fuel = graph.sizeV();
         let result = star_contract_fuel(graph, base, expand, fuel, Ghost(r_inv));
@@ -259,6 +264,7 @@ pub mod StarContractionStEph {
                 spec_graphview_wf(graph@),
             decreases n - i,
         {
+            // Veracity: NEEDED proof block
             let edge = &edge_vec[i];
             let Edge(u, v) = edge;
 
@@ -268,15 +274,18 @@ pub mod StarContractionStEph {
                 // edge_vec comes from graph.E.to_seq(), so element i's view is in graph.E@.
                 // By Seq::map definition: map(f)[i] == f(i, seq[i]) == seq[i]@
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert(edge_vec@.map(|_j: int, t: Edge<V>| t@)[i as int] == edge_vec@[i as int]@);
                 // Contains: the element at index i witnesses the existential.
                 // to_seq postcondition: graph.E@.contains(x) <==> edge_vec@.map(f).contains(x)
                 // graph@.A == graph.E@ (from UnDirGraphStEph::view)
                 // Edge(u, v)@ == (u@, v@) from Edge<V>::view
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert(graph@.A.contains(((*u)@, (*v)@)));
                 // spec_graphview_wf: arc endpoints are vertices
                 // spec_valid_partition_map part 1: every graph vertex is in partition_map
+            // Veracity: NEEDED proof block
             }
 
             // Resolve u's center using if-let so val stays in scope for the proof.
@@ -292,6 +301,7 @@ pub mod StarContractionStEph {
                 c
             } else {
                 // None contradicts partition_map@.contains_key(u@) proved above.
+                // Veracity: NEEDED proof block
                 u.clone_view()
             };
 

@@ -278,6 +278,7 @@ pub mod MinEditDistMtPer {
         where
             T: Default,
         {
+            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 source: ArraySeqMtPerS::new(0, T::default()),
@@ -287,6 +288,7 @@ pub mod MinEditDistMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
+        // Veracity: NEEDED proof block
         fn from_sequences(source: ArraySeqMtPerS<T>, target: ArraySeqMtPerS<T>) -> Self {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {

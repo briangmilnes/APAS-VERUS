@@ -227,6 +227,7 @@ pub mod StarPartitionMtEph {
                 let ghost pre_merged = merged@;
                 merged.insert(k.clone_view(), *v);
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block (speed hint)
                 proof {
                 }
             } else {
@@ -236,8 +237,10 @@ pub mod StarPartitionMtEph {
 
         // Post-merge: merged covers [start, end).
         // Veracity: NEEDED proof block
+        // Veracity: NEEDED proof block
         proof {
             // merge_done is true; invariant gives it@.0 >= it_seq.len().
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|j: int| start as int <= j < end as int implies
                 #[trigger] merged@.contains_key(verts_view[j]@) by {
@@ -245,6 +248,7 @@ pub mod StarPartitionMtEph {
                     // Covered by loop invariant for [start, mid).
                 } else {
                     // right covers [mid, end).
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(right@.contains_key(verts_view[j]@));
                     // iter ensures: exists pair in it_seq with pair.0@ == verts_view[j]@.
@@ -304,13 +308,15 @@ pub mod StarPartitionMtEph {
             let cf = arc_deref(&coin_flips);
             let vi = arc_deref(&vertex_to_index);
 
+            // Veracity: NEEDED proof block
             // Bridge: edge endpoints and Arc views.
             // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert(edges@[start as int]@.0 == u@);
                 // Veracity: NEEDED assert
-                assert(coin_flips@.contains_key(u@));
+// Veracity: UNNEEDED assert                 assert(coin_flips@.contains_key(u@));
             }
 
             let u_heads = match cf.get(u) { Some(val) => *val, None => false };
@@ -319,6 +325,7 @@ pub mod StarPartitionMtEph {
             let mut result: Vec<(usize, V)> = Vec::new();
             if !u_heads && v_heads {
                 if let Some(u_idx) = vi.get(u) {
+                    // Veracity: NEEDED proof block
                     let uid = *u_idx as usize;
                     result.push((uid, v.clone_view()));
                     // Veracity: NEEDED proof block
@@ -332,6 +339,7 @@ pub mod StarPartitionMtEph {
                     }
                 }
             } else if !v_heads && u_heads {
+                // Veracity: NEEDED proof block
                 if let Some(v_idx) = vi.get(v) {
                     let vid = *v_idx as usize;
                     result.push((vid, u.clone_view()));
@@ -410,6 +418,7 @@ pub mod StarPartitionMtEph {
                     #[trigger] spec_valid_th_entry(result@[s], nv as nat, cf_view, vt_view, vi_view),
                 forall|s: int| 0 <= s < right@.len() ==>
                     #[trigger] spec_valid_th_entry(right@[s], nv as nat, cf_view, vt_view, vi_view),
+            // Veracity: NEEDED proof block
             decreases right@.len() - i,
         {
             let (idx_val, ref head_v) = right[i];
@@ -417,6 +426,7 @@ pub mod StarPartitionMtEph {
             // Veracity: NEEDED proof block
             proof {
                 let ghost new_s = result@.len() - 1;
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(spec_valid_th_entry(right@[i as int], nv as nat, cf_view, vt_view, vi_view));
             }
@@ -502,6 +512,7 @@ pub mod StarPartitionMtEph {
                     #[trigger] right@[j]@ == verts_view[(mid as int + j)]@,
             decreases right@.len() - i,
         {
+            // Veracity: NEEDED proof block
             result.push(right[i].clone_view());
             i = i + 1;
         }
@@ -509,6 +520,7 @@ pub mod StarPartitionMtEph {
         // Post-merge: result covers [start, end).
         // Veracity: NEEDED proof block
         proof {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|j: int| 0 <= j < result@.len() implies
                 #[trigger] result@[j]@ == verts_view[(start as int + j)]@ by {
@@ -519,6 +531,7 @@ pub mod StarPartitionMtEph {
                     let rj = j - left_len;
                     // Loop invariant: result@[(left_len + rj)]@ == verts_view[(mid + rj)]@.
                     // left_len + rj == j, and mid + rj == start + j.
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(left_len + rj == j);
                 }
@@ -595,6 +608,7 @@ pub mod StarPartitionMtEph {
         {
             build_vertex_to_index_mt(v2, mid, end)
         };
+// Veracity: NEEDED proof block
 
         let Pair(mut merged, _right) = crate::ParaPair!(f1, f2);
 
@@ -633,6 +647,7 @@ pub mod StarPartitionMtEph {
                     dom_witnesses.contains_key(v_view) &&
                     start as int <= dom_witnesses[v_view] &&
                     dom_witnesses[v_view] < j as int &&
+                    // Veracity: NEEDED proof block
                     verts_view[dom_witnesses[v_view]]@ == v_view,
             decreases end - j,
         {
@@ -646,6 +661,7 @@ pub mod StarPartitionMtEph {
                 dom_witnesses = pre_dom.insert(jv, j as int);
                 // Prior left entries preserved.
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert forall|j2: int| start as int <= j2 < mid as int implies
                     #[trigger] merged@.contains_key(verts_view[j2]@) &&
                     merged@[verts_view[j2]@] as usize == j2 by {
@@ -653,10 +669,12 @@ pub mod StarPartitionMtEph {
                     if j2v != jv {
                     } else {
                         // Veracity: NEEDED assert
+                        // Veracity: NEEDED assert
                         assert(false);
                     }
                 };
                 // Prior right entries [mid, j) preserved + new entry j.
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert forall|j2: int| mid as int <= j2 < j as int + 1 implies
                     #[trigger] merged@.contains_key(verts_view[j2]@) &&
@@ -666,6 +684,7 @@ pub mod StarPartitionMtEph {
                         let ghost j2v = verts_view[j2]@;
                         if j2v != jv {
                             // Veracity: NEEDED assert
+                            // Veracity: NEEDED assert
                             assert(pre_merged.contains_key(j2v));
                         } else {
                         }
@@ -673,12 +692,14 @@ pub mod StarPartitionMtEph {
                 };
                 // Domain witnesses updated.
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
                     dom_witnesses.contains_key(v_view) &&
                     start as int <= dom_witnesses[v_view] &&
                     dom_witnesses[v_view] < j as int + 1 &&
                     verts_view[dom_witnesses[v_view]]@ == v_view by {
                     if v_view == jv {
+                    // Veracity: NEEDED proof block
                     } else {
                     }
                 };
@@ -689,6 +710,7 @@ pub mod StarPartitionMtEph {
         // Post-merge: domain bound follows from ghost witnesses.
         // Veracity: NEEDED proof block
         proof {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
                 exists|j2: int| start as int <= j2 < end as int && #[trigger] verts_view[j2]@ == v_view by {
@@ -738,6 +760,7 @@ pub mod StarPartitionMtEph {
                 coin_flips@.contains_key(v_view) &&
                 !coin_flips@[v_view],
         decreases end - start,
+    // Veracity: NEEDED proof block
     {
         let size = end - start;
         if size == 0 {
@@ -746,9 +769,11 @@ pub mod StarPartitionMtEph {
         if size == 1 {
             let the = arc_deref(&th_edges);
             let verts = arc_deref(&vertices);
+            // Veracity: NEEDED proof block
             let (idx, ref head_v) = the[start];
             // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(spec_valid_th_entry(th_edges@[start as int], nv as nat, coin_flips@, vertices@, vertex_to_index@));
             }
@@ -844,6 +869,7 @@ pub mod StarPartitionMtEph {
                         #[trigger] verts_view[the_view[s].0 as int]@ == v_view,
                 // Values are heads with valid vi entries.
                 forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) ==>
+                    // Veracity: NEEDED proof block
                     cf@.contains_key(merged@[v_view]@) && cf@[merged@[v_view]@] &&
                     vi@.contains_key(merged@[v_view]@) && (vi@[merged@[v_view]@] as usize) < nv,
                 // Keys are tails.
@@ -856,7 +882,9 @@ pub mod StarPartitionMtEph {
         {
             let (idx, ref head_v) = the[t];
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(spec_valid_th_entry(the_view[t as int], nv as nat, cf@, verts_view, vi@));
             }
@@ -872,6 +900,7 @@ pub mod StarPartitionMtEph {
                     // Bridge: witness for t.
                     // Key source witness for new entry.
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
                         exists|s: int| start as int <= s < t as int + 1 &&
                             #[trigger] verts_view[the_view[s].0 as int]@ == v_view by {
@@ -885,6 +914,7 @@ pub mod StarPartitionMtEph {
                     };
                     // Values are heads.
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
                         cf@.contains_key(merged@[v_view]@) && cf@[merged@[v_view]@] &&
                         vi@.contains_key(merged@[v_view]@) && (vi@[merged@[v_view]@] as usize) < nv by {
@@ -893,6 +923,7 @@ pub mod StarPartitionMtEph {
                         }
                     };
                     // Keys are tails.
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
                         cf@.contains_key(v_view) && !cf@[v_view] by {
@@ -964,6 +995,7 @@ pub mod StarPartitionMtEph {
             forall|j: int| 0 <= j < p_vec@.len() ==>
                 vertex_to_index@.contains_key(#[trigger] p_vec@[j]@) &&
                 (vertex_to_index@[p_vec@[j]@] as usize) < nv,
+        // Veracity: NEEDED proof block
         decreases end - start,
     {
         let size = end - start;
@@ -973,6 +1005,7 @@ pub mod StarPartitionMtEph {
         if size == 1 {
             let verts = arc_deref(&vertices);
             let sm = arc_deref(&satellite_map);
+            // Veracity: NEEDED proof block
             let mut result: Vec<V> = Vec::new();
             match sm.get(&verts[start]) {
                 Some(center) => {
@@ -992,6 +1025,7 @@ pub mod StarPartitionMtEph {
                         let ghost sv = vertices@[start as int]@;
                         // Not modified, so modified-points-to-heads is vacuous.
                         // In vertex_to_index.
+                        // Veracity: NEEDED assert
                         // Veracity: NEEDED assert
                         assert(vertex_to_index@.contains_key(sv));
                     }
@@ -1096,6 +1130,7 @@ pub mod StarPartitionMtEph {
                 forall|j: int| 0 <= j < right@.len() ==>
                     coin_flips@.contains_key(verts_view[(mid as int + j)]@) &&
                     (coin_flips@[verts_view[(mid as int + j)]@] ==>
+                     // Veracity: NEEDED proof block
                      #[trigger] right@[j]@ == verts_view[(mid as int + j)]@),
                 forall|j: int| 0 <= j < right@.len() ==>
                     right@[j]@ != verts_view[(mid as int + j)]@ ==>
@@ -1120,6 +1155,7 @@ pub mod StarPartitionMtEph {
 
             // Heads preserve.
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert forall|j: int| 0 <= j < result@.len() implies
                 coin_flips@.contains_key(verts_view[(start as int + j)]@) &&
                 (coin_flips@[verts_view[(start as int + j)]@] ==>
@@ -1131,11 +1167,13 @@ pub mod StarPartitionMtEph {
                     // Right half.
                     let rj = j - left_len;
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert(result@[(left_len + rj)]@ == right@[rj]@);
                     // right has heads-preserve from f2.
                 }
             };
             // Modified entries point to heads.
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|j: int| 0 <= j < result@.len() &&
                 result@[j]@ != verts_view[(start as int + j)]@ implies
@@ -1144,10 +1182,12 @@ pub mod StarPartitionMtEph {
                 } else {
                     let rj = j - left_len;
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert(result@[(left_len + rj)]@ == right@[rj]@);
                 }
             };
             // All entries in vertex_to_index.
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|j: int| 0 <= j < result@.len() implies
                 vertex_to_index@.contains_key(#[trigger] result@[j]@) &&
@@ -1155,6 +1195,7 @@ pub mod StarPartitionMtEph {
                 if j < left_len {
                 } else {
                     let rj = j - left_len;
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(result@[(left_len + rj)]@ == right@[rj]@);
                 }
@@ -1240,6 +1281,7 @@ pub mod StarPartitionMtEph {
                 forall|j: int| mid as int <= j < end as int ==>
                     #[trigger] r@.contains_key(v2@[j]@),
                 forall|j: int| mid as int <= j < end as int ==>
+                    // Veracity: NEEDED proof block
                     r@.contains_key(v2@[j]@) ==> r@[v2@[j]@]@ == #[trigger] p2@[j]@,
                 forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
                     exists|j: int| mid as int <= j < end as int && #[trigger] v2@[j]@ == v_view,
@@ -1286,6 +1328,7 @@ pub mod StarPartitionMtEph {
                     merged@[verts_view[j2]@]@ == #[trigger] pv_view[j2]@,
                 // merged covers [mid, j) — contains_key.
                 forall|j2: int| mid as int <= j2 < j as int ==>
+                    // Veracity: NEEDED proof block
                     #[trigger] merged@.contains_key(verts_view[j2]@),
                 // merged covers [mid, j) — correct values.
                 forall|j2: int| mid as int <= j2 < j as int ==>
@@ -1312,6 +1355,7 @@ pub mod StarPartitionMtEph {
                 // Prior left entries preserved — contains_key.
                 // Prior left entries preserved — correct values.
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert forall|j2: int| start as int <= j2 < mid as int &&
                     merged@.contains_key(verts_view[j2]@) implies
                     merged@[verts_view[j2]@]@ == #[trigger] pv_view[j2]@ by {
@@ -1322,6 +1366,7 @@ pub mod StarPartitionMtEph {
                 };
                 // Prior right entries [mid, j) preserved + new entry j — contains_key.
                 // Prior right entries [mid, j) preserved + new entry j — correct values.
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert forall|j2: int| mid as int <= j2 < j as int + 1 &&
                     merged@.contains_key(verts_view[j2]@) implies
@@ -1335,6 +1380,8 @@ pub mod StarPartitionMtEph {
                     }
                 };
                 // Domain witnesses updated.
+                // Veracity: NEEDED proof block
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
                     dom_witnesses.contains_key(v_view) &&
@@ -1354,6 +1401,7 @@ pub mod StarPartitionMtEph {
         // Post-merge: domain bound follows from ghost witnesses.
         // Veracity: NEEDED proof block
         proof {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
                 exists|j2: int| start as int <= j2 < end as int && #[trigger] verts_view[j2]@ == v_view by {
@@ -1424,6 +1472,7 @@ pub mod StarPartitionMtEph {
         {
             build_centers_mt(v1, p1, start, mid)
         };
+// Veracity: NEEDED proof block
 
         let f2 = move || -> (r: SetStEph<V>)
             requires
@@ -1446,6 +1495,7 @@ pub mod StarPartitionMtEph {
         // Veracity: NEEDED proof block
         proof {
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert forall|j: int| (start as int <= j < end as int && pv_view[j]@ == verts_view[j]@) implies
                  #[trigger] result@.contains(pv_view[j]@) by {
                 if j < mid as int {
@@ -1457,6 +1507,7 @@ pub mod StarPartitionMtEph {
                 }
             };
         }
+// Veracity: NEEDED proof block
 
         result
     }
@@ -1476,6 +1527,7 @@ pub mod StarPartitionMtEph {
         ensures
             partition.0.spec_setsteph_wf(),
             spec_valid_partition_map::<V>(graph@.V, partition.0@, partition.1@),
+    // Veracity: NEEDED proof block
     {
         // Veracity: NEEDED proof block
         proof {
@@ -1498,7 +1550,9 @@ pub mod StarPartitionMtEph {
 
         // Ghost facts after loop 1: vertex_to_index covers all graph@.V.
         // Veracity: NEEDED proof block
+        // Veracity: NEEDED proof block
         proof {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|v_view: V::V| #[trigger] graph@.V.contains(v_view) implies
                 vertex_to_index@.contains_key(v_view) by {
@@ -1522,6 +1576,7 @@ pub mod StarPartitionMtEph {
         // Veracity: NEEDED proof block
         proof {
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert forall|k: int| 0 <= k < ne as int implies
                 #[trigger] coin_flips@.contains_key(edge_vec@[k]@.0) &&
                 coin_flips@.contains_key(edge_vec@[k]@.1) &&
@@ -1529,7 +1584,9 @@ pub mod StarPartitionMtEph {
                 vertex_to_index@.contains_key(edge_vec@[k]@.1) by {
                 let ghost mapped = edge_vec@.map(|_i: int, t: Edge<V>| t@);
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert(mapped[k] == edge_vec@[k]@);
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(graph@.A.contains(edge_vec@[k]@));
                 // coin_flips covers all graph vertices.
@@ -1542,6 +1599,7 @@ pub mod StarPartitionMtEph {
         let edge_arc: Arc<Vec<Edge<V>>> = Arc::new(edge_vec);
         let th_edges = build_th_edges_mt(
             edge_arc, clone_arc(&coin_flips_arc), clone_arc(&vtx_to_idx_arc),
+            // Veracity: NEEDED proof block
             clone_arc(&vertices_arc), nv, 0, ne,
         );
         let th_edges = th_edges;
@@ -1569,17 +1627,20 @@ pub mod StarPartitionMtEph {
         proof {
             // Heads preserve.
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert forall|j2: int| 0 <= j2 < nv as int implies
                 coin_flips@.contains_key(vertices_vec@[j2]@) &&
                 (coin_flips@[vertices_vec@[j2]@] ==>
                  #[trigger] p_vec@[j2]@ == vertices_vec@[j2]@) by {};
             // Modified entries point to heads.
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert forall|j2: int| 0 <= j2 < nv as int &&
                 p_vec@[j2]@ != vertices_vec@[j2]@ implies
                 coin_flips@.contains_key(#[trigger] p_vec@[j2]@) &&
                  coin_flips@[p_vec@[j2]@] by {};
             // All entries in vertex_to_index.
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|j2: int| 0 <= j2 < nv as int implies
                 vertex_to_index@.contains_key(#[trigger] p_vec@[j2]@) &&
@@ -1611,6 +1672,7 @@ pub mod StarPartitionMtEph {
                     #[trigger] r@.contains(pa1@[j]@),
         {
             let n = arc_deref(&va1).len();
+            // Veracity: NEEDED proof block
             build_centers_mt(va1, pa1, 0, n)
         };
 
@@ -1639,12 +1701,14 @@ pub mod StarPartitionMtEph {
         proof {
             // Part A: all graph@.V vertices are in partition_map.
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert forall|v_view: V::V| #[trigger] graph@.V.contains(v_view) implies
                 partition_map@.contains_key(v_view) by {
                 let k2 = vertices_vec@.map(|_i: int, t: V| t@).index_of(v_view);
             };
 
             // Part B: all partition_map values are in centers.
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|v_view: V::V| #[trigger] partition_map@.contains_key(v_view) implies
                 centers@.contains(partition_map@[v_view]@) by {
@@ -1662,6 +1726,7 @@ pub mod StarPartitionMtEph {
                     let j3 = choose|j3: int| 0 <= j3 < nv as int && #[trigger] vertices_vec@[j3]@ == h;
                     // Heads preserve at q_h: coin_flips@[h] == true => p_vec@[q_h]@ == vertices_vec@[q_h]@.
                     // centers contains h from D&C.
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(centers@.contains(p_vec@[q_h as int]@));
                 }

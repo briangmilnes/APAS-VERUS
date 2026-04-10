@@ -112,13 +112,17 @@ pub mod FlatHashTable {
     {
         if old_table.len() == 1 {
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert(spec_count_empties::<Key, Value>(old_table.drop_last()) == 0);
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert(spec_count_empties::<Key, Value>(new_table.drop_last()) == 0);
         } else if s == old_table.len() - 1 {
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert(new_table.drop_last() =~= old_table.drop_last());
         } else {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall |j: int| 0 <= j < old_table.drop_last().len() && j != s
                 implies #[trigger] new_table.drop_last()[j] == old_table.drop_last()[j] by {
@@ -258,6 +262,7 @@ pub mod FlatHashTable {
                 FlatEntry::Occupied(k, v) => FlatEntry::Occupied(k.clone(), v.clone()),
                 FlatEntry::Deleted => FlatEntry::Deleted,
             };
+            // Veracity: NEEDED proof block
             // Veracity: NEEDED proof block
             proof { assume(c == *self); } // Clone bridge.
             c

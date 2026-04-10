@@ -297,6 +297,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Vec, two Arc<RwLock> wrappers
         fn new() -> (empty: Self) {
+            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 keys: new_arc_rwlock(Vec::new(), Ghost(OptBSTMtEphKeysInv { expected_keys: Seq::empty() })),
@@ -319,6 +320,7 @@ broadcast use {
                 key_probs.push(KeyProb { key: keys[idx].clone(), prob: probs[idx] });
                 idx += 1;
             }
+            // Veracity: NEEDED proof block
             let ghost gk = key_probs@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -330,6 +332,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — wrap existing vec in Arc<RwLock>
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
+            // Veracity: NEEDED proof block
             let ghost gk = key_probs@;
             let _len = key_probs.len();
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -346,6 +349,7 @@ broadcast use {
             let handle = rwlock.acquire_read();
             let keys_ref = handle.borrow();
             let keys_len = keys_ref.len();
+            // Veracity: NEEDED assert (speed hint)
             assert(keys_len == rwlock.pred().expected_keys.len());
 
             if keys_len == 0 {
@@ -388,6 +392,7 @@ broadcast use {
             let rwlock = arc_deref(&self.keys);
             let handle = rwlock.acquire_read();
             let borrowed = handle.borrow();
+            // Veracity: NEEDED assert (speed hint)
             assert(borrowed@ =~= rwlock.pred().expected_keys);
             let keys = borrowed.clone();
             handle.release_read();
@@ -402,7 +407,8 @@ broadcast use {
             let rwlock = arc_deref(&self.keys);
             let handle = rwlock.acquire_read();
             let borrowed = handle.borrow();
-            assert(borrowed@ =~= rwlock.pred().expected_keys);
+// Veracity: UNNEEDED assert             assert(borrowed@ =~= rwlock.pred().expected_keys);
+            // Veracity: NEEDED proof block
             let mut keys = borrowed.clone();
             handle.release_read();
             keys.set(index, key_prob);
@@ -420,8 +426,9 @@ broadcast use {
             let rwlock = arc_deref(&self.keys);
             let handle = rwlock.acquire_read();
             let borrowed = handle.borrow();
-            assert(borrowed@ =~= rwlock.pred().expected_keys);
+// Veracity: UNNEEDED assert             assert(borrowed@ =~= rwlock.pred().expected_keys);
             let mut keys = borrowed.clone();
+            // Veracity: NEEDED proof block (speed hint)
             handle.release_read();
             let new_kp = KeyProb { key: keys[index].key.clone(), prob };
             let ghost new_keys_ghost = old_keys.update(index as int, new_kp);
@@ -439,6 +446,7 @@ broadcast use {
             let rwlock = arc_deref(&self.keys);
             let handle = rwlock.acquire_read();
             let count = handle.borrow().len();
+            // Veracity: NEEDED assert (speed hint)
             assert(count == rwlock.pred().expected_keys.len());
             handle.release_read();
             count
@@ -492,6 +500,7 @@ broadcast use {
     //		Section 12a. derive impls in verus!
 
 
+    // Veracity: NEEDED proof block
     impl<T: MtVal> Clone for KeyProb<T> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned == *self
@@ -510,6 +519,7 @@ broadcast use {
     impl<T: MtVal> Clone for OBSTMtEphS<T> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
+        // Veracity: NEEDED proof block
         {
             let cloned = OBSTMtEphS {
                 keys: self.keys.clone(),
@@ -531,6 +541,7 @@ broadcast use {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
+            // Veracity: NEEDED proof block
             let self_rwlock = arc_deref(&self.keys);
             let other_rwlock = arc_deref(&other.keys);
             let self_handle = self_rwlock.acquire_read();

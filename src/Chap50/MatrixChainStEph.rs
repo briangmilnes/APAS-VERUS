@@ -280,6 +280,7 @@ broadcast use {
                 mc@.memo =~= Map::<(usize, usize), usize>::empty(),
                 mc.spec_matrixchainsteph_wf(),
         {
+            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 dimensions: Vec::new(),
@@ -293,6 +294,7 @@ broadcast use {
                 mc@.dimensions =~= dimensions@,
                 mc@.memo =~= Map::<(usize, usize), usize>::empty(),
                 mc.spec_matrixchainsteph_wf(),
+        // Veracity: NEEDED proof block
         {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -306,7 +308,7 @@ broadcast use {
             ensures
                 mc@.dimensions.len() == dim_pairs@.len(),
                 mc@.memo =~= Map::<(usize, usize), usize>::empty(),
-                mc.spec_matrixchainsteph_wf(),
+// Veracity: UNNEEDED proof block                 mc.spec_matrixchainsteph_wf(),
         {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let mut dimensions: Vec<MatrixDim> = Vec::new();
@@ -376,7 +378,7 @@ broadcast use {
                 let right_cost = self.matrix_chain_rec(k + 1, j);
                 let split_cost = self.multiply_cost(i, k, j);
 
-                assert(left_cost as nat + right_cost as nat + split_cost as nat <= usize::MAX as nat);
+// Veracity: UNNEEDED assert                 assert(left_cost as nat + right_cost as nat + split_cost as nat <= usize::MAX as nat);
                 let total = left_cost + right_cost + split_cost;
 
                 if total < best {
@@ -441,6 +443,7 @@ broadcast use {
         {
             let mc = MatrixChainStEphS {
                 dimensions: self.dimensions.clone(),
+                // Veracity: NEEDED proof block
                 memo: self.memo.clone(),
             };
             proof { assume(mc@ == self@); }
@@ -456,6 +459,7 @@ broadcast use {
 
     impl PartialEq for MatrixChainStEphS {
         fn eq(&self, other: &Self) -> (equal: bool)
+            // Veracity: NEEDED proof block (speed hint)
             ensures equal == (self@ == other@)
         {
             let equal = self.dimensions == other.dimensions && self.memo == other.memo;

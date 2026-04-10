@@ -100,12 +100,14 @@ broadcast use {
             let last_idx = entries.len() - 1;
             lemma_entries_to_map_len::<KV, VV>(prefix);
             let prefix_map = spec_entries_to_map(prefix);
+            // Veracity: NEEDED assert
             assert(!prefix_map.contains_key(last.0)) by {
                 if prefix_map.contains_key(last.0) {
                     lemma_entries_to_map_key_in_seq(prefix, last.0);
                     let idx = choose|i: int| 0 <= i < prefix.len() && (#[trigger] prefix[i]).0 == last.0;
                 }
             };
+            // Veracity: NEEDED assert
             assert(prefix_map.dom().finite()) by {
                 lemma_entries_to_map_finite::<KV, VV>(prefix);
             };
@@ -153,6 +155,7 @@ broadcast use {
             exists|j: int| 0 <= j < sup.len() && (#[trigger] sup[j]).0 == (#[trigger] sub[i]).0,
         ensures spec_entries_to_map(sub).dom().subset_of(spec_entries_to_map(sup).dom()),
     {
+        // Veracity: NEEDED assert
         assert forall|k: KV| spec_entries_to_map(sub).dom().contains(k)
             implies spec_entries_to_map(sup).dom().contains(k)
         by {
@@ -208,6 +211,7 @@ broadcast use {
     {
         if entries.len() == 0 {
             if sources.len() > 0 {
+                // Veracity: NEEDED assert
                 assert(0 <= sources[0] < entries.len());
             }
             return;
@@ -217,8 +221,10 @@ broadcast use {
         let prefix = entries.drop_last();
         if last.0 == k {
             let j_last = choose|j: int| 0 <= j < sources.len() && sources[j] == n;
+            // Veracity: NEEDED assert
             assert(j_last == sources.len() - 1) by {
                 if j_last < sources.len() - 1 {
+                    // Veracity: NEEDED assert
                     assert(sources[j_last + 1] < entries.len());
                 }
             };
@@ -226,74 +232,104 @@ broadcast use {
             let last_kept = exists|j: int| 0 <= j < sources.len() && sources[j] == n;
             if last_kept {
                 let j_last = choose|j: int| 0 <= j < sources.len() && sources[j] == n;
+                // Veracity: NEEDED assert
                 assert(j_last == sources.len() - 1) by {
                     if j_last < sources.len() - 1 {
+                        // Veracity: NEEDED assert
                         assert(sources[j_last + 1] < entries.len());
                     }
                 };
                 let f_prefix = filtered.drop_last();
                 let s_prefix = sources.drop_last();
+                // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < s_prefix.len() implies
                     0 <= #[trigger] s_prefix[j] < prefix.len()
                     && f_prefix[j] == prefix[s_prefix[j]]
                 by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(s_prefix[j] == sources[j]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(sources[j] < sources[j_last]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(sources[j_last] == n);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(sources[j] < n);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(0 <= sources[j] < n);
-                    assert(f_prefix[j] == filtered[j]);
+// Veracity: UNNEEDED assert                     assert(f_prefix[j] == filtered[j]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(0 <= sources[j] < entries.len());
-                    assert(filtered[j] == entries[sources[j]]);
+// Veracity: UNNEEDED assert                     assert(filtered[j] == entries[sources[j]]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(sources[j] < prefix.len());
-                    assert(prefix[sources[j]] == entries[sources[j]]);
+// Veracity: UNNEEDED assert                     assert(prefix[sources[j]] == entries[sources[j]]);
                 };
+                // Veracity: NEEDED assert
                 assert forall|j1: int, j2: int| 0 <= j1 < j2 < s_prefix.len()
                     implies s_prefix[j1] < s_prefix[j2]
                 by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(0 <= j1 < sources.len());
+                    // Veracity: NEEDED assert (speed hint)
                     assert(0 <= j2 < sources.len());
+                    // Veracity: NEEDED assert (speed hint)
                     assert(s_prefix[j1] == sources[j1]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(s_prefix[j2] == sources[j2]);
                 };
+                // Veracity: NEEDED assert
                 assert forall|i: int| 0 <= i < prefix.len()
                     && (#[trigger] prefix[i]).0 == k
                     implies exists|j: int| 0 <= j < s_prefix.len() && s_prefix[j] == i
                 by {
-                    assert(0 <= i < entries.len());
+// Veracity: UNNEEDED assert                     assert(0 <= i < entries.len());
+                    // Veracity: NEEDED assert (speed hint)
                     assert(entries[i].0 == k);
                     let j = choose|j: int| 0 <= j < sources.len() && sources[j] == i;
+                    // Veracity: NEEDED assert (speed hint)
                     assert(j < sources.len() - 1) by {
                         if j == sources.len() - 1 {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(j == j_last);
-                            assert(sources[j] == n);
+// Veracity: UNNEEDED assert                             assert(sources[j] == n);
+                            // Veracity: NEEDED assert (speed hint)
                             assert(i == n);
+                            // Veracity: NEEDED assert (speed hint)
                             assert(i < prefix.len());
-                            assert(n == prefix.len());
+// Veracity: UNNEEDED assert                             assert(n == prefix.len());
                         }
                     };
-                    assert(0 <= j < s_prefix.len());
+// Veracity: UNNEEDED assert                     assert(0 <= j < s_prefix.len());
+                    // Veracity: NEEDED assert
                     assert(s_prefix[j] == sources[j]);
                 };
                 lemma_entries_to_map_subseq_value::<KV, VV>(prefix, f_prefix, s_prefix, k);
             } else {
+                // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < sources.len() implies
                     0 <= #[trigger] sources[j] < prefix.len()
                     && filtered[j] == prefix[sources[j]]
                 by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(0 <= sources[j] < entries.len());
                     if sources[j] == n {
                     }
+                    // Veracity: NEEDED assert (speed hint)
                     assert(sources[j] != n);
-                    assert(sources[j] < n);
+// Veracity: UNNEEDED assert                     assert(sources[j] < n);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(sources[j] < prefix.len());
+                    // Veracity: NEEDED assert (speed hint)
                     assert(prefix[sources[j]] == entries[sources[j]]);
                 };
+                // Veracity: NEEDED assert
                 assert forall|i: int| 0 <= i < prefix.len()
                     && (#[trigger] prefix[i]).0 == k
                     implies exists|j: int| 0 <= j < sources.len() && sources[j] == i
                 by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(0 <= i < entries.len());
+                    // Veracity: NEEDED assert (speed hint)
                     assert(entries[i].0 == k);
                 };
                 lemma_entries_to_map_subseq_value::<KV, VV>(prefix, filtered, sources, k);
@@ -321,32 +357,37 @@ broadcast use {
         } else {
             let suffix = entries.subrange(n, entries.len() as int);
             if entries.last().0 == k {
+                // Veracity: NEEDED assert (speed hint)
                 assert(suffix.len() > 0) by {
                     lemma_entries_to_map_key_in_seq(entries, k);
                     let idx = choose|idx: int| 0 <= idx < entries.len()
                         && (#[trigger] entries[idx]).0 == k;
-                    assert(idx >= n);
+// Veracity: UNNEEDED assert                     assert(idx >= n);
                 };
-                assert(suffix.last() == entries.last());
+// Veracity: UNNEEDED assert                 assert(suffix.last() == entries.last());
             } else {
                 let prefix = entries.drop_last();
-                assert(spec_entries_to_map(entries) =~=
-                    spec_entries_to_map(prefix).insert(entries.last().0, entries.last().1));
-                assert(spec_entries_to_map(prefix).contains_key(k));
+// Veracity: UNNEEDED assert                 assert(spec_entries_to_map(entries) =~=
+// Veracity: UNNEEDED assert                     spec_entries_to_map(prefix).insert(entries.last().0, entries.last().1));
+// Veracity: UNNEEDED assert                 assert(spec_entries_to_map(prefix).contains_key(k));
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|i: int| 0 <= i < n implies (#[trigger] prefix[i]).0 != k by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(i < prefix.len());
-                    assert(prefix[i] == entries[i]);
+// Veracity: UNNEEDED assert                     assert(prefix[i] == entries[i]);
                 };
                 lemma_entries_to_map_skip_prefix(prefix, n, k);
+                // Veracity: NEEDED assert (speed hint)
                 assert(suffix.len() > 0) by {
                     lemma_entries_to_map_key_in_seq(entries, k);
                     let idx = choose|idx: int| 0 <= idx < entries.len()
                         && (#[trigger] entries[idx]).0 == k;
-                    assert(idx >= n);
-                    assert(idx < entries.len() - 1 || entries.last().0 == k);
-                    assert(idx < entries.len() - 1);
+// Veracity: UNNEEDED assert                     assert(idx >= n);
+// Veracity: UNNEEDED assert                     assert(idx < entries.len() - 1 || entries.last().0 == k);
+// Veracity: UNNEEDED assert                     assert(idx < entries.len() - 1);
                 };
-                assert(suffix.last() == entries.last());
+// Veracity: UNNEEDED assert                 assert(suffix.last() == entries.last());
+                // Veracity: NEEDED assert
                 assert(suffix.drop_last() =~= prefix.subrange(n, prefix.len() as int));
             }
         }
@@ -366,18 +407,22 @@ broadcast use {
         decreases entries.len() - n,
     {
         if n == entries.len() as int {
+            // Veracity: NEEDED assert
             assert(entries.subrange(0, n) =~= entries);
         } else {
             let last = entries.last();
             let prefix = entries.drop_last();
+            // Veracity: NEEDED assert (speed hint)
             assert(last.0 != k);
-            assert(spec_entries_to_map(prefix).contains_key(k));
+// Veracity: UNNEEDED assert             assert(spec_entries_to_map(prefix).contains_key(k));
+            // Veracity: NEEDED assert
             assert forall|i: int| n <= i < prefix.len()
                 implies (#[trigger] prefix[i]).0 != k
             by {
-                assert(prefix[i] == entries[i]);
+// Veracity: UNNEEDED assert                 assert(prefix[i] == entries[i]);
             };
             lemma_entries_to_map_ignore_suffix(prefix, n, k);
+            // Veracity: NEEDED assert
             assert(entries.subrange(0, n) =~= prefix.subrange(0, n));
         }
     }
@@ -401,24 +446,29 @@ broadcast use {
         if seq1.len() > 0 {
             let last1 = seq1.last();
             let last2 = seq2.last();
-            assert(last1.0 == last2.0);
+// Veracity: UNNEEDED assert             assert(last1.0 == last2.0);
             if last1.0 == k {
+                // Veracity: NEEDED assert (speed hint)
                 assert(last1.1 == last2.1);
             } else {
                 let prefix1 = seq1.drop_last();
                 let prefix2 = seq2.drop_last();
+                // Veracity: NEEDED assert
                 assert forall|i: int| 0 <= i < prefix1.len()
                     implies (#[trigger] prefix1[i]).0 == (#[trigger] prefix2[i]).0
                 by {
-                    assert(prefix1[i] == seq1[i]);
-                    assert(prefix2[i] == seq2[i]);
+// Veracity: UNNEEDED assert                     assert(prefix1[i] == seq1[i]);
+// Veracity: UNNEEDED assert                     assert(prefix2[i] == seq2[i]);
                 };
+                // Veracity: NEEDED assert
                 assert forall|i: int| 0 <= i < prefix1.len() && (#[trigger] prefix1[i]).0 == k
                     implies prefix1[i].1 == prefix2[i].1
                 by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(prefix1[i] == seq1[i]);
-                    assert(prefix2[i] == seq2[i]);
+// Veracity: UNNEEDED assert                     assert(prefix2[i] == seq2[i]);
                 };
+                // Veracity: NEEDED assert (speed hint)
                 assert(spec_entries_to_map(prefix1).contains_key(k));
                 lemma_entries_to_map_agree_on_key(prefix1, prefix2, k);
             }
@@ -442,13 +492,16 @@ broadcast use {
                 ==> sources[j1] < sources[j2],
         ensures spec_keys_no_dups(filtered),
     {
+        // Veracity: NEEDED assert
         assert forall|a: int, b: int|
             0 <= a < b < filtered.len()
             implies (#[trigger] filtered[a]).0 != (#[trigger] filtered[b]).0
         by {
+            // Veracity: NEEDED assert
             assert(sources[a] < sources[b]);
+            // Veracity: NEEDED assert (speed hint)
             assert(filtered[a].0 == original[sources[a]].0);
-            assert(filtered[b].0 == original[sources[b]].0);
+// Veracity: UNNEEDED assert             assert(filtered[b].0 == original[sources[b]].0);
         };
     }
 
@@ -467,6 +520,7 @@ broadcast use {
         ensures
             spec_entries_to_map(filtered).dom().subset_of(spec_entries_to_map(original).dom()),
     {
+        // Veracity: NEEDED assert
         assert forall|k: KV| spec_entries_to_map(filtered).dom().contains(k)
             implies spec_entries_to_map(original).dom().contains(k)
         by {
@@ -503,6 +557,7 @@ broadcast use {
     {
         // First establish dom forward.
         lemma_subseq_dom_forward(original, filtered, sources);
+        // Veracity: NEEDED assert
         assert forall|k: KV| spec_entries_to_map(filtered).contains_key(k)
             implies spec_entries_to_map(original).contains_key(k)
                 && #[trigger] spec_entries_to_map(filtered)[k]
@@ -517,19 +572,24 @@ broadcast use {
                 && (#[trigger] filtered[j]).0 == k;
             let s = sources[j];
             // All original entries with key k are covered by sources.
+            // Veracity: NEEDED assert
             assert forall|i: int| 0 <= i < original.len()
                 && (#[trigger] original[i]).0 == k
                 implies exists|jj: int| 0 <= jj < sources.len() && sources[jj] == i
             by {
                 // original has no dups, so i == s is the only entry with key k.
+                // Veracity: NEEDED assert (speed hint)
                 assert(original[s].0 == k);
                 if i != s {
                     if i < s {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(original[i].0 != original[s].0);
                     } else {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(original[s].0 != original[i].0);
                     }
                 }
+                // Veracity: NEEDED assert (speed hint)
                 assert(i == s);
             };
             lemma_entries_to_map_subseq_value(original, filtered, sources, k);

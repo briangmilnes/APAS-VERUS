@@ -109,6 +109,7 @@ pub mod TopDownDPMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
         fn med_memoized_concurrent(&mut self) -> (distance: usize) {
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -119,6 +120,7 @@ pub mod TopDownDPMtEph {
         /// Compute MED with parallel subproblem exploration.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — fork-join on delete/insert subproblems; Mt parallel.
         fn med_memoized_parallel(&mut self) -> (distance: usize) {
+            // Veracity: NEEDED proof block (speed hint)
             // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let s_len = self.seq_s.length();
@@ -267,6 +269,7 @@ pub mod TopDownDPMtEph {
                 med_recursive_sequential(seq_s, seq_t, memo, i - 1, j - 1)
             } else {
                 let del_cost = med_recursive_sequential(seq_s, seq_t, memo, i - 1, j);
+                // Veracity: NEEDED proof block
                 let ins_cost = med_recursive_sequential(seq_s, seq_t, memo, i, j - 1);
                 // Veracity: NEEDED proof block
                 proof {
@@ -282,10 +285,12 @@ pub mod TopDownDPMtEph {
         };
 
         let ghost s = seq_s@;
+        // Veracity: NEEDED proof block
         let ghost t = seq_t@;
         let ghost pre_memo = memo@;
         // Veracity: NEEDED proof block
         proof {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|a: usize, b: usize| #[trigger] pre_memo.contains_key((a, b))
             implies
@@ -294,6 +299,7 @@ pub mod TopDownDPMtEph {
             };
         }
         memo.insert(Pair(i, j), result);
+        // Veracity: NEEDED assert
         // Veracity: NEEDED assert
         assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
         implies
@@ -333,6 +339,7 @@ pub mod TopDownDPMtEph {
             let found = match handle.borrow().get(&Pair(i, j)) {
                 Some(v) => Some(*v),
                 None => None,
+            // Veracity: NEEDED proof block
             };
             handle.release_read();
             if let Some(result) = found {
@@ -360,7 +367,9 @@ pub mod TopDownDPMtEph {
                 let memo1 = clone_arc_rwlock(memo);
 
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert(memo1.pred().seq_s == s1@);
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(memo1.pred().seq_t == t1@);
 
@@ -369,7 +378,9 @@ pub mod TopDownDPMtEph {
                 let memo2 = clone_arc_rwlock(memo);
 
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert(memo2.pred().seq_s == s2@);
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(memo2.pred().seq_t == t2@);
 
@@ -396,6 +407,7 @@ pub mod TopDownDPMtEph {
                         memo2.pred().seq_t == t2@,
                     ensures r as nat == spec_med_fn(s_view, t_view, i as nat, (j - 1) as nat),
                 {
+                    // Veracity: NEEDED proof block
                     med_recursive_parallel(&s2, &t2, &memo2, i, j - 1)
                 };
                 let (del_cost, ins_cost) = join(f1, f2);
@@ -414,6 +426,7 @@ pub mod TopDownDPMtEph {
         };
 
         // Memo store.
+        // Veracity: NEEDED proof block
         {
             let rwlock = arc_deref(memo);
             let (mut current, write_handle) = rwlock.acquire_write();
@@ -421,6 +434,7 @@ pub mod TopDownDPMtEph {
             current.insert(Pair(i, j), dist);
             // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert forall|a: usize, b: usize| #[trigger] current@.contains_key((a, b))
                 implies
@@ -483,6 +497,7 @@ pub mod TopDownDPMtEph {
             }
         }
     }
+// Veracity: NEEDED proof block (speed hint)
 
     impl PartialEq for TopDownDPMtEphS {
         fn eq(&self, other: &Self) -> (eq: bool)
