@@ -405,8 +405,8 @@ pub mod LinkedListStPer {
                     forall|k: int| #![trigger seq@[k]] 0 <= k < i ==> seq@[k] == a.seq@[k],
                 decreases a_len - i,
             {
-                seq.push(a.seq[i].clone());
                 // Veracity: NEEDED proof block
+                seq.push(a.seq[i].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
                     axiom_cloned_implies_eq_owned(a.seq[i as int], last);
@@ -424,9 +424,9 @@ pub mod LinkedListStPer {
                     forall|k: int| #![trigger seq@[k]] 0 <= k < a_len ==> seq@[k] == a.seq@[k],
                     forall|k: int| #![trigger b.seq@[k]] 0 <= k < j ==> seq@[a_len as int + k] == b.seq@[k],
                 decreases b_len - j,
+            // Veracity: NEEDED proof block
             {
                 seq.push(b.seq[j].clone());
-                // Veracity: NEEDED proof block
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
                     axiom_cloned_implies_eq_owned(b.seq[j as int], last);
@@ -453,16 +453,17 @@ pub mod LinkedListStPer {
                     forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
                     forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> pred.ensures((&seq@[j],), true),
                     seq@.len() == spec_filter_len(a.seq@.subrange(0, i as int), spec_pred),
+                    // Veracity: NEEDED proof block
                     seq@.to_multiset() =~= a.seq@.subrange(0, i as int).to_multiset().filter(spec_pred),
                 decreases len - i,
             {
-                // Veracity: NEEDED proof block
-                proof {
-                    broadcast use vstd::seq_lib::group_to_multiset_ensures;
-                    a.lemma_spec_index(i as int);
-                }
+// Veracity: UNNEEDED proof block                 proof {
+// Veracity: UNNEEDED proof block                     broadcast use vstd::seq_lib::group_to_multiset_ensures;
+// Veracity: UNNEEDED proof block                     a.lemma_spec_index(i as int);
+// Veracity: UNNEEDED proof block                 }
                 // Veracity: NEEDED assert
                 assert(a.seq@.subrange(0, i as int + 1) =~= a.seq@.subrange(0, i as int).push(a.seq@[i as int]));
+                // Veracity: NEEDED proof block
                 // Veracity: NEEDED assert
                 assert(a.seq@.subrange(0, i as int + 1).drop_last() =~= a.seq@.subrange(0, i as int));
                 if pred(&a.seq[i]) {
@@ -471,12 +472,13 @@ pub mod LinkedListStPer {
                     proof {
                         axiom_cloned_implies_eq_owned(a.seq[i as int], elem);
                     }
+                    // Veracity: NEEDED proof block
                     seq.push(elem);
                 }
                 i += 1;
             }
-            let filtered = LinkedListStPerS { seq };
             // Veracity: NEEDED proof block
+            let filtered = LinkedListStPerS { seq };
             proof {
                 // Veracity: NEEDED assert
                 assert(filtered.seq@ =~= Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)));
@@ -510,30 +512,32 @@ pub mod LinkedListStPer {
                         inner_len == inner.seq@.len(),
                         i < outer_len,
                         outer_len == a.seq@.len(),
+                        // Veracity: NEEDED proof block
                         obeys_feq_clone::<T>(),
                         seq@ =~= a.seq@.take(i as int).map_values(|inner: LinkedListStPerS<T>| inner.seq@).flatten()
                             + inner.seq@.take(j as int),
                     decreases inner_len - j,
                 {
-                    seq.push(inner.seq[j].clone());
                     // Veracity: NEEDED proof block
+                    seq.push(inner.seq[j].clone());
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
                         axiom_cloned_implies_eq_owned(inner.seq[j as int], last);
                     }
+                    // Veracity: NEEDED proof block
                     j += 1;
                 }
-                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED proof block
                     let ghost prefix = a.seq@.take(i as int).map_values(|inner: LinkedListStPerS<T>| inner.seq@);
                     // Veracity: NEEDED assert
                     assert(a.seq@.take(i as int + 1).map_values(|inner: LinkedListStPerS<T>| inner.seq@)
                         =~= prefix.push(a.seq@[i as int].seq@));
                     prefix.lemma_flatten_push(a.seq@[i as int].seq@);
+                // Veracity: NEEDED proof block
                 }
                 i += 1;
             }
-            // Veracity: NEEDED proof block
             proof {
             }
             LinkedListStPerS { seq }
@@ -550,23 +554,24 @@ pub mod LinkedListStPer {
                 invariant
                     i <= len,
                     len == a.seq@.len(),
+                    // Veracity: NEEDED proof block
                     seq@.len() == i as int,
                     obeys_feq_clone::<T>(),
                     index < len,
                     forall|k: int| #![trigger seq@[k]] 0 <= k < i && k != index as int ==> seq@[k] == a.seq@[k],
                     i > index ==> seq@[index as int] == item,
+                // Veracity: NEEDED proof block
                 decreases len - i,
             {
                 if i == index {
                     seq.push(item.clone());
-                    // Veracity: NEEDED proof block
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
+                        // Veracity: NEEDED proof block
                         axiom_cloned_implies_eq_owned(item, last);
                     }
                 } else {
                     seq.push(a.seq[i].clone());
-                    // Veracity: NEEDED proof block
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
                         axiom_cloned_implies_eq_owned(a.seq[i as int], last);
@@ -592,32 +597,34 @@ pub mod LinkedListStPer {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             let mut acc = seed;
+            // Veracity: NEEDED proof block
             let mut i: usize = 0;
             while i < len
                 invariant
+                    // Veracity: NEEDED proof block
                     i <= len,
                     len == a.seq@.len(),
                     forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
                     forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),
+                    // Veracity: NEEDED proof block
                     s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
                     acc == s.take(i as int).fold_left(seed, spec_f),
                 decreases len - i,
+            // Veracity: NEEDED proof block
             {
-                // Veracity: NEEDED proof block
                 proof {
                     a.lemma_spec_index(i as int);
                 }
                 acc = f(&acc, &a.seq[i]);
-                // Veracity: NEEDED proof block
                 proof {
                     let ghost t = s.take(i as int + 1);
+                    // Veracity: NEEDED proof block
                     // Veracity: NEEDED assert
                     assert(t.drop_last() =~= s.take(i as int));
                     reveal(Seq::fold_left);
                 }
                 i += 1;
             }
-            // Veracity: NEEDED proof block
             proof {
             }
             acc
@@ -627,21 +634,24 @@ pub mod LinkedListStPer {
         fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
         {
+            // Veracity: NEEDED proof block
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             let mut acc = id;
+            // Veracity: NEEDED proof block
             let mut i: usize = 0;
             while i < len
                 invariant
                     i <= len,
                     len == a.seq@.len(),
+                    // Veracity: NEEDED proof block
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                     forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                    // Veracity: NEEDED proof block
                     s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
                     acc == s.take(i as int).fold_left(id, spec_f),
                 decreases len - i,
             {
-                // Veracity: NEEDED proof block
                 proof {
                     a.lemma_spec_index(i as int);
                 }
@@ -655,7 +665,6 @@ pub mod LinkedListStPer {
                 }
                 i += 1;
             }
-            // Veracity: NEEDED proof block
             proof {
             }
             acc
@@ -667,48 +676,50 @@ pub mod LinkedListStPer {
         {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
+            // Veracity: NEEDED proof block
             let mut acc = id;
             let mut seq: Vec<T> = Vec::with_capacity(len);
             let mut i: usize = 0;
+            // Veracity: NEEDED proof block
             while i < len
                 invariant
                     i <= len,
                     len == a.seq@.len(),
                     seq@.len() == i as int,
                     obeys_feq_clone::<T>(),
+                    // Veracity: NEEDED proof block
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                     forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
                     s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
                     acc == s.take(i as int).fold_left(id, spec_f),
                     forall|k: int| #![trigger seq@[k]] 0 <= k < seq@.len() ==>
+                        // Veracity: NEEDED proof block
                         seq@[k] == s.take(k + 1).fold_left(id, spec_f),
                 decreases len - i,
+            // Veracity: NEEDED proof block
             {
-                // Veracity: NEEDED proof block
                 proof {
                     a.lemma_spec_index(i as int);
+                // Veracity: NEEDED proof block
                 }
                 acc = f(&acc, &a.seq[i]);
-                // Veracity: NEEDED proof block
                 proof {
                     let ghost t = s.take(i as int + 1);
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED proof block
                     assert(t.drop_last() =~= s.take(i as int));
                     reveal(Seq::fold_left);
                 }
                 let cloned = acc.clone();
-                // Veracity: NEEDED proof block
                 proof {
                     axiom_cloned_implies_eq_owned(acc, cloned);
                 }
                 seq.push(cloned);
                 i += 1;
             }
-            // Veracity: NEEDED proof block
             proof {
             }
             let scanned_seq = LinkedListStPerS { seq };
-            // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger scanned_seq.spec_index(i)] 0 <= i < a.spec_len() implies
@@ -841,6 +852,7 @@ pub mod LinkedListStPer {
     }
 
     impl<T> std::iter::IntoIterator for LinkedListStPerS<T> {
+        // Veracity: NEEDED proof block
         type Item = T;
         type IntoIter = IntoIter<T>;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
@@ -853,6 +865,7 @@ pub mod LinkedListStPer {
     #[cfg(verus_keep_ghost)]
     impl<T: View + PartialEq> PartialEqSpecImpl for LinkedListStPerS<T> {
         open spec fn obeys_eq_spec() -> bool { true }
+        // Veracity: NEEDED proof block
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
@@ -863,9 +876,9 @@ pub mod LinkedListStPer {
             ensures cloned@ == self@
         {
             let cloned = LinkedListStPerS { seq: self.seq.clone() };
-            // Veracity: NEEDED proof block
             proof { assume(cloned@ == self@); }
             cloned
+        // Veracity: NEEDED proof block
         }
     }
 
@@ -877,7 +890,6 @@ pub mod LinkedListStPer {
             ensures equal == (self@ == other@)
         {
             let equal = self.seq == other.seq;
-            // Veracity: NEEDED proof block
             proof { assume(equal == (self@ == other@)); }
             equal
         }

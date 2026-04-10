@@ -513,8 +513,8 @@ pub mod ArraySeqMtEph {
                     forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> seq@[j] == a.seq@[(start + j) as int],
                 decreases end - i,
             {
-                seq.push(a.seq[i].clone());
                 // Veracity: NEEDED proof block
+                seq.push(a.seq[i].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
                     axiom_cloned_implies_eq_owned(a.seq[i as int], last);
@@ -557,9 +557,9 @@ pub mod ArraySeqMtEph {
                 &(|_i: usize| -> (r: T)
                     requires obeys_feq_clone::<T>()
                     ensures r == item
+                // Veracity: NEEDED proof block
                 {
                     let r = item.clone();
-                    // Veracity: NEEDED proof block
                     proof {
                         axiom_cloned_implies_eq_owned(item, r);
                     }
@@ -586,17 +586,17 @@ pub mod ArraySeqMtEph {
                     ensures
                         (i as int) < a.seq@.len() ==> r == a.seq@[i as int],
                         (i as int) >= a.seq@.len() ==> r == b.seq@[(i as int) - a.seq@.len()],
+                // Veracity: NEEDED proof block
                 {
                     if i < a_len {
                         let r = a.seq[i].clone();
-                        // Veracity: NEEDED proof block
                         proof {
                             axiom_cloned_implies_eq_owned(a.seq@[i as int], r);
+                        // Veracity: NEEDED proof block
                         }
                         r
                     } else {
                         let r = b.seq[i - a_len].clone();
-                        // Veracity: NEEDED proof block
                         proof {
                             axiom_cloned_implies_eq_owned(b.seq@[(i - a_len) as int], r);
                         }
@@ -608,12 +608,12 @@ pub mod ArraySeqMtEph {
         }
 
         // Algorithm 19.5: parallel D&C filter via filter_dc.
+        // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: ArraySeqMtEphS<T>)
             where T: Clone + Eq + Send + Sync + 'static
         {
             let filtered = Self::filter_dc(a, pred, Ghost(spec_pred));
-            // Veracity: NEEDED proof block
             proof {
                 let ghost s = Seq::new(a.seq@.len(), |i: int| a.seq@[i]);
                 // Veracity: NEEDED assert
@@ -656,13 +656,13 @@ pub mod ArraySeqMtEph {
                     k <= len,
                     len == a.seq@.len(),
                     s == a.seq@,
+                    // Veracity: NEEDED proof block
                     result_vec@.len() == k as int,
                     obeys_feq_clone::<T>(),
                     forall|j: int| #![trigger result_vec@[j]] 0 <= j < k as int ==> result_vec@[j] == s[j],
                 decreases len - k,
             {
                 let elem = a.seq[k].clone();
-                // Veracity: NEEDED proof block
                 proof { axiom_cloned_implies_eq_owned(a.seq@[k as int], elem); }
                 result_vec.push(elem);
                 k += 1;
@@ -679,36 +679,37 @@ pub mod ArraySeqMtEph {
                     obeys_feq_clone::<T>(),
                     s == a.seq@,
                     u == updates@,
+                    // Veracity: NEEDED proof block
                     result_vec@ =~= spec_inject(s, u.subrange(i as int, ulen as int)),
                 decreases i,
             {
                 i -= 1;
+                // Veracity: NEEDED proof block
                 let pos = updates[i].0;
                 if pos < len {
                     let val = updates[i].1.clone();
-                    // Veracity: NEEDED proof block
                     proof {
                         axiom_cloned_implies_eq_owned(u[i as int].1, val);
                     }
                     result_vec.set(pos, val);
-                }
                 // Veracity: NEEDED proof block
+                }
                 proof {
                     let ghost sub = u.subrange(i as int, ulen as int);
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED proof block
                     assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
                     reveal(spec_inject);
                 }
             }
 
-            // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
                 assert(s =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)));
             }
             let injected = ArraySeqMtEphS { seq: result_vec };
-            // Veracity: NEEDED proof block
             proof {
+            // Veracity: NEEDED proof block
             }
             injected
         }
@@ -720,7 +721,6 @@ pub mod ArraySeqMtEph {
             where T: Clone + Eq
         {
             let injected = Self::inject(a, updates);
-            // Veracity: NEEDED proof block
             proof {
                 let s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
                 let r = Seq::new(injected.spec_len(), |i: int| injected.spec_index(i));
@@ -753,8 +753,10 @@ pub mod ArraySeqMtEph {
         // Algorithm 19.8: iterate f x a (iterative form).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A) {
+            // Veracity: NEEDED proof block
             let len = a.seq.len();
             let mut acc = seed;
+            // Veracity: NEEDED proof block
             let mut i: usize = 0;
             while i < len
                 invariant
@@ -762,14 +764,13 @@ pub mod ArraySeqMtEph {
                     len == a.seq@.len(),
                     forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
                     forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
+                    // Veracity: NEEDED proof block
                     acc == a.seq@.take(i as int).fold_left(seed, spec_f),
                 decreases len - i,
             {
-                // Veracity: NEEDED proof block
                 proof {
                 }
                 acc = f(&acc, &a.seq[i]);
-                // Veracity: NEEDED proof block
                 proof {
                     let ghost t = a.seq@.take(i as int + 1);
                     // Veracity: NEEDED assert
@@ -778,7 +779,6 @@ pub mod ArraySeqMtEph {
                 }
                 i += 1;
             }
-            // Veracity: NEEDED proof block
             proof {
             }
             acc
@@ -795,8 +795,10 @@ pub mod ArraySeqMtEph {
 
         // Algorithm 19.9: reduce f id a (iterative form for single-threaded).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        // Veracity: NEEDED proof block
         fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
+        // Veracity: NEEDED proof block
         {
             let len = a.seq.len();
             let mut acc = id;
@@ -804,19 +806,19 @@ pub mod ArraySeqMtEph {
             while i < len
                 invariant
                     i <= len,
+                    // Veracity: NEEDED proof block
                     len == a.seq@.len(),
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                     forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
                     acc == a.seq@.take(i as int).fold_left(id, spec_f),
                 decreases len - i,
             {
-                // Veracity: NEEDED proof block
                 proof {
                 }
                 acc = f(&acc, &a.seq[i]);
-                // Veracity: NEEDED proof block
                 proof {
                     let ghost t = a.seq@.take(i as int + 1);
+                    // Veracity: NEEDED proof block
                     // Veracity: NEEDED assert
                     assert(t.drop_last() =~= a.seq@.take(i as int));
                     reveal(Seq::fold_left);
@@ -836,7 +838,6 @@ pub mod ArraySeqMtEph {
         {
             let len = a.seq.len();
             if len == 0 {
-                // Veracity: NEEDED proof block
                 proof {
                     reveal(Seq::fold_left);
                 }
@@ -844,7 +845,6 @@ pub mod ArraySeqMtEph {
             } else {
                 let f_owned = clone_fn2(f);
                 let result = Self::reduce_par(a, f_owned, Ghost(spec_f), id);
-                // Veracity: NEEDED proof block
                 proof {
                     // Veracity: NEEDED assert
                     assert(Seq::new(a.spec_len(), |i: int| a.spec_index(i)) =~= a.seq@);
@@ -855,9 +855,11 @@ pub mod ArraySeqMtEph {
 
         // Algorithm 19.10: scan f id a (iterative form for single-threaded).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        // Veracity: NEEDED proof block
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtEphS<T>, T))
             where T: Clone
         {
+            // Veracity: NEEDED proof block
             let len = a.seq.len();
             let mut acc = id;
             let mut seq: Vec<T> = Vec::with_capacity(len);
@@ -865,6 +867,7 @@ pub mod ArraySeqMtEph {
             while i < len
                 invariant
                     i <= len,
+                    // Veracity: NEEDED proof block
                     len == a.seq@.len(),
                     seq@.len() == i as int,
                     spec_monoid(spec_f, id),
@@ -875,21 +878,20 @@ pub mod ArraySeqMtEph {
                         seq@[k] == a.seq@.take(k + 1).fold_left(id, spec_f),
                 decreases len - i,
             {
-                // Veracity: NEEDED proof block
                 proof {
                 }
+                // Veracity: NEEDED proof block
                 seq.push(f(&acc, &a.seq[i]));
                 acc = f(&acc, &a.seq[i]);
-                // Veracity: NEEDED proof block
                 proof {
                     let ghost t = a.seq@.take(i as int + 1);
                     // Veracity: NEEDED assert
                     assert(t.drop_last() =~= a.seq@.take(i as int));
                     reveal(Seq::fold_left);
                 }
+                // Veracity: NEEDED proof block
                 i += 1;
             }
-            // Veracity: NEEDED proof block
             proof {
             }
             (ArraySeqMtEphS { seq }, acc)
@@ -903,7 +905,6 @@ pub mod ArraySeqMtEph {
             let a_owned = a.subseq_copy(0, a.seq.len());
             let f_owned = clone_fn(f);
             let ghost a_owned_view = a_owned.seq@;
-            // Veracity: NEEDED proof block
             proof {
                 // Prove element equality before a_owned is consumed
                 // Veracity: NEEDED assert
@@ -913,7 +914,6 @@ pub mod ArraySeqMtEph {
                 }
             }
             let result = Self::map_dc(a_owned, f_owned);
-            // Veracity: NEEDED proof block
             proof {
                 // map_dc ensures f_owned.ensures on a_owned_view elements
                 // clone_fn ensures f_owned.ensures == f.ensures
@@ -948,11 +948,13 @@ pub mod ArraySeqMtEph {
             where T: Clone + Eq
         {
             let outer_len = a.seq.len();
+            // Veracity: NEEDED proof block
             let mut seq: Vec<T> = Vec::new();
             let mut i: usize = 0;
             while i < outer_len
                 invariant
                     i <= outer_len,
+                    // Veracity: NEEDED proof block
                     outer_len == a.seq@.len(),
                     obeys_feq_clone::<T>(),
                     seq@ =~= a.seq@.take(i as int).map_values(|inner: ArraySeqMtEphS<T>| inner.seq@).flatten(),
@@ -961,6 +963,7 @@ pub mod ArraySeqMtEph {
                 let inner = &a.seq[i];
                 let inner_len = inner.seq.len();
                 let mut j: usize = 0;
+                // Veracity: NEEDED proof block
                 while j < inner_len
                     invariant
                         j <= inner_len,
@@ -972,15 +975,14 @@ pub mod ArraySeqMtEph {
                             + inner.seq@.take(j as int),
                     decreases inner_len - j,
                 {
-                    seq.push(inner.seq[j].clone());
                     // Veracity: NEEDED proof block
+                    seq.push(inner.seq[j].clone());
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
                         axiom_cloned_implies_eq_owned(inner.seq[j as int], last);
                     }
                     j += 1;
                 }
-                // Veracity: NEEDED proof block
                 proof {
                     let ghost prefix = a.seq@.take(i as int).map_values(|inner: ArraySeqMtEphS<T>| inner.seq@);
                     // Veracity: NEEDED assert
@@ -990,7 +992,6 @@ pub mod ArraySeqMtEph {
                 }
                 i += 1;
             }
-            // Veracity: NEEDED proof block
             proof {
             }
             ArraySeqMtEphS { seq }
@@ -1003,7 +1004,6 @@ pub mod ArraySeqMtEph {
         {
             if pred(x) {
                 let elem = x.clone();
-                // Veracity: NEEDED proof block
                 proof {
                     axiom_cloned_implies_eq_owned(*x, elem);
                 }
@@ -1030,6 +1030,7 @@ pub mod ArraySeqMtEph {
             ArraySeqMtEphIter { inner: self.seq.iter() }
         }
 
+        // Veracity: NEEDED proof block
         /// Parallel map via D&C fork-join.
         /// - Alg Analysis: APAS (Ch19 Alg 19.3): parallel variant — map
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — D&C + join, but append is sequential O(n).
@@ -1059,7 +1060,6 @@ pub mod ArraySeqMtEph {
                 let right_seq = a.subseq_copy(mid, len - mid);
                 let f1 = clone_fn(&f);
                 let f2 = f;
-                // Veracity: NEEDED proof block
                 proof {
                     // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < left_seq.seq@.len() implies #[trigger] f1.requires((&left_seq.seq@[i],)) by {
@@ -1080,6 +1080,7 @@ pub mod ArraySeqMtEph {
                     { Self::map_par(&left_seq, f1) },
                     move || -> (r: ArraySeqMtEphS<U>)
                         ensures r.seq@.len() == right_len@
+                    // Veracity: NEEDED proof block
                     { Self::map_par(&right_seq, f2) },
                 );
                 ArraySeqMtEphS::<U>::append(&left, &right)
@@ -1087,6 +1088,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// Parallel divide-and-conquer filter. Called by trait method filter.
+        // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter_dc<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
@@ -1095,6 +1097,7 @@ pub mod ArraySeqMtEph {
         ) -> (filtered: ArraySeqMtEphS<T>)
             where T: Clone + Eq + Send + Sync + 'static
             requires
+                // Veracity: NEEDED proof block
                 obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
                 forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
@@ -1102,6 +1105,7 @@ pub mod ArraySeqMtEph {
                 filtered.spec_arrayseqmteph_wf(),
                 filtered.spec_len() <= a.seq@.len(),
                 filtered.spec_len() == spec_filter_len(a.seq@, spec_pred),
+                // Veracity: NEEDED proof block
                 filtered.seq@.to_multiset() =~= a.seq@.to_multiset().filter(spec_pred),
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len()
                     ==> pred.ensures((&filtered.spec_index(i),), true),
@@ -1110,7 +1114,6 @@ pub mod ArraySeqMtEph {
             let len = a.seq.len();
             if len == 0 {
                 let filtered = ArraySeqMtEphS::<T> { seq: Vec::new() };
-                // Veracity: NEEDED proof block
                 proof {
                     broadcast use vstd::multiset::group_multiset_axioms;
                 }
@@ -1129,7 +1132,6 @@ pub mod ArraySeqMtEph {
                     let mut seq = Vec::with_capacity(1);
                     seq.push(elem);
                     let filtered = ArraySeqMtEphS { seq };
-                    // Veracity: NEEDED proof block
                     proof {
                         broadcast use vstd::multiset::group_multiset_axioms;
                         // Veracity: NEEDED assert
@@ -1138,7 +1140,6 @@ pub mod ArraySeqMtEph {
                     filtered
                 } else {
                     let filtered = ArraySeqMtEphS::<T> { seq: Vec::new() };
-                    // Veracity: NEEDED proof block
                     proof {
                         broadcast use vstd::seq_lib::group_to_multiset_ensures;
                         broadcast use vstd::multiset::group_multiset_axioms;
@@ -1156,7 +1157,6 @@ pub mod ArraySeqMtEph {
                 let ghost left_view = left_seq.seq@;
                 let ghost right_view = right_seq.seq@;
 
-                // Veracity: NEEDED proof block
                 proof {
                     // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < left_seq.seq@.len() implies
@@ -1189,6 +1189,7 @@ pub mod ArraySeqMtEph {
                     // Veracity: NEEDED assert
                     assert(a.seq@ =~= left_view + right_view);
                 }
+// Veracity: NEEDED proof block
 
                 let fa = move || -> (r: ArraySeqMtEphS<T>)
                     requires
@@ -1224,7 +1225,6 @@ pub mod ArraySeqMtEph {
 
                 let (left, right) = join(fa, fb);
                 let filtered = Self::append(&left, &right);
-                // Veracity: NEEDED proof block
                 proof {
                     lemma_spec_filter_len_concat(left_view, right_view, spec_pred);
                     lemma_seq_concat_to_multiset_filter(left_view, right_view, spec_pred);
@@ -1259,6 +1259,7 @@ pub mod ArraySeqMtEph {
                         }
                     }
                 }
+                // Veracity: NEEDED proof block
                 filtered
             }
         }
@@ -1295,7 +1296,6 @@ pub mod ArraySeqMtEph {
                 let right_seq = a.subseq_copy(mid, len - mid);
                 let p1 = clone_pred(&pred);
                 let p2 = pred;
-                // Veracity: NEEDED proof block
                 proof {
                     // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < left_seq.seq@.len() implies #[trigger] p1.requires((&left_seq.seq@[i],)) by {
@@ -1332,12 +1332,13 @@ pub mod ArraySeqMtEph {
                 let n = (s.len() - 1) as int;
                 let s1 = s.subrange(0, n);
                 let tail = s.subrange(n, s.len() as int);
-                let a_last = s[n];
-
-                s.lemma_fold_left_split(id, f, n);
+// Veracity: UNNEEDED proof block                 let a_last = s[n];
+// Veracity: UNNEEDED proof block 
+// Veracity: UNNEEDED proof block                 s.lemma_fold_left_split(id, f, n);
                 s.lemma_fold_left_split(x, f, n);
 
                 reveal_with_fuel(Seq::fold_left, 2);
+// Veracity: NEEDED proof block
 
                 let lid = s1.fold_left(id, f);
                 let lx = s1.fold_left(x, f);
@@ -1350,7 +1351,9 @@ pub mod ArraySeqMtEph {
         /// Parallel reduce via D&C fork-join (requires monoid).
         /// - Alg Analysis: APAS (Ch19 Alg 19.9): parallel variant — reduce
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(lg |a|).
+        // Veracity: NEEDED proof block
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
+            // Veracity: NEEDED proof block
             a: &ArraySeqMtEphS<T>,
             f: F,
             Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
@@ -1369,14 +1372,12 @@ pub mod ArraySeqMtEph {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
             if len == 0 {
-                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(Seq::fold_left, 1);
                 }
                 id
             } else if len == 1 {
                 let element = a.seq[0].clone();
-                // Veracity: NEEDED proof block
                 proof {
                     axiom_cloned_implies_eq_owned(a.seq[0 as int], element);
                     a.lemma_spec_index(0);
@@ -1385,15 +1386,14 @@ pub mod ArraySeqMtEph {
                 element
             } else {
                 let mid = len / 2;
+                // Veracity: NEEDED proof block
                 let left_seq = a.subseq_copy(0, mid);
                 let right_seq = a.subseq_copy(mid, len - mid);
                 let f1 = clone_fn2(&f);
                 let f2 = clone_fn2(&f);
                 let id1 = id.clone();
-                // Veracity: NEEDED proof block
                 proof { axiom_cloned_implies_eq_owned(id, id1); }
                 let id2 = id.clone();
-                // Veracity: NEEDED proof block
                 proof { axiom_cloned_implies_eq_owned(id, id2); }
 
                 let ghost left_s = Seq::new(left_seq.spec_len(), |i: int| left_seq.spec_index(i));
@@ -1427,14 +1427,15 @@ pub mod ArraySeqMtEph {
 
                 let (left, right) = join(fa, fb);
                 let combined = f(&left, &right);
-                // Veracity: NEEDED proof block
                 proof {
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED proof block
                     assert(left_s =~= s.subrange(0, mid as int));
                     // Veracity: NEEDED assert
                     assert(right_s =~= s.subrange(mid as int, len as int));
                     s.lemma_fold_left_split(id, spec_f, mid as int);
                     Self::lemma_monoid_fold_left(right_s, spec_f, id, left);
+                // Veracity: NEEDED proof block
                 }
                 combined
             }
@@ -1471,14 +1472,13 @@ pub mod ArraySeqMtEph {
                 let right_seq = a.subseq_copy(mid, len - mid);
                 let f1 = clone_fn(&f);
                 let f2 = clone_fn(&f);
-                // Veracity: NEEDED proof block
                 proof {
                 }
                 let ghost left_view = left_seq.seq@;
+                // Veracity: NEEDED proof block
                 let ghost right_view = right_seq.seq@;
                 let ghost left_len = left_seq.seq@.len();
                 let ghost right_len = right_seq.seq@.len();
-                // Veracity: NEEDED proof block
                 proof {
                     // Establish element equalities before join closures consume the sequences
                     // Veracity: NEEDED assert
@@ -1519,7 +1519,6 @@ pub mod ArraySeqMtEph {
 
                 let (left, right) = join(fa, fb);
                 let result = ArraySeqMtEphS::<U>::concat_seqs(left, right);
-                // Veracity: NEEDED proof block
                 proof {
                     // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < a_view.len() implies f.ensures((&a_view[i],), #[trigger] result.seq@[i]) by {
@@ -1680,6 +1679,7 @@ pub mod ArraySeqMtEph {
                 it@.1 == self.seq@,
                 iter_invariant(&it),
         {
+            // Veracity: NEEDED proof block
             ArraySeqMtEphIter { inner: self.seq.iter() }
         }
     }
@@ -1724,7 +1724,6 @@ pub mod ArraySeqMtEph {
             ensures equal == (self@ == other@)
         {
             let equal = self.seq == other.seq;
-            // Veracity: NEEDED proof block
             proof { assume(equal == (self@ == other@)); }
             equal
         }
