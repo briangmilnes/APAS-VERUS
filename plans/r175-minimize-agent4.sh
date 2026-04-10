@@ -2,6 +2,6 @@
 cd ~/projects/APAS-VERUS-agent4
 ~/projects/veracity/target/release/veracity-minimize-proofs \
   -c . --project APAS --chapter Chap53 \
-  --file PQMinStPer.rs \
+  -F src/Chap53/PQMinStPer.rs \
   -a -p --no-lib-min --fresh --danger \
   --max-incremental 0.00 --max-memory-increase 0.00

@@ -1,9 +1,20 @@
 #!/bin/bash
 cd ~/projects/APAS-VERUS-agent5
-~/projects/veracity/target/release/veracity-minimize-proofs \
-  -c . --project APAS --chapter Chap57,Chap59 \
-  --file DijkstraStEphF64.rs --file DijkstraStEphU64.rs \
-  --file JohnsonMtEphF64.rs --file JohnsonStEphF64.rs \
-  --file JohnsonMtEphI64.rs --file JohnsonStEphI64.rs \
-  -a -p --no-lib-min --fresh --danger \
-  --max-incremental 0.00 --max-memory-increase 0.00
+
+for f in \
+  src/Chap57/DijkstraStEphF64.rs \
+  src/Chap57/DijkstraStEphU64.rs \
+  src/Chap59/JohnsonMtEphF64.rs \
+  src/Chap59/JohnsonStEphF64.rs \
+  src/Chap59/JohnsonMtEphI64.rs \
+  src/Chap59/JohnsonStEphI64.rs; do
+
+  # Determine chapter from path
+  CHAP=$(echo "$f" | grep -oP 'Chap\d+')
+
+  ~/projects/veracity/target/release/veracity-minimize-proofs \
+    -c . --project APAS --chapter "$CHAP" \
+    -F "$f" \
+    -a -p --no-lib-min --fresh --danger \
+    --max-incremental 0.00 --max-memory-increase 0.00
+done
