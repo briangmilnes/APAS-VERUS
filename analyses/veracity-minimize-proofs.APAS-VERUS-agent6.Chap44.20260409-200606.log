@@ -10622,4 +10622,680 @@ Found 681 asserts in codebase, testing 681
 [354/681] assert L382 in out_neighbors (src/Chap52/AdjTableGraphMtPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -89s, mem: -291MB, real: 47s]
 [355/681] assert L379 in out_neighbors (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 14s, mem: 0MB, real: 6s]
 [356/681] assert L378 in out_neighbors (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +34%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +92s, mem: +136MB, real: 57s]
-[357/681] assert L353 in has_edge (src/Chap52/AdjTableGraphMtPer.rs)... 
+[357/681] assert L353 in has_edge (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +56%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +153s, mem: +348MB, real: 57s]
+[358/681] assert L350 in has_edge (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 63s, mem: 218MB, real: 8s]
+[359/681] assert L349 in has_edge (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +38%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +102s, mem: +26MB, real: 51s]
+[360/681] assert L318 in empty (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 179s, mem: 697MB, real: 14s]
+[361/681] assert L317 in empty (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +19%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +52s, mem: +113MB, real: 58s]
+[362/681] assert L316 in empty (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +39%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +105s, mem: +25MB, real: 55s]
+[363/681] assert L275 in count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static> (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +21%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +58s, mem: -1MB, real: 55s]
+[364/681] assert L266 in count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static> (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +13%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +35s, mem: +10MB, real: 55s]
+[365/681] assert L265 in count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static> (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +84%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +229s, mem: +49MB, real: 58s]
+[366/681] assert L261 in count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static> (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 11s, mem: 0MB, real: 8s]
+[367/681] assert L258 in count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static> (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +35%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +94s, mem: +56MB, real: 54s]
+[368/681] assert L254 in count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static> (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 31s, mem: 0MB, real: 8s]
+[369/681] assert L253 in count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static> (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +18%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +49s, mem: +7MB, real: 63s]
+[370/681] assert L252 in count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static> (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +7%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +20s, mem: -53MB, real: 56s]
+[371/681] assert L241 in count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static> (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +24%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +66s, mem: +178MB, real: 57s]
+[372/681] assert L237 in count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static> (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 211s, mem: 510MB, real: 13s]
+[373/681] assert L236 in count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static> (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +15%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +40s, mem: +303MB, real: 55s]
+[374/681] assert L234 in count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static> (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +39%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +105s, mem: +38MB, real: 57s]
+[375/681] assert L233 in count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static> (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +46%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +125s, mem: +32MB, real: 51s]
+[376/681] assert L229 in count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static> (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +24%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +65s, mem: +10MB, real: 51s]
+[377/681] assert L223 in count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static> (src/Chap52/AdjTableGraphMtPer.rs)... NEEDED (cpu hint: +69%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +188s, mem: +293MB, real: 54s]
+[378/681] assert L372 in lemma_sum_entry_sizes_eq<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 411s, mem: 721MB, real: 49s]
+[379/681] assert L371 in lemma_sum_entry_sizes_eq<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +203%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +553s, mem: +684MB, real: 83s]
+[380/681] assert L370 in lemma_sum_entry_sizes_eq<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +112%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +305s, mem: -72MB, real: 53s]
+[381/681] assert L364 in lemma_sum_entry_sizes_eq<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +14%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +39s, mem: -89MB, real: 53s]
+[382/681] assert L363 in lemma_sum_entry_sizes_eq<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 218s, mem: 394MB, real: 38s]
+[383/681] assert L359 in lemma_sum_entry_sizes_eq<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 262s, mem: 680MB, real: 22s]
+[384/681] assert L358 in lemma_sum_entry_sizes_eq<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +31%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +83s, mem: -3MB, real: 51s]
+[385/681] assert L350 in lemma_sum_entry_sizes_eq<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +60%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +162s, mem: +302MB, real: 57s]
+[386/681] assert L346 in lemma_sum_entry_sizes_eq<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 492s, mem: 616MB, real: 26s]
+[387/681] assert L345 in lemma_sum_entry_sizes_eq<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +107%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +290s, mem: -126MB, real: 58s]
+[388/681] assert L342 in lemma_sum_entry_sizes_eq<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +61%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +165s, mem: +362MB, real: 63s]
+[389/681] assert L338 in lemma_sum_entry_sizes_eq<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 252s, mem: 503MB, real: 24s]
+[390/681] assert L337 in lemma_sum_entry_sizes_eq<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +242%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +658s, mem: +326MB, real: 77s]
+[391/681] assert L333 in lemma_sum_entry_sizes_eq<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +138%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +376s, mem: +145MB, real: 68s]
+[392/681] assert L313 in lemma_sum_adj_sizes_monotone<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +39%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +105s, mem: +106MB, real: 57s]
+[393/681] assert L310 in lemma_sum_adj_sizes_monotone<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 367s, mem: 738MB, real: 24s]
+[394/681] assert L309 in lemma_sum_adj_sizes_monotone<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +238%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +648s, mem: +229MB, real: 64s]
+[395/681] assert L289 in lemma_sum_adj_remove<VV> (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 352s, mem: 725MB, real: 62s]
+[396/681] assert L269 in lemma_sum_of_bounded (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 181s, mem: 392MB, real: 22s]
+[397/681] assert L268 in lemma_sum_of_bounded (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -8s, mem: -163MB, real: 55s]
+[398/681] assert L266 in lemma_sum_of_bounded (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +29%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +78s, mem: -10MB, real: 48s]
+[399/681] assert L239 in lemma_sum_of_change_one (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +172%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +467s, mem: +509MB, real: 68s]
+[400/681] assert L221 in lemma_sum_of_ext (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +148%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +403s, mem: -222MB, real: 51s]
+[401/681] assert L209 in lemma_sum_of_all_zero (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -1s, mem: -135MB, real: 52s]
+[402/681] assert L165 in lemma_count_true_set_false (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +218%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +593s, mem: +526MB, real: 81s]
+[403/681] assert L146 in lemma_count_true_set_true (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... NEEDED (cpu hint: +59%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +161s, mem: +200MB, real: 88s]
+[404/681] assert L128 in lemma_count_true_ext (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -35s, mem: -230MB, real: 50s]
+[405/681] assert L116 in lemma_count_true_all_false (src/Chap52/AdjTableGraphSpecsAndLemmas.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -116s, mem: -224MB, real: 45s]
+[406/681] assert L773 in delete_edge (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -107s, mem: -226MB, real: 45s]
+[407/681] assert L769 in delete_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +66%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +180s, mem: +158MB, real: 53s]
+[408/681] assert L766 in delete_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +20%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +55s, mem: +24MB, real: 44s]
+[409/681] assert L765 in delete_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +21%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +57s, mem: +141MB, real: 47s]
+[410/681] assert L758 in delete_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 146s, mem: 381MB, real: 12s]
+[411/681] assert L753 in delete_edge (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -3s, mem: -225MB, real: 48s]
+[412/681] assert L752 in delete_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +20%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +54s, mem: -186MB, real: 50s]
+[413/681] assert L750 in delete_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +50%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +135s, mem: +40MB, real: 53s]
+[414/681] assert L743 in delete_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 175s, mem: 270MB, real: 11s]
+[415/681] assert L741 in delete_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +119%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +325s, mem: +128MB, real: 66s]
+[416/681] assert L740 in delete_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +105%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +285s, mem: +25MB, real: 52s]
+[417/681] assert L732 in delete_edge (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -58s, mem: -229MB, real: 45s]
+[418/681] assert L714 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +105%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +286s, mem: -57MB, real: 60s]
+[419/681] assert L710 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +159%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +433s, mem: -58MB, real: 53s]
+[420/681] assert L705 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +31%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +85s, mem: +212MB, real: 45s]
+[421/681] assert L704 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +168%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +458s, mem: +478MB, real: 61s]
+[422/681] assert L697 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 526s, mem: 154MB, real: 9s]
+[423/681] assert L692 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -87s, mem: -262MB, real: 44s]
+[424/681] assert L691 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +71%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +192s, mem: -33MB, real: 53s]
+[425/681] assert L688 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +157%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +427s, mem: -183MB, real: 54s]
+[426/681] assert L687 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -84s, mem: -224MB, real: 49s]
+[427/681] assert L680 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 130s, mem: 316MB, real: 8s]
+[428/681] assert L678 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +19%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +52s, mem: +156MB, real: 52s]
+[429/681] assert L677 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -27s, mem: -42MB, real: 48s]
+[430/681] assert L676 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -89s, mem: -209MB, real: 45s]
+[431/681] assert L675 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -47s, mem: -252MB, real: 45s]
+[432/681] assert L671 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +139%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +378s, mem: +285MB, real: 57s]
+[433/681] assert L670 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +214%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +582s, mem: +123MB, real: 52s]
+[434/681] assert L669 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -62s, mem: -13MB, real: 47s]
+[435/681] assert L668 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +15%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +42s, mem: -107MB, real: 48s]
+[436/681] assert L660 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +188%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +512s, mem: +450MB, real: 66s]
+[437/681] assert L659 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +38%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +103s, mem: -68MB, real: 66s]
+[438/681] assert L648 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +6%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +17s, mem: +29MB, real: 44s]
+[439/681] assert L647 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +3%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +8s, mem: +154MB, real: 42s]
+[440/681] assert L642 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 15s, mem: 0MB, real: 7s]
+[441/681] assert L641 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -122s, mem: -276MB, real: 42s]
+[442/681] assert L627 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -129s, mem: -236MB, real: 40s]
+[443/681] assert L626 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -124s, mem: -258MB, real: 43s]
+[444/681] assert L625 in insert_edge (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -93s, mem: -224MB, real: 46s]
+[445/681] assert L603 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -105s, mem: -237MB, real: 38s]
+[446/681] assert L601 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -29s, mem: -220MB, real: 43s]
+[447/681] assert L600 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +8%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +22s, mem: +66MB, real: 43s]
+[448/681] assert L598 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +12%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +34s, mem: +130MB, real: 44s]
+[449/681] assert L597 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -73s, mem: -222MB, real: 42s]
+[450/681] assert L591 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 17s, mem: 0MB, real: 6s]
+[451/681] assert L586 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -103s, mem: -212MB, real: 42s]
+[452/681] assert L585 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -62s, mem: -263MB, real: 43s]
+[453/681] assert L581 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 117s, mem: 0MB, real: 6s]
+[454/681] assert L572 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -24s, mem: -135MB, real: 41s]
+[455/681] assert L571 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -54s, mem: -227MB, real: 41s]
+[456/681] assert L569 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -126s, mem: -224MB, real: 41s]
+[457/681] assert L567 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -109s, mem: -226MB, real: 41s]
+[458/681] assert L564 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -38s, mem: -218MB, real: 44s]
+[459/681] assert L560 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 110s, mem: 0MB, real: 6s]
+[460/681] assert L558 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (mem hint: +3%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -27s, mem: +21MB, real: 40s]
+[461/681] assert L557 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -100s, mem: -268MB, real: 40s]
+[462/681] assert L554 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 15s, mem: 0MB, real: 6s]
+[463/681] assert L553 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -117s, mem: -238MB, real: 42s]
+[464/681] assert L551 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -98s, mem: -219MB, real: 43s]
+[465/681] assert L547 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +40%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +109s, mem: -122MB, real: 52s]
+[466/681] assert L545 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +156%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +423s, mem: +165MB, real: 55s]
+[467/681] assert L544 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -72s, mem: -224MB, real: 45s]
+[468/681] assert L540 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 151s, mem: 373MB, real: 8s]
+[469/681] assert L538 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +109%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +296s, mem: +251MB, real: 58s]
+[470/681] assert L534 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +165%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +449s, mem: +43MB, real: 54s]
+[471/681] assert L530 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -92s, mem: -223MB, real: 53s]
+[472/681] assert L528 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -69s, mem: -219MB, real: 51s]
+[473/681] assert L527 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +4%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +10s, mem: -259MB, real: 46s]
+[474/681] assert L522 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 278s, mem: 305MB, real: 11s]
+[475/681] assert L507 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +185%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +504s, mem: -46MB, real: 55s]
+[476/681] assert L472 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +127%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +346s, mem: +41MB, real: 44s]
+[477/681] assert L468 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +189%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +513s, mem: +544MB, real: 63s]
+[478/681] assert L464 in delete_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 582s, mem: 0MB, real: 8s]
+[479/681] assert L440 in insert_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +139%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +377s, mem: -221MB, real: 65s]
+[480/681] assert L435 in insert_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -57s, mem: -257MB, real: 56s]
+[481/681] assert L426 in insert_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -119s, mem: -224MB, real: 42s]
+[482/681] assert L425 in insert_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -136s, mem: -257MB, real: 38s]
+[483/681] assert L417 in insert_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 73s, mem: 379MB, real: 8s]
+[484/681] assert L411 in insert_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -39s, mem: -230MB, real: 40s]
+[485/681] assert L410 in insert_vertex (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -115s, mem: -281MB, real: 37s]
+[486/681] assert L405 in insert_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +6%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +15s, mem: +79MB, real: 44s]
+[487/681] assert L404 in insert_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +2%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +6s, mem: +82MB, real: 38s]
+[488/681] assert L397 in insert_vertex (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 8s, mem: 0MB, real: 5s]
+[489/681] assert L343 in vertices (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -135s, mem: -262MB, real: 38s]
+[490/681] assert L337 in vertices (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 100s, mem: 427MB, real: 9s]
+[491/681] assert L334 in vertices (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -31s, mem: -81MB, real: 38s]
+[492/681] assert L329 in vertices (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 120s, mem: 0MB, real: 6s]
+[493/681] assert L321 in vertices (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 249s, mem: 534MB, real: 34s]
+[494/681] assert L320 in vertices (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (cpu hint: +2%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +6s, mem: +49MB, real: 41s]
+[495/681] assert L318 in vertices (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -75s, mem: -268MB, real: 41s]
+[496/681] assert L313 in vertices (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 9s, mem: 0MB, real: 6s]
+[497/681] assert L245 in num_edges (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 136s, mem: 437MB, real: 36s]
+[498/681] assert L226 in from_table (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 246s, mem: 688MB, real: 33s]
+[499/681] assert L225 in from_table (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 109s, mem: 388MB, real: 29s]
+[500/681] assert L224 in from_table (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 129s, mem: 389MB, real: 33s]
+[501/681] assert L223 in from_table (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 131s, mem: 425MB, real: 33s]
+[502/681] assert L214 in empty (src/Chap52/AdjTableGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 137s, mem: 400MB, real: 36s]
+[503/681] assert L212 in empty (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -136s, mem: -238MB, real: 41s]
+[504/681] assert L211 in empty (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -123s, mem: -262MB, real: 43s]
+[505/681] assert L210 in empty (src/Chap52/AdjTableGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -120s, mem: -224MB, real: 44s]
+[506/681] assert L839 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -79s, mem: -260MB, real: 47s]
+[507/681] assert L838 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -24s, mem: -216MB, real: 45s]
+[508/681] assert L833 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 264s, mem: 308MB, real: 10s]
+[509/681] assert L830 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +193%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +525s, mem: -17MB, real: 57s]
+[510/681] assert L823 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 476s, mem: 0MB, real: 6s]
+[511/681] assert L812 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +6%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +17s, mem: +89MB, real: 40s]
+[512/681] assert L808 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (mem hint: +5%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -4s, mem: +30MB, real: 41s]
+[513/681] assert L806 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +9%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +24s, mem: +92MB, real: 41s]
+[514/681] assert L805 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (mem hint: +7%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -3s, mem: +46MB, real: 40s]
+[515/681] assert L800 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 12s, mem: 0MB, real: 6s]
+[516/681] assert L796 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -145s, mem: -294MB, real: 39s]
+[517/681] assert L795 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -90s, mem: -254MB, real: 42s]
+[518/681] assert L793 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -124s, mem: -222MB, real: 43s]
+[519/681] assert L787 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 104s, mem: 346MB, real: 9s]
+[520/681] assert L785 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -11s, mem: -134MB, real: 42s]
+[521/681] assert L784 in delete_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +5%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +13s, mem: +33MB, real: 40s]
+[522/681] assert L759 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -71s, mem: -217MB, real: 40s]
+[523/681] assert L755 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -28s, mem: -52MB, real: 38s]
+[524/681] assert L751 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -82s, mem: -221MB, real: 41s]
+[525/681] assert L750 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -138s, mem: -220MB, real: 38s]
+[526/681] assert L745 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 75s, mem: 360MB, real: 10s]
+[527/681] assert L741 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -117s, mem: -215MB, real: 37s]
+[528/681] assert L740 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -56s, mem: -226MB, real: 43s]
+[529/681] assert L738 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -11s, mem: -8MB, real: 40s]
+[530/681] assert L737 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +4%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +11s, mem: +147MB, real: 38s]
+[531/681] assert L731 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 9s, mem: 0MB, real: 6s]
+[532/681] assert L729 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -130s, mem: -223MB, real: 39s]
+[533/681] assert L728 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -134s, mem: -265MB, real: 39s]
+[534/681] assert L727 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -128s, mem: -235MB, real: 39s]
+[535/681] assert L726 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -136s, mem: -225MB, real: 38s]
+[536/681] assert L718 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -105s, mem: -262MB, real: 41s]
+[537/681] assert L717 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -92s, mem: -230MB, real: 39s]
+[538/681] assert L716 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -71s, mem: -260MB, real: 38s]
+[539/681] assert L715 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -45s, mem: -112MB, real: 38s]
+[540/681] assert L709 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -20s, mem: -14MB, real: 40s]
+[541/681] assert L708 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +6%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +15s, mem: +91MB, real: 39s]
+[542/681] assert L698 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (mem hint: +19%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -11s, mem: +124MB, real: 39s]
+[543/681] assert L697 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -49s, mem: -300MB, real: 47s]
+[544/681] assert L693 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 154s, mem: 453MB, real: 10s]
+[545/681] assert L692 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +16%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +43s, mem: +1912MB, real: 47s]
+[546/681] assert L680 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +43%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +117s, mem: +1943MB, real: 50s]
+[547/681] assert L679 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +17%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +47s, mem: +1622MB, real: 45s]
+[548/681] assert L678 in insert_edge (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +8%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +23s, mem: -30MB, real: 43s]
+[549/681] assert L657 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -22s, mem: -150MB, real: 43s]
+[550/681] assert L655 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +14%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +37s, mem: +91MB, real: 43s]
+[551/681] assert L654 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +4%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +12s, mem: +1192MB, real: 50s]
+[552/681] assert L652 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +40%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +108s, mem: +2138MB, real: 47s]
+[553/681] assert L651 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +50%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +136s, mem: +2348MB, real: 42s]
+[554/681] assert L645 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 253s, mem: 0MB, real: 7s]
+[555/681] assert L640 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -66s, mem: -280MB, real: 43s]
+[556/681] assert L636 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 261s, mem: 804MB, real: 14s]
+[557/681] assert L626 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +43%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +118s, mem: +2116MB, real: 43s]
+[558/681] assert L625 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +56%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +153s, mem: +2241MB, real: 43s]
+[559/681] assert L623 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +11%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +31s, mem: +1654MB, real: 42s]
+[560/681] assert L621 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -81s, mem: -231MB, real: 40s]
+[561/681] assert L618 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -139s, mem: -259MB, real: 38s]
+[562/681] assert L614 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 85s, mem: 357MB, real: 9s]
+[563/681] assert L612 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +35%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +94s, mem: +1159MB, real: 48s]
+[564/681] assert L611 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +46%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +125s, mem: +2226MB, real: 43s]
+[565/681] assert L608 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 125s, mem: 2180MB, real: 6s]
+[566/681] assert L607 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +39%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +105s, mem: +1902MB, real: 43s]
+[567/681] assert L605 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -91s, mem: -276MB, real: 44s]
+[568/681] assert L601 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +38%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +102s, mem: +1148MB, real: 46s]
+[569/681] assert L594 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 237s, mem: 2004MB, real: 7s]
+[570/681] assert L592 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +3%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +9s, mem: +1874MB, real: 40s]
+[571/681] assert L588 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +34%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +93s, mem: +1983MB, real: 39s]
+[572/681] assert L584 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -143s, mem: -262MB, real: 36s]
+[573/681] assert L582 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +27%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +73s, mem: +947MB, real: 46s]
+[574/681] assert L575 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 251s, mem: 1535MB, real: 7s]
+[575/681] assert L573 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +46%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +125s, mem: +2231MB, real: 40s]
+[576/681] assert L561 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +21%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +57s, mem: +1978MB, real: 39s]
+[577/681] assert L560 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -21s, mem: -255MB, real: 39s]
+[578/681] assert L548 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +21%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +56s, mem: +1185MB, real: 46s]
+[579/681] assert L508 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (mem hint: +290%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -28s, mem: +1889MB, real: 41s]
+[580/681] assert L504 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +34%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +93s, mem: +2305MB, real: 39s]
+[581/681] assert L500 in delete_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 12s, mem: 0MB, real: 5s]
+[582/681] assert L480 in insert_vertex (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -144s, mem: -251MB, real: 36s]
+[583/681] assert L475 in insert_vertex (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -21s, mem: -26MB, real: 45s]
+[584/681] assert L471 in insert_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +34%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +92s, mem: +1877MB, real: 42s]
+[585/681] assert L470 in insert_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +47%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +127s, mem: +2374MB, real: 39s]
+[586/681] assert L465 in insert_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 135s, mem: 2204MB, real: 6s]
+[587/681] assert L461 in insert_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +44%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +120s, mem: +2039MB, real: 38s]
+[588/681] assert L460 in insert_vertex (src/Chap52/AdjTableGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -91s, mem: -273MB, real: 38s]
+[589/681] assert L455 in insert_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (mem hint: +264%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -28s, mem: +1721MB, real: 45s]
+[590/681] assert L454 in insert_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +23%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +62s, mem: +2031MB, real: 39s]
+[591/681] assert L448 in insert_vertex (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 125s, mem: 2193MB, real: 7s]
+[592/681] assert L392 in vertices (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +19%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +52s, mem: +2039MB, real: 38s]
+[593/681] assert L375 in vertices (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 94s, mem: 351MB, real: 9s]
+[594/681] assert L367 in vertices (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 302s, mem: 986MB, real: 36s]
+[595/681] assert L364 in vertices (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +34%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +92s, mem: +1860MB, real: 43s]
+[596/681] assert L357 in vertices (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 248s, mem: 2110MB, real: 6s]
+[597/681] assert L353 in vertices (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (cpu hint: +31%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +83s, mem: +2007MB, real: 39s]
+[598/681] assert L349 in vertices (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (mem hint: +311%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -21s, mem: +2025MB, real: 40s]
+[599/681] assert L281 in num_edges (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 134s, mem: 349MB, real: 32s]
+[600/681] assert L260 in from_table (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 264s, mem: 1781MB, real: 37s]
+[601/681] assert L259 in from_table (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 355s, mem: 2873MB, real: 32s]
+[602/681] assert L258 in from_table (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 282s, mem: 2891MB, real: 30s]
+[603/681] assert L257 in from_table (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 295s, mem: 2490MB, real: 28s]
+[604/681] assert L248 in empty (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 132s, mem: 388MB, real: 32s]
+[605/681] assert L247 in empty (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 367s, mem: 1762MB, real: 37s]
+[606/681] assert L246 in empty (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 373s, mem: 2811MB, real: 34s]
+[607/681] assert L245 in empty (src/Chap52/AdjTableGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 361s, mem: 2882MB, real: 33s]
+[608/681] assert L410 in delete_edge (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (cpu hint: +12%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +34s, mem: +2096MB, real: 38s]
+[609/681] assert L395 in insert_edge (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (cpu hint: +41%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +111s, mem: +197MB, real: 45s]
+[610/681] assert L378 in delete_vertex (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (cpu hint: +11%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +30s, mem: +1896MB, real: 40s]
+[611/681] assert L377 in delete_vertex (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (cpu hint: +26%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +72s, mem: +1911MB, real: 39s]
+[612/681] assert L376 in delete_vertex (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (mem hint: +314%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -22s, mem: +2043MB, real: 40s]
+[613/681] assert L375 in delete_vertex (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (cpu hint: +10%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +28s, mem: +211MB, real: 43s]
+[614/681] assert L372 in delete_vertex (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (cpu hint: +22%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +60s, mem: +1884MB, real: 44s]
+[615/681] assert L364 in delete_vertex (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (cpu hint: +36%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +97s, mem: +2036MB, real: 40s]
+[616/681] assert L363 in delete_vertex (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (cpu hint: +44%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +120s, mem: +2447MB, real: 38s]
+[617/681] assert L362 in delete_vertex (src/Chap52/EdgeSetGraphMtPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -108s, mem: -56MB, real: 37s]
+[618/681] assert L315 in insert_vertex (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (cpu hint: +93%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +254s, mem: +360MB, real: 51s]
+[619/681] assert L299 in out_neighbors (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (cpu hint: +95%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +259s, mem: +1857MB, real: 42s]
+[620/681] assert L297 in out_neighbors (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (cpu hint: +110%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +298s, mem: +1843MB, real: 40s]
+[621/681] assert L294 in out_neighbors (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (cpu hint: +118%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +322s, mem: +2172MB, real: 40s]
+[622/681] assert L292 in out_neighbors (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (cpu hint: +124%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +338s, mem: +2339MB, real: 40s]
+[623/681] assert L291 in out_neighbors (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (cpu hint: +78%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +213s, mem: +2021MB, real: 39s]
+[624/681] assert L289 in out_neighbors (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (cpu hint: +75%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +203s, mem: +1988MB, real: 38s]
+[625/681] assert L288 in out_neighbors (src/Chap52/EdgeSetGraphMtPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -136s, mem: -220MB, real: 40s]
+[626/681] assert L285 in out_neighbors (src/Chap52/EdgeSetGraphMtPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -62s, mem: -258MB, real: 45s]
+[627/681] assert L277 in out_neighbors (src/Chap52/EdgeSetGraphMtPer.rs)... NEEDED (mem hint: +31%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -29s, mem: +202MB, real: 36s]
+[628/681] assert L276 in out_neighbors (src/Chap52/EdgeSetGraphMtPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -139s, mem: -220MB, real: 38s]
+[629/681] assert L275 in out_neighbors (src/Chap52/EdgeSetGraphMtPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -52s, mem: -216MB, real: 39s]
+[630/681] assert L429 in delete_edge (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 169s, mem: 654MB, real: 32s]
+[631/681] assert L425 in delete_edge (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 355s, mem: 1623MB, real: 38s]
+[632/681] assert L415 in insert_edge (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (cpu hint: +27%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +74s, mem: +1942MB, real: 39s]
+[633/681] assert L408 in insert_edge (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (cpu hint: +27%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +73s, mem: +2007MB, real: 39s]
+[634/681] assert L395 in delete_vertex (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (cpu hint: +1%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +3s, mem: +2053MB, real: 37s]
+[635/681] assert L394 in delete_vertex (src/Chap52/EdgeSetGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -119s, mem: -235MB, real: 36s]
+[636/681] assert L393 in delete_vertex (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (cpu hint: +76%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +206s, mem: +382MB, real: 52s]
+[637/681] assert L390 in delete_vertex (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (cpu hint: +106%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +288s, mem: +1538MB, real: 39s]
+[638/681] assert L388 in delete_vertex (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (cpu hint: +79%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +214s, mem: +1917MB, real: 39s]
+[639/681] assert L387 in delete_vertex (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (cpu hint: +73%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +199s, mem: +1959MB, real: 40s]
+[640/681] assert L385 in delete_vertex (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 469s, mem: 2728MB, real: 36s]
+[641/681] assert L381 in delete_vertex (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 469s, mem: 2729MB, real: 32s]
+[642/681] assert L333 in insert_vertex (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 461s, mem: 2751MB, real: 34s]
+[643/681] assert L329 in insert_vertex (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 131s, mem: 440MB, real: 35s]
+[644/681] assert L314 in out_neighbors (src/Chap52/EdgeSetGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -135s, mem: -215MB, real: 41s]
+[645/681] assert L312 in out_neighbors (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 126s, mem: 430MB, real: 34s]
+[646/681] assert L310 in out_neighbors (src/Chap52/EdgeSetGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -120s, mem: -249MB, real: 38s]
+[647/681] assert L309 in out_neighbors (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 115s, mem: 384MB, real: 28s]
+[648/681] assert L308 in out_neighbors (src/Chap52/EdgeSetGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -97s, mem: -224MB, real: 40s]
+[649/681] assert L305 in out_neighbors (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 125s, mem: 447MB, real: 7s]
+[650/681] assert L293 in out_neighbors (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (mem hint: +291%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -18s, mem: +1896MB, real: 39s]
+[651/681] assert L292 in out_neighbors (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (cpu hint: +28%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +75s, mem: +2181MB, real: 38s]
+[652/681] assert L288 in out_neighbors (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (cpu hint: +37%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +101s, mem: +2482MB, real: 39s]
+[653/681] assert L282 in out_neighbors (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (mem hint: +270%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -81s, mem: +1756MB, real: 36s]
+[654/681] assert L281 in out_neighbors (src/Chap52/EdgeSetGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -66s, mem: -253MB, real: 38s]
+[655/681] assert L280 in out_neighbors (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 214s, mem: 670MB, real: 30s]
+[656/681] assert L279 in out_neighbors (src/Chap52/EdgeSetGraphStEph.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -53s, mem: -128MB, real: 37s]
+[657/681] assert L278 in out_neighbors (src/Chap52/EdgeSetGraphStEph.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 106s, mem: 428MB, real: 26s]
+[658/681] assert L402 in delete_edge (src/Chap52/EdgeSetGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -76s, mem: -309MB, real: 36s]
+[659/681] assert L383 in insert_edge (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (cpu hint: +14%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +39s, mem: +930MB, real: 43s]
+[660/681] assert L367 in delete_vertex (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (mem hint: +292%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -8s, mem: +1904MB, real: 39s]
+[661/681] assert L366 in delete_vertex (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (mem hint: +313%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -15s, mem: +2038MB, real: 40s]
+[662/681] assert L365 in delete_vertex (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (mem hint: +334%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -10s, mem: +2174MB, real: 40s]
+[663/681] assert L364 in delete_vertex (src/Chap52/EdgeSetGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -136s, mem: -257MB, real: 37s]
+[664/681] assert L363 in delete_vertex (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (cpu hint: +1%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +2s, mem: +1278MB, real: 45s]
+[665/681] assert L362 in delete_vertex (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (mem hint: +298%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -18s, mem: +1937MB, real: 40s]
+[666/681] assert L359 in delete_vertex (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (cpu hint: +45%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +122s, mem: +2514MB, real: 38s]
+[667/681] assert L330 in insert_vertex (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (cpu hint: +40%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +109s, mem: +2549MB, real: 38s]
+[668/681] assert L313 in out_neighbors (src/Chap52/EdgeSetGraphStPer.rs)... UNNEEDED (commented) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -84s, mem: -262MB, real: 37s]
+[669/681] assert L311 in out_neighbors (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 238s, mem: 2228MB, real: 35s]
+[670/681] assert L309 in out_neighbors (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (mem hint: +298%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -47s, mem: +1943MB, real: 34s]
+[671/681] assert L308 in out_neighbors (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (mem hint: +324%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -8s, mem: +2110MB, real: 39s]
+[672/681] assert L307 in out_neighbors (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (mem hint: +456%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: -31s, mem: +2968MB, real: 37s]
+[673/681] assert L304 in out_neighbors (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (restored) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: 167s, mem: 3631MB, real: 8s]
+[674/681] assert L293 in out_neighbors (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (cpu hint: +46%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +126s, mem: +2746MB, real: 38s]
+[675/681] assert L292 in out_neighbors (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (cpu hint: +87%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +236s, mem: +151MB, real: 46s]
+[676/681] assert L288 in out_neighbors (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (cpu hint: +73%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +198s, mem: +1375MB, real: 40s]
+[677/681] assert L284 in out_neighbors (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (cpu hint: +113%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +308s, mem: +2017MB, real: 45s]
+[678/681] assert L283 in out_neighbors (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (cpu hint: +120%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +327s, mem: +2292MB, real: 39s]
+[679/681] assert L282 in out_neighbors (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (cpu hint: +94%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +255s, mem: +2112MB, real: 37s]
+[680/681] assert L281 in out_neighbors (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (cpu hint: +106%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +288s, mem: +3085MB, real: 39s]
+[681/681] assert L280 in out_neighbors (src/Chap52/EdgeSetGraphStPer.rs)... NEEDED (cpu hint: +58%) [baseline cpu: 272s, mem: 651MB, real: 51s | cpu: +157s, mem: +3243MB, real: 40s]
+
+Phase 10 Summary: 681 tested, 166 removed (commented)
+
+Phase 11: Skipped (use -m flag to enable admit minimization)
+
+═══════════════════════════════════════════════════════════════
+Phase 12: Testing proof {} blocks
+═══════════════════════════════════════════════════════════════
+
+  Found 216 proof {} blocks in 15 files
+  Testing 216 proof blocks...
+
+[Baseline] verification CPU: 136s (2m 16s), z3 RSS: 391 MB, wall: 38s
+
+  [1/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:236-246 in fn new... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 128s, mem: 385MB, real: 32s]
+  [2/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:267-267 in fn from_matrix... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [3/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:284-284 in fn from_matrix... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 119s, mem: 432MB, real: 30s]
+  [4/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:295-306 in fn from_matrix... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [5/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:356-374 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [6/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:379-388 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 102s, mem: 362MB, real: 9s]
+  [7/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:402-402 in fn out_degree... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [8/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:415-415 in fn out_degree... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 215s, mem: 698MB, real: 31s]
+  [9/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:480-487 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [10/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:490-499 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 198s, mem: 518MB, real: 31s]
+  [11/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:502-534 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 62s, mem: 344MB, real: 8s]
+  [12/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:563-569 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [13/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:583-583 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 141s, mem: 962MB, real: 7s]
+  [14/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:588-588 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 237s, mem: 2493MB, real: 31s]
+  [15/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:601-601 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 167s, mem: 2599MB, real: 7s]
+  [16/216] Testing proof block at src/Chap52/AdjMatrixGraphMtEph.rs:612-623 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 208s, mem: 2259MB, real: 6s]
+  [17/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:241-252 in fn new... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 312s, mem: 2970MB, real: 33s]
+  [18/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:273-273 in fn from_matrix... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [19/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:290-290 in fn from_matrix... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 286s, mem: 4092MB, real: 31s]
+  [20/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:301-312 in fn from_matrix... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [21/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:366-384 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [22/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:389-398 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 221s, mem: 3531MB, real: 6s]
+  [23/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:412-412 in fn out_degree... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [24/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:425-425 in fn out_degree... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 131s, mem: 3532MB, real: 29s]
+  [25/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:489-496 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [26/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:499-508 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 115s, mem: 416MB, real: 28s]
+  [27/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:514-548 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [28/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:578-584 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [29/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:598-598 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 42s, mem: 389MB, real: 7s]
+  [30/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:603-603 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 106s, mem: 387MB, real: 28s]
+  [31/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:616-616 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 4s, mem: 0MB, real: 5s]
+  [32/216] Testing proof block at src/Chap52/AdjMatrixGraphMtPer.rs:627-638 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 5s, mem: 0MB, real: 5s]
+  [33/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:222-233 in fn new... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 120s, mem: 436MB, real: 27s]
+  [34/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:254-254 in fn from_matrix... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [35/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:271-271 in fn from_matrix... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 100s, mem: 394MB, real: 28s]
+  [36/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:282-293 in fn from_matrix... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [37/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:341-359 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [38/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:364-373 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 4s, mem: 0MB, real: 5s]
+  [39/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:384-384 in fn out_degree... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [40/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:397-397 in fn out_degree... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 228s, mem: 739MB, real: 31s]
+  [41/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:462-469 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [42/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:472-481 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 267s, mem: 2173MB, real: 34s]
+  [43/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:484-517 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 214s, mem: 2243MB, real: 8s]
+  [44/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:546-552 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [45/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:566-566 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 114s, mem: 2174MB, real: 6s]
+  [46/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:571-571 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 266s, mem: 2698MB, real: 30s]
+  [47/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:584-584 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 218s, mem: 2702MB, real: 7s]
+  [48/216] Testing proof block at src/Chap52/AdjMatrixGraphStEph.rs:595-606 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 114s, mem: 2354MB, real: 6s]
+  [49/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:236-247 in fn new... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 276s, mem: 4107MB, real: 30s]
+  [50/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:268-268 in fn from_matrix... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [51/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:285-285 in fn from_matrix... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 382s, mem: 3892MB, real: 29s]
+  [52/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:296-307 in fn from_matrix... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [53/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:355-373 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [54/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:378-387 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 8s, mem: 0MB, real: 6s]
+  [55/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:398-398 in fn out_degree... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [56/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:411-411 in fn out_degree... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 118s, mem: 393MB, real: 30s]
+  [57/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:475-482 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [58/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:485-494 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 118s, mem: 353MB, real: 30s]
+  [59/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:500-532 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [60/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:562-568 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [61/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:582-582 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 112s, mem: 767MB, real: 9s]
+  [62/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:587-587 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 284s, mem: 2295MB, real: 34s]
+  [63/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:600-600 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 229s, mem: 2272MB, real: 7s]
+  [64/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:611-622 in fn complement... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 127s, mem: 2173MB, real: 6s]
+  [65/216] Testing proof block at src/Chap52/AdjMatrixGraphStPer.rs:647-647 in fn eq... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [66/216] Testing proof block at src/Chap52/AdjSeqGraphMtEph.rs:243-248 in fn new... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 248s, mem: 2713MB, real: 30s]
+  [67/216] Testing proof block at src/Chap52/AdjSeqGraphMtEph.rs:267-270 in fn from_seq... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [68/216] Testing proof block at src/Chap52/AdjSeqGraphMtEph.rs:276-281 in fn from_seq... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 228s, mem: 2695MB, real: 7s]
+  [69/216] Testing proof block at src/Chap52/AdjSeqGraphMtEph.rs:360-362 in fn set_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [70/216] Testing proof block at src/Chap52/AdjSeqGraphMtEph.rs:369-379 in fn set_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 126s, mem: 2528MB, real: 6s]
+  [71/216] Testing proof block at src/Chap52/AdjSeqGraphMtEph.rs:455-468 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [72/216] Testing proof block at src/Chap52/AdjSeqGraphMtEph.rs:508-511 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [73/216] Testing proof block at src/Chap52/AdjSeqGraphMtEph.rs:513-527 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 127s, mem: 3514MB, real: 6s]
+  [74/216] Testing proof block at src/Chap52/AdjSeqGraphMtPer.rs:231-236 in fn new... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 315s, mem: 3933MB, real: 33s]
+  [75/216] Testing proof block at src/Chap52/AdjSeqGraphMtPer.rs:255-258 in fn from_seq... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [76/216] Testing proof block at src/Chap52/AdjSeqGraphMtPer.rs:264-269 in fn from_seq... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 10s, mem: 0MB, real: 5s]
+  [77/216] Testing proof block at src/Chap52/AdjSeqGraphMtPer.rs:363-369 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [78/216] Testing proof block at src/Chap52/AdjSeqGraphMtPer.rs:391-391 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 116s, mem: 429MB, real: 30s]
+  [79/216] Testing proof block at src/Chap52/AdjSeqGraphMtPer.rs:448-479 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [80/216] Testing proof block at src/Chap52/AdjSeqGraphMtPer.rs:569-573 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [81/216] Testing proof block at src/Chap52/AdjSeqGraphMtPer.rs:580-604 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 93s, mem: 349MB, real: 8s]
+  [82/216] Testing proof block at src/Chap52/AdjSeqGraphStEph.rs:282-287 in fn new... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 258s, mem: 1771MB, real: 34s]
+  [83/216] Testing proof block at src/Chap52/AdjSeqGraphStEph.rs:306-309 in fn from_seq... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [84/216] Testing proof block at src/Chap52/AdjSeqGraphStEph.rs:315-319 in fn from_seq... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 217s, mem: 1737MB, real: 7s]
+  [85/216] Testing proof block at src/Chap52/AdjSeqGraphStEph.rs:399-401 in fn set_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [86/216] Testing proof block at src/Chap52/AdjSeqGraphStEph.rs:409-421 in fn set_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 124s, mem: 2201MB, real: 7s]
+  [87/216] Testing proof block at src/Chap52/AdjSeqGraphStEph.rs:508-520 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [88/216] Testing proof block at src/Chap52/AdjSeqGraphStEph.rs:561-565 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [89/216] Testing proof block at src/Chap52/AdjSeqGraphStEph.rs:567-580 in fn set_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [90/216] Testing proof block at src/Chap52/AdjSeqGraphStPer.rs:236-240 in fn new... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 220s, mem: 2699MB, real: 31s]
+  [91/216] Testing proof block at src/Chap52/AdjSeqGraphStPer.rs:259-262 in fn from_seq... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [92/216] Testing proof block at src/Chap52/AdjSeqGraphStPer.rs:268-273 in fn from_seq... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 112s, mem: 2338MB, real: 6s]
+  [93/216] Testing proof block at src/Chap52/AdjSeqGraphStPer.rs:367-374 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [94/216] Testing proof block at src/Chap52/AdjSeqGraphStPer.rs:397-397 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 312s, mem: 3913MB, real: 32s]
+  [95/216] Testing proof block at src/Chap52/AdjSeqGraphStPer.rs:451-482 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [96/216] Testing proof block at src/Chap52/AdjSeqGraphStPer.rs:572-577 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [97/216] Testing proof block at src/Chap52/AdjSeqGraphStPer.rs:584-611 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 119s, mem: 3512MB, real: 6s]
+  [98/216] Testing proof block at src/Chap52/AdjSeqGraphStPer.rs:637-637 in fn eq... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 211s, mem: 3931MB, real: 13s]
+  [99/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:200-200 in fn count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static>... NEEDED (cpu hint: +56%) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: +76s, mem: +147MB, real: 36s]
+  [100/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:224-224 in fn count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static>... UNNEEDED (commented) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: -9s, mem: -4MB, real: 33s]
+  [101/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:231-231 in fn count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static>... NEEDED (cpu hint: +63%) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: +86s, mem: +176MB, real: 37s]
+  [102/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:234-253 in fn count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static>... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [103/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:258-282 in fn count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static>... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [104/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:288-291 in fn count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static>... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [105/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:327-343 in fn empty... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [106/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:363-378 in fn has_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [107/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:395-409 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [108/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:443-487 in fn insert_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [109/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:497-503 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [110/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:513-624 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [111/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:627-629 in fn delete_vertex... UNNEEDED (commented) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: -14s, mem: -5MB, real: 36s]
+  [112/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:640-643 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [113/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:656-658 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 109s, mem: 386MB, real: 9s]
+  [114/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:668-676 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 221s, mem: 2601MB, real: 33s]
+  [115/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:687-689 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [116/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:699-720 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 121s, mem: 4647MB, real: 6s]
+  [117/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:726-732 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [118/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:738-743 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [119/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:744-748 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [120/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:755-882 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [121/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:890-904 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [122/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:911-915 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [123/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:916-927 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [124/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:933-984 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [125/216] Testing proof block at src/Chap52/AdjTableGraphMtPer.rs:991-1009 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [126/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:208-216 in fn empty... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 333s, mem: 8526MB, real: 32s]
+  [127/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:223-236 in fn from_table... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [128/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:245-253 in fn num_edges... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [129/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:270-273 in fn num_edges... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [130/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:275-280 in fn num_edges... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 10s, mem: 0MB, real: 5s]
+  [131/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:291-293 in fn vertices... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 34s, mem: 425MB, real: 6s]
+  [132/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:313-315 in fn vertices... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 135s, mem: 370MB, real: 29s]
+  [133/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:318-333 in fn vertices... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [134/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:336-355 in fn vertices... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [135/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:363-363 in fn has_edge... NEEDED (cpu hint: +88%) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: +119s, mem: +4883MB, real: 39s]
+  [136/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:378-378 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 215s, mem: 7454MB, real: 19s]
+  [137/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:387-387 in fn out_degree... NEEDED (cpu hint: +88%) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: +120s, mem: +7883MB, real: 37s]
+  [138/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:396-396 in fn insert_vertex... NEEDED (cpu hint: +143%) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: +195s, mem: +336MB, real: 41s]
+  [139/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:403-462 in fn insert_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [140/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:467-467 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 587s, mem: 3986MB, real: 36s]
+  [141/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:478-493 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [142/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:523-528 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 460s, mem: 7609MB, real: 30s]
+  [143/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:540-605 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [144/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:609-639 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [145/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:644-644 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 591s, mem: 8855MB, real: 34s]
+  [146/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:651-651 in fn insert_edge... NEEDED (cpu hint: +260%) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: +354s, mem: +8067MB, real: 39s]
+  [147/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:656-666 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [148/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:674-689 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [149/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:695-700 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [150/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:706-714 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [151/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:716-768 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [152/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:773-773 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 183s, mem: 391MB, real: 34s]
+  [153/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:785-785 in fn delete_edge... NEEDED (cpu hint: +86%) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: +117s, mem: +354MB, real: 36s]
+  [154/216] Testing proof block at src/Chap52/AdjTableGraphStEph.rs:790-836 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [155/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:244-253 in fn empty... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 151s, mem: 474MB, real: 28s]
+  [156/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:260-273 in fn from_table... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [157/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:279-279 in fn num_vertices... NEEDED (cpu hint: +68%) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: +92s, mem: +246MB, real: 36s]
+  [158/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:285-292 in fn num_edges... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [159/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:309-312 in fn num_edges... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [160/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:314-318 in fn num_edges... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 4s, mem: 0MB, real: 5s]
+  [161/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:327-329 in fn vertices... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [162/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:351-353 in fn vertices... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 142s, mem: 396MB, real: 29s]
+  [163/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:356-384 in fn vertices... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [164/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:387-409 in fn vertices... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [165/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:415-415 in fn has_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [166/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:426-426 in fn out_neighbors... NEEDED (mem hint: +1%) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: -26s, mem: +5MB, real: 34s]
+  [167/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:445-445 in fn out_degree... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [168/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:454-454 in fn insert_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [169/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:462-509 in fn insert_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [170/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:515-515 in fn delete_vertex... UNNEEDED (commented) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: -3s, mem: -45MB, real: 34s]
+  [171/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:522-536 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [172/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:571-576 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 116s, mem: 343MB, real: 27s]
+  [173/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:578-590 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [174/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:599-672 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 95s, mem: 295MB, real: 8s]
+  [175/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:677-708 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [176/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:714-714 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [177/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:721-721 in fn insert_edge... NEEDED (cpu hint: +76%) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: +104s, mem: +375MB, real: 34s]
+  [178/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:724-737 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [179/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:743-757 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [180/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:762-766 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [181/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:770-775 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [182/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:781-821 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 4s, mem: 0MB, real: 6s]
+  [183/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:827-827 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [184/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:836-836 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [185/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:842-881 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 15s, mem: 0MB, real: 5s]
+  [186/216] Testing proof block at src/Chap52/AdjTableGraphStPer.rs:887-910 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [187/216] Testing proof block at src/Chap52/EdgeSetGraphMtPer.rs:248-248 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 105s, mem: 342MB, real: 27s]
+  [188/216] Testing proof block at src/Chap52/EdgeSetGraphMtPer.rs:274-279 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [189/216] Testing proof block at src/Chap52/EdgeSetGraphMtPer.rs:285-307 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 198s, mem: 389MB, real: 30s]
+  [190/216] Testing proof block at src/Chap52/EdgeSetGraphMtPer.rs:321-326 in fn insert_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [191/216] Testing proof block at src/Chap52/EdgeSetGraphMtPer.rs:338-338 in fn delete_vertex... NEEDED (cpu hint: +69%) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: +94s, mem: +237MB, real: 34s]
+  [192/216] Testing proof block at src/Chap52/EdgeSetGraphMtPer.rs:369-375 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [193/216] Testing proof block at src/Chap52/EdgeSetGraphMtPer.rs:381-395 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [194/216] Testing proof block at src/Chap52/EdgeSetGraphMtPer.rs:409-414 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [195/216] Testing proof block at src/Chap52/EdgeSetGraphMtPer.rs:425-430 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [196/216] Testing proof block at src/Chap52/EdgeSetGraphStEph.rs:237-237 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 206s, mem: 637MB, real: 29s]
+  [197/216] Testing proof block at src/Chap52/EdgeSetGraphStEph.rs:277-286 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [198/216] Testing proof block at src/Chap52/EdgeSetGraphStEph.rs:288-304 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [199/216] Testing proof block at src/Chap52/EdgeSetGraphStEph.rs:310-324 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [200/216] Testing proof block at src/Chap52/EdgeSetGraphStEph.rs:337-347 in fn insert_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [201/216] Testing proof block at src/Chap52/EdgeSetGraphStEph.rs:362-362 in fn delete_vertex... NEEDED (mem hint: +8%) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: -18s, mem: +32MB, real: 34s]
+  [202/216] Testing proof block at src/Chap52/EdgeSetGraphStEph.rs:391-415 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [203/216] Testing proof block at src/Chap52/EdgeSetGraphStEph.rs:425-438 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [204/216] Testing proof block at src/Chap52/EdgeSetGraphStEph.rs:444-453 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [205/216] Testing proof block at src/Chap52/EdgeSetGraphStEph.rs:468-468 in fn clone... UNNEEDED (commented) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: -35s, mem: -40MB, real: 31s]
+  [206/216] Testing proof block at src/Chap52/EdgeSetGraphStPer.rs:239-239 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 191s, mem: 729MB, real: 29s]
+  [207/216] Testing proof block at src/Chap52/EdgeSetGraphStPer.rs:279-290 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [208/216] Testing proof block at src/Chap52/EdgeSetGraphStPer.rs:292-305 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [209/216] Testing proof block at src/Chap52/EdgeSetGraphStPer.rs:311-327 in fn out_neighbors... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+  [210/216] Testing proof block at src/Chap52/EdgeSetGraphStPer.rs:341-347 in fn insert_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [211/216] Testing proof block at src/Chap52/EdgeSetGraphStPer.rs:360-360 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 4s, mem: 0MB, real: 5s]
+  [212/216] Testing proof block at src/Chap52/EdgeSetGraphStPer.rs:371-389 in fn delete_vertex... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [213/216] Testing proof block at src/Chap52/EdgeSetGraphStPer.rs:402-410 in fn insert_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [214/216] Testing proof block at src/Chap52/EdgeSetGraphStPer.rs:421-426 in fn delete_edge... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 0s]
+  [215/216] Testing proof block at src/Chap52/EdgeSetGraphStPer.rs:445-445 in fn clone... NEEDED (cpu hint: +49%) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: +66s, mem: -1MB, real: 35s]
+  [216/216] Testing proof block at src/Chap52/EdgeSetGraphStPer.rs:461-461 in fn eq... NEEDED (restored) [baseline cpu: 136s, mem: 391MB, real: 38s | cpu: 0s, mem: 0MB, real: 1s]
+
+Phase 12 Summary: 216 tested, 4 removed (commented)
+
+Phase 13: Skipped (use -t flag to enable type minimization)
+
+═══════════════════════════════════════════════════════════════
+Phase 14: Analyzing and verifying final codebase
+═══════════════════════════════════════════════════════════════
+
+  Final LOC (comments not counted):
+    Spec:    1408
+    Proof:   2793
+    Exec:    3368
+    Total:   7569
+
+  LOC change: +707 lines (10.3% increase, from Veracity comments)
+  (excluding manual module removal)
+
+  Verifying...
+✓ Final verification: cpu 200s (3m 20s) (was 179s (2m 59s), 11.7% slower), z3 RSS: 384 MB, wall: 35s
+
+═══════════════════════════════════════════════════════════════
+MINIMIZATION SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Time:
+  Actual time:             8h 49m 30s
+  Estimated time:          6946s (115m 46s)
+  Estimation error:        +24824.6s (+357.4%)
+
+Verification (CPU time):
+  Initial: 179s (2m 59s) (passed)
+  Final:   200s (3m 20s) (passed)
+  Change:  11.7% slower
+
+Verification (wall-clock):
+  Initial: 46s (passed)
+  Final:   35s (passed)
+  Change:  23.9% faster
+
+Lines of Code (comments not counted):
+  Initial:   6862 (spec: 1407, proof: 2271, exec: 3184)
+  Final:     7569 (spec: 1408, proof: 2793, exec: 3368)
+  Change:  +707 lines (10.3% increase, from Veracity comments) (excluding manual module removal)
+
+Phase 7 (dependence): 0 DEPENDENT, 0 INDEPENDENT
+Phase 8 (necessity):  0 USED, 0 UNUSED, 0 skipped
+Combined:             0 DEPENDENT BUT NEEDED (keep these)
+
+┌───────────────────────────────────────────────────────────────┐
+│ DEPENDENT LEMMAS (vstd broadcast groups can prove these)     │
+├───────────────────────────────────────────────────────────────┤
+│ (none)                                                        │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ UNNEEDED LEMMAS (commented out, codebase verifies without)   │
+├───────────────────────────────────────────────────────────────┤
+│ (none - all tested lemmas are needed)                        │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ DEPENDENT BUT NEEDED (guide verification, keep for now)      │
+├───────────────────────────────────────────────────────────────┤
+│ (none - all dependent lemmas were also unneeded)             │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ SPEC FUNCTIONS (160 total, 56 without explicit calls)         │
+├───────────────────────────────────────────────────────────────┤
+│ checked_int.rs             -> spec_is_add_associative
+│ checked_int.rs             -> spec_is_add_commutative
+│ checked_int.rs             -> spec_is_mul_associative
+│ checked_int.rs             -> spec_is_mul_commutative
+│ checked_int.rs             -> spec_mul_distributes_over_add
+│ checked_nat.rs             -> spec_is_add_associative
+│ checked_nat.rs             -> spec_is_add_commutative
+│ checked_nat.rs             -> spec_is_mul_associative
+│ checked_nat.rs             -> spec_is_mul_commutative
+│ checked_nat.rs             -> spec_mul_distributes_over_add
+│ feq.rs                     -> feq_reflexive
+│ feq.rs                     -> feq_symmetric
+│ feq.rs                     -> feq_transitive
+│ feq.rs                     -> obeys_feq<bool, u8, u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize> (13 variants, 0 used)
+│ feq.rs                     -> obeys_feq_clone
+│ feq.rs                     -> obeys_feq_eq
+│ feq.rs                     -> obeys_feq_full
+│ feq.rs                     -> obeys_feq_full_trigger
+│ feq.rs                     -> obeys_feq_fulls
+│ feq.rs                     -> obeys_feq_properties
+│ feq.rs                     -> obeys_feq_view
+│ feq.rs                     -> obeys_feq_view_injective
+│ feq.rs                     -> obeys_view_eq_trigger
+│ float.rs                   -> all_float_wf
+│ float.rs                   -> spec_float_sorted
+│ hash_map_with_view_plus.rs -> exec_invariant
+│ hash_map_with_view_plus.rs -> ghost_advance
+│ hash_map_with_view_plus.rs -> ghost_decrease
+│ hash_map_with_view_plus.rs -> ghost_ensures
+│ hash_map_with_view_plus.rs -> ghost_invariant
+│ hash_map_with_view_plus.rs -> ghost_iter
+│ hash_map_with_view_plus.rs -> ghost_peek_next
+│ hash_set_with_view_plus.rs -> exec_invariant
+│ hash_set_with_view_plus.rs -> ghost_advance
+│ hash_set_with_view_plus.rs -> ghost_decrease
+│ hash_set_with_view_plus.rs -> ghost_ensures
+│ hash_set_with_view_plus.rs -> ghost_invariant
+│ hash_set_with_view_plus.rs -> ghost_iter
+│ hash_set_with_view_plus.rs -> ghost_peek_next
+│ hashed_checked_u32.rs      -> valid_key_type_CheckedU32
+│ partial_order.rs           -> partial_order_ensures
+│ pervasives_plus.rs         -> comment
+│ seq.rs                     -> spec_sum_u32_fold
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ REMOVABLE MODULES (0 can be removed entirely)               │
+├───────────────────────────────────────────────────────────────┤
+│ (none - all modules are needed)                              │
+└───────────────────────────────────────────────────────────────┘
+
+✓ Minimization complete! Codebase still verifies.

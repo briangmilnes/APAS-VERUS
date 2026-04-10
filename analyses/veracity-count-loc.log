@@ -1,26 +1,26 @@
     Spec/   Proof/    Exec/    Rust File
 --------------------------------------------
-      92/     110/     276/      20 AdjMatrixGraphMtEph.rs
-      99/     110/     278/      20 AdjMatrixGraphMtPer.rs
-      88/     110/     270/      20 AdjMatrixGraphStEph.rs
-      95/     111/     274/      22 AdjMatrixGraphStPer.rs
-     108/      54/     221/      20 AdjSeqGraphMtEph.rs
-      99/      67/     289/      19 AdjSeqGraphMtPer.rs
-     142/      54/     231/      19 AdjSeqGraphStEph.rs
-     102/      72/     296/      22 AdjSeqGraphStPer.rs
-      90/     436/     218/      31 AdjTableGraphMtPer.rs
-     102/     186/       0/       9 AdjTableGraphSpecsAndLemmas.rs
-      80/     355/     205/      32 AdjTableGraphStEph.rs
-      86/     387/     220/      39 AdjTableGraphStPer.rs
-      79/      59/     132/      25 EdgeSetGraphMtPer.rs
-      71/      88/     138/      25 EdgeSetGraphStEph.rs
-      74/      72/     136/      28 EdgeSetGraphStPer.rs
+      92/     132/     289/      20 AdjMatrixGraphMtEph.rs
+      99/     135/     292/      20 AdjMatrixGraphMtPer.rs
+      88/     134/     283/      20 AdjMatrixGraphStEph.rs
+      95/     134/     287/      22 AdjMatrixGraphStPer.rs
+     108/      63/     238/      20 AdjSeqGraphMtEph.rs
+      99/      87/     304/      19 AdjSeqGraphMtPer.rs
+     142/      63/     250/      19 AdjSeqGraphStEph.rs
+     102/      92/     307/      22 AdjSeqGraphStPer.rs
+      90/     564/     243/      31 AdjTableGraphMtPer.rs
+     102/     210/       0/       9 AdjTableGraphSpecsAndLemmas.rs
+      81/     426/     219/      32 AdjTableGraphStEph.rs
+      86/     470/     235/      39 AdjTableGraphStPer.rs
+      79/      77/     137/      25 EdgeSetGraphMtPer.rs
+      71/     112/     143/      25 EdgeSetGraphStEph.rs
+      74/      94/     141/      28 EdgeSetGraphStPer.rs
 --------------------------------------------
     spec    proof     exec     rust
-   1,407/   2,271/   3,184/     351 Total
-   9,287 total lines
+   1,408/   2,793/   3,368/     351 Total
+  10,014 total lines
 15 files analyzed
-85ms
+54ms
 
 Proof Lines Per Function
 ========================
@@ -28,63 +28,70 @@ Proof Lines Per Function
 By chapter:
 |   # | Chapter    |  PrfTot |  InSpec |  InExec | InProof | ExecLOC |  Prf/Ex |
 | --- | ---------- | ------- | ------- | ------- | ------- | ------- | ------- |
-|   1 | root       |   3,757 |     362 |   3,082 |     313 |   3,184 |    1.18 |
+|   1 | root       |   4,289 |     362 |   3,590 |     337 |   3,368 |    1.27 |
 
-1 chapters, 3,757 proof lines, 3,184 exec lines, ratio 1.18
-3,757 min  3,757 max  3757.0 avg  3757.0 median (proof lines)
+1 chapters, 4,289 proof lines, 3,368 exec lines, ratio 1.27
+4,289 min  4,289 max  4289.0 avg  4289.0 median (proof lines)
 
 By module:
 |   # | Chap       | Module                         |  PrfTot |  InSpec |  InExec | InProof | ExecLOC | Prf/Ex |
 | --- | ---------- | ------------------------------ | ------- | ------- | ------- | ------- | ------- | ------ |
-|   1 | root       | AdjTableGraphMtPer             |     529 |      24 |     505 |       0 |     218 |   2.43 |
-|   2 | root       | AdjTableGraphStPer             |     470 |      26 |     419 |      25 |     220 |   2.14 |
-|   3 | root       | AdjTableGraphStEph             |     432 |      26 |     406 |       0 |     205 |   2.11 |
-|   4 | root       | AdjTableGraphSpecsAndLemmas    |     279 |      21 |       0 |     258 |       0 |      - |
-|   5 | root       | AdjSeqGraphStEph               |     235 |      25 |     210 |       0 |     231 |   1.02 |
-|   6 | root       | AdjMatrixGraphMtPer            |     207 |      26 |     181 |       0 |     278 |   0.74 |
-|   7 | root       | AdjMatrixGraphStPer            |     204 |      28 |     176 |       0 |     274 |   0.74 |
-|   8 | root       | AdjMatrixGraphMtEph            |     200 |      22 |     178 |       0 |     276 |   0.72 |
-|   9 | root       | AdjSeqGraphMtEph               |     200 |      25 |     175 |       0 |     221 |   0.90 |
-|  10 | root       | AdjMatrixGraphStEph            |     196 |      22 |     174 |       0 |     270 |   0.73 |
-|  11 | root       | AdjSeqGraphStPer               |     191 |      27 |     164 |       0 |     296 |   0.65 |
-|  12 | root       | AdjSeqGraphMtPer               |     183 |      25 |     158 |       0 |     289 |   0.63 |
-|  13 | root       | EdgeSetGraphStEph              |     155 |      21 |     124 |      10 |     138 |   1.12 |
-|  14 | root       | EdgeSetGraphStPer              |     142 |      23 |     109 |      10 |     136 |   1.04 |
-|  15 | root       | EdgeSetGraphMtPer              |     134 |      21 |     103 |      10 |     132 |   1.02 |
+|   1 | root       | AdjTableGraphMtPer             |     657 |      24 |     633 |       0 |     243 |   2.70 |
+|   2 | root       | AdjTableGraphStPer             |     553 |      26 |     502 |      25 |     235 |   2.35 |
+|   3 | root       | AdjTableGraphStEph             |     504 |      26 |     478 |       0 |     219 |   2.30 |
+|   4 | root       | AdjTableGraphSpecsAndLemmas    |     303 |      21 |       0 |     282 |       0 |      - |
+|   5 | root       | AdjSeqGraphStEph               |     251 |      25 |     226 |       0 |     250 |   1.00 |
+|   6 | root       | AdjMatrixGraphMtPer            |     232 |      26 |     206 |       0 |     292 |   0.79 |
+|   7 | root       | AdjMatrixGraphStPer            |     227 |      28 |     199 |       0 |     287 |   0.79 |
+|   8 | root       | AdjMatrixGraphMtEph            |     221 |      22 |     199 |       0 |     289 |   0.76 |
+|   9 | root       | AdjMatrixGraphStEph            |     220 |      22 |     198 |       0 |     283 |   0.78 |
+|  10 | root       | AdjSeqGraphMtEph               |     214 |      25 |     189 |       0 |     238 |   0.90 |
+|  11 | root       | AdjSeqGraphStPer               |     208 |      27 |     181 |       0 |     307 |   0.68 |
+|  12 | root       | AdjSeqGraphMtPer               |     204 |      25 |     179 |       0 |     304 |   0.67 |
+|  13 | root       | EdgeSetGraphStEph              |     179 |      21 |     148 |      10 |     143 |   1.25 |
+|  14 | root       | EdgeSetGraphStPer              |     164 |      23 |     131 |      10 |     141 |   1.16 |
+|  15 | root       | EdgeSetGraphMtPer              |     152 |      21 |     121 |      10 |     137 |   1.11 |
 
-15 modules, 3,757 proof lines, 3,184 exec lines, ratio 1.18
-134 min  529 max  250.5 avg  200.0 median (proof lines)
+15 modules, 4,289 proof lines, 3,368 exec lines, ratio 1.27
+152 min  657 max  285.9 avg  221.0 median (proof lines)
 
 Per exec function (proof lines within exec fns):
-  308 exec functions total, 242 with proof lines
-  3,082 total proof lines in exec fns
-  1 min  156 max  12.7 avg  6.0 median
+  308 exec functions total, 240 with proof lines
+  3,590 total proof lines in exec fns
+  1 min  196 max  15.0 avg  6.0 median
 
 Per proof function:
   24 proof functions
-  313 total proof lines in proof fns
-  5 min  53 max  13.0 avg  10.0 median
+  337 total proof lines in proof fns
+  5 min  67 max  14.0 avg  10.0 median
 
 Grand total:
-  458 total functions, 355 with proof lines (78%)
-  3,757 total proof lines, 3,184 exec lines, ratio 1.18
-  1 min  156 max  10.6 avg  5.0 median (proof lines per fn)
+  458 total functions, 353 with proof lines (77%)
+  4,289 total proof lines, 3,368 exec lines, ratio 1.27
+  1 min  196 max  12.2 avg  5.0 median (proof lines per fn)
 
 Outliers (>= 50 proof lines):
 |   # | Chap       | Module                         | Function                 |  Kind |  Lines |
 | --- | ---------- | ------------------------------ | ------------------------ | ----- | ------ |
-|   1 | root       | AdjTableGraphMtPer             | insert_edge              |  exec |    156 |
-|   2 | root       | AdjTableGraphStPer             | delete_vertex            |  exec |    115 |
-|   3 | root       | AdjTableGraphStEph             | delete_vertex            |  exec |    102 |
-|   4 | root       | AdjTableGraphMtPer             | delete_vertex            |  exec |     86 |
-|   5 | root       | AdjTableGraphMtPer             | delete_edge              |  exec |     84 |
-|   6 | root       | AdjTableGraphStEph             | insert_edge              |  exec |     80 |
-|   7 | root       | AdjTableGraphStPer             | insert_edge              |  exec |     73 |
-|   8 | root       | AdjTableGraphStEph             | insert_vertex            |  exec |     56 |
-|   9 | root       | AdjTableGraphStPer             | delete_edge              |  exec |     56 |
-|  10 | root       | AdjTableGraphSpecsAndLemmas    | lemma_sum_entry_sizes_eq | proof |     53 |
-|  11 | root       | AdjSeqGraphMtEph               | set_edge                 |  exec |     51 |
-|  12 | root       | AdjSeqGraphStEph               | set_edge                 |  exec |     51 |
-|  13 | root       | AdjTableGraphStPer             | vertices                 |  exec |     51 |
+|   1 | root       | AdjTableGraphMtPer             | insert_edge              |  exec |    196 |
+|   2 | root       | AdjTableGraphStPer             | delete_vertex            |  exec |    146 |
+|   3 | root       | AdjTableGraphMtPer             | delete_vertex            |  exec |    124 |
+|   4 | root       | AdjTableGraphStEph             | delete_vertex            |  exec |    124 |
+|   5 | root       | AdjTableGraphMtPer             | delete_edge              |  exec |    105 |
+|   6 | root       | AdjTableGraphStEph             | insert_edge              |  exec |    101 |
+|   7 | root       | AdjTableGraphStPer             | insert_edge              |  exec |     88 |
+|   8 | root       | AdjTableGraphSpecsAndLemmas    | lemma_sum_entry_sizes_eq | proof |     67 |
+|   9 | root       | AdjTableGraphStPer             | delete_edge              |  exec |     67 |
+|  10 | root       | AdjTableGraphStEph             | insert_vertex            |  exec |     62 |
+|  11 | root       | AdjSeqGraphMtEph               | set_edge                 |  exec |     61 |
+|  12 | root       | AdjSeqGraphStEph               | set_edge                 |  exec |     61 |
+|  13 | root       | AdjTableGraphMtPer             | count_table_edges        |  exec |     60 |
+|  14 | root       | AdjTableGraphStPer             | vertices                 |  exec |     60 |
+|  15 | root       | AdjMatrixGraphMtPer            | set_edge                 |  exec |     55 |
+|  16 | root       | AdjMatrixGraphStEph            | set_edge                 |  exec |     54 |
+|  17 | root       | AdjMatrixGraphMtEph            | set_edge                 |  exec |     53 |
+|  18 | root       | AdjMatrixGraphStPer            | set_edge                 |  exec |     53 |
+|  19 | root       | AdjSeqGraphStPer               | delete_edge              |  exec |     51 |
+|  20 | root       | AdjTableGraphStPer             | insert_vertex            |  exec |     50 |
 
-13 functions over 50 proof lines
+20 functions over 50 proof lines
