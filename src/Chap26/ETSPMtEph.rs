@@ -146,15 +146,34 @@ pub mod ETSPMtEph {
             && spec_point_in_seq(edges[k].to, points)
     }
 
+    /// The from-point of the next edge in a tour (mod wrap). Closed to prevent
+    /// Z3 matching loops: `tour[i]` trigger would otherwise chain through
+    /// `tour[(i+1) % n]`, producing unbounded instantiations.
+    pub closed spec fn spec_next_edge_from(tour: Seq<Edge>, i: int) -> Point {
+        tour[((i + 1) % (tour.len() as int))].from
+    }
+
     /// Edges form a Hamiltonian cycle: each edge's destination is the next edge's source.
     pub open spec fn spec_edges_form_cycle(tour: Seq<Edge>) -> bool {
         tour.len() > 0 ==>
         forall|i: int| #![trigger tour[i]] 0 <= i < tour.len() ==>
-            spec_point_eq(tour[i].to, tour[((i + 1) % (tour.len() as int))].from)
+            spec_point_eq(tour[i].to, spec_next_edge_from(tour, i))
     }
 
     //		Section 7b. proof fns/broadcast groups
 
+
+    /// Reveal spec_next_edge_from for a single index. Call this instead of
+    /// reveal(spec_next_edge_from) to avoid re-enabling the matching loop.
+    pub proof fn lemma_next_edge_from_eq(tour: Seq<Edge>, i: int)
+        requires
+            tour.len() > 0,
+            0 <= i < tour.len(),
+        ensures
+            spec_next_edge_from(tour, i) == tour[((i + 1) % (tour.len() as int))].from,
+    {
+        reveal(spec_next_edge_from);
+    }
 
     /// If point p is in sub, and every element of sub is in sup, then p is in sup.
     pub proof fn lemma_point_in_seq_transitive(p: Point, sub: Seq<Point>, sup: Seq<Point>)
@@ -201,9 +220,6 @@ pub mod ETSPMtEph {
 
     /// The combined tour forms a cycle, given sub-tour cycle properties
     /// and the identity of each combined element.
-    // BYPASSED: rlimit — Z3 matching loop on spec_edges_form_cycle modular indexing trigger.
-    // Same issue as ETSPStEph.rs lemma_combined_cycle. Proof body preserved below.
-    #[verifier::external_body]
     proof fn lemma_combined_cycle(
         combined: Seq<Edge>, lt: Seq<Edge>, rt: Seq<Edge>,
         ln_i: int, rn_i: int, best_li: int, best_ri: int,
@@ -232,6 +248,69 @@ pub mod ETSPMtEph {
     {
         let n = ln_i + rn_i;
 
+        assert forall|i: int| #![trigger combined[i]] 0 <= i < n implies
+            spec_point_eq(combined[i].to, spec_next_edge_from(combined, i))
+        by {
+            // Reveal combined's next-edge so Z3 sees the concrete target.
+            lemma_next_edge_from_eq(combined, i);
+
+            let next_i = (i + 1) % n;
+
+            if i + 1 < n {
+                vstd::arithmetic::div_mod::lemma_small_mod((i + 1) as nat, n as nat);
+            } else {
+                vstd::arithmetic::div_mod::lemma_mod_self_0(n);
+            }
+
+            if i < ln_i - 1 {
+                // Left-tour segment.
+                let k = i;
+                let li = (best_li + 1 + k) % ln_i;
+                // Selectively reveal lt's cycle at index li (no matching loop).
+                lemma_next_edge_from_eq(lt, li);
+                if i < ln_i - 2 {
+                    lemma_small_mod(1, ln_i as nat);
+                    lemma_add_mod_noop(best_li + 1 + i, 1, ln_i);
+                } else {
+                    assert(i == ln_i - 2);
+                    lemma_small_mod(1, ln_i as nat);
+                    lemma_add_mod_noop(best_li + ln_i - 1, 1, ln_i);
+                    lemma_mod_multiples_vanish(1, best_li, ln_i);
+                    lemma_small_mod(best_li as nat, ln_i as nat);
+                    assert((li + 1) % ln_i == best_li);
+                }
+            } else if i == ln_i - 1 {
+                // Bridge: left -> right.
+                // Selectively reveal rt's cycle at best_ri.
+                lemma_next_edge_from_eq(rt, best_ri);
+                let m: int = 0;
+                assert(combined[next_i] == combined[(ln_i + 0)]);
+            } else if i < ln_i + rn_i - 1 {
+                // Right-tour segment.
+                let m = i - ln_i;
+                let ri = (best_ri + 1 + m) % rn_i;
+                // Selectively reveal rt's cycle at ri.
+                lemma_next_edge_from_eq(rt, ri);
+                assert(combined[(ln_i + m)] == rt[ri]);
+                if m < rn_i - 2 {
+                    let m1 = m + 1;
+                    assert(combined[(ln_i + m1)] == rt[((best_ri + 1 + m1) % rn_i)]);
+                    lemma_small_mod(1, rn_i as nat);
+                    lemma_add_mod_noop(best_ri + 1 + m, 1, rn_i);
+                } else {
+                    lemma_small_mod(1, rn_i as nat);
+                    lemma_add_mod_noop(best_ri + rn_i - 1, 1, rn_i);
+                    lemma_mod_multiples_vanish(1, best_ri, rn_i);
+                    lemma_small_mod(best_ri as nat, rn_i as nat);
+                }
+            } else {
+                // Bridge: right -> left (wraps to index 0).
+                // Selectively reveal lt's cycle at best_li.
+                lemma_next_edge_from_eq(lt, best_li);
+                let k: int = 0;
+                assert(combined[next_i].from == lt[((best_li + 1) % ln_i)].from);
+            }
+        }
     }
 
     //		Section 8b. traits
@@ -280,6 +359,7 @@ pub mod ETSPMtEph {
             tour.push(Edge { from: points[0], to: points[1] });
             tour.push(Edge { from: points[1], to: points[0] });
             proof {
+                reveal(spec_next_edge_from);
             }
             return tour;
         }
@@ -291,8 +371,15 @@ pub mod ETSPMtEph {
             tour.push(Edge { from: points[1], to: points[2] });
             tour.push(Edge { from: points[2], to: points[0] });
             proof {
-                assert(spec_point_eq(tour@[1].to, points@[2]));
-                assert(spec_point_eq(tour@[2].to, tour@[0].from));
+                reveal(spec_next_edge_from);
+                // Conjunction flakiness fix: assert each conjunct then the whole.
+                let c1 = tour@.len() == points@.len();
+                let c2 = spec_sources_valid(tour@, points@);
+                let c3 = spec_targets_valid(tour@, points@);
+                let c4 = spec_edges_form_cycle(tour@);
+                assert(c1);
+                assert(c4);
+                assert(spec_etsp(tour@, points@) == (c1 && c2 && c3 && c4));
             }
             return tour;
         }
