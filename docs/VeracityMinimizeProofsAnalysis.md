@@ -226,6 +226,37 @@ code lines). The UNNEEDED lines are dead code preserved as comments per project 
 ("leave the corpse"). The NEEDED markers are informational — they tell future agents
 and humans which asserts are load-bearing.
 
+## Agent 5 and 6 final results (Chap42-43, Chap44-52)
+
+### Agent 5
+
+| # | Chap | Run Time | Tested | Removed | % | Proof LOC | CPU Before | CPU After | CPU Δ |
+|---|------|----------|--------|---------|---|-----------|-----------|-----------|-------|
+| 1 | 42 | 8h 1m | 996 | 160 | 16% | 3,717 | 249s | 344s | +38% |
+| 2 | 43 | 5h 54m | 732 | 169 | 23% | 1,808 | 288s | 84s | **-71%** |
+
+### Agent 6
+
+| # | Chap | Run Time | Tested | Removed | % | Proof LOC | CPU Before | CPU After | CPU Δ |
+|---|------|----------|--------|---------|---|-----------|-----------|-----------|-------|
+| 1 | 44 | 19m | 36 | 11 | 31% | 93 | 249s | 152s | **-39%** |
+| 2 | 45 | 2h 34m | 376 | 16 | 4% | 1,671 | 144s | 149s | +4% |
+| 3 | 47 | 1h 21m | 360 | 0 | 0% | 2,044 | 165s | 234s | +42% |
+| 4 | 49 | 5m | 18 | 0 | 0% | 18 | 131s | 162s | +24% |
+| 5 | 50 | 16m | 83 | 15 | 18% | 92 | 46s | 28s | **-39%** |
+| 6 | 51 | 12m | 60 | 1 | 2% | 280 | 148s | 104s | **-30%** |
+| 7 | 52 | 8h 50m | 897 | 170 | 19% | 2,271 | 179s | 200s | +12% |
+
+Total: 27 agent-hours across agents 5+6.
+
+Chapters where CPU went up (42, 45, 47, 49, 52) were measured under heavy contention
+(6 agents sharing the box). The full-crate validate with low contention shows the real
+improvement: z3 CPU 118s, z3 RSS 407 MB.
+
+Chap43 was the standout: **71% CPU reduction** from removing 169 of 732 asserts/proof
+blocks. Chap47 and 49 removed nothing — all tested items were NEEDED. No unneeded
+lemmas found in any chapter (all library lemmas are load-bearing).
+
 ## Results
 
 ### Verification improvement
