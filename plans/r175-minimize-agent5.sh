@@ -13,7 +13,7 @@ for f in \
   CHAP=$(echo "$f" | grep -oP 'Chap\d+')
 
   ~/projects/veracity/target/release/veracity-minimize-proofs \
-    -c . --project APAS --chapter "$CHAP" \
+    -c . -l src/vstdplus --project APAS --chapter "$CHAP" \
     -F "$f" \
     -a -p --no-lib-min --fresh --danger \
     --max-incremental 0.00 --max-memory-increase 0.00
