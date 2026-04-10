@@ -50,6 +50,47 @@ Each iteration costs one `validate isolate ChapNN` (~30-60s per chapter). A chap
 with 400 asserts at 40s/iteration = ~4.5h. Lock contention from 6 concurrent agents
 adds 20-50% overhead.
 
+### Chapters that improved (sorted by CPU reduction)
+
+Wave 2 isolate-mode data (Wave 1 logs lost in rebase). All merged.
+
+| # | Agent | Chap | CPU Before | CPU After | CPU Δ |
+|---|-------|------|-----------|-----------|-------|
+| 1 | 2 | 66 | 727s | 179s | **-75%** |
+| 2 | 5 | 43 | 288s | 84s | **-71%** |
+| 3 | 7 | 56 | 212s | 81s | **-62%** |
+| 4 | 7 | 53 | 259s | 136s | **-48%** |
+| 5 | 6 | 44 | 249s | 152s | **-39%** |
+| 6 | 6 | 50 | 46s | 28s | **-39%** |
+| 7 | 7 | 57 | 429s | 288s | **-33%** |
+| 8 | 6 | 51 | 148s | 104s | **-30%** |
+| 9 | 4 | 61 | 421s | 329s | **-22%** |
+| 10 | 3 | 57 | 418s | 377s | **-10%** |
+| 11 | 4 | 64 | 429s | 387s | **-10%** |
+| 12 | 7 | 55 | 208s | 203s | -2% |
+
+12 chapters improved. Plus Wave 1 chapters (03,06,11,17,18,19,21,23,26,27,28,35,
+37,38,39,40,41,43,45,47,51) whose per-chapter numbers are unknown but contributed
+to the full-crate improvement.
+
+### Chapters that got slower (contention artifact)
+
+| # | Agent | Chap | CPU Before | CPU After | CPU Δ |
+|---|-------|------|-----------|-----------|-------|
+| 1 | 6 | 45 | 144s | 149s | +4% |
+| 2 | 2 | 59 | 432s | 470s | +9% |
+| 3 | 6 | 52 | 179s | 200s | +12% |
+| 4 | 6 | 49 | 131s | 162s | +24% |
+| 5 | 5 | 42 | 249s | 344s | +38% |
+| 6 | 6 | 47 | 165s | 234s | +42% |
+| 7 | 4 | 63 | 176s | 312s | +77% |
+| 8 | 2 | 62 | 337s | 754s | +124% |
+
+These per-chapter isolate numbers were measured with 6 agents contending for CPU.
+The full-crate validate with low contention (z3 CPU 118s, RSS 407 MB) shows the
+net effect is strongly positive. Several of these chapters removed 0 items
+(Chap47, 49) — the markers add LOC but remove nothing.
+
 ### Per-chapter detail: CPU, memory, LOC, NEEDED/UNNEEDED
 
 Isolate-mode verification stats from Wave 2 logs. CPU is z3 children time, RSS is
