@@ -130,18 +130,16 @@ pub mod JohnsonStEphI64 {
                 forall|k: usize| vertices@.contains(k) <==> k < i,
             decreases (max_val + 1) - i,
         {
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof {
             }
             let _ = vertices.insert(i);
-            // Veracity: NEEDED proof block
-            proof {
-            }
+// Veracity: UNNEEDED proof block             proof {
+// Veracity: UNNEEDED proof block             }
             i = i + 1;
         }
-        // Veracity: NEEDED proof block
-        proof {
-        }
+// Veracity: UNNEEDED proof block         proof {
+// Veracity: UNNEEDED proof block         }
         vertices
     }
 
@@ -265,9 +263,8 @@ pub mod JohnsonStEphI64 {
             reweighted@.A.len() * 2 + 2 <= usize::MAX as int,
     {
         let vertices = build_vertex_set(n - 1);
-        // Veracity: NEEDED proof block
-        proof {
-        }
+// Veracity: UNNEEDED proof block         proof {
+// Veracity: UNNEEDED proof block         }
 
         let mut edges = SetStEph::<WeightedEdge<usize, i128>>::empty();
 
@@ -417,7 +414,6 @@ pub mod JohnsonStEphI64 {
 
         // Phase 2: Reweight graph edges.
         let reweighted = reweight_graph(graph, &potentials, n);
-        // Veracity: NEEDED assert
         assert(spec_labgraphview_wf(reweighted@));
 
         // Phase 3: Run Dijkstra from each vertex, adjust distances back.
