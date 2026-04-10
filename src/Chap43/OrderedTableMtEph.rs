@@ -429,17 +429,22 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self) {
+                      // Veracity: NEEDED assert
                       assert(obeys_feq_full_trigger::<K>());
+           // Veracity: NEEDED assert
            assert(obeys_feq_full_trigger::<V>());
+           // Veracity: NEEDED assert
            assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let inner = OrderedTableStEph::empty();
             from_st(inner)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        // Veracity: NEEDED proof block
         fn singleton(k: K, v: V) -> (tree: Self) {
-                      assert(obeys_feq_full_trigger::<K>());
-           assert(obeys_feq_full_trigger::<V>());
+// Veracity: UNNEEDED assert                       assert(obeys_feq_full_trigger::<K>());
+// Veracity: UNNEEDED assert            assert(obeys_feq_full_trigger::<V>());
+            // Veracity: NEEDED assert
             proof { assert(obeys_feq_full_trigger::<Pair<K, V>>()); }
             let inner = OrderedTableStEph::singleton(k, v);
             from_st(inner)
@@ -478,13 +483,14 @@ broadcast use {
             let ghost new_view = locked_val@;
             write_handle.release_write(locked_val);
             self.ghost_locked_table = Ghost(new_view);
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph delete
         fn delete(&mut self, k: &K) -> (updated: Option<V>) {
             proof {
 
-                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+// Veracity: UNNEEDED assert                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
             }
             let ghost old_view = self.ghost_locked_table@;
             let ghost k_view = k@;
@@ -494,13 +500,14 @@ broadcast use {
             write_handle.release_write(locked_val);
             self.ghost_locked_table = Ghost(old_view.remove(k_view));
             updated
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph domain
         fn domain(&self) -> (domain: ArraySetStEph<K>) {
             proof {
                 assume(self@.dom().finite());
-                assert(obeys_feq_full_trigger::<K>());
+// Veracity: UNNEEDED assert                 assert(obeys_feq_full_trigger::<K>());
             }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -514,13 +521,14 @@ broadcast use {
         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
             let inner = OrderedTableStEph::tabulate(f, keys);
             from_st(inner)
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StEph map
         fn map<F: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: F) -> (mapped: Self) {
             proof {
 
-                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+// Veracity: UNNEEDED assert                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
             }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -541,13 +549,15 @@ broadcast use {
             let result = inner.filter(f, Ghost(spec_pred));
             read_handle.release_read();
             from_st(result)
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- RwLock wrapper, delegates to StEph intersection
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F) {
             proof {
 
-                assert(obeys_feq_full_trigger::<K>());
+// Veracity: UNNEEDED assert                 assert(obeys_feq_full_trigger::<K>());
+                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
             let other_read = other.locked_table.acquire_read();
@@ -558,6 +568,7 @@ broadcast use {
             let ghost new_view = locked_val@;
             write_handle.release_write(locked_val);
             other_read.release_read();
+            // Veracity: NEEDED proof block
             self.ghost_locked_table = Ghost(new_view);
         }
 
@@ -565,8 +576,9 @@ broadcast use {
         fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F) {
             proof {
 
-                assert(obeys_feq_full_trigger::<Pair<K, V>>());
-                assert(obeys_feq_full_trigger::<K>());
+// Veracity: UNNEEDED assert                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
+// Veracity: UNNEEDED assert                 assert(obeys_feq_full_trigger::<K>());
+                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
             let other_read = other.locked_table.acquire_read();
@@ -577,6 +589,7 @@ broadcast use {
             proof { assume(locked_val.spec_orderedtablesteph_wf()); }
             let ghost new_view = locked_val@;
             write_handle.release_write(locked_val);
+            // Veracity: NEEDED proof block
             other_read.release_read();
             self.ghost_locked_table = Ghost(new_view);
         }
@@ -585,7 +598,9 @@ broadcast use {
         fn difference(&mut self, other: &Self) {
             proof {
 
+                // Veracity: NEEDED assert (speed hint)
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
+                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
             let other_read = other.locked_table.acquire_read();
@@ -594,6 +609,7 @@ broadcast use {
             proof { assume(other_ref.spec_orderedtablesteph_wf()); }
             locked_val.difference(other_ref);
             proof { assume(locked_val.spec_orderedtablesteph_wf()); }
+            // Veracity: NEEDED proof block (speed hint)
             let ghost new_view = locked_val@;
             write_handle.release_write(locked_val);
             other_read.release_read();
@@ -604,9 +620,11 @@ broadcast use {
         fn restrict(&mut self, keys: &ArraySetStEph<K>) {
             proof {
 
+                // Veracity: NEEDED assert (speed hint)
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
             }
             let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            // Veracity: NEEDED proof block
             locked_val.restrict(keys);
             proof { assume(locked_val.spec_orderedtablesteph_wf()); }
             let ghost new_view = locked_val@;
@@ -618,8 +636,10 @@ broadcast use {
         fn subtract(&mut self, keys: &ArraySetStEph<K>) {
             proof {
 
+                // Veracity: NEEDED assert (speed hint)
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
             }
+            // Veracity: NEEDED proof block
             let (mut locked_val, write_handle) = self.locked_table.acquire_write();
             locked_val.subtract(keys);
             proof { assume(locked_val.spec_orderedtablesteph_wf()); }
@@ -631,6 +651,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph reduce
         fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (reduced: R) {
             proof { assume(self@.dom().finite()); }
+            // Veracity: NEEDED proof block
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             proof { assume(inner.spec_orderedtablesteph_wf()); }
@@ -695,6 +716,7 @@ broadcast use {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             proof { assume(inner.spec_orderedtablesteph_wf()); }
+            // Veracity: NEEDED proof block
             let successor = inner.next_key(k);
             proof { assume(inner@ =~= self@); }
             read_handle.release_read();
@@ -703,8 +725,10 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StEph split_key
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
+            // Veracity: NEEDED proof block
             where Self: Sized
         {
+            // Veracity: NEEDED assert (speed hint)
             proof { assert(obeys_view_eq_trigger::<K>()); }
             let (mut locked_val, write_handle) = self.locked_table.acquire_write();
             let (left_inner, found_value, right_inner) = locked_val.split_key(k);
@@ -725,11 +749,15 @@ broadcast use {
             self.union(&other, |v1: &V, _v2: &V| v1.clone());
         }
 
+        // Veracity: NEEDED proof block (speed hint)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StEph get_key_range
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self) {
 
+                      // Veracity: NEEDED assert (speed hint)
                       assert(obeys_feq_full_trigger::<K>());
+           // Veracity: NEEDED assert (speed hint)
            assert(obeys_feq_full_trigger::<V>());
+           // Veracity: NEEDED assert (speed hint)
            assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -762,6 +790,7 @@ broadcast use {
             let inner = read_handle.borrow();
             let selected = inner.select_key(i);
             proof { assume(inner@ =~= self@); }
+            // Veracity: NEEDED proof block
             read_handle.release_read();
             selected
         }
@@ -805,6 +834,7 @@ broadcast use {
             }
             read_handle.release_read();
             OrderedTableMtEphIter { snapshot, pos: 0, _phantom: core::marker::PhantomData }
+        // Veracity: NEEDED proof block
         }
     }
 
@@ -815,8 +845,11 @@ broadcast use {
         requires inner@.dom().finite()
         ensures s@ =~= inner@, s@.dom().finite(), s.spec_orderedtablemteph_wf()
     {
+        // Veracity: NEEDED assert (speed hint)
         assert(obeys_feq_full_trigger::<K>());
+        // Veracity: NEEDED assert (speed hint)
         assert(obeys_feq_full_trigger::<V>());
+        // Veracity: NEEDED assert (speed hint)
         assert(obeys_feq_full_trigger::<Pair<K, V>>());
         let ghost view = inner@;
         proof { assume(inner.spec_orderedtablesteph_wf()); }
@@ -843,8 +876,11 @@ broadcast use {
                 ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,
         ensures constructed@.dom().finite(), constructed.spec_orderedtablemteph_wf()
     {
+        // Veracity: NEEDED assert
         assert(obeys_feq_full_trigger::<K>());
+        // Veracity: NEEDED assert
         assert(obeys_feq_full_trigger::<V>());
+        // Veracity: NEEDED assert (speed hint)
         assert(obeys_feq_full_trigger::<Pair<K, V>>());
         let inner = crate::Chap43::OrderedTableStEph::OrderedTableStEph::from_sorted_entries(entries);
         from_st(inner)
@@ -964,6 +1000,7 @@ broadcast use {
     }
 
     //		Section 11a. top level coarse locking
+// Veracity: NEEDED proof block
 
 
     impl<K: MtKey, V: MtVal + Ord> RwLockPredicate<OrderedTableStEph<K, V>> for OrderedTableMtEphInv {

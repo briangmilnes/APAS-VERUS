@@ -418,7 +418,7 @@ broadcast use {
     ensures table@.dom().finite()
     {
         let reduced = calculate_reduction(&table.base_table, &table.reducer, &table.identity);
-        // Veracity: NEEDED proof block
+        // Veracity: NEEDED proof block (speed hint)
         proof { lemma_aug_view(table); }
         reduced
     }
@@ -467,7 +467,7 @@ broadcast use {
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite()
         {
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.size()
         }
@@ -483,8 +483,7 @@ broadcast use {
                 reducer,
                 identity,
             };
-            // Veracity: NEEDED proof block
-            proof { lemma_aug_view(&r); }
+// Veracity: UNNEEDED proof block             proof { lemma_aug_view(&r); }
             r
         }
 
@@ -499,7 +498,7 @@ broadcast use {
                 reducer,
                 identity,
             };
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(&r); }
             r
         }
@@ -518,7 +517,7 @@ broadcast use {
         fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == self@.dom().is_empty(), self@.dom().finite()
         {
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.is_empty()
         }
@@ -529,7 +528,7 @@ broadcast use {
         {
             self.base_table.insert(k, v, combine);
             self.cached_reduction = recalculate_reduction(self);
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
 
@@ -539,8 +538,7 @@ broadcast use {
         {
             let updated = self.base_table.delete(k);
             self.cached_reduction = recalculate_reduction(self);
-            // Veracity: NEEDED proof block
-            proof { lemma_aug_view(self); }
+// Veracity: UNNEEDED proof block             proof { lemma_aug_view(self); }
             updated
         }
 
@@ -548,7 +546,7 @@ broadcast use {
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite()
         {
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.domain()
         }
@@ -571,7 +569,7 @@ broadcast use {
                 reducer,
                 identity,
             };
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(&r); }
             r
         }
@@ -589,8 +587,7 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            // Veracity: NEEDED proof block
-            proof { lemma_aug_view(&r); }
+// Veracity: UNNEEDED proof block             proof { lemma_aug_view(&r); }
             r
         }
 
@@ -607,7 +604,7 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(&r); }
             r
         }
@@ -618,7 +615,7 @@ broadcast use {
         {
             self.base_table.intersection(&other.base_table, f);
             self.cached_reduction = recalculate_reduction(self);
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
 
@@ -628,8 +625,7 @@ broadcast use {
         {
             self.base_table.union(&other.base_table, f);
             self.cached_reduction = recalculate_reduction(self);
-            // Veracity: NEEDED proof block
-            proof { lemma_aug_view(self); }
+// Veracity: UNNEEDED proof block             proof { lemma_aug_view(self); }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base difference + recalculate
@@ -638,7 +634,7 @@ broadcast use {
         {
             self.base_table.difference(&other.base_table);
             self.cached_reduction = recalculate_reduction(self);
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
 
@@ -648,7 +644,7 @@ broadcast use {
         {
             self.base_table.restrict(keys);
             self.cached_reduction = recalculate_reduction(self);
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
 
@@ -658,7 +654,7 @@ broadcast use {
         {
             self.base_table.subtract(keys);
             self.cached_reduction = recalculate_reduction(self);
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
 
@@ -666,7 +662,7 @@ broadcast use {
         fn reduce<R: StTInMtT + 'static, G: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: G) -> (reduced: R)
             ensures self@.dom().finite()
         {
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.reduce(init, f)
         }
@@ -675,7 +671,7 @@ broadcast use {
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf()
         {
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.collect()
         }
@@ -684,7 +680,7 @@ broadcast use {
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.first_key()
         }
@@ -693,7 +689,7 @@ broadcast use {
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
         {
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.last_key()
         }
@@ -702,7 +698,7 @@ broadcast use {
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.previous_key(k)
         }
@@ -711,7 +707,7 @@ broadcast use {
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.next_key(k)
         }
@@ -739,7 +735,7 @@ broadcast use {
                 identity: self.identity.clone(),
             };
 
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             (left, found_value, right)
         }
@@ -750,7 +746,7 @@ broadcast use {
         {
             self.base_table.join_key(other.base_table);
             self.cached_reduction = recalculate_reduction(self);
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
 
@@ -767,7 +763,7 @@ broadcast use {
                 reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(&r); }
             r
         }
@@ -776,7 +772,7 @@ broadcast use {
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.rank_key(k)
         }
@@ -785,7 +781,7 @@ broadcast use {
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
         {
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.select_key(i)
         }
@@ -813,7 +809,7 @@ broadcast use {
                 identity: self.identity.clone(),
             };
 
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             (left, right)
         }
@@ -822,7 +818,7 @@ broadcast use {
         fn reduce_val(&self) -> (reduced: V)
             ensures self@.dom().finite()
         {
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.cached_reduction.clone()
         }
@@ -831,7 +827,7 @@ broadcast use {
         fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
             ensures self@.dom().finite()
         {
-            // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             let range_table = self.get_key_range(k1, k2);
             range_table.reduce_val()
