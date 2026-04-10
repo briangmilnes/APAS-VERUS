@@ -220,6 +220,7 @@ pub mod ETSPMtEph {
 
     /// The combined tour forms a cycle, given sub-tour cycle properties
     /// and the identity of each combined element.
+    #[verifier::rlimit(40)]
     proof fn lemma_combined_cycle(
         combined: Seq<Edge>, lt: Seq<Edge>, rt: Seq<Edge>,
         ln_i: int, rn_i: int, best_li: int, best_ri: int,

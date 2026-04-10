@@ -1021,7 +1021,7 @@ pub mod ArraySeqStPer {
     //		Section 12. derive impls in verus!
 
 
-// Veracity: UNNEEDED proof block     #[cfg(verus_keep_ghost)]
+    #[cfg(verus_keep_ghost)]
     impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqStPerS<T> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }

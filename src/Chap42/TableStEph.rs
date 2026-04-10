@@ -1465,7 +1465,7 @@ broadcast use {
                 lemma_subseq_value_agrees::<K::V, V::V>(old_self_view, self.entries@, sources);
                 // Forward: result keys are in old \ other.
                 assert forall|k: K::V|
-                    spec_entries_to_map(self.entries@).dom().contains(k)
+                    #[trigger] spec_entries_to_map(self.entries@).dom().contains(k)
                     implies spec_entries_to_map(old_self_view).dom().contains(k)
                         && !other@.dom().contains(k)
                 by {
@@ -1480,7 +1480,7 @@ broadcast use {
                 assert forall|k: K::V|
                     spec_entries_to_map(old_self_view).dom().contains(k)
                     && !other@.dom().contains(k)
-                    implies spec_entries_to_map(self.entries@).dom().contains(k)
+                    implies #[trigger] spec_entries_to_map(self.entries@).dom().contains(k)
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_self_view, k);
                     let si = choose|si: int| 0 <= si < old_self_view.len()

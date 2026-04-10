@@ -1846,7 +1846,7 @@ pub mod ArraySeqMtPer {
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
                 it@.0 == 0,
-// Veracity: UNNEEDED proof block                 it@.1 == self.seq@,
+                it@.1 == self.seq@,
         {
             self.seq.into_iter()
         }
