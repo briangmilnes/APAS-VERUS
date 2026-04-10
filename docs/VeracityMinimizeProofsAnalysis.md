@@ -15,6 +15,95 @@ Two waves were run:
 - **Wave 2:** Agents 2,3,4 took remaining chapters (Chap56-66) after agent 7's load
   was rebalanced.
 
+## Cost: minimize run times
+
+Wall-clock time per chapter (Wave 2, 6 agents on a contended 32 GB box):
+
+| # | Agent | Chap | Asserts | Time | Notes |
+|---|-------|------|---------|------|-------|
+| 1 | 2 | 59 | 20 | 24m | |
+| 2 | 2 | 62 | — | 18m | |
+| 3 | 2 | 66 | — | 6m | |
+| 4 | 3 | 57 | 2 | 9m | died on Chap58 |
+| 5 | 4 | 61 | — | 26s | small chapter |
+| 6 | 4 | 63 | — | 3m | |
+| 7 | 4 | 64 | — | 1m | |
+| 8 | 5 | 42 | 160+ | 8h 1m | largest prior-round chapter |
+| 9 | 5 | 43 | 432 | running | at 64% after ~11h |
+| 10 | 6 | 44 | — | 19m | |
+| 11 | 6 | 45 | — | 2h 34m | |
+| 12 | 6 | 47 | — | 1h 21m | |
+| 13 | 6 | 49 | — | 5m | |
+| 14 | 6 | 50 | — | 16m | |
+| 15 | 6 | 51 | — | 12m | |
+| 16 | 6 | 52 | 681 | running | at 72% after ~11h |
+| 17 | 7 | 53 | — | 23m | |
+| 18 | 7 | 54 | — | 36m | |
+| 19 | 7 | 55 | 818 | 8h 59m | largest chapter, 818 asserts |
+| 20 | 7 | 56 | — | 3m | |
+| 21 | 7 | 57 | — | 5m | died on Chap58 |
+
+Total agent-hours (Wave 2): ~55h across 6 agents, ~11h wall clock.
+Wave 1 timing was lost with the logs, but covered 22 chapters with similar profiles.
+
+Each iteration costs one `validate isolate ChapNN` (~30-60s per chapter). A chapter
+with 400 asserts at 40s/iteration = ~4.5h. Lock contention from 6 concurrent agents
+adds 20-50% overhead.
+
+### Per-chapter detail: CPU, memory, LOC, NEEDED/UNNEEDED
+
+Isolate-mode verification stats from Wave 2 logs. CPU is z3 children time, RSS is
+peak z3 RSS. LOC is total lines (comments not counted). NEEDED/UNNEEDED are assert
+and proof block counts after testing.
+
+| # | Agent | Chap | CPU Before | CPU After | CPU Δ | RSS Before | RSS After | RSS Δ | LOC Before | LOC After | LOC Δ | Needed | Unneeded | % Removed |
+|---|-------|------|-----------|-----------|-------|-----------|-----------|-------|-----------|-----------|-------|--------|----------|-----------|
+| 1 | 2 | 59 | 432s | 470s | +9% | 984 MB | 970 MB | -1% | 1479 | 1499 | +20 | 20 | 8 | 29% |
+| 2 | 2 | 62 | 337s | 754s | +124% | 516 MB | 1162 MB | +125% | 2245 | 2341 | +96 | 96 | 2 | 2% |
+| 3 | 2 | 66 | 727s | 179s | **-75%** | 429 MB | 389 MB | -9% | 1303 | 1323 | +20 | 20 | 0 | 0% |
+| 4 | 3 | 57 | 418s | 377s | -10% | 949 MB | 659 MB | **-31%** | 448 | 454 | +6 | 6 | 4 | 40% |
+| 5 | 4 | 61 | 421s | 329s | -22% | 955 MB | 431 MB | **-55%** | 537 | 537 | 0 | 0 | 0 | — |
+| 6 | 4 | 63 | 176s | 312s | +77% | 422 MB | 445 MB | +5% | 284 | 284 | 0 | 0 | 0 | — |
+| 7 | 4 | 64 | 429s | 387s | -10% | 1170 MB | 440 MB | **-62%** | 565 | 565 | 0 | 0 | 0 | — |
+| 8 | 5 | 42 | 249s | 344s | +38% | 694 MB | 654 MB | -6% | 6837 | 7666 | +829 | 836 | 160 | 16% |
+| 9 | 6 | 44 | 249s | 152s | **-39%** | 714 MB | 599 MB | -16% | 430 | 454 | +24 | 25 | 11 | 31% |
+| 10 | 6 | 45 | 144s | 149s | +3% | 500 MB | 584 MB | +17% | 4724 | 5073 | +349 | 360 | 16 | 4% |
+| 11 | 6 | 47 | 165s | 234s | +42% | 677 MB | 714 MB | +5% | 4662 | 5014 | +352 | 360 | 0 | 0% |
+| 12 | 6 | 49 | 131s | 162s | +24% | 496 MB | 589 MB | +19% | 1297 | 1306 | +9 | 18 | 0 | 0% |
+| 13 | 6 | 50 | 46s | 28s | **-39%** | 351 MB | 0 MB | **-100%** | 2132 | 2194 | +62 | 68 | 15 | 18% |
+| 14 | 6 | 51 | 148s | 104s | **-30%** | 454 MB | 496 MB | +9% | 2653 | 2708 | +55 | 59 | 1 | 2% |
+| 15 | 7 | 53 | 259s | 136s | **-47%** | 624 MB | 600 MB | -4% | 1647 | 1714 | +67 | 67 | 3 | 4% |
+| 16 | 7 | 54 | 136s | 136s | 0% | 650 MB | 609 MB | -6% | 2429 | 2545 | +116 | 118 | 14 | 11% |
+| 17 | 7 | 55 | 208s | 203s | -2% | 704 MB | 406 MB | **-42%** | 4740 | 5419 | +679 | 681 | 271 | 28% |
+| 18 | 7 | 56 | 212s | 81s | **-62%** | 431 MB | 253 MB | **-41%** | 2282 | 2296 | +14 | 14 | 0 | 0% |
+| 19 | 7 | 57 | 429s | 288s | **-33%** | 726 MB | 648 MB | -11% | 458 | 467 | +9 | 9 | 1 | 10% |
+
+**Wave 2 totals:** 2757 asserts/proof blocks tested, 506 removed (18%).
+LOC increased by +2698 lines from Veracity comment markers on NEEDED items.
+
+Note: LOC *increases* because NEEDED markers add comment lines. UNNEEDED items are
+commented out (code stays as a comment, not deleted). The net LOC change is from
+markers, not from adding new code.
+
+### Chapter status summary
+
+| Status | Count | Chapters |
+|--------|-------|----------|
+| Done and merged clean | 29 | 03,06,11,17,18,19,21,23,26,27,28,35,38,39,40,41,42,44,49,50,51,54,55,56,61,62,63,64,66 |
+| Done, merged with ensures fixes | 2 | 50 (OBSTMtPer, MatrixChainStPer ensures restored) |
+| Done, partially merged (files reverted) | 5 | 36 (full), 37 (BSTRBMtEph), 53 (PQMinStPer), 57 (Dijkstra F64/U64), 59 (Johnson 4 files) |
+| Still running | 2 | 43 (agent5, 64%), 52 (agent6, 72%) |
+| Failed (stale Chap19) | 1 | 58 |
+| Never assigned | 3 | 30, 60, 65 |
+| No asserts to test | 4 | 45 (merged markers only), 47 (merged markers only), 61, 63 |
+
+Some chapters show *increases* in CPU or memory after minimize. This happens when
+removing asserts that were Z3 speed hints — the 0.00 threshold prevents removing
+asserts that increase CPU or memory for *that specific assert's test*, but
+interactions between remaining asserts can shift Z3's search strategy for the
+full chapter. The net effect across the full crate is still a 19% CPU reduction
+and 25% RSS reduction.
+
 ## Results
 
 ### Verification improvement
