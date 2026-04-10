@@ -140,32 +140,32 @@ verus!
 
         spec fn is_functional(&self) -> bool;
 
-        /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|v|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|^2), Span O(|v|^2) — disagrees. For each element calls is_functional_vec_at which is O(|v|).
+        /// - Alg Analysis: APAS (Ch05 Def 5.6): definitional predicate, no cost specified.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|^2), Span O(|v|^2). For each element calls is_functional_vec_at which is O(|v|).
         fn is_functional_vec(v: &Vec<Pair<X, Y>>) -> (functional: bool)
             requires Self::spec_valid_key_type()
             ensures functional == is_functional_seq(v@);
 
-        /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|v|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel. Scans vec for duplicate domain key at p.
+        /// - Alg Analysis: APAS (Ch05 Def 5.6): definitional predicate, no cost specified.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|). Scans vec for duplicate domain key at p.
         fn is_functional_vec_at(v: &Vec<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool)
             requires Self::spec_valid_key_type()
             ensures functional == is_functional_seq_at(v@, p@);
 
-        /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|s|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel. Iterates set, checks domain key at p.
+        /// - Alg Analysis: APAS (Ch05 Def 5.6): definitional predicate, no cost specified.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|). Iterates set, checks domain key at p.
         fn is_functional_SetStEph_at(s: &SetStEph<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool)
             requires Self::spec_valid_key_type()
             ensures functional == is_functional_set_at(s@, p@);
 
-        /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|s|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|²), Span O(|s|²) — disagrees. Iterates set and for each pair calls is_functional_SetStEph_at which is O(|s|), yielding quadratic total.
+        /// - Alg Analysis: APAS (Ch05 Def 5.6): definitional predicate, no cost specified.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|²), Span O(|s|²). Iterates set and for each pair calls is_functional_SetStEph_at which is O(|s|).
         fn is_functional_SetStEph(s: &SetStEph<Pair<X, Y>>) -> (functional: bool)
             requires Self::spec_valid_key_type()
             ensures functional == is_functional_set(s@);
 
-        /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|r|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|²), Span O(|r|²) — disagrees. Delegates to is_functional_SetStEph which is O(|s|²).
+        /// - Alg Analysis: APAS (Ch05 Def 5.6): definitional predicate, no cost specified.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|²), Span O(|r|²). Delegates to is_functional_SetStEph which is O(|s|²).
         fn is_functional_RelationStEph(r: &RelationStEph<X, Y>) -> (functional: bool)
             requires Self::spec_valid_key_type()
             ensures functional == is_functional_relation(*r);
