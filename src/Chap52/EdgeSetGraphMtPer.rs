@@ -245,6 +245,7 @@ pub mod EdgeSetGraphMtPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(|E| log |V|), Span Theta(|E| log |V|) — sequential iterate+insert.
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
         {
+            // Veracity: NEEDED proof block
             proof { lemma_eq_spec_iff_view_eq::<V>(); }
             let seq = self.edges.to_seq();
             let len = seq.length();
@@ -270,32 +271,41 @@ pub mod EdgeSetGraphMtPer {
             {
                 let elem = seq.nth(i);
                 if elem.0 == *u {
+                    // Veracity: NEEDED proof block
                     let w = elem.1.clone_view();
                     proof {
-                        assert(seq.spec_seq().to_set().contains(seq.spec_seq()[i as int]));
-                        assert(self.edges@.contains(seq.spec_seq()[i as int]));
+// Veracity: UNNEEDED assert                         assert(seq.spec_seq().to_set().contains(seq.spec_seq()[i as int]));
+// Veracity: UNNEEDED assert                         assert(self.edges@.contains(seq.spec_seq()[i as int]));
+                        // Veracity: NEEDED assert (speed hint)
                         assert(seq.spec_seq()[i as int].0 == u@);
                     }
                     neighbors = neighbors.insert(w);
                 }
                 i += 1;
+            // Veracity: NEEDED proof block
             }
 
             proof {
-                assert forall|v: <V as View>::V|
-                    Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))).contains(v)
-                    implies #[trigger] neighbors@.contains(v) by {
-                    assert(self.edges@.contains((u@, v)));
-                    assert(seq.spec_seq().to_set().contains((u@, v)));
-                    let j = choose|j: int| 0 <= j < seq.spec_seq().len() && seq.spec_seq()[j] == (u@, v);
-                    assert(seq.spec_seq()[j].0 == u@);
-                    assert(seq.spec_seq()[j].1 == v);
-                }
+// Veracity: UNNEEDED assert                 assert forall|v: <V as View>::V|
+// Veracity: UNNEEDED assert                     Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))).contains(v)
+// Veracity: UNNEEDED assert                     implies #[trigger] neighbors@.contains(v) by {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                     assert(self.edges@.contains((u@, v)));
+// Veracity: UNNEEDED assert                     // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                     assert(seq.spec_seq().to_set().contains((u@, v)));
+// Veracity: UNNEEDED assert                     let j = choose|j: int| 0 <= j < seq.spec_seq().len() && seq.spec_seq()[j] == (u@, v);
+// Veracity: UNNEEDED assert                     // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                     assert(seq.spec_seq()[j].0 == u@);
+// Veracity: UNNEEDED assert                     // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                     assert(seq.spec_seq()[j].1 == v);
+// Veracity: UNNEEDED assert                 }
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|v: <V as View>::V|
                     #[trigger] neighbors@.contains(v)
                     implies Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))).contains(v) by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(self.edges@.contains((u@, v)));
                 }
+                // Veracity: NEEDED assert (speed hint)
                 assert(neighbors@ =~= Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))));
             }
 
@@ -308,10 +318,12 @@ pub mod EdgeSetGraphMtPer {
         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        // Veracity: NEEDED proof block
         fn insert_vertex(&self, v: V) -> (updated: Self) {
             let new_vertices = self.vertices.insert(v);
             let new_edges = self.edges.clone();
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|a: <V as View>::V, b: <V as View>::V|
                     #[trigger] new_edges@.contains((a, b))
                     implies new_vertices@.contains(a) && new_vertices@.contains(b) by {}
@@ -323,6 +335,7 @@ pub mod EdgeSetGraphMtPer {
         }
 
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(|E| log |E|), Span O(log |E| * log |V|)
+        // Veracity: NEEDED proof block (speed hint)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E| log |E|), Span O(log |E| * log |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(|E| log |E|), Span Theta(|E| log |E|) — sequential iterate+insert.
         fn delete_vertex(&self, v: &V) -> (updated: Self)
@@ -353,15 +366,19 @@ pub mod EdgeSetGraphMtPer {
                     forall|j: int| 0 <= j < i ==>
                         (seq.spec_seq()[j].0 != v@ && seq.spec_seq()[j].1 != v@)
                         ==> #[trigger] new_edges@.contains(seq.spec_seq()[j]),
+                // Veracity: NEEDED proof block
                 decreases len - i,
             {
                 let elem = seq.nth(i);
                 if !(elem.0 == *v) && !(elem.1 == *v) {
                     let e = Pair(elem.0.clone_view(), elem.1.clone_view());
                     proof {
-                        assert(seq.spec_seq().to_set().contains(seq.spec_seq()[i as int]));
+// Veracity: UNNEEDED assert                         assert(seq.spec_seq().to_set().contains(seq.spec_seq()[i as int]));
+                        // Veracity: NEEDED assert (speed hint)
                         assert(self.edges@.contains(seq.spec_seq()[i as int]));
+                        // Veracity: NEEDED assert (speed hint)
                         assert(e@ == seq.spec_seq()[i as int]);
+                    // Veracity: NEEDED proof block
                     }
                     new_edges = new_edges.insert(e);
                 }
@@ -369,12 +386,17 @@ pub mod EdgeSetGraphMtPer {
             }
 
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|a: <V as View>::V, b: <V as View>::V|
                     #[trigger] new_edges@.contains((a, b))
                     implies new_vertices@.contains(a) && new_vertices@.contains(b) by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(self.edges@.contains((a, b)));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(a != v@ && b != v@);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(self.vertices@.contains(a));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(self.vertices@.contains(b));
                 }
             }
@@ -384,6 +406,7 @@ pub mod EdgeSetGraphMtPer {
                 edges: new_edges,
             }
         }
+// Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + log m), Span O(log n + log m)
         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
@@ -392,12 +415,14 @@ pub mod EdgeSetGraphMtPer {
             let new_vertices = self.vertices.insert(u_cv).insert(v_cv);
             let new_edges = self.edges.insert(Pair(u, v));
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|a: <V as View>::V, b: <V as View>::V|
                     #[trigger] new_edges@.contains((a, b))
                     implies new_vertices@.contains(a) && new_vertices@.contains(b) by {}
             }
             EdgeSetGraphMtPer {
                 vertices: new_vertices,
+                // Veracity: NEEDED proof block
                 edges: new_edges,
             }
         }
@@ -407,6 +432,7 @@ pub mod EdgeSetGraphMtPer {
             let new_edges = self.edges.delete(&Pair(u.clone(), v.clone()));
             let new_vertices = self.vertices.clone();
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|a: <V as View>::V, b: <V as View>::V|
                     #[trigger] new_edges@.contains((a, b))
                     implies new_vertices@.contains(a) && new_vertices@.contains(b) by {}

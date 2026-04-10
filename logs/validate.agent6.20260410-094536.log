@@ -1,0 +1,44 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error[E0425]: cannot find value `u_in_orig` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:681:20
+    |
+681 |                 if u_in_orig {
+    |                    ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `u_in_orig` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:714:20
+    |
+714 |                 if u_in_orig {
+    |                    ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `u_in_orig` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:740:20
+    |
+740 |                 if u_in_orig {
+    |                    ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `u_in_orig` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:785:21
+    |
+785 |                 if !u_in_orig {
+    |                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `u_in_orig` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:797:21
+    |
+797 |                 if !u_in_orig {
+    |                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `u_in_orig` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:877:32
+    |
+877 | ...                   if u_in_orig {
+    |                          ^^^^^^^^^ not found in this scope
+
+error: aborting due to 6 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3069MB, peak z3 RSS: 386MB, min free: 19442MB
+Sampled CPU Usage: rust_verify: 59s, z3 children: 50s

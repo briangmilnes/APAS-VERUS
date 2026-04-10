@@ -233,6 +233,7 @@ broadcast use {
                 n,
             );
             let empty = AdjSeqGraphStPer { adj, num_edges: 0 };
+            // Veracity: NEEDED proof block
             proof {
                 let degree_fn = |i: int| empty.spec_degree(i);
 // Veracity: UNNEEDED assert                 assert forall|i: int| 0 <= i < n implies #[trigger] degree_fn(i) == 0nat by {};
@@ -255,6 +256,7 @@ broadcast use {
                     degree_fn == (|k: int| adj.spec_index(k).spec_len()),
                     spec_sum_of(n as int, degree_fn) <= usize::MAX as nat,
                 decreases n - i
+            // Veracity: NEEDED proof block
             {
                 proof {
                     lemma_sum_of_unfold(i as int, degree_fn);
@@ -263,6 +265,7 @@ broadcast use {
                 let deg = adj.nth(i).length();
                 count = count + deg;
                 i = i + 1;
+            // Veracity: NEEDED proof block
             }
             let constructed = AdjSeqGraphStPer { adj, num_edges: count };
             proof {
@@ -361,6 +364,7 @@ broadcast use {
                     &|i: usize| -> (r: usize)
                         requires i < deg_u
                         ensures r == src_u.spec_index(i as int)
+                    // Veracity: NEEDED proof block
                     { *src_u.nth(i) },
                     deg_u,
                 );
@@ -390,6 +394,7 @@ broadcast use {
                     decreases deg_u - j
                 {
                     nvec.push(*src_u.nth(j));
+                    // Veracity: NEEDED proof block
                     j = j + 1;
                 }
                 nvec.push(v);
@@ -443,6 +448,7 @@ broadcast use {
             let new_num_edges: usize = if found { self.num_edges } else { self.num_edges + 1 };
 
             let updated = AdjSeqGraphStPer { adj: result_adj, num_edges: new_num_edges };
+// Veracity: NEEDED proof block
 // Veracity: UNNEEDED assert             assert(updated.spec_degree(u as int) == new_neighbors.spec_len());
             // Veracity: NEEDED assert
             assert(updated.spec_neighbor(u as int, witness) == new_neighbors.spec_index(witness));
@@ -563,6 +569,7 @@ broadcast use {
             implies #[trigger] result_adj.spec_index(u2).spec_index(j2) < result_adj.spec_len()
             by {
                 if u2 != u as int {
+                    // Veracity: NEEDED proof block
                     // Veracity: NEEDED assert (speed hint)
                     assert(result_adj.spec_index(u2).spec_index(j2) == self.adj.spec_index(u2).spec_index(j2));
                 }
@@ -574,6 +581,7 @@ broadcast use {
                 lemma_sum_of_lower_bound(n_v as int, old_degree_fn, u as int);
                 // Veracity: NEEDED assert (speed hint)
                 assert(new_deg_u <= deg_u);
+            // Veracity: NEEDED proof block
             }
 
             // Compute new num_edges: self.num_edges - (deg_u - new_deg_u).
@@ -626,6 +634,7 @@ broadcast use {
     #[cfg(verus_keep_ghost)]
     impl PartialEqSpecImpl for AdjSeqGraphStPer {
         open spec fn obeys_eq_spec() -> bool { true }
+        // Veracity: NEEDED proof block
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 

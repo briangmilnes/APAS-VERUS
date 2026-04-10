@@ -1,0 +1,85 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error[E0425]: cannot find value `u` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:599:19
+    |
+599 |             while u < n
+    |                   ^ not found in this scope
+
+error[E0425]: cannot find value `u` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:601:21
+    |
+601 |                     u <= n,
+    |                     ^ not found in this scope
+
+error[E0425]: cannot find value `u` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:604:49
+    |
+604 |                     total as nat == spec_sum_of(u as int, comp_row_count),
+    |                                                 ^ not found in this scope
+
+error[E0425]: cannot find value `u` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:608:31
+    |
+608 |                 decreases n - u
+    |                               ^ not found in this scope
+
+error[E0425]: cannot find value `u` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:610:47
+    |
+610 |                 proof { lemma_sum_of_monotone(u as int + 1, n as int, comp_row_count); }
+    |                                               ^ not found in this scope
+
+error[E0425]: cannot find value `u` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:611:38
+    |
+611 |                 let row = matrix.nth(u);
+    |                                      ^ not found in this scope
+
+error[E0425]: cannot find value `u` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:614:64
+    |
+614 |                 let ghost edge_fn = |v: int| matrix.spec_index(u as int).spec_index(v);
+    |                                                                ^ not found in this scope
+
+error[E0425]: cannot find value `u` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:620:25
+    |
+620 |                         u < n,
+    |                         ^ not found in this scope
+
+error[E0425]: cannot find value `u` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:622:105
+    |
+622 |                         forall|j: int| 0 <= j < n ==> #[trigger] row.spec_index(j) == matrix.spec_index(u as int).spec_index(j),
+    |                                                                                                         ^ not found in this scope
+
+error[E0425]: cannot find value `u` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:624:64
+    |
+624 |                         edge_fn == (|v: int| matrix.spec_index(u as int).spec_index(v)),
+    |                                                                ^ not found in this scope
+
+error[E0425]: cannot find value `u` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:635:17
+    |
+635 |                 u = u + 1;
+    |                 ^
+    |
+help: you might have meant to introduce a new binding
+    |
+635 |                 let u = u + 1;
+    |                 +++
+
+error[E0425]: cannot find value `u` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:635:21
+    |
+635 |                 u = u + 1;
+    |                     ^ not found in this scope
+
+error: aborting due to 12 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 2581MB, peak z3 RSS: 389MB, min free: 19747MB
+Sampled CPU Usage: rust_verify: 30s, z3 children: 12s

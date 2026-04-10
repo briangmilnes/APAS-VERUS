@@ -1,0 +1,28 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: this file contains an unclosed delimiter
+    --> src/Chap52/AdjTableGraphMtPer.rs:1063:3
+     |
+  22 | pub mod AdjTableGraphMtPer {
+     |                            - unclosed delimiter
+...
+  43 | {
+     | - unclosed delimiter
+...
+ 301 |     impl<V: StTInMtT + Ord + TotalOrder + 'static> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+     |                                                                                                         - unclosed delimiter
+...
+ 989 |                             if u2 == u@ {
+     |                                         - this delimiter might not be properly closed...
+...
+1010 |                 }
+     |                 - ...as it matches this but it has different indentation
+...
+1063 | }
+     |  ^
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 12121MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

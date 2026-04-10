@@ -1,0 +1,28 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: mismatched closing delimiter: `}`
+   --> src/Chap52/AdjTableGraphStEph.rs:715:28
+    |
+715 |             self.adj.insert(u, neighbors,
+    |                            ^ unclosed delimiter
+...
+793 |             }
+    |             ^ mismatched closing delimiter
+
+error: unexpected closing delimiter: `}`
+   --> src/Chap52/AdjTableGraphStEph.rs:884:1
+    |
+665 |         fn insert_edge(&mut self, u: V, v: V) {
+    |                                               - this delimiter might not be properly closed...
+...
+793 |             }
+    |             - ...as it matches this but it has different indentation
+...
+884 | }
+    | ^ unexpected closing delimiter
+
+error: aborting due to 2 previous errors
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 22116MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

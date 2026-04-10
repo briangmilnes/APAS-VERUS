@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: expected an expression
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:538:19
+    |
+538 |                 } else {
+    |                   ^^^^
+
+error[E0425]: cannot find type `AdjMatrixGraphMtEph` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:652:30
+    |
+652 |     impl std::fmt::Debug for AdjMatrixGraphMtEph {
+    |                              ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AdjMatrixGraphMtEph` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:662:32
+    |
+662 |     impl std::fmt::Display for AdjMatrixGraphMtEph {
+    |                                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 3762MB, peak z3 RSS: 344MB, min free: 18734MB
+Sampled CPU Usage: rust_verify: 50s, z3 children: 12s

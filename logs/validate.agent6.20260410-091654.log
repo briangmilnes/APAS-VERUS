@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: unexpected token, expected `;`
+   --> src/Chap52/EdgeSetGraphStPer.rs:306:55
+    |
+306 |                     #[trigger] neighbors@.contains(v) by {
+    |                                                       ^^
+
+error[E0425]: cannot find type `EdgeSetGraphStPer` in this scope
+   --> src/Chap52/EdgeSetGraphStPer.rs:464:86
+    |
+464 |     impl<V: StT + Ord + TotalOrder + ClonePreservesView + fmt::Debug> fmt::Debug for EdgeSetGraphStPer<V> {
+    |                                                                                      ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `EdgeSetGraphStPer` in this scope
+   --> src/Chap52/EdgeSetGraphStPer.rs:474:90
+    |
+474 |     impl<V: StT + Ord + TotalOrder + ClonePreservesView + fmt::Display> fmt::Display for EdgeSetGraphStPer<V> {
+    |                                                                                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 5411MB, peak z3 RSS: 3631MB, min free: 13735MB
+Sampled CPU Usage: rust_verify: 94s, z3 children: 73s

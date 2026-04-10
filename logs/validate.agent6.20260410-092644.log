@@ -1,0 +1,38 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error[E0425]: cannot find value `edge_fn` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:602:48
+    |
+602 |                 proof { lemma_count_true_bound(edge_fn, n as int); }
+    |                                                ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `edge_fn` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:610:57
+    |
+610 |                         count as nat == spec_count_true(edge_fn, vi as int),
+    |                                                         ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `edge_fn` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:611:25
+    |
+611 |                         edge_fn == (|v: int| matrix.spec_index(u as int).spec_index(v)),
+    |                         ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `edge_fn` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:612:41
+    |
+612 |                         spec_count_true(edge_fn, n as int) <= n as nat,
+    |                                         ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `edge_fn` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:615:55
+    |
+615 |                     proof { lemma_count_true_monotone(edge_fn, vi as int + 1, n as int); }
+    |                                                       ^^^^^^^ not found in this scope
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 5403MB, peak z3 RSS: 2599MB, min free: 14858MB
+Sampled CPU Usage: rust_verify: 95s, z3 children: 72s

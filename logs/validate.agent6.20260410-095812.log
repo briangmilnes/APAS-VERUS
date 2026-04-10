@@ -1,0 +1,170 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:187:21
+    |
+187 |             ensures updated.spec_adjtablegraphstper_wf(), !updated.spec_adj().dom().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+725 |             updated
+    |             ------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:187:59
+    |
+187 |             ensures updated.spec_adjtablegraphstper_wf(), !updated.spec_adj().dom().contains(v@);
+    |                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+725 |             updated
+    |             ------- at the end of the function body
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:602:32
+    |
+602 |                         assert(sv.spec_avltreesetstper_wf());
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:634:40
+    |
+634 | ...                   assert(old_sv.spec_avltreesetstper_wf());
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:641:32
+    |
+641 |                         assert(result_adj@.dom() =~= adj_after_delete.dom());
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:697:21
+    |
+697 |                     !result_adj@[k].contains(v@)
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:709:29
+    |
+709 |                     implies updated.spec_adj().dom().contains(w)
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:720:28
+    |
+720 |                     assert(old_adj[u].contains(w));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap38/BSTParaStEph.rs:519:13
+    |
+519 |             self@.finite()
+    |             ^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:427:13
+    |
+427 |             self.tree.spec_bstparasteph_wf()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+428 |             && self@.len() < usize::MAX as nat
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+sv.spec_avltreesetstper_wf()
+|   sv.tree.spec_bstparasteph_wf() ✘
+|   |   sv.tree.view().finite() ✘
+|   |       function is uninterpreted
+|   |   obeys_feq_full() ✔
+|   +---
+|   sv.view().len() < UnsignedMax.Exec(usize::BITS) ✘
++---
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphStPer.rs:579:50
+    |
+579 |                         result_adj@[k].subset_of(adj_after_delete[k]),
+    |                                                  ^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphStPer.rs:718:28
+    |
+718 |                     assert(adj_after_delete[u].contains(w));
+    |                            ^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphStPer.rs:720:28
+    |
+720 |                     assert(old_adj[u].contains(w));
+    |                            ^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:1467:17
+     |
+1467 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap42/TableStEph.rs:1469:29
+     |
+1469 |                     implies spec_entries_to_map(old_self_view).dom().contains(k)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap42/TableStEph.rs:1470:29
+     |
+1470 |                         && !other@.dom().contains(k)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:1480:17
+     |
+1480 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap42/TableStEph.rs:1481:21
+     |
+1481 |                     spec_entries_to_map(old_self_view).dom().contains(k)
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap42/TableStEph.rs:1482:25
+     |
+1482 |                     && !other@.dom().contains(k)
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+    --> src/Chap42/TableStEph.rs:1480:17
+     |
+1480 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+verification results:: 3019 verified, 2 errors
+error: aborting due to 8 previous errors
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 4125MB, peak z3 RSS: 343MB, min free: 18234MB
+Sampled CPU Usage: rust_verify: 63s, z3 children: 53s

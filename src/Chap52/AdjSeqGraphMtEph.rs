@@ -240,6 +240,7 @@ broadcast use {
                 n,
             );
             let empty = AdjSeqGraphMtEph { adj, num_edges: 0 };
+            // Veracity: NEEDED proof block
             proof {
                 let degree_fn = |i: int| empty.spec_degree(i);
                 // Veracity: NEEDED assert (speed hint)
@@ -263,6 +264,7 @@ broadcast use {
                     degree_fn == (|k: int| adj.spec_index(k).spec_len()),
                     spec_sum_of(n as int, degree_fn) <= usize::MAX as nat,
                 decreases n - i
+            // Veracity: NEEDED proof block
             {
                 proof {
                     lemma_sum_of_unfold(i as int, degree_fn);
@@ -271,6 +273,7 @@ broadcast use {
                 let deg = adj.nth(i).length();
                 count = count + deg;
                 i = i + 1;
+            // Veracity: NEEDED proof block
             }
             let constructed = AdjSeqGraphMtEph { adj, num_edges: count };
             proof {
@@ -354,6 +357,7 @@ broadcast use {
                 if u != v as int {
                     // Veracity: NEEDED assert
                     assert(self.adj.spec_index(u) == old(self).adj.spec_index(u));
+                // Veracity: NEEDED proof block
                 }
             }
             // Update num_edges: old_count - old_deg + new_deg.
@@ -362,6 +366,7 @@ broadcast use {
             }
             if new_deg >= old_deg {
                 self.num_edges = self.num_edges + (new_deg - old_deg);
+            // Veracity: NEEDED proof block
             } else {
                 self.num_edges = self.num_edges - (old_deg - new_deg);
             }
@@ -447,6 +452,7 @@ broadcast use {
                             assert(self.adj.spec_index(u2) == old(self).adj.spec_index(u2));
                         }
                     }
+                    // Veracity: NEEDED proof block
                     self.num_edges = self.num_edges + 1;
                     // Re-assert postconditions (num_edges mutation may invalidate).
 // Veracity: UNNEEDED assert                     assert(self.spec_degree(u as int) == old_len as nat + 1);
@@ -499,10 +505,12 @@ broadcast use {
                     0 <= u2 < self.adj.spec_len()
                     && 0 <= j2 < self.adj.spec_index(u2).spec_len()
                 implies #[trigger] self.adj.spec_index(u2).spec_index(j2) < self.adj.spec_len()
+                // Veracity: NEEDED proof block
                 by {
                     if u2 != u as int {
                         // Veracity: NEEDED assert
                         assert(self.adj.spec_index(u2) == old(self).adj.spec_index(u2));
+                    // Veracity: NEEDED proof block
                     }
                 }
                 proof {

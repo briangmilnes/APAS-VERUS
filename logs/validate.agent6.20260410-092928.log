@@ -1,0 +1,28 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: mismatched closing delimiter: `}`
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:566:50
+    |
+207 |     impl AdjMatrixGraphMtPerTrait for AdjMatrixGraphMtPer {
+    |                                                           - closing delimiter possibly meant for this
+...
+566 |             let matrix = ArraySeqMtPerS::tabulate(
+    |                                                  ^ unclosed delimiter
+...
+652 |     }
+    |     ^ mismatched closing delimiter
+
+error: this file contains an unclosed delimiter
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:683:3
+    |
+ 22 | pub mod AdjMatrixGraphMtPer {
+    |                             - unclosed delimiter
+...
+683 | }
+    |  ^
+
+error: aborting due to 2 previous errors
+
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 21658MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

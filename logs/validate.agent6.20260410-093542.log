@@ -1,0 +1,37 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: mismatched closing delimiter: `}`
+   --> src/Chap52/AdjMatrixGraphStPer.rs:469:49
+    |
+469 |                         ArraySeqStPerS::tabulate(
+    |                                                 ^ unclosed delimiter
+...
+492 |             } else if !old_val && exists {
+    |             ^ mismatched closing delimiter
+
+error: mismatched closing delimiter: `}`
+   --> src/Chap52/AdjMatrixGraphStPer.rs:451:50
+    |
+202 |     impl AdjMatrixGraphStPerTrait for AdjMatrixGraphStPer {
+    |                                                           - closing delimiter possibly meant for this
+...
+451 |             let matrix = ArraySeqStPerS::tabulate(
+    |                                                  ^ unclosed delimiter
+...
+633 |     }
+    |     ^ mismatched closing delimiter
+
+error: this file contains an unclosed delimiter
+   --> src/Chap52/AdjMatrixGraphStPer.rs:682:3
+    |
+ 22 | pub mod AdjMatrixGraphStPer {
+    |                             - unclosed delimiter
+...
+682 | }
+    |  ^
+
+error: aborting due to 3 previous errors
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 20959MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

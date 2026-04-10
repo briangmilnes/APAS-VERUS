@@ -1,0 +1,44 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: The Verus types 'nat' and 'int' can only be used in ghost code (e.g., in a 'spec' or 'proof' function, inside a 'proof' block, or when assigning to a 'ghost' or 'tracked' variable)
+   --> src/Chap52/AdjSeqGraphStEph.rs:424:41
+    |
+424 |                 lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, v as int);
+    |                                         ^^^^^^^^
+
+error: The Verus types 'nat' and 'int' can only be used in ghost code (e.g., in a 'spec' or 'proof' function, inside a 'proof' block, or when assigning to a 'ghost' or 'tracked' variable)
+   --> src/Chap52/AdjSeqGraphStEph.rs:424:81
+    |
+424 |                 lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, v as int);
+    |                                                                                 ^^^^^^^^
+
+error[E0425]: cannot find value `new_degree_fn` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:424:66
+    |
+424 |                 lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, v as int);
+    |                                                                  ^^^^^^^^^^^^^
+    |
+help: a local variable with a similar name exists
+    |
+424 -                 lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, v as int);
+424 +                 lemma_sum_of_change_one(n as int, old_degree_fn, old_degree_fn, v as int);
+    |
+
+error[E0425]: cannot find function `new_degree_fn` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:423:24
+    |
+423 |                 assert(new_degree_fn(v as int) == new_deg as nat);
+    |                        ^^^^^^^^^^^^^
+    |
+help: a local variable with a similar name exists
+    |
+423 -                 assert(new_degree_fn(v as int) == new_deg as nat);
+423 +                 assert(old_degree_fn(v as int) == new_deg as nat);
+    |
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 4603MB, peak z3 RSS: 2201MB, min free: 16095MB
+Sampled CPU Usage: rust_verify: 72s, z3 children: 52s

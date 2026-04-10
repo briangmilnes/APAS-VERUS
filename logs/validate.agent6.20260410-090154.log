@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: unexpected token, expected `;`
+   --> src/Chap52/EdgeSetGraphStEph.rs:307:55
+    |
+307 |                     #[trigger] neighbors@.contains(v) by {
+    |                                                       ^^
+
+error[E0425]: cannot find type `EdgeSetGraphStEph` in this scope
+   --> src/Chap52/EdgeSetGraphStEph.rs:471:96
+    |
+471 |     impl<V: StT + Ord + TotalOrder + ClonePreservesView + std::fmt::Debug> std::fmt::Debug for EdgeSetGraphStEph<V> {
+    |                                                                                                ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `EdgeSetGraphStEph` in this scope
+   --> src/Chap52/EdgeSetGraphStEph.rs:480:100
+    |
+480 |     impl<V: StT + Ord + TotalOrder + ClonePreservesView + std::fmt::Display> std::fmt::Display for EdgeSetGraphStEph<V> {
+    |                                                                                                    ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 3747MB, peak z3 RSS: 447MB, min free: 18473MB
+Sampled CPU Usage: rust_verify: 74s, z3 children: 51s

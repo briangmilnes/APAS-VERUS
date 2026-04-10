@@ -1,0 +1,39 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: unexpected token, expected `;`
+   --> src/Chap52/AdjTableGraphMtPer.rs:321:21
+    |
+321 |                     implies out.spec_adj().dom().contains(v)
+    |                     ^^^^^^^
+
+error[E0425]: cannot find type `AdjTableGraphMtPer` in this scope
+    --> src/Chap52/AdjTableGraphMtPer.rs:1004:70
+     |
+1004 |     impl<V: StTInMtT + Ord + TotalOrder + Clone + 'static> Clone for AdjTableGraphMtPer<V> {
+     |                                                                      ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AdjTableGraphMtPer` in this scope
+    --> src/Chap52/AdjTableGraphMtPer.rs:1006:13
+     |
+1006 |             AdjTableGraphMtPer { adj: self.adj.clone(), num_edges: self.num_edges }
+     |             ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AdjTableGraphMtPer` in this scope
+    --> src/Chap52/AdjTableGraphMtPer.rs:1010:72
+     |
+1010 |     impl<V: StTInMtT + Ord + TotalOrder + 'static> std::fmt::Debug for AdjTableGraphMtPer<V> {
+     |                                                                        ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AdjTableGraphMtPer` in this scope
+    --> src/Chap52/AdjTableGraphMtPer.rs:1016:74
+     |
+1016 |     impl<V: StTInMtT + Ord + TotalOrder + 'static> std::fmt::Display for AdjTableGraphMtPer<V> {
+     |                                                                          ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 5 previous errors
+
+Some errors have detailed explanations: E0422, E0425.
+For more information about an error, try `rustc --explain E0422`.
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 4900MB, peak z3 RSS: 697MB, min free: 16311MB
+Sampled CPU Usage: rust_verify: 103s, z3 children: 76s

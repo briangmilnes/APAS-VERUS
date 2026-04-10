@@ -1,0 +1,143 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphSpecsAndLemmas.rs:327:13
+    |
+327 | /             spec_sum_entry_sizes(entries, n) == spec_sum_adj_sizes(
+328 | |                 spec_entries_to_map(entries.subrange(0, n)))
+    | |____________________________________________________________^ failed this postcondition
+...
+332 | /         if n == 0 {
+333 | |             assert(entries.subrange(0, 0) =~= Seq::<(VV, Set<VV>)>::empty());
+334 | |         } else {
+335 | |             let sub_n = entries.subrange(0, n);
+...   |
+373 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+spec_sum_entry_sizes(old(entries), old(n)) == spec_sum_adj_sizes(spec_entries_to_map(old(entries).subrange(0, old(n)))) 
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphSpecsAndLemmas.rs:342:28
+    |
+342 |                     assert(entries[i].0 != entries[j].0);
+    |                            ^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphSpecsAndLemmas.rs:342:44
+    |
+342 |                     assert(entries[i].0 != entries[j].0);
+    |                                            ^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphSpecsAndLemmas.rs:350:28
+    |
+350 |                     assert(entries[i].0 != entries[j].0);
+    |                            ^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphSpecsAndLemmas.rs:350:44
+    |
+350 |                     assert(entries[i].0 != entries[j].0);
+    |                                            ^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphSpecsAndLemmas.rs:363:20
+    |
+363 |             assert(sub_n.drop_last() =~= sub_prev);
+    |                    ^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphSpecsAndLemmas.rs:364:20
+    |
+364 |             assert(sub_n.last() == (key, val));
+    |                    ^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:1467:17
+     |
+1467 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap42/TableStEph.rs:1469:29
+     |
+1469 |                     implies spec_entries_to_map(old_self_view).dom().contains(k)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap42/TableStEph.rs:1470:29
+     |
+1470 |                         && !other@.dom().contains(k)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:1480:17
+     |
+1480 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap42/TableStEph.rs:1481:21
+     |
+1481 |                     spec_entries_to_map(old_self_view).dom().contains(k)
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap42/TableStEph.rs:1482:25
+     |
+1482 |                     && !other@.dom().contains(k)
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+    --> src/Chap42/TableStEph.rs:1480:17
+     |
+1480 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+verification results:: 3020 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 49s
+Sampled Memory Usage: peak rust_verify RSS: 10402MB, peak z3 RSS: 721MB, min free: 10662MB
+Sampled CPU Usage: rust_verify: 244s, z3 children: 167s

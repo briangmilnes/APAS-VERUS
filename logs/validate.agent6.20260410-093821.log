@@ -1,0 +1,32 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error[E0425]: cannot find value `new_degree_fn` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:533:70
+    |
+533 |                     lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, u as int);
+    |                                                                      ^^^^^^^^^^^^^
+    |
+help: a local variable with a similar name exists
+    |
+533 -                     lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, u as int);
+533 +                     lemma_sum_of_change_one(n as int, old_degree_fn, old_degree_fn, u as int);
+    |
+
+error[E0425]: cannot find function `new_degree_fn` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:532:28
+    |
+532 |                     assert(new_degree_fn(u as int) == new_len as nat);
+    |                            ^^^^^^^^^^^^^
+    |
+help: a local variable with a similar name exists
+    |
+532 -                     assert(new_degree_fn(u as int) == new_len as nat);
+532 +                     assert(old_degree_fn(u as int) == new_len as nat);
+    |
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 3347MB, peak z3 RSS: 3514MB, min free: 15800MB
+Sampled CPU Usage: rust_verify: 65s, z3 children: 62s

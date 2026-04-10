@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error[E0425]: cannot find value `new_degree_fn` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:614:48
+    |
+614 |                 assert(spec_sum_of(n_v as int, new_degree_fn)
+    |                                                ^^^^^^^^^^^^^
+    |
+help: a local variable with a similar name exists
+    |
+614 -                 assert(spec_sum_of(n_v as int, new_degree_fn)
+614 +                 assert(spec_sum_of(n_v as int, old_degree_fn)
+    |
+
+error[E0425]: cannot find value `updated` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:620:13
+    |
+620 |             updated
+    |             ^^^^^^^ not found in this scope
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 4091MB, peak z3 RSS: 3512MB, min free: 15201MB
+Sampled CPU Usage: rust_verify: 67s, z3 children: 52s

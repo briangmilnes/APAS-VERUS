@@ -1,0 +1,44 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error[E0425]: cannot find value `nvec_view` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:399:59
+    |
+399 |                     let witness = choose|k: int| 0 <= k < nvec_view.len() as int && nvec_view[k] == j as usize;
+    |                                                           ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `nvec_view` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:399:85
+    |
+399 |                     let witness = choose|k: int| 0 <= k < nvec_view.len() as int && nvec_view[k] == j as usize;
+    |                                                                                     ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `j` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:399:101
+    |
+399 |                     let witness = choose|k: int| 0 <= k < nvec_view.len() as int && nvec_view[k] == j as usize;
+    |                                                                                                     ^ not found in this scope
+
+error[E0425]: cannot find value `neighbors` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:401:28
+    |
+401 |                     assert(neighbors.spec_index(witness) == nvec_view[witness]);
+    |                            ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `nvec_view` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:401:61
+    |
+401 |                     assert(neighbors.spec_index(witness) == nvec_view[witness]);
+    |                                                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `neighbors` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:404:13
+    |
+404 |             neighbors
+    |             ^^^^^^^^^ not found in this scope
+
+error: aborting due to 6 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 5446MB, peak z3 RSS: 3531MB, min free: 13633MB
+Sampled CPU Usage: rust_verify: 112s, z3 children: 109s

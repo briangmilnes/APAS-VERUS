@@ -1,0 +1,32 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: The Verus types 'nat' and 'int' can only be used in ghost code (e.g., in a 'spec' or 'proof' function, inside a 'proof' block, or when assigning to a 'ghost' or 'tracked' variable)
+   --> src/Chap52/AdjSeqGraphMtEph.rs:382:41
+    |
+382 |                 lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, v as int);
+    |                                         ^^^^^^^^
+
+error: The Verus types 'nat' and 'int' can only be used in ghost code (e.g., in a 'spec' or 'proof' function, inside a 'proof' block, or when assigning to a 'ghost' or 'tracked' variable)
+   --> src/Chap52/AdjSeqGraphMtEph.rs:382:81
+    |
+382 |                 lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, v as int);
+    |                                                                                 ^^^^^^^^
+
+error[E0425]: cannot find value `new_degree_fn` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:382:66
+    |
+382 |                 lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, v as int);
+    |                                                                  ^^^^^^^^^^^^^
+    |
+help: a local variable with a similar name exists
+    |
+382 -                 lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, v as int);
+382 +                 lemma_sum_of_change_one(n as int, old_degree_fn, old_degree_fn, v as int);
+    |
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 3336MB, peak z3 RSS: 2528MB, min free: 16820MB
+Sampled CPU Usage: rust_verify: 64s, z3 children: 62s

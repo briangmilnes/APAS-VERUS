@@ -1,0 +1,16 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error[E0046]: not all trait items implemented, missing: `eq_spec`
+   --> src/Chap52/AdjSeqGraphStPer.rs:635:5
+    |
+635 |     impl PartialEqSpecImpl for AdjSeqGraphStPer {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `eq_spec` in implementation
+    |
+    = help: implement the missing item: `fn eq_spec(&self, _: &Chap52::AdjSeqGraphStPer::AdjSeqGraphStPer::AdjSeqGraphStPer) -> bool { todo!() }`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0046`.
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 5918MB, peak z3 RSS: 3931MB, min free: 13122MB
+Sampled CPU Usage: rust_verify: 109s, z3 children: 102s

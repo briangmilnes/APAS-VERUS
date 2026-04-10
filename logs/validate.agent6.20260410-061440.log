@@ -1,0 +1,2154 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: unexpected token, expected `;`
+   --> src/Chap52/AdjTableGraphSpecsAndLemmas.rs:270:26
+    |
+270 |                 requires n >= 1;
+    |                          ^
+
+error[E0425]: cannot find function `lemma_sum_entry_sizes_eq` in module `crate::Chap52::AdjTableGraphSpecsAndLemmas::AdjTableGraphSpecsAndLemmas`
+   --> src/Chap52/AdjTableGraphStPer.rs:109:82
+    |
+109 |         crate::Chap52::AdjTableGraphSpecsAndLemmas::AdjTableGraphSpecsAndLemmas::lemma_sum_entry_sizes_eq::<VV>(entries, n);
+    |                                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^ not found in `crate::Chap52::AdjTableGraphSpecsAndLemmas::AdjTableGraphSpecsAndLemmas`
+
+error[E0425]: cannot find value `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:200:24
+    |
+200 |         proof { reveal(spec_sum_adj_sizes); }
+    |                        ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:328:24
+    |
+328 |                 reveal(spec_sum_adj_sizes);
+    |                        ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:455:28
+    |
+455 |                     reveal(spec_sum_adj_sizes);
+    |                            ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:560:24
+    |
+560 |                 reveal(spec_sum_adj_sizes);
+    |                        ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:756:24
+    |
+756 |                 reveal(spec_sum_adj_sizes);
+    |                        ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:917:32
+    |
+917 |                         reveal(spec_sum_adj_sizes);
+    |                                ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:934:32
+    |
+934 |                         reveal(spec_sum_adj_sizes);
+    |                                ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:101:17
+    |
+101 |                 spec_sum_of(adj.spec_len() as int, |i: int| adj.spec_index(i).spec_len()) <= usize::MAX as nat,
+    |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:123:29
+    |
+123 |                 m as nat == spec_sum_of(
+    |                             ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:160:17
+    |
+160 |                 spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i)) < usize::MAX as nat,
+    |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:161:17
+    |
+161 |                 spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i))
+    |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:185:17
+    |
+185 |                 spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i)) < usize::MAX as nat,
+    |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:207:17
+    |
+207 |                 spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i)) < usize::MAX as nat,
+    |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:228:17
+    |
+228 |                 spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i)) < usize::MAX as nat,
+    |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:256:42
+    |
+256 |             &&& self.num_edges as nat == spec_sum_of(self.spec_num_vertices() as int, |i: int| self.spec_degree(i))
+    |                                          ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_all_zero` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:286:17
+    |
+286 |                 lemma_sum_of_all_zero(degree_fn, n as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:301:37
+    |
+301 |                     count as nat == spec_sum_of(i as int, degree_fn),
+    |                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:303:21
+    |
+303 |                     spec_sum_of(n as int, degree_fn) <= usize::MAX as nat,
+    |                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_unfold` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:307:21
+    |
+307 |                     lemma_sum_of_unfold(i as int, degree_fn);
+    |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_monotone` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:308:21
+    |
+308 |                     lemma_sum_of_monotone(i as int + 1, n as int, degree_fn);
+    |                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:318:17
+    |
+318 |                 lemma_sum_of_ext(degree_fn, wf_degree, n as int);
+    |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_lower_bound` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:400:17
+    |
+400 |                 lemma_sum_of_lower_bound(n as int, old_degree_fn, v as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:420:17
+    |
+420 |                 lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, v as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:519:25
+    |
+519 |                         lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, u as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_lower_bound` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:562:21
+    |
+562 |                     lemma_sum_of_lower_bound(n as int, old_degree_fn, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:579:21
+    |
+579 |                     lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:104:17
+    |
+104 |                 spec_sum_of(
+    |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:130:29
+    |
+130 |                 m as nat == spec_sum_of(
+    |                             ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:168:17
+    |
+168 |                 spec_sum_of(self.spec_num_vertices() as int, |i: int| self.spec_degree(i)) < usize::MAX as nat,
+    |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:210:42
+    |
+210 |             &&& self.num_edges as nat == spec_sum_of(self.spec_num_vertices() as int, |i: int| self.spec_degree(i))
+    |                                          ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_all_zero` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:239:17
+    |
+239 |                 lemma_sum_of_all_zero(degree_fn, n as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:254:37
+    |
+254 |                     count as nat == spec_sum_of(i as int, degree_fn),
+    |                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:256:21
+    |
+256 |                     spec_sum_of(n as int, degree_fn) <= usize::MAX as nat,
+    |                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_unfold` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:260:21
+    |
+260 |                     lemma_sum_of_unfold(i as int, degree_fn);
+    |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_monotone` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:261:21
+    |
+261 |                     lemma_sum_of_monotone(i as int + 1, n as int, degree_fn);
+    |                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:272:17
+    |
+272 |                 lemma_sum_of_ext(degree_fn, wf_degree, n as int);
+    |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:457:17
+    |
+457 |                 lemma_sum_of_change_one(n_v as int, old_degree_fn, new_degree_fn, u as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:466:28
+    |
+466 |                     assert(spec_sum_of(n_v as int, new_degree_fn) == spec_sum_of(n_v as int, old_degree_fn));
+    |                            ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:466:70
+    |
+466 |                     assert(spec_sum_of(n_v as int, new_degree_fn) == spec_sum_of(n_v as int, old_degree_fn));
+    |                                                                      ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:469:52
+    |
+469 |                     assert(new_num_edges as nat == spec_sum_of(n_v as int, new_degree_fn));
+    |                                                    ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:475:28
+    |
+475 |                     assert(spec_sum_of(n_v as int, new_degree_fn) == spec_sum_of(n_v as int, old_degree_fn) + 1);
+    |                            ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:475:70
+    |
+475 |                     assert(spec_sum_of(n_v as int, new_degree_fn) == spec_sum_of(n_v as int, old_degree_fn) + 1);
+    |                                                                      ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:478:52
+    |
+478 |                     assert(new_num_edges as nat == spec_sum_of(n_v as int, new_degree_fn));
+    |                                                    ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:481:52
+    |
+481 |                 assert(updated.num_edges as nat == spec_sum_of(updated.spec_num_vertices() as int, |i: int| updated.spec_degree(i)));
+    |                                                    ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_lower_bound` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:574:17
+    |
+574 |                 lemma_sum_of_lower_bound(n_v as int, old_degree_fn, u as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:594:17
+    |
+594 |                 lemma_sum_of_change_one(n_v as int, old_degree_fn, new_degree_fn, u as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:607:24
+    |
+607 |                 assert(spec_sum_of(n_v as int, new_degree_fn)
+    |                        ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:101:17
+    |
+101 |                 spec_sum_of(adj.spec_len() as int, |i: int| adj.spec_index(i).spec_len()) <= usize::MAX as nat,
+    |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:125:29
+    |
+125 |                 m as nat == spec_sum_of(
+    |                             ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:164:17
+    |
+164 |                 spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i)) < usize::MAX as nat,
+    |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:165:17
+    |
+165 |                 spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i))
+    |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:189:17
+    |
+189 |                 spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i)) < usize::MAX as nat,
+    |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:217:42
+    |
+217 |             &&& self.num_edges as nat == spec_sum_of(self.spec_num_vertices() as int, |i: int| self.spec_degree(i))
+    |                                          ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_all_zero` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:247:17
+    |
+247 |                 lemma_sum_of_all_zero(degree_fn, n as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:262:37
+    |
+262 |                     count as nat == spec_sum_of(i as int, degree_fn),
+    |                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:264:21
+    |
+264 |                     spec_sum_of(n as int, degree_fn) <= usize::MAX as nat,
+    |                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_unfold` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:268:21
+    |
+268 |                     lemma_sum_of_unfold(i as int, degree_fn);
+    |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_monotone` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:269:21
+    |
+269 |                     lemma_sum_of_monotone(i as int + 1, n as int, degree_fn);
+    |                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:280:17
+    |
+280 |                 lemma_sum_of_ext(degree_fn, wf_degree, n as int);
+    |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_lower_bound` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:361:17
+    |
+361 |                 lemma_sum_of_lower_bound(n as int, old_degree_fn, v as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:378:17
+    |
+378 |                 lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, v as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:467:25
+    |
+467 |                         lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, u as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_lower_bound` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:509:21
+    |
+509 |                     lemma_sum_of_lower_bound(n as int, old_degree_fn, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:526:21
+    |
+526 |                     lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+  --> src/Chap52/AdjSeqGraphMtPer.rs:99:17
+   |
+99 |                 spec_sum_of(
+   |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:125:29
+    |
+125 |                 m as nat == spec_sum_of(
+    |                             ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:163:17
+    |
+163 |                 spec_sum_of(self.spec_num_vertices() as int, |i: int| self.spec_degree(i)) < usize::MAX as nat,
+    |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:205:42
+    |
+205 |             &&& self.num_edges as nat == spec_sum_of(self.spec_num_vertices() as int, |i: int| self.spec_degree(i))
+    |                                          ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_all_zero` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:235:17
+    |
+235 |                 lemma_sum_of_all_zero(degree_fn, n as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:250:37
+    |
+250 |                     count as nat == spec_sum_of(i as int, degree_fn),
+    |                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:252:21
+    |
+252 |                     spec_sum_of(n as int, degree_fn) <= usize::MAX as nat,
+    |                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_unfold` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:256:21
+    |
+256 |                     lemma_sum_of_unfold(i as int, degree_fn);
+    |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_monotone` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:257:21
+    |
+257 |                     lemma_sum_of_monotone(i as int + 1, n as int, degree_fn);
+    |                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:268:17
+    |
+268 |                 lemma_sum_of_ext(degree_fn, wf_degree, n as int);
+    |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:453:17
+    |
+453 |                 lemma_sum_of_change_one(n_v as int, old_degree_fn, new_degree_fn, u as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:461:28
+    |
+461 |                     assert(spec_sum_of(n_v as int, new_degree_fn) == spec_sum_of(n_v as int, old_degree_fn));
+    |                            ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:461:70
+    |
+461 |                     assert(spec_sum_of(n_v as int, new_degree_fn) == spec_sum_of(n_v as int, old_degree_fn));
+    |                                                                      ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:465:52
+    |
+465 |                     assert(new_num_edges as nat == spec_sum_of(n_v as int, new_degree_fn));
+    |                                                    ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:472:28
+    |
+472 |                     assert(spec_sum_of(n_v as int, new_degree_fn) == spec_sum_of(n_v as int, old_degree_fn) + 1);
+    |                            ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:472:70
+    |
+472 |                     assert(spec_sum_of(n_v as int, new_degree_fn) == spec_sum_of(n_v as int, old_degree_fn) + 1);
+    |                                                                      ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:475:52
+    |
+475 |                     assert(new_num_edges as nat == spec_sum_of(n_v as int, new_degree_fn));
+    |                                                    ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:478:52
+    |
+478 |                 assert(updated.num_edges as nat == spec_sum_of(updated.spec_num_vertices() as int, |i: int| updated.spec_degree(i)));
+    |                                                    ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_lower_bound` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:571:17
+    |
+571 |                 lemma_sum_of_lower_bound(n_v as int, old_degree_fn, u as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:590:17
+    |
+590 |                 lemma_sum_of_change_one(n_v as int, old_degree_fn, new_degree_fn, u as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:592:24
+    |
+592 |                 assert(spec_sum_of(n_v as int, new_degree_fn) + old_degree_fn(u as int)
+    |                        ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:593:24
+    |
+593 |                     == spec_sum_of(n_v as int, old_degree_fn) + new_degree_fn(u as int));
+    |                        ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:599:24
+    |
+599 |                 assert(spec_sum_of(n_v as int, old_degree_fn) == self.num_edges as nat);
+    |                        ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+  --> src/Chap52/AdjMatrixGraphStEph.rs:96:17
+   |
+96 |                 spec_sum_of(
+   |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+  --> src/Chap52/AdjMatrixGraphStEph.rs:98:30
+   |
+98 |                     |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), matrix.spec_len() as int),
+   |                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:118:29
+    |
+118 |                 m as nat == spec_sum_of(
+    |                             ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:120:30
+    |
+120 |                     |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
+    |                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:145:33
+    |
+145 |             ensures d as nat == spec_count_true(
+    |                                 ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:190:42
+    |
+190 |             &&& self.num_edges as nat == spec_sum_of(
+    |                                          ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:192:26
+    |
+192 |                 |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
+    |                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:224:42
+    |
+224 |                 let row_count = |u: int| spec_count_true(|v: int| empty.spec_edge(u, v), empty.spec_n() as int);
+    |                                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_all_false` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:230:21
+    |
+230 |                     lemma_count_true_all_false(edge_fn, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_all_zero` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:232:17
+    |
+232 |                 lemma_sum_of_all_zero(row_count, n as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:240:44
+    |
+240 |             let ghost row_count = |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int);
+    |                                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:249:37
+    |
+249 |                     total as nat == spec_sum_of(u as int, row_count),
+    |                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:250:44
+    |
+250 |                     row_count == (|u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int)),
+    |                                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:251:21
+    |
+251 |                     spec_sum_of(n as int, row_count) <= usize::MAX as nat,
+    |                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:254:25
+    |
+254 |                 proof { lemma_sum_of_monotone(u as int + 1, n as int, row_count); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:266:41
+    |
+266 |                         count as nat == spec_count_true(edge_fn, v as int),
+    |                                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:268:25
+    |
+268 |                         spec_count_true(edge_fn, n as int) <= usize::MAX as nat,
+    |                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:271:29
+    |
+271 |                     proof { lemma_count_true_monotone(edge_fn, v as int + 1, n as int); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:283:45
+    |
+283 |                 let wf_row_count = |u: int| spec_count_true(|v: int| constructed.spec_edge(u, v), constructed.spec_n() as int);
+    |                                             ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:290:21
+    |
+290 |                     lemma_count_true_ext(inner_mat, inner_edge, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:292:17
+    |
+292 |                 lemma_sum_of_ext(row_count, wf_row_count, n as int);
+    |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:384:21
+    |
+384 |             proof { lemma_count_true_bound(edge_fn, n as int); }
+    |                     ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:392:37
+    |
+392 |                     count as nat == spec_count_true(edge_fn, v as int),
+    |                                     ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:394:21
+    |
+394 |                     spec_count_true(edge_fn, n as int) <= n as nat,
+    |                     ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:397:25
+    |
+397 |                 proof { lemma_count_true_monotone(edge_fn, v as int + 1, n as int); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:411:48
+    |
+411 |             let ghost old_row_count = |r: int| spec_count_true(|c: int| self.spec_edge(r, c), self.spec_n() as int);
+    |                                                ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_at_least_one` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:465:21
+    |
+465 |                     lemma_count_true_at_least_one(edge_u, v as int, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_lower_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:466:21
+    |
+466 |                     lemma_sum_of_lower_bound(n as int, old_row_count, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:476:25
+    |
+476 |                         lemma_count_true_bound(|c: int| old(self).spec_edge(r, c), n as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_bounded` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:478:21
+    |
+478 |                     lemma_sum_of_bounded(n as int, old_row_count, n as nat);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:485:46
+    |
+485 |                 let new_row_count = |r: int| spec_count_true(|c: int| self.spec_edge(r, c), self.spec_n() as int);
+    |                                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:494:21
+    |
+494 |                     lemma_count_true_ext(old_edge, new_edge, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_set_false` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:503:21
+    |
+503 |                     lemma_count_true_set_false(old_edge_u, new_edge_u, v as int, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:506:21
+    |
+506 |                     lemma_sum_of_change_one(n as int, old_row_count, new_row_count, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_set_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:508:21
+    |
+508 |                     lemma_count_true_set_true(old_edge_u, new_edge_u, v as int, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:510:21
+    |
+510 |                     lemma_sum_of_change_one(n as int, old_row_count, new_row_count, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:512:21
+    |
+512 |                     lemma_count_true_ext(old_edge_u, new_edge_u, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:515:21
+    |
+515 |                     lemma_sum_of_ext(old_row_count, new_row_count, n as int);
+    |                     ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:545:49
+    |
+545 |             let ghost comp_row_count = |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int);
+    |                                                 ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:549:21
+    |
+549 |                     lemma_count_true_bound(|v: int| matrix.spec_index(r).spec_index(v), n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_bounded` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:551:17
+    |
+551 |                 lemma_sum_of_bounded(n as int, comp_row_count, n as nat);
+    |                 ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:560:37
+    |
+560 |                     total as nat == spec_sum_of(u as int, comp_row_count),
+    |                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:561:49
+    |
+561 |                     comp_row_count == (|u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int)),
+    |                                                 ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:562:21
+    |
+562 |                     spec_sum_of(n as int, comp_row_count) <= (n as nat) * (n as nat),
+    |                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:566:25
+    |
+566 |                 proof { lemma_sum_of_monotone(u as int + 1, n as int, comp_row_count); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:571:25
+    |
+571 |                 proof { lemma_count_true_bound(edge_fn, n as int); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:579:41
+    |
+579 |                         count as nat == spec_count_true(edge_fn, vi as int),
+    |                                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:581:25
+    |
+581 |                         spec_count_true(edge_fn, n as int) <= n as nat,
+    |                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:584:29
+    |
+584 |                     proof { lemma_count_true_monotone(edge_fn, vi as int + 1, n as int); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:596:45
+    |
+596 |                 let wf_row_count = |u: int| spec_count_true(|v: int| complemented.spec_edge(u, v), complemented.spec_n() as int);
+    |                                             ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:603:21
+    |
+603 |                     lemma_count_true_ext(inner_mat, inner_edge, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:605:17
+    |
+605 |                 lemma_sum_of_ext(comp_row_count, wf_row_count, n as int);
+    |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+  --> src/Chap52/AdjMatrixGraphStPer.rs:74:34
+   |
+74 |         && g.num_edges as nat == spec_sum_of(
+   |                                  ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+  --> src/Chap52/AdjMatrixGraphStPer.rs:76:22
+   |
+76 |             |u: int| spec_count_true(|v: int| g.matrix.spec_index(u).spec_index(v), g.n as int),
+   |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:107:17
+    |
+107 |                 spec_sum_of(
+    |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:109:30
+    |
+109 |                     |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), matrix.spec_len() as int),
+    |                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:131:29
+    |
+131 |                 m as nat == spec_sum_of(
+    |                             ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:133:30
+    |
+133 |                     |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
+    |                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:161:33
+    |
+161 |             ensures d as nat == spec_count_true(
+    |                                 ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:208:42
+    |
+208 |             &&& self.num_edges as nat == spec_sum_of(
+    |                                          ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:210:26
+    |
+210 |                 |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
+    |                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:238:42
+    |
+238 |                 let row_count = |u: int| spec_count_true(|v: int| empty.spec_edge(u, v), empty.spec_n() as int);
+    |                                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_all_false` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:244:21
+    |
+244 |                     lemma_count_true_all_false(edge_fn, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_all_zero` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:246:17
+    |
+246 |                 lemma_sum_of_all_zero(row_count, n as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:254:44
+    |
+254 |             let ghost row_count = |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int);
+    |                                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:263:37
+    |
+263 |                     total as nat == spec_sum_of(u as int, row_count),
+    |                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:264:44
+    |
+264 |                     row_count == (|u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int)),
+    |                                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:265:21
+    |
+265 |                     spec_sum_of(n as int, row_count) <= usize::MAX as nat,
+    |                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:268:25
+    |
+268 |                 proof { lemma_sum_of_monotone(u as int + 1, n as int, row_count); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:280:41
+    |
+280 |                         count as nat == spec_count_true(edge_fn, v as int),
+    |                                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:282:25
+    |
+282 |                         spec_count_true(edge_fn, n as int) <= usize::MAX as nat,
+    |                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:285:29
+    |
+285 |                     proof { lemma_count_true_monotone(edge_fn, v as int + 1, n as int); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:297:45
+    |
+297 |                 let wf_row_count = |u: int| spec_count_true(|v: int| constructed.spec_edge(u, v), constructed.spec_n() as int);
+    |                                             ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:304:21
+    |
+304 |                     lemma_count_true_ext(inner_mat, inner_edge, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:306:17
+    |
+306 |                 lemma_sum_of_ext(row_count, wf_row_count, n as int);
+    |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:398:21
+    |
+398 |             proof { lemma_count_true_bound(edge_fn, n as int); }
+    |                     ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:406:37
+    |
+406 |                     count as nat == spec_count_true(edge_fn, v as int),
+    |                                     ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:408:21
+    |
+408 |                     spec_count_true(edge_fn, n as int) <= n as nat,
+    |                     ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:411:25
+    |
+411 |                 proof { lemma_count_true_monotone(edge_fn, v as int + 1, n as int); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:424:48
+    |
+424 |             let ghost old_row_count = |r: int| spec_count_true(|c: int| self.spec_edge(r, c), self.spec_n() as int);
+    |                                                ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_at_least_one` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:478:21
+    |
+478 |                     lemma_count_true_at_least_one(edge_u, v as int, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_lower_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:479:21
+    |
+479 |                     lemma_sum_of_lower_bound(n as int, old_row_count, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:489:25
+    |
+489 |                         lemma_count_true_bound(|c: int| self.spec_edge(r, c), n as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_bounded` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:491:21
+    |
+491 |                     lemma_sum_of_bounded(n as int, old_row_count, n as nat);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:501:46
+    |
+501 |                 let new_row_count = |r: int| spec_count_true(|c: int| updated.spec_edge(r, c), updated.spec_n() as int);
+    |                                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:509:21
+    |
+509 |                     lemma_count_true_ext(old_edge, new_edge, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_set_false` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:518:21
+    |
+518 |                     lemma_count_true_set_false(old_edge_u, new_edge_u, v as int, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:521:21
+    |
+521 |                     lemma_sum_of_change_one(n as int, old_row_count, new_row_count, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_set_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:523:21
+    |
+523 |                     lemma_count_true_set_true(old_edge_u, new_edge_u, v as int, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:525:21
+    |
+525 |                     lemma_sum_of_change_one(n as int, old_row_count, new_row_count, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:527:21
+    |
+527 |                     lemma_count_true_ext(old_edge_u, new_edge_u, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:530:21
+    |
+530 |                     lemma_sum_of_ext(old_row_count, new_row_count, n as int);
+    |                     ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:561:49
+    |
+561 |             let ghost comp_row_count = |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int);
+    |                                                 ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:565:21
+    |
+565 |                     lemma_count_true_bound(|v: int| matrix.spec_index(r).spec_index(v), n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_bounded` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:567:17
+    |
+567 |                 lemma_sum_of_bounded(n as int, comp_row_count, n as nat);
+    |                 ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:576:37
+    |
+576 |                     total as nat == spec_sum_of(u as int, comp_row_count),
+    |                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:577:49
+    |
+577 |                     comp_row_count == (|u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int)),
+    |                                                 ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:578:21
+    |
+578 |                     spec_sum_of(n as int, comp_row_count) <= (n as nat) * (n as nat),
+    |                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:582:25
+    |
+582 |                 proof { lemma_sum_of_monotone(u as int + 1, n as int, comp_row_count); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:587:25
+    |
+587 |                 proof { lemma_count_true_bound(edge_fn, n as int); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:595:41
+    |
+595 |                         count as nat == spec_count_true(edge_fn, vi as int),
+    |                                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:597:25
+    |
+597 |                         spec_count_true(edge_fn, n as int) <= n as nat,
+    |                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:600:29
+    |
+600 |                     proof { lemma_count_true_monotone(edge_fn, vi as int + 1, n as int); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:612:45
+    |
+612 |                 let wf_row_count = |u: int| spec_count_true(|v: int| complemented.spec_edge(u, v), complemented.spec_n() as int);
+    |                                             ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:619:21
+    |
+619 |                     lemma_count_true_ext(inner_mat, inner_edge, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:621:17
+    |
+621 |                 lemma_sum_of_ext(comp_row_count, wf_row_count, n as int);
+    |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+  --> src/Chap52/AdjMatrixGraphMtEph.rs:99:17
+   |
+99 |                 spec_sum_of(
+   |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:101:30
+    |
+101 |                     |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), matrix.spec_len() as int),
+    |                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:123:29
+    |
+123 |                 m as nat == spec_sum_of(
+    |                             ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:125:30
+    |
+125 |                     |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
+    |                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:156:51
+    |
+156 |                 u < self.spec_n() ==> d as nat == spec_count_true(
+    |                                                   ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:204:42
+    |
+204 |             &&& self.num_edges as nat == spec_sum_of(
+    |                                          ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:206:26
+    |
+206 |                 |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
+    |                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:238:42
+    |
+238 |                 let row_count = |u: int| spec_count_true(|v: int| empty.spec_edge(u, v), empty.spec_n() as int);
+    |                                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_all_false` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:243:21
+    |
+243 |                     lemma_count_true_all_false(edge_fn, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_all_zero` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:245:17
+    |
+245 |                 lemma_sum_of_all_zero(row_count, n as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:253:44
+    |
+253 |             let ghost row_count = |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int);
+    |                                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:262:37
+    |
+262 |                     total as nat == spec_sum_of(u as int, row_count),
+    |                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:263:44
+    |
+263 |                     row_count == (|u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int)),
+    |                                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:264:21
+    |
+264 |                     spec_sum_of(n as int, row_count) <= usize::MAX as nat,
+    |                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:267:25
+    |
+267 |                 proof { lemma_sum_of_monotone(u as int + 1, n as int, row_count); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:279:41
+    |
+279 |                         count as nat == spec_count_true(edge_fn, v as int),
+    |                                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:281:25
+    |
+281 |                         spec_count_true(edge_fn, n as int) <= usize::MAX as nat,
+    |                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:284:29
+    |
+284 |                     proof { lemma_count_true_monotone(edge_fn, v as int + 1, n as int); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:296:45
+    |
+296 |                 let wf_row_count = |u: int| spec_count_true(|v: int| constructed.spec_edge(u, v), constructed.spec_n() as int);
+    |                                             ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:303:21
+    |
+303 |                     lemma_count_true_ext(inner_mat, inner_edge, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:305:17
+    |
+305 |                 lemma_sum_of_ext(row_count, wf_row_count, n as int);
+    |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:402:21
+    |
+402 |             proof { lemma_count_true_bound(edge_fn, n as int); }
+    |                     ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:410:37
+    |
+410 |                     count as nat == spec_count_true(edge_fn, v as int),
+    |                                     ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:412:21
+    |
+412 |                     spec_count_true(edge_fn, n as int) <= n as nat,
+    |                     ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:415:25
+    |
+415 |                 proof { lemma_count_true_monotone(edge_fn, v as int + 1, n as int); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:429:48
+    |
+429 |             let ghost old_row_count = |r: int| spec_count_true(|c: int| self.spec_edge(r, c), self.spec_n() as int);
+    |                                                ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_at_least_one` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:483:21
+    |
+483 |                     lemma_count_true_at_least_one(edge_u, v as int, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_lower_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:484:21
+    |
+484 |                     lemma_sum_of_lower_bound(n as int, old_row_count, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:494:25
+    |
+494 |                         lemma_count_true_bound(|c: int| old(self).spec_edge(r, c), n as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_bounded` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:496:21
+    |
+496 |                     lemma_sum_of_bounded(n as int, old_row_count, n as nat);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:503:46
+    |
+503 |                 let new_row_count = |r: int| spec_count_true(|c: int| self.spec_edge(r, c), self.spec_n() as int);
+    |                                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:512:21
+    |
+512 |                     lemma_count_true_ext(old_edge, new_edge, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_set_false` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:520:21
+    |
+520 |                     lemma_count_true_set_false(old_edge_u, new_edge_u, v as int, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:522:21
+    |
+522 |                     lemma_sum_of_change_one(n as int, old_row_count, new_row_count, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_set_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:524:21
+    |
+524 |                     lemma_count_true_set_true(old_edge_u, new_edge_u, v as int, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:527:21
+    |
+527 |                     lemma_sum_of_change_one(n as int, old_row_count, new_row_count, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:529:21
+    |
+529 |                     lemma_count_true_ext(old_edge_u, new_edge_u, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:532:21
+    |
+532 |                     lemma_sum_of_ext(old_row_count, new_row_count, n as int);
+    |                     ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:562:49
+    |
+562 |             let ghost comp_row_count = |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int);
+    |                                                 ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:566:21
+    |
+566 |                     lemma_count_true_bound(|v: int| matrix.spec_index(r).spec_index(v), n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_bounded` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:568:17
+    |
+568 |                 lemma_sum_of_bounded(n as int, comp_row_count, n as nat);
+    |                 ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:577:37
+    |
+577 |                     total as nat == spec_sum_of(u as int, comp_row_count),
+    |                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:578:49
+    |
+578 |                     comp_row_count == (|u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int)),
+    |                                                 ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:579:21
+    |
+579 |                     spec_sum_of(n as int, comp_row_count) <= (n as nat) * (n as nat),
+    |                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:583:25
+    |
+583 |                 proof { lemma_sum_of_monotone(u as int + 1, n as int, comp_row_count); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:588:25
+    |
+588 |                 proof { lemma_count_true_bound(edge_fn, n as int); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:596:41
+    |
+596 |                         count as nat == spec_count_true(edge_fn, vi as int),
+    |                                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:598:25
+    |
+598 |                         spec_count_true(edge_fn, n as int) <= n as nat,
+    |                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:601:29
+    |
+601 |                     proof { lemma_count_true_monotone(edge_fn, vi as int + 1, n as int); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:613:45
+    |
+613 |                 let wf_row_count = |u: int| spec_count_true(|v: int| complemented.spec_edge(u, v), complemented.spec_n() as int);
+    |                                             ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:620:21
+    |
+620 |                     lemma_count_true_ext(inner_mat, inner_edge, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:622:17
+    |
+622 |                 lemma_sum_of_ext(comp_row_count, wf_row_count, n as int);
+    |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+  --> src/Chap52/AdjMatrixGraphMtPer.rs:72:34
+   |
+72 |         && g.num_edges as nat == spec_sum_of(
+   |                                  ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+  --> src/Chap52/AdjMatrixGraphMtPer.rs:74:22
+   |
+74 |             |u: int| spec_count_true(|v: int| g.matrix.spec_index(u).spec_index(v), g.n as int),
+   |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:105:17
+    |
+105 |                 spec_sum_of(
+    |                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:107:30
+    |
+107 |                     |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), matrix.spec_len() as int),
+    |                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:129:29
+    |
+129 |                 m as nat == spec_sum_of(
+    |                             ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:131:30
+    |
+131 |                     |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
+    |                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:165:51
+    |
+165 |                 u < self.spec_n() ==> d as nat == spec_count_true(
+    |                                                   ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:213:42
+    |
+213 |             &&& self.num_edges as nat == spec_sum_of(
+    |                                          ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:215:26
+    |
+215 |                 |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
+    |                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:243:42
+    |
+243 |                 let row_count = |u: int| spec_count_true(|v: int| empty.spec_edge(u, v), empty.spec_n() as int);
+    |                                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_all_false` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:249:21
+    |
+249 |                     lemma_count_true_all_false(edge_fn, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_all_zero` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:251:17
+    |
+251 |                 lemma_sum_of_all_zero(row_count, n as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:259:44
+    |
+259 |             let ghost row_count = |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int);
+    |                                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:268:37
+    |
+268 |                     total as nat == spec_sum_of(u as int, row_count),
+    |                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:269:44
+    |
+269 |                     row_count == (|u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int)),
+    |                                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:270:21
+    |
+270 |                     spec_sum_of(n as int, row_count) <= usize::MAX as nat,
+    |                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:273:25
+    |
+273 |                 proof { lemma_sum_of_monotone(u as int + 1, n as int, row_count); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:285:41
+    |
+285 |                         count as nat == spec_count_true(edge_fn, v as int),
+    |                                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:287:25
+    |
+287 |                         spec_count_true(edge_fn, n as int) <= usize::MAX as nat,
+    |                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:290:29
+    |
+290 |                     proof { lemma_count_true_monotone(edge_fn, v as int + 1, n as int); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:302:45
+    |
+302 |                 let wf_row_count = |u: int| spec_count_true(|v: int| constructed.spec_edge(u, v), constructed.spec_n() as int);
+    |                                             ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:309:21
+    |
+309 |                     lemma_count_true_ext(inner_mat, inner_edge, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:311:17
+    |
+311 |                 lemma_sum_of_ext(row_count, wf_row_count, n as int);
+    |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:412:21
+    |
+412 |             proof { lemma_count_true_bound(edge_fn, n as int); }
+    |                     ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:420:37
+    |
+420 |                     count as nat == spec_count_true(edge_fn, v as int),
+    |                                     ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:422:21
+    |
+422 |                     spec_count_true(edge_fn, n as int) <= n as nat,
+    |                     ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:425:25
+    |
+425 |                 proof { lemma_count_true_monotone(edge_fn, v as int + 1, n as int); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:438:48
+    |
+438 |             let ghost old_row_count = |r: int| spec_count_true(|c: int| self.spec_edge(r, c), self.spec_n() as int);
+    |                                                ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_at_least_one` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:492:21
+    |
+492 |                     lemma_count_true_at_least_one(edge_u, v as int, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_lower_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:493:21
+    |
+493 |                     lemma_sum_of_lower_bound(n as int, old_row_count, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:503:25
+    |
+503 |                         lemma_count_true_bound(|c: int| self.spec_edge(r, c), n as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_bounded` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:505:21
+    |
+505 |                     lemma_sum_of_bounded(n as int, old_row_count, n as nat);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:515:46
+    |
+515 |                 let new_row_count = |r: int| spec_count_true(|c: int| updated.spec_edge(r, c), updated.spec_n() as int);
+    |                                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:524:21
+    |
+524 |                     lemma_count_true_ext(old_edge, new_edge, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_set_false` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:533:21
+    |
+533 |                     lemma_count_true_set_false(old_edge_u, new_edge_u, v as int, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:536:21
+    |
+536 |                     lemma_sum_of_change_one(n as int, old_row_count, new_row_count, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_set_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:538:21
+    |
+538 |                     lemma_count_true_set_true(old_edge_u, new_edge_u, v as int, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_change_one` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:541:21
+    |
+541 |                     lemma_sum_of_change_one(n as int, old_row_count, new_row_count, u as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:543:21
+    |
+543 |                     lemma_count_true_ext(old_edge_u, new_edge_u, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:546:21
+    |
+546 |                     lemma_sum_of_ext(old_row_count, new_row_count, n as int);
+    |                     ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:577:49
+    |
+577 |             let ghost comp_row_count = |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int);
+    |                                                 ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:581:21
+    |
+581 |                     lemma_count_true_bound(|v: int| matrix.spec_index(r).spec_index(v), n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_bounded` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:583:17
+    |
+583 |                 lemma_sum_of_bounded(n as int, comp_row_count, n as nat);
+    |                 ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:592:37
+    |
+592 |                     total as nat == spec_sum_of(u as int, comp_row_count),
+    |                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:593:49
+    |
+593 |                     comp_row_count == (|u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int)),
+    |                                                 ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_of` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:594:21
+    |
+594 |                     spec_sum_of(n as int, comp_row_count) <= (n as nat) * (n as nat),
+    |                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:598:25
+    |
+598 |                 proof { lemma_sum_of_monotone(u as int + 1, n as int, comp_row_count); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_bound` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:603:25
+    |
+603 |                 proof { lemma_count_true_bound(edge_fn, n as int); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:611:41
+    |
+611 |                         count as nat == spec_count_true(edge_fn, vi as int),
+    |                                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:613:25
+    |
+613 |                         spec_count_true(edge_fn, n as int) <= n as nat,
+    |                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_monotone` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:616:29
+    |
+616 |                     proof { lemma_count_true_monotone(edge_fn, vi as int + 1, n as int); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_count_true` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:628:45
+    |
+628 |                 let wf_row_count = |u: int| spec_count_true(|v: int| complemented.spec_edge(u, v), complemented.spec_n() as int);
+    |                                             ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_count_true_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:635:21
+    |
+635 |                     lemma_count_true_ext(inner_mat, inner_edge, n as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_of_ext` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:637:17
+    |
+637 |                 lemma_sum_of_ext(comp_row_count, wf_row_count, n as int);
+    |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:202:13
+    |
+202 |             spec_sum_adj_sizes(self.spec_adj())
+    |             ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_entry_sizes_eq` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:244:17
+    |
+244 |                 lemma_sum_entry_sizes_eq::<V::V>(self.adj.entries@, self.adj.entries@.len() as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_entry_sizes` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:249:31
+    |
+249 |             let ghost total = spec_sum_entry_sizes(self.adj.entries@, len as int);
+    |                               ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_entry_sizes` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:257:37
+    |
+257 |                     count as nat == spec_sum_entry_sizes(self.adj.entries@, i as int),
+    |                                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_entry_sizes` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:259:30
+    |
+259 |                     total == spec_sum_entry_sizes(self.adj.entries@, len as int),
+    |                              ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_entry_sizes_monotone` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:272:21
+    |
+272 |                     lemma_sum_entry_sizes_monotone::<V::V>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_entry_sizes` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:104:13
+    |
+104 |             spec_sum_entry_sizes(entries, n) == spec_sum_adj_sizes(
+    |             ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:104:49
+    |
+104 |             spec_sum_entry_sizes(entries, n) == spec_sum_adj_sizes(
+    |                                                 ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:238:13
+    |
+238 |             spec_sum_adj_sizes(self.spec_adj())
+    |             ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_entry_sizes` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:285:31
+    |
+285 |             let ghost total = spec_sum_entry_sizes(self.adj.entries@, len as int);
+    |                               ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_entry_sizes` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:293:37
+    |
+293 |                     count as nat == spec_sum_entry_sizes(self.adj.entries@, i as int),
+    |                                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_entry_sizes` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:295:30
+    |
+295 |                     total == spec_sum_entry_sizes(self.adj.entries@, len as int),
+    |                              ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_entry_sizes_monotone` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:307:21
+    |
+ 99 |       proof fn lemma_sum_entry_sizes_eq_stper<VV>(entries: Seq<(VV, Set<VV>)>, n: int)
+    |  ___________-
+100 | |         requires
+101 | |             0 <= n <= entries.len(),
+102 | |             spec_keys_no_dups(entries),
+...   |
+109 | |         crate::Chap52::AdjTableGraphSpecsAndLemmas::AdjTableGraphSpecsAndLemmas::lemma_sum_entry_sizes_eq::<VV>(entries, n);
+110 | |     }
+    | |_____- similarly named function `lemma_sum_entry_sizes_eq_stper` defined here
+...
+307 |                       lemma_sum_entry_sizes_monotone::<V::V>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+307 -                     lemma_sum_entry_sizes_monotone::<V::V>(
+307 +                     lemma_sum_entry_sizes_eq_stper::<V::V>(
+    |
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:100:41
+    |
+100 |                 out.spec_num_edges() == spec_sum_adj_sizes(out.spec_adj());
+    |                                         ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:139:42
+    |
+139 |                 self.spec_num_edges() == spec_sum_adj_sizes(self.spec_adj()),
+    |                                          ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:143:45
+    |
+143 |                 updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());
+    |                                             ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:149:42
+    |
+149 |                 self.spec_num_edges() == spec_sum_adj_sizes(self.spec_adj()),
+    |                                          ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:153:45
+    |
+153 |                 updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());
+    |                                             ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:161:42
+    |
+161 |                 self.spec_num_edges() == spec_sum_adj_sizes(self.spec_adj()),
+    |                                          ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:167:45
+    |
+167 |                 updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());
+    |                                             ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:174:42
+    |
+174 |                 self.spec_num_edges() == spec_sum_adj_sizes(self.spec_adj()),
+    |                                          ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:179:45
+    |
+179 |                 updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());
+    |                                             ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:196:13
+    |
+196 |             spec_sum_adj_sizes(table@) <= usize::MAX as nat,
+    |             ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:198:29
+    |
+198 |             count as nat == spec_sum_adj_sizes(table@)
+    |                             ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:208:32
+    |
+208 |                 count as nat + spec_sum_adj_sizes(remaining@) == spec_sum_adj_sizes(table@),
+    |                                ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:208:66
+    |
+208 |                 count as nat + spec_sum_adj_sizes(remaining@) == spec_sum_adj_sizes(table@),
+    |                                                                  ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:216:17
+    |
+216 |                 spec_sum_adj_sizes(table@) <= usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:217:33
+    |
+217 |                 count as nat <= spec_sum_adj_sizes(table@),
+    |                                 ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_adj_remove` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:252:33
+    |
+252 | ...                   lemma_sum_adj_remove(remaining@, v_key@);
+    |                       ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_adj_remove` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:456:21
+    |
+456 |                     lemma_sum_adj_remove(updated.adj@, v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_adj_sizes_monotone` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:597:17
+    |
+597 |                 lemma_sum_adj_sizes_monotone(cleaned@, without_v@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_adj_remove` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:603:21
+    |
+603 |                     lemma_sum_adj_remove(self.adj@, v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:606:28
+    |
+606 |                     assert(spec_sum_adj_sizes(self.adj@.remove(v@))
+    |                            ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:607:28
+    |
+607 |                         <= spec_sum_adj_sizes(self.adj@));
+    |                            ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:614:24
+    |
+614 |                 assert(spec_sum_adj_sizes(without_v@)
+    |                        ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:615:24
+    |
+615 |                     == spec_sum_adj_sizes(self.adj@.remove(v@)));
+    |                        ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:617:24
+    |
+617 |                 assert(spec_sum_adj_sizes(without_v@) <= spec_sum_adj_sizes(self.adj@));
+    |                        ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:617:58
+    |
+617 |                 assert(spec_sum_adj_sizes(without_v@) <= spec_sum_adj_sizes(self.adj@));
+    |                                                          ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:619:49
+    |
+619 |                 assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+    |                                                 ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:621:24
+    |
+621 |                 assert(spec_sum_adj_sizes(cleaned@) <= self.num_edges as nat);
+    |                        ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:623:24
+    |
+623 |                 assert(spec_sum_adj_sizes(cleaned@) <= usize::MAX as nat);
+    |                        ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:746:49
+    |
+746 |                 assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+    |                                                 ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:780:49
+    |
+780 |                 assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+    |                                                 ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:781:32
+    |
+781 |                 let self_sum = spec_sum_adj_sizes(self.adj@);
+    |                                ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_adj_remove` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:795:21
+    |
+795 |                     lemma_sum_adj_remove(adj_after_u, u@);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:801:28
+    |
+801 |                     assert(spec_sum_adj_sizes(adj_after_u) == self_sum);
+    |                            ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_adj_remove` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:815:21
+    |
+815 |                     lemma_sum_adj_remove(new_adj@, v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_adj_remove` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:826:17
+    |
+826 |                 lemma_sum_adj_remove(updated.adj@, u@);
+    |                 ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_adj_remove` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:827:17
+    |
+827 |                 lemma_sum_adj_remove(new_adj@, u@);
+    |                 ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:841:28
+    |
+841 |                     assert(spec_sum_adj_sizes(updated.adj@) == self_sum);
+    |                            ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_adj_sizes` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:849:28
+    |
+849 |                     assert(spec_sum_adj_sizes(updated.adj@) == self_sum + 1);
+    |                            ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_adj_remove` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:921:29
+    |
+921 | ...                   lemma_sum_adj_remove(self.adj@, u@);
+    |                       ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_adj_remove` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:941:25
+    |
+941 |                         lemma_sum_adj_remove(updated_inner.adj@, u@);
+    |                         ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_sum_adj_remove` in this scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:942:25
+    |
+942 |                         lemma_sum_adj_remove(self.adj@, u@);
+    |                         ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 355 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 22s
+Sampled Memory Usage: peak rust_verify RSS: 5712MB, peak z3 RSS: 392MB, min free: 16274MB
+Sampled CPU Usage: rust_verify: 110s, z3 children: 71s

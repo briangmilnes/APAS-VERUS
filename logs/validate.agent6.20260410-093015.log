@@ -1,0 +1,31 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: unexpected end of input, expected curly braces
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:611:13
+    |
+611 | /             {
+612 | |                 proof { lemma_sum_of_monotone(u as int + 1, n as int, comp_row_count); }
+613 | |                 let row = matrix.nth(u);
+614 | |                 let mut count: usize = 0;
+...   |
+639 | |             }
+    | |_____________^
+
+error[E0425]: cannot find type `AdjMatrixGraphMtPer` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:672:30
+    |
+672 |     impl std::fmt::Debug for AdjMatrixGraphMtPer {
+    |                              ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AdjMatrixGraphMtPer` in this scope
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:682:32
+    |
+682 |     impl std::fmt::Display for AdjMatrixGraphMtPer {
+    |                                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 502MB, peak z3 RSS: 0MB, min free: 22116MB
+Sampled CPU Usage: rust_verify: 5s, z3 children: 0s

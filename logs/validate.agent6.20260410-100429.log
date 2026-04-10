@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: expected delimiter
+   --> src/Chap52/EdgeSetGraphStPer.rs:361:22
+    |
+361 |             ensures !updated.vertices@.contains(v@)
+    |                      ^^^^^^^
+
+error[E0425]: cannot find type `EdgeSetGraphStPer` in this scope
+   --> src/Chap52/EdgeSetGraphStPer.rs:478:86
+    |
+478 |     impl<V: StT + Ord + TotalOrder + ClonePreservesView + fmt::Debug> fmt::Debug for EdgeSetGraphStPer<V> {
+    |                                                                                      ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `EdgeSetGraphStPer` in this scope
+   --> src/Chap52/EdgeSetGraphStPer.rs:488:90
+    |
+488 |     impl<V: StT + Ord + TotalOrder + ClonePreservesView + fmt::Display> fmt::Display for EdgeSetGraphStPer<V> {
+    |                                                                                          ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 304MB, peak z3 RSS: 0MB, min free: 22175MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

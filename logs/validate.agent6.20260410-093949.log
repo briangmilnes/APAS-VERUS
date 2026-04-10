@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error[E0425]: cannot find value `updated` in this scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:613:13
+    |
+613 |             updated
+    |             ^^^^^^^ not found in this scope
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 2988MB, peak z3 RSS: 349MB, min free: 19488MB
+Sampled CPU Usage: rust_verify: 53s, z3 children: 40s

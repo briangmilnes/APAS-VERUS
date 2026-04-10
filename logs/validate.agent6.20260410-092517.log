@@ -1,0 +1,199 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: postcondition not satisfied
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:172:17
+    |
+172 |                   self.spec_adjmatrixgraphmteph_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+511 |               proof {
+    |  ___________________-
+512 | |                 let new_row_count = |r: int| spec_count_true(|c: int| self.spec_edge(r, c), self.spec_n() as int);
+...   |
+543 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:172:17
+    |
+172 |                 self.spec_adjmatrixgraphmteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_adjmatrixgraphmteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+self.spec_n() == old(self).spec_n() ✔
+self.spec_edge(old(u), old(v)) == old(exists) ✔
+forall |i, j|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = old(self).spec_n() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = old(self).spec_n() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == old(u) && j == old(v)) ==>
+        self.spec_edge(i, j) == old(self).spec_edge(i, j) ✔
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:445:29
+    |
+445 | ...                   self.matrix.spec_index(u as int).spec_index(j as int)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:136:24
+    |
+136 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:445:29
+    |
+445 | ...                   self.matrix.spec_index(u as int).spec_index(j as int)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:136:24
+    |
+136 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:477:46
+    |
+477 | ...                   ensures r == row.spec_index(j as int)
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:136:24
+    |
+136 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:462:40
+    |
+462 | ...                   #[trigger] r.spec_index(j) == (if j == v as int {
+    |                                  ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:136:24
+    |
+136 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:465:33
+    |
+465 | ...                   self.matrix.spec_index(u as int).spec_index(j)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:136:24
+    |
+136 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:465:33
+    |
+465 | ...                   self.matrix.spec_index(u as int).spec_index(j)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:136:24
+    |
+136 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:468:40
+    |
+468 | ...                   #[trigger] r.spec_index(j) == self.matrix.spec_index(i as int).spec_index(j)
+    |                                  ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:136:24
+    |
+136 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:468:59
+    |
+468 | ...                   #[trigger] r.spec_index(j) == self.matrix.spec_index(i as int).spec_index(j)
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:136:24
+    |
+136 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:468:59
+    |
+468 | ...                   #[trigger] r.spec_index(j) == self.matrix.spec_index(i as int).spec_index(j)
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:136:24
+    |
+136 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:174:17
+    |
+ 83 |             recommends 0 <= u < self.spec_n(), 0 <= v < self.spec_n();
+    |                        ---------------------- recommendation not met
+...
+174 |                 self.spec_edge(u as int, v as int) == exists,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:1467:17
+     |
+1467 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap42/TableStEph.rs:1469:29
+     |
+1469 |                     implies spec_entries_to_map(old_self_view).dom().contains(k)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap42/TableStEph.rs:1470:29
+     |
+1470 |                         && !other@.dom().contains(k)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:1480:17
+     |
+1480 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap42/TableStEph.rs:1481:21
+     |
+1481 |                     spec_entries_to_map(old_self_view).dom().contains(k)
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap42/TableStEph.rs:1482:25
+     |
+1482 |                     && !other@.dom().contains(k)
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+    --> src/Chap42/TableStEph.rs:1480:17
+     |
+1480 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+verification results:: 3020 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 31s
+Sampled Memory Usage: peak rust_verify RSS: 5654MB, peak z3 RSS: 518MB, min free: 16808MB
+Sampled CPU Usage: rust_verify: 104s, z3 children: 94s

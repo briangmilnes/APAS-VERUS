@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: unexpected token, expected `;`
+   --> src/Chap52/AdjTableGraphStEph.rs:330:29
+    |
+330 |                     implies verts@.contains(k)
+    |                             ^^^^^
+
+error[E0425]: cannot find type `AdjTableGraphStEph` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:838:57
+    |
+838 |     impl<V: StT + Ord + TotalOrder> std::fmt::Debug for AdjTableGraphStEph<V> {
+    |                                                         ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AdjTableGraphStEph` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:844:59
+    |
+844 |     impl<V: StT + Ord + TotalOrder> std::fmt::Display for AdjTableGraphStEph<V> {
+    |                                                           ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 2580MB, peak z3 RSS: 0MB, min free: 20174MB
+Sampled CPU Usage: rust_verify: 58s, z3 children: 62s

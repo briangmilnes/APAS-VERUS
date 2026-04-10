@@ -1,0 +1,39 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: unexpected token, expected `;`
+   --> src/Chap52/AdjTableGraphStPer.rs:577:25
+    |
+577 |                         by {
+    |                         ^^
+
+error[E0425]: cannot find type `AdjTableGraphStPer` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:891:55
+    |
+891 |     impl<V: StT + Ord + TotalOrder + Clone> Clone for AdjTableGraphStPer<V> {
+    |                                                       ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AdjTableGraphStPer` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:893:13
+    |
+893 |             AdjTableGraphStPer { adj: self.adj.clone() }
+    |             ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AdjTableGraphStPer` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:897:57
+    |
+897 |     impl<V: StT + Ord + TotalOrder> std::fmt::Debug for AdjTableGraphStPer<V> {
+    |                                                         ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AdjTableGraphStPer` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:903:59
+    |
+903 |     impl<V: StT + Ord + TotalOrder> std::fmt::Display for AdjTableGraphStPer<V> {
+    |                                                           ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 5 previous errors
+
+Some errors have detailed explanations: E0422, E0425.
+For more information about an error, try `rustc --explain E0422`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 5615MB, peak z3 RSS: 1535MB, min free: 15278MB
+Sampled CPU Usage: rust_verify: 125s, z3 children: 126s

@@ -1,0 +1,37 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: mismatched closing delimiter: `}`
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:474:49
+    |
+474 |                         ArraySeqMtEphS::tabulate(
+    |                                                 ^ unclosed delimiter
+...
+497 |             } else if !old_val && exists {
+    |             ^ mismatched closing delimiter
+
+error: mismatched closing delimiter: `}`
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:456:50
+    |
+198 |     impl AdjMatrixGraphMtEphTrait for AdjMatrixGraphMtEph {
+    |                                                           - closing delimiter possibly meant for this
+...
+456 |             let matrix = ArraySeqMtEphS::tabulate(
+    |                                                  ^ unclosed delimiter
+...
+634 |     }
+    |     ^ mismatched closing delimiter
+
+error: this file contains an unclosed delimiter
+   --> src/Chap52/AdjMatrixGraphMtEph.rs:665:3
+    |
+ 21 | pub mod AdjMatrixGraphMtEph {
+    |                             - unclosed delimiter
+...
+665 | }
+    |  ^
+
+error: aborting due to 3 previous errors
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 22181MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

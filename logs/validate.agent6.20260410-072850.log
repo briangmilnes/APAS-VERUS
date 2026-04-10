@@ -1,0 +1,39 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+
+thread '<unnamed>' (851479) panicked at vir/src/sst_to_air.rs:174:25:
+abstract datatype should be boxed Datatype(Path(Path(Some("vstd"), ["set" :: "Set"])), [Projection { trait_typ_args: [TypParam("V")], trait_path: Path(Some("vstd"), ["view" :: "View"]), name: "V" }], [])
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (851479) panicked at rust_verify/src/verifier.rs:415:17:
+dropped, expected call to `into_inner` instead
+stack backtrace:
+   0:     0x7b52ee65c603 - <std::sys::backtrace::BacktraceLock::print::DisplayBacktrace as core::fmt::Display>::fmt::h93773fc827e3113d
+   1:     0x7b52eec0e488 - core::fmt::write::hed7b5c73d82ecb7c
+   2:     0x7b52f00f8142 - std::io::Write::write_fmt::h6f0185aecf0ed75f
+   3:     0x7b52ee629b65 - std::panicking::default_hook::{{closure}}::h2be84df4f189ae36
+   4:     0x7b52ee629993 - std::panicking::default_hook::hf0ea8939246f43a9
+   5:     0x7b52ee629e5b - std::panicking::panic_with_hook::hb4bd9ac1123582a0
+   6:     0x7b52ee629c5a - std::panicking::panic_handler::{{closure}}::hde00dd15f5637fe2
+   7:     0x7b52ee623ac9 - std::sys::backtrace::__rust_end_short_backtrace::hb72197fa777c1785
+   8:     0x7b52ee60448d - __rustc[4425a7e20b4c8619]::rust_begin_unwind
+   9:     0x7b52eb18e35c - core::panicking::panic_fmt::ha59b517dd231f4da
+  10:     0x5a09bf2ce2a3 - core[32850a7867c2faaf]::ptr::drop_in_place::<rust_verify[dd972f0d42ef0053]::verifier::util::PanicOnDropVec<(alloc[7a43974b6697a11c]::sync::Arc<vir[687892e775c402a9]::messages::MessageX>, air[b8d3350494d6b72d]::messages::MessageLevel)>>
+  11:     0x5a09bf2b558f - <rust_verify[dd972f0d42ef0053]::verifier::Verifier>::verify_bucket::<rust_verify[dd972f0d42ef0053]::verifier::QueuedReporter>
+  12:     0x5a09bf2c59c4 - <rust_verify[dd972f0d42ef0053]::verifier::Verifier>::verify_bucket_outer::<rust_verify[dd972f0d42ef0053]::verifier::QueuedReporter>
+  13:     0x5a09bf32e83e - std[765ed69a96918746]::sys::backtrace::__rust_begin_short_backtrace::<<rust_verify[dd972f0d42ef0053]::verifier::Verifier>::verify_crate_inner::{closure#1}, (rust_verify[dd972f0d42ef0053]::verifier::Verifier, alloc[7a43974b6697a11c]::vec::Vec<core[32850a7867c2faaf]::result::Result<vir[687892e775c402a9]::context::GlobalCtx, ()>>)>
+  14:     0x5a09bf2db0fb - <std[765ed69a96918746]::thread::lifecycle::spawn_unchecked<<rust_verify[dd972f0d42ef0053]::verifier::Verifier>::verify_crate_inner::{closure#1}, (rust_verify[dd972f0d42ef0053]::verifier::Verifier, alloc[7a43974b6697a11c]::vec::Vec<core[32850a7867c2faaf]::result::Result<vir[687892e775c402a9]::context::GlobalCtx, ()>>)>::{closure#1} as core[32850a7867c2faaf]::ops::function::FnOnce<()>>::call_once::{shim:vtable#0}
+  15:     0x7b52efd2b702 - std::sys::thread::unix::Thread::new::thread_start::h982f9ea829d1b5fb
+  16:     0x7b52e9694ac3 - start_thread
+                               at ./nptl/pthread_create.c:442:8
+  17:     0x7b52e97268d0 - __GI___clone3
+                               at ./misc/../sysdeps/unix/sysv/linux/x86_64/clone3.S:81:0
+  18:                0x0 - <unknown>
+
+thread '<unnamed>' (851479) panicked at /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/panicking.rs:233:5:
+panic in a destructor during cleanup
+thread caused non-unwinding panic. aborting.
+timeout: the monitored command dumped core
+Elapsed: 33s
+Sampled Memory Usage: peak rust_verify RSS: 3902MB, peak z3 RSS: 389MB, min free: 18364MB
+Sampled CPU Usage: rust_verify: 72s, z3 children: 57s

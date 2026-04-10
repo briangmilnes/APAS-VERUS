@@ -1,0 +1,156 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:149:21
+    |
+149 |               ensures self.spec_adjtablegraphsteph_wf(), !self.spec_adj().dom().contains(v@);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+625 |               proof {
+    |  ___________________-
+626 | |                 // v@ removed from ALL neighbor sets (loop processed entire domain).
+627 | |                 // Veracity: NEEDED assert
+628 | |                 assert forall|k: <V as View>::V| #[trigger] self.adj@.dom().contains(k) implies
+...   |
+654 | |                 };
+655 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:149:56
+    |
+149 |               ensures self.spec_adjtablegraphsteph_wf(), !self.spec_adj().dom().contains(v@);
+    |                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+625 |               proof {
+    |  ___________________-
+626 | |                 // v@ removed from ALL neighbor sets (loop processed entire domain).
+627 | |                 // Veracity: NEEDED assert
+628 | |                 assert forall|k: <V as View>::V| #[trigger] self.adj@.dom().contains(k) implies
+...   |
+654 | |                 };
+655 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:549:41
+    |
+549 |                     let mut neighbors = ns_ref.clone_wf();
+    |                                         ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/clone_view.rs:50:22
+    |
+ 50 |             requires self.spec_wf(),
+    |                      -------------- failed precondition
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:571:40
+    |
+571 | ...                   assert(old_sv.spec_avltreesetsteph_wf());
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:578:32
+    |
+578 |                         assert(self.adj@.dom() =~= adj_after_delete.dom());
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:629:21
+    |
+629 |                     !self.adj@[k].contains(v@)
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:642:29
+    |
+642 |                     implies self.spec_adj().dom().contains(w)
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+ns_ref.spec_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphStEph.rs:531:48
+    |
+531 |                         self.adj@[k].subset_of(adj_after_delete[k]),
+    |                                                ^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphStEph.rs:650:28
+    |
+650 |                     assert(adj_after_delete[u].contains(w));
+    |                            ^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:1467:17
+     |
+1467 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap42/TableStEph.rs:1469:29
+     |
+1469 |                     implies spec_entries_to_map(old_self_view).dom().contains(k)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap42/TableStEph.rs:1470:29
+     |
+1470 |                         && !other@.dom().contains(k)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:1480:17
+     |
+1480 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap42/TableStEph.rs:1481:21
+     |
+1481 |                     spec_entries_to_map(old_self_view).dom().contains(k)
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap42/TableStEph.rs:1482:25
+     |
+1482 |                     && !other@.dom().contains(k)
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+    --> src/Chap42/TableStEph.rs:1480:17
+     |
+1480 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+verification results:: 3019 verified, 2 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 30s
+Sampled Memory Usage: peak rust_verify RSS: 8956MB, peak z3 RSS: 7609MB, min free: 6701MB
+Sampled CPU Usage: rust_verify: 313s, z3 children: 147s
