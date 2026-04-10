@@ -104,6 +104,95 @@ interactions between remaining asserts can shift Z3's search strategy for the
 full chapter. The net effect across the full crate is still a 19% CPU reduction
 and 25% RSS reduction.
 
+## Codebase size (post-minimize)
+
+As of commit `9950c339a` (2026-04-10):
+
+```
+    Spec    Proof     Exec     Rust   Total
+  31,172   40,314   66,874   11,801  150,161 (code lines, comments excluded)
+                                     200,482 (total lines including comments)
+```
+
+270 source files across 45 chapters.
+
+### Per-chapter LOC
+
+| Chap | Files | Spec | Proof | Exec | Rust |
+|------|-------|------|-------|------|------|
+| 02 | 2 | 40 | 35 | 96 | 76 |
+| 03 | 1 | 13 | 24 | 49 | 7 |
+| 05 | 5 | 713 | 356 | 1,221 | 200 |
+| 06 | 21 | 2,052 | 1,823 | 4,940 | 756 |
+| 11 | 5 | 39 | 53 | 323 | 37 |
+| 12 | 3 | 13 | 0 | 122 | 46 |
+| 17 | 1 | 153 | 61 | 236 | 82 |
+| 18 | 9 | 2,007 | 1,808 | 4,762 | 418 |
+| 19 | 5 | 1,150 | 900 | 2,403 | 214 |
+| 21 | 12 | 159 | 426 | 595 | 50 |
+| 23 | 2 | 466 | 150 | 573 | 152 |
+| 26 | 8 | 518 | 884 | 1,313 | 129 |
+| 27 | 5 | 117 | 265 | 438 | 17 |
+| 28 | 11 | 395 | 733 | 863 | 66 |
+| 30 | 1 | 6 | 0 | 36 | 25 |
+| 35 | 4 | 196 | 834 | 653 | 12 |
+| 36 | 3 | 217 | 832 | 1,139 | 9 |
+| 37 | 20 | 3,403 | 4,302 | 7,069 | 973 |
+| 38 | 3 | 617 | 1,061 | 1,119 | 140 |
+| 39 | 5 | 1,436 | 1,011 | 2,109 | 294 |
+| 40 | 3 | 1,094 | 853 | 1,695 | 223 |
+| 41 | 8 | 1,526 | 968 | 1,752 | 379 |
+| 42 | 5 | 686 | 416 | 2,563 | 265 |
+| 43 | 12 | 2,674 | 1,553 | 3,442 | 836 |
+| 44 | 2 | 115 | 110 | 229 | 225 |
+| 45 | 7 | 887 | 1,912 | 2,274 | 562 |
+| 47 | 9 | 539 | 2,257 | 2,218 | 220 |
+| 49 | 8 | 360 | 18 | 928 | 549 |
+| 50 | 8 | 616 | 99 | 1,479 | 612 |
+| 51 | 9 | 759 | 291 | 1,658 | 257 |
+| 52 | 15 | 1,407 | 2,271 | 3,184 | 351 |
+| 53 | 5 | 505 | 234 | 977 | 190 |
+| 54 | 5 | 560 | 605 | 1,380 | 123 |
+| 55 | 9 | 897 | 2,309 | 2,213 | 179 |
+| 56 | 12 | 653 | 0 | 1,643 | 193 |
+| 57 | 3 | 82 | 53 | 323 | 75 |
+| 58 | 2 | 68 | 0 | 372 | 57 |
+| 59 | 4 | 263 | 91 | 1,155 | 62 |
+| 61 | 4 | 62 | 0 | 475 | 87 |
+| 62 | 4 | 349 | 570 | 1,422 | 95 |
+| 63 | 2 | 56 | 0 | 228 | 50 |
+| 64 | 3 | 83 | 0 | 482 | 76 |
+| 65 | 3 | 764 | 868 | 651 | 98 |
+| 66 | 2 | 171 | 2 | 1,150 | 117 |
+
+### Infrastructure modules
+
+| Module | Files | Spec | Proof | Exec | Rust |
+|--------|-------|------|-------|------|------|
+| vstdplus | 26 | 1,087 | 1,506 | 655 | 963 |
+| standards | 29 | 1,113 | 42 | 956 | 693 |
+| Types.rs | 1 | 72 | 20 | 16 | 72 |
+| lib.rs | 1 | 0 | 0 | 0 | 466 |
+
+### Composition
+
+- **40,314 proof lines** — 27% of code. This is the verification effort.
+- **31,172 spec lines** — 21% of code. Function contracts and ghost definitions.
+- **66,874 exec lines** — 44% of code. The actual algorithms.
+- **11,801 rust lines** — 8% of code. Outside verus! (Debug, Display, macros, tests).
+
+### Veracity marker overhead
+
+The minimize run added 10,529 `// Veracity:` comment lines to the codebase:
+- 9,678 `// Veracity: NEEDED` — marks asserts/proof blocks that Z3 requires.
+- 915 `// Veracity: UNNEEDED` — commented-out asserts/proof blocks (corpses left in place).
+
+These 10,529 lines are ~5.3% of total lines. They are included in the 200,482 total
+line count but excluded from the spec/proof/exec/rust breakdown (which counts only
+code lines). The UNNEEDED lines are dead code preserved as comments per project policy
+("leave the corpse"). The NEEDED markers are informational — they tell future agents
+and humans which asserts are load-bearing.
+
 ## Results
 
 ### Verification improvement

@@ -8,124 +8,124 @@
       97/      37/      84/      32 src/Chap05/RelationStEph.rs
      214/     111/     541/      68 src/Chap05/SetMtEph.rs
      193/      70/     408/      44 src/Chap05/SetStEph.rs
-     385/      84/     341/      64 src/Chap06/DirGraphMtEph.rs
-     153/     101/     230/      51 src/Chap06/DirGraphStEph.rs
-     226/     111/     276/      59 src/Chap06/LabDirGraphMtEph.rs
-     120/      73/     191/      43 src/Chap06/LabDirGraphStEph.rs
-     199/     128/     267/      70 src/Chap06/LabUnDirGraphMtEph.rs
-     119/      58/     175/      54 src/Chap06/LabUnDirGraphStEph.rs
-     233/      46/     208/      64 src/Chap06/UnDirGraphMtEph.rs
-     134/      52/     117/      52 src/Chap06/UnDirGraphStEph.rs
-      26/      43/     141/      23 src/Chap06/WeightedDirGraphStEphF64.rs
-      38/      83/     236/      23 src/Chap06/WeightedDirGraphStEphI128.rs
-      38/      81/     232/      23 src/Chap06/WeightedDirGraphStEphI16.rs
-      38/      81/     232/      23 src/Chap06/WeightedDirGraphStEphI32.rs
-      38/      81/     232/      23 src/Chap06/WeightedDirGraphStEphI64.rs
-      38/      81/     232/      23 src/Chap06/WeightedDirGraphStEphI8.rs
-      38/      81/     232/      23 src/Chap06/WeightedDirGraphStEphIsize.rs
-      38/      82/     232/      23 src/Chap06/WeightedDirGraphStEphU128.rs
-      38/      82/     232/      23 src/Chap06/WeightedDirGraphStEphU16.rs
-      38/      82/     232/      23 src/Chap06/WeightedDirGraphStEphU32.rs
-      38/      82/     232/      23 src/Chap06/WeightedDirGraphStEphU64.rs
-      38/      82/     232/      23 src/Chap06/WeightedDirGraphStEphU8.rs
-      38/      82/     232/      23 src/Chap06/WeightedDirGraphStEphUsize.rs
-       2/       8/      78/       8 src/Chap11/FibonacciMtEph2Threads.rs
-       3/       8/      82/       6 src/Chap11/FibonacciMtEphRecomputes.rs
-       5/       1/      24/       7 src/Chap11/FibonacciMtPerAllThreads.rs
-       3/       8/      80/       6 src/Chap11/FibonacciMtPerTSM.rs
-      26/      27/      41/      10 src/Chap11/FibonacciStEph.rs
+     385/      93/     352/      64 src/Chap06/DirGraphMtEph.rs
+     153/     113/     236/      51 src/Chap06/DirGraphStEph.rs
+     226/     127/     289/      59 src/Chap06/LabDirGraphMtEph.rs
+     120/      59/     217/      43 src/Chap06/LabDirGraphStEph.rs
+     199/     140/     280/      70 src/Chap06/LabUnDirGraphMtEph.rs
+     119/      62/     181/      54 src/Chap06/LabUnDirGraphStEph.rs
+     234/      50/     221/      64 src/Chap06/UnDirGraphMtEph.rs
+     134/      56/     121/      52 src/Chap06/UnDirGraphStEph.rs
+      26/      47/     146/      23 src/Chap06/WeightedDirGraphStEphF64.rs
+      38/      91/     246/      23 src/Chap06/WeightedDirGraphStEphI128.rs
+      38/      89/     241/      23 src/Chap06/WeightedDirGraphStEphI16.rs
+      38/      89/     241/      23 src/Chap06/WeightedDirGraphStEphI32.rs
+      38/      89/     241/      23 src/Chap06/WeightedDirGraphStEphI64.rs
+      38/      89/     241/      23 src/Chap06/WeightedDirGraphStEphI8.rs
+      38/      89/     241/      23 src/Chap06/WeightedDirGraphStEphIsize.rs
+      38/      90/     241/      23 src/Chap06/WeightedDirGraphStEphU128.rs
+      38/      90/     241/      23 src/Chap06/WeightedDirGraphStEphU16.rs
+      38/      90/     241/      23 src/Chap06/WeightedDirGraphStEphU32.rs
+      38/      90/     241/      23 src/Chap06/WeightedDirGraphStEphU64.rs
+      38/      90/     241/      23 src/Chap06/WeightedDirGraphStEphU8.rs
+      38/      90/     241/      23 src/Chap06/WeightedDirGraphStEphUsize.rs
+       2/       8/      83/       8 src/Chap11/FibonacciMtEph2Threads.rs
+       3/       8/      87/       6 src/Chap11/FibonacciMtEphRecomputes.rs
+       5/       1/      25/       7 src/Chap11/FibonacciMtPerAllThreads.rs
+       3/       8/      85/       6 src/Chap11/FibonacciMtPerTSM.rs
+      26/      28/      43/      10 src/Chap11/FibonacciStEph.rs
        7/       0/      50/      17 src/Chap12/Exercise12_1.rs
        0/       0/      12/       4 src/Chap12/Exercise12_2.rs
        6/       0/      60/      25 src/Chap12/Exercise12_5.rs
-     153/      53/     231/      82 src/Chap17/MathSeq.rs
-     329/     299/     617/      43 src/Chap18/ArraySeq.rs
-     283/     380/     816/      63 src/Chap18/ArraySeqMtEph.rs
-     353/     238/     783/      64 src/Chap18/ArraySeqMtEphSlice.rs
-     264/     370/     877/      59 src/Chap18/ArraySeqMtPer.rs
+     153/      61/     236/      82 src/Chap17/MathSeq.rs
+     331/     312/     625/      43 src/Chap18/ArraySeq.rs
+     291/     402/     816/      63 src/Chap18/ArraySeqMtEph.rs
+     357/     244/     788/      64 src/Chap18/ArraySeqMtEphSlice.rs
+     271/     384/     887/      59 src/Chap18/ArraySeqMtPer.rs
       34/      34/       0/       3 src/Chap18/ArraySeqSpecsAndLemmas.rs
-     200/     115/     451/      43 src/Chap18/ArraySeqStEph.rs
-     190/     115/     434/      53 src/Chap18/ArraySeqStPer.rs
-     169/      93/     366/      45 src/Chap18/LinkedListStEph.rs
-     164/      93/     357/      45 src/Chap18/LinkedListStPer.rs
-     285/     322/     735/      49 src/Chap19/ArraySeqMtEph.rs
-     373/     244/     795/      64 src/Chap19/ArraySeqMtEphSlice.rs
+     200/     121/     462/      43 src/Chap18/ArraySeqStEph.rs
+     190/     121/     445/      53 src/Chap18/ArraySeqStPer.rs
+     169/      95/     374/      45 src/Chap18/LinkedListStEph.rs
+     164/      95/     365/      45 src/Chap18/LinkedListStPer.rs
+     287/     329/     719/      49 src/Chap19/ArraySeqMtEph.rs
+     375/     228/     798/      64 src/Chap19/ArraySeqMtEphSlice.rs
       34/      34/       0/       3 src/Chap19/ArraySeqSpecsAndLemmas.rs
-     230/     149/     442/      49 src/Chap19/ArraySeqStEph.rs
-     224/     155/     453/      49 src/Chap19/ArraySeqStPer.rs
-      25/      26/      87/       3 src/Chap21/Algorithm21_1.rs
-       7/      27/      55/       7 src/Chap21/Algorithm21_2.rs
-       8/      17/      24/       3 src/Chap21/Algorithm21_5.rs
-       8/      27/      77/       3 src/Chap21/Algorithm21_6.rs
-      11/      25/      31/       5 src/Chap21/Exercise21_5.rs
+     230/     151/     439/      49 src/Chap19/ArraySeqStEph.rs
+     224/     158/     447/      49 src/Chap19/ArraySeqStPer.rs
+      25/      28/      90/       3 src/Chap21/Algorithm21_1.rs
+       7/      32/      58/       7 src/Chap21/Algorithm21_2.rs
+       8/      20/      25/       3 src/Chap21/Algorithm21_5.rs
+       8/      33/      78/       3 src/Chap21/Algorithm21_6.rs
+      11/      28/      32/       5 src/Chap21/Exercise21_5.rs
        0/       0/       0/       3 src/Chap21/Exercise21_6.rs
-      13/      15/      51/       5 src/Chap21/Exercise21_7.rs
-      38/     117/      40/       5 src/Chap21/Exercise21_8.rs
-      17/      49/       0/       3 src/Chap21/Exercise21_9.rs
-       9/       0/      44/       3 src/Chap21/Problem21_1.rs
-      11/      55/      70/       5 src/Chap21/Problem21_3.rs
-      12/      23/      94/       5 src/Chap21/Problem21_4.rs
-     279/      64/     165/      93 src/Chap23/BalBinTreeStEph.rs
-     187/      78/     383/      59 src/Chap23/PrimTreeSeqStPer.rs
-      71/      64/      71/       3 src/Chap26/DivConReduceMtPer.rs
+      13/      17/      52/       5 src/Chap21/Exercise21_7.rs
+      38/     124/      41/       5 src/Chap21/Exercise21_8.rs
+      17/      55/       0/       3 src/Chap21/Exercise21_9.rs
+       9/       0/      45/       3 src/Chap21/Problem21_1.rs
+      11/      63/      74/       5 src/Chap21/Problem21_3.rs
+      12/      26/     100/       5 src/Chap21/Problem21_4.rs
+     279/      64/     169/      93 src/Chap23/BalBinTreeStEph.rs
+     187/      86/     404/      59 src/Chap23/PrimTreeSeqStPer.rs
+      71/      75/      73/       3 src/Chap26/DivConReduceMtPer.rs
       42/       0/      67/       3 src/Chap26/DivConReduceStPer.rs
-     117/      62/     308/      30 src/Chap26/ETSPMtEph.rs
-     100/     135/     166/      81 src/Chap26/ETSPStEph.rs
-      68/     232/     248/       3 src/Chap26/MergeSortMtPer.rs
-      36/      58/     102/       3 src/Chap26/MergeSortStPer.rs
-      40/      58/     163/       3 src/Chap26/ScanDCMtPer.rs
-      36/      61/     142/       3 src/Chap26/ScanDCStPer.rs
-      48/      97/       0/       3 src/Chap27/ContractSpecsAndLemmas.rs
-      18/      33/      61/       4 src/Chap27/ReduceContractMtEph.rs
-       8/      39/      75/       3 src/Chap27/ReduceContractStEph.rs
-      22/      39/     125/       4 src/Chap27/ScanContractMtEph.rs
-      21/      39/     150/       3 src/Chap27/ScanContractStEph.rs
-     130/      69/       0/       3 src/Chap28/MCSSSpec.rs
-      16/       3/      74/       5 src/Chap28/MaxContigSubSumBruteStEph.rs
-      21/      55/      97/      10 src/Chap28/MaxContigSubSumDivConMtEph.rs
-      24/      41/      45/      10 src/Chap28/MaxContigSubSumDivConOptMtEph.rs
-      61/     198/      50/       5 src/Chap28/MaxContigSubSumDivConOptStEph.rs
-      44/     136/     119/       5 src/Chap28/MaxContigSubSumDivConStEph.rs
-      39/      73/      65/       5 src/Chap28/MaxContigSubSumIterStEph.rs
-       7/      16/     102/       8 src/Chap28/MaxContigSubSumOptMtEph.rs
-      23/      50/     117/       5 src/Chap28/MaxContigSubSumOptStEph.rs
-      15/      56/      81/       5 src/Chap28/MaxContigSubSumReducedMcsseStEph.rs
-      15/       3/      73/       5 src/Chap28/MaxContigSubSumReducedStEph.rs
+     125/     137/     308/      30 src/Chap26/ETSPMtEph.rs
+     100/     152/     176/      81 src/Chap26/ETSPStEph.rs
+      68/     305/     256/       3 src/Chap26/MergeSortMtPer.rs
+      36/      66/     113/       3 src/Chap26/MergeSortStPer.rs
+      40/      73/     170/       3 src/Chap26/ScanDCMtPer.rs
+      36/      76/     150/       3 src/Chap26/ScanDCStPer.rs
+      48/     104/       0/       3 src/Chap27/ContractSpecsAndLemmas.rs
+      18/      37/      65/       4 src/Chap27/ReduceContractMtEph.rs
+       8/      43/      79/       3 src/Chap27/ReduceContractStEph.rs
+      22/      42/     134/       4 src/Chap27/ScanContractMtEph.rs
+      21/      39/     160/       3 src/Chap27/ScanContractStEph.rs
+     130/      71/       0/       3 src/Chap28/MCSSSpec.rs
+      16/       3/      75/       5 src/Chap28/MaxContigSubSumBruteStEph.rs
+      21/      61/     104/      10 src/Chap28/MaxContigSubSumDivConMtEph.rs
+      24/      45/      49/      10 src/Chap28/MaxContigSubSumDivConOptMtEph.rs
+      61/     205/      54/       5 src/Chap28/MaxContigSubSumDivConOptStEph.rs
+      44/     143/     126/       5 src/Chap28/MaxContigSubSumDivConStEph.rs
+      39/      74/      69/       5 src/Chap28/MaxContigSubSumIterStEph.rs
+       7/      17/     106/       8 src/Chap28/MaxContigSubSumOptMtEph.rs
+      23/      51/     121/       5 src/Chap28/MaxContigSubSumOptStEph.rs
+      15/      60/      85/       5 src/Chap28/MaxContigSubSumReducedMcsseStEph.rs
+      15/       3/      74/       5 src/Chap28/MaxContigSubSumReducedStEph.rs
        6/       0/      36/      25 src/Chap30/Probability.rs
-      76/     207/     207/       3 src/Chap35/OrderStatSelectMtEph.rs
-      76/     205/     207/       3 src/Chap35/OrderStatSelectMtPer.rs
-      21/     158/     102/       3 src/Chap35/OrderStatSelectStEph.rs
-      21/     149/     102/       3 src/Chap35/OrderStatSelectStPer.rs
+      77/     239/     217/       3 src/Chap35/OrderStatSelectMtEph.rs
+      77/     237/     217/       3 src/Chap35/OrderStatSelectMtPer.rs
+      21/     184/     109/       3 src/Chap35/OrderStatSelectStEph.rs
+      21/     174/     110/       3 src/Chap35/OrderStatSelectStPer.rs
       58/     224/     383/       3 src/Chap36/QuickSortMtEph.rs
      101/     380/     421/       3 src/Chap36/QuickSortMtEphSlice.rs
       58/     228/     335/       3 src/Chap36/QuickSortStEph.rs
-     322/     196/     558/      69 src/Chap37/AVLTreeSeq.rs
-     234/     114/     355/      96 src/Chap37/AVLTreeSeqMtPer.rs
-     325/     164/     561/      79 src/Chap37/AVLTreeSeqStEph.rs
-     253/     169/     376/      83 src/Chap37/AVLTreeSeqStPer.rs
-     167/     225/     354/      38 src/Chap37/BSTAVLMtEph.rs
-     180/     288/     309/      26 src/Chap37/BSTAVLStEph.rs
-     112/     166/     317/      38 src/Chap37/BSTBBAlphaMtEph.rs
-     130/     156/     244/      30 src/Chap37/BSTBBAlphaStEph.rs
-     112/     154/     320/      38 src/Chap37/BSTPlainMtEph.rs
-     148/     149/     249/      30 src/Chap37/BSTPlainStEph.rs
+     324/     179/     534/      69 src/Chap37/AVLTreeSeq.rs
+     235/     111/     345/      96 src/Chap37/AVLTreeSeqMtPer.rs
+     326/     149/     540/      79 src/Chap37/AVLTreeSeqStEph.rs
+     254/     166/     365/      83 src/Chap37/AVLTreeSeqStPer.rs
+     168/     243/     354/      38 src/Chap37/BSTAVLMtEph.rs
+     181/     304/     310/      26 src/Chap37/BSTAVLStEph.rs
+     112/     168/     316/      38 src/Chap37/BSTBBAlphaMtEph.rs
+     130/     158/     245/      30 src/Chap37/BSTBBAlphaStEph.rs
+     112/     157/     313/      38 src/Chap37/BSTPlainMtEph.rs
+     148/     152/     246/      30 src/Chap37/BSTPlainStEph.rs
      212/     458/     553/      70 src/Chap37/BSTRBMtEph.rs
-      77/     131/     233/      26 src/Chap37/BSTRBStEph.rs
+      77/     132/     238/      26 src/Chap37/BSTRBStEph.rs
      110/       1/     362/      51 src/Chap37/BSTSetAVLMtEph.rs
      109/       1/     316/      48 src/Chap37/BSTSetBBAlphaMtEph.rs
      109/       1/     316/      48 src/Chap37/BSTSetPlainMtEph.rs
      110/       1/     362/      51 src/Chap37/BSTSetRBMtEph.rs
      110/       1/     366/      51 src/Chap37/BSTSetSplayMtEph.rs
-     112/     182/       0/       3 src/Chap37/BSTSpecsAndLemmas.rs
-     254/     906/     623/      56 src/Chap37/BSTSplayMtEph.rs
-     210/     768/     414/      42 src/Chap37/BSTSplayStEph.rs
-     327/     431/     601/      69 src/Chap38/BSTParaMtEph.rs
+     112/     198/       0/       3 src/Chap37/BSTSpecsAndLemmas.rs
+     254/     938/     593/      56 src/Chap37/BSTSplayMtEph.rs
+     210/     784/     395/      42 src/Chap37/BSTSplayStEph.rs
+     337/     472/     638/      69 src/Chap38/BSTParaMtEph.rs
       39/      27/       0/       7 src/Chap38/BSTParaSpecsAndLemmas.rs
-     239/     492/     463/      64 src/Chap38/BSTParaStEph.rs
-     264/     483/     543/      78 src/Chap39/BSTParaTreapMtEph.rs
-     118/      21/     133/      32 src/Chap39/BSTSetTreapMtEph.rs
-     343/     333/     451/      75 src/Chap39/BSTTreapMtEph.rs
-      67/     104/       0/       6 src/Chap39/BSTTreapSpecsAndLemmas.rs
-     630/     955/     886/     103 src/Chap39/BSTTreapStEph.rs
+     241/     562/     481/      64 src/Chap38/BSTParaStEph.rs
+     272/     525/     570/      78 src/Chap39/BSTParaTreapMtEph.rs
+     119/      23/     136/      32 src/Chap39/BSTSetTreapMtEph.rs
+     346/     351/     478/      75 src/Chap39/BSTTreapMtEph.rs
+      67/     111/       0/       6 src/Chap39/BSTTreapSpecsAndLemmas.rs
+     632/   1,101/     925/     103 src/Chap39/BSTTreapStEph.rs
      348/     343/     507/      66 src/Chap40/BSTKeyValueStEph.rs
      382/     273/     604/      97 src/Chap40/BSTReducedStEph.rs
      364/     237/     584/      60 src/Chap40/BSTSizeStEph.rs
@@ -138,10 +138,10 @@
        0/       4/     151/      10 src/Chap41/Example41_3.rs
      559/   2,609/   1,273/      30 src/Chap41/OrdKeyMap.rs
        0/       1/       0/     143 src/Chap42/Example42_1.rs
-     155/   1,006/     811/      43 src/Chap42/TableMtEph.rs
-     115/     352/       0/       3 src/Chap42/TableSpecsAndLemmas.rs
-     190/   1,270/     894/      38 src/Chap42/TableStEph.rs
-     223/   1,520/     863/      38 src/Chap42/TableStPer.rs
+     156/   1,228/     860/      43 src/Chap42/TableMtEph.rs
+     115/     412/       0/       3 src/Chap42/TableSpecsAndLemmas.rs
+     190/   1,294/     868/      38 src/Chap42/TableStEph.rs
+     225/   1,482/     835/      38 src/Chap42/TableStPer.rs
      189/      34/     418/      64 src/Chap43/AugOrderedTableMtEph.rs
      282/      56/     343/      63 src/Chap43/AugOrderedTableStEph.rs
      309/      72/     384/      56 src/Chap43/AugOrderedTableStPer.rs
@@ -152,51 +152,51 @@
       62/     173/       0/       8 src/Chap43/OrderedSpecsAndLemmas.rs
      204/      83/     350/      90 src/Chap43/OrderedTableMtEph.rs
      115/     123/     251/      40 src/Chap43/OrderedTableMtPer.rs
-     412/     486/     573/      68 src/Chap43/OrderedTableStEph.rs
+     412/     231/     442/      68 src/Chap43/OrderedTableStEph.rs
      380/     317/     417/      64 src/Chap43/OrderedTableStPer.rs
-     115/      92/     222/      73 src/Chap44/DocumentIndex.rs
+     115/     109/     229/      73 src/Chap44/DocumentIndex.rs
        0/       1/       0/     152 src/Chap44/Example44_1.rs
-     101/      89/     430/      44 src/Chap45/BalancedTreePQ.rs
-     268/     592/     644/      42 src/Chap45/BinaryHeapPQ.rs
+     101/      88/     447/      44 src/Chap45/BalancedTreePQ.rs
+     272/     666/     668/      42 src/Chap45/BinaryHeapPQ.rs
        0/       1/      16/      75 src/Chap45/Example45_2.rs
-      14/       3/      59/     234 src/Chap45/HeapsortExample.rs
-     264/     215/     445/      83 src/Chap45/LeftistHeapPQ.rs
-     138/     485/     342/      42 src/Chap45/SortedListPQ.rs
-      95/     286/     237/      42 src/Chap45/UnsortedListPQ.rs
-      40/      74/       1/       5 src/Chap47/ChainedHashTable.rs
-      43/     301/     339/      22 src/Chap47/DoubleHashFlatHashTableStEph.rs
-      61/      53/      42/      19 src/Chap47/FlatHashTable.rs
-      35/     334/     289/      21 src/Chap47/LinProbFlatHashTableStEph.rs
-      16/     162/     349/      21 src/Chap47/LinkedListChainedHashTableStEph.rs
-     176/     122/      59/      40 src/Chap47/ParaHashTableStEph.rs
-      80/     552/     305/      24 src/Chap47/QuadProbFlatHashTableStEph.rs
-      69/     284/     351/      48 src/Chap47/StructChainedHashTable.rs
-      17/     162/     346/      20 src/Chap47/VecChainedHashTableStEph.rs
-      69/       2/     170/      73 src/Chap49/MinEditDistMtEph.rs
-      50/       2/     148/      64 src/Chap49/MinEditDistMtPer.rs
-      54/       2/      90/      89 src/Chap49/MinEditDistStEph.rs
-      40/       3/      82/      75 src/Chap49/MinEditDistStPer.rs
-      49/       2/     143/      69 src/Chap49/SubsetSumMtEph.rs
-      42/       2/     130/      62 src/Chap49/SubsetSumMtPer.rs
-      30/       2/      80/      61 src/Chap49/SubsetSumStEph.rs
-      26/       3/      76/      56 src/Chap49/SubsetSumStPer.rs
-     113/      31/     247/      93 src/Chap50/MatrixChainMtEph.rs
-      93/      27/     182/      73 src/Chap50/MatrixChainMtPer.rs
-     132/       5/     141/      64 src/Chap50/MatrixChainStEph.rs
-     116/       5/     129/      59 src/Chap50/MatrixChainStPer.rs
-      53/       8/     271/     100 src/Chap50/OptBinSearchTreeMtEph.rs
-      37/       6/     197/      78 src/Chap50/OptBinSearchTreeMtPer.rs
-      39/       5/     137/      75 src/Chap50/OptBinSearchTreeStEph.rs
-      28/       5/     125/      70 src/Chap50/OptBinSearchTreeStPer.rs
-     104/      35/     238/      27 src/Chap51/BottomUpDPMtEph.rs
-      91/      35/     230/      27 src/Chap51/BottomUpDPMtPer.rs
-     104/      46/     245/      27 src/Chap51/BottomUpDPStEph.rs
-      91/      39/     237/      27 src/Chap51/BottomUpDPStPer.rs
+      14/       3/      61/     234 src/Chap45/HeapsortExample.rs
+     267/     240/     466/      83 src/Chap45/LeftistHeapPQ.rs
+     138/     570/     367/      42 src/Chap45/SortedListPQ.rs
+      95/     344/     249/      42 src/Chap45/UnsortedListPQ.rs
+      40/      78/       1/       5 src/Chap47/ChainedHashTable.rs
+      43/     338/     362/      22 src/Chap47/DoubleHashFlatHashTableStEph.rs
+      61/      57/      43/      19 src/Chap47/FlatHashTable.rs
+      35/     376/     312/      21 src/Chap47/LinProbFlatHashTableStEph.rs
+      16/     185/     371/      21 src/Chap47/LinkedListChainedHashTableStEph.rs
+     176/     133/      62/      40 src/Chap47/ParaHashTableStEph.rs
+      80/     596/     328/      24 src/Chap47/QuadProbFlatHashTableStEph.rs
+      71/     309/     372/      48 src/Chap47/StructChainedHashTable.rs
+      17/     185/     367/      20 src/Chap47/VecChainedHashTableStEph.rs
+      69/       2/     171/      73 src/Chap49/MinEditDistMtEph.rs
+      50/       2/     149/      64 src/Chap49/MinEditDistMtPer.rs
+      54/       2/      91/      89 src/Chap49/MinEditDistStEph.rs
+      40/       3/      83/      75 src/Chap49/MinEditDistStPer.rs
+      49/       2/     144/      69 src/Chap49/SubsetSumMtEph.rs
+      42/       2/     131/      62 src/Chap49/SubsetSumMtPer.rs
+      30/       2/      81/      61 src/Chap49/SubsetSumStEph.rs
+      26/       3/      78/      56 src/Chap49/SubsetSumStPer.rs
+     113/      34/     264/      93 src/Chap50/MatrixChainMtEph.rs
+      94/      31/     189/      73 src/Chap50/MatrixChainMtPer.rs
+     133/       5/     144/      64 src/Chap50/MatrixChainStEph.rs
+     117/       5/     132/      59 src/Chap50/MatrixChainStPer.rs
+      54/       8/     280/     100 src/Chap50/OptBinSearchTreeMtEph.rs
+      37/       6/     201/      78 src/Chap50/OptBinSearchTreeMtPer.rs
+      40/       5/     140/      75 src/Chap50/OptBinSearchTreeStEph.rs
+      28/       5/     129/      70 src/Chap50/OptBinSearchTreeStPer.rs
+     104/      36/     241/      27 src/Chap51/BottomUpDPMtEph.rs
+      91/      36/     233/      27 src/Chap51/BottomUpDPMtPer.rs
+     104/      47/     248/      27 src/Chap51/BottomUpDPStEph.rs
+      91/      40/     240/      27 src/Chap51/BottomUpDPStPer.rs
       26/      10/       0/       3 src/Chap51/SeqSpecsAndLemmas.rs
-      95/      35/     208/      43 src/Chap51/TopDownDPMtEph.rs
-      71/      35/     204/      43 src/Chap51/TopDownDPMtPer.rs
-     100/      21/     129/      30 src/Chap51/TopDownDPStEph.rs
-      76/      24/     124/      30 src/Chap51/TopDownDPStPer.rs
+      95/      37/     220/      43 src/Chap51/TopDownDPMtEph.rs
+      71/      37/     215/      43 src/Chap51/TopDownDPMtPer.rs
+     101/      23/     133/      30 src/Chap51/TopDownDPStEph.rs
+      76/      25/     128/      30 src/Chap51/TopDownDPStPer.rs
       92/     110/     276/      20 src/Chap52/AdjMatrixGraphMtEph.rs
       99/     110/     278/      20 src/Chap52/AdjMatrixGraphMtPer.rs
       88/     110/     270/      20 src/Chap52/AdjMatrixGraphStEph.rs
@@ -212,28 +212,28 @@
       79/      59/     132/      25 src/Chap52/EdgeSetGraphMtPer.rs
       71/      88/     138/      25 src/Chap52/EdgeSetGraphStEph.rs
       74/      72/     136/      28 src/Chap52/EdgeSetGraphStPer.rs
-      83/      17/     146/      44 src/Chap53/GraphSearchMtPer.rs
-      81/      13/     149/      44 src/Chap53/GraphSearchStEph.rs
+      83/      16/     147/      44 src/Chap53/GraphSearchMtPer.rs
+      81/      13/     150/      44 src/Chap53/GraphSearchStEph.rs
       81/      20/     144/      44 src/Chap53/GraphSearchStPer.rs
-     141/     100/     285/      28 src/Chap53/PQMinStEph.rs
+     142/     101/     283/      28 src/Chap53/PQMinStEph.rs
      118/      84/     253/      30 src/Chap53/PQMinStPer.rs
-     160/     165/     466/      30 src/Chap54/BFSMtEph.rs
-     160/     163/     474/      30 src/Chap54/BFSMtPer.rs
-      59/      56/       0/       3 src/Chap54/BFSSpecsAndLemmas.rs
-      90/      78/     200/      30 src/Chap54/BFSStEph.rs
-      91/      69/     198/      30 src/Chap54/BFSStPer.rs
-     112/     422/     193/      19 src/Chap55/CycleDetectStEph.rs
-     109/     314/     162/      21 src/Chap55/CycleDetectStPer.rs
-      46/      85/       0/       5 src/Chap55/DFSSpecsAndLemmas.rs
-      86/     180/     152/      20 src/Chap55/DFSStEph.rs
-      86/     155/     133/      20 src/Chap55/DFSStPer.rs
-      35/      70/     370/      28 src/Chap55/SCCStEph.rs
-      54/      52/     431/      26 src/Chap55/SCCStPer.rs
-     186/     340/     260/      19 src/Chap55/TopoSortStEph.rs
-     181/     264/     262/      21 src/Chap55/TopoSortStPer.rs
-      29/       0/     189/      17 src/Chap56/AllPairsResultStEphF64.rs
+     160/     188/     483/      30 src/Chap54/BFSMtEph.rs
+     160/     188/     488/      30 src/Chap54/BFSMtPer.rs
+      59/      60/       0/       3 src/Chap54/BFSSpecsAndLemmas.rs
+      90/      91/     206/      30 src/Chap54/BFSStEph.rs
+      91/      78/     203/      30 src/Chap54/BFSStPer.rs
+     112/     530/     216/      19 src/Chap55/CycleDetectStEph.rs
+     109/     405/     176/      21 src/Chap55/CycleDetectStPer.rs
+      46/      99/       0/       5 src/Chap55/DFSSpecsAndLemmas.rs
+      86/     214/     179/      20 src/Chap55/DFSStEph.rs
+      86/     180/     159/      20 src/Chap55/DFSStPer.rs
+      36/      84/     422/      28 src/Chap55/SCCStEph.rs
+      54/      62/     486/      26 src/Chap55/SCCStPer.rs
+     187/     398/     283/      19 src/Chap55/TopoSortStEph.rs
+     181/     337/     292/      21 src/Chap55/TopoSortStPer.rs
+      29/       0/     195/      17 src/Chap56/AllPairsResultStEphF64.rs
      111/       0/     186/      16 src/Chap56/AllPairsResultStEphI64.rs
-      29/       0/     189/      16 src/Chap56/AllPairsResultStPerF64.rs
+      29/       0/     197/      16 src/Chap56/AllPairsResultStPerF64.rs
      123/       0/     192/      15 src/Chap56/AllPairsResultStPerI64.rs
        0/       0/      44/      16 src/Chap56/Example56_1.rs
        0/       0/      43/      16 src/Chap56/Example56_3.rs
@@ -256,22 +256,24 @@
       17/       0/      85/      21 src/Chap61/EdgeContractionStEph.rs
       14/       0/     153/      23 src/Chap61/VertexMatchingMtEph.rs
       15/       0/     105/      20 src/Chap61/VertexMatchingStEph.rs
-      85/      62/     162/      24 src/Chap62/StarContractionMtEph.rs
-      57/      47/     131/      23 src/Chap62/StarContractionStEph.rs
-     178/     380/     968/      29 src/Chap62/StarPartitionMtEph.rs
-      24/      39/     112/      19 src/Chap62/StarPartitionStEph.rs
+      86/      69/     169/      24 src/Chap62/StarContractionMtEph.rs
+      58/      51/     136/      23 src/Chap62/StarContractionStEph.rs
+     181/     421/     989/      29 src/Chap62/StarPartitionMtEph.rs
+      24/      29/     128/      19 src/Chap62/StarPartitionStEph.rs
       28/       0/     115/      25 src/Chap63/ConnectivityMtEph.rs
       28/       0/     113/      25 src/Chap63/ConnectivityStEph.rs
       16/       0/     130/      26 src/Chap64/SpanTreeMtEph.rs
       16/       0/     126/      25 src/Chap64/SpanTreeStEph.rs
       51/       0/     226/      25 src/Chap64/TSPApproxStEph.rs
-      34/     103/     205/      50 src/Chap65/PrimStEph.rs
-     115/       1/     803/      60 src/Chap66/BoruvkaMtEph.rs
-      56/       1/     327/      57 src/Chap66/BoruvkaStEph.rs
+      67/      65/     210/      26 src/Chap65/KruskalStEph.rs
+      36/     114/     206/      56 src/Chap65/PrimStEph.rs
+     661/     689/     235/      16 src/Chap65/UnionFindStEph.rs
+     115/       1/     812/      60 src/Chap66/BoruvkaMtEph.rs
+      56/       1/     338/      57 src/Chap66/BoruvkaStEph.rs
        0/       0/       3/       7 src/Concurrency.rs
       14/       0/      20/      16 src/ParaPairs.rs
       72/      20/      16/      72 src/Types.rs
-       0/       0/       0/     462 src/lib.rs
+       0/       0/       0/     466 src/lib.rs
        0/       0/       0/       0 src/standards/alg_analysis_notation_standard.rs
       17/       1/      42/      35 src/standards/arc_usage_standard.rs
       23/       0/      69/      13 src/standards/capacity_bounds_standard.rs
@@ -329,10 +331,10 @@
       81/     249/     151/       9 src/vstdplus/total_order.rs
 --------------------------------------------
     spec    proof     exec     rust
-  30,347/  37,451/  65,347/  11,749 Total
- 194,586 total lines
+  31,172/  40,314/  66,874/  11,801 Total
+ 200,482 total lines
 329 files analyzed
-1936ms
+1934ms
 
 Proof Lines Per Function
 ========================
@@ -340,45 +342,45 @@ Proof Lines Per Function
 By chapter:
 |   # | Chapter    |  PrfTot |  InSpec |  InExec | InProof | ExecLOC |  Prf/Ex |
 | --- | ---------- | ------- | ------- | ------- | ------- | ------- | ------- |
-|   1 | Chap37     |   7,488 |     967 |   5,846 |     675 |   7,188 |    1.04 |
-|   2 | Chap41     |   5,087 |     165 |   4,102 |     820 |   3,024 |    1.68 |
-|   3 | Chap42     |   4,848 |      90 |   4,230 |     528 |   2,568 |    1.89 |
-|   4 | Chap43     |   4,489 |     276 |   3,922 |     291 |   3,573 |    1.26 |
-|   5 | Chap52     |   3,757 |     362 |   3,082 |     313 |   3,184 |    1.18 |
-|   6 | Chap18     |   3,696 |     451 |   2,877 |     368 |   4,701 |    0.79 |
-|   7 | Chap06     |   3,597 |     573 |   3,024 |       0 |   4,734 |    0.76 |
-|   8 | Chap39     |   3,261 |     285 |   2,474 |     502 |   2,013 |    1.62 |
-|   9 | Chap55     |   3,015 |     191 |   1,957 |     867 |   1,963 |    1.54 |
-|  10 | Chap47     |   2,550 |     211 |   1,720 |     619 |   2,081 |    1.23 |
-|  11 | Chap45     |   2,514 |     192 |   2,076 |     246 |   2,232 |    1.13 |
+|   1 | Chap37     |   7,566 |     971 |   5,900 |     695 |   7,069 |    1.07 |
+|   2 | Chap42     |   5,109 |      91 |   4,431 |     587 |   2,563 |    1.99 |
+|   3 | Chap41     |   5,087 |     165 |   4,102 |     820 |   3,024 |    1.68 |
+|   4 | Chap43     |   4,234 |     276 |   3,667 |     291 |   3,442 |    1.23 |
+|   5 | Chap18     |   3,788 |     452 |   2,965 |     371 |   4,762 |    0.80 |
+|   6 | Chap52     |   3,757 |     362 |   3,082 |     313 |   3,184 |    1.18 |
+|   7 | Chap06     |   3,745 |     573 |   3,172 |       0 |   4,940 |    0.76 |
+|   8 | Chap39     |   3,489 |     286 |   2,691 |     512 |   2,109 |    1.65 |
+|   9 | Chap55     |   3,351 |     191 |   2,155 |   1,005 |   2,213 |    1.51 |
+|  10 | Chap47     |   2,765 |     211 |   1,908 |     646 |   2,218 |    1.25 |
+|  11 | Chap45     |   2,761 |     193 |   2,303 |     265 |   2,335 |    1.18 |
 |  12 | vstdplus   |   2,495 |     417 |     298 |   1,780 |     655 |    3.81 |
-|  13 | Chap19     |   2,028 |     232 |   1,511 |     285 |   2,425 |    0.84 |
+|  13 | Chap19     |   2,028 |     232 |   1,510 |     286 |   2,403 |    0.84 |
 |  14 | Chap40     |   1,893 |     304 |   1,239 |     350 |   1,695 |    1.12 |
-|  15 | Chap38     |   1,557 |      69 |   1,425 |      63 |   1,064 |    1.46 |
-|  16 | Chap26     |   1,172 |     159 |     640 |     373 |   1,267 |    0.93 |
-|  17 | standards  |   1,123 |     589 |     507 |      27 |     956 |    1.17 |
-|  18 | Chap28     |   1,089 |     148 |     468 |     473 |     823 |    1.32 |
-|  19 | Chap54     |   1,087 |      77 |     516 |     494 |   1,338 |    0.81 |
-|  20 | Chap05     |   1,059 |     271 |     701 |      87 |   1,221 |    0.87 |
-|  21 | Chap36     |   1,049 |      45 |     663 |     341 |   1,139 |    0.92 |
-|  22 | Chap51     |     996 |     168 |     744 |      84 |   1,615 |    0.62 |
-|  23 | Chap35     |     905 |      36 |     713 |     156 |     618 |    1.46 |
-|  24 | Chap62     |     854 |      50 |     804 |       0 |   1,373 |    0.62 |
-|  25 | Chap53     |     760 |      14 |     746 |       0 |     977 |    0.78 |
-|  26 | Chap50     |     712 |     260 |     452 |       0 |   1,429 |    0.50 |
-|  27 | Chap56     |     603 |     187 |     416 |       0 |   1,629 |    0.37 |
-|  28 | Chap23     |     590 |     206 |     320 |      64 |     548 |    1.08 |
-|  29 | Chap21     |     542 |      20 |     322 |     200 |     573 |    0.95 |
-|  30 | Chap27     |     364 |       0 |     219 |     145 |     411 |    0.89 |
-|  31 | Chap59     |     356 |       0 |     356 |       0 |   1,155 |    0.31 |
-|  32 | Chap49     |     346 |     140 |     206 |       0 |     919 |    0.38 |
-|  33 | Chap44     |     206 |      15 |     190 |       1 |     222 |    0.93 |
-|  34 | Chap17     |     201 |      59 |     142 |       0 |     231 |    0.87 |
-|  35 | Chap66     |     185 |      25 |     160 |       0 |   1,130 |    0.16 |
-|  36 | Chap65     |     137 |      20 |      72 |      45 |     205 |    0.67 |
+|  15 | Chap38     |   1,680 |      72 |   1,545 |      63 |   1,119 |    1.50 |
+|  16 | Chap65     |   1,612 |     200 |     445 |     967 |     861 |    1.87 |
+|  17 | Chap26     |   1,394 |     162 |     758 |     474 |   1,313 |    1.06 |
+|  18 | Chap54     |   1,161 |      77 |     546 |     538 |   1,380 |    0.84 |
+|  19 | standards  |   1,123 |     589 |     507 |      27 |     956 |    1.17 |
+|  20 | Chap28     |   1,122 |     148 |     494 |     480 |     863 |    1.30 |
+|  21 | Chap05     |   1,059 |     271 |     701 |      87 |   1,221 |    0.87 |
+|  22 | Chap36     |   1,049 |      45 |     663 |     341 |   1,139 |    0.92 |
+|  23 | Chap35     |   1,022 |      36 |     802 |     184 |     653 |    1.57 |
+|  24 | Chap51     |   1,008 |     168 |     756 |      84 |   1,658 |    0.61 |
+|  25 | Chap62     |     901 |      50 |     851 |       0 |   1,422 |    0.63 |
+|  26 | Chap53     |     761 |      14 |     747 |       0 |     977 |    0.78 |
+|  27 | Chap50     |     715 |     260 |     455 |       0 |   1,479 |    0.48 |
+|  28 | Chap56     |     607 |     187 |     420 |       0 |   1,643 |    0.37 |
+|  29 | Chap23     |     598 |     206 |     328 |      64 |     573 |    1.04 |
+|  30 | Chap21     |     587 |      20 |     353 |     214 |     595 |    0.99 |
+|  31 | Chap27     |     382 |       0 |     230 |     152 |     438 |    0.87 |
+|  32 | Chap59     |     356 |       0 |     356 |       0 |   1,155 |    0.31 |
+|  33 | Chap49     |     346 |     140 |     206 |       0 |     928 |    0.37 |
+|  34 | Chap44     |     223 |      15 |     207 |       1 |     229 |    0.97 |
+|  35 | Chap17     |     209 |      59 |     150 |       0 |     236 |    0.89 |
+|  36 | Chap66     |     185 |      25 |     160 |       0 |   1,150 |    0.16 |
 |  37 | Chap57     |     134 |      18 |     106 |      10 |     323 |    0.41 |
 |  38 | src        |     106 |      48 |      18 |      40 |      39 |    2.72 |
-|  39 | Chap11     |      89 |       9 |      49 |      31 |     305 |    0.29 |
+|  39 | Chap11     |      90 |       9 |      49 |      32 |     323 |    0.28 |
 |  40 | Chap64     |      83 |       9 |      74 |       0 |     482 |    0.17 |
 |  41 | Chap02     |      72 |       4 |      26 |      42 |      96 |    0.75 |
 |  42 | Chap58     |      70 |       0 |      70 |       0 |     372 |    0.19 |
@@ -389,541 +391,578 @@ By chapter:
 |  47 | Chap12     |      11 |       1 |      10 |       0 |     122 |    0.09 |
 |  48 | Chap30     |       6 |       6 |       0 |       0 |      36 |    0.17 |
 
-48 chapters, 67,378 proof lines, 65,406 exec lines, ratio 1.03
-6 min  7,488 max  1403.7 avg  807.0 median (proof lines)
+48 chapters, 70,936 proof lines, 67,145 exec lines, ratio 1.06
+6 min  7,566 max  1477.8 avg  954.5 median (proof lines)
 
 By module:
 |   # | Chap       | Module                         |  PrfTot |  InSpec |  InExec | InProof | ExecLOC | Prf/Ex |
 | --- | ---------- | ------------------------------ | ------- | ------- | ------- | ------- | ------- | ------ |
 |   1 | Chap41     | OrdKeyMap                      |   3,167 |      32 |   2,614 |     521 |   1,273 |   2.49 |
-|   2 | Chap42     | TableStPer                     |   1,741 |      40 |   1,653 |      48 |     863 |   2.02 |
-|   3 | Chap39     | BSTTreapStEph                  |   1,554 |     127 |   1,266 |     161 |     886 |   1.75 |
-|   4 | Chap42     | TableStEph                     |   1,463 |      23 |   1,414 |      26 |     894 |   1.64 |
-|   5 | Chap42     | TableMtEph                     |   1,178 |      15 |   1,163 |       0 |     811 |   1.45 |
-|   6 | Chap37     | BSTSplayMtEph                  |   1,142 |      82 |     996 |      64 |     623 |   1.83 |
-|   7 | vstdplus   | seq_set                        |   1,055 |      74 |       0 |     981 |       0 |      - |
-|   8 | Chap37     | BSTSplayStEph                  |     951 |      71 |     795 |      85 |     414 |   2.30 |
-|   9 | Chap43     | OrderedTableStEph              |     897 |      35 |     862 |       0 |     573 |   1.57 |
-|  10 | Chap45     | BinaryHeapPQ                   |     846 |      52 |     690 |     104 |     644 |   1.31 |
-|  11 | Chap38     | BSTParaMtEph                   |     759 |      33 |     726 |       0 |     601 |   1.26 |
-|  12 | Chap39     | BSTParaTreapMtEph              |     746 |      30 |     716 |       0 |     543 |   1.37 |
-|  13 | Chap38     | BSTParaStEph                   |     732 |      33 |     699 |       0 |     463 |   1.58 |
-|  14 | Chap43     | OrderedTableStPer              |     695 |      40 |     655 |       0 |     417 |   1.67 |
-|  15 | Chap18     | ArraySeqMtEph                  |     660 |      52 |     581 |      27 |     816 |   0.81 |
-|  16 | Chap40     | BSTKeyValueStEph               |     656 |     114 |     378 |     164 |     507 |   1.29 |
-|  17 | Chap37     | BSTRBMtEph                     |     654 |      68 |     512 |      74 |     553 |   1.18 |
-|  18 | Chap39     | BSTTreapMtEph                  |     652 |     119 |     360 |     173 |     451 |   1.45 |
-|  19 | Chap40     | BSTReducedStEph                |     638 |      98 |     448 |      92 |     604 |   1.06 |
-|  20 | Chap18     | ArraySeqMtPer                  |     631 |      44 |     549 |      38 |     877 |   0.72 |
-|  21 | Chap47     | QuadProbFlatHashTableStEph     |     630 |      41 |     310 |     279 |     305 |   2.07 |
-|  22 | Chap18     | ArraySeq                       |     624 |      89 |     403 |     132 |     617 |   1.01 |
-|  23 | Chap45     | SortedListPQ                   |     618 |      16 |     540 |      62 |     342 |   1.81 |
-|  24 | Chap19     | ArraySeqMtEphSlice             |     606 |      75 |     421 |     110 |     795 |   0.76 |
-|  25 | Chap19     | ArraySeqMtEph                  |     604 |      44 |     504 |      56 |     735 |   0.82 |
-|  26 | Chap40     | BSTSizeStEph                   |     599 |      92 |     413 |      94 |     584 |   1.03 |
-|  27 | Chap18     | ArraySeqMtEphSlice             |     580 |      75 |     395 |     110 |     783 |   0.74 |
-|  28 | Chap62     | StarPartitionMtEph             |     548 |      21 |     527 |       0 |     968 |   0.57 |
-|  29 | Chap55     | TopoSortStEph                  |     541 |      70 |     346 |     125 |     260 |   2.08 |
-|  30 | Chap55     | CycleDetectStEph               |     539 |      22 |     371 |     146 |     193 |   2.79 |
-|  31 | Chap43     | OrderedSetStPer                |     533 |      40 |     464 |      29 |     268 |   1.99 |
-|  32 | Chap52     | AdjTableGraphMtPer             |     529 |      24 |     505 |       0 |     218 |   2.43 |
-|  33 | Chap37     | AVLTreeSeq                     |     508 |     119 |     351 |      38 |     558 |   0.91 |
-|  34 | Chap43     | OrderedSetStEph                |     495 |      38 |     428 |      29 |     288 |   1.72 |
-|  35 | Chap36     | QuickSortMtEphSlice            |     481 |      17 |     343 |     121 |     421 |   1.14 |
-|  36 | Chap37     | AVLTreeSeqStEph                |     481 |     107 |     328 |      46 |     561 |   0.86 |
-|  37 | Chap41     | ArraySetStEph                  |     479 |      15 |     352 |     112 |     426 |   1.12 |
-|  38 | Chap52     | AdjTableGraphStPer             |     470 |      26 |     419 |      25 |     220 |   2.14 |
-|  39 | Chap45     | LeftistHeapPQ                  |     466 |      89 |     301 |      76 |     445 |   1.05 |
-|  40 | Chap42     | TableSpecsAndLemmas            |     465 |      12 |       0 |     453 |       0 |      - |
-|  41 | Chap37     | BSTAVLStEph                    |     460 |      33 |     427 |       0 |     309 |   1.49 |
-|  42 | Chap55     | TopoSortStPer                  |     459 |      70 |     297 |      92 |     262 |   1.75 |
-|  43 | Chap41     | ArraySetEnumMtEph              |     434 |      23 |     351 |      60 |     343 |   1.27 |
-|  44 | Chap52     | AdjTableGraphStEph             |     432 |      26 |     406 |       0 |     205 |   2.11 |
-|  45 | Chap06     | DirGraphMtEph                  |     427 |     105 |     322 |       0 |     341 |   1.25 |
-|  46 | Chap55     | CycleDetectStPer               |     423 |      24 |     259 |     140 |     162 |   2.61 |
-|  47 | Chap37     | AVLTreeSeqStPer                |     410 |      97 |     265 |      48 |     376 |   1.09 |
-|  48 | Chap37     | BSTAVLMtEph                    |     387 |      33 |     354 |       0 |     354 |   1.09 |
-|  49 | Chap43     | AugOrderedTableStPer           |     380 |       9 |     366 |       5 |     384 |   0.99 |
-|  50 | Chap45     | UnsortedListPQ                 |     377 |      16 |     360 |       1 |     237 |   1.59 |
-|  51 | Chap19     | ArraySeqStEph                  |     376 |      46 |     293 |      37 |     442 |   0.85 |
-|  52 | Chap19     | ArraySeqStPer                  |     376 |      46 |     293 |      37 |     453 |   0.83 |
-|  53 | Chap47     | LinProbFlatHashTableStEph      |     367 |      33 |     334 |       0 |     289 |   1.27 |
-|  54 | Chap41     | AVLTreeSetStEph                |     349 |      25 |     256 |      68 |     204 |   1.71 |
-|  55 | Chap47     | StructChainedHashTable         |     344 |      30 |     313 |       1 |     351 |   0.98 |
-|  56 | Chap47     | DoubleHashFlatHashTableStEph   |     342 |      35 |     304 |       3 |     339 |   1.01 |
-|  57 | Chap37     | AVLTreeSeqMtPer                |     338 |      90 |     222 |      26 |     355 |   0.95 |
-|  58 | Chap43     | AugOrderedTableStEph           |     337 |       7 |     325 |       5 |     343 |   0.98 |
-|  59 | Chap23     | BalBinTreeStEph                |     326 |     151 |     111 |      64 |     165 |   1.98 |
-|  60 | Chap54     | BFSMtEph                       |     324 |      16 |     179 |     129 |     466 |   0.70 |
-|  61 | Chap05     | SetMtEph                       |     323 |      69 |     244 |      10 |     541 |   0.60 |
-|  62 | Chap54     | BFSMtPer                       |     322 |      16 |     177 |     129 |     474 |   0.68 |
-|  63 | vstdplus   | total_order                    |     322 |      46 |      24 |     252 |     151 |   2.13 |
-|  64 | Chap06     | LabDirGraphMtEph               |     319 |      81 |     238 |       0 |     276 |   1.16 |
-|  65 | Chap06     | LabUnDirGraphMtEph             |     317 |      77 |     240 |       0 |     267 |   1.19 |
-|  66 | Chap18     | ArraySeqStEph                  |     314 |      44 |     266 |       4 |     451 |   0.70 |
-|  67 | Chap18     | ArraySeqStPer                  |     304 |      46 |     254 |       4 |     434 |   0.70 |
-|  68 | Chap55     | DFSStEph                       |     304 |       0 |     184 |     120 |     152 |   2.00 |
-|  69 | Chap26     | MergeSortMtPer                 |     300 |      16 |     211 |      73 |     248 |   1.21 |
-|  70 | Chap43     | OrderedTableMtEph              |     300 |      49 |     251 |       0 |     350 |   0.86 |
-|  71 | Chap37     | BSTSpecsAndLemmas              |     294 |       0 |       0 |     294 |       0 |      - |
-|  72 | Chap36     | QuickSortStEph                 |     286 |      14 |     159 |     113 |     335 |   0.85 |
-|  73 | Chap47     | ParaHashTableStEph             |     286 |      48 |      81 |     157 |      59 |   4.85 |
-|  74 | Chap37     | BSTPlainStEph                  |     285 |      28 |     257 |       0 |     249 |   1.14 |
-|  75 | Chap36     | QuickSortMtEph                 |     282 |      14 |     161 |     107 |     383 |   0.74 |
-|  76 | Chap37     | BSTBBAlphaStEph                |     282 |      18 |     264 |       0 |     244 |   1.16 |
-|  77 | Chap35     | OrderStatSelectMtEph           |     281 |      12 |     217 |      52 |     207 |   1.36 |
-|  78 | Chap41     | AVLTreeSetStPer                |     280 |      24 |     197 |      59 |     174 |   1.61 |
-|  79 | Chap35     | OrderStatSelectMtPer           |     279 |      12 |     215 |      52 |     207 |   1.35 |
-|  80 | Chap52     | AdjTableGraphSpecsAndLemmas    |     279 |      21 |       0 |     258 |       0 |      - |
-|  81 | Chap37     | BSTBBAlphaMtEph                |     277 |      19 |     258 |       0 |     317 |   0.87 |
-|  82 | Chap37     | BSTPlainMtEph                  |     265 |      19 |     246 |       0 |     320 |   0.83 |
-|  83 | Chap23     | PrimTreeSeqStPer               |     264 |      55 |     209 |       0 |     383 |   0.69 |
-|  84 | Chap55     | DFSStPer                       |     262 |       0 |     142 |     120 |     133 |   1.97 |
-|  85 | Chap05     | SetStEph                       |     261 |      57 |     194 |      10 |     408 |   0.64 |
-|  86 | Chap06     | UnDirGraphMtEph                |     261 |      80 |     181 |       0 |     208 |   1.25 |
-|  87 | Chap18     | LinkedListStEph                |     261 |      40 |     217 |       4 |     366 |   0.71 |
-|  88 | Chap28     | MaxContigSubSumDivConOptStEph  |     259 |       8 |      68 |     183 |      50 |   5.18 |
-|  89 | Chap18     | LinkedListStPer                |     256 |      40 |     212 |       4 |     357 |   0.72 |
-|  90 | Chap53     | PQMinStEph                     |     252 |       7 |     245 |       0 |     285 |   0.88 |
-|  91 | Chap05     | MappingStEph                   |     248 |      78 |     170 |       0 |     149 |   1.66 |
-|  92 | Chap06     | DirGraphStEph                  |     239 |      56 |     183 |       0 |     230 |   1.04 |
-|  93 | Chap26     | ETSPStEph                      |     237 |      33 |      74 |     130 |     166 |   1.43 |
-|  94 | Chap43     | OrderedTableMtPer              |     237 |      17 |     220 |       0 |     251 |   0.94 |
-|  95 | Chap43     | OrderedSpecsAndLemmas          |     235 |      18 |       0 |     217 |       0 |      - |
-|  96 | Chap52     | AdjSeqGraphStEph               |     235 |      25 |     210 |       0 |     231 |   1.02 |
-|  97 | Chap43     | AugOrderedTableMtEph           |     222 |       7 |     210 |       5 |     418 |   0.53 |
-|  98 | Chap41     | AVLTreeSetMtEph                |     219 |      37 |     182 |       0 |     212 |   1.03 |
-|  99 | Chap52     | AdjMatrixGraphMtPer            |     207 |      26 |     181 |       0 |     278 |   0.74 |
-| 100 | Chap37     | BSTRBStEph                     |     206 |       3 |     203 |       0 |     233 |   0.88 |
-| 101 | Chap44     | DocumentIndex                  |     205 |      15 |     190 |       0 |     222 |   0.92 |
-| 102 | Chap52     | AdjMatrixGraphStPer            |     204 |      28 |     176 |       0 |     274 |   0.74 |
-| 103 | Chap17     | MathSeq                        |     201 |      59 |     142 |       0 |     231 |   0.87 |
-| 104 | Chap52     | AdjMatrixGraphMtEph            |     200 |      22 |     178 |       0 |     276 |   0.72 |
-| 105 | Chap52     | AdjSeqGraphMtEph               |     200 |      25 |     175 |       0 |     221 |   0.90 |
-| 106 | Chap53     | PQMinStPer                     |     199 |       7 |     192 |       0 |     253 |   0.79 |
-| 107 | Chap52     | AdjMatrixGraphStEph            |     196 |      22 |     174 |       0 |     270 |   0.73 |
-| 108 | Chap28     | MCSSSpec                       |     195 |      75 |       0 |     120 |       0 |      - |
-| 109 | Chap52     | AdjSeqGraphStPer               |     191 |      27 |     164 |       0 |     296 |   0.65 |
-| 110 | Chap45     | BalancedTreePQ                 |     189 |       7 |     181 |       1 |     430 |   0.44 |
-| 111 | Chap06     | LabDirGraphStEph               |     188 |      55 |     133 |       0 |     191 |   0.98 |
-| 112 | Chap52     | AdjSeqGraphMtPer               |     183 |      25 |     158 |       0 |     289 |   0.63 |
-| 113 | Chap28     | MaxContigSubSumDivConStEph     |     180 |       8 |      91 |      81 |     119 |   1.51 |
-| 114 | Chap55     | SCCStPer                       |     180 |       0 |     180 |       0 |     431 |   0.42 |
-| 115 | Chap06     | UnDirGraphStEph                |     179 |      54 |     125 |       0 |     117 |   1.53 |
-| 116 | Chap26     | ETSPMtEph                      |     179 |      38 |      76 |      65 |     308 |   0.58 |
-| 117 | Chap47     | VecChainedHashTableStEph       |     179 |       3 |     175 |       1 |     346 |   0.52 |
-| 118 | Chap47     | LinkedListChainedHashTableStEph |     178 |       3 |     174 |       1 |     349 |   0.51 |
-| 119 | Chap55     | SCCStEph                       |     178 |       0 |     178 |       0 |     370 |   0.48 |
-| 120 | Chap35     | OrderStatSelectStEph           |     177 |       6 |     145 |      26 |     102 |   1.74 |
-| 121 | Chap06     | LabUnDirGraphStEph             |     174 |      53 |     121 |       0 |     175 |   0.99 |
-| 122 | Chap39     | BSTTreapSpecsAndLemmas         |     171 |       3 |       0 |     168 |       0 |      - |
-| 123 | vstdplus   | multiset                       |     169 |       8 |       0 |     161 |       0 |      - |
-| 124 | vstdplus   | seq                            |     169 |      27 |      19 |     123 |      24 |   7.04 |
-| 125 | Chap35     | OrderStatSelectStPer           |     168 |       6 |     136 |      26 |     102 |   1.65 |
-| 126 | Chap54     | BFSStEph                       |     167 |      16 |      84 |      67 |     200 |   0.83 |
-| 127 | Chap54     | BFSStPer                       |     159 |      16 |      76 |      67 |     198 |   0.80 |
-| 128 | vstdplus   | partial_order                  |     159 |      42 |      12 |     105 |     117 |   1.36 |
-| 129 | Chap43     | OrderedSetMtEph                |     157 |      16 |     141 |       0 |     281 |   0.56 |
-| 130 | Chap41     | AVLTreeSetMtPer                |     155 |       9 |     146 |       0 |     241 |   0.64 |
-| 131 | Chap52     | EdgeSetGraphStEph              |     155 |      21 |     124 |      10 |     138 |   1.12 |
-| 132 | Chap21     | Exercise21_8                   |     153 |       8 |      75 |      70 |      40 |   3.83 |
-| 133 | Chap50     | MatrixChainMtEph               |     152 |      59 |      93 |       0 |     247 |   0.62 |
-| 134 | Chap27     | ContractSpecsAndLemmas         |     145 |       0 |       0 |     145 |       0 |      - |
-| 135 | Chap62     | StarContractionMtEph           |     143 |      13 |     130 |       0 |     162 |   0.88 |
-| 136 | Chap52     | EdgeSetGraphStPer              |     142 |      23 |     109 |      10 |     136 |   1.04 |
-| 137 | vstdplus   | float                          |     142 |      22 |      86 |      34 |      87 |   1.63 |
-| 138 | Chap51     | BottomUpDPStEph                |     141 |      20 |     108 |      13 |     245 |   0.58 |
-| 139 | standards  | multi_struct_standard          |     140 |     118 |      22 |       0 |      20 |   7.00 |
-| 140 | Chap39     | BSTSetTreapMtEph               |     138 |       6 |     132 |       0 |     133 |   1.04 |
-| 141 | vstdplus   | feq                            |     138 |      54 |       8 |      76 |       5 |  27.60 |
-| 142 | Chap65     | PrimStEph                      |     137 |      20 |      72 |      45 |     205 |   0.67 |
-| 143 | standards  | wrapping_iterators_standard    |     136 |      84 |      52 |       0 |      43 |   3.16 |
-| 144 | Chap26     | DivConReduceMtPer              |     135 |      15 |      60 |      60 |      71 |   1.90 |
-| 145 | Chap50     | MatrixChainStEph               |     135 |      54 |      81 |       0 |     141 |   0.96 |
-| 146 | Chap51     | TopDownDPMtEph                 |     135 |      16 |     115 |       4 |     208 |   0.65 |
-| 147 | Chap52     | EdgeSetGraphMtPer              |     134 |      21 |     103 |      10 |     132 |   1.02 |
-| 148 | Chap05     | RelationStEph                  |     132 |      50 |      82 |       0 |      84 |   1.57 |
-| 149 | standards  | table_of_contents_standard     |     132 |      70 |      52 |      10 |      67 |   1.97 |
-| 150 | Chap51     | BottomUpDPMtEph                |     130 |      20 |      97 |      13 |     238 |   0.55 |
-| 151 | Chap55     | DFSSpecsAndLemmas              |     129 |       5 |       0 |     124 |       0 |      - |
-| 152 | Chap66     | BoruvkaMtEph                   |     122 |      12 |     110 |       0 |     803 |   0.15 |
-| 153 | Chap50     | MatrixChainMtPer               |     121 |      55 |      66 |       0 |     182 |   0.66 |
-| 154 | Chap51     | BottomUpDPStPer                |     121 |      20 |      88 |      13 |     237 |   0.51 |
-| 155 | Chap06     | WeightedDirGraphStEphI128      |     120 |       1 |     119 |       0 |     236 |   0.51 |
-| 156 | Chap51     | TopDownDPStEph                 |     120 |      19 |      95 |       6 |     129 |   0.93 |
-| 157 | Chap06     | WeightedDirGraphStEphU128      |     119 |       1 |     118 |       0 |     232 |   0.51 |
-| 158 | Chap06     | WeightedDirGraphStEphU16       |     119 |       1 |     118 |       0 |     232 |   0.51 |
-| 159 | Chap06     | WeightedDirGraphStEphU32       |     119 |       1 |     118 |       0 |     232 |   0.51 |
-| 160 | Chap06     | WeightedDirGraphStEphU64       |     119 |       1 |     118 |       0 |     232 |   0.51 |
-| 161 | Chap06     | WeightedDirGraphStEphU8        |     119 |       1 |     118 |       0 |     232 |   0.51 |
-| 162 | Chap06     | WeightedDirGraphStEphUsize     |     119 |       1 |     118 |       0 |     232 |   0.51 |
-| 163 | Chap50     | MatrixChainStPer               |     119 |      54 |      65 |       0 |     129 |   0.92 |
-| 164 | Chap06     | WeightedDirGraphStEphI16       |     118 |       1 |     117 |       0 |     232 |   0.51 |
-| 165 | Chap06     | WeightedDirGraphStEphI32       |     118 |       1 |     117 |       0 |     232 |   0.51 |
-| 166 | Chap06     | WeightedDirGraphStEphI64       |     118 |       1 |     117 |       0 |     232 |   0.51 |
-| 167 | Chap06     | WeightedDirGraphStEphI8        |     118 |       1 |     117 |       0 |     232 |   0.51 |
-| 168 | Chap06     | WeightedDirGraphStEphIsize     |     118 |       1 |     117 |       0 |     232 |   0.51 |
-| 169 | Chap51     | BottomUpDPMtPer                |     117 |      20 |      84 |      13 |     230 |   0.51 |
-| 170 | Chap54     | BFSSpecsAndLemmas              |     115 |      13 |       0 |     102 |       0 |      - |
-| 171 | Chap56     | AllPairsResultStPerI64         |     115 |      15 |     100 |       0 |     192 |   0.60 |
-| 172 | Chap47     | ChainedHashTable               |     114 |       0 |       5 |     109 |       1 | 114.00 |
-| 173 | Chap51     | TopDownDPMtPer                 |     111 |      16 |      91 |       4 |     204 |   0.54 |
-| 174 | Chap28     | MaxContigSubSumIterStEph       |     110 |      17 |      47 |      46 |      65 |   1.69 |
-| 175 | Chap37     | BSTSetAVLMtEph                 |     110 |      36 |      74 |       0 |     362 |   0.30 |
-| 176 | Chap37     | BSTSetRBMtEph                  |     110 |      36 |      74 |       0 |     362 |   0.30 |
-| 177 | Chap37     | BSTSetSplayMtEph               |     110 |      36 |      74 |       0 |     366 |   0.30 |
-| 178 | Chap47     | FlatHashTable                  |     110 |      18 |      24 |      68 |      42 |   2.62 |
-| 179 | Chap37     | BSTSetBBAlphaMtEph             |     109 |      36 |      73 |       0 |     316 |   0.34 |
-| 180 | Chap37     | BSTSetPlainMtEph               |     109 |      36 |      73 |       0 |     316 |   0.34 |
-| 181 | Chap53     | GraphSearchMtPer               |     107 |       0 |     107 |       0 |     146 |   0.73 |
-| 182 | Chap62     | StarContractionStEph           |     104 |       3 |     101 |       0 |     131 |   0.79 |
-| 183 | Chap56     | AllPairsResultStEphI64         |     103 |      15 |      88 |       0 |     186 |   0.55 |
-| 184 | Chap53     | GraphSearchStEph               |     101 |       0 |     101 |       0 |     149 |   0.68 |
-| 185 | Chap53     | GraphSearchStPer               |     101 |       0 |     101 |       0 |     144 |   0.70 |
-| 186 | standards  | view_standard                  |      99 |      57 |      42 |       0 |      32 |   3.09 |
-| 187 | Chap59     | JohnsonMtEphI64                |      97 |       0 |      97 |       0 |     302 |   0.32 |
-| 188 | Chap05     | KleeneStPer                    |      95 |      17 |      11 |      67 |      39 |   2.44 |
-| 189 | Chap26     | MergeSortStPer                 |      94 |      16 |      57 |      21 |     102 |   0.92 |
-| 190 | Chap59     | JohnsonMtEphF64                |      94 |       0 |      94 |       0 |     297 |   0.32 |
-| 191 | Chap26     | ScanDCMtPer                    |      93 |      17 |      64 |      12 |     163 |   0.57 |
-| 192 | Chap26     | ScanDCStPer                    |      92 |       9 |      71 |      12 |     142 |   0.65 |
-| 193 | src        | Types                          |      92 |      48 |       4 |      40 |      16 |   5.75 |
-| 194 | Chap51     | TopDownDPStPer                 |      91 |      19 |      66 |       6 |     124 |   0.73 |
-| 195 | standards  | deep_view_standard             |      90 |      52 |      28 |      10 |      16 |   5.62 |
-| 196 | vstdplus   | hash_set_with_view_plus        |      90 |      42 |      42 |       6 |      42 |   2.14 |
-| 197 | Chap59     | JohnsonStEphI64                |      87 |       0 |      87 |       0 |     295 |   0.29 |
-| 198 | standards  | mod_standard                   |      82 |      48 |      34 |       0 |      35 |   2.34 |
-| 199 | standards  | iterators_standard             |      79 |      48 |      31 |       0 |      31 |   2.55 |
-| 200 | Chap59     | JohnsonStEphF64                |      78 |       0 |      78 |       0 |     261 |   0.30 |
-| 201 | Chap28     | MaxContigSubSumDivConMtEph     |      76 |       8 |      68 |       0 |      97 |   0.78 |
-| 202 | vstdplus   | hash_map_with_view_plus        |      74 |      39 |      35 |       0 |      64 |   1.16 |
-| 203 | Chap28     | MaxContigSubSumOptStEph        |      73 |       0 |      30 |      43 |     117 |   0.62 |
-| 204 | Chap28     | MaxContigSubSumReducedMcsseStEph |      71 |       8 |      63 |       0 |      81 |   0.88 |
-| 205 | Chap06     | WeightedDirGraphStEphF64       |      69 |       0 |      69 |       0 |     141 |   0.49 |
-| 206 | Chap18     | ArraySeqSpecsAndLemmas         |      66 |      21 |       0 |      45 |       0 |      - |
-| 207 | Chap19     | ArraySeqSpecsAndLemmas         |      66 |      21 |       0 |      45 |       0 |      - |
-| 208 | Chap21     | Exercise21_9                   |      66 |       3 |       0 |      63 |       0 |      - |
-| 209 | Chap21     | Problem21_3                    |      66 |       0 |      66 |       0 |      70 |   0.94 |
-| 210 | Chap38     | BSTParaSpecsAndLemmas          |      66 |       3 |       0 |      63 |       0 |      - |
-| 211 | Chap49     | MinEditDistMtEph               |      66 |      19 |      47 |       0 |     170 |   0.39 |
-| 212 | Chap28     | MaxContigSubSumDivConOptMtEph  |      65 |       8 |      57 |       0 |      45 |   1.44 |
-| 213 | Chap50     | OptBinSearchTreeMtEph          |      65 |      15 |      50 |       0 |     271 |   0.24 |
-| 214 | Chap66     | BoruvkaStEph                   |      63 |      13 |      50 |       0 |     327 |   0.19 |
-| 215 | Chap27     | ScanContractMtEph              |      61 |       0 |      61 |       0 |     125 |   0.49 |
-| 216 | Chap27     | ScanContractStEph              |      60 |       0 |      60 |       0 |     150 |   0.40 |
-| 217 | Chap62     | StarPartitionStEph             |      59 |      13 |      46 |       0 |     112 |   0.53 |
-| 218 | standards  | mut_standard                   |      56 |      12 |      44 |       0 |     101 |   0.55 |
-| 219 | Chap56     | PathWeightUtilsStPer           |      55 |      51 |       4 |       0 |     166 |   0.33 |
-| 220 | Chap02     | FibonacciHFScheduler           |      54 |       4 |       8 |      42 |      31 |   1.74 |
-| 221 | Chap56     | PathWeightUtilsStEph           |      53 |      51 |       2 |       0 |     164 |   0.32 |
-| 222 | Chap49     | MinEditDistStEph               |      52 |      17 |      35 |       0 |      90 |   0.58 |
-| 223 | Chap57     | DijkstraStEphU64               |      52 |       6 |      42 |       4 |     143 |   0.36 |
-| 224 | Chap11     | FibonacciStEph                 |      51 |       9 |      11 |      31 |      41 |   1.24 |
-| 225 | Chap27     | ReduceContractMtEph            |      51 |       0 |      51 |       0 |      61 |   0.84 |
-| 226 | Chap64     | TSPApproxStEph                 |      51 |       3 |      48 |       0 |     226 |   0.23 |
-| 227 | Chap21     | Algorithm21_1                  |      49 |       4 |      17 |      28 |      87 |   0.56 |
-| 228 | Chap56     | SSSPResultStEphI64             |      49 |       7 |      42 |       0 |     125 |   0.39 |
-| 229 | Chap57     | DijkstraStEphF64               |      49 |       6 |      37 |       6 |     156 |   0.31 |
-| 230 | Chap27     | ReduceContractStEph            |      47 |       0 |      47 |       0 |      75 |   0.63 |
-| 231 | Chap49     | MinEditDistMtPer               |      47 |      19 |      28 |       0 |     148 |   0.32 |
-| 232 | Chap49     | SubsetSumMtEph                 |      47 |      20 |      27 |       0 |     143 |   0.33 |
-| 233 | Chap56     | AllPairsResultStPerF64         |      47 |      12 |      35 |       0 |     189 |   0.25 |
-| 234 | Chap56     | SSSPResultStPerI64             |      47 |       7 |      40 |       0 |     120 |   0.39 |
-| 235 | Chap56     | SSSPResultStPerF64             |      46 |      10 |      36 |       0 |     109 |   0.42 |
-| 236 | standards  | spec_wf_standard               |      46 |      12 |      34 |       0 |      32 |   1.44 |
-| 237 | Chap56     | AllPairsResultStEphF64         |      45 |      12 |      33 |       0 |     189 |   0.24 |
-| 238 | Chap50     | OptBinSearchTreeStEph          |      44 |       6 |      38 |       0 |     137 |   0.32 |
-| 239 | Chap50     | OptBinSearchTreeMtPer          |      43 |      11 |      32 |       0 |     197 |   0.22 |
-| 240 | Chap56     | SSSPResultStEphF64             |      43 |       7 |      36 |       0 |     102 |   0.42 |
-| 241 | standards  | spec_naming_convention         |      43 |      20 |      23 |       0 |      52 |   0.83 |
-| 242 | Chap26     | DivConReduceStPer              |      42 |      15 |      27 |       0 |      67 |   0.63 |
-| 243 | arithmetic | power2_plus                    |      41 |       0 |       0 |      41 |       0 |      - |
-| 244 | Chap49     | SubsetSumMtPer                 |      40 |      20 |      20 |       0 |     130 |   0.31 |
-| 245 | Chap21     | Problem21_4                    |      39 |       0 |      39 |       0 |      94 |   0.41 |
-| 246 | Chap49     | MinEditDistStPer               |      39 |      17 |      22 |       0 |      82 |   0.48 |
-| 247 | Chap58     | BellmanFordStEphI64            |      39 |       0 |      39 |       0 |     191 |   0.20 |
-| 248 | vstdplus   | checked_nat                    |      39 |      17 |       4 |      18 |       4 |   9.75 |
-| 249 | Chap03     | InsertionSortStEph             |      37 |       9 |      28 |       0 |      49 |   0.76 |
-| 250 | Chap21     | Exercise21_5                   |      36 |       0 |      13 |      23 |      31 |   1.16 |
-| 251 | standards  | using_closures_standard        |      36 |      12 |      24 |       0 |      69 |   0.52 |
-| 252 | Chap21     | Algorithm21_6                  |      35 |       0 |      19 |      16 |      77 |   0.45 |
-| 253 | standards  | iterative_vs_recursive_standard |      35 |       6 |      22 |       7 |      39 |   0.90 |
-| 254 | Chap21     | Algorithm21_2                  |      34 |       0 |      34 |       0 |      55 |   0.62 |
-| 255 | standards  | rwlock_tsm_standard            |      34 |      14 |      20 |       0 |      62 |   0.55 |
-| 256 | Chap50     | OptBinSearchTreeStPer          |      33 |       6 |      27 |       0 |     125 |   0.26 |
-| 257 | Chap57     | StackStEph                     |      33 |       6 |      27 |       0 |      24 |   1.38 |
-| 258 | standards  | toplevel_coarse_rwlocks_for_mt_modules |      33 |      11 |      22 |       0 |      48 |   0.69 |
-| 259 | vstdplus   | checked_int                    |      33 |      17 |       5 |      11 |       5 |   6.60 |
-| 260 | Chap58     | BellmanFordStEphF64            |      31 |       0 |      31 |       0 |     181 |   0.17 |
-| 261 | Chap51     | SeqSpecsAndLemmas              |      30 |      18 |       0 |      12 |       0 |      - |
-| 262 | Chap49     | SubsetSumStEph                 |      29 |      14 |      15 |       0 |      80 |   0.36 |
-| 263 | Chap21     | Exercise21_7                   |      28 |       5 |      23 |       0 |      51 |   0.55 |
-| 264 | Chap63     | ConnectivityMtEph              |      28 |       3 |      25 |       0 |     115 |   0.24 |
-| 265 | Chap63     | ConnectivityStEph              |      28 |       3 |      25 |       0 |     113 |   0.25 |
-| 266 | standards  | capacity_bounds_standard       |      27 |       4 |      23 |       0 |      69 |   0.39 |
-| 267 | Chap49     | SubsetSumStPer                 |      26 |      14 |      12 |       0 |      76 |   0.34 |
-| 268 | Chap21     | Algorithm21_5                  |      25 |       0 |      25 |       0 |      24 |   1.04 |
-| 269 | Chap28     | MaxContigSubSumOptMtEph        |      23 |       0 |      23 |       0 |     102 |   0.23 |
-| 270 | Chap28     | MaxContigSubSumBruteStEph      |      19 |       8 |      11 |       0 |      74 |   0.26 |
-| 271 | Chap02     | HFSchedulerMtEph               |      18 |       0 |      18 |       0 |      65 |   0.28 |
-| 272 | Chap28     | MaxContigSubSumReducedStEph    |      18 |       8 |      10 |       0 |      73 |   0.25 |
-| 273 | Chap61     | EdgeContractionStEph           |      17 |       3 |      14 |       0 |      85 |   0.20 |
-| 274 | Chap45     | HeapsortExample                |      16 |      12 |       4 |       0 |      59 |   0.27 |
-| 275 | Chap61     | EdgeContractionMtEph           |      16 |       3 |      13 |       0 |     132 |   0.12 |
-| 276 | Chap64     | SpanTreeMtEph                  |      16 |       3 |      13 |       0 |     130 |   0.12 |
-| 277 | Chap64     | SpanTreeStEph                  |      16 |       3 |      13 |       0 |     126 |   0.13 |
-| 278 | standards  | arc_usage_standard             |      16 |       9 |       7 |       0 |      42 |   0.38 |
-| 279 | vstdplus   | clone_plus                     |      16 |       0 |      16 |       0 |      24 |   0.67 |
-| 280 | vstdplus   | strings                        |      16 |      11 |       5 |       0 |      10 |   1.60 |
-| 281 | Chap61     | VertexMatchingStEph            |      15 |       3 |      12 |       0 |     105 |   0.14 |
-| 282 | Chap61     | VertexMatchingMtEph            |      14 |       3 |      11 |       0 |     153 |   0.09 |
-| 283 | src        | ParaPairs                      |      14 |       0 |      14 |       0 |      20 |   0.70 |
-| 284 | vstdplus   | hashed_checked_u32             |      13 |       5 |       0 |       8 |       6 |   2.17 |
-| 285 | standards  | hfscheduler_standard           |      12 |       3 |       9 |       0 |     103 |   0.12 |
-| 286 | vstdplus   | pervasives_plus                |      12 |       3 |       9 |       0 |       4 |   3.00 |
-| 287 | Chap11     | FibonacciMtEphRecomputes       |      11 |       0 |      11 |       0 |      82 |   0.13 |
-| 288 | Chap11     | FibonacciMtPerTSM              |      11 |       0 |      11 |       0 |      80 |   0.14 |
-| 289 | Chap21     | Problem21_1                    |      11 |       0 |      11 |       0 |      44 |   0.25 |
-| 290 | standards  | finite_sets_standard           |      11 |       6 |       5 |       0 |      17 |   0.65 |
-| 291 | vstdplus   | clone_view                     |      11 |       0 |      11 |       0 |      34 |   0.32 |
-| 292 | Chap11     | FibonacciMtEph2Threads         |      10 |       0 |      10 |       0 |      78 |   0.13 |
-| 293 | standards  | tsm_standard                   |       9 |       0 |       9 |       0 |      68 |   0.13 |
-| 294 | vstdplus   | monoid                         |       9 |       9 |       0 |       0 |       0 |      - |
-| 295 | vstdplus   | VecQueue                       |       8 |       1 |       7 |       0 |      12 |   0.67 |
-| 296 | standards  | partial_eq_eq_clone_standard   |       7 |       3 |       4 |       0 |      10 |   0.70 |
-| 297 | Chap11     | FibonacciMtPerAllThreads       |       6 |       0 |       6 |       0 |      24 |   0.25 |
-| 298 | Chap12     | Exercise12_5                   |       6 |       1 |       5 |       0 |      60 |   0.10 |
-| 299 | Chap30     | Probability                    |       6 |       6 |       0 |       0 |      36 |   0.17 |
-| 300 | Chap12     | Exercise12_1                   |       5 |       0 |       5 |       0 |      50 |   0.10 |
-| 301 | vstdplus   | accept                         |       5 |       0 |       0 |       5 |       0 |      - |
-| 302 | vstdplus   | smart_ptrs                     |       5 |       0 |       5 |       0 |      16 |   0.31 |
-| 303 | Chap41     | Example41_3                    |       4 |       0 |       4 |       0 |     151 |   0.03 |
-| 304 | vstdplus   | arc_rwlock                     |       4 |       0 |       4 |       0 |      17 |   0.24 |
-| 305 | vstdplus   | threads_plus                   |       4 |       0 |       4 |       0 |      21 |   0.19 |
-| 306 | vstdplus   | rand                           |       2 |       0 |       2 |       0 |      12 |   0.17 |
-| 307 | Chap42     | Example42_1                    |       1 |       0 |       0 |       1 |       0 |      - |
-| 308 | Chap43     | Example43_1                    |       1 |       0 |       0 |       1 |       0 |      - |
-| 309 | Chap44     | Example44_1                    |       1 |       0 |       0 |       1 |       0 |      - |
-| 310 | Chap45     | Example45_2                    |       1 |       0 |       0 |       1 |      16 |   0.06 |
-| 311 | Chap45     | HeapsortExample                |       1 |       0 |       0 |       1 |      59 |   0.02 |
+|   2 | Chap39     | BSTTreapStEph                  |   1,702 |     127 |   1,411 |     164 |     925 |   1.84 |
+|   3 | Chap42     | TableStPer                     |   1,702 |      40 |   1,614 |      48 |     835 |   2.04 |
+|   4 | Chap42     | TableStEph                     |   1,485 |      23 |   1,437 |      25 |     868 |   1.71 |
+|   5 | Chap42     | TableMtEph                     |   1,396 |      16 |   1,380 |       0 |     860 |   1.62 |
+|   6 | Chap65     | UnionFindStEph                 |   1,330 |     174 |     270 |     886 |     235 |   5.66 |
+|   7 | Chap37     | BSTSplayMtEph                  |   1,174 |      82 |   1,026 |      66 |     593 |   1.98 |
+|   8 | vstdplus   | seq_set                        |   1,055 |      74 |       0 |     981 |       0 |      - |
+|   9 | Chap37     | BSTSplayStEph                  |     967 |      71 |     809 |      87 |     395 |   2.45 |
+|  10 | Chap45     | BinaryHeapPQ                   |     924 |      53 |     763 |     108 |     668 |   1.38 |
+|  11 | Chap38     | BSTParaMtEph                   |     810 |      35 |     775 |       0 |     638 |   1.27 |
+|  12 | Chap38     | BSTParaStEph                   |     804 |      34 |     770 |       0 |     481 |   1.67 |
+|  13 | Chap39     | BSTParaTreapMtEph              |     796 |      31 |     765 |       0 |     570 |   1.40 |
+|  14 | Chap45     | SortedListPQ                   |     703 |      16 |     615 |      72 |     367 |   1.92 |
+|  15 | Chap43     | OrderedTableStPer              |     695 |      40 |     655 |       0 |     417 |   1.67 |
+|  16 | Chap18     | ArraySeqMtEph                  |     690 |      53 |     609 |      28 |     816 |   0.85 |
+|  17 | Chap47     | QuadProbFlatHashTableStEph     |     674 |      41 |     345 |     288 |     328 |   2.05 |
+|  18 | Chap39     | BSTTreapMtEph                  |     672 |     119 |     380 |     173 |     478 |   1.41 |
+|  19 | Chap40     | BSTKeyValueStEph               |     656 |     114 |     378 |     164 |     507 |   1.29 |
+|  20 | Chap37     | BSTRBMtEph                     |     654 |      68 |     512 |      74 |     553 |   1.18 |
+|  21 | Chap18     | ArraySeqMtPer                  |     652 |      44 |     568 |      40 |     887 |   0.74 |
+|  22 | Chap43     | OrderedTableStEph              |     642 |      35 |     607 |       0 |     442 |   1.45 |
+|  23 | Chap55     | CycleDetectStEph               |     642 |      22 |     456 |     164 |     216 |   2.97 |
+|  24 | Chap18     | ArraySeq                       |     639 |      89 |     418 |     132 |     625 |   1.02 |
+|  25 | Chap40     | BSTReducedStEph                |     638 |      98 |     448 |      92 |     604 |   1.06 |
+|  26 | Chap19     | ArraySeqMtEph                  |     613 |      44 |     512 |      57 |     719 |   0.85 |
+|  27 | Chap40     | BSTSizeStEph                   |     599 |      92 |     413 |      94 |     584 |   1.03 |
+|  28 | Chap19     | ArraySeqMtEphSlice             |     592 |      75 |     407 |     110 |     798 |   0.74 |
+|  29 | Chap62     | StarPartitionMtEph             |     592 |      21 |     571 |       0 |     989 |   0.60 |
+|  30 | Chap18     | ArraySeqMtEphSlice             |     590 |      75 |     405 |     110 |     788 |   0.75 |
+|  31 | Chap55     | TopoSortStEph                  |     583 |      70 |     365 |     148 |     283 |   2.06 |
+|  32 | Chap43     | OrderedSetStPer                |     533 |      40 |     464 |      29 |     268 |   1.99 |
+|  33 | Chap55     | TopoSortStPer                  |     531 |      70 |     344 |     117 |     292 |   1.82 |
+|  34 | Chap52     | AdjTableGraphMtPer             |     529 |      24 |     505 |       0 |     218 |   2.43 |
+|  35 | Chap42     | TableSpecsAndLemmas            |     525 |      12 |       0 |     513 |       0 |      - |
+|  36 | Chap55     | CycleDetectStPer               |     508 |      24 |     325 |     159 |     176 |   2.89 |
+|  37 | Chap43     | OrderedSetStEph                |     495 |      38 |     428 |      29 |     288 |   1.72 |
+|  38 | Chap37     | AVLTreeSeq                     |     493 |     120 |     335 |      38 |     534 |   0.92 |
+|  39 | Chap45     | LeftistHeapPQ                  |     493 |      89 |     323 |      81 |     466 |   1.06 |
+|  40 | Chap36     | QuickSortMtEphSlice            |     481 |      17 |     343 |     121 |     421 |   1.14 |
+|  41 | Chap41     | ArraySetStEph                  |     479 |      15 |     352 |     112 |     426 |   1.12 |
+|  42 | Chap37     | BSTAVLStEph                    |     477 |      33 |     444 |       0 |     310 |   1.54 |
+|  43 | Chap52     | AdjTableGraphStPer             |     470 |      26 |     419 |      25 |     220 |   2.14 |
+|  44 | Chap37     | AVLTreeSeqStEph                |     467 |     107 |     314 |      46 |     540 |   0.86 |
+|  45 | Chap06     | DirGraphMtEph                  |     436 |     105 |     331 |       0 |     352 |   1.24 |
+|  46 | Chap45     | UnsortedListPQ                 |     435 |      16 |     418 |       1 |     249 |   1.75 |
+|  47 | Chap41     | ArraySetEnumMtEph              |     434 |      23 |     351 |      60 |     343 |   1.27 |
+|  48 | Chap52     | AdjTableGraphStEph             |     432 |      26 |     406 |       0 |     205 |   2.11 |
+|  49 | Chap47     | LinProbFlatHashTableStEph      |     409 |      33 |     376 |       0 |     312 |   1.31 |
+|  50 | Chap37     | AVLTreeSeqStPer                |     408 |      98 |     262 |      48 |     365 |   1.12 |
+|  51 | Chap37     | BSTAVLMtEph                    |     406 |      34 |     372 |       0 |     354 |   1.15 |
+|  52 | Chap43     | AugOrderedTableStPer           |     380 |       9 |     366 |       5 |     384 |   0.99 |
+|  53 | Chap19     | ArraySeqStPer                  |     379 |      46 |     296 |      37 |     447 |   0.85 |
+|  54 | Chap47     | DoubleHashFlatHashTableStEph   |     379 |      35 |     341 |       3 |     362 |   1.05 |
+|  55 | Chap19     | ArraySeqStEph                  |     378 |      46 |     295 |      37 |     439 |   0.86 |
+|  56 | Chap26     | MergeSortMtPer                 |     373 |      16 |     270 |      87 |     256 |   1.46 |
+|  57 | Chap47     | StructChainedHashTable         |     371 |      30 |     340 |       1 |     372 |   1.00 |
+|  58 | Chap41     | AVLTreeSetStEph                |     349 |      25 |     256 |      68 |     204 |   1.71 |
+|  59 | Chap54     | BFSMtEph                       |     347 |      16 |     188 |     143 |     483 |   0.72 |
+|  60 | Chap54     | BFSMtPer                       |     347 |      16 |     188 |     143 |     488 |   0.71 |
+|  61 | Chap43     | AugOrderedTableStEph           |     337 |       7 |     325 |       5 |     343 |   0.98 |
+|  62 | Chap37     | AVLTreeSeqMtPer                |     336 |      91 |     219 |      26 |     345 |   0.97 |
+|  63 | Chap06     | LabDirGraphMtEph               |     335 |      81 |     254 |       0 |     289 |   1.16 |
+|  64 | Chap06     | LabUnDirGraphMtEph             |     329 |      77 |     252 |       0 |     280 |   1.18 |
+|  65 | Chap55     | DFSStEph                       |     329 |       0 |     190 |     139 |     179 |   1.84 |
+|  66 | Chap23     | BalBinTreeStEph                |     326 |     151 |     111 |      64 |     169 |   1.93 |
+|  67 | Chap05     | SetMtEph                       |     323 |      69 |     244 |      10 |     541 |   0.60 |
+|  68 | vstdplus   | total_order                    |     322 |      46 |      24 |     252 |     151 |   2.13 |
+|  69 | Chap18     | ArraySeqStEph                  |     320 |      44 |     272 |       4 |     462 |   0.69 |
+|  70 | Chap35     | OrderStatSelectMtEph           |     314 |      12 |     242 |      60 |     217 |   1.45 |
+|  71 | Chap35     | OrderStatSelectMtPer           |     312 |      12 |     240 |      60 |     217 |   1.44 |
+|  72 | Chap18     | ArraySeqStPer                  |     310 |      46 |     260 |       4 |     445 |   0.70 |
+|  73 | Chap37     | BSTSpecsAndLemmas              |     310 |       0 |       0 |     310 |       0 |      - |
+|  74 | Chap43     | OrderedTableMtEph              |     300 |      49 |     251 |       0 |     350 |   0.86 |
+|  75 | Chap47     | ParaHashTableStEph             |     297 |      48 |      82 |     167 |      62 |   4.79 |
+|  76 | Chap37     | BSTPlainStEph                  |     288 |      28 |     260 |       0 |     246 |   1.17 |
+|  77 | Chap36     | QuickSortStEph                 |     286 |      14 |     159 |     113 |     335 |   0.85 |
+|  78 | Chap37     | BSTBBAlphaStEph                |     284 |      18 |     266 |       0 |     245 |   1.16 |
+|  79 | Chap36     | QuickSortMtEph                 |     282 |      14 |     161 |     107 |     383 |   0.74 |
+|  80 | Chap55     | DFSStPer                       |     281 |       0 |     141 |     140 |     159 |   1.77 |
+|  81 | Chap41     | AVLTreeSetStPer                |     280 |      24 |     197 |      59 |     174 |   1.61 |
+|  82 | Chap37     | BSTBBAlphaMtEph                |     279 |      19 |     260 |       0 |     316 |   0.88 |
+|  83 | Chap52     | AdjTableGraphSpecsAndLemmas    |     279 |      21 |       0 |     258 |       0 |      - |
+|  84 | Chap23     | PrimTreeSeqStPer               |     272 |      55 |     217 |       0 |     404 |   0.67 |
+|  85 | Chap37     | BSTPlainMtEph                  |     268 |      19 |     249 |       0 |     313 |   0.86 |
+|  86 | Chap06     | UnDirGraphMtEph                |     266 |      80 |     186 |       0 |     221 |   1.20 |
+|  87 | Chap28     | MaxContigSubSumDivConOptStEph  |     266 |       8 |      72 |     186 |      54 |   4.93 |
+|  88 | Chap18     | LinkedListStEph                |     263 |      40 |     219 |       4 |     374 |   0.70 |
+|  89 | Chap26     | ETSPMtEph                      |     262 |      41 |      84 |     137 |     308 |   0.85 |
+|  90 | Chap05     | SetStEph                       |     261 |      57 |     194 |      10 |     408 |   0.64 |
+|  91 | Chap18     | LinkedListStPer                |     258 |      40 |     214 |       4 |     365 |   0.71 |
+|  92 | Chap26     | ETSPStEph                      |     254 |      33 |      83 |     138 |     176 |   1.44 |
+|  93 | Chap53     | PQMinStEph                     |     254 |       7 |     247 |       0 |     283 |   0.90 |
+|  94 | Chap06     | DirGraphStEph                  |     251 |      56 |     195 |       0 |     236 |   1.06 |
+|  95 | Chap05     | MappingStEph                   |     248 |      78 |     170 |       0 |     149 |   1.66 |
+|  96 | Chap43     | OrderedTableMtPer              |     237 |      17 |     220 |       0 |     251 |   0.94 |
+|  97 | Chap43     | OrderedSpecsAndLemmas          |     235 |      18 |       0 |     217 |       0 |      - |
+|  98 | Chap52     | AdjSeqGraphStEph               |     235 |      25 |     210 |       0 |     231 |   1.02 |
+|  99 | Chap43     | AugOrderedTableMtEph           |     222 |       7 |     210 |       5 |     418 |   0.53 |
+| 100 | Chap44     | DocumentIndex                  |     222 |      15 |     207 |       0 |     229 |   0.97 |
+| 101 | Chap41     | AVLTreeSetMtEph                |     219 |      37 |     182 |       0 |     212 |   1.03 |
+| 102 | Chap17     | MathSeq                        |     209 |      59 |     150 |       0 |     236 |   0.89 |
+| 103 | Chap37     | BSTRBStEph                     |     207 |       3 |     204 |       0 |     238 |   0.87 |
+| 104 | Chap52     | AdjMatrixGraphMtPer            |     207 |      26 |     181 |       0 |     278 |   0.74 |
+| 105 | Chap52     | AdjMatrixGraphStPer            |     204 |      28 |     176 |       0 |     274 |   0.74 |
+| 106 | Chap35     | OrderStatSelectStEph           |     203 |       6 |     165 |      32 |     109 |   1.86 |
+| 107 | Chap47     | VecChainedHashTableStEph       |     202 |       3 |     198 |       1 |     367 |   0.55 |
+| 108 | Chap47     | LinkedListChainedHashTableStEph |     201 |       3 |     197 |       1 |     371 |   0.54 |
+| 109 | Chap52     | AdjMatrixGraphMtEph            |     200 |      22 |     178 |       0 |     276 |   0.72 |
+| 110 | Chap52     | AdjSeqGraphMtEph               |     200 |      25 |     175 |       0 |     221 |   0.90 |
+| 111 | Chap53     | PQMinStPer                     |     199 |       7 |     192 |       0 |     253 |   0.79 |
+| 112 | Chap28     | MCSSSpec                       |     197 |      75 |       0 |     122 |       0 |      - |
+| 113 | Chap52     | AdjMatrixGraphStEph            |     196 |      22 |     174 |       0 |     270 |   0.73 |
+| 114 | Chap35     | OrderStatSelectStPer           |     193 |       6 |     155 |      32 |     110 |   1.75 |
+| 115 | Chap52     | AdjSeqGraphStPer               |     191 |      27 |     164 |       0 |     296 |   0.65 |
+| 116 | Chap45     | BalancedTreePQ                 |     188 |       7 |     180 |       1 |     447 |   0.42 |
+| 117 | Chap28     | MaxContigSubSumDivConStEph     |     187 |       8 |      97 |      82 |     126 |   1.48 |
+| 118 | Chap06     | UnDirGraphStEph                |     183 |      54 |     129 |       0 |     121 |   1.51 |
+| 119 | Chap52     | AdjSeqGraphMtPer               |     183 |      25 |     158 |       0 |     289 |   0.63 |
+| 120 | Chap54     | BFSStEph                       |     180 |      16 |      91 |      73 |     206 |   0.87 |
+| 121 | Chap06     | LabUnDirGraphStEph             |     178 |      53 |     125 |       0 |     181 |   0.98 |
+| 122 | Chap39     | BSTTreapSpecsAndLemmas         |     178 |       3 |       0 |     175 |       0 |      - |
+| 123 | Chap06     | LabDirGraphStEph               |     174 |      55 |     119 |       0 |     217 |   0.80 |
+| 124 | Chap55     | SCCStPer                       |     171 |       0 |     171 |       0 |     486 |   0.35 |
+| 125 | vstdplus   | multiset                       |     169 |       8 |       0 |     161 |       0 |      - |
+| 126 | vstdplus   | seq                            |     169 |      27 |      19 |     123 |      24 |   7.04 |
+| 127 | Chap54     | BFSStPer                       |     168 |      16 |      79 |      73 |     203 |   0.83 |
+| 128 | Chap55     | SCCStEph                       |     163 |       0 |     163 |       0 |     422 |   0.39 |
+| 129 | Chap21     | Exercise21_8                   |     160 |       8 |      81 |      71 |      41 |   3.90 |
+| 130 | vstdplus   | partial_order                  |     159 |      42 |      12 |     105 |     117 |   1.36 |
+| 131 | Chap43     | OrderedSetMtEph                |     157 |      16 |     141 |       0 |     281 |   0.56 |
+| 132 | Chap41     | AVLTreeSetMtPer                |     155 |       9 |     146 |       0 |     241 |   0.64 |
+| 133 | Chap52     | EdgeSetGraphStEph              |     155 |      21 |     124 |      10 |     138 |   1.12 |
+| 134 | Chap27     | ContractSpecsAndLemmas         |     152 |       0 |       0 |     152 |       0 |      - |
+| 135 | Chap50     | MatrixChainMtEph               |     152 |      59 |      93 |       0 |     264 |   0.58 |
+| 136 | Chap62     | StarContractionMtEph           |     151 |      13 |     138 |       0 |     169 |   0.89 |
+| 137 | Chap65     | PrimStEph                      |     150 |      20 |      85 |      45 |     206 |   0.73 |
+| 138 | Chap26     | DivConReduceMtPer              |     146 |      15 |      65 |      66 |      73 |   2.00 |
+| 139 | Chap55     | DFSSpecsAndLemmas              |     143 |       5 |       0 |     138 |       0 |      - |
+| 140 | Chap51     | BottomUpDPStEph                |     142 |      20 |     109 |      13 |     248 |   0.57 |
+| 141 | Chap52     | EdgeSetGraphStPer              |     142 |      23 |     109 |      10 |     136 |   1.04 |
+| 142 | vstdplus   | float                          |     142 |      22 |      86 |      34 |      87 |   1.63 |
+| 143 | Chap39     | BSTSetTreapMtEph               |     141 |       6 |     135 |       0 |     136 |   1.04 |
+| 144 | standards  | multi_struct_standard          |     140 |     118 |      22 |       0 |      20 |   7.00 |
+| 145 | vstdplus   | feq                            |     138 |      54 |       8 |      76 |       5 |  27.60 |
+| 146 | Chap51     | TopDownDPMtEph                 |     137 |      16 |     117 |       4 |     220 |   0.62 |
+| 147 | standards  | wrapping_iterators_standard    |     136 |      84 |      52 |       0 |      43 |   3.16 |
+| 148 | Chap50     | MatrixChainStEph               |     135 |      54 |      81 |       0 |     144 |   0.94 |
+| 149 | Chap52     | EdgeSetGraphMtPer              |     134 |      21 |     103 |      10 |     132 |   1.02 |
+| 150 | Chap05     | RelationStEph                  |     132 |      50 |      82 |       0 |      84 |   1.57 |
+| 151 | standards  | table_of_contents_standard     |     132 |      70 |      52 |      10 |      67 |   1.97 |
+| 152 | Chap51     | BottomUpDPMtEph                |     131 |      20 |      98 |      13 |     241 |   0.54 |
+| 153 | Chap06     | WeightedDirGraphStEphI128      |     128 |       1 |     127 |       0 |     246 |   0.52 |
+| 154 | Chap06     | WeightedDirGraphStEphU128      |     127 |       1 |     126 |       0 |     241 |   0.53 |
+| 155 | Chap06     | WeightedDirGraphStEphU16       |     127 |       1 |     126 |       0 |     241 |   0.53 |
+| 156 | Chap06     | WeightedDirGraphStEphU32       |     127 |       1 |     126 |       0 |     241 |   0.53 |
+| 157 | Chap06     | WeightedDirGraphStEphU64       |     127 |       1 |     126 |       0 |     241 |   0.53 |
+| 158 | Chap06     | WeightedDirGraphStEphU8        |     127 |       1 |     126 |       0 |     241 |   0.53 |
+| 159 | Chap06     | WeightedDirGraphStEphUsize     |     127 |       1 |     126 |       0 |     241 |   0.53 |
+| 160 | Chap06     | WeightedDirGraphStEphI16       |     126 |       1 |     125 |       0 |     241 |   0.52 |
+| 161 | Chap06     | WeightedDirGraphStEphI32       |     126 |       1 |     125 |       0 |     241 |   0.52 |
+| 162 | Chap06     | WeightedDirGraphStEphI64       |     126 |       1 |     125 |       0 |     241 |   0.52 |
+| 163 | Chap06     | WeightedDirGraphStEphI8        |     126 |       1 |     125 |       0 |     241 |   0.52 |
+| 164 | Chap06     | WeightedDirGraphStEphIsize     |     126 |       1 |     125 |       0 |     241 |   0.52 |
+| 165 | Chap50     | MatrixChainMtPer               |     124 |      55 |      69 |       0 |     189 |   0.66 |
+| 166 | Chap51     | TopDownDPStEph                 |     123 |      19 |      98 |       6 |     133 |   0.92 |
+| 167 | Chap51     | BottomUpDPStPer                |     122 |      20 |      89 |      13 |     240 |   0.51 |
+| 168 | Chap66     | BoruvkaMtEph                   |     122 |      12 |     110 |       0 |     812 |   0.15 |
+| 169 | Chap50     | MatrixChainStPer               |     120 |      54 |      66 |       0 |     132 |   0.91 |
+| 170 | Chap65     | KruskalStEph                   |     120 |       3 |      81 |      36 |     210 |   0.57 |
+| 171 | Chap54     | BFSSpecsAndLemmas              |     119 |      13 |       0 |     106 |       0 |      - |
+| 172 | Chap47     | ChainedHashTable               |     118 |       0 |       5 |     113 |       1 | 118.00 |
+| 173 | Chap51     | BottomUpDPMtPer                |     118 |      20 |      85 |      13 |     233 |   0.51 |
+| 174 | Chap56     | AllPairsResultStPerI64         |     115 |      15 |     100 |       0 |     192 |   0.60 |
+| 175 | Chap47     | FlatHashTable                  |     114 |      18 |      24 |      72 |      43 |   2.65 |
+| 176 | Chap51     | TopDownDPMtPer                 |     113 |      16 |      93 |       4 |     215 |   0.53 |
+| 177 | Chap28     | MaxContigSubSumIterStEph       |     111 |      17 |      48 |      46 |      69 |   1.61 |
+| 178 | Chap37     | BSTSetAVLMtEph                 |     110 |      36 |      74 |       0 |     362 |   0.30 |
+| 179 | Chap37     | BSTSetRBMtEph                  |     110 |      36 |      74 |       0 |     362 |   0.30 |
+| 180 | Chap37     | BSTSetSplayMtEph               |     110 |      36 |      74 |       0 |     366 |   0.30 |
+| 181 | Chap37     | BSTSetBBAlphaMtEph             |     109 |      36 |      73 |       0 |     316 |   0.34 |
+| 182 | Chap37     | BSTSetPlainMtEph               |     109 |      36 |      73 |       0 |     316 |   0.34 |
+| 183 | Chap62     | StarContractionStEph           |     109 |       3 |     106 |       0 |     136 |   0.80 |
+| 184 | Chap26     | ScanDCMtPer                    |     108 |      17 |      79 |      12 |     170 |   0.64 |
+| 185 | Chap26     | ScanDCStPer                    |     107 |       9 |      86 |      12 |     150 |   0.71 |
+| 186 | Chap53     | GraphSearchMtPer               |     106 |       0 |     106 |       0 |     147 |   0.72 |
+| 187 | Chap56     | AllPairsResultStEphI64         |     103 |      15 |      88 |       0 |     186 |   0.55 |
+| 188 | Chap26     | MergeSortStPer                 |     102 |      16 |      64 |      22 |     113 |   0.90 |
+| 189 | Chap53     | GraphSearchStEph               |     101 |       0 |     101 |       0 |     150 |   0.67 |
+| 190 | Chap53     | GraphSearchStPer               |     101 |       0 |     101 |       0 |     144 |   0.70 |
+| 191 | standards  | view_standard                  |      99 |      57 |      42 |       0 |      32 |   3.09 |
+| 192 | Chap59     | JohnsonMtEphI64                |      97 |       0 |      97 |       0 |     302 |   0.32 |
+| 193 | Chap05     | KleeneStPer                    |      95 |      17 |      11 |      67 |      39 |   2.44 |
+| 194 | Chap59     | JohnsonMtEphF64                |      94 |       0 |      94 |       0 |     297 |   0.32 |
+| 195 | Chap51     | TopDownDPStPer                 |      92 |      19 |      67 |       6 |     128 |   0.72 |
+| 196 | src        | Types                          |      92 |      48 |       4 |      40 |      16 |   5.75 |
+| 197 | standards  | deep_view_standard             |      90 |      52 |      28 |      10 |      16 |   5.62 |
+| 198 | vstdplus   | hash_set_with_view_plus        |      90 |      42 |      42 |       6 |      42 |   2.14 |
+| 199 | Chap59     | JohnsonStEphI64                |      87 |       0 |      87 |       0 |     295 |   0.29 |
+| 200 | Chap28     | MaxContigSubSumDivConMtEph     |      82 |       8 |      74 |       0 |     104 |   0.79 |
+| 201 | standards  | mod_standard                   |      82 |      48 |      34 |       0 |      35 |   2.34 |
+| 202 | standards  | iterators_standard             |      79 |      48 |      31 |       0 |      31 |   2.55 |
+| 203 | Chap59     | JohnsonStEphF64                |      78 |       0 |      78 |       0 |     261 |   0.30 |
+| 204 | Chap28     | MaxContigSubSumReducedMcsseStEph |      75 |       8 |      67 |       0 |      85 |   0.88 |
+| 205 | Chap21     | Problem21_3                    |      74 |       0 |      74 |       0 |      74 |   1.00 |
+| 206 | Chap28     | MaxContigSubSumOptStEph        |      74 |       0 |      30 |      44 |     121 |   0.61 |
+| 207 | vstdplus   | hash_map_with_view_plus        |      74 |      39 |      35 |       0 |      64 |   1.16 |
+| 208 | Chap06     | WeightedDirGraphStEphF64       |      73 |       0 |      73 |       0 |     146 |   0.50 |
+| 209 | Chap21     | Exercise21_9                   |      72 |       3 |       0 |      69 |       0 |      - |
+| 210 | Chap28     | MaxContigSubSumDivConOptMtEph  |      69 |       8 |      61 |       0 |      49 |   1.41 |
+| 211 | Chap18     | ArraySeqSpecsAndLemmas         |      66 |      21 |       0 |      45 |       0 |      - |
+| 212 | Chap19     | ArraySeqSpecsAndLemmas         |      66 |      21 |       0 |      45 |       0 |      - |
+| 213 | Chap38     | BSTParaSpecsAndLemmas          |      66 |       3 |       0 |      63 |       0 |      - |
+| 214 | Chap49     | MinEditDistMtEph               |      66 |      19 |      47 |       0 |     171 |   0.39 |
+| 215 | Chap27     | ScanContractMtEph              |      64 |       0 |      64 |       0 |     134 |   0.48 |
+| 216 | Chap50     | OptBinSearchTreeMtEph          |      64 |      15 |      49 |       0 |     280 |   0.23 |
+| 217 | Chap66     | BoruvkaStEph                   |      63 |      13 |      50 |       0 |     338 |   0.19 |
+| 218 | Chap27     | ScanContractStEph              |      60 |       0 |      60 |       0 |     160 |   0.38 |
+| 219 | standards  | mut_standard                   |      56 |      12 |      44 |       0 |     101 |   0.55 |
+| 220 | Chap27     | ReduceContractMtEph            |      55 |       0 |      55 |       0 |      65 |   0.85 |
+| 221 | Chap56     | PathWeightUtilsStPer           |      55 |      51 |       4 |       0 |     166 |   0.33 |
+| 222 | Chap02     | FibonacciHFScheduler           |      54 |       4 |       8 |      42 |      31 |   1.74 |
+| 223 | Chap56     | PathWeightUtilsStEph           |      53 |      51 |       2 |       0 |     164 |   0.32 |
+| 224 | Chap11     | FibonacciStEph                 |      52 |       9 |      11 |      32 |      43 |   1.21 |
+| 225 | Chap49     | MinEditDistStEph               |      52 |      17 |      35 |       0 |      91 |   0.57 |
+| 226 | Chap57     | DijkstraStEphU64               |      52 |       6 |      42 |       4 |     143 |   0.36 |
+| 227 | Chap21     | Algorithm21_1                  |      51 |       4 |      17 |      30 |      90 |   0.57 |
+| 228 | Chap27     | ReduceContractStEph            |      51 |       0 |      51 |       0 |      79 |   0.65 |
+| 229 | Chap64     | TSPApproxStEph                 |      51 |       3 |      48 |       0 |     226 |   0.23 |
+| 230 | Chap56     | AllPairsResultStPerF64         |      49 |      12 |      37 |       0 |     197 |   0.25 |
+| 231 | Chap56     | SSSPResultStEphI64             |      49 |       7 |      42 |       0 |     125 |   0.39 |
+| 232 | Chap57     | DijkstraStEphF64               |      49 |       6 |      37 |       6 |     156 |   0.31 |
+| 233 | Chap62     | StarPartitionStEph             |      49 |      13 |      36 |       0 |     128 |   0.38 |
+| 234 | Chap49     | MinEditDistMtPer               |      47 |      19 |      28 |       0 |     149 |   0.32 |
+| 235 | Chap49     | SubsetSumMtEph                 |      47 |      20 |      27 |       0 |     144 |   0.33 |
+| 236 | Chap56     | AllPairsResultStEphF64         |      47 |      12 |      35 |       0 |     195 |   0.24 |
+| 237 | Chap56     | SSSPResultStPerI64             |      47 |       7 |      40 |       0 |     120 |   0.39 |
+| 238 | Chap56     | SSSPResultStPerF64             |      46 |      10 |      36 |       0 |     109 |   0.42 |
+| 239 | standards  | spec_wf_standard               |      46 |      12 |      34 |       0 |      32 |   1.44 |
+| 240 | Chap50     | OptBinSearchTreeStEph          |      45 |       6 |      39 |       0 |     140 |   0.32 |
+| 241 | Chap56     | SSSPResultStEphF64             |      43 |       7 |      36 |       0 |     102 |   0.42 |
+| 242 | standards  | spec_naming_convention         |      43 |      20 |      23 |       0 |      52 |   0.83 |
+| 243 | Chap21     | Problem21_4                    |      42 |       0 |      42 |       0 |     100 |   0.42 |
+| 244 | Chap26     | DivConReduceStPer              |      42 |      15 |      27 |       0 |      67 |   0.63 |
+| 245 | Chap50     | OptBinSearchTreeMtPer          |      42 |      11 |      31 |       0 |     201 |   0.21 |
+| 246 | Chap21     | Algorithm21_6                  |      41 |       0 |      22 |      19 |      78 |   0.53 |
+| 247 | arithmetic | power2_plus                    |      41 |       0 |       0 |      41 |       0 |      - |
+| 248 | Chap49     | SubsetSumMtPer                 |      40 |      20 |      20 |       0 |     131 |   0.31 |
+| 249 | Chap21     | Algorithm21_2                  |      39 |       0 |      39 |       0 |      58 |   0.67 |
+| 250 | Chap21     | Exercise21_5                   |      39 |       0 |      14 |      25 |      32 |   1.22 |
+| 251 | Chap49     | MinEditDistStPer               |      39 |      17 |      22 |       0 |      83 |   0.47 |
+| 252 | Chap58     | BellmanFordStEphI64            |      39 |       0 |      39 |       0 |     191 |   0.20 |
+| 253 | vstdplus   | checked_nat                    |      39 |      17 |       4 |      18 |       4 |   9.75 |
+| 254 | Chap03     | InsertionSortStEph             |      37 |       9 |      28 |       0 |      49 |   0.76 |
+| 255 | standards  | using_closures_standard        |      36 |      12 |      24 |       0 |      69 |   0.52 |
+| 256 | standards  | iterative_vs_recursive_standard |      35 |       6 |      22 |       7 |      39 |   0.90 |
+| 257 | standards  | rwlock_tsm_standard            |      34 |      14 |      20 |       0 |      62 |   0.55 |
+| 258 | Chap50     | OptBinSearchTreeStPer          |      33 |       6 |      27 |       0 |     129 |   0.26 |
+| 259 | Chap57     | StackStEph                     |      33 |       6 |      27 |       0 |      24 |   1.38 |
+| 260 | standards  | toplevel_coarse_rwlocks_for_mt_modules |      33 |      11 |      22 |       0 |      48 |   0.69 |
+| 261 | vstdplus   | checked_int                    |      33 |      17 |       5 |      11 |       5 |   6.60 |
+| 262 | Chap58     | BellmanFordStEphF64            |      31 |       0 |      31 |       0 |     181 |   0.17 |
+| 263 | Chap21     | Exercise21_7                   |      30 |       5 |      25 |       0 |      52 |   0.58 |
+| 264 | Chap51     | SeqSpecsAndLemmas              |      30 |      18 |       0 |      12 |       0 |      - |
+| 265 | Chap49     | SubsetSumStEph                 |      29 |      14 |      15 |       0 |      81 |   0.36 |
+| 266 | Chap21     | Algorithm21_5                  |      28 |       0 |      28 |       0 |      25 |   1.12 |
+| 267 | Chap63     | ConnectivityMtEph              |      28 |       3 |      25 |       0 |     115 |   0.24 |
+| 268 | Chap63     | ConnectivityStEph              |      28 |       3 |      25 |       0 |     113 |   0.25 |
+| 269 | standards  | capacity_bounds_standard       |      27 |       4 |      23 |       0 |      69 |   0.39 |
+| 270 | Chap49     | SubsetSumStPer                 |      26 |      14 |      12 |       0 |      78 |   0.33 |
+| 271 | Chap28     | MaxContigSubSumOptMtEph        |      24 |       0 |      24 |       0 |     106 |   0.23 |
+| 272 | Chap28     | MaxContigSubSumBruteStEph      |      19 |       8 |      11 |       0 |      75 |   0.25 |
+| 273 | Chap02     | HFSchedulerMtEph               |      18 |       0 |      18 |       0 |      65 |   0.28 |
+| 274 | Chap28     | MaxContigSubSumReducedStEph    |      18 |       8 |      10 |       0 |      74 |   0.24 |
+| 275 | Chap61     | EdgeContractionStEph           |      17 |       3 |      14 |       0 |      85 |   0.20 |
+| 276 | Chap45     | HeapsortExample                |      16 |      12 |       4 |       0 |      61 |   0.26 |
+| 277 | Chap61     | EdgeContractionMtEph           |      16 |       3 |      13 |       0 |     132 |   0.12 |
+| 278 | Chap64     | SpanTreeMtEph                  |      16 |       3 |      13 |       0 |     130 |   0.12 |
+| 279 | Chap64     | SpanTreeStEph                  |      16 |       3 |      13 |       0 |     126 |   0.13 |
+| 280 | standards  | arc_usage_standard             |      16 |       9 |       7 |       0 |      42 |   0.38 |
+| 281 | vstdplus   | clone_plus                     |      16 |       0 |      16 |       0 |      24 |   0.67 |
+| 282 | vstdplus   | strings                        |      16 |      11 |       5 |       0 |      10 |   1.60 |
+| 283 | Chap61     | VertexMatchingStEph            |      15 |       3 |      12 |       0 |     105 |   0.14 |
+| 284 | Chap61     | VertexMatchingMtEph            |      14 |       3 |      11 |       0 |     153 |   0.09 |
+| 285 | src        | ParaPairs                      |      14 |       0 |      14 |       0 |      20 |   0.70 |
+| 286 | vstdplus   | hashed_checked_u32             |      13 |       5 |       0 |       8 |       6 |   2.17 |
+| 287 | Chap65     | KruskalStEph                   |      12 |       3 |       9 |       0 |     210 |   0.06 |
+| 288 | standards  | hfscheduler_standard           |      12 |       3 |       9 |       0 |     103 |   0.12 |
+| 289 | vstdplus   | pervasives_plus                |      12 |       3 |       9 |       0 |       4 |   3.00 |
+| 290 | Chap11     | FibonacciMtEphRecomputes       |      11 |       0 |      11 |       0 |      87 |   0.13 |
+| 291 | Chap11     | FibonacciMtPerTSM              |      11 |       0 |      11 |       0 |      85 |   0.13 |
+| 292 | Chap21     | Problem21_1                    |      11 |       0 |      11 |       0 |      45 |   0.24 |
+| 293 | standards  | finite_sets_standard           |      11 |       6 |       5 |       0 |      17 |   0.65 |
+| 294 | vstdplus   | clone_view                     |      11 |       0 |      11 |       0 |      34 |   0.32 |
+| 295 | Chap11     | FibonacciMtEph2Threads         |      10 |       0 |      10 |       0 |      83 |   0.12 |
+| 296 | standards  | tsm_standard                   |       9 |       0 |       9 |       0 |      68 |   0.13 |
+| 297 | vstdplus   | monoid                         |       9 |       9 |       0 |       0 |       0 |      - |
+| 298 | vstdplus   | VecQueue                       |       8 |       1 |       7 |       0 |      12 |   0.67 |
+| 299 | standards  | partial_eq_eq_clone_standard   |       7 |       3 |       4 |       0 |      10 |   0.70 |
+| 300 | Chap11     | FibonacciMtPerAllThreads       |       6 |       0 |       6 |       0 |      25 |   0.24 |
+| 301 | Chap12     | Exercise12_5                   |       6 |       1 |       5 |       0 |      60 |   0.10 |
+| 302 | Chap30     | Probability                    |       6 |       6 |       0 |       0 |      36 |   0.17 |
+| 303 | Chap12     | Exercise12_1                   |       5 |       0 |       5 |       0 |      50 |   0.10 |
+| 304 | vstdplus   | accept                         |       5 |       0 |       0 |       5 |       0 |      - |
+| 305 | vstdplus   | smart_ptrs                     |       5 |       0 |       5 |       0 |      16 |   0.31 |
+| 306 | Chap41     | Example41_3                    |       4 |       0 |       4 |       0 |     151 |   0.03 |
+| 307 | vstdplus   | arc_rwlock                     |       4 |       0 |       4 |       0 |      17 |   0.24 |
+| 308 | vstdplus   | threads_plus                   |       4 |       0 |       4 |       0 |      21 |   0.19 |
+| 309 | vstdplus   | rand                           |       2 |       0 |       2 |       0 |      12 |   0.17 |
+| 310 | Chap42     | Example42_1                    |       1 |       0 |       0 |       1 |       0 |      - |
+| 311 | Chap43     | Example43_1                    |       1 |       0 |       0 |       1 |       0 |      - |
+| 312 | Chap44     | Example44_1                    |       1 |       0 |       0 |       1 |       0 |      - |
+| 313 | Chap45     | Example45_2                    |       1 |       0 |       0 |       1 |      16 |   0.06 |
+| 314 | Chap45     | HeapsortExample                |       1 |       0 |       0 |       1 |      61 |   0.02 |
 
-311 modules, 67,378 proof lines, 65,304 exec lines, ratio 1.03
-1 min  3,167 max  216.6 avg  120.0 median (proof lines)
+314 modules, 70,936 proof lines, 67,043 exec lines, ratio 1.06
+1 min  3,167 max  225.9 avg  127.0 median (proof lines)
 
 Per exec function (proof lines within exec fns):
-  6,246 exec functions total, 4,787 with proof lines
-  49,621 total proof lines in exec fns
-  1 min  566 max  10.4 avg  5.0 median
+  6,272 exec functions total, 4,801 with proof lines
+  51,584 total proof lines in exec fns
+  1 min  588 max  10.7 avg  5.0 median
 
 Per proof function:
-  832 proof functions
-  10,361 total proof lines in proof fns
-  1 min  183 max  12.5 avg  9.0 median
+  858 proof functions
+  11,762 total proof lines in proof fns
+  1 min  186 max  13.7 avg  10.0 median
 
 Grand total:
-  9,668 total functions, 7,686 with proof lines (79%)
-  67,378 total proof lines, 65,406 exec lines, ratio 1.03
-  1 min  566 max  8.8 avg  4.0 median (proof lines per fn)
+  9,747 total functions, 7,752 with proof lines (80%)
+  70,936 total proof lines, 67,145 exec lines, ratio 1.06
+  1 min  588 max  9.2 avg  4.0 median (proof lines per fn)
 
 Outliers (>= 50 proof lines):
-|   # | Chap       | Module                         | Function                            |  Kind |  Lines |
-| --- | ---------- | ------------------------------ | ----------------------------------- | ----- | ------ |
-|   1 | Chap37     | BSTSplayMtEph                  | splay                               |  exec |    566 |
-|   2 | Chap37     | BSTSplayStEph                  | splay                               |  exec |    530 |
-|   3 | Chap55     | CycleDetectStEph               | dfs_check_cycle                     |  exec |    307 |
-|   4 | Chap42     | TableMtEph                     | union                               |  exec |    280 |
-|   5 | Chap41     | OrdKeyMap                      | ordkeymap_select                    |  exec |    275 |
-|   6 | Chap42     | TableStPer                     | insert_wf                           |  exec |    265 |
-|   7 | Chap43     | OrderedTableStEph              | union_bypassed_r158                 |  exec |    255 |
-|   8 | Chap42     | TableStEph                     | union                               |  exec |    229 |
-|   9 | Chap55     | TopoSortStEph                  | dfs_finish_order                    |  exec |    214 |
-|  10 | Chap55     | CycleDetectStPer               | dfs_check_cycle                     |  exec |    212 |
-|  11 | Chap41     | OrdKeyMap                      | ordkeymap_prev                      |  exec |    205 |
-|  12 | Chap41     | OrdKeyMap                      | ordkeymap_next                      |  exec |    201 |
-|  13 | Chap42     | TableStEph                     | insert_wf                           |  exec |    199 |
-|  14 | Chap41     | OrdKeyMap                      | ordkeymap_rank                      |  exec |    195 |
-|  15 | Chap55     | TopoSortStPer                  | dfs_finish_order                    |  exec |    193 |
-|  16 | Chap28     | MaxContigSubSumDivConOptStEph  | lemma_strength_combine              | proof |    183 |
-|  17 | Chap42     | TableStPer                     | insert                              |  exec |    182 |
-|  18 | Chap41     | OrdKeyMap                      | union_with                          |  exec |    181 |
-|  19 | Chap47     | StructChainedHashTable         | resize                              |  exec |    174 |
-|  20 | Chap42     | TableStPer                     | union                               |  exec |    164 |
-|  21 | Chap39     | BSTTreapStEph                  | difference_inner_st                 |  exec |    161 |
-|  22 | Chap52     | AdjTableGraphMtPer             | insert_edge                         |  exec |    156 |
-|  23 | Chap42     | TableStPer                     | delete_wf                           |  exec |    154 |
-|  24 | Chap26     | MergeSortMtPer                 | merge_dc                            |  exec |    150 |
-|  25 | Chap47     | LinProbFlatHashTableStEph      | insert                              |  exec |    147 |
-|  26 | Chap35     | OrderStatSelectStEph           | select_inner                        |  exec |    140 |
-|  27 | Chap45     | SortedListPQ                   | insert                              |  exec |    138 |
-|  28 | Chap55     | DFSStEph                       | dfs_recursive                       |  exec |    136 |
-|  29 | Chap35     | OrderStatSelectStPer           | select_inner                        |  exec |    131 |
-|  30 | Chap41     | OrdKeyMap                      | union                               |  exec |    131 |
-|  31 | Chap42     | TableStEph                     | insert                              |  exec |    131 |
-|  32 | Chap45     | BinaryHeapPQ                   | delete_min                          |  exec |    128 |
-|  33 | Chap37     | BSTAVLStEph                    | rebalance                           |  exec |    125 |
-|  34 | Chap42     | TableMtEph                     | insert                              |  exec |    122 |
-|  35 | Chap47     | QuadProbFlatHashTableStEph     | insert                              |  exec |    121 |
-|  36 | Chap41     | OrdKeyMap                      | intersect_with                      |  exec |    120 |
-|  37 | Chap39     | BSTTreapStEph                  | filter_inner_st                     |  exec |    119 |
-|  38 | Chap41     | OrdKeyMap                      | split_rank_key                      |  exec |    119 |
-|  39 | Chap38     | BSTParaStEph                   | split                               |  exec |    116 |
-|  40 | Chap41     | OrdKeyMap                      | ordkeymap_split                     |  exec |    116 |
-|  41 | Chap42     | TableSpecsAndLemmas            | lemma_entries_to_map_subseq_value   | proof |    115 |
-|  42 | Chap52     | AdjTableGraphStPer             | delete_vertex                       |  exec |    115 |
-|  43 | Chap18     | ArraySeqMtEph                  | filter_dc                           |  exec |    114 |
-|  44 | Chap42     | TableStEph                     | delete_wf                           |  exec |    114 |
-|  45 | Chap37     | BSTAVLMtEph                    | rebalance                           |  exec |    109 |
-|  46 | Chap37     | BSTRBMtEph                     | insert_link                         |  exec |    109 |
-|  47 | Chap47     | DoubleHashFlatHashTableStEph   | insert                              |  exec |    109 |
-|  48 | Chap55     | DFSStPer                       | dfs_recursive                       |  exec |    109 |
-|  49 | Chap42     | TableStPer                     | delete                              |  exec |    108 |
-|  50 | Chap41     | OrdKeyMap                      | tabulate                            |  exec |    106 |
-|  51 | Chap39     | BSTTreapStEph                  | split_inner_st                      |  exec |    105 |
-|  52 | Chap45     | BinaryHeapPQ                   | bubble_up_heap                      |  exec |    105 |
-|  53 | Chap53     | PQMinStEph                     | pq_explore                          |  exec |    105 |
-|  54 | Chap42     | TableStPer                     | intersection                        |  exec |    104 |
-|  55 | Chap52     | AdjTableGraphStEph             | delete_vertex                       |  exec |    102 |
-|  56 | Chap62     | StarPartitionMtEph             | build_p_vec_with_inject_mt          |  exec |    102 |
-|  57 | Chap39     | BSTParaTreapMtEph              | split_inner                         |  exec |     99 |
-|  58 | Chap18     | ArraySeqMtPer                  | filter_dc                           |  exec |     97 |
-|  59 | Chap19     | ArraySeqMtEph                  | filter_dc                           |  exec |     97 |
-|  60 | Chap37     | BSTSplayMtEph                  | bst_insert                          |  exec |     97 |
-|  61 | Chap43     | OrderedTableStPer              | map                                 |  exec |     97 |
-|  62 | Chap45     | SortedListPQ                   | meld                                |  exec |     97 |
-|  63 | Chap06     | LabUnDirGraphMtEph             | ng_par                              |  exec |     92 |
-|  64 | Chap26     | ETSPStEph                      | lemma_combined_cycle                | proof |     92 |
-|  65 | Chap42     | TableStEph                     | intersection                        |  exec |     92 |
-|  66 | Chap35     | OrderStatSelectMtEph           | select_inner                        |  exec |     90 |
-|  67 | Chap35     | OrderStatSelectMtPer           | select_inner                        |  exec |     90 |
-|  68 | Chap62     | StarPartitionMtEph             | parallel_star_partition             |  exec |     90 |
-|  69 | Chap38     | BSTParaMtEph                   | split_inner                         |  exec |     89 |
-|  70 | Chap39     | BSTParaTreapMtEph              | join_pair_inner                     |  exec |     88 |
-|  71 | Chap55     | TopoSortStEph                  | topo_sort                           |  exec |     88 |
-|  72 | Chap36     | QuickSortStEph                 | lemma_partition_sort_concat         | proof |     87 |
-|  73 | Chap37     | BSTSplayMtEph                  | build_balanced                      |  exec |     87 |
-|  74 | Chap42     | TableMtEph                     | intersection                        |  exec |     87 |
-|  75 | Chap44     | DocumentIndex                  | make_index                          |  exec |     87 |
-|  76 | Chap52     | AdjTableGraphMtPer             | delete_vertex                       |  exec |     86 |
-|  77 | Chap45     | BinaryHeapPQ                   | bubble_down_heap                    |  exec |     85 |
-|  78 | Chap45     | UnsortedListPQ                 | delete_min                          |  exec |     85 |
-|  79 | Chap52     | AdjTableGraphMtPer             | delete_edge                         |  exec |     84 |
-|  80 | Chap47     | QuadProbFlatHashTableStEph     | delete                              |  exec |     82 |
-|  81 | Chap28     | MaxContigSubSumDivConStEph     | lemma_divcon_combine                | proof |     81 |
-|  82 | Chap36     | QuickSortMtEph                 | lemma_partition_sort_concat         | proof |     81 |
-|  83 | Chap36     | QuickSortMtEphSlice            | lemma_partition_sort_concat         | proof |     81 |
-|  84 | Chap42     | TableStPer                     | collect_by_key                      |  exec |     81 |
-|  85 | Chap43     | OrderedTableStPer              | from_sorted_entries                 |  exec |     81 |
-|  86 | Chap41     | OrdKeyMap                      | insert                              |  exec |     80 |
-|  87 | Chap47     | LinProbFlatHashTableStEph      | delete                              |  exec |     80 |
-|  88 | Chap52     | AdjTableGraphStEph             | insert_edge                         |  exec |     80 |
-|  89 | Chap53     | PQMinStPer                     | pq_explore                          |  exec |     80 |
-|  90 | Chap38     | BSTParaStEph                   | intersect                           |  exec |     79 |
-|  91 | Chap47     | DoubleHashFlatHashTableStEph   | delete                              |  exec |     79 |
-|  92 | Chap39     | BSTParaTreapMtEph              | join_with_priority                  |  exec |     77 |
-|  93 | Chap47     | QuadProbFlatHashTableStEph     | lemma_empty_slot_reachable          | proof |     77 |
-|  94 | Chap37     | BSTBBAlphaStEph                | delete_min_node                     |  exec |     75 |
-|  95 | Chap41     | OrdKeyMap                      | split                               |  exec |     75 |
-|  96 | Chap47     | QuadProbFlatHashTableStEph     | lemma_triangular_injective          | proof |     75 |
-|  97 | Chap62     | StarPartitionMtEph             | build_partition_map_mt              |  exec |     75 |
-|  98 | Chap21     | Exercise21_8                   | is_prime                            |  exec |     73 |
-|  99 | Chap37     | BSTBBAlphaMtEph                | delete_min_node                     |  exec |     73 |
-| 100 | Chap43     | OrderedTableStEph              | from_sorted_entries                 |  exec |     73 |
-| 101 | Chap47     | QuadProbFlatHashTableStEph     | lemma_odd_factor_pow2               | proof |     73 |
-| 102 | Chap52     | AdjTableGraphStPer             | insert_edge                         |  exec |     73 |
-| 103 | Chap39     | BSTTreapMtEph                  | delete_link                         |  exec |     72 |
-| 104 | Chap41     | OrdKeyMap                      | get_key_range                       |  exec |     72 |
-| 105 | Chap42     | TableMtEph                     | delete                              |  exec |     71 |
-| 106 | Chap38     | BSTParaStEph                   | difference                          |  exec |     70 |
-| 107 | Chap39     | BSTParaTreapMtEph              | intersect_inner                     |  exec |     70 |
-| 108 | Chap40     | BSTKeyValueStEph               | delete_link                         |  exec |     70 |
-| 109 | Chap41     | OrdKeyMap                      | lemma_set_to_map_union_root         | proof |     70 |
-| 110 | Chap45     | UnsortedListPQ                 | extract_all_sorted                  |  exec |     70 |
-| 111 | Chap62     | StarPartitionMtEph             | build_vertex_to_index_mt            |  exec |     70 |
-| 112 | Chap62     | StarPartitionMtEph             | build_satellite_map_mt              |  exec |     70 |
-| 113 | Chap36     | QuickSortMtEphSlice            | quick_sort_first                    |  exec |     69 |
-| 114 | Chap37     | BSTSplayStEph                  | bst_insert                          |  exec |     69 |
-| 115 | Chap39     | BSTTreapStEph                  | join_pair_inner_st                  |  exec |     69 |
-| 116 | Chap41     | ArraySetEnumMtEph              | to_seq                              |  exec |     69 |
-| 117 | Chap41     | OrdKeyMap                      | intersect                           |  exec |     69 |
-| 118 | Chap37     | BSTAVLStEph                    | rotate_right                        |  exec |     68 |
-| 119 | Chap42     | TableStEph                     | difference                          |  exec |     68 |
-| 120 | Chap36     | QuickSortMtEphSlice            | quick_sort_median3                  |  exec |     67 |
-| 121 | Chap36     | QuickSortMtEphSlice            | quick_sort_random                   |  exec |     67 |
-| 122 | Chap39     | BSTTreapStEph                  | delete_link                         |  exec |     67 |
-| 123 | Chap42     | TableMtEph                     | difference                          |  exec |     67 |
-| 124 | Chap43     | OrderedTableStEph              | restrict                            |  exec |     67 |
-| 125 | Chap43     | OrderedTableStEph              | subtract                            |  exec |     67 |
-| 126 | vstdplus   | multiset                       | lemma_flatten_01_multiset_eq_filter | proof |     67 |
-| 127 | Chap21     | Problem21_3                    | points3d_loops                      |  exec |     66 |
-| 128 | Chap37     | BSTPlainMtEph                  | delete_node                         |  exec |     66 |
-| 129 | Chap37     | BSTPlainStEph                  | delete_node                         |  exec |     66 |
-| 130 | Chap42     | TableStPer                     | tabulate                            |  exec |     66 |
-| 131 | Chap42     | TableStPer                     | difference                          |  exec |     66 |
-| 132 | Chap47     | DoubleHashFlatHashTableStEph   | lookup                              |  exec |     66 |
-| 133 | Chap39     | BSTTreapStEph                  | intersect_inner_st                  |  exec |     65 |
-| 134 | Chap38     | BSTParaMtEph                   | intersect_inner                     |  exec |     64 |
-| 135 | Chap38     | BSTParaMtEph                   | difference_inner                    |  exec |     64 |
-| 136 | Chap39     | BSTParaTreapMtEph              | difference_inner                    |  exec |     64 |
-| 137 | Chap41     | OrdKeyMap                      | difference                          |  exec |     64 |
-| 138 | Chap18     | ArraySeqMtEph                  | map_dc                              |  exec |     62 |
-| 139 | Chap47     | QuadProbFlatHashTableStEph     | lookup                              |  exec |     62 |
-| 140 | Chap28     | MaxContigSubSumDivConOptStEph  | max_contig_sub_sum_aux              |  exec |     61 |
-| 141 | Chap45     | LeftistHeapPQ                  | extract_all_sorted                  |  exec |     61 |
-| 142 | Chap55     | SCCStEph                       | dfs_reach                           |  exec |     61 |
-| 143 | Chap55     | TopoSortStPer                  | topo_sort                           |  exec |     61 |
-| 144 | Chap37     | BSTAVLStEph                    | rotate_left                         |  exec |     60 |
-| 145 | Chap37     | BSTBBAlphaMtEph                | delete_node                         |  exec |     60 |
-| 146 | Chap42     | TableStEph                     | tabulate                            |  exec |     60 |
-| 147 | Chap45     | BinaryHeapPQ                   | extract_all_sorted                  |  exec |     60 |
-| 148 | Chap39     | BSTTreapStEph                  | union_inner_st                      |  exec |     59 |
-| 149 | Chap40     | BSTReducedStEph                | rotate_left                         |  exec |     59 |
-| 150 | Chap55     | CycleDetectStEph               | has_cycle                           |  exec |     59 |
-| 151 | Chap40     | BSTReducedStEph                | delete_link                         |  exec |     58 |
-| 152 | Chap40     | BSTSizeStEph                   | delete_link                         |  exec |     58 |
-| 153 | Chap42     | TableMtEph                     | map_table_dc                        |  exec |     58 |
-| 154 | Chap47     | LinProbFlatHashTableStEph      | lookup                              |  exec |     58 |
-| 155 | Chap53     | PQMinStEph                     | pq_min_multi                        |  exec |     58 |
-| 156 | Chap26     | ScanDCMtPer                    | prefix_sums_dc_inner                |  exec |     57 |
-| 157 | Chap35     | OrderStatSelectMtEph           | parallel_three_way_partition        |  exec |     57 |
-| 158 | Chap40     | BSTReducedStEph                | rotate_right                        |  exec |     57 |
-| 159 | Chap43     | OrderedSetStPer                | split_rank_iter                     |  exec |     57 |
-| 160 | Chap28     | MaxContigSubSumReducedMcsseStEph | max_contig_sub_sum_reduced_mcsse    |  exec |     56 |
-| 161 | Chap41     | OrdKeyMap                      | restrict                            |  exec |     56 |
-| 162 | Chap41     | OrdKeyMap                      | subtract                            |  exec |     56 |
-| 163 | Chap45     | LeftistHeapPQ                  | lemma_heap_root_is_min              | proof |     56 |
-| 164 | Chap52     | AdjTableGraphStEph             | insert_vertex                       |  exec |     56 |
-| 165 | Chap52     | AdjTableGraphStPer             | delete_edge                         |  exec |     56 |
-| 166 | Chap35     | OrderStatSelectMtPer           | parallel_three_way_partition        |  exec |     55 |
-| 167 | Chap42     | TableStEph                     | delete                              |  exec |     55 |
-| 168 | Chap47     | VecChainedHashTableStEph       | delete                              |  exec |     55 |
-| 169 | Chap27     | ContractSpecsAndLemmas         | lemma_contraction_even              | proof |     54 |
-| 170 | Chap37     | BSTBBAlphaStEph                | delete_node                         |  exec |     54 |
-| 171 | Chap37     | BSTRBStEph                     | rotate_left                         |  exec |     54 |
-| 172 | Chap42     | TableMtEph                     | tabulate_table_dc                   |  exec |     54 |
-| 173 | Chap42     | TableSpecsAndLemmas            | lemma_subseq_value_agrees           | proof |     54 |
-| 174 | Chap43     | OrderedTableStPer              | restrict                            |  exec |     54 |
-| 175 | Chap43     | OrderedTableStPer              | subtract                            |  exec |     54 |
-| 176 | Chap47     | LinkedListChainedHashTableStEph | delete                              |  exec |     54 |
-| 177 | Chap26     | ScanDCStPer                    | scan_dc                             |  exec |     53 |
-| 178 | Chap42     | TableMtEph                     | restrict                            |  exec |     53 |
-| 179 | Chap52     | AdjTableGraphSpecsAndLemmas    | lemma_sum_entry_sizes_eq            | proof |     53 |
-| 180 | Chap41     | ArraySetStEph                  | filter                              |  exec |     52 |
-| 181 | Chap42     | TableMtEph                     | tabulate                            |  exec |     52 |
-| 182 | Chap42     | TableStEph                     | restrict                            |  exec |     52 |
-| 183 | Chap42     | TableStEph                     | subtract                            |  exec |     52 |
-| 184 | Chap42     | TableStPer                     | restrict                            |  exec |     52 |
-| 185 | Chap42     | TableStPer                     | subtract                            |  exec |     52 |
-| 186 | Chap65     | PrimStEph                      | prim_mst                            |  exec |     52 |
-| 187 | Chap39     | BSTParaTreapMtEph              | union_inner                         |  exec |     51 |
-| 188 | Chap41     | ArraySetStEph                  | union                               |  exec |     51 |
-| 189 | Chap42     | TableMtEph                     | subtract                            |  exec |     51 |
-| 190 | Chap52     | AdjSeqGraphMtEph               | set_edge                            |  exec |     51 |
-| 191 | Chap52     | AdjSeqGraphStEph               | set_edge                            |  exec |     51 |
-| 192 | Chap52     | AdjTableGraphStPer             | vertices                            |  exec |     51 |
-| 193 | Chap36     | QuickSortMtEphSlice            | partition_three_dc                  |  exec |     50 |
-| 194 | Chap37     | BSTSpecsAndLemmas              | lemma_bst_delete_left               | proof |     50 |
-| 195 | Chap37     | BSTSpecsAndLemmas              | lemma_bst_delete_right              | proof |     50 |
-| 196 | Chap40     | BSTKeyValueStEph               | rotate_left                         |  exec |     50 |
-| 197 | Chap47     | LinkedListChainedHashTableStEph | resize                              |  exec |     50 |
+|   # | Chap       | Module                         | Function                             |  Kind |  Lines |
+| --- | ---------- | ------------------------------ | ------------------------------------ | ----- | ------ |
+|   1 | Chap37     | BSTSplayMtEph                  | splay                                |  exec |    588 |
+|   2 | Chap37     | BSTSplayStEph                  | splay                                |  exec |    542 |
+|   3 | Chap55     | CycleDetectStEph               | dfs_check_cycle                      |  exec |    372 |
+|   4 | Chap42     | TableMtEph                     | union                                |  exec |    326 |
+|   5 | Chap41     | OrdKeyMap                      | ordkeymap_select                     |  exec |    275 |
+|   6 | Chap55     | CycleDetectStPer               | dfs_check_cycle                      |  exec |    262 |
+|   7 | Chap42     | TableStPer                     | insert_wf                            |  exec |    246 |
+|   8 | Chap42     | TableStEph                     | union                                |  exec |    227 |
+|   9 | Chap55     | TopoSortStEph                  | dfs_finish_order                     |  exec |    225 |
+|  10 | Chap55     | TopoSortStPer                  | dfs_finish_order                     |  exec |    223 |
+|  11 | Chap41     | OrdKeyMap                      | ordkeymap_prev                       |  exec |    205 |
+|  12 | Chap39     | BSTTreapStEph                  | difference_inner_st                  |  exec |    201 |
+|  13 | Chap41     | OrdKeyMap                      | ordkeymap_next                       |  exec |    201 |
+|  14 | Chap26     | MergeSortMtPer                 | merge_dc                             |  exec |    198 |
+|  15 | Chap42     | TableStEph                     | insert_wf                            |  exec |    197 |
+|  16 | Chap41     | OrdKeyMap                      | ordkeymap_rank                       |  exec |    195 |
+|  17 | Chap47     | StructChainedHashTable         | resize                               |  exec |    191 |
+|  18 | Chap28     | MaxContigSubSumDivConOptStEph  | lemma_strength_combine               | proof |    186 |
+|  19 | Chap41     | OrdKeyMap                      | union_with                           |  exec |    181 |
+|  20 | Chap42     | TableStPer                     | insert                               |  exec |    165 |
+|  21 | Chap45     | SortedListPQ                   | insert                               |  exec |    164 |
+|  22 | Chap47     | LinProbFlatHashTableStEph      | insert                               |  exec |    162 |
+|  23 | Chap42     | TableStPer                     | union                                |  exec |    161 |
+|  24 | Chap35     | OrderStatSelectStEph           | select_inner                         |  exec |    160 |
+|  25 | Chap52     | AdjTableGraphMtPer             | insert_edge                          |  exec |    156 |
+|  26 | Chap35     | OrderStatSelectStPer           | select_inner                         |  exec |    150 |
+|  27 | Chap39     | BSTTreapStEph                  | filter_inner_st                      |  exec |    150 |
+|  28 | Chap42     | TableSpecsAndLemmas            | lemma_entries_to_map_subseq_value    | proof |    148 |
+|  29 | Chap42     | TableMtEph                     | insert                               |  exec |    147 |
+|  30 | Chap42     | TableStPer                     | delete_wf                            |  exec |    146 |
+|  31 | Chap45     | BinaryHeapPQ                   | delete_min                           |  exec |    143 |
+|  32 | Chap37     | BSTAVLStEph                    | rebalance                            |  exec |    140 |
+|  33 | Chap38     | BSTParaStEph                   | split                                |  exec |    137 |
+|  34 | Chap55     | DFSStEph                       | dfs_recursive                        |  exec |    136 |
+|  35 | Chap47     | QuadProbFlatHashTableStEph     | insert                               |  exec |    132 |
+|  36 | Chap41     | OrdKeyMap                      | union                                |  exec |    131 |
+|  37 | Chap42     | TableStEph                     | insert                               |  exec |    129 |
+|  38 | Chap37     | BSTAVLMtEph                    | rebalance                            |  exec |    124 |
+|  39 | Chap47     | DoubleHashFlatHashTableStEph   | insert                               |  exec |    121 |
+|  40 | Chap41     | OrdKeyMap                      | intersect_with                       |  exec |    120 |
+|  41 | Chap18     | ArraySeqMtEph                  | filter_dc                            |  exec |    119 |
+|  42 | Chap41     | OrdKeyMap                      | split_rank_key                       |  exec |    119 |
+|  43 | Chap45     | BinaryHeapPQ                   | bubble_up_heap                       |  exec |    117 |
+|  44 | Chap39     | BSTTreapStEph                  | split_inner_st                       |  exec |    116 |
+|  45 | Chap41     | OrdKeyMap                      | ordkeymap_split                      |  exec |    116 |
+|  46 | Chap52     | AdjTableGraphStPer             | delete_vertex                        |  exec |    115 |
+|  47 | Chap42     | TableStEph                     | delete_wf                            |  exec |    114 |
+|  48 | Chap45     | SortedListPQ                   | meld                                 |  exec |    113 |
+|  49 | Chap39     | BSTParaTreapMtEph              | split_inner                          |  exec |    110 |
+|  50 | Chap62     | StarPartitionMtEph             | build_p_vec_with_inject_mt           |  exec |    110 |
+|  51 | Chap37     | BSTRBMtEph                     | insert_link                          |  exec |    109 |
+|  52 | Chap41     | OrdKeyMap                      | tabulate                             |  exec |    106 |
+|  53 | Chap42     | TableStPer                     | intersection                         |  exec |    106 |
+|  54 | Chap53     | PQMinStEph                     | pq_explore                           |  exec |    106 |
+|  55 | Chap44     | DocumentIndex                  | make_index                           |  exec |    104 |
+|  56 | Chap35     | OrderStatSelectMtEph           | select_inner                         |  exec |    103 |
+|  57 | Chap35     | OrderStatSelectMtPer           | select_inner                         |  exec |    103 |
+|  58 | Chap42     | TableStPer                     | delete                               |  exec |    103 |
+|  59 | Chap06     | LabUnDirGraphMtEph             | ng_par                               |  exec |    102 |
+|  60 | Chap18     | ArraySeqMtPer                  | filter_dc                            |  exec |    102 |
+|  61 | Chap42     | TableMtEph                     | intersection                         |  exec |    102 |
+|  62 | Chap52     | AdjTableGraphStEph             | delete_vertex                        |  exec |    102 |
+|  63 | Chap55     | DFSStPer                       | dfs_recursive                        |  exec |    102 |
+|  64 | Chap39     | BSTParaTreapMtEph              | join_pair_inner                      |  exec |    101 |
+|  65 | Chap45     | UnsortedListPQ                 | delete_min                           |  exec |    101 |
+|  66 | Chap55     | TopoSortStEph                  | topo_sort                            |  exec |    101 |
+|  67 | Chap62     | StarPartitionMtEph             | parallel_star_partition              |  exec |    101 |
+|  68 | Chap37     | BSTSplayMtEph                  | bst_insert                           |  exec |    100 |
+|  69 | Chap19     | ArraySeqMtEph                  | filter_dc                            |  exec |     99 |
+|  70 | Chap26     | ETSPStEph                      | lemma_combined_cycle                 | proof |     99 |
+|  71 | Chap38     | BSTParaMtEph                   | split_inner                          |  exec |     98 |
+|  72 | Chap65     | UnionFindStEph                 | lemma_insert_preserves_wf            | proof |     98 |
+|  73 | Chap43     | OrderedTableStPer              | map                                  |  exec |     97 |
+|  74 | Chap42     | TableStEph                     | intersection                         |  exec |     96 |
+|  75 | Chap45     | BinaryHeapPQ                   | bubble_down_heap                     |  exec |     95 |
+|  76 | Chap26     | ETSPMtEph                      | lemma_combined_cycle                 | proof |     92 |
+|  77 | Chap38     | BSTParaStEph                   | intersect                            |  exec |     91 |
+|  78 | Chap47     | LinProbFlatHashTableStEph      | delete                               |  exec |     91 |
+|  79 | Chap37     | BSTSplayMtEph                  | build_balanced                       |  exec |     90 |
+|  80 | Chap47     | QuadProbFlatHashTableStEph     | delete                               |  exec |     90 |
+|  81 | Chap42     | TableMtEph                     | delete                               |  exec |     89 |
+|  82 | Chap65     | UnionFindStEph                 | lemma_union_wf_ordering              | proof |     89 |
+|  83 | Chap47     | DoubleHashFlatHashTableStEph   | delete                               |  exec |     88 |
+|  84 | Chap36     | QuickSortStEph                 | lemma_partition_sort_concat          | proof |     87 |
+|  85 | Chap45     | UnsortedListPQ                 | extract_all_sorted                   |  exec |     86 |
+|  86 | Chap52     | AdjTableGraphMtPer             | delete_vertex                        |  exec |     86 |
+|  87 | Chap52     | AdjTableGraphMtPer             | delete_edge                          |  exec |     84 |
+|  88 | Chap28     | MaxContigSubSumDivConStEph     | lemma_divcon_combine                 | proof |     82 |
+|  89 | Chap36     | QuickSortMtEph                 | lemma_partition_sort_concat          | proof |     81 |
+|  90 | Chap36     | QuickSortMtEphSlice            | lemma_partition_sort_concat          | proof |     81 |
+|  91 | Chap39     | BSTTreapStEph                  | join_pair_inner_st                   |  exec |     81 |
+|  92 | Chap43     | OrderedTableStPer              | from_sorted_entries                  |  exec |     81 |
+|  93 | Chap39     | BSTParaTreapMtEph              | join_with_priority                   |  exec |     80 |
+|  94 | Chap39     | BSTParaTreapMtEph              | intersect_inner                      |  exec |     80 |
+|  95 | Chap39     | BSTTreapMtEph                  | delete_link                          |  exec |     80 |
+|  96 | Chap41     | OrdKeyMap                      | insert                               |  exec |     80 |
+|  97 | Chap42     | TableStPer                     | collect_by_key                       |  exec |     80 |
+|  98 | Chap47     | QuadProbFlatHashTableStEph     | lemma_empty_slot_reachable           | proof |     80 |
+|  99 | Chap52     | AdjTableGraphStEph             | insert_edge                          |  exec |     80 |
+| 100 | Chap53     | PQMinStPer                     | pq_explore                           |  exec |     80 |
+| 101 | Chap62     | StarPartitionMtEph             | build_partition_map_mt               |  exec |     80 |
+| 102 | Chap21     | Exercise21_8                   | is_prime                             |  exec |     79 |
+| 103 | Chap42     | TableMtEph                     | difference                           |  exec |     79 |
+| 104 | Chap47     | QuadProbFlatHashTableStEph     | lemma_triangular_injective           | proof |     79 |
+| 105 | Chap55     | CycleDetectStEph               | has_cycle                            |  exec |     79 |
+| 106 | Chap55     | TopoSortStPer                  | topo_sort                            |  exec |     79 |
+| 107 | Chap42     | TableStEph                     | difference                           |  exec |     78 |
+| 108 | Chap38     | BSTParaStEph                   | difference                           |  exec |     77 |
+| 109 | Chap62     | StarPartitionMtEph             | build_vertex_to_index_mt             |  exec |     77 |
+| 110 | Chap42     | TableMtEph                     | map_table_dc                         |  exec |     76 |
+| 111 | Chap47     | DoubleHashFlatHashTableStEph   | lookup                               |  exec |     76 |
+| 112 | Chap62     | StarPartitionMtEph             | build_satellite_map_mt               |  exec |     76 |
+| 113 | Chap65     | UnionFindStEph                 | lemma_union_wf_parent                | proof |     76 |
+| 114 | Chap37     | BSTBBAlphaStEph                | delete_min_node                      |  exec |     75 |
+| 115 | Chap41     | OrdKeyMap                      | split                                |  exec |     75 |
+| 116 | Chap21     | Problem21_3                    | points3d_loops                       |  exec |     74 |
+| 117 | Chap39     | BSTTreapStEph                  | delete_link                          |  exec |     74 |
+| 118 | Chap42     | TableStPer                     | difference                           |  exec |     74 |
+| 119 | Chap47     | QuadProbFlatHashTableStEph     | lemma_odd_factor_pow2                | proof |     74 |
+| 120 | Chap37     | BSTBBAlphaMtEph                | delete_min_node                      |  exec |     73 |
+| 121 | Chap39     | BSTTreapStEph                  | intersect_inner_st                   |  exec |     73 |
+| 122 | Chap43     | OrderedTableStEph              | from_sorted_entries                  |  exec |     73 |
+| 123 | Chap52     | AdjTableGraphStPer             | insert_edge                          |  exec |     73 |
+| 124 | Chap65     | UnionFindStEph                 | lemma_union_merge_wf                 | proof |     73 |
+| 125 | Chap26     | ScanDCMtPer                    | prefix_sums_dc_inner                 |  exec |     72 |
+| 126 | Chap41     | OrdKeyMap                      | get_key_range                        |  exec |     72 |
+| 127 | Chap42     | TableMtEph                     | tabulate_table_dc                    |  exec |     72 |
+| 128 | Chap47     | QuadProbFlatHashTableStEph     | lookup                               |  exec |     72 |
+| 129 | Chap37     | BSTSplayStEph                  | bst_insert                           |  exec |     71 |
+| 130 | Chap18     | ArraySeqMtEph                  | map_dc                               |  exec |     70 |
+| 131 | Chap38     | BSTParaMtEph                   | intersect_inner                      |  exec |     70 |
+| 132 | Chap40     | BSTKeyValueStEph               | delete_link                          |  exec |     70 |
+| 133 | Chap41     | OrdKeyMap                      | lemma_set_to_map_union_root          | proof |     70 |
+| 134 | Chap45     | LeftistHeapPQ                  | extract_all_sorted                   |  exec |     70 |
+| 135 | Chap36     | QuickSortMtEphSlice            | quick_sort_first                     |  exec |     69 |
+| 136 | Chap41     | ArraySetEnumMtEph              | to_seq                               |  exec |     69 |
+| 137 | Chap41     | OrdKeyMap                      | intersect                            |  exec |     69 |
+| 138 | Chap45     | BinaryHeapPQ                   | extract_all_sorted                   |  exec |     69 |
+| 139 | Chap26     | ScanDCStPer                    | scan_dc                              |  exec |     68 |
+| 140 | Chap37     | BSTAVLStEph                    | rotate_right                         |  exec |     68 |
+| 141 | Chap37     | BSTPlainMtEph                  | delete_node                          |  exec |     68 |
+| 142 | Chap37     | BSTPlainStEph                  | delete_node                          |  exec |     68 |
+| 143 | Chap38     | BSTParaMtEph                   | difference_inner                     |  exec |     68 |
+| 144 | Chap39     | BSTTreapStEph                  | union_inner_st                       |  exec |     68 |
+| 145 | Chap36     | QuickSortMtEphSlice            | quick_sort_median3                   |  exec |     67 |
+| 146 | Chap36     | QuickSortMtEphSlice            | quick_sort_random                    |  exec |     67 |
+| 147 | Chap39     | BSTParaTreapMtEph              | difference_inner                     |  exec |     67 |
+| 148 | Chap43     | OrderedTableStEph              | restrict                             |  exec |     67 |
+| 149 | Chap43     | OrderedTableStEph              | subtract                             |  exec |     67 |
+| 150 | Chap47     | LinProbFlatHashTableStEph      | lookup                               |  exec |     67 |
+| 151 | vstdplus   | multiset                       | lemma_flatten_01_multiset_eq_filter  | proof |     67 |
+| 152 | Chap28     | MaxContigSubSumDivConOptStEph  | max_contig_sub_sum_aux               |  exec |     65 |
+| 153 | Chap65     | PrimStEph                      | prim_mst                             |  exec |     65 |
+| 154 | Chap65     | UnionFindStEph                 | lemma_rank_lt_elements               | proof |     65 |
+| 155 | Chap41     | OrdKeyMap                      | difference                           |  exec |     64 |
+| 156 | Chap42     | TableMtEph                     | restrict                             |  exec |     64 |
+| 157 | Chap42     | TableMtEph                     | tabulate                             |  exec |     63 |
+| 158 | Chap42     | TableMtEph                     | subtract                             |  exec |     63 |
+| 159 | Chap47     | VecChainedHashTableStEph       | delete                               |  exec |     63 |
+| 160 | Chap35     | OrderStatSelectMtEph           | parallel_three_way_partition         |  exec |     62 |
+| 161 | Chap37     | BSTBBAlphaMtEph                | delete_node                          |  exec |     62 |
+| 162 | Chap47     | LinkedListChainedHashTableStEph | delete                               |  exec |     62 |
+| 163 | Chap45     | LeftistHeapPQ                  | lemma_heap_root_is_min               | proof |     61 |
+| 164 | Chap28     | MaxContigSubSumReducedMcsseStEph | max_contig_sub_sum_reduced_mcsse     |  exec |     60 |
+| 165 | Chap35     | OrderStatSelectMtPer           | parallel_three_way_partition         |  exec |     60 |
+| 166 | Chap37     | BSTAVLStEph                    | rotate_left                          |  exec |     60 |
+| 167 | Chap42     | TableSpecsAndLemmas            | lemma_subseq_value_agrees            | proof |     60 |
+| 168 | Chap42     | TableStPer                     | tabulate                             |  exec |     60 |
+| 169 | Chap27     | ContractSpecsAndLemmas         | lemma_contraction_even               | proof |     59 |
+| 170 | Chap40     | BSTReducedStEph                | rotate_left                          |  exec |     59 |
+| 171 | Chap42     | TableStEph                     | tabulate                             |  exec |     59 |
+| 172 | Chap42     | TableStEph                     | delete                               |  exec |     59 |
+| 173 | Chap42     | TableStEph                     | subtract                             |  exec |     59 |
+| 174 | Chap53     | PQMinStEph                     | pq_min_multi                         |  exec |     59 |
+| 175 | Chap26     | ETSPStEph                      | etsp_inner                           |  exec |     58 |
+| 176 | Chap40     | BSTReducedStEph                | delete_link                          |  exec |     58 |
+| 177 | Chap40     | BSTSizeStEph                   | delete_link                          |  exec |     58 |
+| 178 | Chap42     | TableStPer                     | subtract                             |  exec |     58 |
+| 179 | Chap47     | LinkedListChainedHashTableStEph | resize                               |  exec |     58 |
+| 180 | Chap55     | CycleDetectStPer               | has_cycle                            |  exec |     58 |
+| 181 | Chap65     | UnionFindStEph                 | lemma_establish_union_pre            | proof |     58 |
+| 182 | Chap40     | BSTReducedStEph                | rotate_right                         |  exec |     57 |
+| 183 | Chap42     | TableStEph                     | restrict                             |  exec |     57 |
+| 184 | Chap43     | OrderedSetStPer                | split_rank_iter                      |  exec |     57 |
+| 185 | Chap47     | VecChainedHashTableStEph       | resize                               |  exec |     57 |
+| 186 | Chap55     | DFSStPer                       | lemma_neighbor_closed_path_per       | proof |     57 |
+| 187 | Chap39     | BSTParaTreapMtEph              | union_inner                          |  exec |     56 |
+| 188 | Chap41     | OrdKeyMap                      | restrict                             |  exec |     56 |
+| 189 | Chap41     | OrdKeyMap                      | subtract                             |  exec |     56 |
+| 190 | Chap42     | TableMtEph                     | filter                               |  exec |     56 |
+| 191 | Chap42     | TableStPer                     | restrict                             |  exec |     56 |
+| 192 | Chap47     | LinProbFlatHashTableStEph      | resize                               |  exec |     56 |
+| 193 | Chap52     | AdjTableGraphStEph             | insert_vertex                        |  exec |     56 |
+| 194 | Chap52     | AdjTableGraphStPer             | delete_edge                          |  exec |     56 |
+| 195 | Chap55     | DFSStEph                       | lemma_neighbor_closed_path           | proof |     56 |
+| 196 | Chap65     | UnionFindStEph                 | union_merge_exec                     |  exec |     56 |
+| 197 | Chap37     | BSTBBAlphaStEph                | delete_node                          |  exec |     55 |
+| 198 | Chap45     | BinaryHeapPQ                   | insert                               |  exec |     55 |
+| 199 | Chap55     | CycleDetectStEph               | lemma_cycle_not_dag                  | proof |     55 |
+| 200 | Chap37     | BSTRBStEph                     | rotate_left                          |  exec |     54 |
+| 201 | Chap37     | BSTSpecsAndLemmas              | lemma_bst_delete_left                | proof |     54 |
+| 202 | Chap37     | BSTSpecsAndLemmas              | lemma_bst_delete_right               | proof |     54 |
+| 203 | Chap42     | TableSpecsAndLemmas            | lemma_entries_to_map_skip_prefix     | proof |     54 |
+| 204 | Chap42     | TableStPer                     | filter                               |  exec |     54 |
+| 205 | Chap43     | OrderedTableStPer              | restrict                             |  exec |     54 |
+| 206 | Chap43     | OrderedTableStPer              | subtract                             |  exec |     54 |
+| 207 | Chap45     | SortedListPQ                   | lemma_append_push_bridge             | proof |     54 |
+| 208 | Chap28     | MaxContigSubSumDivConOptMtEph  | max_contig_sub_sum_aux               |  exec |     53 |
+| 209 | Chap35     | OrderStatSelectMtEph           | partition_three_dc                   |  exec |     53 |
+| 210 | Chap35     | OrderStatSelectMtPer           | partition_three_dc                   |  exec |     53 |
+| 211 | Chap37     | BSTSpecsAndLemmas              | lemma_bst_insert_left                | proof |     53 |
+| 212 | Chap37     | BSTSpecsAndLemmas              | lemma_bst_insert_right               | proof |     53 |
+| 213 | Chap45     | SortedListPQ                   | delete_max                           |  exec |     53 |
+| 214 | Chap45     | SortedListPQ                   | is_sorted                            |  exec |     53 |
+| 215 | Chap52     | AdjTableGraphSpecsAndLemmas    | lemma_sum_entry_sizes_eq             | proof |     53 |
+| 216 | Chap54     | BFSMtEph                       | bfs                                  |  exec |     53 |
+| 217 | Chap55     | TopoSortStEph                  | lemma_reachable_edge_contradicts_dag | proof |     53 |
+| 218 | Chap41     | ArraySetStEph                  | filter                               |  exec |     52 |
+| 219 | Chap42     | TableStEph                     | filter                               |  exec |     52 |
+| 220 | Chap28     | MaxContigSubSumDivConStEph     | max_contig_sub_sum_divcon            |  exec |     51 |
+| 221 | Chap39     | BSTTreapMtEph                  | rotate_right                         |  exec |     51 |
+| 222 | Chap41     | ArraySetStEph                  | union                                |  exec |     51 |
+| 223 | Chap47     | DoubleHashFlatHashTableStEph   | resize                               |  exec |     51 |
+| 224 | Chap47     | QuadProbFlatHashTableStEph     | resize                               |  exec |     51 |
+| 225 | Chap52     | AdjSeqGraphMtEph               | set_edge                             |  exec |     51 |
+| 226 | Chap52     | AdjSeqGraphStEph               | set_edge                             |  exec |     51 |
+| 227 | Chap52     | AdjTableGraphStPer             | vertices                             |  exec |     51 |
+| 228 | Chap55     | CycleDetectStPer               | lemma_path_ord_decreases_per         | proof |     51 |
+| 229 | Chap36     | QuickSortMtEphSlice            | partition_three_dc                   |  exec |     50 |
+| 230 | Chap40     | BSTKeyValueStEph               | rotate_left                          |  exec |     50 |
+| 231 | Chap55     | CycleDetectStEph               | lemma_path_ord_decreases             | proof |     50 |
 
-197 functions over 50 proof lines
+231 functions over 50 proof lines
