@@ -386,6 +386,7 @@ pub mod AVLTreeSeqMtPer {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     impl<T: StTInMtT> AVLTreeSeqMtPerNodeFns<T> for Arc<Node<T>> {
 
+    #[verifier::rlimit(80)]
     fn rotate_right(self) -> (rotated: Self)
     {
         let ghost node = self;
