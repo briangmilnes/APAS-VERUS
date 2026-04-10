@@ -1,0 +1,30 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error[E0405]: cannot find trait `PartialEqSpecImpl` in this scope
+    --> src/Chap37/AVLTreeSeq.rs:1340:18
+     |
+1340 |     impl<T: StT> PartialEqSpecImpl for AVLTreeS<T> {
+     |                  ^^^^^^^^^^^^^^^^^ not found in this scope
+
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:782:15
+    |
+782 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+For more information about this error, try `rustc --explain E0405`.
+warning: `apas-verus` (lib test) generated 1 warning
+error: could not compile `apas-verus` (lib test) due to 1 previous error; 1 warning emitted
+warning: build failed, waiting for other jobs to finish...
+warning: `apas-verus` (lib) generated 1 warning (1 duplicate)
+error: could not compile `apas-verus` (lib) due to 1 previous error; 1 warning emitted
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 10s

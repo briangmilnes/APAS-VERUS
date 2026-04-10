@@ -50,6 +50,64 @@ The proof block detector must not match lines that are part of `ensures` or `req
 blocks. A line is part of an ensures block if it's between `ensures` and the opening
 `{` of the function body (accounting for nesting and `by` blocks).
 
+## Bug 2: NEEDED proof block markers shift code, corrupting exec logic
+
+### Bug
+
+When `veracity-minimize-proofs` inserts `// Veracity: NEEDED proof block` markers,
+it can place them on the wrong line — between a `let ghost` binding and the `proof {}`
+block that uses it, or between an exec statement and its proof block. This shifts
+code relative to proof blocks, corrupting the exec logic.
+
+### Example
+
+In `src/Chap37/BSTRBMtEph.rs`, the Red-Black tree `rotate_left` function had:
+
+```rust
+// Before (correct):
+let ghost old_x_right = x.right;
+proof {
+    reveal_with_fuel(spec_is_bst_link, 2);
+
+// After (corrupted by marker insertion):
+// Veracity: NEEDED proof block
+let ghost old_x_right = x.right;
+proof {
+    reveal_with_fuel(spec_is_bst_link, 2);
+```
+
+The marker shifted `let ghost old_x_right` down relative to the proof block, and
+similar shifts happened in `rotate_right`. The code still verified (the ghost
+bindings don't affect exec), but the RB tree's runtime balancing behavior changed,
+causing `test_rb_balancing` to fail with `assert!(height <= 6)`.
+
+### Root Cause
+
+The marker insertion code does not account for the relationship between ghost
+bindings and their proof blocks. It inserts markers at proof block boundaries
+without checking whether intervening lines are part of the same logical unit.
+
+### Impact
+
+Runtime correctness corruption. This is worse than the ensures-gutting bug because:
+1. Verus verification passes (ghost code doesn't affect exec)
+2. RTTs catch it only if the specific behavior is tested
+3. The corruption is subtle — moved ghost bindings, shifted proof blocks
+
+### Scope
+
+Any file with interleaved `let ghost` bindings and `proof {}` blocks. Common in
+BST, AVL, RB tree modules (Chap37-41).
+
+## Bug 3: #[cfg(verus_keep_ghost)] treated as proof block
+
+The `#[cfg(verus_keep_ghost)]` attribute on `PartialEqSpecImpl` impls is a structural
+gate, not a proof block. Commenting it out exposes the impl to the non-Verus compiler
+(cargo test), which cannot find the `PartialEqSpecImpl` trait. Found in:
+- `src/Chap18/ArraySeqStPer.rs:1024`
+- `src/Chap37/AVLTreeSeq.rs:1339`
+
 ## Workaround
 
 Manual review of all UNNEEDED markers before merging agent results.
+Revert any file where RTT fails after merge.
