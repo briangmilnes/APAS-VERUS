@@ -74,11 +74,14 @@ broadcast use {
         ensures
             spec_set_pair_view_generated::<K, V>(s.insert(pair@)),
     {
+        // Veracity: NEEDED assert (speed hint)
         assert forall|elem: (K::V, V::V)| s.insert(pair@).contains(elem)
             implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
             if elem == pair@ {
+                // Veracity: NEEDED assert (speed hint)
                 assert(pair@ == elem);
             } else {
+                // Veracity: NEEDED assert (speed hint)
                 assert(s.contains(elem));
             }
         };
@@ -93,12 +96,14 @@ broadcast use {
         let proj = |p: (KV, VV)| -> KV { p.0 };
         let proj_set = s.map(proj);
         // dom_set ⊆ proj_set.
+        // Veracity: NEEDED assert
         assert forall|k: KV| dom_set.contains(k)
             implies #[trigger] proj_set.contains(k)
         by {
             let v: VV = choose|v: VV| s.contains((k, v));
+            // Veracity: NEEDED assert (speed hint)
             assert(s.contains((k, v)));
-            assert(proj((k, v)) == k);
+// Veracity: UNNEEDED assert             assert(proj((k, v)) == k);
         };
         s.lemma_map_finite(proj);
         vstd::set_lib::lemma_len_subset(dom_set, proj_set);
@@ -114,22 +119,29 @@ broadcast use {
         let proj = |p: (KV, VV)| -> KV { p.0 };
         let proj_set = s.map(proj);
         // dom_set =~= proj_set.
+        // Veracity: NEEDED assert
         assert(dom_set =~= proj_set) by {
+            // Veracity: NEEDED assert
             assert forall|k: KV| dom_set.contains(k)
                 implies #[trigger] proj_set.contains(k)
             by {
                 let v: VV = choose|v: VV| s.contains((k, v));
+                // Veracity: NEEDED assert (speed hint)
                 assert(s.contains((k, v)));
             };
+            // Veracity: NEEDED assert
             assert forall|k: KV| proj_set.contains(k)
                 implies #[trigger] dom_set.contains(k)
             by {
                 let p: (KV, VV) = choose|p: (KV, VV)| #[trigger] s.contains(p) && p.0 == k;
+                // Veracity: NEEDED assert
                 assert(s.contains((k, p.1)));
             };
         };
         // proj is injective on s when keys are unique: distinct pairs have distinct keys.
+        // Veracity: NEEDED assert
         assert(vstd::relations::injective_on(proj, s)) by {
+            // Veracity: NEEDED assert
             assert forall|x1: (KV, VV), x2: (KV, VV)|
                 s.contains(x1) && s.contains(x2) && #[trigger] proj(x1) == #[trigger] proj(x2)
                 implies x1 == x2
@@ -150,11 +162,14 @@ broadcast use {
             spec_pair_set_to_map(s)[k] == v,
     {
         let m = spec_pair_set_to_map(s);
+        // Veracity: NEEDED assert (speed hint)
         assert(m.dom().contains(k));
         // m[k] == choose|v_| s.contains((k, v_)).
         // By key uniqueness, that chosen value must equal v.
         let v2 = choose|v2: VV| s.contains((k, v2));
+        // Veracity: NEEDED assert (speed hint)
         assert(s.contains((k, v2)));
+        // Veracity: NEEDED assert (speed hint)
         assert(v2 == v);
     }
 
@@ -174,15 +189,18 @@ broadcast use {
         ensures
             spec_key_unique_pairs_set(s.insert((k, v)))
     {
+        // Veracity: NEEDED assert
         assert forall|k2: KV, v1: VV, v2: VV|
             s.insert((k, v)).contains((k2, v1)) && s.insert((k, v)).contains((k2, v2))
             implies v1 == v2
         by {
             if k2 == k {
                 if s.contains((k2, v1)) {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(spec_pair_set_to_map(s).dom().contains(k));
                 }
                 if s.contains((k2, v2)) {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(spec_pair_set_to_map(s).dom().contains(k));
                 }
                 // Both must be (k, v) from the insert.
@@ -210,20 +228,26 @@ broadcast use {
                 ==> (#[trigger] sorted[i]).0 != (#[trigger] sorted[j]).0,
     {
         // sorted.to_set() =~= tree.
+        // Veracity: NEEDED assert
         assert(sorted.to_set() =~= tree) by {
+            // Veracity: NEEDED assert (speed hint)
             assert forall|v: (KV, VV)| sorted.to_set().contains(v) <==> #[trigger] tree.contains(v) by {};
         };
         // sorted.to_set().len() == tree.len() == sorted.len(), so no duplicates.
         sorted.lemma_no_dup_set_cardinality();
         // Pairwise distinct keys: same key + key uniqueness → same pair → contradicts no_duplicates.
+        // Veracity: NEEDED assert
         assert forall|i: int, j: int|
             0 <= i < sorted.len() && 0 <= j < sorted.len() && i != j
             implies (#[trigger] sorted[i]).0 != (#[trigger] sorted[j]).0
         by {
             if sorted[i].0 == sorted[j].0 {
+                // Veracity: NEEDED assert
                 assert(tree.contains(sorted[i]));
+                // Veracity: NEEDED assert
                 assert(tree.contains(sorted[j]));
                 // Key uniqueness: same key in tree → same value → same pair.
+                // Veracity: NEEDED assert
                 assert(sorted[i] == sorted[j]);
                 // Contradicts no_duplicates.
             }
@@ -260,39 +284,49 @@ broadcast use {
         let old_m = spec_pair_set_to_map(s);
         let new_s = s.insert((k, v));
         let new_m = spec_pair_set_to_map(new_s);
+        // Veracity: NEEDED assert
         assert forall|key: KV| #[trigger] new_m.dom().contains(key)
             implies old_m.insert(k, v).dom().contains(key)
         by {
             if key == k {
             } else {
                 let vv: VV = choose|vv: VV| new_s.contains((key, vv));
-                assert(s.contains((key, vv)));
+// Veracity: UNNEEDED assert                 assert(s.contains((key, vv)));
             }
         };
+        // Veracity: NEEDED assert
         assert forall|key: KV| old_m.insert(k, v).dom().contains(key)
             implies #[trigger] new_m.dom().contains(key)
         by {
             if key == k {
+                // Veracity: NEEDED assert
                 assert(new_s.contains((k, v)));
             } else {
                 let vv: VV = choose|vv: VV| s.contains((key, vv));
+                // Veracity: NEEDED assert
                 assert(new_s.contains((key, vv)));
             }
         };
         // Values agree.
+        // Veracity: NEEDED assert
         assert forall|key: KV| new_m.dom().contains(key)
             implies #[trigger] new_m[key] == old_m.insert(k, v)[key]
         by {
             if key == k {
                 let cv: VV = choose|cv: VV| new_s.contains((k, cv));
+                // Veracity: NEEDED assert (speed hint)
                 assert(new_s.contains((k, cv)));
+                // Veracity: NEEDED assert (speed hint)
                 assert(new_s.contains((k, v)));
                 lemma_key_unique_insert(s, k, v);
+                // Veracity: NEEDED assert (speed hint)
                 assert(cv == v);
             } else {
                 let cv: VV = choose|cv: VV| new_s.contains((key, cv));
+                // Veracity: NEEDED assert (speed hint)
                 assert(s.contains((key, cv)));
                 let cv2: VV = choose|cv2: VV| s.contains((key, cv2));
+                // Veracity: NEEDED assert (speed hint)
                 assert(cv == cv2);
             }
         };

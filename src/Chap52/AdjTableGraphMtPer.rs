@@ -197,6 +197,7 @@ broadcast use {
         ensures
             count as nat == spec_sum_adj_sizes(table@)
     {
+        // Veracity: NEEDED proof block (speed hint)
         proof { reveal(spec_sum_adj_sizes); }
         let mut remaining = table.clone();
         let mut count: usize = 0;
@@ -220,24 +221,33 @@ broadcast use {
             let first = remaining.first_key();
             match first {
                 None => {
+// Veracity: UNNEEDED proof block                     // Veracity: NEEDED assert (speed hint)
                     proof { assert(false); }
                 }
                 Some(v_key) => {
                     let ghost old_remaining_view = remaining@;
                     match remaining.find(&v_key) {
                         None => {
+                            // Veracity: NEEDED proof block (speed hint)
+                            // Veracity: NEEDED assert (speed hint)
                             proof { assert(false); }
+                        // Veracity: NEEDED proof block
                         }
                         Some(neighbors) => {
                             proof {
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(remaining@.dom().contains(v_key@));
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(neighbors@ == table@[v_key@]);
                                 let dom = table@.dom();
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(neighbors@.subset_of(dom)) by {
+                                    // Veracity: NEEDED assert
                                     assert forall|w: <V as View>::V|
                                         #[trigger] neighbors@.contains(w)
                                         implies dom.contains(w)
                                     by {
+                                        // Veracity: NEEDED assert (speed hint)
                                         assert(table@.index(v_key@).contains(w));
                                     };
                                 };
@@ -245,33 +255,43 @@ broadcast use {
                                 lemma_sum_adj_remove(remaining@, v_key@);
                             }
                             let neighbor_count = neighbors.size();
+                            // Veracity: NEEDED proof block
                             count = count + neighbor_count;
                             remaining = remaining.delete(&v_key);
                             n = remaining.size();
                             proof {
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(remaining@ == old_remaining_view.remove(v_key@));
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(remaining@.dom().subset_of(table@.dom())) by {
+                                    // Veracity: NEEDED assert
                                     assert forall|k: <V as View>::V|
                                         #[trigger] remaining@.dom().contains(k)
                                         implies table@.dom().contains(k)
                                     by {
+                                        // Veracity: NEEDED assert (speed hint)
                                         assert(old_remaining_view.dom().contains(k));
                                     };
                                 };
+                                // Veracity: NEEDED assert
                                 assert forall|k: <V as View>::V|
                                     #[trigger] remaining@.dom().contains(k)
                                     implies remaining@[k] == table@[k]
                                 by {
+                                    // Veracity: NEEDED assert (speed hint)
                                     assert(old_remaining_view.dom().contains(k));
+                                    // Veracity: NEEDED assert (speed hint)
                                     assert(k != v_key@);
                                 };
                             }
                         }
+                    // Veracity: NEEDED proof block
                     }
                 }
             }
         }
         proof {
+            // Veracity: NEEDED assert (speed hint)
             assert(remaining@.dom().is_empty());
         }
         count
@@ -304,6 +324,7 @@ broadcast use {
         open spec fn spec_num_edges(&self) -> nat {
             self.num_edges as nat
         }
+// Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (out: Self) {
@@ -313,8 +334,11 @@ broadcast use {
                 reveal(spec_sum_adj_sizes);
                 // Type-level preds come from requires. Graph closure is vacuous
                 // on an empty map since no u satisfies dom().contains(u).
+                // Veracity: NEEDED assert (speed hint)
                 assert(out.adj@ == Map::<<V as View>::V, Set<<V as View>::V>>::empty());
+                // Veracity: NEEDED assert (speed hint)
                 assert(out.spec_adj().dom().finite());
+                // Veracity: NEEDED assert
                 assert forall|u: <V as View>::V, v: <V as View>::V|
                     out.spec_adj().dom().contains(u)
                     && #[trigger] out.spec_adj().index(u).contains(v)
@@ -336,6 +360,7 @@ broadcast use {
             where V: crate::vstdplus::total_order::total_order::TotalOrder
         {
             self.num_edges
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
@@ -346,10 +371,13 @@ broadcast use {
                         // find ensures: self.adj@.contains_key(u@) && self.adj@[u@] == neighbors@
                         // Prove neighbors wf via graph closure + finiteness.
                         let dom = self.spec_adj().dom();
+                        // Veracity: NEEDED assert (speed hint)
                         assert(neighbors@.subset_of(dom)) by {
+                            // Veracity: NEEDED assert
                             assert forall|w: <V as View>::V| #[trigger] neighbors@.contains(w)
                                 implies dom.contains(w)
                             by {
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(self.spec_adj().index(u@).contains(w));
                             };
                         };
@@ -364,6 +392,7 @@ broadcast use {
                     // so !self.spec_adj().dom().contains(u@), making the && false.
                     false
                 }
+            // Veracity: NEEDED proof block
             }
         }
 
@@ -375,11 +404,13 @@ broadcast use {
                         // find ensures: self.adj@.contains_key(u@) && self.adj@[u@] == ns@
                         // Prove ns wf: ns@ == adj[u@] ⊆ dom (graph closure), dom finite → ns@ finite.
                         let dom = self.spec_adj().dom();
+                        // Veracity: NEEDED assert (speed hint)
                         assert(ns@.subset_of(dom)) by {
+                            // Veracity: NEEDED assert
                             assert forall|w: <V as View>::V| #[trigger] ns@.contains(w)
                                 implies dom.contains(w)
                             by {
-                                assert(self.spec_adj().index(u@).contains(w));
+// Veracity: UNNEEDED assert                                 assert(self.spec_adj().index(u@).contains(w));
                             };
                         };
                         vstd::set_lib::lemma_len_subset(ns@, dom);
@@ -409,6 +440,7 @@ broadcast use {
                 // updated.spec_adj() == self.spec_adj(), so wf follows from self's wf.
                 // dom.contains(v@): find returned Some → self.adj@.contains_key(v@).
                 updated
+            // Veracity: NEEDED proof block
             } else {
                 // v not in domain. Insert v with empty neighbor set.
                 let empty_set = AVLTreeSetMtPer::empty();
@@ -431,10 +463,13 @@ broadcast use {
                     //   = self.num_edges
                     reveal(spec_sum_adj_sizes);
                     lemma_sum_adj_remove(updated.adj@, v@);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(updated.adj@[v@] =~= Set::<<V as View>::V>::empty());
+                    // Veracity: NEEDED assert
                     assert(updated.adj@.remove(v@) =~= self.adj@);
 
                     // Graph closure: every neighbor of every vertex is also a vertex.
+                    // Veracity: NEEDED assert
                     assert forall|u2: <V as View>::V, w: <V as View>::V|
                         updated.spec_adj().dom().contains(u2)
                         && #[trigger] updated.spec_adj().index(u2).contains(w)
@@ -442,18 +477,24 @@ broadcast use {
                     by {
                         if u2 == v@ {
                             // updated.adj@[v@] == Set::empty(), contradiction.
+                            // Veracity: NEEDED assert (speed hint)
                             assert(updated.adj@[v@] =~= Set::<<V as View>::V>::empty());
                         } else {
                             // u2 in old domain, value unchanged.
+                            // Veracity: NEEDED assert (speed hint)
                             assert(self.adj@.contains_key(u2));
+                            // Veracity: NEEDED assert (speed hint)
                             assert(updated.adj@[u2] == self.adj@[u2]);
                             // By self's graph closure: w in self's domain.
+                            // Veracity: NEEDED assert (speed hint)
                             assert(self.spec_adj().index(u2).contains(w));
+                            // Veracity: NEEDED assert (speed hint)
                             assert(self.spec_adj().dom().contains(w));
                             // self's domain ⊆ updated domain.
                         }
                     };
                 }
+                // Veracity: NEEDED proof block
                 updated
             }
         }
@@ -464,9 +505,12 @@ broadcast use {
             let ghost v_view = v@;
             let v_clone = v.clone();
             proof {
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<V>());
                 crate::vstdplus::feq::feq::lemma_cloned_view_eq::<V>(*v, v_clone);
+                // Veracity: NEEDED assert (speed hint)
                 assert(v_clone@ == v_view);
+            // Veracity: NEEDED proof block
             }
             let cleaned = without_v.map(
                 move |neighbors: &AVLTreeSetMtPer<V>| -> (r: AVLTreeSetMtPer<V>)
@@ -481,28 +525,45 @@ broadcast use {
                 // delete ensures: without_v@ == self.adj@.remove(v@)
                 // map ensures: cleaned@.dom() =~= without_v@.dom(),
                 //   forall|k| without_v@.contains_key(k) ==> cleaned@[k] == without_v@[k].remove(v@)
+                // Veracity: NEEDED assert (speed hint)
                 assert(without_v@ == self.adj@.remove(v@));
+                // Veracity: NEEDED assert (speed hint)
                 assert(cleaned@.dom() =~= without_v@.dom());
 
                 // Graph closure on cleaned.
+                // Veracity: NEEDED assert
                 assert forall|u: <V as View>::V, w: <V as View>::V|
                     cleaned@.dom().contains(u)
                     && #[trigger] cleaned@.index(u).contains(w)
                     implies cleaned@.dom().contains(w)
                 by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(cleaned@.dom().contains(u));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(cleaned@.index(u).contains(w));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(without_v@.contains_key(u));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(without_v@.contains_key(u));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(cleaned@[u] =~= without_v@[u].remove(v_view));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(u != v@);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(self.adj@.contains_key(u));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(without_v@[u] =~= self.adj@[u]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(self.adj@.index(u).contains(w));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(w != v_view);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(v_view == v@);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(self.adj@.dom().contains(w));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(without_v@.dom().contains(w));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(cleaned@.dom().contains(w));
                 };
 
@@ -511,21 +572,29 @@ broadcast use {
                 // cleaned@ values are subsets of without_v@ values (removing an element).
                 // without_v@ values equal self.adj@ values for keys in without_v@.dom().
                 // Monotonicity: smaller sets → smaller sum.
+                // Veracity: NEEDED assert
                 assert forall|k: <V as View>::V| #[trigger] cleaned@.dom().contains(k)
                     implies cleaned@[k].len() <= without_v@[k].len()
                 by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(without_v@.contains_key(k));
-                    assert(cleaned@[k] =~= without_v@[k].remove(v_view));
+// Veracity: UNNEEDED assert                     assert(cleaned@[k] =~= without_v@[k].remove(v_view));
                     // S.remove(x) ⊆ S, so |S.remove(x)| <= |S|.
                     // Prove without_v@[k] is finite for len() to be defined.
+                    // Veracity: NEEDED assert (speed hint)
                     assert(k != v@);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(self.adj@.contains_key(k));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(without_v@[k] =~= self.adj@[k]);
                     let dom = self.spec_adj().dom();
+                    // Veracity: NEEDED assert (speed hint)
                     assert(self.adj@[k].subset_of(dom)) by {
+                        // Veracity: NEEDED assert
                         assert forall|w: <V as View>::V| #[trigger] self.adj@[k].contains(w)
                             implies dom.contains(w)
                         by {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(self.spec_adj().index(k).contains(w));
                         };
                     };
@@ -534,31 +603,41 @@ broadcast use {
                 };
                 assert(cleaned@.dom().finite()) by { assert(cleaned.spec_orderedtablemtper_wf()); };
                 assert(without_v@.dom().finite()) by { assert(without_v.spec_orderedtablemtper_wf()); };
+                // Veracity: NEEDED assert (speed hint)
                 assert(self.adj@.dom().finite());
                 lemma_sum_adj_sizes_monotone(cleaned@, without_v@);
-                assert(spec_sum_adj_sizes(cleaned@) <= spec_sum_adj_sizes(without_v@));
+// Veracity: UNNEEDED assert                 assert(spec_sum_adj_sizes(cleaned@) <= spec_sum_adj_sizes(without_v@));
                 // without_v@ == self.adj@.remove(v@). Prove its sum <= self's sum.
+                // Veracity: NEEDED assert (speed hint)
                 assert(without_v@ =~= self.adj@.remove(v@));
                 if self.adj@.dom().contains(v@) {
                     lemma_sum_adj_remove(self.adj@, v@);
                     // self sum = adj[v@].len + sum(adj.remove(v@)) >= sum(adj.remove(v@))
+                    // Veracity: NEEDED assert (speed hint)
                     assert(spec_sum_adj_sizes(self.adj@.remove(v@))
                         <= spec_sum_adj_sizes(self.adj@));
                 } else {
+                    // Veracity: NEEDED assert
                     assert(self.adj@.remove(v@) =~= self.adj@);
                 }
                 // Verus needs substitution: without_v@ =~= self.adj@.remove(v@)
+                // Veracity: NEEDED assert (speed hint)
                 assert(spec_sum_adj_sizes(without_v@)
                     == spec_sum_adj_sizes(self.adj@.remove(v@)));
-                assert(spec_sum_adj_sizes(without_v@) <= spec_sum_adj_sizes(self.adj@));
+// Veracity: UNNEEDED proof block                 // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED proof block                 assert(spec_sum_adj_sizes(without_v@) <= spec_sum_adj_sizes(self.adj@));
+// Veracity: UNNEEDED proof block                 // Veracity: NEEDED assert (speed hint)
                 assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+                // Veracity: NEEDED assert (speed hint)
                 assert(spec_sum_adj_sizes(cleaned@) <= self.num_edges as nat);
+                // Veracity: NEEDED assert (speed hint)
                 assert(spec_sum_adj_sizes(cleaned@) <= usize::MAX as nat);
             }
             let new_num_edges = count_table_edges(&cleaned);
             let updated = AdjTableGraphMtPer { adj: cleaned, num_edges: new_num_edges };
             proof {
-                assert(!updated.spec_adj().dom().contains(v@));
+// Veracity: UNNEEDED assert                 assert(!updated.spec_adj().dom().contains(v@));
+            // Veracity: NEEDED proof block
             }
             updated
         }
@@ -571,8 +650,10 @@ broadcast use {
             let ghost orig_dom_len = self.adj@.dom().len();
 
             proof {
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<V>());
             }
+// Veracity: NEEDED proof block
 
             // Track whether u was originally in domain.
             let ghost u_in_orig = self.adj@.contains_key(u@);
@@ -580,15 +661,19 @@ broadcast use {
             // Ensure u is in domain.
             match new_adj.find(&u) {
                 Some(_) => {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_adj@.dom().len() <= orig_dom_len);
                 }
                 None => {
+                    // Veracity: NEEDED proof block
                     let u_clone = u.clone();
                     proof {
                         crate::vstdplus::feq::feq::lemma_cloned_view_eq::<V>(u, u_clone);
                     }
                     new_adj = new_adj.insert_wf(u_clone, AVLTreeSetMtPer::empty());
+                    // Veracity: NEEDED assert
                     assert(new_adj@.dom().contains(u@));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_adj@.dom().len() <= orig_dom_len + 1);
                 }
             }
@@ -596,8 +681,11 @@ broadcast use {
             // After match 1: u@ in dom. Establish u-value invariant.
             proof {
                 if u_in_orig {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_adj@[u@] == orig_adj[u@]);
                 } else {
+                    // Veracity: NEEDED proof block
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_adj@[u@] =~= Set::<<V as View>::V>::empty());
                 }
             }
@@ -606,7 +694,9 @@ broadcast use {
             // Ensure v is in domain.
             match new_adj.find(&v) {
                 Some(_) => {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_adj@.dom().len() <= orig_dom_len + 1);
+                // Veracity: NEEDED proof block
                 }
                 None => {
                     let v_clone = v.clone();
@@ -614,52 +704,67 @@ broadcast use {
                         crate::vstdplus::feq::feq::lemma_cloned_view_eq::<V>(v, v_clone);
                     }
                     new_adj = new_adj.insert_wf(v_clone, AVLTreeSetMtPer::empty());
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_adj@.dom().contains(v@));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_adj@.dom().len() <= orig_dom_len + 2);
                 }
             }
 
             // After match 2: u@ and v@ both in dom. u's value is unchanged.
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(new_adj@[u@] == adj_after_u[u@]);
                 if u_in_orig {
-                    assert(new_adj@[u@] == orig_adj[u@]);
+// Veracity: UNNEEDED assert                     assert(new_adj@[u@] == orig_adj[u@]);
                     let dom = orig_adj.dom();
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_adj@[u@].subset_of(dom)) by {
+                        // Veracity: NEEDED assert
                         assert forall|w: <V as View>::V| #[trigger] new_adj@[u@].contains(w)
                             implies dom.contains(w)
+                        // Veracity: NEEDED proof block
                         by {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(orig_adj.index(u@).contains(w));
                         };
                     };
                     vstd::set_lib::lemma_len_subset(new_adj@[u@], dom);
                 } else {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_adj@[u@] =~= Set::<<V as View>::V>::empty());
                 }
             }
+// Veracity: NEEDED proof block
 
             let u_neighbors = match new_adj.find(&u) {
                 Some(ns) => ns,
                 None => AVLTreeSetMtPer::empty(),
             };
+            // Veracity: NEEDED proof block
             proof {
-                assert(u_neighbors@.finite());
+// Veracity: UNNEEDED assert                 assert(u_neighbors@.finite());
                 if u_in_orig {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(u_neighbors@.len() <= orig_dom_len);
                 }
             }
             // Check whether edge already exists before consuming v.
             assert_avltreesetmtper_always_wf(&u_neighbors);
             let had_edge = u_neighbors.find(&v);
+            // Veracity: NEEDED proof block
             let new_u_neighbors = u_neighbors.insert(v);
             // insert ensures: new_u_neighbors@ == u_neighbors@.insert(v@), wf preserved.
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(new_adj@.dom().len() <= orig_dom_len + 2);
+                // Veracity: NEEDED assert (speed hint)
                 assert(new_adj@.dom().len() + 1 < usize::MAX as nat);
             }
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
-                assert((self.num_edges as nat) < (usize::MAX as nat));
+// Veracity: UNNEEDED assert                 assert((self.num_edges as nat) < (usize::MAX as nat));
             }
             let new_num_edges: usize = if had_edge { self.num_edges } else { self.num_edges + 1 };
             let updated_adj = new_adj.insert_wf(u, new_u_neighbors);
@@ -675,7 +780,9 @@ broadcast use {
                 //   forall|k2 != u@| new_adj@.contains_key(k2) ==> updated.adj@[k2] == new_adj@[k2]
 
                 // Postcondition: updated.adj@[u@].contains(v@).
+                // Veracity: NEEDED assert (speed hint)
                 assert(updated.adj@[u@] =~= u_neighbors@.insert(v@));
+                // Veracity: NEEDED assert (speed hint)
                 assert(updated.spec_adj()[u@].contains(v@));
 
                 // Prove cached edge count is correct.
@@ -689,44 +796,56 @@ broadcast use {
                     // Since adj_after_u[u@] == empty and new_adj@ preserves u@'s value:
                 }
                 // Prove spec_sum_adj_sizes(new_adj@) == self.num_edges as nat.
+                // Veracity: NEEDED assert (speed hint)
                 assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
                 let self_sum = spec_sum_adj_sizes(self.adj@);
+                // Veracity: NEEDED assert (speed hint)
                 assert(self_sum == self.num_edges as nat);
                 // After adding u@ (if not present):
                 if !u_in_orig {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(adj_after_u.dom().finite()) by {
                         // adj_after_u == result of insert_wf on self.adj, which is wf.
                         // insert_wf ensures dom =~= self.adj@.dom().insert(u@).
+                        // Veracity: NEEDED assert (speed hint)
                         assert(adj_after_u.dom() =~= self.adj@.dom().insert(u@));
                     };
+                    // Veracity: NEEDED assert (speed hint)
                     assert(adj_after_u.dom().contains(u@));
                     lemma_sum_adj_remove(adj_after_u, u@);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(adj_after_u[u@] =~= Set::<<V as View>::V>::empty());
+                    // Veracity: NEEDED assert
                     assert(adj_after_u.remove(u@) =~= self.adj@);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(spec_sum_adj_sizes(adj_after_u) == self_sum);
                 } else {
-                    assert(adj_after_u =~= self.adj@);
-                    assert(adj_after_u.dom().finite());
+// Veracity: UNNEEDED assert                     assert(adj_after_u =~= self.adj@);
+// Veracity: UNNEEDED assert                     assert(adj_after_u.dom().finite());
                 }
                 // After adding v@ (if not present):
+                // Veracity: NEEDED assert (speed hint)
                 assert(new_adj@.dom().finite()) by {
                     assert(new_adj.spec_orderedtablemtper_wf());
                 };
                 let ghost v_in_adj_after_u = adj_after_u.dom().contains(v@);
                 if !v_in_adj_after_u {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_adj@.dom().contains(v@));
                     lemma_sum_adj_remove(new_adj@, v@);
-                    assert(new_adj@[v@] =~= Set::<<V as View>::V>::empty());
+// Veracity: UNNEEDED assert                     assert(new_adj@[v@] =~= Set::<<V as View>::V>::empty());
+                    // Veracity: NEEDED assert
                     assert(new_adj@.remove(v@) =~= adj_after_u);
-                    assert(spec_sum_adj_sizes(new_adj@) == spec_sum_adj_sizes(adj_after_u));
+// Veracity: UNNEEDED assert                     assert(spec_sum_adj_sizes(new_adj@) == spec_sum_adj_sizes(adj_after_u));
                 } else {
-                    assert(new_adj@ =~= adj_after_u);
+// Veracity: UNNEEDED assert                     assert(new_adj@ =~= adj_after_u);
                 }
-                assert(spec_sum_adj_sizes(new_adj@) == self_sum);
+// Veracity: UNNEEDED assert                 assert(spec_sum_adj_sizes(new_adj@) == self_sum);
 
                 // Step 2: Relate updated.adj@ sum to new_adj@ sum.
                 lemma_sum_adj_remove(updated.adj@, u@);
                 lemma_sum_adj_remove(new_adj@, u@);
+                // Veracity: NEEDED assert
                 assert(updated.adj@.remove(u@) =~= new_adj@.remove(u@));
                 // spec_sum_adj_sizes(updated.adj@)
                 //   = updated.adj@[u@].len() + spec_sum_adj_sizes(new_adj@.remove(u@))
@@ -734,17 +853,24 @@ broadcast use {
                 // If had_edge (v@ in u_neighbors@): insert is idempotent, len unchanged.
                 // If !had_edge: len increases by 1.
                 if had_edge {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(u_neighbors@.contains(v@));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(u_neighbors@.insert(v@) =~= u_neighbors@);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(spec_sum_adj_sizes(updated.adj@) == self_sum);
                 } else {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(!u_neighbors@.contains(v@));
                     vstd::set_lib::lemma_len_union(u_neighbors@, Set::<<V as View>::V>::empty().insert(v@));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(u_neighbors@.insert(v@).len() == u_neighbors@.len() + 1nat);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(spec_sum_adj_sizes(updated.adj@) == self_sum + 1);
                 }
 
                 // Graph closure on updated.
+                // Veracity: NEEDED assert
                 assert forall|u2: <V as View>::V, w: <V as View>::V|
                     updated.spec_adj().dom().contains(u2)
                     && #[trigger] updated.spec_adj().index(u2).contains(w)
@@ -752,19 +878,24 @@ broadcast use {
                 by {
                     if u2 == u@ {
                         if w == v@ {
-                            assert(new_adj@.dom().contains(v@));
+// Veracity: UNNEEDED assert                             assert(new_adj@.dom().contains(v@));
                         } else {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(u_neighbors@.contains(w));
                             if u_in_orig {
-                                assert(orig_adj.index(u@).contains(w));
+// Veracity: UNNEEDED assert                                 assert(orig_adj.index(u@).contains(w));
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(orig_adj.dom().contains(w));
                             }
+                        // Veracity: NEEDED proof block
                         }
                     } else {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(new_adj@.contains_key(u2));
-                        assert(updated.adj@[u2] == new_adj@[u2]);
+// Veracity: UNNEEDED assert                         assert(updated.adj@[u2] == new_adj@[u2]);
                         if orig_adj.contains_key(u2) {
-                            assert(orig_adj.index(u2).contains(w));
+// Veracity: UNNEEDED assert                             assert(orig_adj.index(u2).contains(w));
+                            // Veracity: NEEDED assert (speed hint)
                             assert(orig_adj.dom().contains(w));
                         }
                     }
@@ -777,17 +908,21 @@ broadcast use {
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
             let updated = match self.adj.find(u) {
                 Some(u_neighbors) => {
+                    // Veracity: NEEDED proof block
                     proof {
                         // find ensures: self.adj@.contains_key(u@) && self.adj@[u@] == u_neighbors@
                         // Prove u_neighbors wf via graph closure + finiteness.
                         let dom = self.spec_adj().dom();
-                        assert(u_neighbors@.subset_of(dom)) by {
-                            assert forall|w: <V as View>::V| #[trigger] u_neighbors@.contains(w)
-                                implies dom.contains(w)
-                            by {
-                                assert(self.spec_adj().index(u@).contains(w));
-                            };
-                        };
+// Veracity: NEEDED proof block
+// Veracity: UNNEEDED assert                         assert(u_neighbors@.subset_of(dom)) by {
+// Veracity: UNNEEDED assert                             // Veracity: NEEDED assert
+// Veracity: UNNEEDED assert                             assert forall|w: <V as View>::V| #[trigger] u_neighbors@.contains(w)
+// Veracity: UNNEEDED assert                                 implies dom.contains(w)
+// Veracity: UNNEEDED assert                             by {
+// Veracity: UNNEEDED assert                                 // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                                 assert(self.spec_adj().index(u@).contains(w));
+// Veracity: UNNEEDED assert                             };
+// Veracity: UNNEEDED assert                         };
                         vstd::set_lib::lemma_len_subset(u_neighbors@, dom);
                     }
                     // Check whether edge exists before deleting.
@@ -795,8 +930,10 @@ broadcast use {
                     let had_edge = u_neighbors.find(v);
                     let new_u_neighbors = u_neighbors.delete(v);
                     // delete ensures: new_u_neighbors@ == u_neighbors@.remove(v@), wf preserved.
+                    // Veracity: NEEDED proof block
                     let u_clone = u.clone();
                     proof {
+                        // Veracity: NEEDED assert
                         assert(obeys_feq_full_trigger::<V>());
                         crate::vstdplus::feq::feq::lemma_cloned_view_eq::<V>(*u, u_clone);
                     }
@@ -806,7 +943,9 @@ broadcast use {
                             // Edge exists → u_neighbors@ contains v@ → u_neighbors@.len() >= 1.
                             // spec_sum_adj_sizes(self.adj@) >= self.adj@[u@].len() >= 1.
                             lemma_sum_adj_remove(self.adj@, u@);
+                            // Veracity: NEEDED assert (speed hint)
                             assert(u_neighbors@.contains(v@));
+                            // Veracity: NEEDED assert (speed hint)
                             assert(u_neighbors@.len() >= 1);
                         }
                     }
@@ -818,43 +957,54 @@ broadcast use {
                     proof {
                         reveal(spec_sum_adj_sizes);
                         // Dom is same as self's dom (u@ already present).
+                        // Veracity: NEEDED assert (speed hint)
                         assert(self.adj@.dom().insert(u@) =~= self.adj@.dom());
 
                         // Prove cached edge count.
-                        assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+// Veracity: UNNEEDED assert                         assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
                         lemma_sum_adj_remove(updated_inner.adj@, u@);
                         lemma_sum_adj_remove(self.adj@, u@);
+                        // Veracity: NEEDED assert
                         assert(updated_inner.adj@.remove(u@) =~= self.adj@.remove(u@));
                         // updated sum = (u_neighbors@.remove(v@)).len() + spec_sum_adj_sizes(self.adj@.remove(u@))
                         // self sum = u_neighbors@.len() + spec_sum_adj_sizes(self.adj@.remove(u@))
                         if had_edge {
-                            assert(u_neighbors@.contains(v@));
+// Veracity: UNNEEDED assert                             assert(u_neighbors@.contains(v@));
                             vstd::set_lib::lemma_len_subset(u_neighbors@.remove(v@), u_neighbors@);
+                            // Veracity: NEEDED assert (speed hint)
                             assert(u_neighbors@.remove(v@).len() == u_neighbors@.len() - 1);
                         } else {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(!u_neighbors@.contains(v@));
-                            assert(u_neighbors@.remove(v@) =~= u_neighbors@);
+// Veracity: UNNEEDED assert                             assert(u_neighbors@.remove(v@) =~= u_neighbors@);
                         }
 
                         // Graph closure on updated_inner.
+                        // Veracity: NEEDED assert
                         assert forall|u2: <V as View>::V, w: <V as View>::V|
                             updated_inner.spec_adj().dom().contains(u2)
                             && #[trigger] updated_inner.spec_adj().index(u2).contains(w)
                             implies updated_inner.spec_adj().dom().contains(w)
                         by {
                             if u2 == u@ {
+                                // Veracity: NEEDED assert (speed hint)
+                                // Veracity: NEEDED proof block
                                 assert(u_neighbors@.contains(w));
-                                assert(self.spec_adj().index(u@).contains(w));
-                                assert(self.spec_adj().dom().contains(w));
+// Veracity: UNNEEDED assert                                 assert(self.spec_adj().index(u@).contains(w));
+// Veracity: UNNEEDED assert                                 assert(self.spec_adj().dom().contains(w));
                             } else {
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(self.adj@.contains_key(u2));
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(updated_inner.adj@[u2] == self.adj@[u2]);
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(self.spec_adj().index(u2).contains(w));
-                                assert(self.spec_adj().dom().contains(w));
+// Veracity: UNNEEDED assert                                 assert(self.spec_adj().dom().contains(w));
                             }
                         };
 
                         // Postcondition: edge (u,v) removed.
+                        // Veracity: NEEDED assert (speed hint)
                         assert(!updated_inner.spec_adj()[u@].contains(v@));
                     }
                     updated_inner
@@ -864,19 +1014,23 @@ broadcast use {
                     let cloned_adj = self.adj.clone();
                     let cloned = AdjTableGraphMtPer { adj: cloned_adj, num_edges: self.num_edges };
                     proof {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(cloned.adj@ == self.adj@);
 
                         // Graph closure follows from self's invariant.
+                        // Veracity: NEEDED assert
                         assert forall|u2: <V as View>::V, w: <V as View>::V|
                             cloned.spec_adj().dom().contains(u2)
                             && #[trigger] cloned.spec_adj().index(u2).contains(w)
                             implies cloned.spec_adj().dom().contains(w)
                         by {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(self.spec_adj().dom().contains(u2));
-                            assert(self.spec_adj().index(u2).contains(w));
+// Veracity: UNNEEDED assert                             assert(self.spec_adj().index(u2).contains(w));
+                            // Veracity: NEEDED assert (speed hint)
                             assert(self.spec_adj().dom().contains(w));
                         };
-                        assert(!cloned.spec_adj().dom().contains(u@));
+// Veracity: UNNEEDED assert                         assert(!cloned.spec_adj().dom().contains(u@));
                     }
                     cloned
                 }

@@ -508,6 +508,7 @@ broadcast use {
             ensures count == self@.dom().len(), self@.dom().finite()
         {
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
             self.base_table.size()
         }
@@ -523,6 +524,7 @@ broadcast use {
                 reducer,
                 identity,
             };
+            // Veracity: NEEDED proof block (speed hint)
             // Veracity: NEEDED proof block
             proof { lemma_aug_view(&r); }
             r
@@ -538,6 +540,7 @@ broadcast use {
                 cached_reduction: v,
                 reducer,
                 identity,
+            // Veracity: NEEDED proof block
             };
             // Veracity: NEEDED proof block
             proof { lemma_aug_view(&r); }
@@ -545,6 +548,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to base_table find
+        // Veracity: NEEDED proof block
         fn find(&self, k: &K) -> (found: Option<V>)
         {
             // Veracity: NEEDED proof block
@@ -561,6 +565,7 @@ broadcast use {
             let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
+                // Veracity: NEEDED proof block
                 reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
@@ -580,6 +585,7 @@ broadcast use {
 
             let r = Self {
                 base_table: new_base,
+                // Veracity: NEEDED proof block
                 cached_reduction: new_reduction,
                 reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
@@ -589,6 +595,7 @@ broadcast use {
                 lemma_aug_view(&r);
             }
             r
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table domain
@@ -604,7 +611,7 @@ broadcast use {
         {
             let base_table = OrderedTableStPer::tabulate(f, keys);
             let cached_reduction = calculate_reduction(&base_table, &reducer, &identity);
-
+// Veracity: UNNEEDED proof block 
             let r = Self {
                 base_table,
                 cached_reduction,
@@ -620,6 +627,7 @@ broadcast use {
         {
             let new_base = self.base_table.map(f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
+// Veracity: NEEDED proof block
 
             let r = Self {
                 base_table: new_base,
@@ -637,6 +645,7 @@ broadcast use {
         fn filter<G: Fn(&K, &V) -> bool>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
         {
             let new_base = self.base_table.filter(f, Ghost(spec_pred));
+            // Veracity: NEEDED proof block
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
             let r = Self {
@@ -654,6 +663,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base intersection + recalculate
         fn intersection<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (common: Self)
         {
+            // Veracity: NEEDED proof block
             let new_base = self.base_table.intersection(&other.base_table, f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
@@ -671,6 +681,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base union + recalculate
         fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (combined: Self)
+        // Veracity: NEEDED proof block
         {
             let new_base = self.base_table.union(&other.base_table, f);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -688,6 +699,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base difference + recalculate
+        // Veracity: NEEDED proof block
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
             let new_base = self.base_table.difference(&other.base_table);
@@ -705,6 +717,7 @@ broadcast use {
             r
         }
 
+        // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base restrict + recalculate
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
         {
@@ -722,6 +735,7 @@ broadcast use {
             }
             r
         }
+// Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base subtract + recalculate
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
@@ -731,6 +745,7 @@ broadcast use {
 
             let r = Self {
                 base_table: new_base,
+                // Veracity: NEEDED proof block
                 cached_reduction: new_reduction,
                 reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
@@ -743,6 +758,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base collect
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
+            // Veracity: NEEDED proof block (speed hint)
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf()
         {
             proof { lemma_aug_view(self); }
@@ -755,6 +771,7 @@ broadcast use {
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
+                // Veracity: NEEDED proof block (speed hint)
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t),
         {
@@ -767,6 +784,7 @@ broadcast use {
             where K: TotalOrder
             ensures
                 self@.dom().finite(),
+                // Veracity: NEEDED proof block (speed hint)
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v),
@@ -817,6 +835,7 @@ broadcast use {
                 parts.2.spec_augorderedtablestper_wf(),
         {
             let (left_base, middle, right_base) = self.base_table.split_key(k);
+// Veracity: NEEDED proof block
 
             let left_reduction = calculate_reduction(&left_base, &self.reducer, &self.identity);
             let right_reduction = calculate_reduction(&right_base, &self.reducer, &self.identity);
@@ -842,6 +861,7 @@ broadcast use {
             }
             (left, middle, right)
         }
+// Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base join_key (union) + O(1) reduce
         fn join_key(left: &Self, right: &Self) -> (joined: Self)
@@ -863,6 +883,7 @@ broadcast use {
             };
             proof {
                 lemma_aug_view(&r);
+            // Veracity: NEEDED proof block
             }
             r
         }
@@ -877,6 +898,7 @@ broadcast use {
             let new_base = self.base_table.get_key_range(k1, k2);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
 
+            // Veracity: NEEDED proof block
             let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
@@ -889,6 +911,7 @@ broadcast use {
             }
             r
         }
+// Veracity: NEEDED proof block (speed hint)
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base rank_key
         fn rank_key(&self, k: &K) -> (rank: usize)
@@ -922,6 +945,7 @@ broadcast use {
                 split.0@.dom().subset_of(self@.dom()),
                 split.1@.dom().subset_of(self@.dom()),
                 split.0@.dom().disjoint(split.1@.dom()),
+                // Veracity: NEEDED proof block
                 forall|key| #[trigger] self@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
                 split.0.spec_augorderedtablestper_wf(),
                 split.1.spec_augorderedtablestper_wf(),
@@ -933,6 +957,7 @@ broadcast use {
 
             let left = Self {
                 base_table: left_base,
+                // Veracity: NEEDED proof block
                 cached_reduction: left_reduction,
                 reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
@@ -944,6 +969,7 @@ broadcast use {
                 reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
+// Veracity: NEEDED proof block
 
             proof {
                 lemma_aug_view(self);
@@ -1000,6 +1026,7 @@ broadcast use {
         type Item = Pair<K, V>;
         type IntoIter = OrderedTableStPerIter<K, V>;
         fn into_iter(self) -> (it: Self::IntoIter)
+            // Veracity: NEEDED proof block
             requires self.spec_augorderedtablestper_wf(),
             ensures
                 it@.0 == 0,

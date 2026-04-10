@@ -228,8 +228,10 @@ broadcast use {
                 n,
             );
             let empty = AdjSeqGraphMtPer { adj, num_edges: 0 };
+            // Veracity: NEEDED proof block
             proof {
                 let degree_fn = |i: int| empty.spec_degree(i);
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|i: int| 0 <= i < n implies #[trigger] degree_fn(i) == 0nat by {};
                 lemma_sum_of_all_zero(degree_fn, n as int);
             }
@@ -250,6 +252,7 @@ broadcast use {
                     degree_fn == (|k: int| adj.spec_index(k).spec_len()),
                     spec_sum_of(n as int, degree_fn) <= usize::MAX as nat,
                 decreases n - i
+            // Veracity: NEEDED proof block
             {
                 proof {
                     lemma_sum_of_unfold(i as int, degree_fn);
@@ -258,10 +261,12 @@ broadcast use {
                 let deg = adj.nth(i).length();
                 count = count + deg;
                 i = i + 1;
+            // Veracity: NEEDED proof block
             }
             let constructed = AdjSeqGraphMtPer { adj, num_edges: count };
             proof {
                 let wf_degree = |i: int| constructed.spec_degree(i);
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|i: int| 0 <= i < n implies #[trigger] degree_fn(i) == wf_degree(i) by {};
                 lemma_sum_of_ext(degree_fn, wf_degree, n as int);
             }
@@ -296,6 +301,7 @@ broadcast use {
                 decreases len - i
             {
                 if *neighbors.nth(i) == v {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(self.spec_neighbor(u as int, i as int) == v);
                     return true;
                 }
@@ -338,6 +344,7 @@ broadcast use {
                 decreases deg_u - fi
             {
                 if *src_u.nth(fi) == v {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(self.spec_neighbor(u as int, fi as int) == v);
                     found = true;
                     break;
@@ -353,13 +360,15 @@ broadcast use {
                     &|i: usize| -> (r: usize)
                         requires i < deg_u
                         ensures r == src_u.spec_index(i as int)
+                    // Veracity: NEEDED proof block
                     { *src_u.nth(i) },
                     deg_u,
                 );
                 proof {
                     witness = choose|j: int| 0 <= j < self.spec_degree(u as int)
                         && self.spec_neighbor(u as int, j) == v;
-                    assert(new_neighbors.spec_index(witness) == src_u.spec_index(witness));
+// Veracity: UNNEEDED assert                     assert(new_neighbors.spec_index(witness) == src_u.spec_index(witness));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(src_u.spec_index(witness) == self.spec_neighbor(u as int, witness));
                 }
             } else {
@@ -379,13 +388,16 @@ broadcast use {
                     decreases deg_u - j
                 {
                     nvec.push(*src_u.nth(j));
+                    // Veracity: NEEDED proof block
                     j = j + 1;
                 }
                 nvec.push(v);
                 new_neighbors = ArraySeqMtPerS::from_vec(nvec);
                 proof { witness = deg_u as int; }
             }
+            // Veracity: NEEDED assert (speed hint)
             assert(0 <= witness < new_neighbors.spec_len() as int);
+            // Veracity: NEEDED assert (speed hint)
             assert(new_neighbors.spec_index(witness) == v);
 
             // Build new adj: tabulate copies each row; row u gets new_neighbors.
@@ -432,30 +444,43 @@ broadcast use {
             let new_num_edges: usize = if found { self.num_edges } else { self.num_edges + 1 };
 
             let updated = AdjSeqGraphMtPer { adj: result_adj, num_edges: new_num_edges };
-            assert(updated.spec_degree(u as int) == new_neighbors.spec_len());
+// Veracity: UNNEEDED assert             assert(updated.spec_degree(u as int) == new_neighbors.spec_len());
+            // Veracity: NEEDED proof block
+            // Veracity: NEEDED assert (speed hint)
             assert(updated.spec_neighbor(u as int, witness) == new_neighbors.spec_index(witness));
+            // Veracity: NEEDED assert (speed hint)
             assert(updated.spec_neighbor(u as int, witness) == v);
 
             proof {
                 let old_degree_fn = |i: int| self.spec_degree(i);
                 let new_degree_fn = |i: int| updated.spec_degree(i);
-                assert(forall|i: int| 0 <= i < n_v as int && i != u as int
-                    ==> #[trigger] old_degree_fn(i) == new_degree_fn(i));
+// Veracity: UNNEEDED assert                 assert(forall|i: int| 0 <= i < n_v as int && i != u as int
+// Veracity: UNNEEDED assert                     ==> #[trigger] old_degree_fn(i) == new_degree_fn(i));
                 lemma_sum_of_change_one(n_v as int, old_degree_fn, new_degree_fn, u as int);
+                // Veracity: NEEDED assert (speed hint)
                 assert(updated.spec_degree(u as int) == new_neighbors.spec_len());
                 if found {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_neighbors.spec_len() == deg_u as nat);
-                    assert(new_degree_fn(u as int) == old_degree_fn(u as int));
+// Veracity: UNNEEDED assert                     assert(new_degree_fn(u as int) == old_degree_fn(u as int));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(spec_sum_of(n_v as int, new_degree_fn) == spec_sum_of(n_v as int, old_degree_fn));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_num_edges as nat == self.num_edges as nat);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_num_edges as nat == spec_sum_of(n_v as int, new_degree_fn));
                 } else {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_neighbors.spec_len() == deg_u + 1);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_degree_fn(u as int) == old_degree_fn(u as int) + 1);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(spec_sum_of(n_v as int, new_degree_fn) == spec_sum_of(n_v as int, old_degree_fn) + 1);
-                    assert(new_num_edges as nat == self.num_edges as nat + 1);
+// Veracity: UNNEEDED assert                     assert(new_num_edges as nat == self.num_edges as nat + 1);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_num_edges as nat == spec_sum_of(n_v as int, new_degree_fn));
                 }
+                // Veracity: NEEDED assert (speed hint)
                 assert(updated.num_edges as nat == spec_sum_of(updated.spec_num_vertices() as int, |i: int| updated.spec_degree(i)));
             }
 
@@ -534,12 +559,15 @@ broadcast use {
                 n_v,
             );
 
+            // Veracity: NEEDED assert
             assert forall|u2: int, j2: int|
                 0 <= u2 < result_adj.spec_len()
                 && 0 <= j2 < result_adj.spec_index(u2).spec_len()
             implies #[trigger] result_adj.spec_index(u2).spec_index(j2) < result_adj.spec_len()
             by {
                 if u2 != u as int {
+                    // Veracity: NEEDED proof block
+                    // Veracity: NEEDED assert (speed hint)
                     assert(result_adj.spec_index(u2).spec_index(j2) == self.adj.spec_index(u2).spec_index(j2));
                 }
             }
@@ -548,7 +576,8 @@ broadcast use {
             proof {
                 let old_degree_fn = |i: int| self.spec_degree(i);
                 lemma_sum_of_lower_bound(n_v as int, old_degree_fn, u as int);
-                assert(new_deg_u <= deg_u);
+// Veracity: UNNEEDED assert                 assert(new_deg_u <= deg_u);
+            // Veracity: NEEDED proof block
             }
 
             // Compute new num_edges: self.num_edges - (deg_u - new_deg_u).
@@ -559,21 +588,27 @@ broadcast use {
             proof {
                 let old_degree_fn = |i: int| self.spec_degree(i);
                 let new_degree_fn = |i: int| updated.spec_degree(i);
+                // Veracity: NEEDED assert (speed hint)
                 assert(updated.spec_degree(u as int) == new_neighbors.spec_len());
+                // Veracity: NEEDED assert (speed hint)
                 assert(new_neighbors.spec_len() == new_deg_u as nat);
+                // Veracity: NEEDED assert (speed hint)
                 assert(forall|i: int| 0 <= i < n_v as int && i != u as int
                     ==> #[trigger] old_degree_fn(i) == new_degree_fn(i));
                 lemma_sum_of_change_one(n_v as int, old_degree_fn, new_degree_fn, u as int);
+                // Veracity: NEEDED assert (speed hint)
                 assert(spec_sum_of(n_v as int, new_degree_fn) + old_degree_fn(u as int)
                     == spec_sum_of(n_v as int, old_degree_fn) + new_degree_fn(u as int));
-                assert(old_degree_fn(u as int) == deg_u as nat);
+// Veracity: UNNEEDED assert                 assert(old_degree_fn(u as int) == deg_u as nat);
+                // Veracity: NEEDED assert (speed hint)
                 assert(new_degree_fn(u as int) == new_deg_u as nat);
-                assert(new_deg_u <= deg_u);
+// Veracity: UNNEEDED assert                 assert(new_deg_u <= deg_u);
+                // Veracity: NEEDED assert (speed hint)
                 assert(spec_sum_of(n_v as int, old_degree_fn) == self.num_edges as nat);
-                assert(spec_sum_of(n_v as int, new_degree_fn)
-                    == self.num_edges as nat - (deg_u - new_deg_u) as nat);
-                assert(new_num_edges as nat == spec_sum_of(n_v as int, new_degree_fn));
-                assert(updated.num_edges as nat == spec_sum_of(updated.spec_num_vertices() as int, |i: int| updated.spec_degree(i)));
+// Veracity: UNNEEDED assert                 assert(spec_sum_of(n_v as int, new_degree_fn)
+// Veracity: UNNEEDED assert                     == self.num_edges as nat - (deg_u - new_deg_u) as nat);
+// Veracity: UNNEEDED assert                 assert(new_num_edges as nat == spec_sum_of(n_v as int, new_degree_fn));
+// Veracity: UNNEEDED assert                 assert(updated.num_edges as nat == spec_sum_of(updated.spec_num_vertices() as int, |i: int| updated.spec_degree(i)));
             }
 
             updated

@@ -113,7 +113,7 @@ broadcast use {
         decreases n
     {
         if n > 0 {
-            assert(!f(n - 1));
+// Veracity: UNNEEDED assert             assert(!f(n - 1));
             lemma_count_true_all_false(f, n - 1);
         }
     }
@@ -125,7 +125,7 @@ broadcast use {
         decreases n
     {
         if n > 0 {
-            assert(f(n - 1) == g(n - 1));
+// Veracity: UNNEEDED assert             assert(f(n - 1) == g(n - 1));
             lemma_count_true_ext(f, g, n - 1);
         }
     }
@@ -143,6 +143,7 @@ broadcast use {
             if k == n - 1 {
                 lemma_count_true_ext(f, g, n - 1);
             } else {
+                // Veracity: NEEDED assert (speed hint)
                 assert(f(n - 1) == g(n - 1));
                 lemma_count_true_set_true(f, g, k, n - 1);
             }
@@ -162,6 +163,7 @@ broadcast use {
             if k == n - 1 {
                 lemma_count_true_ext(f, g, n - 1);
             } else {
+                // Veracity: NEEDED assert (speed hint)
                 assert(f(n - 1) == g(n - 1));
                 lemma_count_true_set_false(f, g, k, n - 1);
             }
@@ -206,7 +208,7 @@ broadcast use {
         decreases n
     {
         if n > 0 {
-            assert(f(n - 1) == 0nat);
+// Veracity: UNNEEDED assert             assert(f(n - 1) == 0nat);
             lemma_sum_of_all_zero(f, n - 1);
         }
     }
@@ -218,6 +220,7 @@ broadcast use {
         decreases n
     {
         if n > 0 {
+            // Veracity: NEEDED assert (speed hint)
             assert(f(n - 1) == g(n - 1));
             lemma_sum_of_ext(f, g, n - 1);
         }
@@ -236,6 +239,7 @@ broadcast use {
             if k == n - 1 {
                 lemma_sum_of_ext(old_f, new_f, n - 1);
             } else {
+                // Veracity: NEEDED assert (speed hint)
                 assert(old_f(n - 1) == new_f(n - 1));
                 lemma_sum_of_change_one(n - 1, old_f, new_f, k);
             }
@@ -263,9 +267,11 @@ broadcast use {
         decreases n
     {
         if n > 0 {
+            // Veracity: NEEDED assert (speed hint)
             assert(f(n - 1) <= bound);
             lemma_sum_of_bounded(n - 1, f, bound);
-            assert(spec_sum_of(n, f) <= bound + ((n - 1) as nat) * bound);
+// Veracity: UNNEEDED assert             assert(spec_sum_of(n, f) <= bound + ((n - 1) as nat) * bound);
+            // Veracity: NEEDED assert
             assert((n as nat) * bound == bound + ((n - 1) as nat) * bound) by(nonlinear_arith)
                 requires n >= 1;
         }
@@ -286,6 +292,7 @@ broadcast use {
             // Definition picks chosen != k.
             lemma_sum_adj_remove(m.remove(chosen), k);
             lemma_sum_adj_remove(m.remove(k), chosen);
+            // Veracity: NEEDED assert
             assert(m.remove(chosen).remove(k) =~= m.remove(k).remove(chosen));
         }
     }
@@ -306,10 +313,13 @@ broadcast use {
             let k = m1.dom().choose();
             lemma_sum_adj_remove(m1, k);
             lemma_sum_adj_remove(m2, k);
+            // Veracity: NEEDED assert (speed hint)
             assert(m1.remove(k).dom() =~= m2.remove(k).dom());
+            // Veracity: NEEDED assert
             assert forall|j: VV| #[trigger] m1.remove(k).dom().contains(j)
                 implies m1.remove(k)[j].len() <= m2.remove(k)[j].len()
             by {
+                // Veracity: NEEDED assert (speed hint)
                 assert(m1.dom().contains(j));
             };
             lemma_sum_adj_sizes_monotone(m1.remove(k), m2.remove(k));
@@ -330,23 +340,30 @@ broadcast use {
     {
         lemma_entries_to_map_finite::<VV, Set<VV>>(entries.subrange(0, n));
         if n == 0 {
+            // Veracity: NEEDED assert (speed hint)
             assert(entries.subrange(0, 0) =~= Seq::<(VV, Set<VV>)>::empty());
         } else {
             let sub_n = entries.subrange(0, n);
             let sub_prev = entries.subrange(0, n - 1);
+            // Veracity: NEEDED assert (speed hint)
             assert(spec_keys_no_dups::<VV, Set<VV>>(sub_n)) by {
+                // Veracity: NEEDED assert
                 assert forall|i: int, j: int|
                     0 <= i < j < sub_n.len()
                     implies (#[trigger] sub_n[i]).0 != (#[trigger] sub_n[j]).0
                 by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(entries[i].0 != entries[j].0);
                 };
             };
+            // Veracity: NEEDED assert (speed hint)
             assert(spec_keys_no_dups::<VV, Set<VV>>(sub_prev)) by {
+                // Veracity: NEEDED assert
                 assert forall|i: int, j: int|
                     0 <= i < j < sub_prev.len()
                     implies (#[trigger] sub_prev[i]).0 != (#[trigger] sub_prev[j]).0
                 by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(entries[i].0 != entries[j].0);
                 };
             };
@@ -355,20 +372,27 @@ broadcast use {
             let full_map = spec_entries_to_map(sub_n);
             let key = entries[n - 1].0;
             let val = entries[n - 1].1;
+            // Veracity: NEEDED assert (speed hint)
             assert(sub_n =~= sub_prev.push((key, val)));
+            // Veracity: NEEDED assert
             assert forall|idx: int| 0 <= idx < sub_prev.len()
                 implies (#[trigger] sub_prev[idx]).0 != key
             by {};
             lemma_entries_to_map_no_key::<VV, Set<VV>>(sub_prev, key);
+            // Veracity: NEEDED assert
             assert(sub_n.drop_last() =~= sub_prev);
+            // Veracity: NEEDED assert (speed hint)
             assert(sub_n.last() == (key, val));
             lemma_entries_to_map_finite::<VV, Set<VV>>(sub_n);
             lemma_entries_to_map_contains_key::<VV, Set<VV>>(sub_n, n - 1);
             lemma_sum_adj_remove(full_map, key);
             lemma_entries_to_map_get::<VV, Set<VV>>(sub_n, n - 1);
             lemma_entries_to_map_finite::<VV, Set<VV>>(sub_prev);
+            // Veracity: NEEDED assert (speed hint)
             assert(full_map =~= prefix_map.insert(key, val));
+            // Veracity: NEEDED assert (speed hint)
             assert(!prefix_map.dom().contains(key));
+            // Veracity: NEEDED assert
             assert(prefix_map.insert(key, val).remove(key) =~= prefix_map);
         }
     }

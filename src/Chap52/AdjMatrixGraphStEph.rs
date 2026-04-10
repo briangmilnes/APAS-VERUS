@@ -219,11 +219,14 @@ broadcast use {
                 n,
             );
             let empty = AdjMatrixGraphStEph { matrix, n, num_edges: 0 };
+            // Veracity: NEEDED proof block
             proof {
                 // Each row has zero true entries, so each row count is 0.
                 let row_count = |u: int| spec_count_true(|v: int| empty.spec_edge(u, v), empty.spec_n() as int);
+                // Veracity: NEEDED assert
                 assert forall|u: int| 0 <= u < n implies #[trigger] row_count(u) == 0nat by {
                     let edge_fn = |v: int| empty.spec_edge(u, v);
+                    // Veracity: NEEDED assert (speed hint)
                     assert forall|v: int| 0 <= v < n implies !#[trigger] edge_fn(v) by {};
                     lemma_count_true_all_false(edge_fn, n as int);
                 };
@@ -248,6 +251,7 @@ broadcast use {
                     row_count == (|u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int)),
                     spec_sum_of(n as int, row_count) <= usize::MAX as nat,
                 decreases n - u
+            // Veracity: NEEDED proof block
             {
                 proof { lemma_sum_of_monotone(u as int + 1, n as int, row_count); }
                 let row = matrix.nth(u);
@@ -264,6 +268,7 @@ broadcast use {
                         count as nat == spec_count_true(edge_fn, v as int),
                         edge_fn == (|v: int| matrix.spec_index(u as int).spec_index(v)),
                         spec_count_true(edge_fn, n as int) <= usize::MAX as nat,
+                    // Veracity: NEEDED proof block
                     decreases n - v
                 {
                     proof { lemma_count_true_monotone(edge_fn, v as int + 1, n as int); }
@@ -274,14 +279,17 @@ broadcast use {
                 }
                 total = total + count;
                 u = u + 1;
+            // Veracity: NEEDED proof block
             }
             // Connect the loop's row_count (using matrix directly) to the wf's row_count (using spec_edge).
             let constructed = AdjMatrixGraphStEph { matrix, n, num_edges: total };
             proof {
                 let wf_row_count = |u: int| spec_count_true(|v: int| constructed.spec_edge(u, v), constructed.spec_n() as int);
+                // Veracity: NEEDED assert
                 assert forall|u: int| 0 <= u < n implies #[trigger] row_count(u) == wf_row_count(u) by {
                     let inner_mat = |v: int| matrix.spec_index(u).spec_index(v);
                     let inner_edge = |v: int| constructed.spec_edge(u, v);
+                    // Veracity: NEEDED assert (speed hint)
                     assert forall|v: int| 0 <= v < n implies #[trigger] inner_mat(v) == inner_edge(v) by {};
                     lemma_count_true_ext(inner_mat, inner_edge, n as int);
                 };
@@ -327,36 +335,45 @@ broadcast use {
                 decreases n - v
             {
                 let val = *row.nth(v);
+                // Veracity: NEEDED assert (speed hint)
                 assert(val == self.spec_edge(u as int, v as int));
                 let ghost pre_push = nvec@;
+                // Veracity: NEEDED proof block
                 let ghost old_nvec_len = nvec@.len();
                 if val {
                     nvec.push(v);
                 }
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|k: int| 0 <= k < old_nvec_len as int
                         implies nvec@[k] == #[trigger] pre_push[k]
                     by {};
+                    // Veracity: NEEDED assert
                     assert forall|j: int| 0 <= j < (v as int + 1) && self.spec_edge(u as int, j)
                         implies exists|k: int| 0 <= k < nvec@.len() as int && nvec@[k] == j as usize
                     by {
                         if j < v as int {
                             let witness = choose|k: int| 0 <= k < old_nvec_len as int && pre_push[k] == j as usize;
+                            // Veracity: NEEDED assert (speed hint)
                             assert(nvec@[witness] == j as usize);
                         } else {
+                            // Veracity: NEEDED assert
                             assert(nvec@[old_nvec_len as int] == v as usize);
                         }
                     }
+                // Veracity: NEEDED proof block
                 }
                 v = v + 1;
             }
             let ghost nvec_view = nvec@;
             let neighbors = ArraySeqStEphS::from_vec(nvec);
             proof {
+                // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < (n as int) && self.spec_edge(u as int, j)
                     implies exists|k: int| 0 <= k < neighbors.spec_len() && neighbors.spec_index(k) == j as usize
                 by {
                     let witness = choose|k: int| 0 <= k < nvec_view.len() as int && nvec_view[k] == j as usize;
+                    // Veracity: NEEDED assert
                     assert(neighbors.spec_index(witness) == nvec_view[witness]);
                 }
             }
@@ -364,6 +381,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        // Veracity: NEEDED proof block
         fn out_degree(&self, u: usize) -> (d: usize) {
             let n = self.n;
             let row = self.matrix.nth(u);
@@ -376,6 +394,7 @@ broadcast use {
                     v <= n,
                     self.spec_adjmatrixgraphsteph_wf(),
                     n as nat == self.spec_n(),
+                    // Veracity: NEEDED proof block
                     row.spec_len() == n,
                     forall|vi: int| 0 <= vi < n ==> #[trigger] row.spec_index(vi) == self.spec_edge(u as int, vi),
                     count as nat == spec_count_true(edge_fn, v as int),
@@ -440,6 +459,7 @@ broadcast use {
                                 ensures r == row.spec_index(j as int)
                             { *row.nth(j) },
                             n,
+                        // Veracity: NEEDED proof block
                         )
                     }
                 },
@@ -449,20 +469,25 @@ broadcast use {
             // Update cached edge count based on whether the edge changed.
             if old_val && !exists {
                 proof {
+                    // Veracity: NEEDED proof block
                     // num_edges >= 1: edge(u,v) was true, so row u count >= 1, so sum >= 1.
                     let edge_u = |c: int| old(self).spec_edge(u as int, c);
                     lemma_count_true_at_least_one(edge_u, v as int, n as int);
                     lemma_sum_of_lower_bound(n as int, old_row_count, u as int);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(self.num_edges as nat >= 1nat);
                 }
                 self.num_edges = self.num_edges - 1;
             } else if !old_val && exists {
                 proof {
                     // num_edges ≤ n² < usize::MAX, so +1 fits.
+                    // Veracity: NEEDED proof block
+                    // Veracity: NEEDED assert
                     assert forall|r: int| 0 <= r < n implies #[trigger] old_row_count(r) <= n as nat by {
                         lemma_count_true_bound(|c: int| old(self).spec_edge(r, c), n as int);
                     };
                     lemma_sum_of_bounded(n as int, old_row_count, n as nat);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(self.num_edges as nat <= (n as nat) * (n as nat));
                 }
                 self.num_edges = self.num_edges + 1;
@@ -470,28 +495,33 @@ broadcast use {
             proof {
                 let new_row_count = |r: int| spec_count_true(|c: int| self.spec_edge(r, c), self.spec_n() as int);
                 // For rows other than u, the edge predicate is unchanged.
+                // Veracity: NEEDED assert
                 assert forall|r: int| 0 <= r < n && r != u as int
                     implies #[trigger] new_row_count(r) == old_row_count(r) by {
                     let old_edge = |c: int| old(self).spec_edge(r, c);
                     let new_edge = |c: int| self.spec_edge(r, c);
+                    // Veracity: NEEDED assert (speed hint)
                     assert forall|c: int| 0 <= c < n implies #[trigger] old_edge(c) == new_edge(c) by {};
                     lemma_count_true_ext(old_edge, new_edge, n as int);
                 };
                 // For row u, relate old and new counts.
                 let old_edge_u = |c: int| old(self).spec_edge(u as int, c);
                 let new_edge_u = |c: int| self.spec_edge(u as int, c);
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|c: int| 0 <= c < n && c != v as int
                     implies #[trigger] old_edge_u(c) == new_edge_u(c) by {};
                 if old_val && !exists {
                     lemma_count_true_set_false(old_edge_u, new_edge_u, v as int, n as int);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_row_count(u as int) + 1 == old_row_count(u as int));
                     lemma_sum_of_change_one(n as int, old_row_count, new_row_count, u as int);
                 } else if !old_val && exists {
                     lemma_count_true_set_true(old_edge_u, new_edge_u, v as int, n as int);
-                    assert(new_row_count(u as int) == old_row_count(u as int) + 1);
+// Veracity: UNNEEDED assert                     assert(new_row_count(u as int) == old_row_count(u as int) + 1);
                     lemma_sum_of_change_one(n as int, old_row_count, new_row_count, u as int);
                 } else {
                     lemma_count_true_ext(old_edge_u, new_edge_u, n as int);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_row_count(u as int) == old_row_count(u as int));
                     lemma_sum_of_ext(old_row_count, new_row_count, n as int);
                 }
@@ -513,6 +543,7 @@ broadcast use {
                     ArraySeqStEphS::tabulate(
                         &|j: usize| -> (r: bool)
                             requires j < n
+                            // Veracity: NEEDED proof block
                             ensures r == (i as int != j as int && !row.spec_index(j as int))
                         {
                             i != j && !*row.nth(j)
@@ -525,16 +556,19 @@ broadcast use {
             // Count edges in complement matrix.
             let ghost comp_row_count = |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int);
             proof {
+                // Veracity: NEEDED assert
                 assert forall|r: int| 0 <= r < n implies #[trigger] comp_row_count(r) <= n as nat by {
                     lemma_count_true_bound(|v: int| matrix.spec_index(r).spec_index(v), n as int);
                 };
                 lemma_sum_of_bounded(n as int, comp_row_count, n as nat);
             }
             let mut total: usize = 0;
+            // Veracity: NEEDED proof block
             let mut u: usize = 0;
             while u < n
                 invariant
                     u <= n,
+                    // Veracity: NEEDED proof block
                     n as nat == matrix.spec_len(),
                     forall|i: int| 0 <= i < n ==> #[trigger] matrix.spec_index(i).spec_len() == n,
                     total as nat == spec_sum_of(u as int, comp_row_count),
@@ -547,6 +581,7 @@ broadcast use {
                 let row = matrix.nth(u);
                 let mut count: usize = 0;
                 let mut vi: usize = 0;
+                // Veracity: NEEDED proof block
                 let ghost edge_fn = |v: int| matrix.spec_index(u as int).spec_index(v);
                 proof { lemma_count_true_bound(edge_fn, n as int); }
                 while vi < n
@@ -557,6 +592,7 @@ broadcast use {
                         row.spec_len() == n,
                         forall|j: int| 0 <= j < n ==> #[trigger] row.spec_index(j) == matrix.spec_index(u as int).spec_index(j),
                         count as nat == spec_count_true(edge_fn, vi as int),
+                        // Veracity: NEEDED proof block
                         edge_fn == (|v: int| matrix.spec_index(u as int).spec_index(v)),
                         spec_count_true(edge_fn, n as int) <= n as nat,
                     decreases n - vi
@@ -574,9 +610,11 @@ broadcast use {
             let complemented = AdjMatrixGraphStEph { matrix, n, num_edges: total };
             proof {
                 let wf_row_count = |u: int| spec_count_true(|v: int| complemented.spec_edge(u, v), complemented.spec_n() as int);
+                // Veracity: NEEDED assert
                 assert forall|u: int| 0 <= u < n implies #[trigger] comp_row_count(u) == wf_row_count(u) by {
                     let inner_mat = |v: int| matrix.spec_index(u).spec_index(v);
                     let inner_edge = |v: int| complemented.spec_edge(u, v);
+                    // Veracity: NEEDED assert (speed hint)
                     assert forall|v: int| 0 <= v < n implies #[trigger] inner_mat(v) == inner_edge(v) by {};
                     lemma_count_true_ext(inner_mat, inner_edge, n as int);
                 };

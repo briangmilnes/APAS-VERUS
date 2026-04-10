@@ -614,9 +614,11 @@ broadcast use {
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablesteph_wf()
         {
             let bst = ParamBST::singleton(Pair(k, v));
+            // Veracity: NEEDED proof block
             proof {
                 // bst@ == Set::empty().insert((k@, v@)).
                 let s = Set::<(K::V, V::V)>::empty().insert((k@, v@));
+                // Veracity: NEEDED assert (speed hint)
                 assert(bst@ =~= s);
                 // spec_pair_set_to_map(s) should be Map::empty().insert(k@, v@).
                 lemma_set_to_map_empty::<K::V, V::V>();
@@ -625,8 +627,11 @@ broadcast use {
                 lemma_set_to_map_insert(Set::empty(), k@, v@);
                 lemma_pair_set_to_map_dom_finite(s);
                 // Type axioms for wf: feq via broadcast, rest from requires.
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<K>());
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<V>());
+                // Veracity: NEEDED assert (speed hint)
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
             }
             OrderedTableStEph { tree: OrdKeyMap { inner: bst } }
@@ -740,6 +745,7 @@ broadcast use {
                 let pair = sorted.nth(i);
                 reduced = f(reduced, &pair.0, &pair.1);
                 i = i + 1;
+            // Veracity: NEEDED proof block
             }
             proof { lemma_pair_set_to_map_dom_finite(self.tree.inner@); }
             reduced
@@ -747,6 +753,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to OrdKeyMap::intersect_with
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
+        // Veracity: NEEDED proof block
         {
             self.tree = self.tree.intersect_with(&other.tree, &f);
             proof {
@@ -757,6 +764,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to OrdKeyMap::union_with
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
         {
+            // Veracity: NEEDED proof block
             let ghost old_tree = self.tree;
             let combined = self.tree.union_with(&other.tree, &f);
             self.tree = combined;
@@ -766,6 +774,7 @@ broadcast use {
                 // OrdKeyMap::union_with ensures: for k in both old_tree@ and other.tree@,
                 // exists v1 v2 r with combine.ensures((&v1,&v2),r) && combined@[k]==r@.
                 // We must relay with f.ensures since combine == &f.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     #[trigger] old_tree@.contains_key(k) && other.tree@.contains_key(k)
                     implies (exists|v1: V, v2: V, r: V|
@@ -777,11 +786,433 @@ broadcast use {
             }
         }
 
+        // BYPASSED R158: union old two-phase implementation (~390 lines).
+        // Veracity: NEEDED proof block
+        // Delegated to OrdKeyMap::union_with. See git history at commit before R158.
+        #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+            let ghost old_map = self@;
+            let ghost other_map = other@;
+            proof {
+// Veracity: UNNEEDED assert                 assert(obeys_feq_full_trigger::<V>());
+                // Veracity: NEEDED assert (speed hint)
+                assert(obeys_feq_full_trigger::<K>());
+                // Veracity: NEEDED assert (speed hint)
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+                lemma_pair_set_to_map_len(old_tree);
+                lemma_pair_set_to_map_len(other.tree.inner@);
+            }
+            // Veracity: NEEDED proof block
+            // Phase 1: iterate self entries, merge with other where overlapping.
+            let self_sorted = self.tree.inner.in_order();
+            let self_len = self_sorted.length();
+            let mut new_tree = ParamBST::<Pair<K, V>>::new();
+            let mut i: usize = 0;
+            proof {
+                lemma_sorted_keys_pairwise_distinct(old_tree, self_sorted@);
+                lemma_key_unique_empty::<K::V, V::V>();
+                // Empty set is trivially view-generated.
+                // Veracity: NEEDED assert (speed hint)
+                assert(spec_set_pair_view_generated::<K, V>(new_tree@)) by {
+                    // Veracity: NEEDED assert (speed hint)
+                    assert forall|elem: (K::V, V::V)| new_tree@.contains(elem)
+                        implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+                        // Veracity: NEEDED assert (speed hint)
+                        assert(false);
+                    };
+                };
+            }
+            while i < self_len
+                invariant
+                    self.tree.inner@ == old_tree,
+                    old(self).spec_orderedtablesteph_wf(),
+                    other.spec_orderedtablesteph_wf(),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<V>(),
+                    obeys_feq_full::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    forall|v1: &V, v2: &V| f.requires((v1, v2)),
+                    self_len as nat == self_sorted@.len(),
+                    self_sorted@.len() == old_tree.len(),
+                    forall|v: <Pair<K, V> as View>::V| old_tree.contains(v) <==> #[trigger] self_sorted@.contains(v),
+                    forall|ii: int, jj: int|
+                        0 <= ii < self_sorted@.len() && 0 <= jj < self_sorted@.len() && ii != jj
+                        ==> (#[trigger] self_sorted@[ii]).0 != (#[trigger] self_sorted@[jj]).0,
+                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==>
+                        exists|j: int| 0 <= j < i as int && p.0 == (#[trigger] self_sorted@[j]).0,
+                    0 <= i <= self_len,
+                    new_tree.spec_bstparasteph_wf(),
+                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    view_ord_consistent::<Pair<K, V>>(),
+                    new_tree@.len() == i as nat,
+                    new_tree@.len() < usize::MAX as nat,
+                    spec_key_unique_pairs_set(new_tree@),
+                    spec_key_unique_pairs_set(old_tree),
+                    old_map == spec_pair_set_to_map(old_tree),
+                    other_map == other@,
+                    // Phase 1 completeness.
+                    forall|j2: int| 0 <= j2 < i as int
+                        ==> #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[j2].0),
+                    // Phase 1 value tracking (unified per-pair).
+                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==>
+                        old_map.dom().contains(p.0) &&
+                        ((!other_map.dom().contains(p.0) && old_tree.contains(p))
+                        || (other_map.dom().contains(p.0) && exists|v1: V, v2: V, r: V|
+// Veracity: UNNEEDED proof block                             v1@ == old_map[p.0] && v2@ == other_map[p.0]
+                            && f.ensures((&v1, &v2), r) && p.1 == r@)),
+                    spec_set_pair_view_generated::<K, V>(new_tree@),
+                // Veracity: NEEDED proof block
+                decreases self_len - i,
+            {
+                let pair = self_sorted.nth(i);
+                proof { reveal(obeys_view_eq); }
+                let other_find = other.find(&pair.0);
+                let ghost old_new_tree_view = new_tree@;
+                proof {
+                    // Freshness: self_sorted@[i].0 not in new_tree.
+// Veracity: UNNEEDED assert                     assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(self_sorted@[i as int].0)) by {
+// Veracity: UNNEEDED assert                         if spec_pair_set_to_map(old_new_tree_view).dom().contains(self_sorted@[i as int].0) {
+// Veracity: UNNEEDED assert                             lemma_map_contains_pair_in_set(old_new_tree_view, self_sorted@[i as int].0);
+// Veracity: UNNEEDED assert                             let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((self_sorted@[i as int].0, vv));
+// Veracity: UNNEEDED assert                             let jj = choose|jj: int| 0 <= jj < i as int && (self_sorted@[i as int].0, vv).0 == (#[trigger] self_sorted@[jj]).0;
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             assert(false);
+// Veracity: UNNEEDED assert                         }
+// Veracity: UNNEEDED assert                     };
+                    // Link sorted entry to old_tree.
+                    // Veracity: NEEDED assert (speed hint)
+                    assert(self_sorted@.contains(self_sorted@[i as int])) by { assert(self_sorted@[i as int] == self_sorted@[i as int]); };
+// Veracity: UNNEEDED proof block // Veracity: UNNEEDED assert                     assert(old_tree.contains(self_sorted@[i as int]));
+                    lemma_pair_in_set_map_contains(old_tree, self_sorted@[i as int].0, self_sorted@[i as int].1);
+                // Veracity: NEEDED proof block
+                }
+                match other_find {
+                    Some(ov) => {
+                        let combined = f(&pair.1, &ov);
+                        let key_clone = pair.0.clone_plus();
+                        proof { lemma_cloned_view_eq(pair.0, key_clone); }
+                        new_tree.insert(Pair(key_clone, combined));
+                        proof {
+                            lemma_view_gen_insert::<K, V>(old_new_tree_view, Pair(key_clone, combined));
+// Veracity: UNNEEDED assert                             assert(new_tree@.len() == i as nat + 1);
+// Veracity: UNNEEDED assert                             assert(new_tree@.len() < usize::MAX as nat);
+                            lemma_key_unique_insert(old_new_tree_view, self_sorted@[i as int].0, combined@);
+                            // Completeness maintenance.
+                            lemma_pair_in_set_map_contains(new_tree@, self_sorted@[i as int].0, combined@);
+// Veracity: UNNEEDED assert                             assert forall|j2: int| 0 <= j2 < i as int
+// Veracity: UNNEEDED assert                                 implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[j2].0)
+// Veracity: UNNEEDED assert                             by {
+// Veracity: UNNEEDED assert                                 lemma_map_contains_pair_in_set(old_new_tree_view, self_sorted@[j2].0);
+// Veracity: UNNEEDED assert                                 let w: V::V = choose|w: V::V| old_new_tree_view.contains((self_sorted@[j2].0, w));
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 assert(new_tree@.contains((self_sorted@[j2].0, w)));
+// Veracity: UNNEEDED assert                                 lemma_pair_in_set_map_contains(new_tree@, self_sorted@[j2].0, w);
+// Veracity: UNNEEDED assert                             };
+                            // Value tracking maintenance: new pair is combined.
+// Veracity: UNNEEDED assert                             assert(old_map.dom().contains(self_sorted@[i as int].0)) by {
+// Veracity: UNNEEDED assert                                 lemma_pair_in_set_map_contains(old_tree, self_sorted@[i as int].0, self_sorted@[i as int].1);
+// Veracity: UNNEEDED assert                             };
+                            // Veracity: NEEDED assert
+                            assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
+                                old_map.dom().contains(p.0) &&
+                                ((!other_map.dom().contains(p.0) && old_tree.contains(p))
+                                || (other_map.dom().contains(p.0) && exists|v1: V, v2: V, r: V|
+                                    v1@ == old_map[p.0] && v2@ == other_map[p.0]
+                                    && f.ensures((&v1, &v2), r) && p.1 == r@))
+                            by {
+                                if old_new_tree_view.contains(p) {
+                                    // Existing pair — invariant held before insert.
+                                } else {
+                                    // New pair: p == (self_sorted@[i].0, combined@).
+// Veracity: UNNEEDED assert                                     assert(p.0 == self_sorted@[i as int].0);
+// Veracity: UNNEEDED proof block // Veracity: UNNEEDED assert                                     assert(p.1 == combined@);
+// Veracity: UNNEEDED assert                                     assert(other_map.dom().contains(p.0));
+// Veracity: UNNEEDED proof block                                 }
+// Veracity: UNNEEDED proof block                             };
+// Veracity: UNNEEDED proof block                         }
+// Veracity: UNNEEDED proof block                     },
+// Veracity: UNNEEDED proof block                     None => {
+// Veracity: UNNEEDED proof block                         let cloned = pair.clone_plus();
+// Veracity: UNNEEDED proof block                         proof { lemma_cloned_view_eq(*pair, cloned); }
+// Veracity: UNNEEDED proof block                         new_tree.insert(cloned);
+// Veracity: UNNEEDED proof block                         proof {
+// Veracity: UNNEEDED proof block                             lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
+// Veracity: UNNEEDED proof block // Veracity: UNNEEDED assert                             assert(new_tree@.len() == i as nat + 1);
+// Veracity: UNNEEDED proof block                             // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED proof block                             assert(new_tree@.len() < usize::MAX as nat);
+// Veracity: UNNEEDED proof block                             lemma_key_unique_insert(old_new_tree_view, self_sorted@[i as int].0, self_sorted@[i as int].1);
+// Veracity: UNNEEDED proof block                             // Completeness maintenance.
+// Veracity: UNNEEDED proof block                             lemma_pair_in_set_map_contains(new_tree@, self_sorted@[i as int].0, self_sorted@[i as int].1);
+// Veracity: UNNEEDED proof block // Veracity: UNNEEDED assert                             assert forall|j2: int| 0 <= j2 < i as int
+// Veracity: UNNEEDED proof block // Veracity: UNNEEDED assert                                 implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[j2].0)
+// Veracity: UNNEEDED proof block // Veracity: UNNEEDED assert                             by {
+// Veracity: UNNEEDED proof block // Veracity: UNNEEDED assert                                 lemma_map_contains_pair_in_set(old_new_tree_view, self_sorted@[j2].0);
+// Veracity: UNNEEDED proof block // Veracity: UNNEEDED assert                                 let w: V::V = choose|w: V::V| old_new_tree_view.contains((self_sorted@[j2].0, w));
+// Veracity: UNNEEDED proof block // Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 assert(new_tree@.contains((self_sorted@[j2].0, w)));
+// Veracity: UNNEEDED proof block // Veracity: UNNEEDED assert                                 lemma_pair_in_set_map_contains(new_tree@, self_sorted@[j2].0, w);
+// Veracity: UNNEEDED proof block // Veracity: UNNEEDED assert                             };
+// Veracity: UNNEEDED proof block                             // Value tracking maintenance: new pair is self-only.
+// Veracity: UNNEEDED proof block // Veracity: UNNEEDED assert                             assert(old_map.dom().contains(self_sorted@[i as int].0)) by {
+// Veracity: UNNEEDED proof block // Veracity: UNNEEDED assert                                 lemma_pair_in_set_map_contains(old_tree, self_sorted@[i as int].0, self_sorted@[i as int].1);
+// Veracity: UNNEEDED proof block // Veracity: UNNEEDED assert                             };
+// Veracity: UNNEEDED proof block                             // Veracity: NEEDED assert
+// Veracity: UNNEEDED proof block                             assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
+// Veracity: UNNEEDED proof block                                 old_map.dom().contains(p.0) &&
+// Veracity: UNNEEDED proof block                                 ((!other_map.dom().contains(p.0) && old_tree.contains(p))
+// Veracity: UNNEEDED proof block                                 || (other_map.dom().contains(p.0) && exists|v1: V, v2: V, r: V|
+// Veracity: UNNEEDED proof block                                     v1@ == old_map[p.0] && v2@ == other_map[p.0]
+// Veracity: UNNEEDED proof block                                     && f.ensures((&v1, &v2), r) && p.1 == r@))
+// Veracity: UNNEEDED proof block                             by {
+// Veracity: UNNEEDED proof block                                 if old_new_tree_view.contains(p) {
+// Veracity: UNNEEDED proof block                                     // Existing pair — invariant held before insert.
+// Veracity: UNNEEDED proof block                                 } else {
+                                    // New pair: p == self_sorted@[i] (cloned).
+// Veracity: UNNEEDED assert                                     assert(p.0 == self_sorted@[i as int].0);
+// Veracity: UNNEEDED assert                                     assert(p.1 == self_sorted@[i as int].1);
+// Veracity: UNNEEDED assert                                     assert(!other_map.dom().contains(p.0));
+// Veracity: UNNEEDED assert                                     assert(old_tree.contains(p));
+                                }
+                            };
+                        }
+                    // Veracity: NEEDED proof block
+                    },
+                }
+                i += 1;
+            }
+            // Phase 2: iterate other entries, add those not in self.
+            let other_sorted = other.tree.inner.in_order();
+            let other_len = other_sorted.length();
+            let mut j: usize = 0;
+            proof {
+                lemma_sorted_keys_pairwise_distinct(other.tree.inner@, other_sorted@);
+                // Bridge: old keys preserved (Phase 1 completeness → per-key form).
+                // Veracity: NEEDED assert
+                assert forall|kv: K::V| #[trigger] old_map.dom().contains(kv)
+                    implies spec_pair_set_to_map(new_tree@).dom().contains(kv)
+                by {
+                    lemma_map_contains_pair_in_set(old_tree, kv);
+                    let vv: V::V = choose|vv: V::V| old_tree.contains((kv, vv));
+// Veracity: UNNEEDED assert                     assert(self_sorted@.contains((kv, vv)));
+                    let jx: int = choose|jx: int| 0 <= jx < self_sorted@.len() as int && self_sorted@[jx] == (kv, vv);
+                    // Veracity: NEEDED assert (speed hint)
+                    assert(spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[jx].0));
+                };
+                lemma_pair_set_to_map_len(old_tree);
+                lemma_pair_set_to_map_len(other.tree.inner@);
+            }
+            while j < other_len
+                invariant
+                    self.tree.inner@ == old_tree,
+                    old(self).spec_orderedtablesteph_wf(),
+                    other.spec_orderedtablesteph_wf(),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    obeys_feq_full::<V>(),
+                    obeys_feq_full::<K>(),
+                    other_map == other@,
+                    old_map == spec_pair_set_to_map(old_tree),
+                    other_len as nat == other_sorted@.len(),
+                    other_sorted@.len() == other.tree.inner@.len(),
+                    self_sorted@.len() == old_tree.len(),
+                    forall|v: <Pair<K, V> as View>::V| other.tree.inner@.contains(v) <==> #[trigger] other_sorted@.contains(v),
+                    forall|v: <Pair<K, V> as View>::V| old_tree.contains(v) <==> #[trigger] self_sorted@.contains(v),
+                    forall|ii: int, jj: int|
+                        0 <= ii < other_sorted@.len() && 0 <= jj < other_sorted@.len() && ii != jj
+                        ==> (#[trigger] other_sorted@[ii]).0 != (#[trigger] other_sorted@[jj]).0,
+                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==>
+                        old_map.dom().contains(p.0) ||
+                        (exists|j2: int| 0 <= j2 < j as int && p.0 == (#[trigger] other_sorted@[j2]).0),
+                    0 <= j <= other_len,
+                    new_tree.spec_bstparasteph_wf(),
+                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    view_ord_consistent::<Pair<K, V>>(),
+                    new_tree@.len() <= self_sorted@.len() + j as nat,
+                    self_sorted@.len() + other_sorted@.len() < usize::MAX as nat,
+                    spec_key_unique_pairs_set(new_tree@),
+                    spec_key_unique_pairs_set(old_tree),
+                    // Old keys preserved.
+                    forall|kv: K::V| #[trigger] old_map.dom().contains(kv)
+                        ==> spec_pair_set_to_map(new_tree@).dom().contains(kv),
+                    // Other completeness.
+                    forall|j2: int| 0 <= j2 < j as int && !old_map.dom().contains(other_sorted@[j2].0)
+                        ==> #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(other_sorted@[j2].0),
+                    // Phase 2 value tracking (3-way).
+                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==>
+                        (old_map.dom().contains(p.0) &&
+                            // Veracity: NEEDED proof block
+                            ((!other_map.dom().contains(p.0) && old_tree.contains(p))
+                            || (other_map.dom().contains(p.0) && exists|v1: V, v2: V, r: V|
+                                v1@ == old_map[p.0] && v2@ == other_map[p.0]
+                                && f.ensures((&v1, &v2), r) && p.1 == r@)))
+                        || (!old_map.dom().contains(p.0) && other.tree.inner@.contains(p)),
+                    spec_set_pair_view_generated::<K, V>(new_tree@),
+                // Veracity: NEEDED proof block
+                decreases other_len - j,
+            {
+                let pair = other_sorted.nth(j);
+                proof { reveal(obeys_view_eq); }
+                let in_self = self.find(&pair.0);
+                match in_self {
+                    None => {
+                        // find returned None → !old_map.dom().contains(other_sorted@[j].0).
+                        let cloned = pair.clone_plus();
+                        let ghost old_new_tree_view = new_tree@;
+                        proof {
+                            lemma_cloned_view_eq(*pair, cloned);
+                            // Freshness: other_sorted@[j].0 not already in new_tree.
+// Veracity: UNNEEDED assert                             assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(other_sorted@[j as int].0)) by {
+// Veracity: UNNEEDED assert                                 if spec_pair_set_to_map(old_new_tree_view).dom().contains(other_sorted@[j as int].0) {
+// Veracity: UNNEEDED assert                                     lemma_map_contains_pair_in_set(old_new_tree_view, other_sorted@[j as int].0);
+// Veracity: NEEDED proof block
+// Veracity: UNNEEDED assert                                     let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((other_sorted@[j as int].0, vv));
+// Veracity: UNNEEDED assert                                     if old_map.dom().contains(other_sorted@[j as int].0) {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                         assert(false);
+// Veracity: UNNEEDED assert                                     } else {
+// Veracity: UNNEEDED assert                                         let j2 = choose|j2: int| 0 <= j2 < j as int && (other_sorted@[j as int].0, vv).0 == (#[trigger] other_sorted@[j2]).0;
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                         assert(false);
+// Veracity: UNNEEDED assert                                     }
+// Veracity: UNNEEDED assert                                 }
+// Veracity: UNNEEDED assert                             };
+                        }
+                        new_tree.insert(cloned);
+                        proof {
+                            lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
+// Veracity: UNNEEDED assert                             assert(new_tree@.len() <= self_sorted@.len() + j as nat + 1);
+                            lemma_key_unique_insert(old_new_tree_view, other_sorted@[j as int].0, other_sorted@[j as int].1);
+                            // Old keys preserved maintenance.
+                            // Veracity: NEEDED assert
+                            assert forall|kv: K::V| #[trigger] old_map.dom().contains(kv)
+                                implies spec_pair_set_to_map(new_tree@).dom().contains(kv)
+                            by {
+                                lemma_map_contains_pair_in_set(old_new_tree_view, kv);
+                                let w: V::V = choose|w: V::V| old_new_tree_view.contains((kv, w));
+// Veracity: UNNEEDED assert                                 assert(new_tree@.contains((kv, w)));
+                                lemma_pair_in_set_map_contains(new_tree@, kv, w);
+                            };
+                            // Other completeness maintenance.
+// Veracity: UNNEEDED assert                             assert(other_sorted@.contains(other_sorted@[j as int])) by {
+// Veracity: UNNEEDED assert                                 // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                                 assert(other_sorted@[j as int] == other_sorted@[j as int]);
+// Veracity: UNNEEDED assert                             };
+                            // Veracity: NEEDED assert (speed hint)
+                            assert(other.tree.inner@.contains(other_sorted@[j as int]));
+                            lemma_pair_in_set_map_contains(new_tree@, other_sorted@[j as int].0, other_sorted@[j as int].1);
+                            // Veracity: NEEDED assert
+                            assert forall|j2: int| 0 <= j2 < j as int + 1
+                                && !old_map.dom().contains(other_sorted@[j2].0)
+                                implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(other_sorted@[j2].0)
+                            by {
+                                if j2 == j as int {
+                                } else {
+                                    lemma_map_contains_pair_in_set(old_new_tree_view, other_sorted@[j2].0);
+                                    let w: V::V = choose|w: V::V| old_new_tree_view.contains((other_sorted@[j2].0, w));
+                                    // Veracity: NEEDED assert (speed hint)
+                                    assert(new_tree@.contains((other_sorted@[j2].0, w)));
+                                    lemma_pair_in_set_map_contains(new_tree@, other_sorted@[j2].0, w);
+                                }
+                            };
+                            // Value tracking maintenance.
+                            // Veracity: NEEDED assert
+                            assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
+                                (old_map.dom().contains(p.0) &&
+                                    ((!other_map.dom().contains(p.0) && old_tree.contains(p))
+                                    || (other_map.dom().contains(p.0) && exists|v1: V, v2: V, r: V|
+                                        v1@ == old_map[p.0] && v2@ == other_map[p.0]
+                                        && f.ensures((&v1, &v2), r) && p.1 == r@)))
+                                || (!old_map.dom().contains(p.0) && other.tree.inner@.contains(p))
+                            by {
+                                if old_new_tree_view.contains(p) {
+                                } else {
+                                    // Veracity: NEEDED assert (speed hint)
+                                    assert(p.0 == other_sorted@[j as int].0);
+// Veracity: NEEDED proof block
+// Veracity: UNNEEDED assert                                     assert(p.1 == other_sorted@[j as int].1);
+// Veracity: UNNEEDED assert                                     assert(!old_map.dom().contains(p.0));
+// Veracity: UNNEEDED assert                                     assert(other.tree.inner@.contains(p));
+                                }
+                            };
+                        }
+                    },
+                    Some(_) => {},
+                }
+                j += 1;
+            }
+            self.tree = OrdKeyMap { inner: new_tree };
+            proof {
+                lemma_pair_set_to_map_dom_finite(new_tree@);
+                lemma_pair_set_to_map_dom_finite(old_tree);
+                lemma_pair_set_to_map_dom_finite(other.tree.inner@);
+                // 1. Domain: self@.dom() =~= old_map.dom().union(other_map.dom()).
+// Veracity: UNNEEDED assert                 assert(self@.dom() =~= old_map.dom().union(other_map.dom())) by {
+// Veracity: UNNEEDED assert                     // Veracity: NEEDED assert
+// Veracity: UNNEEDED assert                     assert forall|kv: K::V| self@.dom().contains(kv)
+// Veracity: UNNEEDED assert                         implies #[trigger] old_map.dom().union(other_map.dom()).contains(kv)
+// Veracity: UNNEEDED assert                     by {
+// Veracity: UNNEEDED assert                         lemma_map_contains_pair_in_set(self.tree.inner@, kv);
+// Veracity: UNNEEDED assert                         let vv: V::V = choose|vv: V::V| self.tree.inner@.contains((kv, vv));
+// Veracity: UNNEEDED assert                         if !old_map.dom().contains(kv) {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             assert(other.tree.inner@.contains((kv, vv)));
+// Veracity: UNNEEDED assert                             lemma_pair_in_set_map_contains(other.tree.inner@, kv, vv);
+// Veracity: UNNEEDED assert                         }
+// Veracity: UNNEEDED assert                     };
+// Veracity: UNNEEDED assert                     // Veracity: NEEDED assert
+// Veracity: UNNEEDED assert                     assert forall|kv: K::V| #[trigger] old_map.dom().union(other_map.dom()).contains(kv)
+// Veracity: UNNEEDED assert                         implies self@.dom().contains(kv)
+// Veracity: UNNEEDED assert                     by {
+// Veracity: UNNEEDED assert                         if old_map.dom().contains(kv) {
+// Veracity: UNNEEDED assert                         } else {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             assert(other_map.dom().contains(kv));
+// Veracity: UNNEEDED assert                             lemma_map_contains_pair_in_set(other.tree.inner@, kv);
+// Veracity: UNNEEDED assert                             let vv: V::V = choose|vv: V::V| other.tree.inner@.contains((kv, vv));
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             assert(other_sorted@.contains((kv, vv)));
+// Veracity: UNNEEDED assert                             let jx: int = choose|jx: int| 0 <= jx < other_sorted@.len() as int && other_sorted@[jx] == (kv, vv);
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             assert(!old_map.dom().contains(other_sorted@[jx].0));
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             assert(spec_pair_set_to_map(new_tree@).dom().contains(other_sorted@[jx].0));
+// Veracity: UNNEEDED assert                         }
+// Veracity: UNNEEDED assert                     };
+// Veracity: UNNEEDED assert                 };
+                // 2. Self-only values.
+                // Veracity: NEEDED assert
+                assert forall|k: K::V| #[trigger] old_map.contains_key(k) && !other_map.contains_key(k)
+                    implies self@[k] == old_map[k]
+                by {
+                    lemma_map_contains_pair_in_set(self.tree.inner@, k);
+                    let vv: V::V = choose|vv: V::V| self.tree.inner@.contains((k, vv));
+                    // Veracity: NEEDED assert (speed hint)
+                    assert(old_tree.contains((k, vv)));
+                    lemma_pair_in_set_map_contains(self.tree.inner@, k, vv);
+                    lemma_pair_in_set_map_contains(old_tree, k, vv);
+                };
+                // 3. Other-only values.
+                // Veracity: NEEDED assert
+                assert forall|k: K::V| #[trigger] other_map.contains_key(k) && !old_map.contains_key(k)
+                    implies self@[k] == other_map[k]
+                by {
+                    lemma_map_contains_pair_in_set(self.tree.inner@, k);
+                    let vv: V::V = choose|vv: V::V| self.tree.inner@.contains((k, vv));
+// Veracity: UNNEEDED assert                     assert(other.tree.inner@.contains((k, vv)));
+                    lemma_pair_in_set_map_contains(self.tree.inner@, k, vv);
+                    lemma_pair_in_set_map_contains(other.tree.inner@, k, vv);
+                };
+                // 4. Both values.
+                // Veracity: NEEDED assert
+                assert forall|k: K::V| #[trigger] old_map.contains_key(k) && other_map.contains_key(k) implies
+                    (exists|v1: V, v2: V, r: V|
+                        v1@ == old_map[k] && v2@ == other_map[k]
+                        && f.ensures((&v1, &v2), r)
+                        && self@[k] == r@)
+                by {
+// Veracity: UNNEEDED proof block                     lemma_map_contains_pair_in_set(self.tree.inner@, k);
+                    let vv: V::V = choose|vv: V::V| self.tree.inner@.contains((k, vv));
+                    lemma_pair_in_set_map_contains(self.tree.inner@, k, vv);
+                };
+                // 5. wf.
+// Veracity: UNNEEDED assert                 assert(self.tree.inner@.len() < usize::MAX as nat);
+            }
+        }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to OrdKeyMap::difference
         fn difference(&mut self, other: &Self)
         {
             self.tree = self.tree.difference(&other.tree);
+            // Veracity: NEEDED proof block
             proof { lemma_pair_set_to_map_dom_finite(self.tree.inner@); }
         }
 
@@ -823,6 +1254,7 @@ broadcast use {
                     forall|j: int| 0 <= j < i as int && keys_set.contains(sorted@[j].0)
                         ==> #[trigger] new_tree@.contains(sorted@[j]),
                     0 <= i <= len,
+                    // Veracity: NEEDED proof block
                     new_tree.spec_bstparasteph_wf(),
                     vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
                     view_ord_consistent::<Pair<K, V>>(),
@@ -835,26 +1267,32 @@ broadcast use {
                 let pair = sorted.nth(i);
                 let in_keys = keys.find(&pair.0);
                 if in_keys {
+                    // Veracity: NEEDED proof block
                     let cloned = pair.clone_plus();
                     let ghost old_new_tree_view = new_tree@;
                     proof {
                         lemma_cloned_view_eq(*pair, cloned);
+                        // Veracity: NEEDED assert (speed hint)
                         assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0)) by {
                             if spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0) {
                                 lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[i as int].0);
                                 let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((sorted@[i as int].0, vv));
                                 let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == (#[trigger] sorted@[jj]).0;
-                                assert(false);
+// Veracity: UNNEEDED assert                                 assert(false);
                             }
                         };
                     }
+                    // Veracity: NEEDED proof block
                     new_tree.insert(cloned);
                     proof {
-                        assert(new_tree@.len() <= i as nat + 1);
-                        assert(new_tree@.len() < usize::MAX as nat);
+// Veracity: UNNEEDED assert                         assert(new_tree@.len() <= i as nat + 1);
+// Veracity: UNNEEDED assert                         assert(new_tree@.len() < usize::MAX as nat);
                         lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, sorted@[i as int].1);
+                        // Veracity: NEEDED assert
                         assert(sorted@.contains(sorted@[i as int])) by { assert(sorted@[i as int] == sorted@[i as int]); };
+                        // Veracity: NEEDED assert (speed hint)
                         assert(old_tree.contains(sorted@[i as int]));
+                        // Veracity: NEEDED assert (speed hint)
                         assert(new_tree@.contains(sorted@[i as int]));
                     }
                 }
@@ -865,45 +1303,53 @@ broadcast use {
                 lemma_pair_set_to_map_dom_finite(new_tree@);
                 lemma_pair_set_to_map_dom_finite(old_tree);
                 // Prove: self@.dom() =~= old_map.dom().intersect(keys_set)
+                // Veracity: NEEDED assert
                 assert(self@.dom() =~= old_map.dom().intersect(keys_set)) by {
                     // Forward: k in self dom ==> k in old dom and k in keys_set.
+                    // Veracity: NEEDED assert
                     assert forall|k: K::V| #[trigger] self@.dom().contains(k)
                         implies old_map.dom().contains(k) && keys_set.contains(k)
                     by {
                         lemma_map_contains_pair_in_set(new_tree@, k);
                         let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                        assert(old_tree.contains((k, v)));
+// Veracity: UNNEEDED assert                         assert(old_tree.contains((k, v)));
                         lemma_pair_in_set_map_contains(old_tree, k, v);
-                        assert(keys_set.contains(k));
+// Veracity: UNNEEDED assert                         assert(keys_set.contains(k));
                     };
                     // Backward: k in old dom and k in keys_set ==> k in self dom.
+                    // Veracity: NEEDED assert
                     assert forall|k: K::V|
                         old_map.dom().contains(k) && keys_set.contains(k)
                         implies #[trigger] self@.dom().contains(k)
                     by {
                         lemma_map_contains_pair_in_set(old_tree, k);
                         let v: V::V = choose|v: V::V| old_tree.contains((k, v));
-                        assert(sorted@.contains((k, v)));
+// Veracity: UNNEEDED assert                         assert(sorted@.contains((k, v)));
                         let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (k, v);
-                        assert(new_tree@.contains(sorted@[j]));
+// Veracity: UNNEEDED assert                         assert(new_tree@.contains(sorted@[j]));
                         lemma_pair_in_set_map_contains(new_tree@, k, v);
                     };
                 };
                 // Prove: values preserved.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] self@.contains_key(k)
                     implies self@[k] == old_map[k]
                 by {
                     lemma_map_contains_pair_in_set(new_tree@, k);
                     let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                    assert(old_tree.contains((k, v)));
+// Veracity: UNNEEDED assert                     assert(old_tree.contains((k, v)));
                     lemma_pair_in_set_map_contains(new_tree@, k, v);
                     lemma_pair_in_set_map_contains(old_tree, k, v);
                 };
                 // Type axioms flow from old(self).spec_orderedtablesteph_wf().
+                // Veracity: NEEDED assert (speed hint)
                 assert(spec_pair_key_determines_order::<K, V>());
+                // Veracity: NEEDED assert (speed hint)
                 assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                assert(view_ord_consistent::<K>());
-                assert(obeys_feq_fulls::<K, V>());
+// Veracity: UNNEEDED proof block                 // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED proof block                 assert(view_ord_consistent::<K>());
+// Veracity: UNNEEDED proof block                 // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED proof block                 assert(obeys_feq_fulls::<K, V>());
             }
         }
 
@@ -942,6 +1388,7 @@ broadcast use {
                     forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==>
                         !keys_set.contains(p.0),
                     // Completeness: processed entries not in keys_set are in new_tree.
+                    // Veracity: NEEDED proof block
                     forall|j: int| 0 <= j < i as int && !keys_set.contains(sorted@[j].0)
                         ==> #[trigger] new_tree@.contains(sorted@[j]),
                     0 <= i <= len,
@@ -954,6 +1401,7 @@ broadcast use {
                     spec_key_unique_pairs_set(old_tree),
                 decreases len - i,
             {
+                // Veracity: NEEDED proof block
                 let pair = sorted.nth(i);
                 let in_keys = keys.find(&pair.0);
                 if !in_keys {
@@ -961,23 +1409,28 @@ broadcast use {
                     let ghost old_new_tree_view = new_tree@;
                     proof {
                         lemma_cloned_view_eq(*pair, cloned);
+                        // Veracity: NEEDED assert (speed hint)
                         assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0)) by {
                             if spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0) {
                                 lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[i as int].0);
                                 let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((sorted@[i as int].0, vv));
                                 let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == (#[trigger] sorted@[jj]).0;
-                                assert(false);
+// Veracity: UNNEEDED assert                                 assert(false);
+                            // Veracity: NEEDED proof block
                             }
                         };
                     }
                     new_tree.insert(cloned);
                     proof {
-                        assert(new_tree@.len() <= i as nat + 1);
+// Veracity: UNNEEDED assert                         assert(new_tree@.len() <= i as nat + 1);
+                        // Veracity: NEEDED assert (speed hint)
                         assert(new_tree@.len() < usize::MAX as nat);
                         lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, sorted@[i as int].1);
+                        // Veracity: NEEDED assert
                         assert(sorted@.contains(sorted@[i as int])) by { assert(sorted@[i as int] == sorted@[i as int]); };
+                        // Veracity: NEEDED assert (speed hint)
                         assert(old_tree.contains(sorted@[i as int]));
-                        assert(new_tree@.contains(sorted@[i as int]));
+// Veracity: UNNEEDED assert                         assert(new_tree@.contains(sorted@[i as int]));
                     }
                 }
                 i = i + 1;
@@ -987,45 +1440,51 @@ broadcast use {
                 lemma_pair_set_to_map_dom_finite(new_tree@);
                 lemma_pair_set_to_map_dom_finite(old_tree);
                 // Prove: self@.dom() =~= old_map.dom().difference(keys_set)
+                // Veracity: NEEDED assert
                 assert(self@.dom() =~= old_map.dom().difference(keys_set)) by {
                     // Forward: k in self dom ==> k in old dom and k not in keys_set.
+                    // Veracity: NEEDED assert
                     assert forall|k: K::V| #[trigger] self@.dom().contains(k)
                         implies old_map.dom().contains(k) && !keys_set.contains(k)
                     by {
                         lemma_map_contains_pair_in_set(new_tree@, k);
                         let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
+                        // Veracity: NEEDED assert (speed hint)
                         assert(old_tree.contains((k, v)));
                         lemma_pair_in_set_map_contains(old_tree, k, v);
-                        assert(!keys_set.contains(k));
+// Veracity: UNNEEDED assert                         assert(!keys_set.contains(k));
                     };
                     // Backward: k in old dom and k not in keys_set ==> k in self dom.
+                    // Veracity: NEEDED assert
                     assert forall|k: K::V|
                         old_map.dom().contains(k) && !keys_set.contains(k)
                         implies #[trigger] self@.dom().contains(k)
                     by {
                         lemma_map_contains_pair_in_set(old_tree, k);
                         let v: V::V = choose|v: V::V| old_tree.contains((k, v));
-                        assert(sorted@.contains((k, v)));
+// Veracity: UNNEEDED assert                         assert(sorted@.contains((k, v)));
                         let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (k, v);
-                        assert(new_tree@.contains(sorted@[j]));
+// Veracity: UNNEEDED assert                         assert(new_tree@.contains(sorted@[j]));
                         lemma_pair_in_set_map_contains(new_tree@, k, v);
                     };
                 };
                 // Prove: values preserved.
+                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] self@.contains_key(k)
                     implies self@[k] == old_map[k]
                 by {
                     lemma_map_contains_pair_in_set(new_tree@, k);
                     let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                    assert(old_tree.contains((k, v)));
+// Veracity: NEEDED proof block
+// Veracity: UNNEEDED assert                     assert(old_tree.contains((k, v)));
                     lemma_pair_in_set_map_contains(new_tree@, k, v);
                     lemma_pair_in_set_map_contains(old_tree, k, v);
                 };
                 // Type axioms flow from old(self).spec_orderedtablesteph_wf().
-                assert(spec_pair_key_determines_order::<K, V>());
-                assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                assert(view_ord_consistent::<K>());
-                assert(obeys_feq_fulls::<K, V>());
+// Veracity: UNNEEDED assert                 assert(spec_pair_key_determines_order::<K, V>());
+// Veracity: UNNEEDED assert                 assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
+// Veracity: UNNEEDED assert                 assert(view_ord_consistent::<K>());
+// Veracity: UNNEEDED assert                 assert(obeys_feq_fulls::<K, V>());
             }
         }
 
@@ -1101,7 +1560,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::next_key
         fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrder
+// Veracity: UNNEEDED proof block             where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
@@ -1207,6 +1666,7 @@ broadcast use {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n BST inserts from sorted entries
     #[verifier::loop_isolation(false)]
+    // Veracity: NEEDED proof block
     pub fn from_sorted_entries<K: StT + Ord + TotalOrder, V: StT + Ord>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
     ) -> (table: OrderedTableStEph<K, V>)
@@ -1229,8 +1689,9 @@ broadcast use {
             table.spec_orderedtablesteph_wf(),
     {
         proof {
-            assert(obeys_feq_full_trigger::<K>());
-            assert(obeys_feq_full_trigger::<V>());
+// Veracity: UNNEEDED assert             assert(obeys_feq_full_trigger::<K>());
+// Veracity: UNNEEDED assert             assert(obeys_feq_full_trigger::<V>());
+            // Veracity: NEEDED assert (speed hint)
             assert(obeys_feq_full_trigger::<Pair<K, V>>());
             lemma_key_unique_empty::<K::V, V::V>();
         }
@@ -1239,8 +1700,9 @@ broadcast use {
         let mut i: usize = 0;
         while i < len
             invariant
-                i <= len,
+// Veracity: UNNEEDED proof block                 i <= len,
                 len as nat == entries@.len(),
+                // Veracity: NEEDED proof block
                 entries@.len() < usize::MAX as nat,
                 entries.spec_avltreeseqstper_wf(),
                 tree.spec_bstparasteph_wf(),
@@ -1264,52 +1726,56 @@ broadcast use {
             proof { lemma_cloned_view_eq(*elem, cloned); }
             tree.insert(cloned);
             proof {
-                assert(tree@.len() <= i as nat + 1);
-                assert(i as nat + 1 <= len as nat);
-                assert(tree@.len() < usize::MAX as nat);
+// Veracity: UNNEEDED assert                 assert(tree@.len() <= i as nat + 1);
+// Veracity: UNNEEDED assert                 assert(i as nat + 1 <= len as nat);
+// Veracity: UNNEEDED assert                 assert(tree@.len() < usize::MAX as nat);
                 // Prove provenance for the new tree.
-                assert forall|kv: K::V, vv: V::V| #[trigger] tree@.contains((kv, vv))
-                    implies exists|j: int| #![trigger entries@[j]] 0 <= j < i as int + 1 && entries@[j] == (kv, vv) by {
-                    if old_tree.contains((kv, vv)) {
-                        let j = choose|j: int| #![trigger entries@[j]] 0 <= j < i as int && entries@[j] == (kv, vv);
-                        assert(entries@[j] == (kv, vv) && j < i as int + 1);
-                    } else {
-                        // Must be the newly inserted element.
-                        assert((kv, vv) == cloned@);
-                        assert(entries@[i as int] == cloned@);
-                    }
-                };
+// Veracity: UNNEEDED assert                 assert forall|kv: K::V, vv: V::V| #[trigger] tree@.contains((kv, vv))
+// Veracity: UNNEEDED assert                     implies exists|j: int| #![trigger entries@[j]] 0 <= j < i as int + 1 && entries@[j] == (kv, vv) by {
+// Veracity: UNNEEDED assert                     if old_tree.contains((kv, vv)) {
+// Veracity: UNNEEDED assert                         let j = choose|j: int| #![trigger entries@[j]] 0 <= j < i as int && entries@[j] == (kv, vv);
+// Veracity: UNNEEDED assert                         // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                         assert(entries@[j] == (kv, vv) && j < i as int + 1);
+// Veracity: UNNEEDED assert                     } else {
+// Veracity: UNNEEDED assert                         // Must be the newly inserted element.
+// Veracity: UNNEEDED assert                         // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                         assert((kv, vv) == cloned@);
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                         assert(entries@[i as int] == cloned@);
+// Veracity: UNNEEDED assert                     }
+// Veracity: UNNEEDED assert                 };
                 // Prove key uniqueness is maintained.
-                assert(spec_key_unique_pairs_set(tree@)) by {
-
-                    assert forall|k: K::V, v1: V::V, v2: V::V|
-                        tree@.contains((k, v1)) && tree@.contains((k, v2)) implies v1 == v2 by {
-                        if old_tree.contains((k, v1)) && old_tree.contains((k, v2)) {
-                            // Both in old tree: follows from old invariant.
-                        } else if !old_tree.contains((k, v1)) && !old_tree.contains((k, v2)) {
-                            // Both are the new element.
-                            assert((k, v1) == cloned@ && (k, v2) == cloned@);
-                        } else {
-                            // One old, one new: contradiction via unique keys.
-                            if old_tree.contains((k, v1)) {
-                                // (k, v2) == cloned@, so k == cloned@.0 == entries@[i].0.
-                                let j1 = choose|j: int| #![trigger entries@[j]]
-                                    0 <= j < i as int && entries@[j] == (k, v1);
-                                // entries@[j1].0 == k == entries@[i].0, but j1 < i.
-                                assert(entries@[j1].0 == entries@[i as int].0);
-                                assert(j1 < i as int);
-                                assert(false); // contradicts unique keys
-                            } else {
-                                // (k, v1) == cloned@
-                                let j2 = choose|j: int| #![trigger entries@[j]]
-                                    0 <= j < i as int && entries@[j] == (k, v2);
-                                assert(entries@[j2].0 == entries@[i as int].0);
-                                assert(j2 < i as int);
-                                assert(false);
-                            }
-                        }
-                    };
-                };
+// Veracity: UNNEEDED assert                 assert(spec_key_unique_pairs_set(tree@)) by {
+// Veracity: UNNEEDED assert 
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                     assert forall|k: K::V, v1: V::V, v2: V::V|
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                         tree@.contains((k, v1)) && tree@.contains((k, v2)) implies v1 == v2 by {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                         if old_tree.contains((k, v1)) && old_tree.contains((k, v2)) {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             // Both in old tree: follows from old invariant.
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                         } else if !old_tree.contains((k, v1)) && !old_tree.contains((k, v2)) {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             // Both are the new element.
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             assert((k, v1) == cloned@ && (k, v2) == cloned@);
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                         } else {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             // One old, one new: contradiction via unique keys.
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             if old_tree.contains((k, v1)) {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 // (k, v2) == cloned@, so k == cloned@.0 == entries@[i].0.
+// Veracity: UNNEEDED proof block // Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 let j1 = choose|j: int| #![trigger entries@[j]]
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                     0 <= j < i as int && entries@[j] == (k, v1);
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 // entries@[j1].0 == k == entries@[i].0, but j1 < i.
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 assert(entries@[j1].0 == entries@[i as int].0);
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 assert(j1 < i as int);
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 assert(false); // contradicts unique keys
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             } else {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 // (k, v1) == cloned@
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 let j2 = choose|j: int| #![trigger entries@[j]]
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                     0 <= j < i as int && entries@[j] == (k, v2);
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 assert(entries@[j2].0 == entries@[i as int].0);
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 assert(j2 < i as int);
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 assert(false);
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             }
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                         }
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                     };
+// Veracity: UNNEEDED assert                 };
             }
             i = i + 1;
         }

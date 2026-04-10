@@ -72,6 +72,7 @@ pub mod OrderedTableMtPer {
         ensures s.spec_orderedtablemtper_wf(), s@ == inner@
     {
         let ghost view = inner@;
+        // Veracity: NEEDED proof block
         proof {
             lemma_pair_set_to_map_dom_finite(inner.tree.inner@);
         }
@@ -341,15 +342,18 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+        // Veracity: NEEDED proof block
         fn size(&self) -> (count: usize) {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_table.acquire_read();
+            // Veracity: NEEDED proof block
             let inner = read_handle.borrow();
             let count = inner.size();
             proof {
                 // Predicate chain: inv(pred, inner) → inner@ == pred.expected_view.
                 // type_invariant: pred.expected_view == ghost_locked_table@ == self@.
                 // inner.size() ensures: count == inner@.dom().len().
+                // Veracity: NEEDED assert (speed hint)
                 assert(inner@ == self@);
             }
             read_handle.release_read();
@@ -367,31 +371,38 @@ pub mod OrderedTableMtPer {
             let inner = OrderedTableStPer::singleton(k, v);
             from_st_table(inner)
         }
+// Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- RwLock wrapper, delegates to StPer find
         fn find(&self, k: &K) -> (found: Option<V>) {
             proof {
                 use_type_invariant(self);
+                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let found = inner.find(k);
-            proof { assert(inner@ == self@); }
+// Veracity: UNNEEDED assert             proof { assert(inner@ == self@); }
             read_handle.release_read();
             found
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer insert
         fn insert(&self, k: K, v: V) -> (updated: Self) {
             proof {
                 use_type_invariant(self);
+                // Veracity: NEEDED assert
+                // Veracity: NEEDED proof block
                 assert(obeys_view_eq_trigger::<K>());
             }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED assert (speed hint)
             proof { assert(inner@ == self@); }
             let result = inner.insert(k, v);
+            // Veracity: NEEDED proof block
             read_handle.release_read();
             from_st_table(result)
         }
@@ -400,11 +411,13 @@ pub mod OrderedTableMtPer {
         fn insert_wf(&self, k: K, v: V) -> (updated: Self) {
             proof {
                 use_type_invariant(self);
+                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
-            proof { assert(inner@ == self@); }
+// Veracity: UNNEEDED assert             proof { assert(inner@ == self@); }
+            // Veracity: NEEDED proof block
             let result = inner.insert_wf(k, v);
             read_handle.release_read();
             from_st_table(result)
@@ -414,27 +427,34 @@ pub mod OrderedTableMtPer {
         fn delete(&self, k: &K) -> (updated: Self) {
             proof {
                 use_type_invariant(self);
+                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
-            proof { assert(inner@ == self@); }
+// Veracity: NEEDED proof block
+// Veracity: UNNEEDED assert             proof { assert(inner@ == self@); }
             let result = inner.delete(k);
             read_handle.release_read();
             from_st_table(result)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer delete_wf
+        // Veracity: NEEDED proof block
         fn delete_wf(&self, k: &K) -> (updated: Self) {
             proof {
                 use_type_invariant(self);
+                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
             let read_handle = self.locked_table.acquire_read();
+            // Veracity: NEEDED proof block
             let inner = read_handle.borrow();
+            // Veracity: NEEDED assert (speed hint)
             proof { assert(inner@ == self@); }
             let result = inner.delete_wf(k);
             read_handle.release_read();
+            // Veracity: NEEDED proof block
             from_st_table(result)
         }
 
@@ -454,7 +474,7 @@ pub mod OrderedTableMtPer {
                 // Therefore len < usize::MAX.
                 lemma_size_lt_usize_max::<Pair<K, V>>(&entries.root);
                 lemma_size_eq_inorder_len::<Pair<K, V>>(&entries.root);
-                assert(len < usize::MAX);
+// Veracity: UNNEEDED assert                 assert(len < usize::MAX);
             }
             let mut result = OrderedSetMtEph::empty();
             let mut i: usize = 0;
@@ -467,6 +487,7 @@ pub mod OrderedTableMtPer {
                     result@.finite(),
                     result@.len() <= i as nat,
                 decreases len - i,
+            // Veracity: NEEDED proof block
             {
                 let pair = entries.nth(i);
                 result.insert(pair.0.clone());
@@ -475,17 +496,21 @@ pub mod OrderedTableMtPer {
             result
         }
 
+        // Veracity: NEEDED proof block (speed hint)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StPer map
         fn map<G: Fn(&V) -> V + Send + Sync + 'static>(
+            // Veracity: NEEDED proof block
             &self, f: G, Ghost(f_spec): Ghost<spec_fn(V::V) -> V::V>,
         ) -> (mapped: Self) {
             proof {
                 use_type_invariant(self);
+                // Veracity: NEEDED assert (speed hint)
                 assert(obeys_view_eq_trigger::<K>());
             }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let ghost inner_view = inner@;
+            // Veracity: NEEDED assert (speed hint)
             proof { assert(inner@ == self@); }
             let st_result = inner.map(f);
             read_handle.release_read();
@@ -495,26 +520,34 @@ pub mod OrderedTableMtPer {
                 //   exists|old_val, result| old_val@ == inner@[k] && f.ensures((&old_val,), result) && st_result@[k] == result@
                 // Our requires: forall|v, r| f.ensures((&v,), r) ==> r@ == f_spec(v@)
                 // Combined: st_result@[k] == f_spec(inner@[k]) == f_spec(self@[k])
+                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger] self@.contains_key(k)
                     implies st_result@[k] == f_spec(self@[k])
                 by {
-                    assert(inner_view.contains_key(k));
+// Veracity: UNNEEDED assert                     assert(inner_view.contains_key(k));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(st_result@.contains_key(k));
+                    // Veracity: NEEDED proof block
                     let (old_val, result): (V, V) = choose|old_val: V, result: V|
                         old_val@ == inner_view[k]
                         && f.ensures((&old_val,), result)
                         && st_result@[k] == result@;
+                    // Veracity: NEEDED assert (speed hint)
                     assert(f.ensures((&old_val,), result));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(result@ == f_spec(old_val@));
                 };
             }
             from_st_table(st_result)
         }
+// Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) -- collect O(n) + n StPer inserts each O(n)
         fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (filtered: Self) {
             proof {
+                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
+                // Veracity: NEEDED assert (speed hint)
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
                 use_type_invariant(self);
             }
@@ -527,7 +560,7 @@ pub mod OrderedTableMtPer {
             proof {
                 lemma_size_lt_usize_max::<Pair<K, V>>(&entries.root);
                 lemma_size_eq_inorder_len::<Pair<K, V>>(&entries.root);
-                assert(len < usize::MAX);
+// Veracity: UNNEEDED assert                 assert(len < usize::MAX);
             }
             let mut i: usize = 0;
             while i < len
@@ -540,6 +573,7 @@ pub mod OrderedTableMtPer {
                     len as nat == entries.spec_seq().len(),
                     len < usize::MAX,
                     forall|p: &Pair<K, V>| f.requires((p,)),
+                    // Veracity: NEEDED proof block
                     obeys_view_eq::<K>(),
                     obeys_feq_full::<Pair<K, V>>(),
                 decreases len - i,
@@ -552,34 +586,40 @@ pub mod OrderedTableMtPer {
             }
             from_st_table(result)
         }
+// Veracity: NEEDED proof block (speed hint)
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer first_key
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
+        // Veracity: NEEDED proof block
         {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let first = inner.first_key();
-            proof { assert(inner@ == self@); }
+// Veracity: UNNEEDED assert             proof { assert(inner@ == self@); }
             read_handle.release_read();
             first
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer last_key
         fn last_key(&self) -> (last: Option<K>)
+            // Veracity: NEEDED proof block (speed hint)
             where K: TotalOrder
         {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let last = inner.last_key();
+            // Veracity: NEEDED assert (speed hint)
             proof { assert(inner@ == self@); }
-            read_handle.release_read();
+// Veracity: UNNEEDED proof block             read_handle.release_read();
             last
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer previous_key
+        // Veracity: NEEDED proof block
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
@@ -587,26 +627,32 @@ pub mod OrderedTableMtPer {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let predecessor = inner.previous_key(k);
+// Veracity: UNNEEDED proof block             // Veracity: NEEDED assert (speed hint)
             proof { assert(inner@ == self@); }
             read_handle.release_read();
             predecessor
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer next_key
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(self); }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let successor = inner.next_key(k);
+            // Veracity: NEEDED assert (speed hint)
             proof { assert(inner@ == self@); }
             read_handle.release_read();
             successor
         }
 
+        // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StPer split_key
         fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self)) {
+            // Veracity: NEEDED assert (speed hint)
             proof { assert(obeys_view_eq_trigger::<K>()); }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -619,8 +665,10 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- RwLock wrapper, delegates to StPer join_key (union)
         fn join_key(&self, other: &Self) -> (joined: Self) {
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(obeys_view_eq_trigger::<K>());
-                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+// Veracity: NEEDED proof block
+// Veracity: UNNEEDED assert                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
                 use_type_invariant(self);
                 use_type_invariant(other);
             }
@@ -629,7 +677,10 @@ pub mod OrderedTableMtPer {
             let other_read = other.locked_table.acquire_read();
             let other_inner = other_read.borrow();
             proof {
+                // Veracity: NEEDED proof block
+                // Veracity: NEEDED assert (speed hint)
                 assert(self_inner@ == self@);
+                // Veracity: NEEDED assert (speed hint)
                 assert(other_inner@ == other@);
             }
             let result = OrderedTableStPer::join_key(self_inner, other_inner);
@@ -643,10 +694,10 @@ pub mod OrderedTableMtPer {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let range = inner.get_key_range(k1, k2);
-            read_handle.release_read();
-            proof {
-                lemma_pair_set_to_map_dom_finite(range.tree.inner@);
-            }
+// Veracity: UNNEEDED proof block             read_handle.release_read();
+// Veracity: UNNEEDED proof block             proof {
+// Veracity: UNNEEDED proof block                 lemma_pair_set_to_map_dom_finite(range.tree.inner@);
+// Veracity: UNNEEDED proof block             }
             from_st_table(range)
         }
 
@@ -655,13 +706,15 @@ pub mod OrderedTableMtPer {
             where K: TotalOrder
         {
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(obeys_view_eq_trigger::<K>());
                 use_type_invariant(self);
             }
             let read_handle = self.locked_table.acquire_read();
+            // Veracity: NEEDED proof block
             let inner = read_handle.borrow();
             let rank = inner.rank_key(k);
-            proof { assert(inner@ == self@); }
+// Veracity: UNNEEDED assert             proof { assert(inner@ == self@); }
             read_handle.release_read();
             rank
         }
@@ -671,19 +724,20 @@ pub mod OrderedTableMtPer {
             where K: TotalOrder
         {
             proof {
-                assert(obeys_view_eq_trigger::<K>());
+// Veracity: UNNEEDED assert                 assert(obeys_view_eq_trigger::<K>());
                 use_type_invariant(self);
             }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let selected = inner.select_key(i);
-            proof { assert(inner@ == self@); }
+// Veracity: UNNEEDED assert             proof { assert(inner@ == self@); }
             read_handle.release_read();
             selected
         }
-
+// Veracity: UNNEEDED proof block 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StPer split_rank_key
         fn split_rank_key(&self, i: usize) -> (split: (Self, Self)) {
+            // Veracity: NEEDED proof block
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let (left, right) = inner.split_rank_key(i);

@@ -429,20 +429,24 @@ broadcast use {
             Exposed::Leaf => None,
             Exposed::Node(left, key, right) => {
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof {
                     vstd::set_lib::lemma_len_subset(right@, left@.union(right@));
                 }
                 if right.is_empty() {
                     // Veracity: NEEDED proof block
+                    // Veracity: NEEDED proof block
                     proof {
                     }
                     Some(key)
                 } else {
+                    // Veracity: NEEDED proof block
                     let max_right = tree_max_key(&right);
                     // Veracity: NEEDED proof block
                     proof {
                         let mr = max_right.unwrap();
                         lemma_cmp_antisymmetry(mr, key);
+                        // Veracity: NEEDED assert
                         // Veracity: NEEDED assert
                         assert forall|t: T| (#[trigger] tree@.contains(t@))
                             implies t.cmp_spec(&mr) == Less || mr@ == t@ by {
@@ -474,24 +478,31 @@ broadcast use {
         decreases tree@.len(),
     {
         match tree.expose() {
+            // Veracity: NEEDED proof block
             Exposed::Leaf => None,
             Exposed::Node(left, key, right) => {
                 // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(!right@.contains(key@));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(!left@.union(right@).contains(key@));
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                // Veracity: NEEDED proof block
                 }
                 let left_sz = left.size();
                 if i < left_sz {
                     let result = tree_select(&left, i);
                     proof {
                         if result.is_some() {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(left@.contains(result.unwrap()@));
+                            // Veracity: NEEDED assert (speed hint)
                             assert(tree@.contains(result.unwrap()@));
                         }
                     }
                     result
+                // Veracity: NEEDED proof block
                 } else if i as usize == left_sz {
                     Some(key)
                 } else {
@@ -499,7 +510,9 @@ broadcast use {
                     let result = tree_select(&right, adjusted);
                     proof {
                         if result.is_some() {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(right@.contains(result.unwrap()@));
+                            // Veracity: NEEDED assert (speed hint)
                             assert(tree@.contains(result.unwrap()@));
                         }
                     }
@@ -525,6 +538,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self)
         {
+            // Veracity: NEEDED assert (speed hint)
             assert(obeys_feq_full_trigger::<T>());
             OrderedSetStPer { base_set: AVLTreeSetStPer::empty() }
         }
@@ -532,6 +546,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(x: T) -> (tree: Self)
         {
+            // Veracity: NEEDED assert (speed hint)
             assert(obeys_feq_full_trigger::<T>());
             OrderedSetStPer { base_set: AVLTreeSetStPer::singleton(x) }
         }
@@ -579,38 +594,52 @@ broadcast use {
         {
             OrderedSetStPer { base_set: self.base_set.difference(&other.base_set) }
         }
+// Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + vec copy
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
         {
+            // Veracity: NEEDED proof block
             let mut elements: Vec<T> = Vec::new();
             self.base_set.tree.collect_in_order(&mut elements);
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(elements@.len() < usize::MAX);
             }
             let result = AVLTreeSeqStPerS::from_vec(elements);
             proof {
                 let ghost elem_views = elements@.map_values(|t: T| t@);
+                // Veracity: NEEDED assert (speed hint)
                 assert(result@ =~= elem_views);
 
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|i: int| 0 <= i < elements@.len()
                     implies elem_views[i] == (#[trigger] elements@[i])@ by {};
 
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|i: int| 0 <= i < result@.len()
                     implies #[trigger] self@.contains(result@[i]) by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(result@[i] == elem_views[i]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(elem_views[i] == elements@[i]@);
                 };
 
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|v: T::V| self@.contains(v)
                     implies result@.contains(v) by {
                     let i = choose|i: int| 0 <= i < elements@.len() && (#[trigger] elements@[i])@ == v;
+                    // Veracity: NEEDED assert (speed hint)
                     assert(0 <= i < result@.len());
+                    // Veracity: NEEDED assert (speed hint)
                     assert(result@[i] == elem_views[i]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(elem_views[i] == elements@[i]@);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(result@[i] == v);
                 };
 
+                // Veracity: NEEDED assert (speed hint)
                 assert(result@.to_set() =~= self@);
             }
             result
@@ -619,6 +648,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n treap inserts
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
         {
+            // Veracity: NEEDED assert (speed hint)
             assert(obeys_feq_full_trigger::<T>());
             let mut constructed = Self::empty();
             let n = seq.length();
@@ -628,6 +658,7 @@ broadcast use {
                     seq.spec_avltreeseqstper_wf(),
                     n as nat == seq.spec_seq().len(),
                     0 <= i <= n,
+                    // Veracity: NEEDED proof block
                     constructed.spec_orderedsetstper_wf(),
                     constructed@.finite(),
                     constructed@.len() <= i as nat,
@@ -662,6 +693,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to last_iter
+        // Veracity: NEEDED proof block
         fn last(&self) -> (last: Option<T>)
         { self.last_iter() }
 
@@ -674,20 +706,28 @@ broadcast use {
             proof {
                 if result.is_some() {
                     let v = result.unwrap();
-                    assert(left@.contains(v@));
-                    assert(v.cmp_spec(k) == Less);
+// Veracity: UNNEEDED assert                     assert(left@.contains(v@));
+// Veracity: UNNEEDED assert                     assert(v.cmp_spec(k) == Less);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(v@ != k@);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(left@.union(_right@) =~= self@.remove(k@));
+                    // Veracity: NEEDED assert
                     assert(self@.remove(k@).contains(v@));
-                    assert(self@.contains(v@));
+// Veracity: UNNEEDED assert                     assert(self@.contains(v@));
+                    // Veracity: NEEDED assert
                     assert forall|t: T| #[trigger] self@.contains(t@) && t.cmp_spec(k) == Less
                         implies t.cmp_spec(&v) == Less || v@ == t@ by {
-                        assert(t@ != k@);
+// Veracity: UNNEEDED assert                         assert(t@ != k@);
+                        // Veracity: NEEDED assert (speed hint)
                         assert(self@.remove(k@).contains(t@));
+                        // Veracity: NEEDED assert (speed hint)
                         assert(left@.union(_right@).contains(t@));
                         if _right@.contains(t@) {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(t.cmp_spec(k) == Greater);
                         }
+                        // Veracity: NEEDED assert (speed hint)
                         assert(left@.contains(t@));
                     };
                 }
@@ -695,6 +735,7 @@ broadcast use {
             result
         }
 
+        // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to previous_iter
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
         { self.previous_iter(k) }
@@ -708,26 +749,36 @@ broadcast use {
             proof {
                 if result.is_some() {
                     let v = result.unwrap();
-                    assert(right@.contains(v@));
+// Veracity: UNNEEDED assert                     assert(right@.contains(v@));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(v.cmp_spec(k) == Greater);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(v@ != k@);
-                    assert(_left@.union(right@) =~= self@.remove(k@));
+// Veracity: UNNEEDED assert                     assert(_left@.union(right@) =~= self@.remove(k@));
+                    // Veracity: NEEDED assert
                     assert(self@.remove(k@).contains(v@));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(self@.contains(v@));
+                    // Veracity: NEEDED assert
                     assert forall|t: T| #[trigger] self@.contains(t@) && t.cmp_spec(k) == Greater
                         implies v.cmp_spec(&t) == Less || v@ == t@ by {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(t@ != k@);
+                        // Veracity: NEEDED assert (speed hint)
                         assert(self@.remove(k@).contains(t@));
+                        // Veracity: NEEDED assert (speed hint)
                         assert(_left@.union(right@).contains(t@));
                         if _left@.contains(t@) {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(t.cmp_spec(k) == Less);
                         }
-                        assert(right@.contains(t@));
+// Veracity: UNNEEDED assert                         assert(right@.contains(t@));
                     };
                 }
             }
             result
         }
+// Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to next_iter
         fn next(&self, k: &T) -> (successor: Option<T>)
@@ -740,21 +791,31 @@ broadcast use {
         {
             let (left_tree, found, right_tree) = self.base_set.tree.split(k);
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(left_tree@.union(right_tree@) =~= self@.remove(k@));
+                // Veracity: NEEDED assert
                 assert forall|v: T::V| left_tree@.contains(v) implies #[trigger] self@.contains(v) by {
+                    // Veracity: NEEDED assert
                     assert(self@.remove(k@).contains(v));
                 };
+                // Veracity: NEEDED assert (speed hint)
                 assert(left_tree@.subset_of(self@));
+                // Veracity: NEEDED assert
                 assert forall|v: T::V| right_tree@.contains(v) implies #[trigger] self@.contains(v) by {
+                    // Veracity: NEEDED assert
                     assert(self@.remove(k@).contains(v));
                 };
+                // Veracity: NEEDED assert (speed hint)
                 assert(right_tree@.subset_of(self@));
                 vstd::set_lib::lemma_len_subset(left_tree@, self@);
                 vstd::set_lib::lemma_len_subset(right_tree@, self@);
+                // Veracity: NEEDED assert
                 assert forall|x: T::V| #[trigger] self@.contains(x)
                     implies left_tree@.contains(x) || right_tree@.contains(x) || x == k@ by {
                     if x != k@ {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(self@.remove(k@).contains(x));
+                        // Veracity: NEEDED assert (speed hint)
                         assert(left_tree@.union(right_tree@).contains(x));
                     }
                 };
@@ -767,6 +828,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to split_iter
         fn split(&self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
+        // Veracity: NEEDED proof block
         { self.split_iter(k) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to union
@@ -780,16 +842,22 @@ broadcast use {
             let (_lt_k1, found_k1, right1) = self.base_set.tree.split(k1);
             let (mid, found_k2, _gt_k2) = right1.split(k2);
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(_lt_k1@.union(right1@) =~= self@.remove(k1@));
+                // Veracity: NEEDED assert
                 assert forall|v: T::V| right1@.contains(v) implies self@.contains(v) by {
+                    // Veracity: NEEDED assert
                     assert(self@.remove(k1@).contains(v));
                 };
-                assert(mid@.union(_gt_k2@) =~= right1@.remove(k2@));
+// Veracity: UNNEEDED assert                 assert(mid@.union(_gt_k2@) =~= right1@.remove(k2@));
+                // Veracity: NEEDED assert
+                // Veracity: NEEDED proof block
                 assert forall|v: T::V| mid@.contains(v) implies self@.contains(v) by {
+                    // Veracity: NEEDED assert
                     assert(right1@.remove(k2@).contains(v));
-                    assert(right1@.contains(v));
+// Veracity: UNNEEDED assert                     assert(right1@.contains(v));
                 };
-                assert(mid@.subset_of(self@));
+// Veracity: UNNEEDED assert                 assert(mid@.subset_of(self@));
                 vstd::set_lib::lemma_len_subset(mid@, self@);
             }
             let mut result_tree = mid;
@@ -798,12 +866,15 @@ broadcast use {
                 result_tree.insert(k1_clone);
             }
             proof {
-                assert forall|v: T::V| result_tree@.contains(v) implies self@.contains(v) by {
-                    if mid@.contains(v) {
-                    } else {
-                        assert(self@.contains(k1@));
-                    }
-                };
+// Veracity: UNNEEDED assert                 assert forall|v: T::V| result_tree@.contains(v) implies self@.contains(v) by {
+// Veracity: NEEDED proof block (speed hint)
+// Veracity: UNNEEDED assert                     if mid@.contains(v) {
+// Veracity: UNNEEDED assert                     } else {
+// Veracity: UNNEEDED assert                         // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                         assert(self@.contains(k1@));
+// Veracity: UNNEEDED assert                     }
+// Veracity: UNNEEDED assert                 };
+                // Veracity: NEEDED assert (speed hint)
                 assert(result_tree@.subset_of(self@));
                 vstd::set_lib::lemma_len_subset(result_tree@, self@);
             }
@@ -812,14 +883,18 @@ broadcast use {
                 result_tree.insert(k2_clone);
             }
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|v: T::V| result_tree@.contains(v) implies self@.contains(v) by {
                     if mid@.contains(v) {
                     } else if v == k1@ {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(self@.contains(k1@));
                     } else {
-                        assert(self@.contains(k2@));
+// Veracity: UNNEEDED assert                         assert(self@.contains(k2@));
                     }
                 };
+                // Veracity: NEEDED assert (speed hint)
+                // Veracity: NEEDED proof block
                 assert(result_tree@.subset_of(self@));
                 vstd::set_lib::lemma_len_subset(result_tree@, self@);
             }
@@ -836,10 +911,14 @@ broadcast use {
         {
             let (left, _found, _right) = self.base_set.tree.split(k);
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(left@.union(_right@) =~= self@.remove(k@));
+                // Veracity: NEEDED assert
                 assert forall|v: T::V| left@.contains(v) implies self@.contains(v) by {
+                    // Veracity: NEEDED assert
                     assert(self@.remove(k@).contains(v));
                 };
+                // Veracity: NEEDED assert (speed hint)
                 assert(left@.subset_of(self@));
                 vstd::set_lib::lemma_len_subset(left@, self@);
             }
@@ -857,8 +936,10 @@ broadcast use {
             let sz = self.size();
             if i >= sz {
                 None
+            // Veracity: NEEDED proof block
             } else {
                 tree_select(&self.base_set.tree, i)
+            // Veracity: NEEDED proof block
             }
         }
 
@@ -872,65 +953,75 @@ broadcast use {
                 (self.clone(), Self::empty())
             } else {
                 let pivot = tree_select(&self.base_set.tree, i);
+                // Veracity: NEEDED assert (speed hint)
                 proof { assert(pivot.is_some()); }
                 let pivot_key = pivot.unwrap();
                 let (left_tree, _found, right_tree) = self.base_set.tree.split(&pivot_key);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(left_tree@.union(right_tree@) =~= self@.remove(pivot_key@));
+                    // Veracity: NEEDED assert (speed hint)
                     assert forall|v: T::V| left_tree@.contains(v) implies self@.contains(v) by {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(self@.remove(pivot_key@).contains(v));
                     };
-                    assert forall|v: T::V| right_tree@.contains(v) implies self@.contains(v) by {
-                        assert(self@.remove(pivot_key@).contains(v));
-                    };
-                    assert(left_tree@.subset_of(self@));
-                    assert(right_tree@.subset_of(self@));
+// Veracity: UNNEEDED assert                     assert forall|v: T::V| right_tree@.contains(v) implies self@.contains(v) by {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                         assert(self@.remove(pivot_key@).contains(v));
+// Veracity: UNNEEDED assert                     };
+// Veracity: UNNEEDED assert                     assert(left_tree@.subset_of(self@));
+// Veracity: UNNEEDED assert                     assert(right_tree@.subset_of(self@));
+                    // Veracity: NEEDED proof block
                     vstd::set_lib::lemma_len_subset(left_tree@, self@);
                     vstd::set_lib::lemma_len_subset(right_tree@, self@);
                 }
                 let mut right_with_pivot = right_tree;
                 right_with_pivot.insert(pivot_key);
                 proof {
-                    assert forall|v: T::V| right_with_pivot@.contains(v) implies self@.contains(v) by {
-                        if right_tree@.contains(v) {
-                        } else {
-                            assert(v == pivot_key@);
-                            assert(self@.contains(pivot_key@));
-                        }
-                    };
-                    assert(right_with_pivot@.subset_of(self@));
+// Veracity: UNNEEDED assert                     assert forall|v: T::V| right_with_pivot@.contains(v) implies self@.contains(v) by {
+// Veracity: UNNEEDED assert                         if right_tree@.contains(v) {
+// Veracity: UNNEEDED assert                         } else {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             assert(v == pivot_key@);
+// Veracity: UNNEEDED assert                             // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                             assert(self@.contains(pivot_key@));
+// Veracity: UNNEEDED assert                         }
+// Veracity: UNNEEDED assert                     };
+// Veracity: UNNEEDED assert                     assert(right_with_pivot@.subset_of(self@));
                     vstd::set_lib::lemma_len_subset(right_with_pivot@, self@);
                 }
                 let left = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: left_tree } };
                 let right = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: right_with_pivot } };
                 proof {
                     // Disjointness: left has elements < pivot, right has elements >= pivot.
-                    assert(left@.disjoint(right@)) by {
-                        assert forall|x: T::V| !(#[trigger] left@.contains(x) && right@.contains(x)) by {
-                            if left@.contains(x) && right@.contains(x) {
-                                // x in left_tree@: cmp_spec(pivot) == Less.
-                                // x in right_with_pivot@: either x == pivot@ or x in right_tree@ (Greater).
-                                // left_tree disjoint right_tree, so x not in both.
-                                // If x == pivot@, but left elements have cmp_spec(pivot) == Less,
-                                // so x@ != pivot@ (view_ord_consistent). Contradiction.
-                                if !right_tree@.contains(x) {
-                                    // x == pivot_key@, but left@ elements have cmp(pivot) == Less.
-                                    assert(x == pivot_key@);
-                                    assert(!left_tree@.contains(pivot_key@));
-                                }
-                            }
-                        };
-                    };
+// Veracity: UNNEEDED assert                     assert(left@.disjoint(right@)) by {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                         assert forall|x: T::V| !(#[trigger] left@.contains(x) && right@.contains(x)) by {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             if left@.contains(x) && right@.contains(x) {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 // x in left_tree@: cmp_spec(pivot) == Less.
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 // x in right_with_pivot@: either x == pivot@ or x in right_tree@ (Greater).
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 // left_tree disjoint right_tree, so x not in both.
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 // If x == pivot@, but left elements have cmp_spec(pivot) == Less,
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 // so x@ != pivot@ (view_ord_consistent). Contradiction.
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 if !right_tree@.contains(x) {
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                     // x == pivot_key@, but left@ elements have cmp(pivot) == Less.
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                     assert(x == pivot_key@);
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                     assert(!left_tree@.contains(pivot_key@));
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 }
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             }
+// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                         };
+// Veracity: UNNEEDED assert                     };
                     // Coverage.
+                    // Veracity: NEEDED assert (speed hint)
                     assert forall|x: T::V| #[trigger] self@.contains(x)
                         implies left@.contains(x) || right@.contains(x) by {
                         if x != pivot_key@ {
-                            assert(self@.remove(pivot_key@).contains(x));
-                            assert(left_tree@.union(right_tree@).contains(x));
+// Veracity: UNNEEDED assert                             assert(self@.remove(pivot_key@).contains(x));
+// Veracity: UNNEEDED assert                             assert(left_tree@.union(right_tree@).contains(x));
                             if right_tree@.contains(x) {
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(right_with_pivot@.contains(x));
                             }
                         } else {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(right_with_pivot@.contains(pivot_key@));
                         }
                     };
@@ -953,6 +1044,7 @@ broadcast use {
             view_ord_consistent::<T>(),
         ensures constructed.spec_orderedsetstper_wf()
     {
+        // Veracity: NEEDED assert (speed hint)
         assert(obeys_feq_full_trigger::<T>());
         let seq = AVLTreeSeqStPerS::from_vec(elements);
         OrderedSetStPer::from_seq(seq)

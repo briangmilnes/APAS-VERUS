@@ -241,10 +241,15 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (out: Self) {
             let adj: TableStPer<V, AVLTreeSetStPer<V>> = TableStPer::empty();
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<V>());
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<AVLTreeSetStPer<V>>());
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<Pair<V, AVLTreeSetStPer<V>>>());
+                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<V>());
             }
             AdjTableGraphStPer { adj }
@@ -252,11 +257,16 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self) {
+            // Veracity: NEEDED proof block
             let out = AdjTableGraphStPer { adj: table };
             proof {
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<V>());
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<AVLTreeSetStPer<V>>());
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<Pair<V, AVLTreeSetStPer<V>>>());
+                // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<V>());
                 // keys_no_dups: from table.spec_tablestper_wf() in requires.
                 // stored-value wf: from quantifier in requires.
@@ -266,11 +276,13 @@ broadcast use {
             out
         }
 
+        // Veracity: NEEDED proof block (speed hint)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_vertices(&self) -> usize {
             proof { reveal(obeys_view_eq); }
             self.adj.size()
         }
+// Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn num_edges(&self) -> (m: usize) {
@@ -278,6 +290,7 @@ broadcast use {
                 reveal(obeys_view_eq);
                 lemma_entries_to_map_len::<V::V, Set<V::V>>(self.adj.entries@);
                 lemma_sum_entry_sizes_eq_stper::<V::V>(self.adj.entries@, self.adj.entries@.len() as int);
+                // Veracity: NEEDED assert
                 assert(self.adj.entries@.subrange(0, self.adj.entries@.len() as int)
                     =~= self.adj.entries@);
             }
@@ -293,10 +306,12 @@ broadcast use {
                     count as nat == spec_sum_entry_sizes(self.adj.entries@, i as int),
                     total == self.spec_num_edges(),
                     total == spec_sum_entry_sizes(self.adj.entries@, len as int),
+                    // Veracity: NEEDED proof block
                     self.spec_num_edges() <= usize::MAX as nat,
                 decreases len - i,
             {
                 let pair: &Pair<V, AVLTreeSetStPer<V>> = self.adj.entries.nth(i);
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_entries_to_map_contains_key::<V::V, Set<V::V>>(
                         self.adj.entries@, i as int);
@@ -309,6 +324,7 @@ broadcast use {
                 }
                 count = count + ns.size();
                 i = i + 1;
+            // Veracity: NEEDED proof block
             }
             count
         }
@@ -332,10 +348,12 @@ broadcast use {
                     // verts contains exactly the keys from entries[0..i].
                     forall|j: int| 0 <= j < i
                         ==> #[trigger] verts@.contains(self.adj.entries@[j].0),
+                    // Veracity: NEEDED proof block
                     forall|v: V::V| #[trigger] verts@.contains(v)
                         ==> exists|j: int| 0 <= j < i
                             && (#[trigger] self.adj.entries@[j]).0 == v,
                 decreases len - i,
+            // Veracity: NEEDED proof block
             {
                 let pair: &Pair<V, AVLTreeSetStPer<V>> = self.adj.entries.nth(i);
                 let key: V = pair.0.clone_plus();
@@ -346,14 +364,17 @@ broadcast use {
                 verts = verts.insert(key);
                 proof {
                     // Maintain forward invariant: entries[0..i+1] keys all in verts.
+                    // Veracity: NEEDED assert (speed hint)
                     assert forall|j: int| 0 <= j < i + 1
                         implies #[trigger] verts@.contains(self.adj.entries@[j].0)
                     by {
                         if j < i {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(old_verts.contains(self.adj.entries@[j].0));
                         }
                     };
                     // Maintain backward invariant: every element in verts came from entries[0..i+1].
+                    // Veracity: NEEDED assert
                     assert forall|v: V::V| #[trigger] verts@.contains(v)
                         implies exists|j: int| 0 <= j < i + 1
                             && (#[trigger] self.adj.entries@[j]).0 == v
@@ -361,9 +382,12 @@ broadcast use {
                         if old_verts.contains(v) {
                             let j = choose|j: int| 0 <= j < i
                                 && (#[trigger] self.adj.entries@[j]).0 == v;
+                            // Veracity: NEEDED assert (speed hint)
                             assert(j < i + 1);
+                        // Veracity: NEEDED proof block
                         } else {
                             // v == key@ == pair.0@ == entries[i].0
+                            // Veracity: NEEDED assert
                             assert(self.adj.entries@[i as int].0 == v);
                         }
                     };
@@ -372,6 +396,7 @@ broadcast use {
             }
             proof {
                 // At end: verts contains exactly all entry keys = self@.dom().
+                // Veracity: NEEDED assert
                 assert forall|v: V::V| #[trigger] verts@.contains(v)
                     == self.spec_adj().dom().contains(v)
                 by {
@@ -387,8 +412,10 @@ broadcast use {
                         let j = choose|j: int| 0 <= j < self.adj.entries@.len()
                             && (#[trigger] self.adj.entries@[j]).0 == v;
                     }
+                // Veracity: NEEDED proof block
                 };
                 lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
+                // Veracity: NEEDED assert (speed hint)
                 assert(verts@ =~= self.spec_adj().dom());
             }
             verts
@@ -396,6 +423,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
+            // Veracity: NEEDED proof block (speed hint)
             proof { reveal(obeys_view_eq); }
             match self.adj.find_ref(u) {
                 Some(neighbors) => {
@@ -414,6 +442,7 @@ broadcast use {
                     // Since spec_adj() = self.adj@, both postconditions follow directly.
                     ns
                 }
+                // Veracity: NEEDED proof block
                 None => {
                     let empty = AVLTreeSetStPer::empty();
                     // find ensures: !self.adj@.contains_key(u@).
@@ -422,6 +451,7 @@ broadcast use {
                     empty
                 }
             }
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
@@ -429,6 +459,7 @@ broadcast use {
             proof { reveal(obeys_view_eq); }
             match self.adj.find_ref(u) {
                 Some(neighbors) => neighbors.size(),
+                // Veracity: NEEDED proof block
                 None => 0,
             }
         }
@@ -445,42 +476,50 @@ broadcast use {
             let updated = AdjTableGraphStPer { adj: new_adj };
             proof {
                 // Graph closure: domain grew by {v@}, edge sets unchanged or empty.
+                // Veracity: NEEDED assert
                 assert forall|u: <V as View>::V, w: <V as View>::V|
                     updated.spec_adj().dom().contains(u)
                     && #[trigger] updated.spec_adj().index(u).contains(w)
                     implies updated.spec_adj().dom().contains(w)
                 by {
                     if u != v@ {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(old_adj.dom().contains(u));
+                        // Veracity: NEEDED assert (speed hint)
                         assert(old_adj.index(u).contains(w));
                     } else if !old_dom.contains(v@) {
                         // v@ new: adj[v@] == Set::empty().
                     } else {
                         // v@ existed: adj[v@] == old_adj[v@] (combine ensures r@ == old@).
-                        assert(old_adj.dom().contains(v@));
+// Veracity: UNNEEDED assert                         assert(old_adj.dom().contains(v@));
+                        // Veracity: NEEDED assert (speed hint)
                         assert(old_adj.index(v@).contains(w));
                     }
                 };
                 // Stored-value wf: proved via lemma_spec_stored_value_view.
+                // Veracity: NEEDED assert
                 assert forall|k: <V as View>::V| #[trigger] updated.adj@.dom().contains(k) implies
                     updated.adj.spec_stored_value(k).spec_avltreesetstper_wf()
                 by {
                     updated.adj.lemma_spec_stored_value_view(k);
                     if k != v@ {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(old_adj.dom().contains(k));
+                        // Veracity: NEEDED assert (speed hint)
                         assert(updated.adj@[k] == old_adj[k]);
                         self.adj.lemma_spec_stored_value_view(k);
                         let old_sv = self.adj.spec_stored_value(k);
                         assert(old_sv.spec_avltreesetstper_wf());
-                        assert(updated.adj.spec_stored_value(k).tree@ =~= old_sv.tree@);
+// Veracity: UNNEEDED assert                         assert(updated.adj.spec_stored_value(k).tree@ =~= old_sv.tree@);
                     } else if !old_dom.contains(v@) {
-                        // New key: stored value is empty, which is wf.
+// Veracity: UNNEEDED proof block                         // New key: stored value is empty, which is wf.
                     } else {
                         // Existing key: combine returned clone with same view.
-                        assert(old_adj.dom().contains(v@));
+// Veracity: UNNEEDED assert                         assert(old_adj.dom().contains(v@));
                         self.adj.lemma_spec_stored_value_view(v@);
                         let old_sv = self.adj.spec_stored_value(v@);
                         assert(old_sv.spec_avltreesetstper_wf());
+                    // Veracity: NEEDED proof block
                     }
                 };
             }
@@ -497,14 +536,17 @@ broadcast use {
             let ghost adj_after_delete = new_adj@;
             // Prove stored-value wf after delete (initial loop invariant).
             proof {
+                // Veracity: NEEDED assert
                 assert forall|k: <V as View>::V| #[trigger] new_adj@.dom().contains(k) implies
                     new_adj.spec_stored_value(k).spec_avltreesetstper_wf()
                 by {
                     new_adj.lemma_spec_stored_value_view(k);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(old_adj.dom().contains(k));
                     self.adj.lemma_spec_stored_value_view(k);
                     let old_sv = self.adj.spec_stored_value(k);
                     assert(old_sv.spec_avltreesetstper_wf());
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_adj.spec_stored_value(k).tree@ =~= old_sv.tree@);
                 };
             }
@@ -526,12 +568,14 @@ broadcast use {
                     view_ord_consistent::<V>(),
                     obeys_feq_fulls::<V, AVLTreeSetStPer<V>>(),
                     obeys_feq_full::<Pair<V, AVLTreeSetStPer<V>>>(),
+                    // Veracity: NEEDED proof block
                     !result_adj@.dom().contains(v@),
                     // Stored-value wf invariant.
                     forall|k: <V as View>::V| #[trigger] result_adj@.dom().contains(k) ==>
                         result_adj.spec_stored_value(k).spec_avltreesetstper_wf(),
                     // Domain unchanged through loop.
                     result_adj@.dom() =~= adj_after_delete.dom(),
+                    // Veracity: NEEDED proof block
                     // For all keys: neighbor sets are subsets of adj_after_delete values.
                     forall|k: <V as View>::V| #[trigger] result_adj@.dom().contains(k) ==>
                         result_adj@[k].subset_of(adj_after_delete[k]),
@@ -545,19 +589,22 @@ broadcast use {
                 proof {
                     lemma_cloned_view_eq::<V>(*nth_ref, u);
                     seq.lemma_view_index(i as int);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(u@ == seq@[i as int]);
                 }
                 if let Some(neighbors) = result_adj.find(&u) {
                     proof {
                         // Prove neighbors.spec_avltreesetstper_wf() from stored-value-wf.
                         // find ensures neighbors@ == result_adj@[u@].
+                        // Veracity: NEEDED proof block
                         // lemma gives spec_stored_value(u@)@ == result_adj@[u@].
                         // So neighbors@ == spec_stored_value(u@)@, i.e., neighbors.tree@ == sv.tree@.
                         // From invariant: sv.spec_avltreesetstper_wf(). Same tree@ ⟹ same wf.
                         result_adj.lemma_spec_stored_value_view(u@);
                         let sv = result_adj.spec_stored_value(u@);
                         assert(sv.spec_avltreesetstper_wf());
-                        assert(neighbors@ == sv@);
+// Veracity: UNNEEDED assert                         assert(neighbors@ == sv@);
+                        // Veracity: NEEDED assert (speed hint)
                         assert(neighbors.tree@ =~= sv.tree@);
                     }
                     let new_neighbors = neighbors.delete(v);
@@ -570,8 +617,10 @@ broadcast use {
                         { new.clone() });
                     proof {
                         // Help Z3 with the insert_edge existential ensures.
+                        // Veracity: NEEDED assert (speed hint)
                         assert(pre_insert.dom().contains(u@));
                         // Prove stored-value wf after insert.
+                        // Veracity: NEEDED assert
                         assert forall|k: <V as View>::V| #[trigger] result_adj@.dom().contains(k) implies
                             result_adj.spec_stored_value(k).spec_avltreesetstper_wf()
                         by {
@@ -579,18 +628,22 @@ broadcast use {
                             if k == u@ {
                                 // insert ensures for existing key: updated@[key@] == r@ where
                                 // combine.ensures((&old_v, &value), r) gives r@ == new_neighbors@.
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(result_adj.spec_stored_value(k).tree@ =~= new_neighbors.tree@);
                             } else {
-                                assert(pre_insert.dom().contains(k));
+// Veracity: UNNEEDED assert                                 assert(pre_insert.dom().contains(k));
                                 pre_insert_adj.lemma_spec_stored_value_view(k);
                                 let old_sv = pre_insert_adj.spec_stored_value(k);
                                 assert(old_sv.spec_avltreesetstper_wf());
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(result_adj.spec_stored_value(k).tree@ =~= old_sv.tree@);
                             }
                         };
                         // Domain unchanged.
+                        // Veracity: NEEDED assert (speed hint)
                         assert(result_adj@.dom() =~= adj_after_delete.dom());
                         // Subset invariant.
+                        // Veracity: NEEDED assert
                         assert forall|k: <V as View>::V| #[trigger] result_adj@.dom().contains(k) implies
                             result_adj@[k].subset_of(adj_after_delete[k])
                         by {
@@ -598,31 +651,41 @@ broadcast use {
                                 // insert ensures for existing key: r@ == new_neighbors@.
                                 // new_neighbors@ ⊆ neighbors@ ⊆ pre_insert[u@] ⊆ adj_after_delete[u@].
                             } else {
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(pre_insert.dom().contains(k));
                             }
                         };
                         // v-removal invariant.
-                        assert(!nn_view.contains(v@));
+// Veracity: UNNEEDED assert                         assert(!nn_view.contains(v@));
                         // Helper: for k != u@ in post-insert domain, value unchanged from pre_insert.
+                        // Veracity: NEEDED assert (speed hint)
                         assert(pre_insert.dom() =~= adj_after_delete.dom());
+                        // Veracity: NEEDED assert
                         assert forall|k: <V as View>::V| k != u@ && #[trigger] result_adj@.dom().contains(k) implies
                             pre_insert.dom().contains(k) && result_adj@[k] == pre_insert[k]
                         by {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(adj_after_delete.dom().contains(k));
+                            // Veracity: NEEDED assert (speed hint)
                             assert(pre_insert.dom().contains(k));
                         };
+                        // Veracity: NEEDED assert
                         assert forall|j: int| #![trigger seq@[j]] 0 <= j < (i + 1) as int && result_adj@.dom().contains(seq@[j]) implies
                             !result_adj@[seq@[j]].contains(v@)
                         by {
                             if j == i as int {
-                                assert(result_adj@[u@] == nn_view);
+// Veracity: NEEDED proof block
+// Veracity: UNNEEDED assert                                 assert(result_adj@[u@] == nn_view);
                             } else if result_adj@.dom().contains(seq@[j]) {
                                 // j < i. no_duplicates ⟹ seq@[j] != seq@[i] == u@.
-                                assert(seq@[j] != u@);
+// Veracity: UNNEEDED assert                                 assert(seq@[j] != u@);
                                 // Helper: value preserved for non-u@ keys.
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(result_adj@[seq@[j]] == pre_insert[seq@[j]]);
                                 // Old invariant at pre-insert: !pre_insert[seq@[j]].contains(v@).
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(pre_insert.dom().contains(seq@[j]));
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(!pre_insert[seq@[j]].contains(v@));
                             }
                         };
@@ -633,28 +696,37 @@ broadcast use {
             let updated = AdjTableGraphStPer { adj: result_adj };
             proof {
                 // v@ removed from ALL neighbor sets (loop processed entire domain).
+                // Veracity: NEEDED assert
                 assert forall|k: <V as View>::V| #[trigger] result_adj@.dom().contains(k) implies
                     !result_adj@[k].contains(v@)
                 by {
                     // k ∈ dom =~= adj_after_delete.dom() =~= seq@.to_set().
-                    assert(seq@.to_set().contains(k));
+// Veracity: UNNEEDED assert                     assert(seq@.to_set().contains(k));
                     // Seq::to_set().contains ⟹ Seq::contains ⟹ ∃j: seq@[j]==k.
                     // Loop invariant (i==len) gives !result_adj@[k].contains(v@).
                 };
                 // Graph closure: for any u,w with adj[u].contains(w), w is in the domain.
+                // Veracity: NEEDED assert
                 assert forall|u: <V as View>::V, w: <V as View>::V|
                     updated.spec_adj().dom().contains(u)
                     && #[trigger] updated.spec_adj().index(u).contains(w)
                     implies updated.spec_adj().dom().contains(w)
+                // Veracity: NEEDED proof block
                 by {
                     // !adj[u].contains(v@) (from above), but adj[u].contains(w), so w≠v@.
+                    // Veracity: NEEDED assert (speed hint)
                     assert(!result_adj@[u].contains(v@));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(w != v@);
+                    // Veracity: NEEDED proof block (speed hint)
                     // adj[u] ⊆ adj_after_delete[u] == old_adj[u], so old_adj[u].contains(w).
+                    // Veracity: NEEDED assert (speed hint)
+                    // Veracity: NEEDED proof block
                     assert(adj_after_delete[u].contains(w));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(old_adj[u].contains(w));
                     // Old graph closure gives old_dom.contains(w). w≠v@ ⟹ dom.contains(w).
-                    assert(old_dom.contains(w));
+// Veracity: UNNEEDED assert                     assert(old_dom.contains(w));
                 };
             }
             updated
@@ -668,6 +740,7 @@ broadcast use {
             let ghost old_adj = self.spec_adj();
             let ghost old_dom = old_adj.dom();
             // Clone v with view equality proof for the neighbor set.
+            // Veracity: NEEDED proof block
             let vc = v.clone_plus();
             proof { lemma_cloned_view_eq::<V>(v, vc); }
             let neighbors = match self.adj.find_ref(&u) {
@@ -675,28 +748,37 @@ broadcast use {
                     proof {
                         // Capacity: graph closure ⇒ ns@ ⊆ domain ⇒ ns@.len() ≤ dom.len().
                         let dom = self.spec_adj().dom();
+                        // Veracity: NEEDED assert (speed hint)
                         assert(ns_ref@.subset_of(dom)) by {
+                            // Veracity: NEEDED assert (speed hint)
                             assert forall|w: <V as View>::V| #[trigger] ns_ref@.contains(w) implies dom.contains(w) by {
+                                // Veracity: NEEDED assert (speed hint)
                                 assert(self.spec_adj().index(u@).contains(w));
                             };
                         };
                         lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
                         vstd::set_lib::lemma_len_subset(ns_ref@, dom);
                     }
+                    // Veracity: NEEDED proof block
                     ns_ref.clone_wf().insert(vc)
                 }
                 None => AVLTreeSetStPer::singleton(vc),
             };
             let ghost neighbors_view = neighbors@;
             proof {
+                // Veracity: NEEDED assert (speed hint)
+                // Veracity: NEEDED proof block
                 assert(neighbors_view.subset_of(old_dom.insert(v_view))) by {
+                    // Veracity: NEEDED assert
                     assert forall|w: <V as View>::V| #[trigger] neighbors_view.contains(w)
                         implies old_dom.insert(v_view).contains(w)
                     by {
                         if w != v_view {
-                            assert(old_adj.dom().contains(u_view));
+// Veracity: UNNEEDED assert                             assert(old_adj.dom().contains(u_view));
+                            // Veracity: NEEDED assert (speed hint)
                             assert(old_adj.index(u_view).contains(w));
                         }
+                    // Veracity: NEEDED proof block
                     };
                 };
             }
@@ -705,17 +787,18 @@ broadcast use {
                     ensures r@ == new@
                 { new.clone() });
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(new_adj@.dom().contains(u_view));
-                assert(new_adj@[u_view] == neighbors_view);
+// Veracity: UNNEEDED assert                 assert(new_adj@[u_view] == neighbors_view);
             }
             let final_adj = if new_adj.find_ref(&v).is_none() {
                 let ghost pre_second = new_adj@;
                 let result = new_adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone());
                 proof {
-                    assert(!pre_second.dom().contains(v_view));
-                    assert(pre_second.dom().contains(u_view));
-                    assert(u_view != v_view);
-                    assert(result@[u_view] == pre_second[u_view]);
+// Veracity: UNNEEDED assert                     assert(!pre_second.dom().contains(v_view));
+// Veracity: UNNEEDED assert                     assert(pre_second.dom().contains(u_view));
+// Veracity: UNNEEDED assert                     assert(u_view != v_view);
+// Veracity: UNNEEDED assert                     assert(result@[u_view] == pre_second[u_view]);
                 }
                 result
             } else {
@@ -723,40 +806,46 @@ broadcast use {
             };
             let updated = AdjTableGraphStPer { adj: final_adj };
             proof {
-                assert(updated.spec_adj().dom().contains(u_view));
-                assert(updated.spec_adj().dom().contains(v_view));
-                assert(neighbors_view.contains(v_view));
-                assert(updated.spec_adj()[u_view].contains(v_view));
+// Veracity: UNNEEDED assert                 assert(updated.spec_adj().dom().contains(u_view));
+// Veracity: UNNEEDED assert                 assert(updated.spec_adj().dom().contains(v_view));
+// Veracity: UNNEEDED assert                 assert(neighbors_view.contains(v_view));
+// Veracity: UNNEEDED assert                 assert(updated.spec_adj()[u_view].contains(v_view));
                 // Graph closure: all neighbors of any vertex are in the domain.
+                // Veracity: NEEDED assert
                 assert forall|x: <V as View>::V, w: <V as View>::V|
                     updated.spec_adj().dom().contains(x)
                     && #[trigger] updated.spec_adj().index(x).contains(w)
                     implies updated.spec_adj().dom().contains(w)
                 by {
                     if x == u_view {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(neighbors_view.contains(w));
-                        assert(old_dom.insert(v_view).contains(w));
+// Veracity: UNNEEDED assert                         assert(old_dom.insert(v_view).contains(w));
                     } else {
-                        assert(old_adj.dom().contains(x));
-                        assert(old_adj.index(x).contains(w));
+// Veracity: UNNEEDED assert                         assert(old_adj.dom().contains(x));
+// Veracity: UNNEEDED assert                         assert(old_adj.index(x).contains(w));
+                    // Veracity: NEEDED proof block
                     }
                 };
                 // Stored-value wf: proved via lemma_spec_stored_value_view.
+                // Veracity: NEEDED assert
                 assert forall|k: <V as View>::V| #[trigger] updated.adj@.dom().contains(k) implies
                     updated.adj.spec_stored_value(k).spec_avltreesetstper_wf()
                 by {
                     updated.adj.lemma_spec_stored_value_view(k);
+                    // Veracity: NEEDED proof block
                     if k == u_view {
-                        assert(updated.adj@[u_view] == neighbors_view);
-                        assert(updated.adj.spec_stored_value(k).tree@ =~= neighbors.tree@);
+// Veracity: UNNEEDED assert                         assert(updated.adj@[u_view] == neighbors_view);
+// Veracity: UNNEEDED assert                         assert(updated.adj.spec_stored_value(k).tree@ =~= neighbors.tree@);
                     } else if k == v_view && !old_dom.contains(v_view) {
                         // v@ was new: stored value is empty, which is wf.
+                    // Veracity: NEEDED proof block
                     } else {
-                        assert(old_adj.dom().contains(k));
+// Veracity: UNNEEDED assert                         assert(old_adj.dom().contains(k));
                         self.adj.lemma_spec_stored_value_view(k);
                         let old_sv = self.adj.spec_stored_value(k);
                         assert(old_sv.spec_avltreesetstper_wf());
-                        assert(updated.adj.spec_stored_value(k).tree@ =~= old_sv.tree@);
+// Veracity: UNNEEDED assert                         assert(updated.adj.spec_stored_value(k).tree@ =~= old_sv.tree@);
                     }
                 };
             }
@@ -781,34 +870,42 @@ broadcast use {
                     { new.clone() });
                 let updated = AdjTableGraphStPer { adj: new_adj };
                 proof {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(new_adj@[u_view] == nn_view);
-                    assert(!updated.spec_adj()[u_view].contains(v_view));
+// Veracity: UNNEEDED assert                     assert(!updated.spec_adj()[u_view].contains(v_view));
                     // Graph closure: nn_view ⊆ old_adj[u@] ⊆ old_dom == dom.
+                    // Veracity: NEEDED assert
                     assert forall|x: <V as View>::V, w: <V as View>::V|
                         updated.spec_adj().dom().contains(x)
                         && #[trigger] updated.spec_adj().index(x).contains(w)
                         implies updated.spec_adj().dom().contains(w)
                     by {
                         if x == u_view {
-                            assert(old_adj.index(u_view).contains(w));
+// Veracity: UNNEEDED assert                             assert(old_adj.index(u_view).contains(w));
                         } else {
-                            assert(old_adj.dom().contains(x));
-                            assert(old_adj.index(x).contains(w));
+// Veracity: UNNEEDED assert                             assert(old_adj.dom().contains(x));
+// Veracity: NEEDED proof block
+// Veracity: UNNEEDED assert                             assert(old_adj.index(x).contains(w));
                         }
                     };
                     // Stored-value wf: proved via lemma_spec_stored_value_view.
+                    // Veracity: NEEDED assert
                     assert forall|k: <V as View>::V| #[trigger] updated.adj@.dom().contains(k) implies
                         updated.adj.spec_stored_value(k).spec_avltreesetstper_wf()
                     by {
                         updated.adj.lemma_spec_stored_value_view(k);
                         if k == u_view {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(new_adj@[u_view] == nn_view);
+                            // Veracity: NEEDED assert (speed hint)
                             assert(updated.adj.spec_stored_value(k).tree@ =~= new_neighbors.tree@);
                         } else {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(old_adj.dom().contains(k));
                             self.adj.lemma_spec_stored_value_view(k);
                             let old_sv = self.adj.spec_stored_value(k);
                             assert(old_sv.spec_avltreesetstper_wf());
+                            // Veracity: NEEDED assert (speed hint)
                             assert(updated.adj.spec_stored_value(k).tree@ =~= old_sv.tree@);
                         }
                     };
@@ -820,6 +917,7 @@ broadcast use {
                 let updated = AdjTableGraphStPer { adj: cloned_adj };
                 proof {
                     // Stored-value wf: clone preserves entries, so same stored values.
+                    // Veracity: NEEDED assert
                     assert forall|k: <V as View>::V| #[trigger] updated.adj@.dom().contains(k) implies
                         updated.adj.spec_stored_value(k).spec_avltreesetstper_wf()
                     by {
@@ -827,16 +925,18 @@ broadcast use {
                         self.adj.lemma_spec_stored_value_view(k);
                         let old_sv = self.adj.spec_stored_value(k);
                         assert(old_sv.spec_avltreesetstper_wf());
+                        // Veracity: NEEDED assert (speed hint)
                         assert(updated.adj.spec_stored_value(k).tree@ =~= old_sv.tree@);
                     };
                     // Graph closure: unchanged from old wf.
+                    // Veracity: NEEDED assert
                     assert forall|x: <V as View>::V, w: <V as View>::V|
                         updated.spec_adj().dom().contains(x)
                         && #[trigger] updated.spec_adj().index(x).contains(w)
                         implies updated.spec_adj().dom().contains(w)
                     by {
-                        assert(old_adj.dom().contains(x));
-                        assert(old_adj.index(x).contains(w));
+// Veracity: UNNEEDED assert                         assert(old_adj.dom().contains(x));
+// Veracity: UNNEEDED assert                         assert(old_adj.index(x).contains(w));
                     };
                 }
                 updated

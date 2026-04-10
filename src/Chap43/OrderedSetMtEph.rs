@@ -314,10 +314,12 @@ pub mod OrderedSetMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn size(&self) -> (count: usize) {
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let count = inner.size();
+            // Veracity: NEEDED proof block (speed hint)
             // Veracity: NEEDED proof block
             proof { assume(count == self@.len()); }
             read_handle.release_read();
@@ -345,10 +347,12 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST search
+        // Veracity: NEEDED proof block
         fn find(&self, x: &T) -> (found: bool) {
             // Veracity: NEEDED proof block
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
+            // Veracity: NEEDED proof block
             let inner = read_handle.borrow();
             let found = inner.find(x);
             // Veracity: NEEDED proof block
@@ -356,9 +360,11 @@ pub mod OrderedSetMtEph {
             read_handle.release_read();
             found
         }
+// Veracity: NEEDED proof block (speed hint)
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, treap insert
         fn insert(&mut self, x: T) {
+            // Veracity: NEEDED proof block
             // Veracity: NEEDED proof block
             proof { use_type_invariant(&*self); }
             let ghost old_view = self.ghost_locked_set@;
@@ -368,6 +374,7 @@ pub mod OrderedSetMtEph {
             proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } // RWLOCK_GHOST
             locked_val.insert(x);
             write_handle.release_write(locked_val);
+            // Veracity: NEEDED proof block
             self.ghost_locked_set = Ghost(old_view.insert(x_view));
         }
 
@@ -392,7 +399,7 @@ pub mod OrderedSetMtEph {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             locked_val.filter(f, Ghost(spec_pred));
             let ghost new_view = locked_val@;
-            write_handle.release_write(locked_val);
+// Veracity: UNNEEDED proof block             write_handle.release_write(locked_val);
             self.ghost_locked_set = Ghost(new_view);
         }
 
@@ -407,14 +414,14 @@ pub mod OrderedSetMtEph {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             locked_val.intersection(other_ref);
             write_handle.release_write(locked_val);
-            other_read.release_read();
+// Veracity: UNNEEDED proof block             other_read.release_read();
             self.ghost_locked_set = Ghost(old_view.intersect(other_view));
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, BST union
         fn union(&mut self, other: &Self) {
             // Veracity: NEEDED proof block
-            proof { use_type_invariant(&*self); use_type_invariant(other); }
+// Veracity: UNNEEDED proof block             proof { use_type_invariant(&*self); use_type_invariant(other); }
             let ghost old_view = self.ghost_locked_set@;
             let ghost other_view = other.ghost_locked_set@;
             let other_read = other.locked_set.acquire_read();
@@ -424,7 +431,7 @@ pub mod OrderedSetMtEph {
             proof { assume(locked_val@.len() + other_ref@.len() < usize::MAX as nat); } // RWLOCK_GHOST
             locked_val.union(other_ref);
             write_handle.release_write(locked_val);
-            other_read.release_read();
+// Veracity: UNNEEDED proof block             other_read.release_read();
             self.ghost_locked_set = Ghost(old_view.union(other_view));
         }
 
@@ -440,11 +447,12 @@ pub mod OrderedSetMtEph {
             locked_val.difference(other_ref);
             write_handle.release_write(locked_val);
             other_read.release_read();
+            // Veracity: NEEDED proof block
             self.ghost_locked_set = Ghost(old_view.difference(other_view));
         }
 
         #[verifier::loop_isolation(false)]
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + vec copy
+// Veracity: UNNEEDED proof block         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + vec copy
         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>) {
             // Veracity: NEEDED proof block
             proof { use_type_invariant(self); }
@@ -461,11 +469,12 @@ pub mod OrderedSetMtEph {
             while i < len
                 invariant
                     avl_seq.spec_avltreeseqstper_wf(),
-                    len as nat == avl_seq@.len(),
+// Veracity: UNNEEDED proof block                     len as nat == avl_seq@.len(),
                     0 <= i <= len,
                     elements@.len() == i as int,
                     forall|j: int| 0 <= j < i ==> (#[trigger] elements@[j])@ == avl_seq@[j],
                 decreases len - i,
+            // Veracity: NEEDED proof block
             {
                 let elem_ref = avl_seq.nth(i);
                 let cloned = elem_ref.clone_plus();
@@ -475,6 +484,7 @@ pub mod OrderedSetMtEph {
             }
             let result = ArraySeqStPerS { seq: elements };
             proof {
+                // Veracity: NEEDED assert
                 assert(result@ =~= avl_seq@);
             }
             result
@@ -497,9 +507,11 @@ pub mod OrderedSetMtEph {
             {
                 // Capacity: inner@.len() <= i < len < usize::MAX (from requires).
                 inner.insert(seq.nth(i).clone());
+                // Veracity: NEEDED proof block
                 i += 1;
             }
             from_st(inner)
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST min_key
@@ -508,9 +520,11 @@ pub mod OrderedSetMtEph {
         {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
+            // Veracity: NEEDED proof block
             let inner = read_handle.borrow();
             let first = inner.first();
             proof { assume(inner@ =~= self@); }
+            // Veracity: NEEDED proof block (speed hint)
             read_handle.release_read();
             first
         }
@@ -519,9 +533,11 @@ pub mod OrderedSetMtEph {
         fn last(&self) -> (last: Option<T>)
 
         {
+            // Veracity: NEEDED proof block (speed hint)
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             let last = inner.last();
             proof { assume(inner@ =~= self@); }
             read_handle.release_read();
@@ -529,9 +545,11 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST split + max_key
+        // Veracity: NEEDED proof block
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
 
         {
+            // Veracity: NEEDED proof block (speed hint)
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
@@ -539,11 +557,13 @@ pub mod OrderedSetMtEph {
             proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             predecessor
+        // Veracity: NEEDED proof block
         }
 
         fn next(&self, k: &T) -> (successor: Option<T>)
 
         {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
@@ -558,7 +578,7 @@ pub mod OrderedSetMtEph {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } // RWLOCK_GHOST
             let (left, found, right) = locked_val.split(k);
-            // Release with empty to satisfy inv (empty is wf by construction).
+// Veracity: UNNEEDED proof block             // Release with empty to satisfy inv (empty is wf by construction).
             let empty_val = OrderedSetStEph::empty();
             self.ghost_locked_set = Ghost(empty_val@);
             write_handle.release_write(empty_val);
@@ -567,6 +587,7 @@ pub mod OrderedSetMtEph {
                 assume(right.spec_orderedsetsteph_wf());
             }
             (from_st(left), found, from_st(right))
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, BST union
@@ -575,6 +596,7 @@ pub mod OrderedSetMtEph {
             let (other_inner, other_write) = other.locked_set.acquire_write();
             // other_inner.spec_orderedsetsteph_wf() from RwLock inv.
             let empty_other = OrderedSetStEph::empty();
+            // Veracity: NEEDED proof block
             other_write.release_write(empty_other);
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             proof { assume(locked_val@.len() + other_inner@.len() < usize::MAX as nat); } // RWLOCK_GHOST
@@ -582,9 +604,11 @@ pub mod OrderedSetMtEph {
             let ghost new_val = locked_val@;
             self.ghost_locked_set = Ghost(new_val);
             write_handle.release_write(locked_val);
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST splits
+        // Veracity: NEEDED proof block
         fn get_range(&self, k1: &T, k2: &T) -> (range: Result<Self, ()>) {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
@@ -593,10 +617,12 @@ pub mod OrderedSetMtEph {
                 read_handle.release_read();
                 return Err(());
             }
+            // Veracity: NEEDED proof block
             let range = inner.get_range(k1, k2);
             read_handle.release_read();
             proof { assume(range.spec_orderedsetsteph_wf()); }
             Ok(from_st(range))
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST split + size
@@ -604,11 +630,13 @@ pub mod OrderedSetMtEph {
 
         {
             proof { use_type_invariant(self); }
+            // Veracity: NEEDED proof block
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let rank = inner.rank(k);
             proof { assume(inner@ =~= self@); }
             read_handle.release_read();
+            // Veracity: NEEDED proof block
             rank
         }
 
