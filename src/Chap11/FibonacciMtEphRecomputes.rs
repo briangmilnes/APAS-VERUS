@@ -133,6 +133,7 @@ pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
                 let tracked mut token = left_done_token;
                 let val = fib_recomputes(n - 1);  // Recursive!
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof { instance1.complete_left(&mut token); }
                 (val, Tracked(token))
             })
@@ -152,6 +153,7 @@ pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
             {
                 let tracked mut token = right_done_token;
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 let val = fib_recomputes(n - 2);  // Recursive!
                 proof { instance2.complete_right(&mut token); }
                 (val, Tracked(token))
@@ -160,6 +162,7 @@ pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
 
         // Join left
         // Veracity: NEEDED proof block
+        // Veracity: NEEDED proof block
         let left_out = match left_handle.join() {
             Result::Ok(out) => out,
             Result::Err(_) => { proof { assume(false); }; diverge() } // accept hole: thread join error arm unreachable
@@ -167,12 +170,14 @@ pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
         let left_val = left_out.0;
         let tracked left_token = left_out.1.get();
 
+// Veracity: NEEDED proof block (speed hint)
 // Veracity: UNNEEDED proof block         // Join right
         let right_out = match right_handle.join() {
             Result::Ok(out) => out,
             Result::Err(_) => { proof { assume(false); }; diverge() } // accept hole: thread join error arm unreachable
         };
         let right_val = right_out.0;
+        // Veracity: NEEDED proof block
         // Veracity: NEEDED proof block
         let tracked right_token = right_out.1.get();
 

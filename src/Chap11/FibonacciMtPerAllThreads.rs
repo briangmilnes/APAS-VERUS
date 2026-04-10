@@ -60,6 +60,7 @@ pub mod FibonacciMtPerAllThreads {
 
                 // para_pair ensures the propagation of the closure postconditions.
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof { lemma_fib_sum_fits_u64(n as nat); }
                 left + right
             }

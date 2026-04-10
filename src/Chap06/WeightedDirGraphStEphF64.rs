@@ -142,6 +142,7 @@ verus!
                     None => break,
                     Some(triple) => {
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_seq_index_in_map_to_set(edge_seq, it@.0 - 1);
                         }
@@ -150,6 +151,7 @@ verus!
                 }
             }
 
+            // Veracity: NEEDED proof block
             // Veracity: NEEDED proof block
             proof {
             }
@@ -193,6 +195,7 @@ verus!
                 decreases wa_seq.len() - it@.0,
             {
                 match it.next() {
+                    // Veracity: NEEDED proof block
                     None => {
                         // Veracity: NEEDED proof block
                         proof {
@@ -227,10 +230,12 @@ verus!
                         (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@.0 == v_view && wa_seq[i]@.1 == p.0 && wa_seq[i]@.2 == p.1),
                 decreases wa_seq.len() - it@.0,
             {
+                // Veracity: NEEDED proof block
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
                         proof {
+// Veracity: NEEDED assert
 // Veracity: NEEDED assert
 assert forall |p: (V::V, f64)| neighbors@.contains(p) implies
                                 (exists |w: f64| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) by {
@@ -239,6 +244,7 @@ assert forall |p: (V::V, f64)| neighbors@.contains(p) implies
                                     lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
+// Veracity: NEEDED assert
 // Veracity: NEEDED assert
 assert forall |p: (V::V, f64)| (exists |w: f64| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) implies
                                 neighbors@.contains(p) by {
@@ -279,11 +285,13 @@ assert forall |p: (V::V, f64)| (exists |w: f64| #![trigger wa_view.contains((v_v
                     forall |p: (V::V, f64)| neighbors@.contains(p) ==
                         (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@.1 == v_view && wa_seq[i]@.0 == p.0 && wa_seq[i]@.2 == p.1),
                 decreases wa_seq.len() - it@.0,
+            // Veracity: NEEDED proof block
             {
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
                         proof {
+// Veracity: NEEDED assert
 // Veracity: NEEDED assert
 assert forall |p: (V::V, f64)| neighbors@.contains(p) implies
                                 (exists |w: f64| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w) by {
@@ -292,6 +300,7 @@ assert forall |p: (V::V, f64)| neighbors@.contains(p) implies
                                     lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
+// Veracity: NEEDED assert
 // Veracity: NEEDED assert
 assert forall |p: (V::V, f64)| (exists |w: f64| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w) implies
                                 neighbors@.contains(p) by {

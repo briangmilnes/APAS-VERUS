@@ -72,6 +72,7 @@ pub mod MaxContigSubSumOptMtEph {
                 decreases n - i,
             {
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int);
                 }
@@ -104,8 +105,10 @@ pub mod MaxContigSubSumOptMtEph {
                 let cur = *ap.nth(j);
                 if cur < rmin { rmin = cur; }
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(spec_min_prefix_sum, 2);
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(rmin as int == spec_min_prefix_sum(a.seq@, j as int));
                 }
@@ -147,6 +150,7 @@ pub mod MaxContigSubSumOptMtEph {
                 decreases n + 1 - idx,
             {
                 let p_hi = *ap.nth(idx);
+                // Veracity: NEEDED proof block
                 let m_lo = *mp.nth(idx - 1);
                 // Veracity: NEEDED proof block
                 proof {
@@ -162,6 +166,7 @@ pub mod MaxContigSubSumOptMtEph {
                     Some(cur) => Some(if cur >= ending_max { cur } else { ending_max }),
                 };
                 idx = idx + 1;
+            // Veracity: NEEDED proof block
             }
 
             // Veracity: NEEDED proof block

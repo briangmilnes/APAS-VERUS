@@ -77,9 +77,11 @@ pub mod Algorithm21_1 {
         if k > 0 {
             lemma_sum_inner_lens_uniform(ss, k - 1, m);
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert((k - 1) * m + m == k * m) by (nonlinear_arith)
                 requires k > 0;
         } else {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert(k * m == 0) by (nonlinear_arith)
                 requires k == 0;
@@ -103,6 +105,7 @@ pub mod Algorithm21_1 {
         let mut total_len: usize = 0;
         let mut i: usize = 0;
         // Veracity: NEEDED proof block
+        // Veracity: NEEDED proof block
         proof { lemma_sum_inner_lens_mono(ss.seq@, 0, ss.seq@.len() as int); }
         while i < ss_len
             invariant
@@ -113,6 +116,7 @@ pub mod Algorithm21_1 {
                 sum_inner_lens(ss.seq@, i as int) <= sum_inner_lens(ss.seq@, ss.seq@.len() as int),
             decreases ss_len - i
         {
+            // Veracity: NEEDED proof block (speed hint)
             // Veracity: NEEDED proof block
             proof { lemma_sum_inner_lens_mono(ss.seq@, (i + 1) as int, ss.seq@.len() as int); }
             total_len = total_len + ss.seq[i].seq.len();
@@ -192,6 +196,7 @@ pub mod Algorithm21_1 {
                 }),
                 n,
             );
+// Veracity: NEEDED proof block
 
         // Veracity: NEEDED proof block
         proof {

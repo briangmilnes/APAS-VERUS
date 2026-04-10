@@ -86,13 +86,17 @@ pub mod MergeSortMtPer {
     {
         if s.len() == 0 {
         } else if s.last() == x {
+            // Veracity: NEEDED assert (speed hint)
             assert(s[s.len() - 1] == x);
         } else {
+            // Veracity: NEEDED assert (speed hint)
             assert(s =~= s.drop_last().push(s.last()));
+            // Veracity: NEEDED assert (speed hint)
             assert(s.drop_last().to_multiset().insert(s.last()).count(x)
                 == s.drop_last().to_multiset().count(x));
             lemma_multiset_count_positive_implies_exists(s.drop_last(), x);
             let j = choose|j: int| 0 <= j < s.drop_last().len() && s.drop_last()[j] == x;
+            // Veracity: NEEDED assert (speed hint)
             assert(s[j] == s.drop_last()[j]);
         }
     }
@@ -105,9 +109,12 @@ pub mod MergeSortMtPer {
         ensures
             forall|i: int| #![trigger a[i]] 0 <= i < a.len() ==> a[i] <= bound,
     {
+        // Veracity: NEEDED assert
         assert forall|i: int| #![trigger a[i]] 0 <= i < a.len() implies a[i] <= bound
         by {
+            // Veracity: NEEDED assert (speed hint)
             assert(a.to_multiset().count(a[i]) > 0);
+            // Veracity: NEEDED assert (speed hint)
             assert(b.to_multiset().count(a[i]) > 0);
             lemma_multiset_count_positive_implies_exists(b, a[i]);
             let j = choose|j: int| #![trigger b[j]] 0 <= j < b.len() && b[j] == a[i];
@@ -122,9 +129,12 @@ pub mod MergeSortMtPer {
         ensures
             forall|i: int| #![trigger a[i]] 0 <= i < a.len() ==> a[i] >= bound,
     {
+        // Veracity: NEEDED assert
         assert forall|i: int| #![trigger a[i]] 0 <= i < a.len() implies a[i] >= bound
         by {
+            // Veracity: NEEDED assert (speed hint)
             assert(a.to_multiset().count(a[i]) > 0);
+            // Veracity: NEEDED assert (speed hint)
             assert(b.to_multiset().count(a[i]) > 0);
             lemma_multiset_count_positive_implies_exists(b, a[i]);
             let j = choose|j: int| #![trigger b[j]] 0 <= j < b.len() && b[j] == a[i];
@@ -144,18 +154,22 @@ pub mod MergeSortMtPer {
     {
         let concatenated = a.push(pivot) + c;
         let ap = a.push(pivot);
+        // Veracity: NEEDED assert
         assert forall|i: int, j: int|
             0 <= i < j < concatenated.len() implies concatenated[i] <= concatenated[j]
         by {
             if j < a.len() as int {
             } else if j == a.len() as int {
             } else if i < a.len() as int {
+                // Veracity: NEEDED assert (speed hint)
                 assert(concatenated[j] == c[j - a.len() as int - 1]);
             } else if i == a.len() as int {
+                // Veracity: NEEDED assert (speed hint)
                 assert(concatenated[j] == c[j - a.len() as int - 1]);
             } else {
+                // Veracity: NEEDED assert (speed hint)
                 assert(concatenated[i] == c[i - a.len() as int - 1]);
-                assert(concatenated[j] == c[j - a.len() as int - 1]);
+// Veracity: UNNEEDED assert                 assert(concatenated[j] == c[j - a.len() as int - 1]);
             }
         }
     }
@@ -222,24 +236,30 @@ pub mod MergeSortMtPer {
         {
             let m = lo + (hi - lo) / 2;
             if *arr.nth(m) <= pivot {
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|j: int| #![trigger arr.spec_index(j)]
                         0 <= j < (m + 1) as int implies arr.spec_index(j) <= pivot
                     by {
                         if j < lo as int {
                         } else {
+                            // Veracity: NEEDED assert
                             assert(s[j] <= s[m as int]);
                         }
                     }
                 }
                 lo = m + 1;
+            // Veracity: NEEDED proof block
             } else {
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|j: int| #![trigger arr.spec_index(j)]
                         m as int <= j < n as int implies arr.spec_index(j) > pivot
                     by {
                         if j >= hi as int {
                         } else {
+                            // Veracity: NEEDED assert
                             assert(s[m as int] <= s[j]);
                         }
                     }
@@ -281,12 +301,14 @@ pub mod MergeSortMtPer {
                     v@.len() == i as int,
                     forall|j: int| #![trigger v@[j]] 0 <= j < i as int ==> v@[j] == right.spec_index(j),
                 decreases nr - i,
+            // Veracity: NEEDED proof block
             { v.push(*right.nth(i)); i += 1; }
             let res = ArraySeqMtPerS { seq: v };
             proof {
                 let rv = Seq::new(res.spec_len(), |i: int| res.spec_index(i));
+                // Veracity: NEEDED assert
                 assert(rv =~= sr);
-                assert(sl + sr =~= sr);
+// Veracity: UNNEEDED assert                 assert(sl + sr =~= sr);
             }
             return res;
         }
@@ -299,12 +321,15 @@ pub mod MergeSortMtPer {
                     i <= nl, nl == left.spec_len(),
                     v@.len() == i as int,
                     forall|j: int| #![trigger v@[j]] 0 <= j < i as int ==> v@[j] == left.spec_index(j),
+                // Veracity: NEEDED proof block
                 decreases nl - i,
             { v.push(*left.nth(i)); i += 1; }
             let res = ArraySeqMtPerS { seq: v };
             proof {
                 let rv = Seq::new(res.spec_len(), |i: int| res.spec_index(i));
+                // Veracity: NEEDED assert
                 assert(rv =~= sl);
+                // Veracity: NEEDED assert (speed hint)
                 assert(sl + sr =~= sl);
             }
             return res;
@@ -368,40 +393,57 @@ pub mod MergeSortMtPer {
         let ghost sl_l = Seq::new(left_l.spec_len(), |i: int| left_l.spec_index(i));
         let ghost sl_r = Seq::new(left_r.spec_len(), |i: int| left_r.spec_index(i));
         let ghost sr_l = Seq::new(right_l.spec_len(), |i: int| right_l.spec_index(i));
+        // Veracity: NEEDED proof block
         let ghost sr_r = Seq::new(right_r.spec_len(), |i: int| right_r.spec_index(i));
         let ghost pivot_seq = Seq::new(1, |unused: int| pivot);
 
         // Prove subarrays are sorted (subrange of sorted is sorted).
         proof {
+            // Veracity: NEEDED assert
             assert(spec_sorted(sl_l)) by {
+                // Veracity: NEEDED assert
                 assert forall|i: int, j: int| 0 <= i < j < sl_l.len()
                     implies sl_l[i] <= sl_l[j]
                 by {
+                    // Veracity: NEEDED assert
                     assert(sl_l[i] == sl[i]);
+                    // Veracity: NEEDED assert
                     assert(sl_l[j] == sl[j]);
                 }
             }
+            // Veracity: NEEDED assert
             assert(spec_sorted(sl_r)) by {
+                // Veracity: NEEDED assert
                 assert forall|i: int, j: int| 0 <= i < j < sl_r.len()
                     implies sl_r[i] <= sl_r[j]
                 by {
+                    // Veracity: NEEDED assert
                     assert(sl_r[i] == sl[mid as int + 1 + i]);
+                    // Veracity: NEEDED assert
                     assert(sl_r[j] == sl[mid as int + 1 + j]);
                 }
             }
+            // Veracity: NEEDED assert
             assert(spec_sorted(sr_l)) by {
+                // Veracity: NEEDED assert
                 assert forall|i: int, j: int| 0 <= i < j < sr_l.len()
                     implies sr_l[i] <= sr_l[j]
                 by {
+                    // Veracity: NEEDED assert
                     assert(sr_l[i] == sr[i]);
+                    // Veracity: NEEDED assert
                     assert(sr_l[j] == sr[j]);
                 }
             }
+            // Veracity: NEEDED assert
             assert(spec_sorted(sr_r)) by {
+                // Veracity: NEEDED assert
                 assert forall|i: int, j: int| 0 <= i < j < sr_r.len()
                     implies sr_r[i] <= sr_r[j]
                 by {
+                    // Veracity: NEEDED assert
                     assert(sr_r[i] == sr[pos as int + i]);
+                    // Veracity: NEEDED assert
                     assert(sr_r[j] == sr[pos as int + j]);
                 }
             }
@@ -449,6 +491,7 @@ pub mod MergeSortMtPer {
                 forall|j: int| #![trigger out@[ml_len as int + 1 + j]]
                     0 <= j < i as int ==> out@[ml_len as int + 1 + j] == merged_r.spec_index(j),
             decreases mr_len - i,
+        // Veracity: NEEDED proof block
         { out.push(*merged_r.nth(i)); i += 1; }
 
         let ghost out_view = out@;
@@ -456,49 +499,67 @@ pub mod MergeSortMtPer {
 
         proof {
             let ghost rv = Seq::new(merged.spec_len(), |i: int| merged.spec_index(i));
+            // Veracity: NEEDED assert
             assert(rv =~= out_view);
 
             // Length.
-            assert(rv.len() == (nl + nr) as int);
+// Veracity: UNNEEDED assert             assert(rv.len() == (nl + nr) as int);
 
             // Sequence decompositions — help the solver with extensional equality.
+            // Veracity: NEEDED assert
             assert(sl =~= sl_l + pivot_seq + sl_r) by {
+                // Veracity: NEEDED assert (speed hint)
                 assert(sl.len() == sl_l.len() + 1 + sl_r.len());
+                // Veracity: NEEDED assert
                 assert forall|k: int| #![trigger sl[k]] 0 <= k < sl.len() implies
                     sl[k] == (sl_l + pivot_seq + sl_r)[k]
                 by {
                     if k < sl_l.len() {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(sl_l[k] == sl[k]);
                     } else if k == mid as int {
                     } else {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(sl_r[k - mid as int - 1] == sl[k]);
                     }
                 }
             }
+            // Veracity: NEEDED assert
             assert(sr =~= sr_l + sr_r) by {
+                // Veracity: NEEDED assert (speed hint)
                 assert(sr.len() == sr_l.len() + sr_r.len());
+                // Veracity: NEEDED assert
                 assert forall|k: int| #![trigger sr[k]] 0 <= k < sr.len() implies
                     sr[k] == (sr_l + sr_r)[k]
                 by {
                     if k < sr_l.len() {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(sr_l[k] == sr[k]);
                     } else {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(sr_r[k - sr_l.len()] == sr[k]);
                     }
                 }
             }
+            // Veracity: NEEDED assert
             assert(out_view =~= ml_view + pivot_seq + mr_view) by {
+                // Veracity: NEEDED assert (speed hint)
                 assert(out_view.len() == ml_view.len() + 1 + mr_view.len());
+                // Veracity: NEEDED assert
                 assert forall|k: int| #![trigger out_view[k]] 0 <= k < out_view.len() implies
                     out_view[k] == (ml_view + pivot_seq + mr_view)[k]
                 by {
                     if k < ml_view.len() {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(out_view[k] == ml_view[k]);
                     } else if k == ml_view.len() {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(out_view[k] == pivot);
                     } else {
                         let ghost j = k - ml_len as int - 1;
+                        // Veracity: NEEDED assert
                         assert(out@[ml_len as int + 1 + j] == merged_r.spec_index(j));
+                        // Veracity: NEEDED assert (speed hint)
                         assert(mr_view[j] == merged_r.spec_index(j));
                     }
                 }
@@ -508,34 +569,45 @@ pub mod MergeSortMtPer {
             let ghost input_l = sl_l + sr_l;
             let ghost input_r = sl_r + sr_r;
 
+            // Veracity: NEEDED assert
             assert forall|k: int| #![trigger input_l[k]]
                 0 <= k < input_l.len() implies input_l[k] <= pivot
             by {
                 if k < sl_l.len() {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(sl_l[k] == sl[k]);
+                    // Veracity: NEEDED assert
                     assert(sl[k] <= sl[mid as int]);
                 } else {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(input_l[k] == sr_l[k - sl_l.len()]);
                 }
             }
 
+            // Veracity: NEEDED assert
             assert forall|k: int| #![trigger input_r[k]]
                 0 <= k < input_r.len() implies input_r[k] >= pivot
             by {
                 if k < sl_r.len() {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(input_r[k] == sl_r[k]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(sl_r[k] == sl[mid as int + 1 + k]);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(sl[mid as int] <= sl[mid as int + 1 + k]);
                 } else {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(input_r[k] == sr_r[k - sl_r.len()]);
-                    assert(sr_r[k - sl_r.len()] == sr[pos as int + (k - sl_r.len())]);
+// Veracity: UNNEEDED assert                     assert(sr_r[k - sl_r.len()] == sr[pos as int + (k - sl_r.len())]);
                 }
             }
 
             lemma_all_le_preserved_by_permutation(ml_view, input_l, pivot);
             lemma_all_ge_preserved_by_permutation(mr_view, input_r, pivot);
             lemma_sorted_concat_pivot(ml_view, pivot, mr_view);
+            // Veracity: NEEDED assert (speed hint)
             assert(out_view =~= ml_view.push(pivot) + mr_view);
+            // Veracity: NEEDED assert (speed hint)
             assert(spec_sorted(out_view));
 
             // Permutation proof: rv.to_multiset() =~= (sl + sr).to_multiset().
@@ -563,6 +635,7 @@ pub mod MergeSortMtPer {
         // Verified parallel merge sort: structural logic proven, recursion parallelized.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n) — parallel D&C sort with parallel merge; Mt parallel.
         fn merge_sort_parallel(a: &ArraySeqMtPerS<usize>) -> (sorted: ArraySeqMtPerS<usize>)
+            // Veracity: NEEDED proof block
             decreases a.spec_len(),
         {
             let n = a.length();
@@ -570,6 +643,8 @@ pub mod MergeSortMtPer {
 
             if n == 0 {
                 proof {
+                    // Veracity: NEEDED proof block
+                    // Veracity: NEEDED assert (speed hint)
                     assert(sa =~= Seq::<usize>::empty());
                 }
                 return ArraySeqMtPerS::empty();
@@ -578,9 +653,13 @@ pub mod MergeSortMtPer {
                 let s = ArraySeqMtPerS::singleton(*a.nth(0));
                 proof {
                     let s_view = Seq::new(s.spec_len(), |i: int| s.spec_index(i));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(sa.len() == 1);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(s_view.len() == 1);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(sa[0] == s_view[0]);
+                    // Veracity: NEEDED assert
                     assert(sa =~= s_view);
                 }
                 return s;
@@ -630,6 +709,7 @@ pub mod MergeSortMtPer {
             { <ArraySeqMtPerS<usize> as MergeSortMtTrait>::merge_sort_parallel(&left) };
 
             let f2 = move || -> (r: ArraySeqMtPerS<usize>)
+                // Veracity: NEEDED proof block
                 ensures spec_sort_post(right_view, Seq::new(r.spec_len(), |i: int| r.spec_index(i)))
             { <ArraySeqMtPerS<usize> as MergeSortMtTrait>::merge_sort_parallel(&right) };
 
@@ -643,6 +723,7 @@ pub mod MergeSortMtPer {
                 let ghost ssr = Seq::new(sorted_right.spec_len(), |i: int| sorted_right.spec_index(i));
                 let ghost sm = Seq::new(merged.spec_len(), |i: int| merged.spec_index(i));
 
+                // Veracity: NEEDED assert
                 assert(left_view + right_view =~= sa);
                 lemma_multiset_commutative(ssl, ssr);
                 lemma_multiset_commutative(left_view, right_view);

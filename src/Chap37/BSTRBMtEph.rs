@@ -443,8 +443,8 @@ pub mod BSTRBMtEph {
             if let Some(mut x) = h.right.take() {
                 let ghost x_key = x.key;
                 let ghost old_x_left = x.left;
-                let ghost old_x_right = x.right;
                 // Veracity: NEEDED proof block
+                let ghost old_x_right = x.right;
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 2);
                     reveal_with_fuel(link_contains, 2);
@@ -466,9 +466,9 @@ pub mod BSTRBMtEph {
                 x.color = h.color;
                 h.color = Color::Red;
                 x.left = Some(h);
+                // Veracity: NEEDED proof block
                 update(&mut x);
                 *self = Some(x);
-                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 3);
                     reveal_with_fuel(link_contains, 4);
@@ -489,10 +489,10 @@ pub mod BSTRBMtEph {
                     assert(link_spec_size(*self) == link_spec_size(old_link)) by {
                         reveal_with_fuel(link_spec_size, 3);
                     };
+                // Veracity: NEEDED proof block
                 }
             } else {
                 *self = Some(h);
-                // Veracity: NEEDED proof block
                 proof { reveal_with_fuel(link_spec_size, 2); }
             }
         }
@@ -502,11 +502,11 @@ pub mod BSTRBMtEph {
     fn rotate_right(&mut self)
     {
         let ghost old_link = *self;
+        // Veracity: NEEDED proof block
         if let Some(mut h) = self.take() {
             let ghost h_key = h.key;
             let ghost old_h_left = h.left;
             let ghost old_h_right = h.right;
-            // Veracity: NEEDED proof block
             proof {
                 reveal_with_fuel(spec_is_bst_link, 3);
                 reveal_with_fuel(link_contains, 3);
@@ -516,16 +516,16 @@ pub mod BSTRBMtEph {
                 // Veracity: NEEDED assert
                 assert forall|z: T| link_contains(old_h_right, z) implies
                     (TotalOrder::le(h_key, z) && z != h_key) by {};
+            // Veracity: NEEDED proof block
             }
             if let Some(mut x) = h.left.take() {
                 let ghost x_key = x.key;
                 let ghost old_x_left = x.left;
                 let ghost old_x_right = x.right;
-                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 2);
                     reveal_with_fuel(link_contains, 2);
-                    // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert (speed hint)
                     assert(TotalOrder::le(x_key, h_key) && x_key != h_key);
                     // Veracity: NEEDED assert
                     assert forall|z: T| link_contains(old_x_left, z) implies
@@ -539,13 +539,13 @@ pub mod BSTRBMtEph {
                     };
                 }
                 h.left = x.right.take();
+                // Veracity: NEEDED proof block
                 update(&mut h);
                 x.color = h.color;
                 h.color = Color::Red;
                 x.right = Some(h);
                 update(&mut x);
                 *self = Some(x);
-                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 3);
                     reveal_with_fuel(link_contains, 4);
@@ -561,6 +561,7 @@ pub mod BSTRBMtEph {
                         } else {
                         }
                     };
+                    // Veracity: NEEDED proof block (speed hint)
                     // Veracity: NEEDED assert
                     assert(link_spec_size(*self) == link_spec_size(old_link)) by {
                         reveal_with_fuel(link_spec_size, 3);
@@ -568,12 +569,12 @@ pub mod BSTRBMtEph {
                 }
             } else {
                 *self = Some(h);
-                // Veracity: NEEDED proof block
                 proof { reveal_with_fuel(link_spec_size, 2); }
             }
         }
     }
 
+    // Veracity: NEEDED proof block
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn flip_colors(&mut self)
     {
@@ -582,7 +583,6 @@ pub mod BSTRBMtEph {
             let ghost node_key = node.key;
             let ghost orig_left = node.left;
             let ghost orig_right = node.right;
-            // Veracity: NEEDED proof block
             proof {
                 reveal_with_fuel(spec_is_bst_link, 2);
             }
@@ -596,6 +596,7 @@ pub mod BSTRBMtEph {
                     | Color::Black => Color::Red,
                 };
                 node.left = Some(left);
+            // Veracity: NEEDED proof block
             }
             if let Some(mut right) = node.right.take() {
                 right.color = match right.color {
@@ -605,7 +606,6 @@ pub mod BSTRBMtEph {
                 node.right = Some(right);
             }
             *self = Some(node);
-            // Veracity: NEEDED proof block
             proof {
                 reveal_with_fuel(spec_is_bst_link, 3);
                 reveal_with_fuel(link_contains, 3);
@@ -638,6 +638,7 @@ pub mod BSTRBMtEph {
 
         // Check rotate_left condition via take/read/put-back.
         let tmp = self.take();
+        // Veracity: NEEDED proof block
         let rotate_left_needed = match &tmp {
             | Some(node) => node.right.is_red() && !node.left.is_red(),
             | None => false,
@@ -648,7 +649,6 @@ pub mod BSTRBMtEph {
             self.rotate_left();
         }
         let ghost after_rl = *self;
-        // Veracity: NEEDED proof block
         proof {
         }
 
@@ -658,6 +658,7 @@ pub mod BSTRBMtEph {
             | Some(node) => {
                 match &node.left {
                     | Some(left) => node.left.is_red() && left.left.is_red(),
+                    // Veracity: NEEDED proof block
                     | None => false,
                 }
             }
@@ -669,10 +670,10 @@ pub mod BSTRBMtEph {
             self.rotate_right();
         }
         let ghost after_rr = *self;
-        // Veracity: NEEDED proof block
         proof {
         }
 
+        // Veracity: NEEDED proof block
         // Check flip condition.
         let tmp = self.take();
         let flip_needed = match &tmp {
@@ -681,13 +682,12 @@ pub mod BSTRBMtEph {
         };
         *self = tmp;
         let ghost before_fl = *self;
-        if flip_needed {
-            self.flip_colors();
-        }
-        let ghost after_fl = *self;
-        // Veracity: NEEDED proof block
-        proof {
-        }
+// Veracity: UNNEEDED proof block         if flip_needed {
+// Veracity: UNNEEDED proof block             self.flip_colors();
+// Veracity: UNNEEDED proof block         }
+// Veracity: UNNEEDED proof block         let ghost after_fl = *self;
+// Veracity: UNNEEDED proof block         proof {
+// Veracity: UNNEEDED proof block         }
 
         // Update size via take/put-back.
         if let Some(mut node) = self.take() {
@@ -695,10 +695,10 @@ pub mod BSTRBMtEph {
             *self = Some(node);
         }
 
-        // Veracity: NEEDED proof block
         proof {
             reveal_with_fuel(spec_is_bst_link, 2);
             reveal_with_fuel(link_contains, 2);
+            // Veracity: NEEDED proof block
             // Chain containment equivalences through each step.
             // Trait ensures uses spec_contains; bridge to link_contains via open unfolding.
         }
@@ -712,8 +712,8 @@ pub mod BSTRBMtEph {
         match cur {
             | None => {
                 *self = Some(Box::new(new_node(value)));
-                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED proof block
                     reveal_with_fuel(spec_is_bst_link, 2);
                     reveal_with_fuel(link_contains, 2);
                 }
@@ -728,7 +728,6 @@ pub mod BSTRBMtEph {
                         node.left.insert_link(value);
                         update(&mut node);
                         *self = Some(node);
-                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
@@ -769,6 +768,7 @@ pub mod BSTRBMtEph {
                             by {
                                 reveal_with_fuel(link_contains, 2);
                                 if node.key == x {
+                                // Veracity: NEEDED proof block
                                 } else if link_contains(node.left, x) {
                                     // Bridge: trait ensures via spec_contains.
                                     // Veracity: NEEDED assert
@@ -784,7 +784,6 @@ pub mod BSTRBMtEph {
                         node.right.insert_link(value);
                         update(&mut node);
                         *self = Some(node);
-                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
@@ -822,6 +821,7 @@ pub mod BSTRBMtEph {
                             // Veracity: NEEDED assert
                             assert forall|x: T| link_contains(*self, x) implies
                                 (link_contains(*old(self), x) || x == value)
+                            // Veracity: NEEDED proof block
                             by {
                                 reveal_with_fuel(link_contains, 2);
                                 if node.key == x {
@@ -838,12 +838,12 @@ pub mod BSTRBMtEph {
                     }
                     core::cmp::Ordering::Equal => {
                         *self = Some(node);
-                        // Veracity: NEEDED proof block
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                         }
                         return;
+                    // Veracity: NEEDED proof block
                     }
                 }
             }
@@ -854,6 +854,7 @@ pub mod BSTRBMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn find_link(&self, target: &T) -> (found: Option<&T>)
         decreases *self,
+    // Veracity: NEEDED proof block
     {
         match self {
             | None => None,
@@ -861,7 +862,6 @@ pub mod BSTRBMtEph {
                 match TotalOrder::cmp(target, &node.key) {
                     core::cmp::Ordering::Equal => Some(&node.key),
                     core::cmp::Ordering::Less => {
-                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert(!link_contains(node.right, *target)) by {
@@ -873,11 +873,11 @@ pub mod BSTRBMtEph {
                         node.left.find_link(target)
                     }
                     core::cmp::Ordering::Greater => {
-                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert(!link_contains(node.left, *target)) by {
                                 if link_contains(node.left, *target) {
+                                    // Veracity: NEEDED proof block
                                     T::antisymmetric(node.key, *target);
                                 }
                             };
@@ -894,10 +894,10 @@ pub mod BSTRBMtEph {
         decreases *self,
     {
         match self {
+            // Veracity: NEEDED proof block
             | None => None,
             | Some(node) => match node.left {
                 | None => {
-                    // Veracity: NEEDED proof block
                     proof {
                         // Veracity: NEEDED assert
                         assert forall|x: T| #[trigger] link_contains(*self, x) implies TotalOrder::le(node.key, x) by {
@@ -915,7 +915,6 @@ pub mod BSTRBMtEph {
                 }
                 | Some(_) => {
                     let min = node.left.min_link();
-                    // Veracity: NEEDED proof block
                     proof {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(link_contains, 2);
@@ -928,6 +927,7 @@ pub mod BSTRBMtEph {
                                 // Veracity: NEEDED assert
                                 assert(node.left.spec_contains(x));
                             } else if x == node.key {
+                            // Veracity: NEEDED proof block
                             } else {
                                 // Veracity: NEEDED assert
                                 assert(link_contains(node.right, x));
@@ -944,12 +944,12 @@ pub mod BSTRBMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn max_link(&self) -> (max: Option<&T>)
         decreases *self,
+    // Veracity: NEEDED proof block
     {
         match self {
             | None => None,
             | Some(node) => match node.right {
                 | None => {
-                    // Veracity: NEEDED proof block
                     proof {
                         // Veracity: NEEDED assert
                         assert forall|x: T| #[trigger] link_contains(*self, x) implies TotalOrder::le(x, node.key) by {
@@ -967,7 +967,6 @@ pub mod BSTRBMtEph {
                 }
                 | Some(_) => {
                     let max = node.right.max_link();
-                    // Veracity: NEEDED proof block
                     proof {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(link_contains, 2);
@@ -1017,6 +1016,7 @@ pub mod BSTRBMtEph {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn in_order_parallel(&self) -> (elements: Vec<T>)
+    // Veracity: NEEDED proof block
     {
         let mut out = Vec::new();
         self.in_order_collect(&mut out);
@@ -1040,7 +1040,7 @@ pub mod BSTRBMtEph {
         match self {
             | None => Vec::new(),
             | Some(node) => {
-                // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block (speed hint)
                 proof {
                     reveal_with_fuel(link_spec_size, 2);
                 }
@@ -1059,13 +1059,13 @@ pub mod BSTRBMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn reduce_parallel<F>(&self, op: &Arc<F>, identity: T) -> (reduced: T)
         where
+            // Veracity: NEEDED proof block
             F: Fn(T, T) -> T + Send + Sync,
         decreases *self,
     {
         match self {
             | None => identity,
             | Some(node) => {
-                // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(link_spec_size, 2);
                 }
@@ -1085,7 +1085,6 @@ pub mod BSTRBMtEph {
         match self {
             | None => 0,
             | Some(node) => {
-                // Veracity: NEEDED proof block
                 proof {
                     // link_height = 1 + max(left, right), so children have height < usize::MAX.
                 }
@@ -1105,6 +1104,7 @@ pub mod BSTRBMtEph {
                 let r = node.right.compute_link_spec_size();
                 1 + l + r
             }
+        // Veracity: NEEDED proof block
         }
     }
 
@@ -1131,7 +1131,6 @@ pub mod BSTRBMtEph {
         node.right = right;
         node.color = Color::Black;
         update(&mut node);
-        // Veracity: NEEDED proof block
         proof {
             reveal_with_fuel(link_spec_size, 2);
         }
@@ -1256,6 +1255,7 @@ pub mod BSTRBMtEph {
         #[verifier::type_invariant]
         spec fn wf(self) -> bool {
             link_spec_size(self.ghost_root@) <= usize::MAX
+            // Veracity: NEEDED proof block
             && spec_is_bst_link(self.ghost_root@)
         }
 
@@ -1271,6 +1271,7 @@ pub mod BSTRBMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        // Veracity: NEEDED proof block
         fn new() -> Self {
             BSTRBMtEph {
                 root: RwLock::new(None, Ghost(BSTRBMtEphInv)),
@@ -1300,7 +1301,6 @@ pub mod BSTRBMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert(&mut self, value: T) -> (inserted: Result<(), ()>) {
             let (mut current, write_handle) = self.root.acquire_write();
-            // Veracity: NEEDED proof block
             proof { assume(self.ghost_root@ == current); }
             let sz = current.compute_link_spec_size();
             if sz < usize::MAX {
@@ -1314,7 +1314,6 @@ pub mod BSTRBMtEph {
                 }
                 let ghost old_ghost = self.ghost_root@;
                 let ghost new_root = current;
-                // Veracity: NEEDED proof block
                 proof {
                     // Color change (Black root) preserves structural properties.
                     reveal_with_fuel(link_spec_size, 2);
@@ -1344,6 +1343,7 @@ pub mod BSTRBMtEph {
                         link_contains(after_insert, x)
                     by { reveal_with_fuel(link_contains, 2); };
                     // Size bound: insert adds at most 1, color change preserves size.
+                    // Veracity: NEEDED proof block (speed hint)
                     // Bridge to BalBinTree view.
                     lemma_link_to_bbt_size::<T>(new_root);
                     lemma_link_to_bbt_size::<T>(old_ghost);
@@ -1355,6 +1355,7 @@ pub mod BSTRBMtEph {
                         lemma_link_to_bbt_contains::<T>(new_root, x);
                         lemma_link_to_bbt_contains::<T>(old_ghost, x);
                     };
+                    // Veracity: NEEDED proof block (speed hint)
                     // Ghost-real bridge: spec_is_bst_link → tree_is_bst via link_to_bbt.
                     lemma_link_to_bbt_is_bst::<T>(new_root);
                 }
@@ -1364,6 +1365,7 @@ pub mod BSTRBMtEph {
             } else {
                 write_handle.release_write(current);
                 Err(())
+            // Veracity: NEEDED proof block
             }
         }
 
@@ -1373,12 +1375,13 @@ pub mod BSTRBMtEph {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
             // spec_is_bst_link(*data) from lock predicate via acquire_read.
-            let found = data.find_link(target).is_some();
             // Veracity: NEEDED proof block
+            let found = data.find_link(target).is_some();
             proof { assume(found == self@.tree_contains(*target)); }
             handle.release_read();
             found
         }
+// Veracity: NEEDED proof block (speed hint)
 
         // Reader: link_spec_size from lock predicate, assume return matches ghost.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -1387,9 +1390,9 @@ pub mod BSTRBMtEph {
             let data = handle.borrow();
             // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
             let n = data.size_link();
-            // Veracity: NEEDED proof block
             proof { assume(n as nat == self@.spec_size()); }
             handle.release_read();
+            // Veracity: NEEDED proof block
             n
         }
 
@@ -1398,7 +1401,6 @@ pub mod BSTRBMtEph {
         fn is_empty(&self) -> (b: bool) {
             let handle = self.root.acquire_read();
             let b = handle.borrow().is_none();
-            // Veracity: NEEDED proof block
             proof { assume(b == (self@.spec_size() == 0)); }
             handle.release_read();
             b
@@ -1409,14 +1411,12 @@ pub mod BSTRBMtEph {
         fn height(&self) -> (h: usize) {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
-            // Veracity: NEEDED proof block
             proof {
                 // Lock predicate gives link_spec_size(*data) <= usize::MAX.
                 // Lemma gives link_height <= link_spec_size.
                 lemma_height_le_size::<T>(*data);
             }
             let h = data.height_rec();
-            // Veracity: NEEDED proof block
             proof { assume(h as nat == self@.spec_height()); }
             handle.release_read();
             h
@@ -1428,7 +1428,6 @@ pub mod BSTRBMtEph {
             let data = handle.borrow();
             // spec_is_bst_link(*data) from lock predicate via acquire_read.
             let found = data.find_link(target).cloned();
-            // Veracity: NEEDED proof block
             proof {
                 assume(found.is_some() == self@.tree_contains(*target));
                 accept(found.is_some() ==> found.unwrap() == *target);

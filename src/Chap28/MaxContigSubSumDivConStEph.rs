@@ -131,6 +131,7 @@ broadcast use {
 
         // Part (b): max_sum is maximal.
         // Veracity: NEEDED assert
+        // Veracity: NEEDED assert
         assert forall|lo: int, hi: int|
             #![trigger spec_range_sum(s, lo, hi)]
             0 <= lo < hi <= n
@@ -227,6 +228,7 @@ broadcast use {
             }
 
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block
             proof { lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int); }
             running_sum = running_sum + *a.nth(i);
             i = i + 1;
@@ -235,6 +237,7 @@ broadcast use {
         // Now: running_sum = prefix(n) = total,
         //      min_prefix = min(prefix(0), ..., prefix(n-1)).
         // result = total - min_prefix = max suffix sum.
+        // Veracity: NEEDED proof block
         // Veracity: NEEDED proof block
         proof {
             let total = running_sum as int;
@@ -250,6 +253,7 @@ broadcast use {
             }
 
             // (b) Maximal: for all lo in 0..n: range_sum(a, lo, n) <= total - min_prefix.
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|lo: int|
                 #![trigger spec_range_sum(a.seq@, lo, a.seq@.len() as int)]
@@ -279,6 +283,7 @@ broadcast use {
         let n = a.length();
         let mut max_val: i32 = *a.nth(0);
         let mut running_sum: i32 = *a.nth(0);
+// Veracity: NEEDED proof block (speed hint)
 
         // Veracity: NEEDED proof block
         proof { lemma_range_sum_single(a.seq@, 0); }
@@ -296,6 +301,7 @@ broadcast use {
                 (exists|j: int|
                     #![trigger spec_range_sum(a.seq@, 0, j)]
                     1 <= j <= i && max_val as int == spec_range_sum(a.seq@, 0, j)),
+            // Veracity: NEEDED proof block
             decreases n - i,
         {
             // Veracity: NEEDED proof block
@@ -318,6 +324,7 @@ broadcast use {
             let n = a.length();
 
             if n == 0 {
+                // Veracity: NEEDED proof block
                 return None;
             }
             if n == 1 {
@@ -328,6 +335,7 @@ broadcast use {
                 return Some(*a.nth(0));
             }
 
+            // Veracity: NEEDED proof block
             let mid = n / 2;
             let left = a.subseq_copy(0, mid);
             let right = a.subseq_copy(mid, n - mid);
@@ -335,19 +343,24 @@ broadcast use {
             // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger left.seq@[i]]
                     0 <= i < left.seq@.len() implies left.seq@[i] == a.seq@[i]
+                // Veracity: NEEDED assert
                 by { assert(left.spec_index(i) == a.spec_index(0 + i)); };
                 lemma_sums_fit_subseq(a.seq@, left.seq@, 0);
 
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger right.seq@[i]]
                     0 <= i < right.seq@.len() implies right.seq@[i] == a.seq@[mid as int + i]
+                // Veracity: NEEDED assert
                 by { assert(right.spec_index(i) == a.spec_index(mid as int + i)); };
                 lemma_sums_fit_subseq(a.seq@, right.seq@, mid as int);
             }
 
             let max_left = Self::max_contig_sub_sum_divcon(&left);
+            // Veracity: NEEDED proof block
             let max_right = Self::max_contig_sub_sum_divcon(&right);
 
             let s_left = max_suffix_sum(&left);
@@ -370,6 +383,7 @@ broadcast use {
                 lemma_range_sum_subseq(a.seq@, left.seq@, 0, lo_s, mid as int);
                 lemma_range_sum_subseq(a.seq@, right.seq@, mid as int, 0, hi_p);
                 lemma_range_sum_split(a.seq@, lo_s, mid as int, mid as int + hi_p);
+            // Veracity: NEEDED proof block
             }
 
             let max_crossing: i32 = s_left + p_right;

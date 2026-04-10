@@ -396,6 +396,7 @@ pub mod MathSeq {
                     let not_seen = !seen.contains(&x);
                     if not_seen {
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED proof block
                         proof {
 
                             lemma_map_not_contains_implies_all_ne(out@, x@);
@@ -408,10 +409,12 @@ pub mod MathSeq {
                         let ghost old_out_mapped = old_out.map(|_j: int, t: T| t@);
                         let x_clone = x.clone();
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_cloned_view_eq(x, x_clone);
                         }
                         seen.insert(x_clone);
+                        // Veracity: NEEDED proof block
                         out.push(x);
                         // Veracity: NEEDED proof block
                         proof {
@@ -420,8 +423,10 @@ pub mod MathSeq {
                             old_out.lemma_push_map_commute(f, x);
                             let new_mapped = out@.map_values(f);
                             // Veracity: NEEDED assert
+                            // Veracity: NEEDED assert
                             assert(out@.map(|_j: int, t: T| t@) =~= new_mapped);
 
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall|v: T::V| seen@.contains(v) <==> out@.map(|_j: int, t: T| t@).contains(v) by {
                                 if v == x@ {
@@ -429,11 +434,13 @@ pub mod MathSeq {
                                     if old_out_mapped.contains(v) {
                                         let wit = choose|i: int| 0 <= i < old_out_mapped.len() && old_out_mapped[i] == v;
                                         // Veracity: NEEDED assert
+                                        // Veracity: NEEDED assert
                                         assert(new_mapped[wit] == v);
                                     }
                                     if new_mapped.contains(v) {
                                         let wit = choose|i: int| 0 <= i < new_mapped.len() && new_mapped[i] == v;
                                         if wit < old_out_mapped.len() {
+                                            // Veracity: NEEDED assert
                                             // Veracity: NEEDED assert
                                             assert(old_out_mapped[wit] == v);
                                         } else {
@@ -449,6 +456,7 @@ pub mod MathSeq {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass counting with HashMap + second pass emitting pairs.
+            // Veracity: NEEDED proof block
             fn multiset_range(&self) -> (range: Vec<(usize, T)>)
             {
                 // Veracity: NEEDED proof block
@@ -473,17 +481,21 @@ pub mod MathSeq {
                     let ghost old_order = order@;
 
                     if counts.contains_key(&x) {
+                        // Veracity: NEEDED proof block
                         let old_count = *counts.get(&x).unwrap();
                         if old_count < usize::MAX {
                             counts.insert(x, old_count + 1);
                             // Veracity: NEEDED proof block
                             proof {
+                            // Veracity: NEEDED proof block
                             }
                         }
                     } else {
                         let x2 = x.clone();
                         // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
+                            // Veracity: NEEDED proof block
                             // Veracity: NEEDED assert
                             assert(cloned(x, x2));
                         }
@@ -509,6 +521,7 @@ pub mod MathSeq {
                         obeys_feq_view_injective::<T>(),
                         j <= order_len,
                         range@.len() == j,
+                        // Veracity: NEEDED proof block
                         order_len <= len,
                         counts@ == final_counts,
                         forall|idx: int| #![trigger order@[idx]@] 0 <= idx < order@.len() ==> final_counts.contains_key(order@[idx]@),
@@ -517,6 +530,7 @@ pub mod MathSeq {
                     let x = order[j].clone();
                     // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         // Veracity: NEEDED assert
                         assert(cloned(order@[j as int], x));
                     }
@@ -669,7 +683,7 @@ pub mod MathSeq {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
-
+// Veracity: UNNEEDED proof block 
 
     impl<T: StT> Clone for MathSeqS<T> {
         fn clone(&self) -> (cloned: Self)
@@ -682,6 +696,7 @@ pub mod MathSeq {
         }
     }
 
+    // Veracity: NEEDED proof block (speed hint)
     impl<T: StT> Eq for MathSeqS<T> {}
 
     impl<T: StT> PartialEq for MathSeqS<T> {

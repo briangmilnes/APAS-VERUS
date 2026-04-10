@@ -130,21 +130,29 @@ pub mod ScanDCStPer {
             let ghost input = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
 
             if n == 0 {
-                proof {
-                    reveal(Seq::fold_left);
-                    assert(input =~= Seq::<usize>::empty());
-                }
+// Veracity: UNNEEDED proof block                 proof {
+// Veracity: UNNEEDED proof block                     reveal(Seq::fold_left);
+// Veracity: UNNEEDED proof block                     // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED proof block                     assert(input =~= Seq::<usize>::empty());
+// Veracity: UNNEEDED proof block                 }
                 return (ArraySeqStPerS::empty(), id);
             }
             if n == 1 {
                 let total = f(&id, a.nth(0));
+                // Veracity: NEEDED proof block
                 proof {
                     reveal(Seq::fold_left);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(input.len() == 1);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(input.drop_last() =~= Seq::<usize>::empty());
+                    // Veracity: NEEDED assert (speed hint)
                     assert(input.last() == a.spec_index(0));
+                    // Veracity: NEEDED assert
                     assert(Seq::<usize>::empty().fold_left(id, spec_f) == id);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(input.fold_left(id, spec_f) == spec_f(id, a.spec_index(0)));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(input.take(0) =~= Seq::<usize>::empty());
                 }
                 return (ArraySeqStPerS::singleton(id), total);
@@ -186,10 +194,14 @@ pub mod ScanDCStPer {
 
             let ghost left_input = Seq::new(left.spec_len(), |i: int| left.spec_index(i));
             let ghost right_input = Seq::new(right.spec_len(), |i: int| right.spec_index(i));
+// Veracity: NEEDED proof block
 
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(left_input =~= input.subrange(0, mid as int));
+                // Veracity: NEEDED assert (speed hint)
                 assert(right_input =~= input.subrange(mid as int, n as int));
+                // Veracity: NEEDED assert (speed hint)
                 assert(left_input + right_input =~= input);
             }
 
@@ -270,15 +282,20 @@ pub mod ScanDCStPer {
             let total = f(&l_total, &r_total);
 
             let ghost result_view = result_vec@;
+            // Veracity: NEEDED proof block
             let result_prefixes = ArraySeqStPerS { seq: result_vec };
 
             proof {
                 let ghost rp = Seq::new(result_prefixes.spec_len(), |i: int| result_prefixes.spec_index(i));
+                // Veracity: NEEDED assert (speed hint)
                 assert(rp =~= result_view);
+                // Veracity: NEEDED assert (speed hint)
                 assert(result_view.len() == n as int);
 
                 // Establish subrange equalities for fold_left_split
+                // Veracity: NEEDED assert (speed hint)
                 assert(left_input =~= input.subrange(0, mid as int));
+                // Veracity: NEEDED assert (speed hint)
                 assert(right_input =~= input.subrange(mid as int, n as int));
 
                 // Prove total == input.fold_left(id, spec_f)
@@ -288,19 +305,25 @@ pub mod ScanDCStPer {
                 lemma_fold_left_monoid(right_input, l_total, spec_f, id);
 
                 // Prove each prefix position
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger result_view[i]]
                     0 <= i < n as int implies
                     result_view[i] == spec_scan_at(input, spec_f, id, i)
                 by {
                     if i < mid as int {
-                        assert(result_view[i] == l_pref_view[i]);
+// Veracity: UNNEEDED assert                         assert(result_view[i] == l_pref_view[i]);
+                        // Veracity: NEEDED assert
                         assert(input.take(i) =~= left_input.take(i));
                     } else {
                         let j = i - mid as int;
+                        // Veracity: NEEDED assert (speed hint)
                         assert(i == l_len as int + j);
+                        // Veracity: NEEDED assert (speed hint)
                         assert(result_view[l_len as int + j] == spec_f(l_total, r_pref_view[j]));
                         lemma_fold_left_monoid(right_input.take(j), l_total, spec_f, id);
+                        // Veracity: NEEDED assert
                         assert(input.take(i).subrange(0, mid as int) =~= left_input);
+                        // Veracity: NEEDED assert
                         assert(input.take(i).subrange(mid as int, i as int) =~= right_input.take(j));
                         input.take(i).lemma_fold_left_split(id, spec_f, mid as int);
                     }

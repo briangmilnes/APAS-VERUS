@@ -225,7 +225,9 @@ verus!
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED proof block (speed hint)
                         proof {
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |e: (V::V, V::V)| edges@.contains(e) implies 
                                 (exists |l: L::V| #![trigger le_view.contains((e.0, e.1, l))] le_view.contains((e.0, e.1, l))) by {
@@ -234,6 +236,7 @@ verus!
                                     lemma_seq_index_in_map_to_set(le_seq, i);
                                 }
                             }
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |e: (V::V, V::V)| (exists |l: L::V| #![trigger le_view.contains((e.0, e.1, l))] le_view.contains((e.0, e.1, l))) implies 
                                 edges@.contains(e) by {
@@ -289,12 +292,14 @@ verus!
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         return None;
                     },
                     Some(labeled_edge) => {
                         if (feq(&labeled_edge.0, v1) && feq(&labeled_edge.1, v2)) || 
+                           // Veracity: NEEDED proof block
                            (feq(&labeled_edge.0, v2) && feq(&labeled_edge.1, v1)) {
                             // Veracity: NEEDED proof block
                             proof {
@@ -329,6 +334,7 @@ verus!
                           (le_seq[i]@.0 == v2_view && le_seq[i]@.1 == v1_view)),
                 decreases le_seq.len() - it@.0,
             {
+                // Veracity: NEEDED proof block
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
@@ -336,6 +342,7 @@ verus!
                         }
                         return false;
                     },
+                    // Veracity: NEEDED proof block
                     Some(labeled_edge) => {
                         if (feq(&labeled_edge.0, v1) && feq(&labeled_edge.1, v2)) || 
                            (feq(&labeled_edge.0, v2) && feq(&labeled_edge.1, v1)) {
@@ -373,12 +380,14 @@ verus!
                         exists |i: int| #![trigger le_seq[i]] 0 <= i < it@.0 &&
                             ((le_seq[i]@.0 == v_view && le_seq[i]@.1 == w) ||
                              (le_seq[i]@.1 == v_view && le_seq[i]@.0 == w))),
+                // Veracity: NEEDED proof block
                 decreases le_seq.len() - it@.0,
             {
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] ng@.contains(w) implies 
                                 self.spec_ng(v_view).contains(w) by {
@@ -389,6 +398,7 @@ verus!
                                     lemma_seq_index_in_map_to_set(le_seq, i);
                                 }
                             }
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] self.spec_ng(v_view).contains(w) implies 
                                 ng@.contains(w) by {

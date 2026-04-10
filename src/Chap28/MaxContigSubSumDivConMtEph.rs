@@ -107,11 +107,13 @@ pub mod MaxContigSubSumDivConMtEph {
         {
             if running_sum < min_prefix { min_prefix = running_sum; }
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block
             proof { lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int); }
             running_sum = running_sum + *a.nth(i);
             i = i + 1;
         }
 
+        // Veracity: NEEDED proof block
         // Veracity: NEEDED proof block
         proof {
             let total = running_sum as int;
@@ -121,6 +123,7 @@ pub mod MaxContigSubSumDivConMtEph {
                     0 <= j < n as int && min_prefix as int == spec_prefix_sum(a.seq@, j);
                 lemma_range_sum_via_prefix(a.seq@, lo_w, n as int);
             }
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|lo: int|
                 #![trigger spec_range_sum(a.seq@, lo, a.seq@.len() as int)]
@@ -143,6 +146,7 @@ pub mod MaxContigSubSumDivConMtEph {
     {
         let n = a.length();
         let mut max_val: i32 = *a.nth(0);
+        // Veracity: NEEDED proof block
         let mut running_sum: i32 = *a.nth(0);
         // Veracity: NEEDED proof block
         proof { lemma_range_sum_single(a.seq@, 0); }
@@ -159,6 +163,7 @@ pub mod MaxContigSubSumDivConMtEph {
                 (exists|j: int|
                     #![trigger spec_range_sum(a.seq@, 0, j)]
                     1 <= j <= i && max_val as int == spec_range_sum(a.seq@, 0, j)),
+            // Veracity: NEEDED proof block
             decreases n - i,
         {
             // Veracity: NEEDED proof block
@@ -175,6 +180,7 @@ pub mod MaxContigSubSumDivConMtEph {
         fn max_contig_sub_sum_divcon_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)
             decreases a.seq@.len(),
         {
+            // Veracity: NEEDED proof block
             let n = a.length();
             if n == 0 { return None; }
             if n == 1 {
@@ -183,6 +189,7 @@ pub mod MaxContigSubSumDivConMtEph {
                 return Some(*a.nth(0));
             }
 
+            // Veracity: NEEDED proof block
             let mid = n / 2;
             let left = a.subseq_copy(0, mid);
             let right = a.subseq_copy(mid, n - mid);
@@ -190,18 +197,23 @@ pub mod MaxContigSubSumDivConMtEph {
             // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger left.seq@[i]]
                     0 <= i < left.seq@.len() implies left.seq@[i] == a.seq@[i]
+                // Veracity: NEEDED assert
                 by { assert(left.spec_index(i) == a.spec_index(0 + i)); };
                 lemma_sums_fit_subseq(a.seq@, left.seq@, 0);
 
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger right.seq@[i]]
                     0 <= i < right.seq@.len() implies right.seq@[i] == a.seq@[mid as int + i]
+                // Veracity: NEEDED assert
                 by { assert(right.spec_index(i) == a.spec_index(mid as int + i)); };
                 lemma_sums_fit_subseq(a.seq@, right.seq@, mid as int);
             }
 
+            // Veracity: NEEDED proof block
             let max_left = Self::max_contig_sub_sum_divcon_mt(&left);
             let max_right = Self::max_contig_sub_sum_divcon_mt(&right);
             let s_left = max_suffix_sum(&left);
@@ -220,6 +232,7 @@ pub mod MaxContigSubSumDivConMtEph {
                 lemma_range_sum_subseq(a.seq@, left.seq@, 0, lo_s, mid as int);
                 lemma_range_sum_subseq(a.seq@, right.seq@, mid as int, 0, hi_p);
                 lemma_range_sum_split(a.seq@, lo_s, mid as int, mid as int + hi_p);
+            // Veracity: NEEDED proof block
             }
 
             let max_crossing: i32 = s_left + p_right;

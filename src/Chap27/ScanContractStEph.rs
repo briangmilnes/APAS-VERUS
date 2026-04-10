@@ -121,8 +121,8 @@ pub mod ScanContractStEph {
             // Base case: empty
             if n == 0 {
                 // Veracity: NEEDED proof block
-                proof {
-                }
+// Veracity: UNNEEDED proof block                 proof {
+// Veracity: UNNEEDED proof block                 }
                 return ArraySeqStEphS { seq: Vec::new() };
             }
 
@@ -131,14 +131,15 @@ pub mod ScanContractStEph {
                 let mut v: Vec<T> = Vec::with_capacity(1);
                 v.push(id);
                 // Veracity: NEEDED proof block
-                proof {
-                }
+// Veracity: UNNEEDED proof block                 proof {
+// Veracity: UNNEEDED proof block                 }
                 return ArraySeqStEphS { seq: v };
             }
 
             // f(id, id) == id by left identity, producing an owned T without clone.
             let id_for_recurse = f(&id, &id);
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block (speed hint)
             proof {
             }
 
@@ -173,7 +174,9 @@ pub mod ScanContractStEph {
 
             let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert forall|j: int| #![trigger b_seq[j]] 0 <= j < half as int implies {
                     &&& 2 * j + 1 < s.len()
@@ -184,10 +187,12 @@ pub mod ScanContractStEph {
 
             // Solve: recursively scan contracted sequence
             let c = Self::scan_contract(&b, f, Ghost(spec_f), id_for_recurse);
+// Veracity: NEEDED proof block
 
             // Veracity: NEEDED proof block
             proof {
                 let ghost b_view = Seq::new(b.spec_len(), |j: int| b.spec_index(j));
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert forall|k: int| #![trigger c.spec_index(k)] 0 <= k < half as int implies
                     c.spec_index(k) == b_seq.take(k).fold_left(id, spec_f)
@@ -196,10 +201,12 @@ pub mod ScanContractStEph {
             }
 
             // Expand
+            // Veracity: NEEDED proof block
             let result_vec = Self::expand_scan(a, &b, &c, f, Ghost(spec_f), &id, n, half);
             let scanned = ArraySeqStEphS { seq: result_vec };
             // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert forall|k: int| #![trigger scanned.spec_index(k)]
                     0 <= k < n as int implies
@@ -249,12 +256,14 @@ pub mod ScanContractStEph {
                     spec_monoid(spec_f, *id),
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                     forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                // Veracity: NEEDED proof block
                 decreases half - j,
             {
                 let even_val = f(id, c.nth(j));
                 // Veracity: NEEDED proof block
                 proof {
                     lemma_expand_even::<T>(s, b_seq, spec_f, *id, j as int);
+                // Veracity: NEEDED proof block
                 }
                 result_vec.push(even_val);
 
@@ -265,6 +274,7 @@ pub mod ScanContractStEph {
                 }
                 result_vec.push(odd_val);
 
+                // Veracity: NEEDED proof block
                 j += 1;
             }
 

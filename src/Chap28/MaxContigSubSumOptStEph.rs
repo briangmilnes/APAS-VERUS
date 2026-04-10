@@ -81,6 +81,7 @@ broadcast use {
 
         // Part (b): maximal.
         // Veracity: NEEDED assert
+        // Veracity: NEEDED assert
         assert forall|lo: int, hi: int|
             #![trigger spec_range_sum(s, lo, hi)]
             0 <= lo < hi <= s.len()
@@ -142,6 +143,7 @@ broadcast use {
                 decreases n - i,
             {
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_range_sum_snoc(a.seq@, 0, (i + 1) as int);
                     // spec_prefix_sum(a.seq@, i+1) = spec_prefix_sum(a.seq@, i) + a.seq@[i]
@@ -180,6 +182,7 @@ broadcast use {
                 if cur < rmin {
                     rmin = cur;
                 }
+                // Veracity: NEEDED proof block
                 // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(spec_min_prefix_sum, 2);
@@ -224,6 +227,7 @@ broadcast use {
                 decreases n + 1 - idx,
             {
                 let p_hi = *ap.nth(idx);
+                // Veracity: NEEDED proof block
                 let m_lo = *mp.nth(idx - 1);
                 // Veracity: NEEDED proof block
                 proof {
@@ -246,6 +250,7 @@ broadcast use {
 
                 idx = idx + 1;
             }
+// Veracity: NEEDED proof block (speed hint)
 
 
             // Veracity: NEEDED proof block

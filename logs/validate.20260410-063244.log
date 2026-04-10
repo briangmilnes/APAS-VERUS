@@ -1,0 +1,47 @@
+Mode: full
+error: precondition not satisfied
+   --> src/Chap36/QuickSortStEph.rs:545:17
+    |
+119 | /             forall|j: int| 0 <= j < right_view.len() ==>
+120 | |                 (#[trigger] T::le(pivot, right_view[j])) && right_view[j] != pivot,
+    | |__________________________________________________________________________________- failed precondition
+...
+545 | /                 lemma_partition_sort_concat::<T>(
+546 | |                     s, left_view, right_view, equals_a.seq@,
+547 | |                     // Veracity: NEEDED proof block
+548 | |                     left_a.seq@, right_a.seq@, pivot,
+549 | |                 );
+    | |_________________^
+
+note: diagnostics via expansion
+
+note: 
+
+total_ordering(spec_leq()) ✔
+tmp% =~= left_view.sort_by(spec_leq()) ✔
+tmp% =~= right_view.sort_by(spec_leq()) ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = left_view.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        left_view.index(j).le(pivot) ✔
+        !(left_view.index(j) == pivot) ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = right_view.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        pivot.le(right_view.index(j)) ✔
+        !(right_view.index(j) == pivot) ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(j) == pivot ✔
+tmp%.len() >= 1 ✔
+s.to_multiset() =~= left_view.to_multiset().add(right_view.to_multiset()).add(tmp%.to_multiset()) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+verification results:: 5597 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 118s
+Sampled Memory Usage: peak rust_verify RSS: 14483MB, peak z3 RSS: 561MB, min free: 8231MB
+Sampled CPU Usage: rust_verify: 423s, z3 children: 280s

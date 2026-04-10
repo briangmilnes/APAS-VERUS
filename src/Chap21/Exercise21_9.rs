@@ -54,6 +54,7 @@ pub mod Exercise21_9 {
         let q = m / d0;
         // m == d0 * q, q >= 1 since m >= 2 and d0 < m
         // Veracity: NEEDED assert
+        // Veracity: NEEDED assert
         assert(q >= 2) by (nonlinear_arith)
             requires m == d0 * q, d0 < m, d0 >= 2, m > 1;
         if d0 * d0 <= m {
@@ -62,12 +63,15 @@ pub mod Exercise21_9 {
             // d0 * d0 > m, so q < d0. q is a smaller divisor.
             // If q >= d0, then m == d0 * q >= d0 * d0 > m — contradiction.
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert(q < d0) by (nonlinear_arith)
                 requires d0 * d0 > m, m == d0 * q, d0 >= 2, q >= 2;
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert(q * q <= m) by (nonlinear_arith)
                 requires q < d0, d0 * d0 > m, m == d0 * q, q >= 2;
             // q divides m because m == d0 * q means m % q == 0.
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert(m % q == 0) by (nonlinear_arith)
                 requires m == d0 * q, q >= 2;
@@ -100,8 +104,10 @@ pub mod Exercise21_9 {
         // Actually: d*d <= m and d >= 2 implies m >= 4, and m == d*q with d >= 2
         // and q == 1 means m == d, so d*d <= d, contradiction with d >= 2.
         // Veracity: NEEDED assert
+        // Veracity: NEEDED assert
         assert(q >= 2) by (nonlinear_arith)
             requires m == d * q, d >= 2, d * d <= m;
+        // Veracity: NEEDED assert
         // Veracity: NEEDED assert
         assert(d * d <= n) by (nonlinear_arith)
             requires d * d <= m, m <= n;

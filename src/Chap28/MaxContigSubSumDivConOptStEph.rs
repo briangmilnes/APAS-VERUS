@@ -169,6 +169,7 @@ broadcast use {
         }
         // Part (b): m is maximal.
         // Veracity: NEEDED assert
+        // Veracity: NEEDED assert
         assert forall|lo: int, hi: int|
             #![trigger spec_range_sum(s, lo, hi)]
             0 <= lo < hi <= n
@@ -207,6 +208,7 @@ broadcast use {
         }
         // Part (b): p is maximal.
         // Veracity: NEEDED assert
+        // Veracity: NEEDED assert
         assert forall|hi: int|
             #![trigger spec_range_sum(s, 0, hi)]
             1 <= hi <= n
@@ -242,6 +244,7 @@ broadcast use {
             lemma_range_sum_split(s, lo_sl, mid, n);
         }
         // Part (b): ss is maximal.
+        // Veracity: NEEDED assert
         // Veracity: NEEDED assert
         assert forall|lo: int|
             #![trigger spec_range_sum(s, lo, n)]
@@ -316,6 +319,7 @@ broadcast use {
         if n == 1 {
             let val = *a.nth(0);
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block
             proof {
                 lemma_range_sum_single(a.seq@, 0);
                 // val == a.seq@[0], range_sum(a, 0, 1) == val
@@ -328,16 +332,21 @@ broadcast use {
         let right = a.subseq_copy(mid, n - mid);
 
         // Veracity: NEEDED proof block
+        // Veracity: NEEDED proof block
         proof {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|i: int| #![trigger left.seq@[i]]
                 0 <= i < left.seq@.len() implies left.seq@[i] == a.seq@[i]
+            // Veracity: NEEDED assert
             by { assert(left.spec_index(i) == a.spec_index(0 + i)); };
             lemma_sums_fit_subseq(a.seq@, left.seq@, 0);
 
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert forall|i: int| #![trigger right.seq@[i]]
                 0 <= i < right.seq@.len() implies right.seq@[i] == a.seq@[mid as int + i]
+            // Veracity: NEEDED assert
             by { assert(right.spec_index(i) == a.spec_index(mid as int + i)); };
             lemma_sums_fit_subseq(a.seq@, right.seq@, mid as int);
         }
@@ -345,6 +354,7 @@ broadcast use {
         let (m_left, p_left, s_left, t_left) = max_contig_sub_sum_aux(&left);
         let (m_right, p_right, s_right, t_right) = max_contig_sub_sum_aux(&right);
 
+        // Veracity: NEEDED proof block
         // Prove all four combine operations don't overflow i32.
         // Veracity: NEEDED proof block
         proof {
@@ -380,6 +390,7 @@ broadcast use {
         let max_sum = max_with_neginf(max_with_neginf(m_left, m_right), Some(max_crossing));
         let max_prefix = if p_left >= t_left + p_right { p_left } else { t_left + p_right };
         let max_suffix = if s_right >= s_left + t_right { s_right } else { s_left + t_right };
+        // Veracity: NEEDED proof block
         let total = t_left + t_right;
 
         // Veracity: NEEDED proof block

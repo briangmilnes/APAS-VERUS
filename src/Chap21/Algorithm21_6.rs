@@ -47,11 +47,14 @@ pub mod Algorithm21_6 {
         let c = a * b;
         if a * a <= c {
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert((a * b) % a == 0) by (nonlinear_arith) requires a >= 2;
         } else {
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert(b * b <= a * b) by (nonlinear_arith)
                 requires a * a > a * b, b >= 2, a >= 2;
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert((a * b) % b == 0) by (nonlinear_arith) requires b >= 2;
         }
@@ -92,14 +95,18 @@ pub mod Algorithm21_6 {
                     let limit = if i == 0 { 0 } else { n / i };
                     let len = if limit >= 2 { limit - 1 } else { 0 };
                     // Veracity: NEEDED proof block
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         // Veracity: NEEDED assert
                         assert forall|j0: usize| j0 < len implies
                             #[trigger] (i as int * (j0 as int + 2)) <= n as int by
                         {
                             // Veracity: NEEDED assert
+                            // Veracity: NEEDED assert
                             assert(i as int * limit as int <= n as int) by (nonlinear_arith)
                                 requires limit == n / i, i >= 2;
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert(i as int * (j0 as int + 2) <= i as int * limit as int) by (nonlinear_arith)
                                 requires j0 as int + 2 <= limit as int, i >= 2;

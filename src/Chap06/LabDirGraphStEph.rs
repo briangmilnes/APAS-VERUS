@@ -232,24 +232,26 @@ verus!
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
-                        proof {
-                            // Veracity: NEEDED assert
-                            assert forall |e: (V::V, V::V)| #[trigger] arcs@.contains(e) implies 
-                                self.spec_arcs().contains(e) by {
-                                if arcs@.contains(e) {
-                                    let i = choose |i: int| #![trigger la_seq[i]] 0 <= i < la_seq.len() && la_seq[i]@.0 == e.0 && la_seq[i]@.1 == e.1;
-                                    lemma_seq_index_in_map_to_set(la_seq, i);
-                                }
-                            }
-                            // Veracity: NEEDED assert
-                            assert forall |e: (V::V, V::V)| #[trigger] self.spec_arcs().contains(e) implies 
-                                arcs@.contains(e) by {
-                                if self.spec_arcs().contains(e) {
-                                    let l = choose |l: L::V| #![trigger la_view.contains((e.0, e.1, l))] la_view.contains((e.0, e.1, l));
-                                    lemma_map_to_set_contains_index(la_seq, (e.0, e.1, l));
-                                }
-                            }
-                        }
+// Veracity: UNNEEDED proof block                         proof {
+// Veracity: UNNEEDED proof block                             // Veracity: NEEDED assert
+// Veracity: UNNEEDED proof block                             // Veracity: NEEDED assert
+// Veracity: UNNEEDED proof block                             assert forall |e: (V::V, V::V)| #[trigger] arcs@.contains(e) implies 
+// Veracity: UNNEEDED proof block                                 self.spec_arcs().contains(e) by {
+// Veracity: UNNEEDED proof block                                 if arcs@.contains(e) {
+// Veracity: UNNEEDED proof block                                     let i = choose |i: int| #![trigger la_seq[i]] 0 <= i < la_seq.len() && la_seq[i]@.0 == e.0 && la_seq[i]@.1 == e.1;
+// Veracity: UNNEEDED proof block                                     lemma_seq_index_in_map_to_set(la_seq, i);
+// Veracity: UNNEEDED proof block                                 }
+// Veracity: UNNEEDED proof block                             }
+// Veracity: UNNEEDED proof block                             // Veracity: NEEDED assert
+// Veracity: UNNEEDED proof block                             // Veracity: NEEDED assert
+// Veracity: UNNEEDED proof block                             assert forall |e: (V::V, V::V)| #[trigger] self.spec_arcs().contains(e) implies 
+// Veracity: UNNEEDED proof block                                 arcs@.contains(e) by {
+// Veracity: UNNEEDED proof block                                 if self.spec_arcs().contains(e) {
+// Veracity: UNNEEDED proof block                                     let l = choose |l: L::V| #![trigger la_view.contains((e.0, e.1, l))] la_view.contains((e.0, e.1, l));
+// Veracity: UNNEEDED proof block                                     lemma_map_to_set_contains_index(la_seq, (e.0, e.1, l));
+// Veracity: UNNEEDED proof block                                 }
+// Veracity: UNNEEDED proof block                             }
+// Veracity: UNNEEDED proof block                         }
                         return arcs;
                     },
                     Some(labeled_arc) => {
@@ -290,12 +292,14 @@ verus!
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED proof block (speed hint)
                         proof {
                         }
                         return None;
                     },
                     Some(labeled_arc) => {
                         if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
+                            // Veracity: NEEDED proof block
                             // Veracity: NEEDED proof block
                             proof {
                                 let idx = it@.0 - 1;
@@ -327,6 +331,7 @@ verus!
                 decreases la_seq.len() - it@.0,
             {
                 match it.next() {
+                    // Veracity: NEEDED proof block
                     None => {
                         // Veracity: NEEDED proof block
                         proof {
@@ -338,6 +343,7 @@ verus!
                         }
                         return false;
                     },
+                    // Veracity: NEEDED proof block
                     Some(labeled_arc) => {
                         if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
                             // Veracity: NEEDED proof block
@@ -373,11 +379,13 @@ verus!
                     neighbors@ == Set::new(|w: V::V| 
                         exists |i: int| #![trigger la_seq[i]] 0 <= i < it@.0 && la_seq[i]@.0 == v_view && la_seq[i]@.1 == w),
                 decreases la_seq.len() - it@.0,
+            // Veracity: NEEDED proof block
             {
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] neighbors@.contains(w) implies 
                                 self.spec_n_plus(v_view).contains(w) by {
@@ -386,6 +394,7 @@ verus!
                                     lemma_seq_index_in_map_to_set(la_seq, i);
                                 }
                             }
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] self.spec_n_plus(v_view).contains(w) implies 
                                 neighbors@.contains(w) by {
@@ -424,12 +433,14 @@ verus!
                     la_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == la_view,
                     neighbors@ == Set::new(|u: V::V| 
                         exists |i: int| #![trigger la_seq[i]] 0 <= i < it@.0 && la_seq[i]@.1 == v_view && la_seq[i]@.0 == u),
+                // Veracity: NEEDED proof block
                 decreases la_seq.len() - it@.0,
             {
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |u: V::V| #[trigger] neighbors@.contains(u) implies 
                                 self.spec_n_minus(v_view).contains(u) by {
@@ -438,6 +449,7 @@ verus!
                                     lemma_seq_index_in_map_to_set(la_seq, i);
                                 }
                             }
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |u: V::V| #[trigger] self.spec_n_minus(v_view).contains(u) implies 
                                 neighbors@.contains(u) by {

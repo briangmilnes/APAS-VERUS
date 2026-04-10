@@ -160,8 +160,8 @@ pub mod BSTPlainMtEph {
                             let new_right = right.insert_node(value);
                             let r = BalBinTree::Node(Box::new(BalBinNode {
                                 left: left, value: node_val, right: new_right,
-                            }));
                             // Veracity: NEEDED proof block
+                            }));
                             proof {
                                 lemma_modified_right_preserves_bst(old_right, new_right, node_val);
                                 // Veracity: NEEDED assert
@@ -192,15 +192,15 @@ pub mod BSTPlainMtEph {
                 BalBinTree::Node(inner) => {
                     match TotalOrder::cmp(target, &inner.value) {
                         core::cmp::Ordering::Equal => true,
+                        // Veracity: NEEDED proof block
                         core::cmp::Ordering::Less => {
                             let r = inner.left.contains_node(target);
-                            // Veracity: NEEDED proof block
                             proof { if inner.right.tree_contains(*target) { T::antisymmetric(*target, inner.value); } }
                             r
+                        // Veracity: NEEDED proof block
                         }
                         core::cmp::Ordering::Greater => {
                             let r = inner.right.contains_node(target);
-                            // Veracity: NEEDED proof block
                             proof { if inner.left.tree_contains(*target) { T::antisymmetric(*target, inner.value); } }
                             r
                         }
@@ -215,6 +215,7 @@ pub mod BSTPlainMtEph {
             match self {
                 BalBinTree::Leaf => None,
                 BalBinTree::Node(inner) => {
+                    // Veracity: NEEDED proof block
                     match TotalOrder::cmp(target, &inner.value) {
                         core::cmp::Ordering::Equal => Some(&inner.value),
                         core::cmp::Ordering::Less => {
@@ -225,7 +226,6 @@ pub mod BSTPlainMtEph {
                         }
                         core::cmp::Ordering::Greater => {
                             let r = inner.right.find_node(target);
-                            // Veracity: NEEDED proof block
                             proof { if inner.left.tree_contains(*target) { T::antisymmetric(*target, inner.value); } }
                             r
                         }
@@ -265,13 +265,13 @@ pub mod BSTPlainMtEph {
             match self {
                 BalBinTree::Leaf => {
                     vstd::pervasive::unreached()
+                // Veracity: NEEDED proof block
                 }
                 BalBinTree::Node(inner) => {
                     let BalBinNode { left, value: node_val, right } = *inner;
                     let ghost old_left = left;
                     let ghost old_right = right;
                     if left.is_leaf() {
-                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall|x: T| node.tree_contains(x) implies
@@ -290,6 +290,7 @@ pub mod BSTPlainMtEph {
                             };
                         }
                         (right, node_val)
+                    // Veracity: NEEDED proof block
                     } else {
                         let (new_left, min_val) = left.delete_min_node();
                         let r = BalBinTree::Node(Box::new(BalBinNode {
@@ -297,7 +298,6 @@ pub mod BSTPlainMtEph {
                             value: node_val,
                             right: right,
                         }));
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_modified_left_preserves_bst(old_left, new_left, node_val);
                             // Veracity: NEEDED assert
@@ -345,6 +345,7 @@ pub mod BSTPlainMtEph {
                     let ghost old_left = left;
                     let ghost old_right = right;
 
+                    // Veracity: NEEDED proof block
                     match TotalOrder::cmp(target, &node_val) {
                         core::cmp::Ordering::Less => {
                             let new_left = left.delete_node(target);
@@ -353,7 +354,6 @@ pub mod BSTPlainMtEph {
                                 value: node_val,
                                 right: right,
                             }));
-                            // Veracity: NEEDED proof block
                             proof {
                                 lemma_modified_left_preserves_bst(old_left, new_left, node_val);
                                 // Veracity: NEEDED assert
@@ -366,6 +366,7 @@ pub mod BSTPlainMtEph {
                                     }
                                 };
                             }
+                            // Veracity: NEEDED proof block
                             r
                         }
                         core::cmp::Ordering::Greater => {
@@ -375,13 +376,13 @@ pub mod BSTPlainMtEph {
                                 value: node_val,
                                 right: new_right,
                             }));
-                            // Veracity: NEEDED proof block
                             proof {
                                 lemma_modified_right_preserves_bst(old_right, new_right, node_val);
                                 // Veracity: NEEDED assert
                                 assert forall|x: T| r.tree_contains(x) ==
                                     (node.tree_contains(x) && x != *target)
                                 by {
+                                    // Veracity: NEEDED proof block
                                     lemma_node_contains(old_left, node_val, new_right, x);
                                     if x == *target && old_left.tree_contains(x) {
                                         T::antisymmetric(*target, node_val);
@@ -391,8 +392,8 @@ pub mod BSTPlainMtEph {
                             r
                         }
                         core::cmp::Ordering::Equal => {
+                            // Veracity: NEEDED proof block
                             if left.is_leaf() {
-                                // Veracity: NEEDED proof block
                                 proof {
                                     // Veracity: NEEDED assert
                                     assert forall|x: T| old_right.tree_contains(x) ==
@@ -403,11 +404,11 @@ pub mod BSTPlainMtEph {
                                 }
                                 right
                             } else if right.is_leaf() {
-                                // Veracity: NEEDED proof block
                                 proof {
                                     // Veracity: NEEDED assert
                                     assert forall|x: T| old_left.tree_contains(x) ==
                                         (node.tree_contains(x) && x != *target)
+                                    // Veracity: NEEDED proof block
                                     by {
                                         lemma_node_contains(old_left, node_val, old_right, x);
                                     };
@@ -420,7 +421,6 @@ pub mod BSTPlainMtEph {
                                     value: successor,
                                     right: new_right,
                                 }));
-                                // Veracity: NEEDED proof block
                                 proof {
                                     // Veracity: NEEDED assert
                                     assert forall|x: T| old_left.tree_contains(x) implies
@@ -591,10 +591,12 @@ pub mod BSTPlainMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (tree: Self) {
+            // Veracity: NEEDED proof block
             BSTPlainMtEph {
                 root: RwLock::new(
                     BalBinTree::Leaf,
                     Ghost(BSTPlainMtEphInv { _phantom: PhantomData }),
+                // Veracity: NEEDED proof block
                 ),
                 ghost_root: Ghost(BalBinTree::Leaf),
             }
@@ -604,14 +606,13 @@ pub mod BSTPlainMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert(&mut self, value: T) -> (inserted: Result<(), ()>) {
             let (tree, write_handle) = self.root.acquire_write();
-            // Veracity: NEEDED proof block
             proof { assume(self.ghost_root@ == tree); }
             let current_size = tree.size();
             let current_height = tree.height();
             if current_size < usize::MAX && current_height < usize::MAX {
                 let new_tree = tree.insert_node(value);
-                // Veracity: NEEDED proof block
                 proof {
+                // Veracity: NEEDED proof block
                 }
                 let ghost new_root = new_tree;
                 self.ghost_root = Ghost(new_root);
@@ -625,9 +626,9 @@ pub mod BSTPlainMtEph {
 
         // Writer: assume ghost == inner, delete always succeeds (no capacity check needed).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        // Veracity: NEEDED proof block
         fn delete(&mut self, target: &T) -> (removed: Result<(), ()>) {
             let (tree, write_handle) = self.root.acquire_write();
-            // Veracity: NEEDED proof block
             proof { assume(self.ghost_root@ == tree); }
             let new_tree = tree.delete_node(target);
             let ghost new_root = new_tree;
@@ -636,29 +637,29 @@ pub mod BSTPlainMtEph {
             Ok(())
         }
 
+        // Veracity: NEEDED proof block (speed hint)
         // Reader: assume return value matches ghost.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn contains(&self, target: &T) -> (found: bool) {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let found = tree_ref.contains_node(target);
-            // Veracity: NEEDED proof block
             proof { assume(found == self@.tree_contains(*target)); }
             read_handle.release_read();
             found
         }
-
+// Veracity: UNNEEDED proof block 
         // Reader: assume return value matches ghost.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn size(&self) -> (n: usize) {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let n = tree_ref.size();
-            // Veracity: NEEDED proof block
             proof { assume(n as nat == self@.spec_size()); }
             read_handle.release_read();
             n
         }
+// Veracity: NEEDED proof block (speed hint)
 
         // Predicate: assume return predicate matches spec predicate.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -666,9 +667,9 @@ pub mod BSTPlainMtEph {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let b = tree_ref.is_leaf();
-            // Veracity: NEEDED proof block
             proof { assume(b == (self@ is Leaf)); }
             read_handle.release_read();
+            // Veracity: NEEDED proof block
             b
         }
 
@@ -678,10 +679,10 @@ pub mod BSTPlainMtEph {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let h = tree_ref.height();
-            // Veracity: NEEDED proof block
             proof { assume(h as nat == self@.spec_height()); }
             read_handle.release_read();
             h
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
@@ -689,13 +690,13 @@ pub mod BSTPlainMtEph {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let found = tree_ref.find_node(target).cloned();
-            // Veracity: NEEDED proof block
             proof {
                 assume(found.is_some() == self@.tree_contains(*target));
                 accept(found.is_some() ==> found.unwrap() == *target);
             }
             read_handle.release_read();
             found
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
@@ -703,7 +704,6 @@ pub mod BSTPlainMtEph {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let min = tree_ref.min_node().cloned();
-            // Veracity: NEEDED proof block
             proof {
                 assume(self@.spec_size() == 0 ==> min.is_none());
                 assume(self@.spec_size() > 0 ==> min.is_some());
@@ -718,7 +718,6 @@ pub mod BSTPlainMtEph {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let max = tree_ref.max_node().cloned();
-            // Veracity: NEEDED proof block
             proof {
                 assume(self@.spec_size() == 0 ==> max.is_none());
                 assume(self@.spec_size() > 0 ==> max.is_some());

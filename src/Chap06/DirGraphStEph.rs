@@ -307,7 +307,9 @@ verus!
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED proof block (speed hint)
                         proof {
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] neighbors@.contains(w) implies
                             self.spec_ng_of_vertices(vertices_view).contains(w) by {
@@ -316,6 +318,7 @@ verus!
                                     lemma_seq_index_in_map_to_set(u_seq, i);
                                 }
                             }
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] self.spec_ng_of_vertices(vertices_view).contains(w) implies
                             neighbors@.contains(w) by {
@@ -328,6 +331,7 @@ verus!
                         return neighbors;
                     },
                     Some(u) => {
+                        // Veracity: NEEDED proof block
                         // Veracity: NEEDED proof block
                         proof {
                             lemma_seq_index_in_map_to_set(u_seq, it@.0 - 1);
@@ -362,9 +366,11 @@ verus!
                     decreases arcs_seq.len() - it@.0,
             {
                 match it.next() {
+                    // Veracity: NEEDED proof block
                     None => {
                         // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] out@.contains(w) implies
                             self.spec_n_plus(v_view).contains(w) by {
@@ -373,6 +379,7 @@ verus!
                                     lemma_seq_index_in_map_to_set(arcs_seq, i);
                                 }
                             }
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] self.spec_n_plus(v_view).contains(w) implies
                             out@.contains(w) by {
@@ -416,10 +423,12 @@ verus!
                         0 <= i < it@.0 && arcs_seq[i]@.1 == v_view && arcs_seq[i]@.0 == u),
                     decreases arcs_seq.len() - it@.0,
             {
+                // Veracity: NEEDED proof block
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |u: V::V| #[trigger] inn@.contains(u) implies
                             self.spec_n_minus(v_view).contains(u) by {
@@ -428,6 +437,7 @@ verus!
                                     lemma_seq_index_in_map_to_set(arcs_seq, i);
                                 }
                             }
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |u: V::V| #[trigger] self.spec_n_minus(v_view).contains(u) implies
                             inn@.contains(u) by {
@@ -471,11 +481,13 @@ verus!
                         #![trigger u_seq[i]]
                         0 <= i < it@.0 && self.spec_n_plus(u_seq[i]@).contains(w)),
                     decreases u_seq.len() - it@.0,
+            // Veracity: NEEDED proof block
             {
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] out_neighbors@.contains(w) implies
                             self.spec_n_plus_of_vertices(vertices_view).contains(w) by {
@@ -485,6 +497,7 @@ verus!
                                 }
                             }
                             // Veracity: NEEDED assert
+                            // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] self.spec_n_plus_of_vertices(vertices_view).contains(w) implies
                             out_neighbors@.contains(w) by {
                                 if self.spec_n_plus_of_vertices(vertices_view).contains(w) {
@@ -492,6 +505,7 @@ verus!
                                     lemma_map_to_set_contains_index(u_seq, u);
                                 }
                             }
+                        // Veracity: NEEDED proof block
                         }
                         return out_neighbors;
                     },
@@ -527,6 +541,7 @@ verus!
                     u_seq.map(|i: int, v: V| v@).to_set() == vertices_view,
                     in_neighbors@ == Set::new(|w: V::V| exists |i: int|
                         #![trigger u_seq[i]]
+                        // Veracity: NEEDED proof block
                         0 <= i < it@.0 && self.spec_n_minus(u_seq[i]@).contains(w)),
                     decreases u_seq.len() - it@.0,
             {
@@ -534,6 +549,7 @@ verus!
                     None => {
                         // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] in_neighbors@.contains(w) implies
                             self.spec_n_minus_of_vertices(vertices_view).contains(w) by {
@@ -543,11 +559,13 @@ verus!
                                 }
                             }
                             // Veracity: NEEDED assert
+                            // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] self.spec_n_minus_of_vertices(vertices_view).contains(w) implies
                             in_neighbors@.contains(w) by {
                                 if self.spec_n_minus_of_vertices(vertices_view).contains(w) {
                                     let u = choose |u: V::V| #![trigger vertices_view.contains(u)] vertices_view.contains(u) && self.spec_n_minus(u).contains(w);
                                     lemma_map_to_set_contains_index(u_seq, u);
+                                // Veracity: NEEDED proof block
                                 }
                             }
                         }
@@ -724,6 +742,7 @@ verus!
     }
 
     impl<V: StT + Hash> Eq for DirGraphStEph<V> {}
+// Veracity: NEEDED proof block
 
     impl<V: StT + Hash> PartialEq for DirGraphStEph<V> {
         fn eq(&self, other: &Self) -> (equal: bool)

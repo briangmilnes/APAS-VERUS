@@ -257,7 +257,9 @@ verus!
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED proof block (speed hint)
                         proof {
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] ng@.contains(w) implies 
                                 self.spec_ng(v_view).contains(w) by {
@@ -268,6 +270,7 @@ verus!
                                     lemma_seq_index_in_map_to_set(edges_seq, i);
                                 }
                             }
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] self.spec_ng(v_view).contains(w) implies 
                                 ng@.contains(w) by {
@@ -316,7 +319,9 @@ verus!
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] neighbors@.contains(w) implies 
                                 self.spec_ng_of_vertices(vertices_view).contains(w) by {
@@ -325,6 +330,7 @@ verus!
                                     lemma_seq_index_in_map_to_set(u_seq, i);
                                 }
                             }
+                            // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] self.spec_ng_of_vertices(vertices_view).contains(w) implies 
                                 neighbors@.contains(w) by {
@@ -336,6 +342,7 @@ verus!
                         }
                         return neighbors;
                     },
+                    // Veracity: NEEDED proof block
                     Some(u) => {
                         // Veracity: NEEDED proof block
                         proof {
@@ -506,6 +513,7 @@ verus!
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
+            // Veracity: NEEDED proof block
             let v_eq = self.V == other.V;
             let e_eq = self.E == other.E;
             // Veracity: NEEDED proof block

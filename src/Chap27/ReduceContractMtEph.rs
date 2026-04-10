@@ -104,7 +104,9 @@ pub mod ReduceContractMtEph {
         // Clone array into Arc for sharing between closures
         let a_cloned = a.clone();
         // Veracity: NEEDED proof block
+        // Veracity: NEEDED proof block (speed hint)
         proof {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|i: int| 0 <= i < a.spec_len() implies
                 a_cloned.spec_index(i) == a.spec_index(i)
@@ -215,8 +217,10 @@ pub mod ReduceContractMtEph {
         let b = ArraySeqMtEphS { seq: b_vec };
 
         // Veracity: NEEDED proof block
+        // Veracity: NEEDED proof block
         proof {
             // b_vec@ == left_snap + right_snap (from vstd Vec::append spec)
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|j: int| #![trigger b.spec_index(j)] 0 <= j < half as int implies {
                 &&& 2 * j + 1 < a.spec_len()
@@ -246,6 +250,7 @@ pub mod ReduceContractMtEph {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
 
             // Base case: empty
+            // Veracity: NEEDED proof block
             if n == 0 {
                 // Veracity: NEEDED proof block
                 proof {
@@ -254,6 +259,7 @@ pub mod ReduceContractMtEph {
             }
 
             // Base case: single element — use f(id, a[0]) to avoid unspecified clone
+            // Veracity: NEEDED proof block
             if n == 1 {
                 let reduced = call_f(&f, &id, a.nth(0));
                 // Veracity: NEEDED proof block
@@ -265,11 +271,13 @@ pub mod ReduceContractMtEph {
 
             // Contract: b[i] = f(a[2i], a[2i+1]) — parallel via join
             let half = n / 2;
+            // Veracity: NEEDED proof block
             let b = contract_parallel(a, &f, Ghost(spec_f), half);
 
             let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));
             // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < half as int implies {
                     &&& 2 * j + 1 < s.len()
@@ -282,6 +290,7 @@ pub mod ReduceContractMtEph {
             let id_copy = call_f(&f, &id, &id);
             let contracted_result = Self::reduce_contract_parallel(&b, Arc::clone(&f), Ghost(spec_f), id_copy);
 
+            // Veracity: NEEDED proof block
             // Expand: handle odd-length sequences
             if n % 2 == 1 {
                 let last = a.nth(n - 1);
@@ -293,9 +302,11 @@ pub mod ReduceContractMtEph {
 
                     s.lemma_fold_left_split(id, spec_f, (n - 1) as int);
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert(b_seq =~= Seq::new(
                         (s_even.len() / 2) as nat,
                         |i: int| spec_f(s_even[2 * i], s_even[2 * i + 1]),
+                    // Veracity: NEEDED proof block
                     ));
                     lemma_contraction_even::<T>(s_even, spec_f, id);
                 }
@@ -303,6 +314,7 @@ pub mod ReduceContractMtEph {
             } else {
                 // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(b_seq =~= Seq::new(
                         (s.len() / 2) as nat,

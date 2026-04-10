@@ -82,6 +82,7 @@ pub mod ReduceContractStEph {
             // Base case: empty
             if n == 0 {
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block (speed hint)
                 proof {
                 }
                 return id;
@@ -90,6 +91,7 @@ pub mod ReduceContractStEph {
             // Base case: single element — use f(id, a[0]) to avoid unspecified clone
             if n == 1 {
                 let reduced = f(&id, a.nth(0));
+                // Veracity: NEEDED proof block
                 // Veracity: NEEDED proof block
                 proof {
                     reveal_with_fuel(Seq::fold_left, 2);
@@ -126,9 +128,11 @@ pub mod ReduceContractStEph {
             }
             let b = ArraySeqStEphS { seq: b_vec };
 
+            // Veracity: NEEDED proof block
             let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));
             // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < half as int implies {
                     &&& 2 * j + 1 < s.len()
@@ -142,6 +146,7 @@ pub mod ReduceContractStEph {
 
             // Expand: handle odd-length sequences
             if n % 2 == 1 {
+                // Veracity: NEEDED proof block
                 let last = a.nth(n - 1);
                 let reduced = f(&contracted_result, last);
                 // Veracity: NEEDED proof block
@@ -157,16 +162,19 @@ pub mod ReduceContractStEph {
 
                     // s_even.fold_left(id, f) == b_seq.fold_left(id, f) by contraction
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert(b_seq =~= Seq::new(
                         (s_even.len() / 2) as nat,
                         |i: int| spec_f(s_even[2 * i], s_even[2 * i + 1]),
                     ));
                     lemma_contraction_even::<T>(s_even, spec_f, id);
+                // Veracity: NEEDED proof block
                 }
                 reduced
             } else {
                 // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(b_seq =~= Seq::new(
                         (s.len() / 2) as nat,

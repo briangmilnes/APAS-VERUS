@@ -156,6 +156,7 @@ pub mod ETSPStEph {
             spec_point_in_seq(p, sup),
     {
         let j = choose|j: int| #![trigger sub[j]] 0 <= j < sub.len() && spec_point_eq(p, sub[j]);
+        // Veracity: NEEDED assert (speed hint)
         assert(spec_point_in_seq(sub[j], sup));
         let k = choose|k: int| #![trigger sup[k]] 0 <= k < sup.len() && spec_point_eq(sub[j], sup[k]);
     }
@@ -209,6 +210,7 @@ pub mod ETSPStEph {
     {
         let n = ln_i + rn_i;
 
+        // Veracity: NEEDED assert
         assert forall|i: int| #![trigger combined[i]] 0 <= i < n implies
             spec_point_eq(combined[i].to, spec_next_edge_from(combined, i))
         by {
@@ -233,11 +235,13 @@ pub mod ETSPStEph {
                     lemma_small_mod(1, ln_i as nat);
                     lemma_add_mod_noop(best_li + 1 + i, 1, ln_i);
                 } else {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(i == ln_i - 2);
                     lemma_small_mod(1, ln_i as nat);
                     lemma_add_mod_noop(best_li + ln_i - 1, 1, ln_i);
                     lemma_mod_multiples_vanish(1, best_li, ln_i);
                     lemma_small_mod(best_li as nat, ln_i as nat);
+                    // Veracity: NEEDED assert (speed hint)
                     assert((li + 1) % ln_i == best_li);
                 }
             } else if i == ln_i - 1 {
@@ -245,6 +249,7 @@ pub mod ETSPStEph {
                 // Selectively reveal rt's cycle at best_ri.
                 lemma_next_edge_from_eq(rt, best_ri);
                 let m: int = 0;
+                // Veracity: NEEDED assert
                 assert(combined[next_i] == combined[(ln_i + 0)]);
             } else if i < ln_i + rn_i - 1 {
                 // Right-tour segment.
@@ -252,9 +257,11 @@ pub mod ETSPStEph {
                 let ri = (best_ri + 1 + m) % rn_i;
                 // Selectively reveal rt's cycle at ri.
                 lemma_next_edge_from_eq(rt, ri);
+                // Veracity: NEEDED assert
                 assert(combined[(ln_i + m)] == rt[ri]);
                 if m < rn_i - 2 {
                     let m1 = m + 1;
+                    // Veracity: NEEDED assert
                     assert(combined[(ln_i + m1)] == rt[((best_ri + 1 + m1) % rn_i)]);
                     lemma_small_mod(1, rn_i as nat);
                     lemma_add_mod_noop(best_ri + 1 + m, 1, rn_i);
@@ -269,6 +276,7 @@ pub mod ETSPStEph {
                 // Selectively reveal lt's cycle at best_li.
                 lemma_next_edge_from_eq(lt, best_li);
                 let k: int = 0;
+                // Veracity: NEEDED assert (speed hint)
                 assert(combined[next_i].from == lt[((best_li + 1) % ln_i)].from);
             }
         }
@@ -314,9 +322,9 @@ pub mod ETSPStEph {
             let mut tour: Vec<Edge> = Vec::with_capacity(2);
             tour.push(Edge { from: points[0], to: points[1] });
             tour.push(Edge { from: points[1], to: points[0] });
-            proof {
-                reveal(spec_next_edge_from);
-            }
+// Veracity: UNNEEDED proof block             proof {
+// Veracity: UNNEEDED proof block                 reveal(spec_next_edge_from);
+// Veracity: UNNEEDED proof block             }
             return tour;
         }
 
@@ -326,6 +334,7 @@ pub mod ETSPStEph {
             tour.push(Edge { from: points[0], to: points[1] });
             tour.push(Edge { from: points[1], to: points[2] });
             tour.push(Edge { from: points[2], to: points[0] });
+            // Veracity: NEEDED proof block (speed hint)
             proof {
                 reveal(spec_next_edge_from);
                 // Conjunction flakiness fix: assert each conjunct then the whole.
@@ -333,8 +342,11 @@ pub mod ETSPStEph {
                 let c2 = spec_sources_valid(tour@, points@);
                 let c3 = spec_targets_valid(tour@, points@);
                 let c4 = spec_edges_form_cycle(tour@);
+                // Veracity: NEEDED assert
                 assert(c1);
+                // Veracity: NEEDED assert (speed hint)
                 assert(c4);
+                // Veracity: NEEDED assert (speed hint)
                 assert(spec_etsp(tour@, points@) == (c1 && c2 && c3 && c4));
             }
             return tour;
@@ -377,20 +389,26 @@ pub mod ETSPStEph {
             decreases ln - i,
         {
             let idx = (best_li + i) % ln;
+            // Veracity: NEEDED proof block
             let edge = left_tour[idx];
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(spec_point_in_seq(edge.from, left_points@));
+                // Veracity: NEEDED assert (speed hint)
                 assert(spec_point_in_seq(edge.to, left_points@));
                 lemma_edge_valid_transitive(edge, left_points@, points@);
             }
             combined.push(edge);
             i += 1;
         }
+// Veracity: NEEDED proof block
 
         // Bridge 1: left.from -> right.to
         proof {
+            // Veracity: NEEDED assert (speed hint)
             assert(spec_point_in_seq(el_from, left_points@));
             lemma_point_in_seq_transitive(el_from, left_points@, points@);
+            // Veracity: NEEDED assert (speed hint)
             assert(spec_point_in_seq(er_to, right_points@));
             lemma_point_in_seq_transitive(er_to, right_points@, points@);
         }
@@ -423,29 +441,36 @@ pub mod ETSPStEph {
                 forall|m: int| #![trigger combined@[(ln as int + m)]] 0 <= m < (j - 1) as int ==>
                     combined@[(ln as int + m)] == right_tour@[((best_ri as int + 1 + m) % rn as int)],
             decreases rn - j,
+        // Veracity: NEEDED proof block
         {
             let idx = (best_ri + j) % rn;
             let edge = right_tour[idx];
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(spec_point_in_seq(edge.from, right_points@));
+                // Veracity: NEEDED assert (speed hint)
                 assert(spec_point_in_seq(edge.to, right_points@));
                 lemma_edge_valid_transitive(edge, right_points@, points@);
             }
             combined.push(edge);
+            // Veracity: NEEDED proof block
             j += 1;
         }
 
         // Bridge 2: right.from -> left.to
         proof {
+            // Veracity: NEEDED assert (speed hint)
             assert(spec_point_in_seq(er_from, right_points@));
             lemma_point_in_seq_transitive(er_from, right_points@, points@);
+            // Veracity: NEEDED assert (speed hint)
+            // Veracity: NEEDED proof block
             assert(spec_point_in_seq(el_to, left_points@));
             lemma_point_in_seq_transitive(el_to, left_points@, points@);
         }
         combined.push(Edge { from: er_from, to: el_to });
 
         proof {
-            assert(combined@.len() == (ln + rn) as int);
+// Veracity: UNNEEDED assert             assert(combined@.len() == (ln + rn) as int);
             lemma_combined_cycle(
                 combined@, left_tour@, right_tour@,
                 ln as int, rn as int, best_li as int, best_ri as int,
@@ -500,6 +525,7 @@ pub mod ETSPStEph {
                 ),
             decreases mid - i,
         {
+            // Veracity: NEEDED assert (speed hint)
             assert(spec_point_eq(points@[i as int], points@[i as int]));
             left.push(points[i]);
             i += 1;
@@ -519,6 +545,7 @@ pub mod ETSPStEph {
                 ),
             decreases n - j,
         {
+            // Veracity: NEEDED assert (speed hint)
             assert(spec_point_eq(points@[j as int], points@[j as int]));
             right.push(points[j]);
             j += 1;

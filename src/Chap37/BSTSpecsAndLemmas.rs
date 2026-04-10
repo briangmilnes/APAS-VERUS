@@ -133,9 +133,9 @@ pub mod BSTSpecsAndLemmas {
         match tree {
             BalBinTree::Leaf => {},
             BalBinTree::Node(node) => {
-                // Veracity: NEEDED assert
+                // Veracity: NEEDED assert (speed hint)
                 assert(node.left.tree_is_bst());
-                // Veracity: NEEDED assert
+                // Veracity: NEEDED assert (speed hint)
                 assert(node.right.tree_is_bst());
                 match node.left {
                     BalBinTree::Leaf => {},
@@ -188,6 +188,7 @@ pub mod BSTSpecsAndLemmas {
             forall|x: T| (#[trigger] new_tree.tree_contains(x)) <==>
                 (old_tree.tree_contains(x) || x == value),
     {
+        // Veracity: NEEDED assert
         assert forall|x: T| new_left.tree_contains(x) implies
             #[trigger] T::le(x, node_val) && x != node_val
         by {
@@ -196,13 +197,16 @@ pub mod BSTSpecsAndLemmas {
             }
         };
 
+        // Veracity: NEEDED assert
         assert forall|x: T| old_right.tree_contains(x) implies
             #[trigger] T::le(node_val, x) && x != node_val
         by {};
 
+        // Veracity: NEEDED assert
         assert forall|x: T| new_tree.tree_contains(x) ==
             (old_tree.tree_contains(x) || x == value)
         by {
+            // Veracity: NEEDED assert
             assert(new_tree.tree_contains(x) ==
                 (node_val == x
                 || new_left.tree_contains(x)
@@ -240,10 +244,12 @@ pub mod BSTSpecsAndLemmas {
             forall|x: T| (#[trigger] new_tree.tree_contains(x)) <==>
                 (old_tree.tree_contains(x) || x == value),
     {
+        // Veracity: NEEDED assert
         assert forall|x: T| old_left.tree_contains(x) implies
             #[trigger] T::le(x, node_val) && x != node_val
         by {};
 
+        // Veracity: NEEDED assert
         assert forall|x: T| new_right.tree_contains(x) implies
             #[trigger] T::le(node_val, x) && x != node_val
         by {
@@ -252,9 +258,11 @@ pub mod BSTSpecsAndLemmas {
             }
         };
 
+        // Veracity: NEEDED assert
         assert forall|x: T| new_tree.tree_contains(x) ==
             (old_tree.tree_contains(x) || x == value)
         by {
+            // Veracity: NEEDED assert
             assert(new_tree.tree_contains(x) ==
                 (node_val == x
                 || old_left.tree_contains(x)
@@ -293,18 +301,22 @@ pub mod BSTSpecsAndLemmas {
             forall|x: T| (#[trigger] new_tree.tree_contains(x)) <==>
                 (old_tree.tree_contains(x) && x != target),
     {
+        // Veracity: NEEDED assert
         assert forall|x: T| new_left.tree_contains(x) implies
             #[trigger] T::le(x, node_val) && x != node_val
         by {
         };
 
+        // Veracity: NEEDED assert
         assert forall|x: T| old_right.tree_contains(x) implies
             #[trigger] T::le(node_val, x) && x != node_val
         by {};
 
+        // Veracity: NEEDED assert
         assert forall|x: T| new_tree.tree_contains(x) ==
             (old_tree.tree_contains(x) && x != target)
         by {
+            // Veracity: NEEDED assert
             assert(new_tree.tree_contains(x) ==
                 (node_val == x
                 || new_left.tree_contains(x)
@@ -346,18 +358,22 @@ pub mod BSTSpecsAndLemmas {
             forall|x: T| (#[trigger] new_tree.tree_contains(x)) <==>
                 (old_tree.tree_contains(x) && x != target),
     {
+        // Veracity: NEEDED assert
         assert forall|x: T| old_left.tree_contains(x) implies
             #[trigger] T::le(x, node_val) && x != node_val
         by {};
 
+        // Veracity: NEEDED assert
         assert forall|x: T| new_right.tree_contains(x) implies
             #[trigger] T::le(node_val, x) && x != node_val
         by {
         };
 
+        // Veracity: NEEDED assert
         assert forall|x: T| new_tree.tree_contains(x) ==
             (old_tree.tree_contains(x) && x != target)
         by {
+            // Veracity: NEEDED assert
             assert(new_tree.tree_contains(x) ==
                 (node_val == x
                 || old_left.tree_contains(x)

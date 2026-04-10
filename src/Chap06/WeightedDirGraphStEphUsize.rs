@@ -165,6 +165,7 @@ verus!
                     None => break,
                     Some(triple) => {
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED proof block
                         proof {
                             lemma_seq_index_in_map_to_set(edge_seq, it@.0 - 1);
                         }
@@ -214,6 +215,7 @@ verus!
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED proof block
                         proof {
                         }
                         return edges;
@@ -247,9 +249,11 @@ verus!
                 decreases wa_seq.len() - it@.0,
             {
                 match it.next() {
+                    // Veracity: NEEDED proof block
                     None => {
                         // Veracity: NEEDED proof block
                         proof {
+// Veracity: NEEDED assert
 // Veracity: NEEDED assert
 assert forall |p: (V::V, usize)| neighbors@.contains(p) implies 
                                 (exists |w: usize| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) by {
@@ -258,6 +262,7 @@ assert forall |p: (V::V, usize)| neighbors@.contains(p) implies
                                     lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
+// Veracity: NEEDED assert
 // Veracity: NEEDED assert
 assert forall |p: (V::V, usize)| (exists |w: usize| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) implies 
                                 neighbors@.contains(p) by {
@@ -299,10 +304,12 @@ assert forall |p: (V::V, usize)| (exists |w: usize| #![trigger wa_view.contains(
                         (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@.1 == v_view && wa_seq[i]@.0 == p.0 && wa_seq[i]@.2 == p.1),
                 decreases wa_seq.len() - it@.0,
             {
+                // Veracity: NEEDED proof block
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
                         proof {
+// Veracity: NEEDED assert
 // Veracity: NEEDED assert
 assert forall |p: (V::V, usize)| neighbors@.contains(p) implies 
                                 (exists |w: usize| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w) by {
@@ -311,6 +318,7 @@ assert forall |p: (V::V, usize)| neighbors@.contains(p) implies
                                     lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
+// Veracity: NEEDED assert
 // Veracity: NEEDED assert
 assert forall |p: (V::V, usize)| (exists |w: usize| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w) implies 
                                 neighbors@.contains(p) by {
@@ -349,6 +357,7 @@ assert forall |p: (V::V, usize)| (exists |w: usize| #![trigger wa_view.contains(
                     wa_seq.map(|i: int, e: LabEdge<V, usize>| e@).to_set() == wa_view,
                     sum@ == wa_seq.take(it@.0 as int).fold_left(0int, |acc: int, e: LabEdge<V, usize>| acc + e@.2 as nat),
                 decreases wa_seq.len() - it@.0,
+            // Veracity: NEEDED proof block
             {
                 match it.next() {
                     None => {
@@ -360,9 +369,11 @@ assert forall |p: (V::V, usize)| (exists |w: usize| #![trigger wa_view.contains(
                             lemma_weighted_seq_fold_equals_set_fold_usize(wa_seq.map(|_i: int, e: LabEdge<V, usize>| e@));
                         }
                         return sum;
+                    // Veracity: NEEDED proof block
                     },
                     Some(labeled_edge) => {
 // Veracity: NEEDED proof block
+// Veracity: NEEDED assert
 // Veracity: NEEDED assert
 proof { assert(wa_seq.take(it@.0 as int).drop_last() =~= wa_seq.take((it@.0 - 1) as int)); }
                         sum = sum.add_value(labeled_edge.2);
@@ -387,6 +398,7 @@ proof { assert(wa_seq.take(it@.0 as int).drop_last() =~= wa_seq.take((it@.0 - 1)
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, usize>| e@).to_set() == wa_view,
                     forall |t: (V::V, V::V, usize)| edges@.contains(t) == 
+                        // Veracity: NEEDED proof block
                         (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@ == t && t.2 > threshold),
                 decreases wa_seq.len() - it@.0,
             {
@@ -395,6 +407,7 @@ proof { assert(wa_seq.take(it@.0 as int).drop_last() =~= wa_seq.take((it@.0 - 1)
                         // Veracity: NEEDED proof block
                         proof {
 // Veracity: NEEDED assert
+// Veracity: NEEDED assert
 assert forall |t: (V::V, V::V, usize)| #[trigger] edges@.contains(t) implies 
                                 (wa_view.contains(t) && t.2 > threshold) by {
                                 if edges@.contains(t) {
@@ -402,6 +415,7 @@ assert forall |t: (V::V, V::V, usize)| #[trigger] edges@.contains(t) implies
                                     lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
+// Veracity: NEEDED assert
 // Veracity: NEEDED assert
 assert forall |t: (V::V, V::V, usize)| #[trigger] wa_view.contains(t) && t.2 > threshold implies 
                                 edges@.contains(t) by {
@@ -436,6 +450,7 @@ assert forall |t: (V::V, V::V, usize)| #[trigger] wa_view.contains(t) && t.2 > t
                     it@.0 <= wa_seq.len(),
                     it@.1 == wa_seq,
                     wa_seq.map(|i: int, e: LabEdge<V, usize>| e@).to_set() == wa_view,
+                    // Veracity: NEEDED proof block
                     forall |t: (V::V, V::V, usize)| edges@.contains(t) == 
                         (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@ == t && t.2 < threshold),
                 decreases wa_seq.len() - it@.0,
@@ -445,6 +460,7 @@ assert forall |t: (V::V, V::V, usize)| #[trigger] wa_view.contains(t) && t.2 > t
                         // Veracity: NEEDED proof block
                         proof {
 // Veracity: NEEDED assert
+// Veracity: NEEDED assert
 assert forall |t: (V::V, V::V, usize)| #[trigger] edges@.contains(t) implies 
                                 (wa_view.contains(t) && t.2 < threshold) by {
                                 if edges@.contains(t) {
@@ -452,6 +468,7 @@ assert forall |t: (V::V, V::V, usize)| #[trigger] edges@.contains(t) implies
                                     lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
+// Veracity: NEEDED assert
 // Veracity: NEEDED assert
 assert forall |t: (V::V, V::V, usize)| #[trigger] wa_view.contains(t) && t.2 < threshold implies 
                                 edges@.contains(t) by {

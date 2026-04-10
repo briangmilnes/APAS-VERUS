@@ -83,6 +83,7 @@ pub mod DivConReduceMtPer {
         reveal_with_fuel(Seq::<_>::fold_left::<_>, 2);
         s.lemma_fold_left_split(acc, spec_max_fn(), 1);
         let first = s.subrange(0, 1);
+        // Veracity: NEEDED assert (speed hint)
         assert(first =~= Seq::new(1, |i: int| s[0]));
     }
 
@@ -100,11 +101,13 @@ pub mod DivConReduceMtPer {
             let new_acc = spec_max_fn()(acc, s[0]);
             lemma_fold_left_step(s, acc);
             lemma_max_fold_left_bound(rest, new_acc);
+            // Veracity: NEEDED assert
             assert forall|i: int| #![trigger s[i]] 0 <= i < s.len()
                 implies s[i] <= s.fold_left(acc, spec_max_fn())
             by {
                 if i == 0 {
                 } else {
+                    // Veracity: NEEDED assert
                     assert(rest[i - 1] == s[i]);
                 }
             }
@@ -129,11 +132,14 @@ pub mod DivConReduceMtPer {
             if max_val == new_acc {
                 if new_acc == acc {
                 } else {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(s[0] == max_val);
                 }
             } else {
                 let j = choose|j: int| 0 <= j < rest.len() && rest[j] == max_val;
+                // Veracity: NEEDED assert (speed hint)
                 assert(rest[j] == s[j + 1]);
+                // Veracity: NEEDED assert (speed hint)
                 assert(s[j + 1] == max_val);
             }
         }
@@ -282,24 +288,31 @@ pub mod DivConReduceMtPer {
                 return None;
             }
 
+            // Veracity: NEEDED proof block (speed hint)
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|x: usize| #[trigger] spec_max_fn()(0 as usize, x) == x by {}
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|x: usize| #[trigger] spec_max_fn()(x, 0 as usize) == x by {}
-                assert forall|x: usize, y: usize, z: usize|
-                    #[trigger] spec_max_fn()(spec_max_fn()(x, y), z)
-                    == spec_max_fn()(x, spec_max_fn()(y, z)) by {}
+// Veracity: UNNEEDED assert                 assert forall|x: usize, y: usize, z: usize|
+// Veracity: UNNEEDED assert                     #[trigger] spec_max_fn()(spec_max_fn()(x, y), z)
+// Veracity: UNNEEDED assert                     == spec_max_fn()(x, spec_max_fn()(y, z)) by {}
             }
 
             let max_val = call_reduce_max(a);
+// Veracity: NEEDED proof block
 
             proof {
                 let s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
                 lemma_max_fold_left_bound(s, 0);
                 lemma_max_fold_left_achievable(s, 0);
+                // Veracity: NEEDED assert (speed hint)
                 assert(max_val == s.fold_left(0 as usize, spec_max_fn()));
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger a.spec_index(i)]
                     0 <= i < a.spec_len() implies a.spec_index(i) <= max_val
                 by {
+                    // Veracity: NEEDED assert
                     assert(s[i] == a.spec_index(i));
                 }
             }

@@ -331,6 +331,7 @@ pub mod UnDirGraphMtEph {
             let n = edges.size();
             if n == 0 {
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block (speed hint)
                 proof {
                 }
                 SetStEph::empty()
@@ -338,16 +339,20 @@ pub mod UnDirGraphMtEph {
             else if n == 1 {
                 let Edge(a, b) = edges.choose();
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof {
                 }
+                // Veracity: NEEDED proof block
                 if feq(&a, &v) {
                     // Veracity: NEEDED proof block
                     proof {
                     }
+                    // Veracity: NEEDED proof block
                     SetStEph::singleton(b.clone_plus())
                 } else if feq(&b, &v) {
                     // Veracity: NEEDED proof block
                     proof {
+                    // Veracity: NEEDED proof block
                     }
                     SetStEph::singleton(a.clone_plus())
                 } else {
@@ -386,6 +391,7 @@ pub mod UnDirGraphMtEph {
             let n = verts.size();
             if n == 0 {
                 SetStEph::empty()
+            // Veracity: NEEDED proof block
             }
             else if n == 1 {
                 let u = verts.choose();
@@ -407,6 +413,7 @@ pub mod UnDirGraphMtEph {
 
                 let f2 = move || -> (out: SetStEph<V>)
                     ensures out.spec_setsteph_wf(), out@ == g_right.spec_ng_of_vertices_from_set(right_verts@)
+                // Veracity: NEEDED proof block
                 { g_right.ng_of_vertices_par(right_verts) };
 
                 let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
@@ -414,6 +421,7 @@ pub mod UnDirGraphMtEph {
                 let neighbors = left_neighbors.union(&right_neighbors);
                 // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert forall |w: V::V| #![trigger neighbors@.contains(w)] self.spec_ng_of_vertices_from_set(verts@).contains(w)
                         <==> neighbors@.contains(w) by {
@@ -427,9 +435,11 @@ pub mod UnDirGraphMtEph {
                             if left_neighbors@.contains(w) {
                                 let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && self.spec_ng(v).contains(w);
                                 // Veracity: NEEDED assert
+                                // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             } else {
                                 let v_wit: V::V = choose |v: V::V| #![trigger right_verts@.contains(v)] right_verts@.contains(v) && self.spec_ng(v).contains(w);
+                                // Veracity: NEEDED assert
                                 // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             }
@@ -687,6 +697,7 @@ pub mod UnDirGraphMtEph {
                 locked_graph: RwLock::new(g, Ghost(UnDirGraphMtEphInv)),
                 ghost_locked_graph: Ghost(gv),
             }
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) -- clones under lock
@@ -697,6 +708,7 @@ pub mod UnDirGraphMtEph {
             proof { accept(inner@ == self@); }
             let v = inner.V.clone();
             read_handle.release_read();
+            // Veracity: NEEDED proof block
             v
         }
 
@@ -707,6 +719,7 @@ pub mod UnDirGraphMtEph {
             // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let e = inner.E.clone();
+            // Veracity: NEEDED proof block (speed hint)
             read_handle.release_read();
             e
         }
@@ -717,6 +730,7 @@ pub mod UnDirGraphMtEph {
             let inner = read_handle.borrow();
             // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
+            // Veracity: NEEDED proof block
             let n = inner.sizeV();
             read_handle.release_read();
             n
@@ -726,6 +740,7 @@ pub mod UnDirGraphMtEph {
         fn sizeE(&self) -> (n: usize) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let n = inner.sizeE();
@@ -737,6 +752,7 @@ pub mod UnDirGraphMtEph {
         fn neighbor(&self, u: &V, v: &V) -> (b: bool) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block (speed hint)
             // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let b = inner.neighbor(u, v);
@@ -747,6 +763,7 @@ pub mod UnDirGraphMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- RwLock wrapper
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
+            // Veracity: NEEDED proof block
             let inner = read_handle.borrow();
             // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
@@ -789,6 +806,7 @@ pub mod UnDirGraphMtEph {
     impl<V: StTInMtT + Hash + 'static> Clone for UnDirGraphMtEph<V> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
+        // Veracity: NEEDED proof block
         {
             UnDirGraphMtEph { V: self.V.clone(), E: self.E.clone() }
         }

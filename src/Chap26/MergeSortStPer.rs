@@ -82,6 +82,7 @@ pub mod MergeSortStPer {
         ensures
             spec_sorted(s.push(v)),
     {
+        // Veracity: NEEDED assert
         assert forall|i: int, j: int|
             0 <= i < j < s.push(v).len() implies s.push(v)[i] <= s.push(v)[j]
         by {
@@ -162,8 +163,10 @@ pub mod MergeSortStPer {
             {
                 if li < n_left && (ri >= n_right || *left.nth(li) <= *right.nth(ri)) {
                     let v = *left.nth(li);
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_push_sorted(out@, v);
+                        // Veracity: NEEDED assert
                         assert(sl.take(li as int + 1) =~= sl.take(li as int).push(sl[li as int]));
                         lemma_multiset_commutative(sl.take(li as int + 1), sr.take(ri as int));
                         lemma_multiset_commutative(sl.take(li as int), sr.take(ri as int));
@@ -171,9 +174,11 @@ pub mod MergeSortStPer {
                     out.push(v);
                     li = li + 1;
                 } else {
+                    // Veracity: NEEDED proof block
                     let v = *right.nth(ri);
                     proof {
                         lemma_push_sorted(out@, v);
+                        // Veracity: NEEDED assert
                         assert(sr.take(ri as int + 1) =~= sr.take(ri as int).push(sr[ri as int]));
                         lemma_multiset_commutative(sl.take(li as int), sr.take(ri as int + 1));
                         lemma_multiset_commutative(sl.take(li as int), sr.take(ri as int));
@@ -181,17 +186,22 @@ pub mod MergeSortStPer {
                     out.push(v);
                     ri = ri + 1;
                 }
+// Veracity: UNNEEDED proof block             }
+// Veracity: UNNEEDED proof block 
+// Veracity: UNNEEDED proof block             proof {
+// Veracity: UNNEEDED proof block                 // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED proof block                 assert(sl.take(n_left as int) =~= sl);
+// Veracity: UNNEEDED assert                 assert(sr.take(n_right as int) =~= sr);
             }
-
-            proof {
-                assert(sl.take(n_left as int) =~= sl);
-                assert(sr.take(n_right as int) =~= sr);
-            }
+            // Veracity: NEEDED proof block
             let ghost out_view = out@;
             let merged_result = ArraySeqStPerS { seq: out };
             proof {
+                // Veracity: NEEDED assert
                 assert(Seq::new(merged_result.spec_len(), |i: int| merged_result.spec_index(i)) =~= out_view);
+                // Veracity: NEEDED assert (speed hint)
                 assert(out_view.to_multiset() =~= (sl + sr).to_multiset());
+                // Veracity: NEEDED assert (speed hint)
                 assert(spec_merge_post(sl, sr, Seq::new(merged_result.spec_len(), |i: int| merged_result.spec_index(i))));
             }
             merged_result
@@ -202,21 +212,28 @@ pub mod MergeSortStPer {
             decreases a.spec_len(),
         {
             let n = a.length();
+            // Veracity: NEEDED proof block
             let ghost sa = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
 
             if n == 0 {
                 proof {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(sa =~= Seq::<usize>::empty());
                 }
+                // Veracity: NEEDED proof block
                 return ArraySeqStPerS::empty();
             }
             if n == 1 {
                 let s = ArraySeqStPerS::singleton(*a.nth(0));
                 proof {
                     let s_view = Seq::new(s.spec_len(), |i: int| s.spec_index(i));
+                    // Veracity: NEEDED assert (speed hint)
                     assert(sa.len() == 1);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(s_view.len() == 1);
+                    // Veracity: NEEDED assert (speed hint)
                     assert(sa[0] == s_view[0]);
+                    // Veracity: NEEDED assert
                     assert(sa =~= s_view);
                 }
                 return s;
@@ -258,6 +275,7 @@ pub mod MergeSortStPer {
 
             // Recursive sort
             let sorted_left = Self::merge_sort(&left);
+            // Veracity: NEEDED proof block
             let sorted_right = Self::merge_sort(&right);
 
             // Merge sorted halves
@@ -270,6 +288,7 @@ pub mod MergeSortStPer {
                 let ghost ssr = Seq::new(sorted_right.spec_len(), |i: int| sorted_right.spec_index(i));
                 let ghost sm = Seq::new(merged.spec_len(), |i: int| merged.spec_index(i));
 
+                // Veracity: NEEDED assert
                 assert(sl_view + sr_view =~= sa);
                 lemma_multiset_commutative(ssl, ssr);
                 lemma_multiset_commutative(sl_view, sr_view);

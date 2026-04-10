@@ -175,6 +175,7 @@ broadcast use {
             let mut global_max: i32 = ending_max;
 
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block
             proof {
                 lemma_range_sum_single(a.seq@, 0);
                 reveal_with_fuel(spec_max_ending_at, 1);
@@ -204,6 +205,7 @@ broadcast use {
                 let val = *a.nth(i);
 
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_max_ending_at_achieved(a.seq@, (i - 1) as int);
                     let lo_witness = choose|lo: int|
@@ -219,6 +221,7 @@ broadcast use {
                 } else {
                     ending_max = val;
                 }
+// Veracity: NEEDED proof block
 
                 // Veracity: NEEDED proof block
                 proof {
@@ -227,6 +230,7 @@ broadcast use {
 
                     lemma_max_ending_at_achieved(a.seq@, i as int);
                     // Prove forall for ranges ending at i+1
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert forall|lo: int, hi: int|
                         #![trigger spec_range_sum(a.seq@, lo, hi)]
@@ -243,6 +247,7 @@ broadcast use {
                     };
                 }
 
+                // Veracity: NEEDED proof block
                 if ending_max > global_max {
                     global_max = ending_max;
                     // Veracity: NEEDED proof block

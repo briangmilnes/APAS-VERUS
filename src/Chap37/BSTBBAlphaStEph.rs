@@ -327,6 +327,7 @@ pub mod BSTBBAlphaStEph {
                             value: node_val,
                             right: right,
                         }));
+                        // Veracity: NEEDED proof block
                         proof { lemma_bst_insert_left(node_val, old_left, old_right, node, new_left, r, value); }
                         r
                     }
@@ -336,6 +337,7 @@ pub mod BSTBBAlphaStEph {
                             left: left,
                             value: node_val,
                             right: new_right,
+                        // Veracity: NEEDED proof block
                         }));
                         proof { lemma_bst_insert_right(node_val, old_left, old_right, node, new_right, r, value); }
                         r
@@ -344,9 +346,9 @@ pub mod BSTBBAlphaStEph {
                         let r = BalBinTree::Node(Box::new(BalBinNode {
                             left: left,
                             value: node_val,
+                            // Veracity: NEEDED proof block
                             right: right,
                         }));
-                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall|x: T| r.tree_contains(x) ==
@@ -368,20 +370,20 @@ pub mod BSTBBAlphaStEph {
             BalBinTree::Leaf => false,
             BalBinTree::Node(inner) => {
                 match TotalOrder::cmp(target, &inner.value) {
+                    // Veracity: NEEDED proof block
                     core::cmp::Ordering::Equal => true,
                     core::cmp::Ordering::Less => {
                         let r = inner.left.contains_node(target);
-                        // Veracity: NEEDED proof block
                         proof {
                             if inner.right.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
                             }
                         }
+                        // Veracity: NEEDED proof block
                         r
                     }
                     core::cmp::Ordering::Greater => {
                         let r = inner.right.contains_node(target);
-                        // Veracity: NEEDED proof block
                         proof {
                             if inner.left.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
@@ -399,22 +401,22 @@ pub mod BSTBBAlphaStEph {
     {
         match self {
             BalBinTree::Leaf => None,
+            // Veracity: NEEDED proof block
             BalBinTree::Node(inner) => {
                 match TotalOrder::cmp(target, &inner.value) {
                     core::cmp::Ordering::Equal => Some(&inner.value),
                     core::cmp::Ordering::Less => {
                         let r = inner.left.find_node(target);
-                        // Veracity: NEEDED proof block
                         proof {
                             if inner.right.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
+                            // Veracity: NEEDED proof block
                             }
                         }
                         r
                     }
                     core::cmp::Ordering::Greater => {
                         let r = inner.right.find_node(target);
-                        // Veracity: NEEDED proof block
                         proof {
                             if inner.left.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
@@ -463,6 +465,7 @@ pub mod BSTBBAlphaStEph {
         let ghost node = self;
         match self {
             BalBinTree::Leaf => {
+                // Veracity: NEEDED proof block
                 unreached()
             }
             BalBinTree::Node(inner) => {
@@ -470,7 +473,6 @@ pub mod BSTBBAlphaStEph {
                 let ghost old_left = left;
                 let ghost old_right = right;
                 if left.is_leaf() {
-                    // Veracity: NEEDED proof block
                     proof {
                         // Veracity: NEEDED assert
                         assert forall|x: T| right.tree_contains(x) implies
@@ -504,6 +506,7 @@ pub mod BSTBBAlphaStEph {
                                 || old_right.tree_contains(x)));
                         };
                     }
+                    // Veracity: NEEDED proof block
                     (right, node_val)
                 } else {
                     let (new_left, min_val) = left.delete_min_node();
@@ -512,7 +515,6 @@ pub mod BSTBBAlphaStEph {
                         value: node_val,
                         right: right,
                     }));
-                    // Veracity: NEEDED proof block
                     proof {
 
                         // Veracity: NEEDED assert
@@ -572,7 +574,7 @@ pub mod BSTBBAlphaStEph {
                 let BalBinNode { left, value: node_val, right } = *inner;
                 let ghost old_left = left;
                 let ghost old_right = right;
-
+// Veracity: UNNEEDED proof block 
                 match TotalOrder::cmp(target, &node_val) {
                     core::cmp::Ordering::Less => {
                         let new_left = left.delete_node(target);
@@ -582,10 +584,12 @@ pub mod BSTBBAlphaStEph {
                             right: right,
                         }));
                         proof { lemma_bst_delete_left(node_val, old_left, old_right, node, new_left, r, *target); }
+                        // Veracity: NEEDED proof block
                         r
                     }
                     core::cmp::Ordering::Greater => {
                         let new_right = right.delete_node(target);
+                        // Veracity: NEEDED proof block
                         let r = BalBinTree::Node(Box::new(BalBinNode {
                             left: left,
                             value: node_val,
@@ -595,8 +599,8 @@ pub mod BSTBBAlphaStEph {
                         r
                     }
                     core::cmp::Ordering::Equal => {
+                        // Veracity: NEEDED proof block
                         if left.is_leaf() {
-                            // Veracity: NEEDED proof block
                             proof {
                                 // Veracity: NEEDED assert
                                 assert forall|x: T| old_right.tree_contains(x) ==
@@ -607,11 +611,11 @@ pub mod BSTBBAlphaStEph {
                             }
                             right
                         } else if right.is_leaf() {
-                            // Veracity: NEEDED proof block
                             proof {
                                 // Veracity: NEEDED assert
                                 assert forall|x: T| old_left.tree_contains(x) ==
                                     (node.tree_contains(x) && x != *target)
+                                // Veracity: NEEDED proof block
                                 by {
                                     lemma_node_contains::<T>(old_left, node_val, old_right, x);
                                 };
@@ -624,7 +628,6 @@ pub mod BSTBBAlphaStEph {
                                 value: successor,
                                 right: new_right,
                             }));
-                            // Veracity: NEEDED proof block
                             proof {
 
                                 // Veracity: NEEDED assert

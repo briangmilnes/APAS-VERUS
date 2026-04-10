@@ -265,6 +265,8 @@ pub mod BSTRBStEph {
                     }
                 }
             }
+            // Veracity: NEEDED proof block (speed hint)
+            // Veracity: NEEDED assert
             BalBinTree::Leaf => { proof { assert(false); } BalBinTree::Leaf }
         }
     }
@@ -297,9 +299,9 @@ pub mod BSTRBStEph {
                             left: left_sub,
                             value: y_val,
                             right: rr,
+                        // Veracity: NEEDED proof block
                         }));
 
-                        // Veracity: NEEDED proof block
                         proof {
                             lemma_bst_deep::<T>(tree_ghost);
 
@@ -362,8 +364,10 @@ pub mod BSTRBStEph {
                             right: BalBinTree::Leaf,
                         }))
                     }
+                // Veracity: NEEDED proof block
                 }
             }
+            // Veracity: NEEDED assert
             BalBinTree::Leaf => { proof { assert(false); } BalBinTree::Leaf }
         }
     }
@@ -391,6 +395,7 @@ pub mod BSTRBStEph {
                     core::cmp::Ordering::Less => {
                         let new_left = left.insert_node(value);
                         let r = BalBinTree::Node(Box::new(BalBinNode {
+                            // Veracity: NEEDED proof block
                             left: new_left,
                             value: node_val,
                             right: right,
@@ -400,6 +405,7 @@ pub mod BSTRBStEph {
                     }
                     core::cmp::Ordering::Greater => {
                         let new_right = right.insert_node(value);
+                        // Veracity: NEEDED proof block
                         let r = BalBinTree::Node(Box::new(BalBinNode {
                             left: left,
                             value: node_val,
@@ -408,13 +414,13 @@ pub mod BSTRBStEph {
                         proof { lemma_bst_insert_right(node_val, old_left, old_right, node, new_right, r, value); }
                         r
                     }
+                    // Veracity: NEEDED proof block
                     core::cmp::Ordering::Equal => {
                         let r = BalBinTree::Node(Box::new(BalBinNode {
                             left: left,
                             value: node_val,
                             right: right,
                         }));
-                        // Veracity: NEEDED proof block
                         proof {
                             // Veracity: NEEDED assert
                             assert forall|x: T| r.tree_contains(x) ==
@@ -434,6 +440,7 @@ pub mod BSTRBStEph {
     fn contains_node(&self, target: &T) -> (found: bool)
         decreases self.spec_size(),
     {
+        // Veracity: NEEDED proof block
         match self {
             BalBinTree::Leaf => false,
             BalBinTree::Node(inner) => {
@@ -441,8 +448,8 @@ pub mod BSTRBStEph {
                     core::cmp::Ordering::Equal => true,
                     core::cmp::Ordering::Less => {
                         let r = inner.left.contains_node(target);
-                        // Veracity: NEEDED proof block
                         proof {
+                            // Veracity: NEEDED proof block
                             if inner.right.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
                             }
@@ -451,7 +458,6 @@ pub mod BSTRBStEph {
                     }
                     core::cmp::Ordering::Greater => {
                         let r = inner.right.contains_node(target);
-                        // Veracity: NEEDED proof block
                         proof {
                             if inner.left.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
@@ -467,6 +473,7 @@ pub mod BSTRBStEph {
     /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
     fn find_node(&self, target: &T) -> (found: Option<&T>)
+        // Veracity: NEEDED proof block
         decreases self.spec_size(),
     {
         match self {
@@ -475,8 +482,8 @@ pub mod BSTRBStEph {
                 match TotalOrder::cmp(target, &inner.value) {
                     core::cmp::Ordering::Equal => Some(&inner.value),
                     core::cmp::Ordering::Less => {
-                        let r = inner.left.find_node(target);
                         // Veracity: NEEDED proof block
+                        let r = inner.left.find_node(target);
                         proof {
                             if inner.right.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
@@ -486,7 +493,6 @@ pub mod BSTRBStEph {
                     }
                     core::cmp::Ordering::Greater => {
                         let r = inner.right.find_node(target);
-                        // Veracity: NEEDED proof block
                         proof {
                             if inner.left.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);

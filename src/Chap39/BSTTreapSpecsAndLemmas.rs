@@ -135,6 +135,7 @@ pub mod BSTTreapSpecsAndLemmas {
             forall|t: T| (#[trigger] joined_v.contains(t@)) ==> t.cmp_spec(&lk) == Greater,
     {
         // Veracity: NEEDED assert
+        // Veracity: NEEDED assert
         assert forall|t: T| (#[trigger] joined_v.contains(t@)) implies t.cmp_spec(&lk) == Greater by {
             if lrv.contains(t@) {
             } else if right_v.contains(t@) {
@@ -170,6 +171,7 @@ pub mod BSTTreapSpecsAndLemmas {
             forall|t: T| (#[trigger] joined_v.contains(t@)) ==> t.cmp_spec(&rk) == Less,
     {
         // Veracity: NEEDED assert
+        // Veracity: NEEDED assert
         assert forall|t: T| (#[trigger] joined_v.contains(t@)) implies t.cmp_spec(&rk) == Less by {
             if left_v.contains(t@) {
                 lemma_cmp_antisymmetry(rk, key);
@@ -195,12 +197,16 @@ pub mod BSTTreapSpecsAndLemmas {
             right_part.subset_of(whole),
     {
         // Veracity: NEEDED assert
+        // Veracity: NEEDED assert
         assert forall|x: V| #[trigger] left_part.contains(x) implies whole.contains(x) by {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert(whole.remove(key).contains(x));
         };
         // Veracity: NEEDED assert
+        // Veracity: NEEDED assert
         assert forall|x: V| #[trigger] right_part.contains(x) implies whole.contains(x) by {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert(whole.remove(key).contains(x));
         };
@@ -227,6 +233,7 @@ pub mod BSTTreapSpecsAndLemmas {
             forall|s: T, o: T| #![trigger left.contains(s@), right.contains(o@)]
                 left.contains(s@) && right.contains(o@) ==> s.cmp_spec(&o) == Less,
     {
+        // Veracity: NEEDED assert
         // Veracity: NEEDED assert
         assert forall|s: T, o: T| #![trigger left.contains(s@), right.contains(o@)]
             left.contains(s@) && right.contains(o@) implies s.cmp_spec(&o) == Less by {

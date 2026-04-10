@@ -80,9 +80,11 @@ pub mod ContractSpecsAndLemmas {
 
         if n == 2 {
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert(s =~= seq![s[0], s[1]]);
             lemma_fold_left_pair::<T>(s[0], s[1], f, id);
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert (speed hint)
             assert(b =~= seq![f(s[0], s[1])]);
             lemma_fold_left_singleton::<T>(f(s[0], s[1]), f, id);
         } else {
@@ -92,6 +94,7 @@ pub mod ContractSpecsAndLemmas {
             s.lemma_fold_left_split(id, f, 2);
             let s_head = s.subrange(0, 2);
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert(s_head =~= seq![s[0], s[1]]);
 
             lemma_fold_left_pair::<T>(s[0], s[1], f, id);
@@ -99,6 +102,7 @@ pub mod ContractSpecsAndLemmas {
             lemma_fold_left_monoid::<T>(s_tail, b[0], f, id);
             let s_tail_result = s_tail.fold_left(id, f);
 
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert(b_tail =~= Seq::new(
                 (s_tail.len() / 2) as nat,
@@ -112,6 +116,7 @@ pub mod ContractSpecsAndLemmas {
 
             b.lemma_fold_left_split(id, f, 1);
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert (speed hint)
             assert(b.subrange(0, 1) =~= seq![b[0]]);
             lemma_fold_left_singleton::<T>(b[0], f, id);
         }
@@ -135,6 +140,7 @@ pub mod ContractSpecsAndLemmas {
             (prefix.len() / 2) as nat,
             |i: int| f(prefix[2 * i], prefix[2 * i + 1]),
         );
+        // Veracity: NEEDED assert
         // Veracity: NEEDED assert
         assert(contracted =~= b.take(k));
     }
@@ -168,6 +174,7 @@ pub mod ContractSpecsAndLemmas {
     {
         let take_2j1 = s.take(2 * j + 1);
         take_2j1.lemma_fold_left_split(id, f, 2 * j);
+        // Veracity: NEEDED assert
         // Veracity: NEEDED assert
         assert(take_2j1.subrange(0, 2 * j) =~= s.take(2 * j));
         reveal(Seq::fold_left);

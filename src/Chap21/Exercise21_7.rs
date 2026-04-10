@@ -127,13 +127,16 @@ pub mod Exercise21_7 {
         );
         let pairs = ArraySeqStPerS::flatten(&nested);
         // Veracity: NEEDED proof block
+        // Veracity: NEEDED proof block
         proof {
             let ghost mapped = nested.seq@.map_values(
                 |inner: ArraySeqStPerS<Pair<usize, char>>| inner.seq@);
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert forall|i: int| 0 <= i < mapped.len() implies
                 (#[trigger] mapped[i]).len() == fb_len as int by {}
             lemma_flatten_uniform_len(mapped, fb_len as int);
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert(fa_len as int * fb_len as int <= a.seq@.len() as int * b.seq@.len() as int)
                 by (nonlinear_arith)

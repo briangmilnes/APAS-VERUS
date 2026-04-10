@@ -79,6 +79,7 @@ pub mod Problem21_1 {
                 y = y + 1;
             }
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert((x as int + 1) * (n as int - 1) == x as int * (n as int - 1) + (n as int - 1))
                 by (nonlinear_arith);
             x = x + 1;

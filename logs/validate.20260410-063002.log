@@ -1,0 +1,78 @@
+Mode: full
+error: precondition not satisfied
+   --> src/Chap36/QuickSortStEph.rs:545:17
+    |
+119 | /             forall|j: int| 0 <= j < right_view.len() ==>
+120 | |                 (#[trigger] T::le(pivot, right_view[j])) && right_view[j] != pivot,
+    | |__________________________________________________________________________________- failed precondition
+...
+545 | /                 lemma_partition_sort_concat::<T>(
+546 | |                     s, left_view, right_view, equals_a.seq@,
+547 | |                     // Veracity: NEEDED proof block
+548 | |                     left_a.seq@, right_a.seq@, pivot,
+549 | |                 );
+    | |_________________^
+
+note: diagnostics via expansion
+
+note: 
+
+total_ordering(spec_leq()) ✔
+tmp% =~= left_view.sort_by(spec_leq()) ✔
+tmp% =~= right_view.sort_by(spec_leq()) ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = left_view.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        left_view.index(j).le(pivot) ✔
+        !(left_view.index(j) == pivot) ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = right_view.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        pivot.le(right_view.index(j)) ✔
+        !(right_view.index(j) == pivot) ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(j) == pivot ✔
+tmp%.len() >= 1 ✔
+s.to_multiset() =~= left_view.to_multiset().add(right_view.to_multiset()).add(tmp%.to_multiset()) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: precondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:951:33
+    |
+222 |             TotalOrder::le(lo, hi), lo != hi,
+    |                                     -------- failed precondition
+...
+951 |                                 lemma_zag_child_ordering(right.left, root_key, right_key, orig_right_left, orig_root_left);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+root_key.le(right_key) ✔
+!(root_key == right_key) ✔
+forall |y|
+    link_contains(orig_right_left, y) ==>
+        y.le(right_key) ✔
+        !(y == right_key) ✔
+forall |y|
+    link_contains(orig_root_left, y) ==>
+        y.le(root_key) ✔
+        !(y == root_key) ✔
+forall |y|
+    link_contains(tmp%, y) ==>
+        !(y == root_key || link_contains(orig_root_left, y)) ==>
+            link_contains(orig_right_left, y) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+verification results:: 5596 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 124s
+Sampled Memory Usage: peak rust_verify RSS: 16724MB, peak z3 RSS: 787MB, min free: 5886MB
+Sampled CPU Usage: rust_verify: 366s, z3 children: 255s

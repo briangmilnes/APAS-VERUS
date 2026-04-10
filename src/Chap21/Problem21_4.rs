@@ -64,6 +64,7 @@ pub mod Problem21_4 {
         {
             let mut j: usize = 0;
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert((i as int + 1) * blen as int <= cap as int) by (nonlinear_arith)
                 requires i < alen, cap == alen * blen;
             while j < blen
@@ -80,6 +81,7 @@ pub mod Problem21_4 {
                 v.push(Pair(*a.nth(i), *b.nth(j)));
                 j = j + 1;
             }
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert((i as int + 1) * blen as int == i as int * blen as int + blen as int)
                 by (nonlinear_arith);
@@ -135,6 +137,7 @@ pub mod Problem21_4 {
                     {
                         let y = *b.nth(j);
                         // Veracity: NEEDED proof block
+                        // Veracity: NEEDED proof block (speed hint)
                         proof {
                         }
                         Pair(x, y)
@@ -147,12 +150,16 @@ pub mod Problem21_4 {
         );
 
         // Veracity: NEEDED proof block
+        // Veracity: NEEDED proof block (speed hint)
+        // Veracity: NEEDED assert
         proof { assert(Pair_feq_trigger::<usize, usize>()); }
+        // Veracity: NEEDED proof block
         let pairs = ArraySeqStPerS::flatten(&nested);
         // Veracity: NEEDED proof block
         proof {
             let ghost mapped = nested.seq@.map_values(
                 |inner: ArraySeqStPerS<Pair<usize, usize>>| inner.seq@);
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|i: int| 0 <= i < mapped.len() implies
                 (#[trigger] mapped[i]).len() == blen as int by {}
@@ -162,10 +169,12 @@ pub mod Problem21_4 {
                 a.seq@.contains(p.0) && b.seq@.contains(p.1);
             lemma_flatten_all(mapped, pred);
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert forall|k: int| 0 <= k < pairs.seq@.len() implies (
                 a.seq@.contains((#[trigger] pairs.seq@[k]).0)
                 && b.seq@.contains(pairs.seq@[k].1)
             ) by {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(pred(mapped.flatten()[k]));
             }

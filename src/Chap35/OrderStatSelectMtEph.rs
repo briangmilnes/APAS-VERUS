@@ -87,21 +87,27 @@ pub mod OrderStatSelectMtEph {
     {
         let leq = spec_leq::<T>();
         // Veracity: NEEDED assert
+        // Veracity: NEEDED assert
         assert(antisymmetric(leq)) by {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|x: T, y: T|
                 #[trigger] leq(x, y) && #[trigger] leq(y, x) implies x == y by
             { T::antisymmetric(x, y); }
         };
         // Veracity: NEEDED assert
+        // Veracity: NEEDED assert
         assert(transitive(leq)) by {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|x: T, y: T, z: T|
                 #[trigger] leq(x, y) && #[trigger] leq(y, z) implies leq(x, z) by
             { T::transitive(x, y, z); }
         };
         // Veracity: NEEDED assert
+        // Veracity: NEEDED assert
         assert(strongly_connected(leq)) by {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|x: T, y: T|
                 #[trigger] leq(x, y) || #[trigger] leq(y, x) by
@@ -120,6 +126,7 @@ pub mod OrderStatSelectMtEph {
         if n > 0 {
             lemma_const_seq_multiset::<T>((n - 1) as nat, v);
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert(spec_const_seq(n, v) =~= spec_const_seq((n - 1) as nat, v).push(v));
         }
     }
@@ -134,6 +141,7 @@ pub mod OrderStatSelectMtEph {
     {
         if s.len() > 0 {
             lemma_all_equal_multiset::<T>(s.drop_last(), v);
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert(s =~= s.drop_last().push(v));
         }
@@ -182,8 +190,10 @@ pub mod OrderStatSelectMtEph {
             i = i + 1;
         }
         // Veracity: NEEDED proof block
+        // Veracity: NEEDED proof block
         proof {
             let ghost target = a_orig + b@;
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|k: int| 0 <= k < a@.len()
                 implies a@[k] == #[trigger] target[k] by
@@ -191,6 +201,7 @@ pub mod OrderStatSelectMtEph {
                 if k < alen as int {
                 } else {
                     let kp = k - alen as int;
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(a@[alen as int + kp] == b@[kp]);
                 }
@@ -228,34 +239,41 @@ pub mod OrderStatSelectMtEph {
         } else if n == 1 {
             let elem = a.nth_cloned(0);
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block
             proof {
             }
             match TotalOrder::cmp(&elem, pivot) {
                 core::cmp::Ordering::Less => {
                     let mut v: Vec<T> = Vec::new();
+                    // Veracity: NEEDED proof block
                     v.push(elem);
                     // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         // Veracity: NEEDED assert
                         assert(v@ =~= spec_slice_elements(*a));
                     }
                     (v, Vec::new(), Vec::new())
                 }
                 core::cmp::Ordering::Equal => {
+                    // Veracity: NEEDED proof block
                     let mut v: Vec<T> = Vec::new();
                     v.push(elem);
                     // Veracity: NEEDED proof block
                     proof {
                         // Veracity: NEEDED assert
+                        // Veracity: NEEDED assert
                         assert(v@ =~= spec_slice_elements(*a));
                     }
                     (Vec::new(), v, Vec::new())
                 }
+                // Veracity: NEEDED proof block
                 core::cmp::Ordering::Greater => {
                     let mut v: Vec<T> = Vec::new();
                     v.push(elem);
                     // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         // Veracity: NEEDED assert
                         assert(v@ =~= spec_slice_elements(*a));
                     }
@@ -315,6 +333,7 @@ pub mod OrderStatSelectMtEph {
             let ghost e1_pre = e1@;
             let ghost r1_pre = r1@;
 
+            // Veracity: NEEDED proof block
             append_vec(&mut l1, &l2);
             append_vec(&mut e1, &e2);
             append_vec(&mut r1, &r2);
@@ -322,6 +341,7 @@ pub mod OrderStatSelectMtEph {
             // Veracity: NEEDED proof block
             proof {
                 let ghost ea = spec_slice_elements(*a);
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert forall|k: int| 0 <= k < ea.len()
                     implies ea[k] == #[trigger] (left_elems + right_elems)[k] by
@@ -331,6 +351,7 @@ pub mod OrderStatSelectMtEph {
                         let kp = k - left_elems.len();
                     }
                 };
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(ea =~= left_elems + right_elems);
 
@@ -394,6 +415,7 @@ pub mod OrderStatSelectMtEph {
             data.push(elem);
             ci = ci + 1;
         }
+// Veracity: NEEDED proof block
 
 
         let ghost data_view = data@;
@@ -403,10 +425,12 @@ pub mod OrderStatSelectMtEph {
         proof {
             let ghost se = spec_slice_elements(slice_a);
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert forall|i: int| 0 <= i < s.len()
                 implies se[i] == #[trigger] s[i] by
             {
             };
+        // Veracity: NEEDED proof block
         }
 
         let (left, eq_vec, right) = partition_three_dc(&slice_a, &pivot);
@@ -417,12 +441,15 @@ pub mod OrderStatSelectMtEph {
         proof {
             let ghost se = spec_slice_elements(slice_a);
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert(se =~= s);
 
             // From partition_three_dc: se.to_multiset() =~= left@ + right@ + eq_vec@
             // Pivot is in s at index pivot_idx, so s.to_multiset().count(pivot) >= 1.
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert(s[pivot_idx as int] == pivot);
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert(s.to_multiset().count(pivot) >= 1nat) by {
             };
@@ -473,6 +500,7 @@ pub mod OrderStatSelectMtEph {
             found == Some(spec_kth::<T>(
                 Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int)),
         decreases a.spec_len(),
+    // Veracity: NEEDED proof block
     {
         let n = a.length();
         let ghost s = Seq::new(n as nat, |i: int| a.spec_index(i));
@@ -490,11 +518,13 @@ pub mod OrderStatSelectMtEph {
         }
 
         let pivot_idx = random_usize_range(0, n);
+        // Veracity: NEEDED proof block
         let pivot = *a.nth(pivot_idx);
 
         let (left, eq_count, right) = parallel_three_way_partition(a, pivot, pivot_idx, n);
         let ghost equals_seq: Seq<T> = Seq::new(eq_count as nat, |i: int| pivot);
 
+        // Veracity: NEEDED proof block
         let left_count = left.len();
         let right_count = right.len();
 
@@ -512,13 +542,16 @@ pub mod OrderStatSelectMtEph {
 
 
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
 
 
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert forall|j: int| 0 <= j < sorted_left.len() implies
                 T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
             {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(left@.to_multiset().count(sorted_left[j]) > 0);
                 let idx = choose|idx: int|
@@ -526,9 +559,11 @@ pub mod OrderStatSelectMtEph {
             };
 
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert forall|j: int| 0 <= j < sorted_right.len() implies
                 T::le(pivot, #[trigger] sorted_right[j]) && sorted_right[j] != pivot by
             {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(right@.to_multiset().count(sorted_right[j]) > 0);
                 let idx = choose|idx: int|
@@ -536,7 +571,9 @@ pub mod OrderStatSelectMtEph {
             };
 
             // Veracity: NEEDED assert
+            // Veracity: NEEDED assert
             assert(sorted_by(candidate, leq)) by {
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert forall|ai: int, bi: int|
                     0 <= ai < bi < candidate.len()
@@ -559,6 +596,8 @@ pub mod OrderStatSelectMtEph {
             vstd::seq_lib::lemma_multiset_commutative(sorted_left, equals_seq);
             vstd::seq_lib::lemma_multiset_commutative(
                 sorted_left + equals_seq, sorted_right);
+            // Veracity: NEEDED proof block
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert(candidate.to_multiset() =~= s.to_multiset());
 
@@ -567,11 +606,14 @@ pub mod OrderStatSelectMtEph {
         }
 
         if k < left_count {
+            // Veracity: NEEDED proof block
             let left_a = ArraySeqMtEphS { seq: left };
             // Veracity: NEEDED proof block
             proof {
                 let left_a_view = Seq::new(
                     left_a.spec_len(), |j: int| left_a.spec_index(j));
+                // Veracity: NEEDED assert
+                // Veracity: NEEDED proof block
                 // Veracity: NEEDED assert
                 assert(left_a_view =~= left@);
             }
@@ -590,6 +632,7 @@ pub mod OrderStatSelectMtEph {
                 let el = equals_seq.len();
                 let right_a_view = Seq::new(
                     right_a.spec_len(), |j: int| right_a.spec_index(j));
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(right_a_view =~= right@);
             }

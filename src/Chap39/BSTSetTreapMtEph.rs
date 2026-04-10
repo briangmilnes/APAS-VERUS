@@ -294,8 +294,10 @@ pub mod BSTSetTreapMtEph {
         fn singleton(value: T) -> (set: Self) {
             let set = Self::join_m(Self::empty(), value, Self::empty());
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block
             proof {
                 let empty = Set::<<T as View>::V>::empty();
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(set@ =~= empty.insert(value@));
             }
@@ -332,6 +334,7 @@ pub mod BSTSetTreapMtEph {
             let ghost old_len = self@.len();
             let (left, _found, right) = self.split(&value);
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block
             proof {
                 // left@ and right@ partition self@.remove(value@) ⊆ self@.
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
@@ -344,11 +347,13 @@ pub mod BSTSetTreapMtEph {
         fn delete(&mut self, target: &T) {
             let ghost kref = *target;
             let ghost old_view = self@;
+            // Veracity: NEEDED proof block
             let (left, _found, right) = self.split(target);
             // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
                 vstd::set_lib::lemma_len_subset(old_view.remove(kref@), old_view);
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
                     left@.contains(s@) && right@.contains(o@) implies s.cmp_spec(&o) == Less by {
@@ -424,6 +429,7 @@ pub mod BSTSetTreapMtEph {
     impl<T: MtKey + ClonePreservesView> Clone for BSTSetTreapMtEph<T> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@,
+        // Veracity: NEEDED proof block
         {
             let cloned = BSTSetTreapMtEph { tree: self.tree.clone() };
             // Veracity: NEEDED proof block

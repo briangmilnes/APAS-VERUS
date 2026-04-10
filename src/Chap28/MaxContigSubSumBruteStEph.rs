@@ -139,6 +139,7 @@ pub mod MaxContigSubSumBruteStEph {
                     decreases n - j,
                 {
                     // Veracity: NEEDED proof block
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_range_sum_snoc(a.seq@, i as int, (j + 1) as int);
                     }

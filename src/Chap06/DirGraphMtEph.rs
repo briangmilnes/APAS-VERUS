@@ -589,7 +589,9 @@ pub mod DirGraphMtEph {
 
                 let out_neighbors = left_neighbors.union(&right_neighbors);
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert forall |w: V::V| #![trigger out_neighbors@.contains(w)] self.spec_n_plus_of_vertices_from_set(verts@).contains(w)
                         <==> out_neighbors@.contains(w) by {
@@ -603,9 +605,11 @@ pub mod DirGraphMtEph {
                             if left_neighbors@.contains(w) {
                                 let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && self.spec_n_plus(v).contains(w);
                                 // Veracity: NEEDED assert
+                                // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             } else {
                                 let v_wit: V::V = choose |v: V::V| #![trigger right_verts@.contains(v)] right_verts@.contains(v) && self.spec_n_plus(v).contains(w);
+                                // Veracity: NEEDED assert
                                 // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             }
@@ -646,7 +650,9 @@ pub mod DirGraphMtEph {
 
                 let in_neighbors = left_neighbors.union(&right_neighbors);
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert forall |w: V::V| #![trigger in_neighbors@.contains(w)] self.spec_n_minus_of_vertices_from_set(verts@).contains(w)
                         <==> in_neighbors@.contains(w) by {
@@ -660,9 +666,11 @@ pub mod DirGraphMtEph {
                             if left_neighbors@.contains(w) {
                                 let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && self.spec_n_minus(v).contains(w);
                                 // Veracity: NEEDED assert
+                                // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             } else {
                                 let v_wit: V::V = choose |v: V::V| #![trigger right_verts@.contains(v)] right_verts@.contains(v) && self.spec_n_minus(v).contains(w);
+                                // Veracity: NEEDED assert
                                 // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             }
@@ -701,9 +709,11 @@ pub mod DirGraphMtEph {
 
                 let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
 
+                // Veracity: NEEDED proof block
                 let neighbors = left_neighbors.union(&right_neighbors);
                 // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert forall |w: V::V| #![trigger neighbors@.contains(w)] self.spec_ng_of_vertices_from_set(verts@).contains(w)
                         <==> neighbors@.contains(w) by {
@@ -717,9 +727,11 @@ pub mod DirGraphMtEph {
                             if left_neighbors@.contains(w) {
                                 let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && self.spec_ng(v).contains(w);
                                 // Veracity: NEEDED assert
+                                // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             } else {
                                 let v_wit: V::V = choose |v: V::V| #![trigger right_verts@.contains(v)] right_verts@.contains(v) && self.spec_ng(v).contains(w);
+                                // Veracity: NEEDED assert
                                 // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             }
@@ -1037,6 +1049,7 @@ pub mod DirGraphMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) -- clones vertex set under lock
         fn vertices(&self) -> (v: SetStEph<V>) {
+            // Veracity: NEEDED proof block
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
             // Veracity: NEEDED proof block
@@ -1047,6 +1060,7 @@ pub mod DirGraphMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- clones arc set under lock
+        // Veracity: NEEDED proof block
         fn arcs(&self) -> (a: SetStEph<Edge<V>>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -1057,6 +1071,7 @@ pub mod DirGraphMtEph {
             a
         }
 
+        // Veracity: NEEDED proof block (speed hint)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn sizeV(&self) -> (n: usize) {
             let read_handle = self.locked_graph.acquire_read();
@@ -1067,7 +1082,7 @@ pub mod DirGraphMtEph {
             read_handle.release_read();
             n
         }
-
+// Veracity: UNNEEDED proof block 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn sizeA(&self) -> (n: usize) {
             let read_handle = self.locked_graph.acquire_read();
@@ -1078,6 +1093,7 @@ pub mod DirGraphMtEph {
             read_handle.release_read();
             n
         }
+// Veracity: NEEDED proof block (speed hint)
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn neighbor(&self, u: &V, v: &V) -> (b: bool) {
@@ -1088,6 +1104,7 @@ pub mod DirGraphMtEph {
             let b = inner.neighbor(u, v);
             read_handle.release_read();
             b
+        // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
@@ -1098,6 +1115,7 @@ pub mod DirGraphMtEph {
             proof { accept(inner@ == self@); }
             let out_neighbors = inner.n_plus(v);
             read_handle.release_read();
+            // Veracity: NEEDED proof block
             out_neighbors
         }
 
@@ -1108,6 +1126,7 @@ pub mod DirGraphMtEph {
             // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let in_neighbors = inner.n_minus(v);
+            // Veracity: NEEDED proof block (speed hint)
             read_handle.release_read();
             in_neighbors
         }
@@ -1118,6 +1137,7 @@ pub mod DirGraphMtEph {
             let inner = read_handle.borrow();
             // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
+            // Veracity: NEEDED proof block
             let neighbors = inner.ng(v);
             read_handle.release_read();
             neighbors
@@ -1127,6 +1147,7 @@ pub mod DirGraphMtEph {
         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block
             // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let out_neighbors = inner.n_plus_of_vertices(u_set);
@@ -1138,6 +1159,7 @@ pub mod DirGraphMtEph {
         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
+            // Veracity: NEEDED proof block (speed hint)
             // Veracity: NEEDED proof block
             proof { accept(inner@ == self@); }
             let in_neighbors = inner.n_minus_of_vertices(u_set);
@@ -1180,6 +1202,7 @@ pub mod DirGraphMtEph {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
+            // Veracity: NEEDED proof block
             DirGraphMtEph { V: self.V.clone(), A: self.A.clone() }
         }
     }

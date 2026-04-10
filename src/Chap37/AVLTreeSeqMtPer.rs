@@ -395,26 +395,22 @@ pub mod AVLTreeSeqMtPer {
         let x = y.left.as_ref().unwrap().clone();
         // Veracity: NEEDED proof block
         proof {
-            // Veracity: NEEDED assert
             assert(spec_avltreeseqmtper_wf(y.left));
-            // Veracity: NEEDED assert
             assert(spec_avltreeseqmtper_wf(y.right));
-            // Veracity: NEEDED assert
             assert(spec_avltreeseqmtper_wf(x.left));
-            // Veracity: NEEDED assert
             assert(spec_avltreeseqmtper_wf(x.right));
         }
         let t2 = x.right.clone();
         let y_val = y.value.clone_plus();
-        let new_y = mk(y_val, t2, y.right.clone());
         // Veracity: NEEDED proof block
+        let new_y = mk(y_val, t2, y.right.clone());
         proof {
             lemma_height_le_size::<T>(&x.left);
             lemma_height_le_size::<T>(&Some(new_y));
         }
+        // Veracity: NEEDED proof block
         let x_val = x.value.clone_plus();
         let result = mk(x_val, x.left.clone(), Some(new_y));
-        // Veracity: NEEDED proof block
         proof { reveal_with_fuel(spec_inorder, 3); }
         result
     }
@@ -423,61 +419,60 @@ pub mod AVLTreeSeqMtPer {
     fn rotate_left(self) -> (rotated: Self)
     {
         let ghost node = self;
+        // Veracity: NEEDED proof block
         let x = self;
         let ghost old_x = x;
         let y = x.right.as_ref().unwrap().clone();
-        // Veracity: NEEDED proof block
         proof {
-            // Veracity: NEEDED assert
             assert(spec_avltreeseqmtper_wf(x.left));
-            // Veracity: NEEDED assert
             assert(spec_avltreeseqmtper_wf(x.right));
-            // Veracity: NEEDED assert
             assert(spec_avltreeseqmtper_wf(y.left));
-            // Veracity: NEEDED assert
             assert(spec_avltreeseqmtper_wf(y.right));
+        // Veracity: NEEDED proof block
         }
         let t2 = y.left.clone();
         let x_val = x.value.clone_plus();
         let new_x = mk(x_val, x.left.clone(), t2);
-        // Veracity: NEEDED proof block
         proof {
+            // Veracity: NEEDED proof block
             lemma_height_le_size::<T>(&Some(new_x));
             lemma_height_le_size::<T>(&y.right);
         }
         let y_val = y.value.clone_plus();
         let result = mk(y_val, Some(new_x), y.right.clone());
-        // Veracity: NEEDED proof block
         proof { reveal_with_fuel(spec_inorder, 3); }
         result
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn rebalance(self) -> (balanced: Self)
+    // Veracity: NEEDED proof block
     {
         let ghost node = self;
         let n = self;
+        // Veracity: NEEDED proof block
         let hl = n.left.height_fn();
         let hr = n.right.height_fn();
         if hl > hr.saturating_add(1) {
-            // Veracity: NEEDED proof block
             proof {
+            // Veracity: NEEDED proof block
             }
             let left = n.left.as_ref().unwrap().clone();
             let ghost left_size = spec_cached_size(&Some(left));
-            // Veracity: NEEDED proof block
             proof {
+            // Veracity: NEEDED proof block
             }
             if left.right.height_fn() > left.left.height_fn() {
+                // Veracity: NEEDED proof block
                 let rotated = left.rotate_left();
                 let n_val = n.value.clone_plus();
-                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED proof block
                     lemma_height_le_size::<T>(&Some(rotated));
                     lemma_height_le_size::<T>(&n.right);
                 }
-                let rebuilt = mk(n_val, Some(rotated), n.right.clone());
                 // Veracity: NEEDED proof block
+                let rebuilt = mk(n_val, Some(rotated), n.right.clone());
                 proof { reveal_with_fuel(spec_inorder, 2); }
                 return rebuilt.rotate_right();
             }
@@ -489,25 +484,22 @@ pub mod AVLTreeSeqMtPer {
             // Veracity: NEEDED proof block
             proof {
             }
+            // Veracity: NEEDED proof block
             let right = n.right.as_ref().unwrap().clone();
             let ghost right_size = spec_cached_size(&Some(right));
-            // Veracity: NEEDED proof block
             proof {
             }
             if right.left.height_fn() > right.right.height_fn() {
                 let rotated = right.rotate_right();
                 let n_val = n.value.clone_plus();
-                // Veracity: NEEDED proof block
                 proof {
                     lemma_height_le_size::<T>(&n.left);
                     lemma_height_le_size::<T>(&Some(rotated));
                 }
                 let rebuilt = mk(n_val, n.left.clone(), Some(rotated));
-                // Veracity: NEEDED proof block
                 proof { reveal_with_fuel(spec_inorder, 2); }
                 return rebuilt.rotate_left();
             }
-            // Veracity: NEEDED proof block
             proof { reveal_with_fuel(spec_inorder, 2); }
             return n.rotate_left();
         }
@@ -517,6 +509,7 @@ pub mod AVLTreeSeqMtPer {
     } // impl AVLTreeSeqMtPerNodeFns
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+    // Veracity: NEEDED proof block
     fn build_balanced_from_slice<T: StTInMtT>(a: &[T]) -> (link: Link<T>)
         requires 0nat < usize::MAX as nat,
         ensures
@@ -527,13 +520,13 @@ pub mod AVLTreeSeqMtPer {
         if a.is_empty() {
             return None;
         }
+        // Veracity: NEEDED proof block
         let mid = a.len() / 2;
         let left_slice = slice_subrange(a, 0, mid);
         let right_slice = slice_subrange(a, mid + 1, a.len());
         let left = build_balanced_from_slice(left_slice);
         let right = build_balanced_from_slice(right_slice);
         let val = a[mid].clone();
-        // Veracity: NEEDED proof block
         proof {
             lemma_size_eq_inorder_len::<T>(&left);
             lemma_size_eq_inorder_len::<T>(&right);
@@ -545,7 +538,6 @@ pub mod AVLTreeSeqMtPer {
             assert(cloned(a@[mid as int], val));
         }
         let node = mk(val, left, right);
-        // Veracity: NEEDED proof block
         proof {
             let left_seq = left_slice@;
             let right_seq = right_slice@;
@@ -561,12 +553,14 @@ pub mod AVLTreeSeqMtPer {
     {
         match self {
             None => 0,
+            // Veracity: NEEDED proof block
             Some(node) => node.height,
         }
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn size_fn(&self) -> (sz: usize)
+    // Veracity: NEEDED proof block
     {
         match self {
             None => 0,
@@ -579,17 +573,17 @@ pub mod AVLTreeSeqMtPer {
         decreases *self,
     {
         let node = self.as_ref().unwrap();
-        // Veracity: NEEDED proof block
         proof { lemma_size_eq_inorder_len::<T>(&node.left); }
         let ls = node.left.size_fn();
         if index < ls {
             node.left.nth_ref(index)
         } else if index == ls {
+            // Veracity: NEEDED proof block
             &node.value
         } else {
-            // Veracity: NEEDED proof block
             proof { lemma_size_eq_inorder_len::<T>(&node.right); }
             node.right.nth_ref(index - ls - 1)
+        // Veracity: NEEDED proof block
         }
     }
 
@@ -597,8 +591,10 @@ pub mod AVLTreeSeqMtPer {
     fn set_rec(&self, index: usize, value: T) -> (outcome: Result<Self, &'static str>)
         decreases *self,
     {
+        // Veracity: NEEDED proof block
         match self {
             None => {
+                // Veracity: NEEDED proof block
                 if index == 0 {
                     Ok(Some(mk(value, None, None)))
                 } else {
@@ -606,26 +602,23 @@ pub mod AVLTreeSeqMtPer {
                 }
             }
             Some(n) => {
-                // Veracity: NEEDED proof block
                 proof { lemma_size_eq_inorder_len::<T>(&n.left); }
                 let ls = n.left.size_fn();
                 if index < ls {
                     let new_left = n.left.set_rec(index, value)?;
                     let n_val = n.value.clone_plus();
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_height_le_size::<T>(&new_left);
                         lemma_height_le_size::<T>(&n.right);
                     }
                     Ok(Some(mk(n_val, new_left, n.right.clone()).rebalance()))
                 } else if index == ls {
+                    // Veracity: NEEDED proof block
                     Ok(Some(mk(value, n.left.clone(), n.right.clone())))
                 } else {
-                    // Veracity: NEEDED proof block
                     proof { lemma_size_eq_inorder_len::<T>(&n.right); }
                     let new_right = n.right.set_rec(index - ls - 1, value)?;
                     let n_val = n.value.clone_plus();
-                    // Veracity: NEEDED proof block
                     proof {
                         lemma_height_le_size::<T>(&n.left);
                         lemma_height_le_size::<T>(&new_right);
@@ -638,6 +631,8 @@ pub mod AVLTreeSeqMtPer {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn inorder_collect(&self, out: &mut Vec<T>)
+        // Veracity: NEEDED proof block
+        // Veracity: NEEDED proof block
         decreases *self,
     {
         if let Some(n) = self {
@@ -645,7 +640,6 @@ pub mod AVLTreeSeqMtPer {
             n.left.inorder_collect(out);
             let ghost after_left_views = out@.map_values(|t: T| t@);
             let val = n.value.clone();
-            // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<T>());
@@ -664,9 +658,7 @@ pub mod AVLTreeSeqMtPer {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
     fn compare_trees(&self, other: &Self) -> (equal: bool)
     {
-        // Veracity: NEEDED proof block
         proof { lemma_size_eq_inorder_len::<T>(self); }
-        // Veracity: NEEDED proof block
         proof { lemma_size_eq_inorder_len::<T>(other); }
         let sa = self.size_fn();
         let sb = other.size_fn();
@@ -710,11 +702,13 @@ pub mod AVLTreeSeqMtPer {
         }
 
         open spec fn spec_avltreeseqmtper_wf(&self) -> bool {
+            // Veracity: NEEDED proof block
             spec_avltreeseqmtper_wf(self.root)
             && obeys_feq_full::<T>()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        // Veracity: NEEDED proof block
         fn empty() -> (tree: Self) {
                       // Veracity: NEEDED assert
                       assert(obeys_feq_full_trigger::<T>());
@@ -730,6 +724,7 @@ pub mod AVLTreeSeqMtPer {
         fn singleton(item: T) -> (tree: Self) {
                       // Veracity: NEEDED assert
                       assert(obeys_feq_full_trigger::<T>());
+            // Veracity: NEEDED proof block
             AVLTreeSeqMtPerS {
                 root: Some(mk(item, None, None)),
             }
@@ -737,14 +732,12 @@ pub mod AVLTreeSeqMtPer {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn length(&self) -> (len: usize) {
-            // Veracity: NEEDED proof block
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             self.root.size_fn()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn nth(&self, index: usize) -> (elem: &T) {
-            // Veracity: NEEDED proof block
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             self.root.nth_ref(index)
         }
@@ -761,7 +754,6 @@ pub mod AVLTreeSeqMtPer {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn set(&self, index: usize, item: T) -> (outcome: Result<Self, &'static str>) {
-            // Veracity: NEEDED proof block
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             Ok(AVLTreeSeqMtPerS {
                 root: self.root.set_rec(index, item)?,
@@ -972,6 +964,7 @@ pub mod AVLTreeSeqMtPer {
     impl<T: StTInMtT + 'static> IntoIterator for AVLTreeSeqMtPerS<T> {
         type Item = T;
         type IntoIter = AVLTreeSeqMtPerIter<T>;
+        // Veracity: NEEDED proof block
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures true,
         {
@@ -987,6 +980,7 @@ pub mod AVLTreeSeqMtPer {
 
     impl<T: StTInMtT + 'static> Default for AVLTreeSeqMtPerS<T> {
         fn default() -> Self { Self::empty() }
+    // Veracity: NEEDED proof block
     }
 
 
@@ -1002,7 +996,6 @@ pub mod AVLTreeSeqMtPer {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
-            // Veracity: NEEDED proof block
             proof {
                 assume(spec_avltreeseqmtper_wf(self.root));
                 assume(spec_avltreeseqmtper_wf(other.root));
@@ -1019,7 +1012,6 @@ pub mod AVLTreeSeqMtPer {
             let copy = AVLTreeSeqMtPerS {
                 root: self.root.clone(),
             };
-            // Veracity: NEEDED proof block
             proof { assume(copy@ == self@); }  // accept hole: Arc::clone external_body
             copy
         }

@@ -151,6 +151,7 @@ pub mod PrimTreeSeqStPer {
         fn from_vec(vec: Vec<T>) -> (seq: Self)
         {
             // Veracity: NEEDED proof block
+            // Veracity: NEEDED proof block
             proof { axiom_spec_len(&vec); }
             PrimTreeSeqStS { seq: vec }
         }
@@ -176,6 +177,7 @@ pub mod PrimTreeSeqStPer {
             } else if len == 1 {
                 let elem = self.seq[0].clone();
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof {
                     axiom_cloned_implies_eq_owned(self.seq@[0], elem);
                 }
@@ -196,6 +198,7 @@ pub mod PrimTreeSeqStPer {
                         forall|j: int| #![trigger left_vec@[j]] 0 <= j < left_vec@.len() ==> left_vec@[j] == self.seq@[j],
                     decreases mid - i,
                 {
+                    // Veracity: NEEDED proof block
                     left_vec.push(self.seq[i].clone());
                     // Veracity: NEEDED proof block
                     proof {
@@ -215,6 +218,7 @@ pub mod PrimTreeSeqStPer {
                         forall|j: int| #![trigger left_vec@[j]] 0 <= j < left_vec@.len() ==> left_vec@[j] == self.seq@[j],
                         forall|j: int| #![trigger right_vec@[j]] 0 <= j < right_vec@.len() ==> right_vec@[j] == self.seq@[mid as int + j],
                     decreases len - i,
+                // Veracity: NEEDED proof block
                 {
                     right_vec.push(self.seq[i].clone());
                     // Veracity: NEEDED proof block
@@ -242,6 +246,7 @@ pub mod PrimTreeSeqStPer {
                 PrimTreeSeqStTree::Zero => Self::empty(),
                 PrimTreeSeqStTree::One(value) => Self::singleton(value),
                 PrimTreeSeqStTree::Two(left, right) => {
+                    // Veracity: NEEDED proof block
                     let mut combined = left.seq;
                     let mut right_vec = right.seq;
                     combined.append(&mut right_vec);
@@ -266,6 +271,7 @@ pub mod PrimTreeSeqStPer {
                     a_len == a.seq@.len(),
                     seq@.len() == i as int,
                     obeys_feq_clone::<T>(),
+                    // Veracity: NEEDED proof block
                     forall|k: int| #![trigger seq@[k]] 0 <= k < i ==> seq@[k] == a.seq@[k],
                 decreases a_len - i,
             {
@@ -285,6 +291,7 @@ pub mod PrimTreeSeqStPer {
                     a_len == a.seq@.len(),
                     seq@.len() == a_len + j,
                     obeys_feq_clone::<T>(),
+                    // Veracity: NEEDED proof block
                     forall|k: int| #![trigger seq@[k]] 0 <= k < a_len ==> seq@[k] == a.seq@[k],
                     forall|k: int| #![trigger b.seq@[k]] 0 <= k < j ==> seq@[a_len as int + k] == b.seq@[k],
                 decreases b_len - j,
@@ -312,6 +319,7 @@ pub mod PrimTreeSeqStPer {
                     start <= i <= end,
                     end == start + length,
                     end <= self.seq@.len(),
+                    // Veracity: NEEDED proof block
                     seq@.len() == (i - start) as int,
                     obeys_feq_clone::<T>(),
                     forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> seq@[j] == self.seq@[(start + j) as int],
@@ -341,12 +349,14 @@ pub mod PrimTreeSeqStPer {
                     len == a.seq@.len(),
                     seq@.len() == i as int,
                     obeys_feq_clone::<T>(),
+                    // Veracity: NEEDED proof block
                     index < len,
                     forall|k: int| #![trigger seq@[k]] 0 <= k < i && k != index as int ==> seq@[k] == a.seq@[k],
                     i > index ==> seq@[index as int] == item,
                 decreases len - i,
             {
                 if i == index {
+                    // Veracity: NEEDED proof block
                     seq.push(item.clone());
                     // Veracity: NEEDED proof block
                     proof {
@@ -363,6 +373,7 @@ pub mod PrimTreeSeqStPer {
                 }
                 i += 1;
             }
+            // Veracity: NEEDED proof block
             PrimTreeSeqStS { seq }
         }
 
@@ -375,7 +386,9 @@ pub mod PrimTreeSeqStPer {
             // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < a.seq@.len() implies #[trigger] f.requires((&a.seq@[j],)) by {
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(a.seq@[j] == a.spec_index(j));
                 }
@@ -411,6 +424,7 @@ pub mod PrimTreeSeqStPer {
                 seq.push(f(i));
                 i += 1;
             }
+            // Veracity: NEEDED proof block
             PrimTreeSeqStS { seq }
         }
 
@@ -424,7 +438,9 @@ pub mod PrimTreeSeqStPer {
             // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < a.seq@.len() implies #[trigger] pred.requires((&a.seq@[j],)) by {
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(a.seq@[j] == a.spec_index(j));
                 }
@@ -432,6 +448,7 @@ pub mod PrimTreeSeqStPer {
             }
             while i < len
                 invariant
+                    // Veracity: NEEDED proof block
                     i <= len,
                     len == a.seq@.len(),
                     seq@.len() <= i,
@@ -444,11 +461,15 @@ pub mod PrimTreeSeqStPer {
                 decreases len - i,
             {
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof {
                     broadcast use vstd::seq_lib::group_to_multiset_ensures;
                 }
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert(a.seq@.subrange(0, i as int + 1) =~= a.seq@.subrange(0, i as int).push(a.seq@[i as int]));
+                // Veracity: NEEDED assert
+                // Veracity: NEEDED proof block
                 // Veracity: NEEDED assert
                 assert(a.seq@.subrange(0, i as int + 1).drop_last() =~= a.seq@.subrange(0, i as int));
                 if pred(&a.seq[i]) {
@@ -465,7 +486,9 @@ pub mod PrimTreeSeqStPer {
             // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert(a.seq@ =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)));
+                // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
                 assert(filtered.seq@ =~= Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)));
             }
@@ -496,12 +519,14 @@ pub mod PrimTreeSeqStPer {
                 decreases outer_len - i,
             {
                 let inner = &a.seq[i];
+                // Veracity: NEEDED proof block
                 let inner_len = inner.seq.len();
                 let mut j: usize = 0;
                 while j < inner_len
                     invariant
                         j <= inner_len,
                         inner_len == inner.seq@.len(),
+                        // Veracity: NEEDED proof block
                         i < outer_len,
                         outer_len == a.seq@.len(),
                         obeys_feq_clone::<T>(),
@@ -512,6 +537,7 @@ pub mod PrimTreeSeqStPer {
                     seq.push(inner.seq[j].clone());
                     // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED proof block
                         let ghost last = seq@[seq@.len() - 1 as int];
                         axiom_cloned_implies_eq_owned(inner.seq[j as int], last);
                     }
@@ -520,6 +546,7 @@ pub mod PrimTreeSeqStPer {
                 // Veracity: NEEDED proof block
                 proof {
                     let ghost prefix = a.seq@.take(i as int).map_values(|inner: PrimTreeSeqStS<T>| inner.seq@);
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(a.seq@.take(i as int + 1).map_values(|inner: PrimTreeSeqStS<T>| inner.seq@)
                         =~= prefix.push(a.seq@[i as int].seq@));
@@ -910,6 +937,7 @@ pub mod PrimTreeSeqStPer {
             requires self.spec_primtreeseqstper_wf(),
             ensures vec@ =~= self@;
     }
+// Veracity: NEEDED proof block (speed hint)
 
     //		Section 12a. derive impls in verus!
 
@@ -921,6 +949,7 @@ pub mod PrimTreeSeqStPer {
     }
 
 
+    // Veracity: NEEDED proof block
     impl<T: Clone> Clone for PrimTreeSeqStS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — clones inner Vec.
         fn clone(&self) -> (cloned: Self)
@@ -947,6 +976,7 @@ pub mod PrimTreeSeqStPer {
 
     impl<T: Eq + View> Eq for PrimTreeSeqStS<T> {}
 
+    // Veracity: NEEDED proof block (speed hint)
     //		Section 12b. derive impls in verus!
 
 
@@ -963,11 +993,13 @@ pub mod PrimTreeSeqStPer {
         {
             let cloned = match self {
                 PrimTreeSeqStTree::Zero => PrimTreeSeqStTree::Zero,
+                // Veracity: NEEDED proof block
                 PrimTreeSeqStTree::One(v) => PrimTreeSeqStTree::One(v.clone()),
                 PrimTreeSeqStTree::Two(l, r) => PrimTreeSeqStTree::Two(l.clone(), r.clone()),
             };
             // Veracity: NEEDED proof block
             proof { assume(cloned@ == self@); }
+            // Veracity: NEEDED proof block
             cloned
         }
     }

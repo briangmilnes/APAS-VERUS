@@ -84,9 +84,11 @@ pub mod Problem21_3 {
             {
                 let ghost v_len_mid = v@.len();
                 // Veracity: NEEDED proof block
+                // Veracity: NEEDED proof block
                 proof {
                     // v_len_mid == v_len_before + (y-1)*n, v_len_before == x*nn, nn == n*n, nnn == nn*n
                     // x <= n-1, y <= n, so v_len_mid <= (n-1)*n*n + (n-1)*n = n*n*n - n < nnn
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(v_len_mid <= nnn as int) by (nonlinear_arith)
                         requires
@@ -117,8 +119,10 @@ pub mod Problem21_3 {
                     decreases n + 2 - z,
                 {
                     // Veracity: NEEDED proof block
+                    // Veracity: NEEDED proof block
                     proof {
                         // v.len() < nnn so push won't overflow capacity
+                        // Veracity: NEEDED assert
                         // Veracity: NEEDED assert
                         assert(v_len_mid + (z as int - 2) + 1 <= nnn as int) by (nonlinear_arith)
                             requires
@@ -134,36 +138,44 @@ pub mod Problem21_3 {
                     v.push(Pair(x, Pair(y, z)));
                     z = z + 1;
                 }
+                // Veracity: NEEDED proof block
                 // After inner: added n elements, v.len() == v_len_mid + n
                 // Veracity: NEEDED proof block
                 proof {
                     // (y - 1) * n + n == y * n
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert((y as int - 1) * n as int + n as int == y as int * n as int)
                         by (nonlinear_arith);
                     // Overflow: v.len() <= nnn
                     // Veracity: NEEDED assert
+                    // Veracity: NEEDED assert
                     assert(y as int * n as int <= n as int * n as int)
                         by (nonlinear_arith)
                         requires y as int <= n as int, n as int >= 0;
+                    // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert(v_len_before + n as int * n as int <= (x as int + 1) * nn as int)
                         by (nonlinear_arith)
                         requires v_len_before == x as int * nn as int, nn == n as int * n as int;
                 }
                 y = y + 1;
+            // Veracity: NEEDED proof block
             }
             // After middle: v.len() == v_len_before + n * n == (x+1) * nn
             // Veracity: NEEDED proof block
             proof {
                 // Veracity: NEEDED assert
+                // Veracity: NEEDED assert
                 assert((x as int + 1) * nn as int == x as int * nn as int + nn as int)
                     by (nonlinear_arith);
+            // Veracity: NEEDED proof block
             }
             x = x + 1;
         }
         // Veracity: NEEDED proof block
         proof {
+            // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert(n as int * nn as int == n as int * n as int * n as int)
                 by (nonlinear_arith)
