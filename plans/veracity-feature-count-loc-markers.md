@@ -53,6 +53,25 @@ The "excluding markers" line subtracts NEEDED markers from proof lines (since th
 get counted as proof comments) and UNNEEDED markers from whichever category the
 commented-out code was in.
 
+## Also count algorithm analysis comments
+
+The codebase has 7,580 `/// - Alg Analysis:` comment lines — work/span cost
+annotations on every function:
+- 1,827 `/// - Alg Analysis: APAS` — textbook cost from Blelloch.
+- 5,752 `/// - Alg Analysis: Code review` — agent-reviewed cost annotations.
+
+These should be reported separately, like Veracity markers. They're documentation,
+not code, and inflate the total line count.
+
+```
+Algorithm Analysis Comments
+---------------------------
+  APAS annotations:     1,827
+  Code review annotations: 5,752
+  Total:                7,580
+  % of total lines:       3.8%
+```
+
 ## Constraint: No String Hacking
 
 Do NOT use regex, line-by-line string replacement, or naive find-and-replace on
