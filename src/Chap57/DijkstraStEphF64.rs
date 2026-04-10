@@ -194,7 +194,7 @@ pub mod DijkstraStEphF64 {
 
         // Edge count for PQ size bound: total PQ inserts <= |E|.
         let arcs_ref = graph.labeled_arcs();
-        // Veracity: NEEDED proof block
+        // Veracity: NEEDED proof block (speed hint)
         proof {
         }
         let m = arcs_ref.size();
@@ -246,9 +246,7 @@ pub mod DijkstraStEphF64 {
                     let mut it = neighbors.iter();
 
                     // Pre-compute: every iterator element corresponds to a graph edge.
-                    // Veracity: NEEDED proof block
                     proof {
-                        // Veracity: NEEDED assert
                         assert forall |j: int| 0 <= j < it@.1.len()
                             implies graph@.A.contains((v, (#[trigger] it@.1[j])@.0, it@.1[j]@.1))
                         by {
@@ -295,7 +293,6 @@ pub mod DijkstraStEphF64 {
                                         new_dist.dist_lt(&u_dist)
                                     };
                                     if is_better {
-                                        // Veracity: NEEDED proof block
                                         proof {
                                             let new_edge: (usize, usize, f64) = (v, *u, weight@);
                                             let ghost pos = (it@.0 - 1) as int;
@@ -303,7 +300,6 @@ pub mod DijkstraStEphF64 {
                                             vstd::set_lib::lemma_len_subset::<(usize, usize, f64)>(new_used, graph@.A);
                                         }
                                         pq = pq.insert(pq_entry_new(new_dist, *u));
-                                        // Veracity: NEEDED proof block
                                         proof {
                                             used_edges = used_edges.insert((v, *u, weight@));
                                             remaining_budget = remaining_budget - 1;

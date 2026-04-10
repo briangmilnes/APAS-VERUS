@@ -180,7 +180,7 @@ pub mod DijkstraStEphU64 {
 
         // Edge count for PQ size bound: total PQ inserts <= |E|.
         let arcs_ref = graph.labeled_arcs();
-        // Veracity: NEEDED proof block
+        // Veracity: NEEDED proof block (speed hint)
         proof {
         }
         let m = arcs_ref.size();
@@ -274,8 +274,8 @@ pub mod DijkstraStEphU64 {
                                 if *u < n {
                                     let u_dist = sssp.get_distance(*u);
                                     let new_dist = dist.wrapping_add((*weight) as i64);
+                                    // Veracity: NEEDED proof block
                                     if new_dist < u_dist {
-                                        // Veracity: NEEDED proof block
                                         proof {
                                             // Each PQ insert uses a unique graph edge.
                                             let new_edge: (usize, usize, i128) = (v, *u, *weight);
@@ -284,8 +284,8 @@ pub mod DijkstraStEphU64 {
                                             let new_used = used_edges.insert(new_edge);
                                             vstd::set_lib::lemma_len_subset::<(usize, usize, i128)>(new_used, graph@.A);
                                         }
-                                        pq = pq.insert(pq_entry_new(new_dist, *u));
                                         // Veracity: NEEDED proof block
+                                        pq = pq.insert(pq_entry_new(new_dist, *u));
                                         proof {
                                             used_edges = used_edges.insert((v, *u, *weight));
                                             remaining_budget = remaining_budget - 1;
