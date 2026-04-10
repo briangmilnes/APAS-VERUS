@@ -44,6 +44,7 @@ pub mod AVLTreeSetStPer {
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesWf;
+    use crate::vstdplus::accept::accept;
 
     verus! 
 {
@@ -697,14 +698,14 @@ broadcast use {
         {
             // Veracity: NEEDED proof block
             proof {
-                assume(self.spec_avltreesetstper_wf());
-                assume(other.spec_avltreesetstper_wf());
-                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-                assume(view_ord_consistent::<T>());
+                accept(self.spec_avltreesetstper_wf());
+                accept(other.spec_avltreesetstper_wf());
+                accept(vstd::laws_cmp::obeys_cmp_spec::<T>());
+                accept(view_ord_consistent::<T>());
             }
             let equal = self.size() == other.size() && self.difference(other).size() == 0;
             // Veracity: NEEDED proof block
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

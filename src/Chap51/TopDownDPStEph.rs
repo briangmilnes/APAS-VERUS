@@ -40,6 +40,7 @@ pub mod TopDownDPStEph {
     use crate::Chap51::SeqSpecsAndLemmas::SeqSpecsAndLemmas::*;
     use crate::Types::Types::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -391,7 +392,7 @@ pub mod TopDownDPStEph {
         {
             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
             // Veracity: NEEDED proof block
-            proof { assume(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
+            proof { accept(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
             r
         }
     }

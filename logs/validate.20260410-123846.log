@@ -1,0 +1,1569 @@
+Mode: full
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap05/SetStEph.rs:949:21
+    |
+949 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 27 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap05/MappingStEph.rs:658:21
+    |
+658 |             proof { accept(r == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 27 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap17/MathSeq.rs:694:21
+    |
+694 |             proof { accept(cloned@ == self@); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 31 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap17/MathSeq.rs:708:21
+    |
+708 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 31 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap18/ArraySeq.rs:1680:21
+     |
+1680 |             proof { accept(equal == (self@ == other@)); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  27 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1052:21
+     |
+1052 |             proof { accept(equal == (self@ == other@)); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  27 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap18/ArraySeqStEph.rs:1092:21
+     |
+1092 |             proof { accept(equal == (self@ == other@)); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  27 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap18/LinkedListStPer.rs:879:21
+    |
+879 |             proof { accept(cloned@ == self@); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 27 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap18/LinkedListStPer.rs:893:21
+    |
+893 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 27 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap18/LinkedListStEph.rs:897:21
+    |
+897 |             proof { accept(cloned@ == self@); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 27 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap18/LinkedListStEph.rs:911:21
+    |
+911 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 27 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:1936:21
+     |
+1936 |             proof { accept(equal == (self@ == other@)); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  34 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap18/ArraySeqMtPer.rs:1883:21
+     |
+1883 |             proof { accept(equal == (self@ == other@)); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  29 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap19/ArraySeqMtEph.rs:1727:21
+     |
+1727 |             proof { accept(equal == (self@ == other@)); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  31 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap23/PrimTreeSeqStPer.rs:960:21
+    |
+960 |             proof { accept(cloned@ == self@); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 39 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap23/PrimTreeSeqStPer.rs:972:21
+    |
+972 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 39 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap23/PrimTreeSeqStPer.rs:1001:21
+     |
+1001 |             proof { accept(cloned@ == self@); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  39 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap23/PrimTreeSeqStPer.rs:1019:29
+     |
+1019 |                     proof { accept(equal == (self@ == other@)); }
+     |                             ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  39 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap23/PrimTreeSeqStPer.rs:1025:29
+     |
+1025 |                     proof { accept(equal == (self@ == other@)); }
+     |                             ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  39 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap23/BalBinTreeStEph.rs:503:17
+    |
+503 |         proof { accept(c == *t); }
+    |                 ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 32 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap23/BalBinTreeStEph.rs:812:29
+    |
+812 |                     proof { accept(equal == (*self == *other)); }
+    |                             ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 32 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap23/BalBinTreeStEph.rs:848:21
+    |
+848 |             proof { accept(equal == (*self == *other)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 32 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap23/BalBinTreeStEph.rs:865:21
+    |
+865 |             proof { accept(cloned == *self); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 32 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeq.rs:1356:17
+     |
+1356 |                 accept(spec_avltreeseq_wf(self.root));
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  34 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeq.rs:1357:17
+     |
+1357 |                 accept(spec_avltreeseq_wf(other.root));
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  34 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeq.rs:1358:17
+     |
+1358 |                 accept(obeys_feq_full::<T>());
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  34 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeq.rs:1381:21
+     |
+1381 |             proof { accept(copy@ == self@); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  34 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeqStEph.rs:1256:25
+     |
+1256 |                 proof { accept(new_value@ == node.value@); }
+     |                         ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  39 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeqStEph.rs:1376:17
+     |
+1376 |                 accept(spec_avltreeseqsteph_wf(self.root));
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  39 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeqStEph.rs:1377:17
+     |
+1377 |                 accept(spec_avltreeseqsteph_wf(other.root));
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  39 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeqStEph.rs:1378:17
+     |
+1378 |                 accept(obeys_feq_full::<T>());
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  39 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeqStPer.rs:1096:17
+     |
+1096 |                 accept(spec_avltreeseqstper_wf(self.root));
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  30 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeqStPer.rs:1097:17
+     |
+1097 |                 accept(spec_avltreeseqstper_wf(other.root));
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  30 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeqStPer.rs:1098:17
+     |
+1098 |                 accept(obeys_feq_full::<T>());
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  30 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeqStPer.rs:1113:21
+     |
+1113 | ...   proof { accept(copy@ == self@ && (self.spec_avltreeseqstper_wf() ==> copy.spec_avltreeseqstper_wf())); }  // accept hole: Ar...
+     |               ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  30 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeqMtPer.rs:1000:17
+     |
+1000 |                 accept(spec_avltreeseqmtper_wf(self.root));
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  32 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeqMtPer.rs:1001:17
+     |
+1001 |                 accept(spec_avltreeseqmtper_wf(other.root));
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  32 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeqMtPer.rs:1002:17
+     |
+1002 |                 accept(obeys_feq_full::<T>());
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  32 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap37/AVLTreeSeqMtPer.rs:1015:21
+     |
+1015 |             proof { accept(copy@ == self@); }  // accept hole: Arc::clone external_body
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  32 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:1716:21
+     |
+1716 |             proof { accept(cloned@ == self@); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  39 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:1735:21
+     |
+1735 |             proof { accept(cloned@ == self@); }  // assume_eq_clone_workaround
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  39 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:1688:25
+     |
+1688 |                         accept(forall|t: T| (#[trigger] lv.contains(t@)) ==> t.cmp_spec(&key) == Less);
+     |                         ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  35 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:1689:25
+     |
+1689 |                         accept(forall|t: T| (#[trigger] rv.contains(t@)) ==> t.cmp_spec(&key) == Greater);
+     |                         ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  35 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:1690:25
+     |
+1690 |                         accept(lv.len() + rv.len() < usize::MAX as nat);
+     |                         ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  35 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:1699:21
+     |
+1699 |             proof { accept(cloned@ == self@); } // Clone bridge: deep copy preserves view.
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  35 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:436:21
+    |
+436 |             proof { accept(cloned@ == self@); } // Clone bridge: view preserved by ParamTreap::clone.
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 25 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTKeyValueStEph.rs:1390:25
+     |
+1390 |                 proof { accept(k == node.key && v == node.value); } // accept hole: Clone bridge
+     |                         ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  37 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTKeyValueStEph.rs:1471:21
+     |
+1471 |             proof { accept(spec_ordered_link(&self.left)); accept(spec_ordered_link(&self.right)); } // Clone body: ordering bridge
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  37 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTKeyValueStEph.rs:1471:60
+     |
+1471 |             proof { accept(spec_ordered_link(&self.left)); accept(spec_ordered_link(&self.right)); } // Clone body: ordering bridge
+     |                                                            ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  37 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTKeyValueStEph.rs:1499:21
+     |
+1499 |             proof { accept(spec_ordered_link(&self.root)); } // Clone body: ordering bridge
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  37 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTKeyValueStEph.rs:1520:21
+     |
+1520 | ...   proof { accept(spec_ordered_link(&self.root)); accept(spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
+     |               ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  37 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTKeyValueStEph.rs:1520:60
+     |
+1520 | ...   proof { accept(spec_ordered_link(&self.root)); accept(spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
+     |                                                      ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  37 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTKeyValueStEph.rs:1523:21
+     |
+1523 |             proof { accept(equal == (self@ == other@)); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  37 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTSizeStEph.rs:1437:25
+     |
+1437 |                 proof { accept(k == node.key); } // accept hole: Clone bridge
+     |                         ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  35 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTSizeStEph.rs:1455:21
+     |
+1455 | ...   proof { accept(Lnk::spec_ordered_link(&self.left)); accept(Lnk::spec_ordered_link(&self.right)); } // Clone body: ordering b...
+     |               ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  35 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTSizeStEph.rs:1455:65
+     |
+1455 | ...   proof { accept(Lnk::spec_ordered_link(&self.left)); accept(Lnk::spec_ordered_link(&self.right)); } // Clone body: ordering b...
+     |                                                           ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  35 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTSizeStEph.rs:1483:21
+     |
+1483 |             proof { accept(Lnk::spec_ordered_link(&self.root)); } // Clone body: ordering bridge
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  35 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTSizeStEph.rs:1501:21
+     |
+1501 | ...   proof { accept(Lnk::spec_ordered_link(&self.root)); accept(Lnk::spec_ordered_link(&other.root)); } // PartialEq body: orderi...
+     |               ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  35 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTSizeStEph.rs:1501:65
+     |
+1501 | ...   proof { accept(Lnk::spec_ordered_link(&self.root)); accept(Lnk::spec_ordered_link(&other.root)); } // PartialEq body: orderi...
+     |                                                           ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  35 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTSizeStEph.rs:1504:21
+     |
+1504 |             proof { accept(equal == (self@ == other@)); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  35 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTReducedStEph.rs:1556:25
+     |
+1556 |                 proof { accept(k == node.key && v == node.value); } // accept hole: Clone bridge
+     |                         ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  44 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTReducedStEph.rs:1596:21
+     |
+1596 | ...   proof { accept(Lnk::spec_ordered_link(&self.left)); accept(Lnk::spec_ordered_link(&self.right)); } // Clone body: ordering b...
+     |               ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  44 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTReducedStEph.rs:1596:65
+     |
+1596 | ...   proof { accept(Lnk::spec_ordered_link(&self.left)); accept(Lnk::spec_ordered_link(&self.right)); } // Clone body: ordering b...
+     |                                                           ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  44 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTReducedStEph.rs:1655:21
+     |
+1655 | ...   proof { accept(Lnk::spec_ordered_link(&self.root)); accept(Lnk::spec_ordered_link(&other.root)); } // PartialEq body: orderi...
+     |               ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  44 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTReducedStEph.rs:1655:65
+     |
+1655 | ...   proof { accept(Lnk::spec_ordered_link(&self.root)); accept(Lnk::spec_ordered_link(&other.root)); } // PartialEq body: orderi...
+     |                                                           ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  44 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap40/BSTReducedStEph.rs:1658:21
+     |
+1658 |             proof { accept(equal == (self@ == other@)); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  44 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap41/ArraySetStEph.rs:1064:17
+     |
+1064 |                 accept(self.spec_arraysetsteph_wf());
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  34 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap41/ArraySetStEph.rs:1065:17
+     |
+1065 |                 accept(other.spec_arraysetsteph_wf());
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  34 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap41/ArraySetStEph.rs:1088:21
+     |
+1088 |             proof { accept(equal == (self@ == other@)); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  34 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap41/ArraySetStEph.rs:1102:17
+     |
+1102 |                 accept(obeys_feq_clone::<T>());
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  34 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:978:21
+    |
+978 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 30 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:992:21
+    |
+992 |             proof { accept(cloned@ == self@); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 30 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:823:17
+    |
+823 |                 accept(self.spec_avltreesetsteph_wf());
+    |                 ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:824:17
+    |
+824 |                 accept(other.spec_avltreesetsteph_wf());
+    |                 ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:825:17
+    |
+825 |                 accept(vstd::laws_cmp::obeys_cmp_spec::<T>());
+    |                 ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:826:17
+    |
+826 |                 accept(view_ord_consistent::<T>());
+    |                 ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:830:21
+    |
+830 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:700:17
+    |
+700 |                 accept(self.spec_avltreesetstper_wf());
+    |                 ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:701:17
+    |
+701 |                 accept(other.spec_avltreesetstper_wf());
+    |                 ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:702:17
+    |
+702 |                 accept(vstd::laws_cmp::obeys_cmp_spec::<T>());
+    |                 ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:703:17
+    |
+703 |                 accept(view_ord_consistent::<T>());
+    |                 ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:707:21
+    |
+707 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:591:21
+    |
+591 |             proof { accept(all_eq == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 32 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap42/TableStEph.rs:2553:21
+     |
+2553 |             proof { accept(equal == (self@ == other@)); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  24 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap42/TableStPer.rs:2762:21
+     |
+2762 |             proof { accept(equal == (self@ == other@)); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  24 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap42/TableStPer.rs:2773:17
+     |
+2773 |                 accept(obeys_feq_clone::<Pair<K, V>>());
+     |                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  24 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap42/TableMtEph.rs:2426:21
+     |
+2426 |             proof { accept(equal == (self@ == other@)); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  27 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap42/TableMtEph.rs:2438:21
+     |
+2438 |             proof { accept(cloned@ == self@); }  // accept hole: Vec::clone external_body
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  27 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:966:21
+    |
+966 |             proof { accept(base_cloned@ == self.base_table@); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 27 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:1518:21
+     |
+1518 |             proof { accept(equal == (self@ == other@)); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  28 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:1530:21
+     |
+1530 |             proof { accept(copy@ == self@); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  28 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap44/DocumentIndex.rs:644:21
+    |
+644 |             proof { accept(cloned == *self); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 28 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap45/UnsortedListPQ.rs:845:21
+    |
+845 |                     accept(obeys_feq_clone::<T>());
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap45/UnsortedListPQ.rs:861:25
+    |
+861 |                 proof { accept(equal == (self@ == other@)); }
+    |                         ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap45/SortedListPQ.rs:1254:21
+     |
+1254 |                     accept(obeys_feq_clone::<T>());
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  26 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap45/BinaryHeapPQ.rs:1846:21
+     |
+1846 |                     accept(obeys_feq_clone::<T>());
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  28 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap45/BinaryHeapPQ.rs:1863:25
+     |
+1863 |                 proof { accept(equal == (self@ == other@)); }
+     |                         ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  28 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap45/BalancedTreePQ.rs:858:25
+    |
+858 |                 proof { accept(equal == (self@ == other@)); }
+    |                         ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1195:33
+     |
+1195 |                         proof { accept(cloned == *self); }
+     |                                 ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  34 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1217:25
+     |
+1217 |                 proof { accept(equal == (*self == *other)); }
+     |                         ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  34 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1245:25
+     |
+1245 |                 proof { accept(cloned.root == self.root); }
+     |                         ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  34 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1256:25
+     |
+1256 |                 proof { accept(equal == (self.root == other.root)); }
+     |                         ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  34 +     use crate::vstdplus::accept::accept;
+     |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap45/HeapsortExample.rs:114:25
+    |
+114 |                 proof { accept(cloned@ == self@); }
+    |                         ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 23 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap45/HeapsortExample.rs:131:25
+    |
+131 |                 proof { accept(equal == (self@ == other@)); }
+    |                         ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 23 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:879:25
+    |
+879 |                 proof { accept(cloned == *self); }
+    |                         ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 30 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:897:25
+    |
+897 |                 proof { accept(equal == (*self == *other)); }
+    |                         ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 30 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:930:25
+    |
+930 |                 proof { accept(cloned == *self); }
+    |                         ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 30 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:945:25
+    |
+945 |                 proof { accept(equal == (*self == *other)); }
+    |                         ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 30 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap47/FlatHashTable.rs:267:21
+    |
+267 |             proof { accept(c == *self); } // Clone bridge.
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 23 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/MatrixChainStEph.rs:449:21
+    |
+449 |             proof { accept(mc@ == self@); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 35 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/MatrixChainStEph.rs:466:21
+    |
+466 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 35 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/MatrixChainStPer.rs:409:20
+    |
+409 |             proof {accept(mc@ == self@);}
+    |                    ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 34 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/MatrixChainStPer.rs:425:21
+    |
+425 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 34 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:608:21
+    |
+608 |             proof { accept(mc@ == self@); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 41 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/MatrixChainMtEph.rs:631:21
+    |
+631 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 41 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/MatrixChainMtPer.rs:487:21
+    |
+487 |             proof { accept(mc@ == self@); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 38 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/MatrixChainMtPer.rs:506:21
+    |
+506 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 38 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/OptBinSearchTreeStEph.rs:323:21
+    |
+323 |             proof { accept(cloned == *self); }  // accept hole: T::clone external_body
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/OptBinSearchTreeStEph.rs:342:21
+    |
+342 |             proof { accept(cloned@ == self@); }  // accept hole: Vec::clone external_body
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/OptBinSearchTreeStPer.rs:289:21
+    |
+289 |             proof { accept(cloned == *self); }  // accept hole: T::clone external_body
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/OptBinSearchTreeStPer.rs:308:21
+    |
+308 |             proof { accept(cloned@ == self@); }  // accept hole: Vec::clone external_body
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/OptBinSearchTreeMtEph.rs:509:21
+    |
+509 |             proof { accept(cloned == *self); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 41 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/OptBinSearchTreeMtEph.rs:529:21
+    |
+529 |             proof { accept(cloned@ == self@); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 41 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/OptBinSearchTreeMtEph.rs:552:21
+    |
+552 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 41 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/OptBinSearchTreeMtPer.rs:388:21
+    |
+388 |             proof { accept(cloned == *self); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 37 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/OptBinSearchTreeMtPer.rs:407:21
+    |
+407 |             proof { accept(cloned@ == self@); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 37 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap50/OptBinSearchTreeMtPer.rs:425:21
+    |
+425 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 37 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap51/BottomUpDPStEph.rs:504:21
+    |
+504 |             proof { accept(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 29 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap51/BottomUpDPStPer.rs:468:21
+    |
+468 |             proof { accept(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 30 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap51/BottomUpDPMtEph.rs:485:21
+    |
+485 |             proof { accept(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 30 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap51/BottomUpDPMtPer.rs:456:21
+    |
+456 |             proof { accept(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 30 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap51/TopDownDPStEph.rs:394:21
+    |
+394 |             proof { accept(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 34 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap51/TopDownDPStPer.rs:358:21
+    |
+358 |             proof { accept(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 34 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap51/TopDownDPMtEph.rs:508:21
+    |
+508 |             proof { accept(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 31 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap51/TopDownDPMtPer.rs:468:21
+    |
+468 |             proof { accept(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 31 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:646:21
+    |
+646 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 27 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap52/AdjMatrixGraphStPer.rs:664:21
+    |
+664 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 27 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap52/EdgeSetGraphStEph.rs:477:21
+    |
+477 |             proof { accept(cloned@ == self@); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap52/EdgeSetGraphStPer.rs:455:21
+    |
+455 |             proof { accept(cloned@ == self@); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 27 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap52/EdgeSetGraphStPer.rs:472:21
+    |
+472 |             proof { accept(equal == (self@ == other@)); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 27 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+   --> src/Chap65/PrimStEph.rs:505:21
+    |
+505 |             proof { accept(cloned@ == self@); }
+    |                     ^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 29 +     use crate::vstdplus::accept::accept;
+    |
+
+error[E0425]: cannot find function `accept` in this scope
+    --> src/Chap66/BoruvkaMtEph.rs:1128:21
+     |
+1128 |             proof { accept(equal == (self@ == other@)); }
+     |                     ^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  30 +     use crate::vstdplus::accept::accept;
+     |
+
+error: aborting due to 142 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 714MB, peak z3 RSS: 0MB, min free: 21797MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 0s

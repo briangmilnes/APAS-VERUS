@@ -1460,7 +1460,7 @@ pub mod BSTTreapMtEph {
                 // Veracity: NEEDED proof block
                 let c = None;
                 // Veracity: NEEDED proof block
-                proof { assume(c == *link); }
+                proof { accept(c == *link); }
                 c
             }
             Some(node) => {
@@ -1475,7 +1475,7 @@ pub mod BSTTreapMtEph {
                     right,
                 }));
                 // Veracity: NEEDED proof block
-                proof { assume(c == *link); }
+                proof { accept(c == *link); }
                 c
             }
         }
@@ -1500,8 +1500,8 @@ pub mod BSTTreapMtEph {
             // Veracity: NEEDED proof block
             // Veracity: NEEDED proof block
             proof {
-                assume(Lnk::spec_link_size_wf(&self.left));
-                assume(Lnk::spec_link_size_wf(&self.right));
+                accept(Lnk::spec_link_size_wf(&self.left));
+                accept(Lnk::spec_link_size_wf(&self.right));
             }
             let cloned = Node {
                 key: self.key.clone(),
@@ -1511,7 +1511,7 @@ pub mod BSTTreapMtEph {
                 right: clone_link(&self.right),
             };
             // Veracity: NEEDED proof block
-            proof { assume(cloned == *self); }
+            proof { accept(cloned == *self); }
             cloned
         }
     }
@@ -1532,15 +1532,15 @@ pub mod BSTTreapMtEph {
             handle.release_read();
             // Veracity: NEEDED proof block
             proof {
-                assume(spec_bsttreapmteph_link_wf(&inner_clone));
-                assume(self.ghost_locked_root@.finite());
+                accept(spec_bsttreapmteph_link_wf(&inner_clone));
+                accept(self.ghost_locked_root@.finite());
             }
             let cloned = BSTTreapMtEph {
                 locked_root: RwLock::new(inner_clone, Ghost(BSTTreapMtEphInv)),
                 ghost_locked_root: Ghost(self.ghost_locked_root@),
             };
             // Veracity: NEEDED proof block
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }

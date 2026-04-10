@@ -46,6 +46,7 @@ pub mod BalBinTreeStEph {
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::accept::accept;
 
     //		Section 3. broadcast use
 
@@ -500,7 +501,7 @@ pub mod BalBinTreeStEph {
         };
         // Veracity: NEEDED proof block
         // Veracity: NEEDED proof block
-        proof { assume(c == *t); }
+        proof { accept(c == *t); }
         c
     }
 
@@ -809,7 +810,7 @@ pub mod BalBinTreeStEph {
                     let equal = a.left == b.left && a.value == b.value && a.right == b.right;
                     // Veracity: NEEDED proof block (speed hint)
                     // Veracity: NEEDED proof block
-                    proof { assume(equal == (*self == *other)); }
+                    proof { accept(equal == (*self == *other)); }
                     equal
                 },
                 _ => false,
@@ -845,7 +846,7 @@ pub mod BalBinTreeStEph {
             // Veracity: NEEDED proof block
             let equal = self.left == other.left && self.value == other.value && self.right == other.right;
             // Veracity: NEEDED proof block
-            proof { assume(equal == (*self == *other)); }
+            proof { accept(equal == (*self == *other)); }
             equal
         }
     }
@@ -862,7 +863,7 @@ pub mod BalBinTreeStEph {
                 right: clone_tree(&self.right),
             };
             // Veracity: NEEDED proof block
-            proof { assume(cloned == *self); }
+            proof { accept(cloned == *self); }
             cloned
         }
     }

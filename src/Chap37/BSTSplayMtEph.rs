@@ -1539,7 +1539,7 @@ pub mod BSTSplayMtEph {
                     // Veracity: NEEDED proof block
                     right,
                 }));
-                proof { assume(c == *link); }
+                proof { accept(c == *link); }
                 c
             }
         }
@@ -2095,7 +2095,7 @@ pub mod BSTSplayMtEph {
                 left,
                 right,
             };
-            proof { assume(cloned == *self); }
+            proof { accept(cloned == *self); }
             cloned
         }
     }

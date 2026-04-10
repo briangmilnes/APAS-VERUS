@@ -46,6 +46,7 @@ pub mod OrderedTableStPer {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    use crate::vstdplus::accept::accept;
 
     verus! 
 {
@@ -1515,7 +1516,7 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             let equal = self.tree.inner.size() == other.tree.inner.size();
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }
@@ -1527,7 +1528,7 @@ broadcast use {
             let copy = OrderedTableStPer {
                 tree: OrdKeyMap { inner: self.tree.inner.clone() },
             };
-            proof { assume(copy@ == self@); }
+            proof { accept(copy@ == self@); }
             copy
         }
     }

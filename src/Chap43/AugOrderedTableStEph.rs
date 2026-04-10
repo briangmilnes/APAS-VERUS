@@ -38,6 +38,7 @@ pub mod AugOrderedTableStEph {
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
 
@@ -963,7 +964,7 @@ broadcast use {
             ensures cloned@ == self@
         {
             let base_cloned = self.base_table.clone();
-            proof { assume(base_cloned@ == self.base_table@); }
+            proof { accept(base_cloned@ == self.base_table@); }
             Self {
                 base_table: base_cloned,
                 cached_reduction: self.cached_reduction.clone(),

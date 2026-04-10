@@ -41,6 +41,7 @@ pub mod OptBinSearchTreeStPer {
     use crate::Types::Types::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::prob;
+    use crate::vstdplus::accept::accept;
 
     verus! 
 {
@@ -286,7 +287,7 @@ broadcast use {
             ensures cloned == *self,
         {
             let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
-            proof { assume(cloned == *self); }  // accept hole: T::clone external_body
+            proof { accept(cloned == *self); }  // accept hole: T::clone external_body
             cloned
         }
     }
@@ -305,7 +306,7 @@ broadcast use {
                 keys: self.keys.clone(),
                 memo: self.memo.clone(),
             };
-            proof { assume(cloned@ == self@); }  // accept hole: Vec::clone external_body
+            proof { accept(cloned@ == self@); }  // accept hole: Vec::clone external_body
             cloned
         }
     }

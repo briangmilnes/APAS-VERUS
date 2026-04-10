@@ -50,6 +50,7 @@ pub mod AVLTreeSeq {
 
 
     broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+    use crate::vstdplus::accept::accept;
 
     //		Section 4. type definitions
 
@@ -1353,9 +1354,9 @@ pub mod AVLTreeSeq {
             ensures equal == (self@ == other@)
         {
             proof {
-                assume(spec_avltreeseq_wf(self.root));
-                assume(spec_avltreeseq_wf(other.root));
-                assume(obeys_feq_full::<T>());
+                accept(spec_avltreeseq_wf(self.root));
+                accept(spec_avltreeseq_wf(other.root));
+                accept(obeys_feq_full::<T>());
             }
             // Per-node size bound in wf gives cached_size < usize::MAX.
             let equal = self.root.compare_trees(&other.root);
@@ -1378,7 +1379,7 @@ pub mod AVLTreeSeq {
                 // By induction, root.clone()@ == root@
                 // So copy@ == self@
             }
-            proof { assume(copy@ == self@); }
+            proof { accept(copy@ == self@); }
             copy
         }
     }

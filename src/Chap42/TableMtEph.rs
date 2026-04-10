@@ -45,6 +45,7 @@ pub mod TableMtEph {
     use vstd::laws_eq::obeys_view_eq;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_fulls;
+    use crate::vstdplus::accept::accept;
 
     verus! 
 {
@@ -2423,7 +2424,7 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             let equal = self.entries == other.entries;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }
@@ -2435,7 +2436,7 @@ broadcast use {
             let cloned = TableMtEph {
                 entries: self.entries.clone(),
             };
-            proof { assume(cloned@ == self@); }  // accept hole: Vec::clone external_body
+            proof { accept(cloned@ == self@); }  // accept hole: Vec::clone external_body
             cloned
         }
     }

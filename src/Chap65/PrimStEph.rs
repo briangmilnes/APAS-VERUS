@@ -48,6 +48,7 @@ pub mod PrimStEph {
     use vstd::pervasive::strictly_cloned;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    use crate::vstdplus::accept::accept;
 
     pub type T<V> = PQEntry<V>;
 
@@ -502,7 +503,7 @@ pub mod PrimStEph {
         {
             let cloned = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
             // Veracity: NEEDED proof block
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }

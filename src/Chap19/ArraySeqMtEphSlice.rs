@@ -1719,7 +1719,7 @@ pub mod ArraySeqMtEphSlice {
             ensures equal == (self@ == other@)
         {
             let equal = self.start == other.start && self.len == other.len;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

@@ -38,6 +38,7 @@ pub mod EdgeSetGraphStPer {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::accept::accept;
 
     verus!
 {
@@ -452,7 +453,7 @@ broadcast use {
                 vertices: self.vertices.clone(),
                 edges: self.edges.clone(),
             };
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }
@@ -469,7 +470,7 @@ broadcast use {
             ensures equal == (self@ == other@),
         {
             let equal = self.vertices == other.vertices && self.edges == other.edges;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

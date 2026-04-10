@@ -52,6 +52,7 @@ pub mod PrimTreeSeqStPer {
         vstd::std_specs::cmp::PartialEqSpecImpl,
     };
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use vstd::multiset::Multiset;
     #[cfg(verus_keep_ghost)]
@@ -957,7 +958,7 @@ pub mod PrimTreeSeqStPer {
         {
             let cloned = PrimTreeSeqStS { seq: self.seq.clone() };
             // Veracity: NEEDED proof block
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }
@@ -969,7 +970,7 @@ pub mod PrimTreeSeqStPer {
         {
             let equal = self.seq == other.seq;
             // Veracity: NEEDED proof block
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }
@@ -998,7 +999,7 @@ pub mod PrimTreeSeqStPer {
                 PrimTreeSeqStTree::Two(l, r) => PrimTreeSeqStTree::Two(l.clone(), r.clone()),
             };
             // Veracity: NEEDED proof block
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             // Veracity: NEEDED proof block
             cloned
         }
@@ -1016,13 +1017,13 @@ pub mod PrimTreeSeqStPer {
                 (PrimTreeSeqStTree::One(a), PrimTreeSeqStTree::One(b)) => {
                     let equal = *a == *b;
                     // Veracity: NEEDED proof block
-                    proof { assume(equal == (self@ == other@)); }
+                    proof { accept(equal == (self@ == other@)); }
                     equal
                 },
                 (PrimTreeSeqStTree::Two(l1, r1), PrimTreeSeqStTree::Two(l2, r2)) => {
                     let equal = *l1 == *l2 && *r1 == *r2;
                     // Veracity: NEEDED proof block
-                    proof { assume(equal == (self@ == other@)); }
+                    proof { accept(equal == (self@ == other@)); }
                     equal
                 },
                 _ => {

@@ -38,6 +38,7 @@ pub mod AVLTreeSeqStPer {
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{lemma_cloned_view_eq, obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger};
+    use crate::vstdplus::accept::accept;
 
     verus! 
 {
@@ -1093,9 +1094,9 @@ pub mod AVLTreeSeqStPer {
             ensures equal == (self@ == other@)
         {
             proof {
-                assume(spec_avltreeseqstper_wf(self.root));
-                assume(spec_avltreeseqstper_wf(other.root));
-                assume(obeys_feq_full::<T>());
+                accept(spec_avltreeseqstper_wf(self.root));
+                accept(spec_avltreeseqstper_wf(other.root));
+                accept(obeys_feq_full::<T>());
             }
             self.root.compare_trees(&other.root)
         }
@@ -1110,7 +1111,7 @@ pub mod AVLTreeSeqStPer {
             let copy = AVLTreeSeqStPerS {
                 root: self.root.clone(),
             };
-            proof { assume(copy@ == self@ && (self.spec_avltreeseqstper_wf() ==> copy.spec_avltreeseqstper_wf())); }  // accept hole: Arc::clone external_body
+            proof { accept(copy@ == self@ && (self.spec_avltreeseqstper_wf() ==> copy.spec_avltreeseqstper_wf())); }  // accept hole: Arc::clone external_body
             copy
         }
     }

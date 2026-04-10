@@ -59,6 +59,7 @@ pub mod ArraySeqMtEph {
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::monoid::monoid::*;
     use crate::vstdplus::multiset::multiset::*;
+    use crate::vstdplus::accept::accept;
 
     //		Section 3. broadcast use
 
@@ -1933,7 +1934,7 @@ pub mod ArraySeqMtEph {
             ensures equal == (self@ == other@)
         {
             let equal = self.seq == other.seq;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

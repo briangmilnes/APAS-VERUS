@@ -46,6 +46,7 @@ verus!
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
+    use crate::vstdplus::accept::accept;
 
     //		Section 3. broadcast use
 
@@ -946,7 +947,7 @@ verus!
             let equal = self.elements == other.elements;
             // HashSetWithView* eq is external_body so we have to trust it here.
             // Veracity: NEEDED proof block
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

@@ -43,6 +43,7 @@ pub mod MathSeq {
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::*;
     use crate::vstdplus::seq_set::*;
+    use crate::vstdplus::accept::accept;
     use vstd::slice::slice_subrange;
 
     #[cfg(verus_keep_ghost)]
@@ -691,7 +692,7 @@ pub mod MathSeq {
         {
             let cloned = MathSeqS { data: self.data.clone() };
             // Veracity: NEEDED proof block
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }
@@ -705,7 +706,7 @@ pub mod MathSeq {
         {
             let equal = self.data == other.data;
             // Veracity: NEEDED proof block
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

@@ -46,6 +46,7 @@ pub mod StructChainedHashTable {
 
 
         broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+    use crate::vstdplus::accept::accept;
 
     //		Section 4a. type definitions
 
@@ -876,7 +877,7 @@ pub mod StructChainedHashTable {
                     },
                 };
                 // Veracity: NEEDED proof block
-                proof { assume(cloned == *self); }
+                proof { accept(cloned == *self); }
                 cloned
             }
         }
@@ -894,7 +895,7 @@ pub mod StructChainedHashTable {
                         _ => false,
                     };
                 // Veracity: NEEDED proof block
-                proof { assume(equal == (*self == *other)); }
+                proof { accept(equal == (*self == *other)); }
                 equal
             }
         }
@@ -927,7 +928,7 @@ pub mod StructChainedHashTable {
                     },
                 };
                 // Veracity: NEEDED proof block
-                proof { assume(cloned == *self); }
+                proof { accept(cloned == *self); }
                 cloned
             }
         }
@@ -942,7 +943,7 @@ pub mod StructChainedHashTable {
                     _ => false,
                 };
                 // Veracity: NEEDED proof block
-                proof { assume(equal == (*self == *other)); }
+                proof { accept(equal == (*self == *other)); }
                 equal
             }
         }

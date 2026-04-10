@@ -30,6 +30,7 @@ pub mod AdjMatrixGraphStPer {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap52::AdjTableGraphSpecsAndLemmas::AdjTableGraphSpecsAndLemmas::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! 
 {
@@ -661,7 +662,7 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             let equal = self.matrix == other.matrix && self.n == other.n;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

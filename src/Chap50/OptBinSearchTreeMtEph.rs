@@ -51,6 +51,7 @@ pub mod OptBinSearchTreeMtEph {
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
+    use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
@@ -506,7 +507,7 @@ broadcast use {
             ensures cloned == *self
         {
             let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
-            proof { assume(cloned == *self); }
+            proof { accept(cloned == *self); }
             cloned
         }
     }
@@ -526,7 +527,7 @@ broadcast use {
                 memo: self.memo.clone(),
                 ghost_keys: Ghost(self.ghost_keys@),
             };
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }
@@ -549,7 +550,7 @@ broadcast use {
             let equal = *self_handle.borrow() == *other_handle.borrow();
             other_handle.release_read();
             self_handle.release_read();
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

@@ -773,7 +773,7 @@ pub mod OrderedTableMtPer {
                 // Clone ensures inner@ == borrow()@@.
                 // But clone of OrderedTableStPer... need to check its ensures.
                 accept(inner@ == self@);
-                assume(inner.spec_orderedtablestper_wf());
+                accept(inner.spec_orderedtablestper_wf());
             }
             read_handle.release_read();
             from_st_table(inner)

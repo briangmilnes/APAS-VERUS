@@ -34,6 +34,7 @@ pub mod UnsortedListPQ {
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::accept::accept;
 
     verus! 
 {
@@ -842,7 +843,7 @@ broadcast use {
                 let cloned = UnsortedListPQ { elements: self.elements.clone() };
                 // Veracity: NEEDED proof block
                 proof {
-                    assume(obeys_feq_clone::<T>());
+                    accept(obeys_feq_clone::<T>());
                     lemma_seq_map_cloned_view_eq(
                         self.elements.seq@,
                         cloned.elements.seq@,
@@ -858,7 +859,7 @@ broadcast use {
             {
                 let equal = self.elements == other.elements;
                 // Veracity: NEEDED proof block
-                proof { assume(equal == (self@ == other@)); }
+                proof { accept(equal == (self@ == other@)); }
                 equal
             }
         }

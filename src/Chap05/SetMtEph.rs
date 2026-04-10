@@ -1220,7 +1220,7 @@ verus!
         {
             let equal = self.elements == other.elements;
             // Veracity: NEEDED proof block
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

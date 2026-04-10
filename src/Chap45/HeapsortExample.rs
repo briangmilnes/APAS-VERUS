@@ -37,6 +37,7 @@ pub mod HeapsortExample {
     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQ;
     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::accept::accept;
 
     verus! 
 {
@@ -111,7 +112,7 @@ broadcast use {
                 };
                 // Veracity: NEEDED proof block
                 // Veracity: NEEDED proof block
-                proof { assume(cloned@ == self@); }
+                proof { accept(cloned@ == self@); }
                 cloned
             }
         }
@@ -128,7 +129,7 @@ broadcast use {
                     && self.leftist_heap_result == other.leftist_heap_result;
                 // Veracity: NEEDED proof block (speed hint)
                 // Veracity: NEEDED proof block
-                proof { assume(equal == (self@ == other@)); }
+                proof { accept(equal == (self@ == other@)); }
                 equal
             }
         }

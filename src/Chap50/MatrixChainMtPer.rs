@@ -49,6 +49,7 @@ pub mod MatrixChainMtPer {
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
+    use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
@@ -484,7 +485,7 @@ broadcast use {
                 dimensions: self.dimensions.clone(),
                 memo: self.memo.clone(),
             };
-            proof { assume(mc@ == self@); }
+            proof { accept(mc@ == self@); }
             mc
         }
     }
@@ -503,7 +504,7 @@ broadcast use {
             let self_dims = arc_deref(&self.dimensions);
             let other_dims = arc_deref(&other.dimensions);
             let equal = *self_dims == *other_dims;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

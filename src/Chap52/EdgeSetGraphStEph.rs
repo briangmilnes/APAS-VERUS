@@ -33,6 +33,7 @@ pub mod EdgeSetGraphStEph {
     use vstd::std_specs::cmp::PartialEqSpec;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::accept::accept;
 
     verus!
 {
@@ -474,7 +475,7 @@ broadcast use {
                 vertices: self.vertices.clone(),
                 edges: self.edges.clone(),
             };
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }

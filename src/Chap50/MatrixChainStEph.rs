@@ -41,6 +41,7 @@ pub mod MatrixChainStEph {
 
     use crate::Types::Types::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
@@ -446,7 +447,7 @@ broadcast use {
                 // Veracity: NEEDED proof block
                 memo: self.memo.clone(),
             };
-            proof { assume(mc@ == self@); }
+            proof { accept(mc@ == self@); }
             mc
         }
     }
@@ -463,7 +464,7 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             let equal = self.dimensions == other.dimensions && self.memo == other.memo;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

@@ -35,6 +35,7 @@ pub mod ArraySetEnumMtEph {
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Concurrency::Concurrency::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     // Bit manipulation macros (must precede verus! for use in spec fns).
 
@@ -975,7 +976,7 @@ broadcast use {
         {
             let equal = self.universe_size == other.universe_size && self.bits == other.bits;
             // Veracity: NEEDED proof block
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }
@@ -989,7 +990,7 @@ broadcast use {
                 universe_size: self.universe_size,
             };
             // Veracity: NEEDED proof block
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }

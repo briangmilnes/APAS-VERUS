@@ -33,6 +33,7 @@ pub mod TableStEph {
     use crate::vstdplus::clone_view::clone_view::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
     #[cfg(verus_keep_ghost)]
@@ -2550,7 +2551,7 @@ broadcast use {
             ensures equal == (self@ == other@)
         {
             let equal = self.entries == other.entries;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

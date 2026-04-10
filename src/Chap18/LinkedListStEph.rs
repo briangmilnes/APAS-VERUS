@@ -47,6 +47,7 @@ pub mod LinkedListStEph {
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::monoid::monoid::*;
     use crate::vstdplus::multiset::multiset::*;
+    use crate::vstdplus::accept::accept;
 
     //		Section 3. broadcast use
 
@@ -894,7 +895,7 @@ pub mod LinkedListStEph {
             ensures cloned@ == self@
         {
             let cloned = LinkedListStEphS { seq: self.seq.clone() };
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         // Veracity: NEEDED proof block
         }
@@ -908,7 +909,7 @@ pub mod LinkedListStEph {
             ensures equal == (self@ == other@)
         {
             let equal = self.seq == other.seq;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

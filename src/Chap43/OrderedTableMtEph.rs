@@ -985,8 +985,8 @@ broadcast use {
             read_handle.release_read();
             let ghost view = inner@;
             proof {
-                assume(view.dom().finite());
-                assume(inner.spec_orderedtablesteph_wf());
+                accept(view.dom().finite());
+                accept(inner.spec_orderedtablesteph_wf());
             }
             OrderedTableMtEph {
                 locked_table: RwLock::new(inner, Ghost(OrderedTableMtEphInv)),

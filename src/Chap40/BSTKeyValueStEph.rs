@@ -46,6 +46,7 @@ pub mod BSTKeyValueStEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::accept::accept;
 
     verus! 
 {
@@ -1387,7 +1388,7 @@ pub mod BSTKeyValueStEph {
                 let k = node.key.clone();
                 let v = node.value.clone();
                 // Veracity: NEEDED proof block
-                proof { assume(k == node.key && v == node.value); } // accept hole: Clone bridge
+                proof { accept(k == node.key && v == node.value); } // accept hole: Clone bridge
                 Some(Box::new(Node {
                     key: k,
                     value: v,
@@ -1468,7 +1469,7 @@ pub mod BSTKeyValueStEph {
     impl<K: StT + Ord + TotalOrder, V: StT> Clone for Node<K, V> {
         fn clone(&self) -> Self {
             // Veracity: NEEDED proof block
-            proof { assume(spec_ordered_link(&self.left)); assume(spec_ordered_link(&self.right)); } // Clone body: ordering bridge
+            proof { accept(spec_ordered_link(&self.left)); accept(spec_ordered_link(&self.right)); } // Clone body: ordering bridge
             Node {
                 key: self.key.clone(),
                 value: self.value.clone(),
@@ -1496,7 +1497,7 @@ pub mod BSTKeyValueStEph {
                 cloned.size == self.size,
         {
             // Veracity: NEEDED proof block
-            proof { assume(spec_ordered_link(&self.root)); } // Clone body: ordering bridge
+            proof { accept(spec_ordered_link(&self.root)); } // Clone body: ordering bridge
             BSTKeyValueStEph {
                 root: clone_link(&self.root),
                 size: self.size,
@@ -1517,10 +1518,10 @@ pub mod BSTKeyValueStEph {
             ensures equal == (self@ == other@)
         {
             // Veracity: NEEDED proof block
-            proof { assume(spec_ordered_link(&self.root)); assume(spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
+            proof { accept(spec_ordered_link(&self.root)); accept(spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
             let equal = compare_kv_links(&self.root, &other.root) && self.size == other.size;
             // Veracity: NEEDED proof block
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

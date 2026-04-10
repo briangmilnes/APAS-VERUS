@@ -44,6 +44,7 @@ pub mod LeftistHeapPQ {
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::accept::accept;
 
     verus! 
 {
@@ -1192,7 +1193,7 @@ broadcast use {
                             rank: *rank,
                         };
                         // Veracity: NEEDED proof block
-                        proof { assume(cloned == *self); }
+                        proof { accept(cloned == *self); }
                         cloned
                     }
                 }
@@ -1214,7 +1215,7 @@ broadcast use {
                     _ => false,
                 };
                 // Veracity: NEEDED proof block
-                proof { assume(equal == (*self == *other)); }
+                proof { accept(equal == (*self == *other)); }
                 equal
             }
         }
@@ -1242,7 +1243,7 @@ broadcast use {
             {
                 let cloned = LeftistHeapPQ { root: self.root.clone() };
                 // Veracity: NEEDED proof block
-                proof { assume(cloned.root == self.root); }
+                proof { accept(cloned.root == self.root); }
                 cloned
             }
         }
@@ -1253,7 +1254,7 @@ broadcast use {
             {
                 let equal = self.root == other.root;
                 // Veracity: NEEDED proof block
-                proof { assume(equal == (self.root == other.root)); }
+                proof { accept(equal == (self.root == other.root)); }
                 equal
             }
         }

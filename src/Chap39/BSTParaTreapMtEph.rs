@@ -47,6 +47,7 @@ pub mod BSTParaTreapMtEph {
     use crate::Types::Types::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
+    use crate::vstdplus::accept::accept;
 
     verus! 
 {
@@ -1685,9 +1686,9 @@ pub mod BSTParaTreapMtEph {
                         use_type_invariant(&left);
                         use_type_invariant(&right);
                         // Clone bridge: structural copy inherits BST ordering and size bound.
-                        assume(forall|t: T| (#[trigger] lv.contains(t@)) ==> t.cmp_spec(&key) == Less);
-                        assume(forall|t: T| (#[trigger] rv.contains(t@)) ==> t.cmp_spec(&key) == Greater);
-                        assume(lv.len() + rv.len() < usize::MAX as nat);
+                        accept(forall|t: T| (#[trigger] lv.contains(t@)) ==> t.cmp_spec(&key) == Less);
+                        accept(forall|t: T| (#[trigger] rv.contains(t@)) ==> t.cmp_spec(&key) == Greater);
+                        accept(lv.len() + rv.len() < usize::MAX as nat);
                     }
                     new_param_treap(
                         Some(Box::new(NodeInner { key, priority, size, left, right })),
@@ -1696,7 +1697,7 @@ pub mod BSTParaTreapMtEph {
                 }
             };
             // Veracity: NEEDED proof block
-            proof { assume(cloned@ == self@); } // Clone bridge: deep copy preserves view.
+            proof { accept(cloned@ == self@); } // Clone bridge: deep copy preserves view.
             cloned
         }
     }

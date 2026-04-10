@@ -41,6 +41,7 @@ pub mod DocumentIndex {
     use crate::vstdplus::strings::strings::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_clone};
+    use crate::vstdplus::accept::accept;
 
     pub type Word = String;
     pub type DocumentId = String;
@@ -641,7 +642,7 @@ pub mod DocumentIndex {
             ensures cloned == *self
         {
             let cloned = DocumentIndex { word_to_docs: self.word_to_docs.clone() };
-            proof { assume(cloned == *self); }
+            proof { accept(cloned == *self); }
             cloned
         }
     }

@@ -43,6 +43,7 @@ pub mod BoruvkaMtEph {
     use crate::vstdplus::feq::feq::obeys_feq_view_injective;
     use crate::{ParaPair, SetLit};
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
+    use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
@@ -1125,7 +1126,7 @@ pub mod BoruvkaMtEph {
         {
             let equal = self.0 == other.0 && self.1 == other.1 && self.2.eq(&other.2) && self.3 == other.3;
             // Veracity: NEEDED proof block
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

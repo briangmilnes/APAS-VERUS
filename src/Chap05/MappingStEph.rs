@@ -48,6 +48,7 @@ verus!
     use crate::Chap05::RelationStEph::RelationStEph::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     //		Section 3. broadcast use
 
@@ -655,7 +656,7 @@ verus!
             }
             // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
             // Veracity: NEEDED proof block
-            proof { assume(r == (self@ == other@)); }
+            proof { accept(r == (self@ == other@)); }
             r
         }
     }

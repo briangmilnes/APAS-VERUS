@@ -33,6 +33,7 @@ pub mod BSTSetTreapMtEph {
     use crate::Chap39::BSTParaTreapMtEph::BSTParaTreapMtEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
+    use crate::vstdplus::accept::accept;
 
     verus! 
 {
@@ -433,7 +434,7 @@ pub mod BSTSetTreapMtEph {
         {
             let cloned = BSTSetTreapMtEph { tree: self.tree.clone() };
             // Veracity: NEEDED proof block
-            proof { assume(cloned@ == self@); } // Clone bridge: view preserved by ParamTreap::clone.
+            proof { accept(cloned@ == self@); } // Clone bridge: view preserved by ParamTreap::clone.
             cloned
         }
     }

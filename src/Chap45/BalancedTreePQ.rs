@@ -36,6 +36,7 @@ pub mod BalancedTreePQ {
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
+    use crate::vstdplus::accept::accept;
 
     verus! 
 {
@@ -855,7 +856,7 @@ broadcast use {
             {
                 let equal = self.elements == other.elements;
                 // Veracity: NEEDED proof block
-                proof { assume(equal == (self@ == other@)); }
+                proof { accept(equal == (self@ == other@)); }
                 equal
             }
         }

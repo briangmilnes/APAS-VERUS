@@ -48,6 +48,7 @@ pub mod BinaryHeapPQ {
         use core::cmp::Ordering;
         #[cfg(verus_keep_ghost)]
         use crate::vstdplus::feq::feq::*;
+    use crate::vstdplus::accept::accept;
 
     //		Section 3. broadcast use
 
@@ -1843,7 +1844,7 @@ pub mod BinaryHeapPQ {
                 let cloned = BinaryHeapPQ { elements: self.elements.clone() };
                 // Veracity: NEEDED proof block
                 proof {
-                    assume(obeys_feq_clone::<T>());
+                    accept(obeys_feq_clone::<T>());
                     lemma_seq_map_cloned_view_eq(
                         self.elements.seq@,
                         cloned.elements.seq@,
@@ -1860,7 +1861,7 @@ pub mod BinaryHeapPQ {
             {
                 let equal = self.elements == other.elements;
                 // Veracity: NEEDED proof block
-                proof { assume(equal == (self@ == other@)); }
+                proof { accept(equal == (self@ == other@)); }
                 equal
             }
         }

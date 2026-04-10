@@ -48,6 +48,7 @@ pub mod AVLTreeSetMtPer {
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::accept::accept;
 
     verus!
 {
@@ -588,7 +589,7 @@ broadcast use {
                 i = i + 1;
             }
             // Veracity: NEEDED proof block
-            proof { assume(all_eq == (self@ == other@)); }
+            proof { accept(all_eq == (self@ == other@)); }
             all_eq
         }
     }

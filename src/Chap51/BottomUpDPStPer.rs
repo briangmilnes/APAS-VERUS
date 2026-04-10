@@ -35,6 +35,7 @@ pub mod BottomUpDPStPer {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap51::SeqSpecsAndLemmas::SeqSpecsAndLemmas::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -465,7 +466,7 @@ pub mod BottomUpDPStPer {
             // Veracity: NEEDED proof block
             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
             // Veracity: NEEDED proof block
-            proof { assume(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
+            proof { accept(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
             r
         }
     }

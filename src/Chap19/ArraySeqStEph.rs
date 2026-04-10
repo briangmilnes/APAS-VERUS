@@ -1174,7 +1174,7 @@ pub mod ArraySeqStEph {
             ensures equal == (self@ == other@)
         {
             let equal = self.seq == other.seq;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }

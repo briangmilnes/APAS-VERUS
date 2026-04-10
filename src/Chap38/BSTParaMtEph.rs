@@ -181,6 +181,7 @@ pub mod BSTParaMtEph {
     // view_ord_consistent defined in BSTParaSpecsAndLemmas, re-exported here.
     #[cfg(verus_keep_ghost)]
     pub use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    use crate::vstdplus::accept::accept;
 
     //		Section 7d. proof fns/broadcast groups
 
@@ -1713,7 +1714,7 @@ pub mod BSTParaMtEph {
                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
             };
             // Veracity: NEEDED proof block
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         }
     }
@@ -1732,7 +1733,7 @@ pub mod BSTParaMtEph {
                 right: self.right.clone(),
             };
             // Veracity: NEEDED proof block
-            proof { assume(cloned@ == self@); }  // assume_eq_clone_workaround
+            proof { accept(cloned@ == self@); }  // assume_eq_clone_workaround
             cloned
         }
     }

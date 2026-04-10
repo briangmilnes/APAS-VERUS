@@ -42,6 +42,7 @@ pub mod TopDownDPMtPer {
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
+    use crate::vstdplus::accept::accept;
 
     verus! 
 {
@@ -465,7 +466,7 @@ pub mod TopDownDPMtPer {
         {
             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
             // Veracity: NEEDED proof block
-            proof { assume(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
+            proof { accept(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
             r
         }
     }

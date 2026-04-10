@@ -47,6 +47,7 @@ pub mod LinkedListStPer {
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::monoid::monoid::*;
     use crate::vstdplus::multiset::multiset::*;
+    use crate::vstdplus::accept::accept;
 
     //		Section 3. broadcast use
 
@@ -876,7 +877,7 @@ pub mod LinkedListStPer {
             ensures cloned@ == self@
         {
             let cloned = LinkedListStPerS { seq: self.seq.clone() };
-            proof { assume(cloned@ == self@); }
+            proof { accept(cloned@ == self@); }
             cloned
         // Veracity: NEEDED proof block
         }
@@ -890,7 +891,7 @@ pub mod LinkedListStPer {
             ensures equal == (self@ == other@)
         {
             let equal = self.seq == other.seq;
-            proof { assume(equal == (self@ == other@)); }
+            proof { accept(equal == (self@ == other@)); }
             equal
         }
     }
