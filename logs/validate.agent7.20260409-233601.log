@@ -1,0 +1,45 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: unexpected token, expected `;`
+   --> src/Chap55/CycleDetectStPer.rs:491:17
+    |
+491 |                 implies visited@[v] && !old(ancestors)@[v] by {
+    |                 ^^^^^^^
+
+error[E0432]: unresolved imports `crate::Chap55::CycleDetectStPer::CycleDetectStPer::CycleDetectStPer`, `crate::Chap55::CycleDetectStPer::CycleDetectStPer::CycleDetectStPerTrait`
+  --> src/Chap55/TopoSortStPer.rs:30:61
+   |
+30 |     use crate::Chap55::CycleDetectStPer::CycleDetectStPer::{CycleDetectStPer, CycleDetectStPerTrait};
+   |                                                             ^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^ no `CycleDetectStPerTrait` in `Chap55::CycleDetectStPer::CycleDetectStPer`
+   |                                                             |
+   |                                                             no `CycleDetectStPer` in `Chap55::CycleDetectStPer::CycleDetectStPer`
+   |
+   = help: consider importing one of these modules instead:
+           crate::Chap55::CycleDetectStPer
+           crate::Chap55::CycleDetectStPer::CycleDetectStPer
+
+error[E0432]: unresolved import `crate::Chap55::CycleDetectStPer::CycleDetectStPer::spec_cycledetectstper_wf`
+  --> src/Chap55/TopoSortStPer.rs:32:9
+   |
+32 |     use crate::Chap55::CycleDetectStPer::CycleDetectStPer::spec_cycledetectstper_wf;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `spec_cycledetectstper_wf` in `Chap55::CycleDetectStPer::CycleDetectStPer`
+
+error[E0425]: cannot find type `CycleDetectStPer` in this scope
+   --> src/Chap55/CycleDetectStPer.rs:721:30
+    |
+721 |     impl std::fmt::Debug for CycleDetectStPer {
+    |                              ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `CycleDetectStPer` in this scope
+   --> src/Chap55/CycleDetectStPer.rs:727:32
+    |
+727 |     impl std::fmt::Display for CycleDetectStPer {
+    |                                ^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 5 previous errors
+
+Some errors have detailed explanations: E0425, E0432.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 3349MB, peak z3 RSS: 631MB, min free: 18444MB
+Sampled CPU Usage: rust_verify: 57s, z3 children: 42s

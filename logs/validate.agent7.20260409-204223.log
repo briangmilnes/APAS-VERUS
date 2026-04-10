@@ -1,0 +1,56 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error: unexpected token, expected `;`
+   --> src/Chap54/BFSMtPer.rs:497:25
+    |
+497 |                 implies dist_fn(r.1@[j].0 as int) == UNREACHABLE
+    |                         ^^^^^^^
+
+error[E0425]: cannot find type `BFSTreeS` in this scope
+   --> src/Chap54/BFSMtPer.rs:948:30
+    |
+948 |     impl std::fmt::Debug for BFSTreeS {
+    |                              ^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these structs
+    |
+ 30 +     use crate::Chap54::BFSMtEph::BFSMtEph::BFSTreeS;
+    |
+ 30 +     use crate::Chap54::BFSStEph::BFSStEph::BFSTreeS;
+    |
+ 30 +     use crate::Chap54::BFSStPer::BFSStPer::BFSTreeS;
+    |
+
+error[E0425]: cannot find type `BFSTreeS` in this scope
+   --> src/Chap54/BFSMtPer.rs:957:32
+    |
+957 |     impl std::fmt::Display for BFSTreeS {
+    |                                ^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these structs
+    |
+ 30 +     use crate::Chap54::BFSMtEph::BFSMtEph::BFSTreeS;
+    |
+ 30 +     use crate::Chap54::BFSStEph::BFSStEph::BFSTreeS;
+    |
+ 30 +     use crate::Chap54::BFSStPer::BFSStPer::BFSTreeS;
+    |
+
+error[E0425]: cannot find type `BFSMtPer` in this scope
+   --> src/Chap54/BFSMtPer.rs:965:30
+    |
+965 |     impl std::fmt::Debug for BFSMtPer {
+    |                              ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BFSMtPer` in this scope
+   --> src/Chap54/BFSMtPer.rs:971:32
+    |
+971 |     impl std::fmt::Display for BFSMtPer {
+    |                                ^^^^^^^^ not found in this scope
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 3277MB, peak z3 RSS: 0MB, min free: 18628MB
+Sampled CPU Usage: rust_verify: 51s, z3 children: 51s

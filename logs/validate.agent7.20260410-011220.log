@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: unexpected token, expected `;`
+   --> src/Chap55/DFSStEph.rs:140:25
+    |
+140 |                 implies #[trigger] spec_has_edge(graph, path_tail[k], path_tail[k + 1]) by {
+    |                         ^
+
+error[E0425]: cannot find type `DFSStEph` in this scope
+   --> src/Chap55/DFSStEph.rs:548:30
+    |
+548 |     impl std::fmt::Debug for DFSStEph {
+    |                              ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `DFSStEph` in this scope
+   --> src/Chap55/DFSStEph.rs:554:32
+    |
+554 |     impl std::fmt::Display for DFSStEph {
+    |                                ^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 2990MB, peak z3 RSS: 220MB, min free: 19389MB
+Sampled CPU Usage: rust_verify: 27s, z3 children: 2s

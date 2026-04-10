@@ -1,0 +1,56 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error: unexpected token, expected `;`
+   --> src/Chap54/BFSStEph.rs:283:13
+    |
+283 |             implies distances.spec_index(v) > 0usize
+    |             ^^^^^^^
+
+error[E0425]: cannot find type `BFSTreeS` in this scope
+   --> src/Chap54/BFSStEph.rs:505:30
+    |
+505 |     impl std::fmt::Debug for BFSTreeS {
+    |                              ^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these structs
+    |
+ 30 +     use crate::Chap54::BFSMtEph::BFSMtEph::BFSTreeS;
+    |
+ 30 +     use crate::Chap54::BFSMtPer::BFSMtPer::BFSTreeS;
+    |
+ 30 +     use crate::Chap54::BFSStPer::BFSStPer::BFSTreeS;
+    |
+
+error[E0425]: cannot find type `BFSTreeS` in this scope
+   --> src/Chap54/BFSStEph.rs:514:32
+    |
+514 |     impl std::fmt::Display for BFSTreeS {
+    |                                ^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these structs
+    |
+ 30 +     use crate::Chap54::BFSMtEph::BFSMtEph::BFSTreeS;
+    |
+ 30 +     use crate::Chap54::BFSMtPer::BFSMtPer::BFSTreeS;
+    |
+ 30 +     use crate::Chap54::BFSStPer::BFSStPer::BFSTreeS;
+    |
+
+error[E0425]: cannot find type `BFSStEph` in this scope
+   --> src/Chap54/BFSStEph.rs:522:30
+    |
+522 |     impl std::fmt::Debug for BFSStEph {
+    |                              ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BFSStEph` in this scope
+   --> src/Chap54/BFSStEph.rs:528:32
+    |
+528 |     impl std::fmt::Display for BFSStEph {
+    |                                ^^^^^^^^ not found in this scope
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 2553MB, peak z3 RSS: 345MB, min free: 19402MB
+Sampled CPU Usage: rust_verify: 42s, z3 children: 24s

@@ -1,0 +1,78 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error: postcondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:318:17
+    |
+318 |                 traversal.parents.spec_index(source as int) == source,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+969 |         BFSTreeS { parents, order: order_seq }
+    |         -------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:324:17
+    |
+324 |                 spec_parents_bounded(&traversal.parents, graph.spec_len() as int),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+969 |         BFSTreeS { parents, order: order_seq }
+    |         -------------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:900:17
+    |
+154 |             spec_parents_bounded(original, n),
+    |             --------------------------------- failed precondition
+...
+900 |                 lemma_copy_preserves_parents_bounded(&parents, &parents_snapshot, n as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:904:17
+    |
+576 | /             forall|j: int| 0 <= j < frontier@.len() ==>
+577 | |                 #[trigger] frontier@[j] < graph.spec_len(),
+    | |__________________________________________________________- failed precondition
+...
+904 | /                 process_frontier_tree_parallel(
+905 | |                     graph_owned, parents_snapshot, current_layer
+906 | |                 );
+    | |_________________^
+
+error: invariant not satisfied before loop
+   --> src/Chap54/BFSMtPer.rs:930:21
+    |
+930 |                     parents.spec_index(source as int) == source,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap54/BFSMtPer.rs:931:21
+    |
+931 |                     spec_parents_bounded(&parents, n as int),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap54/BFSMtPer.rs:154:13
+    |
+154 |             spec_parents_bounded(original, n),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_parents_bounded(parents, n) ✘
+|   forall |j|
+|       let tmp%% = 0 in let tmp%% = j in let tmp%% = parents.spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+|           !(parents.spec_index(j) == NO_PARENT()) ==>
+|               parents.spec_index(j) < n 
++---
+parents_snapshot.spec_len() == parents.spec_len() ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = parents.spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        parents_snapshot.spec_index(i) == parents.spec_index(i) ✔
+
+verification results:: 1356 verified, 2 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 1935MB, peak z3 RSS: 335MB, min free: 19813MB
+Sampled CPU Usage: rust_verify: 40s, z3 children: 58s

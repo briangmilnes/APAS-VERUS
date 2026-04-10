@@ -1,0 +1,65 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:307:13
+    |
+307 | /             !has_cycle ==> exists|ord_out: Map<int, nat>|
+308 | |                 #[trigger] spec_is_valid_ord_per(graph, visited@, ancestors@, ord, next_time, ord_out),
+    | |______________________________________________________________________________________________________^ failed this postcondition
+...
+319 |               return false;
+    |               ------------ at this exit
+
+note: diagnostics via expansion
+   --> src/Chap55/CycleDetectStPer.rs:307:28
+    |
+307 |               !has_cycle ==> exists|ord_out: Map<int, nat>|
+    |  ____________________________^
+308 | |                 #[trigger] spec_is_valid_ord_per(graph, visited@, ancestors@, ord, next_time, ord_out),
+    | |______________________________________________________________________________________________________^
+
+note: 
+
+visited.view().len() == old(graph).view().len() ✔
+ancestors.view().len() == old(graph).view().len() ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = visited.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && old(visited).view().index(j) ==>
+        visited.view().index(j) ✔
+spec_num_false(visited.view()) <= spec_num_false(old(visited).view()) ✔
+has_cycle ==>
+    !(spec_is_dag_per(old(graph))) ✔
+!has_cycle ==>
+    ancestors.view() =~= old(ancestors).view() ✔
+!has_cycle ==>
+    visited.view().index(old(vertex)) ✔
+!has_cycle ==>
+    !(old(ancestors).view().index(old(vertex))) ✔
+!has_cycle ==>
+    (exists |ord_out| spec_is_valid_ord_per(old(graph), visited.view(), ancestors.view(), old(ord), old(next_time), ord_out)) ✘
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStPer.rs:409:48
+    |
+409 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStPer.rs:300:44
+    |
+300 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 5030MB, peak z3 RSS: 754MB, min free: 17067MB
+Sampled CPU Usage: rust_verify: 98s, z3 children: 71s

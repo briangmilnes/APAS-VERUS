@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: assertion failed
+   --> src/Chap55/TopoSortStEph.rs:799:98
+    |
+799 |                         assert forall|j: int| #![trigger visited@[j]] 0 <= j < start + 1 implies visited@[j] by {
+    |                                                                                                  ^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+visited.view().index(j) 
+    function is uninterpreted
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 5925MB, peak z3 RSS: 829MB, min free: 16045MB
+Sampled CPU Usage: rust_verify: 116s, z3 children: 126s

@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:200:17
+    |
+195 |       proof fn lemma_self_reachable(
+    |  ___________-
+196 | |         graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
+197 | |         u: int,
+198 | |     )
+    | |_____- at the end of the function body
+199 |           requires 0 <= u < graph@.len(),
+200 |           ensures spec_reachable(graph, u, u),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+spec_reachable(old(graph), old(u), old(u))
+|   (exists |path| spec_is_path(old(graph), path) && path.index(0) == old(u) && path.last() == old(u)) 
++---
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 30s
+Sampled Memory Usage: peak rust_verify RSS: 5515MB, peak z3 RSS: 422MB, min free: 16529MB
+Sampled CPU Usage: rust_verify: 97s, z3 children: 72s

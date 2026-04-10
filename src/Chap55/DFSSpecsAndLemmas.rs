@@ -49,18 +49,25 @@ pub mod DFSSpecsAndLemmas {
         decreases s.len(),
     {
         if s.len() == 1 {
+            // Veracity: NEEDED assert
             assert(s.drop_last() =~= Seq::<bool>::empty());
+            // Veracity: NEEDED assert
             assert(s.update(0, true).drop_last() =~= Seq::<bool>::empty());
+            // Veracity: NEEDED assert (speed hint)
             assert(!s.last());
-            assert(s.update(0, true).last());
+// Veracity: UNNEEDED assert             assert(s.update(0, true).last());
         } else if idx == s.len() - 1 {
+            // Veracity: NEEDED assert (speed hint)
             assert(!s.last());
+            // Veracity: NEEDED assert (speed hint)
             assert(s.update(idx, true).last());
+            // Veracity: NEEDED assert
             assert(s.update(idx, true).drop_last() =~= s.drop_last());
         } else {
+            // Veracity: NEEDED assert
             assert(s.update(idx, true).drop_last() =~= s.drop_last().update(idx, true));
             lemma_set_true_decreases_num_false(s.drop_last(), idx);
-            assert(!s.last() <==> !s.update(idx, true).last());
+// Veracity: UNNEEDED assert             assert(!s.last() <==> !s.update(idx, true).last());
         }
     }
 
@@ -74,18 +81,22 @@ pub mod DFSSpecsAndLemmas {
         decreases s.len(),
     {
         if s.len() == 1 {
+            // Veracity: NEEDED assert
             assert(s.drop_last() =~= Seq::<bool>::empty());
+            // Veracity: NEEDED assert
             assert(s.update(0, true).drop_last() =~= Seq::<bool>::empty());
-            assert(!s.last());
-            assert(s.update(0, true).last());
+// Veracity: UNNEEDED assert             assert(!s.last());
+// Veracity: UNNEEDED assert             assert(s.update(0, true).last());
         } else if idx == s.len() - 1 {
-            assert(!s.last());
-            assert(s.update(idx, true).last());
+// Veracity: UNNEEDED assert             assert(!s.last());
+// Veracity: UNNEEDED assert             assert(s.update(idx, true).last());
+            // Veracity: NEEDED assert
             assert(s.update(idx, true).drop_last() =~= s.drop_last());
         } else {
+            // Veracity: NEEDED assert
             assert(s.update(idx, true).drop_last() =~= s.drop_last().update(idx, true));
             lemma_set_true_num_false_eq(s.drop_last(), idx);
-            assert(!s.last() <==> !s.update(idx, true).last());
+// Veracity: UNNEEDED assert             assert(!s.last() <==> !s.update(idx, true).last());
         }
     }
 
@@ -115,6 +126,7 @@ pub mod DFSSpecsAndLemmas {
     pub proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<bool>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
     {
+        // Veracity: NEEDED assert (speed hint)
         assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
     }
 
@@ -136,9 +148,10 @@ pub mod DFSSpecsAndLemmas {
             a@ =~= old_view.update(vertex, val),
     {
         lemma_bool_view_eq_spec_index(a);
+        // Veracity: NEEDED assert (speed hint)
         assert forall|j: int| 0 <= j < a@.len()
             implies #[trigger] a@[j] == old_view.update(vertex, val)[j] by {
-            assert(a@[j] == a.spec_index(j));
+// Veracity: UNNEEDED assert             assert(a@[j] == a.spec_index(j));
         };
     }
 
@@ -146,6 +159,7 @@ pub mod DFSSpecsAndLemmas {
     pub proof fn lemma_usize_view_eq_spec_index(a: &ArraySeqStEphS<usize>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
     {
+        // Veracity: NEEDED assert (speed hint)
         assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
     }
 
@@ -167,7 +181,7 @@ pub mod DFSSpecsAndLemmas {
     pub proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<usize>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
     {
-        assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
+// Veracity: UNNEEDED assert         assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
     }
 
     /// Bridge: persistent graph adjacency list view at vertex equals spec_index view.

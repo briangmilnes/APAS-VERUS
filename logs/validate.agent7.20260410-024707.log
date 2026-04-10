@@ -1,0 +1,24 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: assertion failed
+   --> src/Chap55/SCCStEph.rs:304:16
+    |
+304 |         assert(spec_toposortsteph_wf(&transposed));
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_toposortsteph_wf(transposed)
+|   forall |v, i|
+|       let tmp%% = 0 in let tmp%% = v in let tmp%% = transposed.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = i in let tmp%% = transposed.view().index(v).len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+|           transposed.view().index(v).index(i) < transposed.view().len() 
++---
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 23s
+Sampled Memory Usage: peak rust_verify RSS: 5563MB, peak z3 RSS: 544MB, min free: 16521MB
+Sampled CPU Usage: rust_verify: 75s, z3 children: 57s

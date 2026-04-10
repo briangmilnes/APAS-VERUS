@@ -1,0 +1,830 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error: unexpected token, expected `;`
+  --> src/Chap54/BFSSpecsAndLemmas.rs:96:13
+   |
+96 |             distances[j] == UNREACHABLE || distances[j] < n
+   |             ^^^^^^^^^
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStEph.rs:123:51
+    |
+123 |             #[trigger] distances.spec_index(j) == UNREACHABLE || distances.spec_index(j) < n
+    |                                                   ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStEph.rs:129:49
+    |
+129 |             #[trigger] parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
+    |                                                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStEph.rs:138:79
+    |
+138 |             forall|i: int| 0 <= i < n ==> #[trigger] parents.spec_index(i) == NO_PARENT,
+    |                                                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStEph.rs:174:55
+    |
+174 |                 #[trigger] distances.spec_index(i) == UNREACHABLE,
+    |                                                       ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStEph.rs:225:62
+    |
+225 |                     && #[trigger] traversal.spec_index(v) != UNREACHABLE && v != source as int
+    |                                                              ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStEph.rs:249:66
+    |
+249 |                         traversal.order.spec_index(i) as int) != NO_PARENT,
+    |                                                                  ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStEph.rs:268:55
+    |
+268 |             &|_idx: usize| -> (r: usize) ensures r == UNREACHABLE { UNREACHABLE },
+    |                                                       ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStEph.rs:268:69
+    |
+268 |             &|_idx: usize| -> (r: usize) ensures r == UNREACHABLE { UNREACHABLE },
+    |                                                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStEph.rs:282:47
+    |
+282 |                 && distances.spec_index(v) != UNREACHABLE && v != source as int
+    |                                               ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStEph.rs:304:76
+    |
+304 |                     distances.spec_index((#[trigger] queue@[j]) as int) != UNREACHABLE,
+    |                                                                            ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStEph.rs:307:62
+    |
+307 |                     && #[trigger] distances.spec_index(v) != UNREACHABLE && v != source as int
+    |                                                              ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStEph.rs:336:88
+    |
+336 | ...                   distances.spec_index((#[trigger] queue@[j]) as int) != UNREACHABLE,
+    |                                                                              ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStEph.rs:339:74
+    |
+339 | ...                   && #[trigger] distances.spec_index(w) != UNREACHABLE && w != source as int
+    |                                                                ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStEph.rs:345:49
+    |
+345 |                         if *distances.nth(v) == UNREACHABLE {
+    |                                                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStEph.rs:357:71
+    |
+357 | ...                   && distances.spec_index(w) != UNREACHABLE
+    |                                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStEph.rs:390:55
+    |
+390 |             &|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT },
+    |                                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStEph.rs:390:67
+    |
+390 |             &|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT },
+    |                                                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStEph.rs:418:74
+    |
+418 |                     parents.spec_index((#[trigger] queue@[j]) as int) != NO_PARENT,
+    |                                                                          ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStEph.rs:425:61
+    |
+425 |                     parents.spec_index(order@[j] as int) != NO_PARENT,
+    |                                                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStEph.rs:450:86
+    |
+450 | ...                   parents.spec_index((#[trigger] queue@[j]) as int) != NO_PARENT,
+    |                                                                            ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStEph.rs:457:73
+    |
+457 | ...                   parents.spec_index(order@[j] as int) != NO_PARENT,
+    |                                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStEph.rs:462:47
+    |
+462 |                         if *parents.nth(v) == NO_PARENT && order.len() < n {
+    |                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStPer.rs:123:51
+    |
+123 |             #[trigger] distances.spec_index(j) == UNREACHABLE || distances.spec_index(j) < n
+    |                                                   ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStPer.rs:129:49
+    |
+129 |             #[trigger] parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
+    |                                                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStPer.rs:138:79
+    |
+138 |             forall|i: int| 0 <= i < n ==> #[trigger] parents.spec_index(i) == NO_PARENT,
+    |                                                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStPer.rs:174:55
+    |
+174 |                 #[trigger] distances.spec_index(i) == UNREACHABLE,
+    |                                                       ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStPer.rs:224:62
+    |
+224 |                     && #[trigger] traversal.spec_index(v) != UNREACHABLE && v != source as int
+    |                                                              ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStPer.rs:249:66
+    |
+249 |                         traversal.order.spec_index(i) as int) != NO_PARENT,
+    |                                                                  ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStPer.rs:268:55
+    |
+268 |             &|_idx: usize| -> (r: usize) ensures r == UNREACHABLE { UNREACHABLE },
+    |                                                       ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStPer.rs:268:69
+    |
+268 |             &|_idx: usize| -> (r: usize) ensures r == UNREACHABLE { UNREACHABLE },
+    |                                                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStPer.rs:294:74
+    |
+294 |                     distances.spec_index(#[trigger] queue@[j] as int) != UNREACHABLE,
+    |                                                                          ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStPer.rs:297:62
+    |
+297 |                     && #[trigger] distances.spec_index(v) != UNREACHABLE && v != source as int
+    |                                                              ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStPer.rs:326:86
+    |
+326 | ...                   distances.spec_index(#[trigger] queue@[j] as int) != UNREACHABLE,
+    |                                                                            ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStPer.rs:329:74
+    |
+329 | ...                   && #[trigger] distances.spec_index(w) != UNREACHABLE && w != source as int
+    |                                                                ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStPer.rs:335:49
+    |
+335 |                         if *distances.nth(v) == UNREACHABLE {
+    |                                                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSStPer.rs:347:71
+    |
+347 | ...                   && distances.spec_index(w) != UNREACHABLE
+    |                                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStPer.rs:380:55
+    |
+380 |             &|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT },
+    |                                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStPer.rs:380:67
+    |
+380 |             &|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT },
+    |                                                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStPer.rs:408:72
+    |
+408 |                     parents.spec_index(#[trigger] queue@[j] as int) != NO_PARENT,
+    |                                                                        ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStPer.rs:415:61
+    |
+415 |                     parents.spec_index(order@[j] as int) != NO_PARENT,
+    |                                                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStPer.rs:440:84
+    |
+440 | ...                   parents.spec_index(#[trigger] queue@[j] as int) != NO_PARENT,
+    |                                                                          ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStPer.rs:447:73
+    |
+447 | ...                   parents.spec_index(order@[j] as int) != NO_PARENT,
+    |                                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSStPer.rs:452:47
+    |
+452 |                         if *parents.nth(v) == NO_PARENT && order.len() < n {
+    |                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+  --> src/Chap54/BFSMtEph.rs:99:51
+   |
+99 |             #[trigger] distances.spec_index(j) == UNREACHABLE || distances.spec_index(j) < n
+   |                                                   ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:105:49
+    |
+105 |             #[trigger] parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
+    |                                                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:114:79
+    |
+114 |             forall|i: int| 0 <= i < n ==> #[trigger] parents.spec_index(i) == NO_PARENT,
+    |                                                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:173:55
+    |
+173 |                 #[trigger] distances.spec_index(i) == UNREACHABLE,
+    |                                                       ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:302:51
+    |
+302 |                     && traversal.spec_index(v) != UNREACHABLE && v != source as int
+    |                                                   ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:326:66
+    |
+326 |                         traversal.order.spec_index(i) as int) != NO_PARENT,
+    |                                                                  ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:411:72
+    |
+411 |                 && distances.spec_index((traversal.1@[j]).0 as int) == UNREACHABLE,
+    |                                                                        ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:444:76
+    |
+444 |                         && distances.spec_index((updates@[j]).0 as int) == UNREACHABLE,
+    |                                                                            ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:448:41
+    |
+448 |                 if *distances.nth(v) == UNREACHABLE {
+    |                                         ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:480:55
+    |
+480 |                     && dist_fn((r.1@[j]).0 as int) == UNREACHABLE,
+    |                                                       ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:486:56
+    |
+486 |                 implies dist_fn((r.1@[j]).0 as int) == UNREACHABLE
+    |                                                        ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:498:55
+    |
+498 |                     && dist_fn((r.1@[j]).0 as int) == UNREACHABLE,
+    |                                                       ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:504:56
+    |
+504 |                 implies dist_fn((r.1@[j]).0 as int) == UNREACHABLE
+    |                                                        ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:535:63
+    |
+535 |                     && dist_fn((all_updates@[j]).0 as int) == UNREACHABLE,
+    |                                                               ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:539:65
+    |
+539 |                     && dist_fn((right_updates@[j]).0 as int) == UNREACHABLE,
+    |                                                                 ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:568:68
+    |
+568 |                 && parents.spec_index((traversal@[j]).0 as int) == NO_PARENT,
+    |                                                                    ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:597:74
+    |
+597 |                         && parents.spec_index((updates@[j]).0 as int) == NO_PARENT,
+    |                                                                          ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:601:39
+    |
+601 |                 if *parents.nth(v) == NO_PARENT {
+    |                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:630:56
+    |
+630 |                     && parents_fn((r@[j]).0 as int) == NO_PARENT,
+    |                                                        ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:636:57
+    |
+636 |                 implies parents_fn((r@[j]).0 as int) == NO_PARENT
+    |                                                         ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:647:56
+    |
+647 |                     && parents_fn((r@[j]).0 as int) == NO_PARENT,
+    |                                                        ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:653:57
+    |
+653 |                 implies parents_fn((r@[j]).0 as int) == NO_PARENT
+    |                                                         ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:669:66
+    |
+669 |                     && parents_fn((all_updates@[j]).0 as int) == NO_PARENT,
+    |                                                                  ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:673:68
+    |
+673 |                     && parents_fn((right_updates@[j]).0 as int) == NO_PARENT,
+    |                                                                    ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:694:55
+    |
+694 |             &|_idx: usize| -> (r: usize) ensures r == UNREACHABLE { UNREACHABLE },
+    |                                                       ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:694:69
+    |
+694 |             &|_idx: usize| -> (r: usize) ensures r == UNREACHABLE { UNREACHABLE },
+    |                                                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:707:47
+    |
+707 |                 && distances.spec_index(v) != UNREACHABLE && v != source as int
+    |                                               ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:730:51
+    |
+730 |                     && distances.spec_index(v) != UNREACHABLE && v != source as int
+    |                                                   ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:754:82
+    |
+754 |                         distances.spec_index((distance_updates@[j]).0 as int) == UNREACHABLE
+    |                                                                                  ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:782:59
+    |
+782 | ...                   && distances.spec_index(v) != UNREACHABLE && v != source as int
+    |                                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtEph.rs:805:59
+    |
+805 | ...                   && distances.spec_index(w) != UNREACHABLE
+    |                                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:839:55
+    |
+839 |             &|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT },
+    |                                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:839:67
+    |
+839 |             &|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT },
+    |                                                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:873:61
+    |
+873 |                     parents.spec_index(order@[j] as int) != NO_PARENT,
+    |                                                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:892:72
+    |
+892 |                     parents.spec_index((tree_updates@[j]).0 as int) == NO_PARENT
+    |                                                                        ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:921:65
+    |
+921 |                         parents.spec_index(order@[j] as int) != NO_PARENT,
+    |                                                                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtEph.rs:928:39
+    |
+928 |                 if *parents.nth(v) == NO_PARENT && order.len() < n {
+    |                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+  --> src/Chap54/BFSMtPer.rs:98:51
+   |
+98 |             #[trigger] distances.spec_index(j) == UNREACHABLE || distances.spec_index(j) < n
+   |                                                   ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:104:49
+    |
+104 |             #[trigger] parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
+    |                                                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:113:79
+    |
+113 |             forall|i: int| 0 <= i < n ==> #[trigger] parents.spec_index(i) == NO_PARENT,
+    |                                                                               ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:172:55
+    |
+172 |                 #[trigger] distances.spec_index(i) == UNREACHABLE,
+    |                                                       ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:303:62
+    |
+303 |                     && #[trigger] traversal.spec_index(v) != UNREACHABLE && v != source as int
+    |                                                              ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:327:66
+    |
+327 |                         traversal.order.spec_index(i) as int) != NO_PARENT,
+    |                                                                  ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:413:70
+    |
+413 |                 && distances.spec_index(traversal.1@[j].0 as int) == UNREACHABLE,
+    |                                                                      ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:446:74
+    |
+446 |                         && distances.spec_index(updates@[j].0 as int) == UNREACHABLE,
+    |                                                                          ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:450:41
+    |
+450 |                 if *distances.nth(v) == UNREACHABLE {
+    |                                         ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:485:53
+    |
+485 |                     && dist_fn(r.1@[j].0 as int) == UNREACHABLE,
+    |                                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:494:54
+    |
+494 |                 implies dist_fn(r.1@[j].0 as int) == UNREACHABLE
+    |                                                      ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:507:53
+    |
+507 |                     && dist_fn(r.1@[j].0 as int) == UNREACHABLE,
+    |                                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:513:54
+    |
+513 |                 implies dist_fn(r.1@[j].0 as int) == UNREACHABLE
+    |                                                      ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:546:61
+    |
+546 |                     && dist_fn(all_updates@[j].0 as int) == UNREACHABLE,
+    |                                                             ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:550:63
+    |
+550 |                     && dist_fn(right_updates@[j].0 as int) == UNREACHABLE,
+    |                                                               ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:579:66
+    |
+579 |                 && parents.spec_index(traversal@[j].0 as int) == NO_PARENT,
+    |                                                                  ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:608:72
+    |
+608 |                         && parents.spec_index(updates@[j].0 as int) == NO_PARENT,
+    |                                                                        ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:612:39
+    |
+612 |                 if *parents.nth(v) == NO_PARENT {
+    |                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:641:54
+    |
+641 |                     && parents_fn(r@[j].0 as int) == NO_PARENT,
+    |                                                      ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:647:55
+    |
+647 |                 implies parents_fn(r@[j].0 as int) == NO_PARENT
+    |                                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:658:54
+    |
+658 |                     && parents_fn(r@[j].0 as int) == NO_PARENT,
+    |                                                      ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:664:55
+    |
+664 |                 implies parents_fn(r@[j].0 as int) == NO_PARENT
+    |                                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:680:64
+    |
+680 |                     && parents_fn(all_updates@[j].0 as int) == NO_PARENT,
+    |                                                                ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:684:66
+    |
+684 |                     && parents_fn(right_updates@[j].0 as int) == NO_PARENT,
+    |                                                                  ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:703:55
+    |
+703 |             &|_idx: usize| -> (r: usize) ensures r == UNREACHABLE { UNREACHABLE },
+    |                                                       ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:703:69
+    |
+703 |             &|_idx: usize| -> (r: usize) ensures r == UNREACHABLE { UNREACHABLE },
+    |                                                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:729:62
+    |
+729 |                     && #[trigger] distances.spec_index(v) != UNREACHABLE && v != source as int
+    |                                                              ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:756:80
+    |
+756 |                         distances.spec_index(distance_updates@[j].0 as int) == UNREACHABLE
+    |                                                                                ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:788:70
+    |
+788 | ...                   && #[trigger] distances.spec_index(v) != UNREACHABLE && v != source as int
+    |                                                                ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `UNREACHABLE` in this scope
+   --> src/Chap54/BFSMtPer.rs:811:59
+    |
+811 | ...                   && distances.spec_index(w) != UNREACHABLE
+    |                                                     ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:845:55
+    |
+845 |             &|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT },
+    |                                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:845:67
+    |
+845 |             &|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT },
+    |                                                                   ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:879:61
+    |
+879 |                     parents.spec_index(order@[j] as int) != NO_PARENT,
+    |                                                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:898:70
+    |
+898 |                     parents.spec_index(tree_updates@[j].0 as int) == NO_PARENT
+    |                                                                      ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:927:65
+    |
+927 |                         parents.spec_index(order@[j] as int) != NO_PARENT,
+    |                                                                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `NO_PARENT` in this scope
+   --> src/Chap54/BFSMtPer.rs:934:39
+    |
+934 |                 if *parents.nth(v) == NO_PARENT && order.len() < n {
+    |                                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_all_no_parent` in this scope
+   --> src/Chap54/BFSStEph.rs:143:9
+    |
+143 |         lemma_bfs_all_no_parent(parents@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_update_preserves_parents_bounded` in this scope
+   --> src/Chap54/BFSStEph.rs:167:9
+    |
+167 |         lemma_bfs_update_preserves_parents_bounded(parents@, old_parents@, v, new_val, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_all_unreachable` in this scope
+   --> src/Chap54/BFSStEph.rs:179:9
+    |
+179 |         lemma_bfs_all_unreachable(distances@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_update_preserves_bounded` in this scope
+   --> src/Chap54/BFSStEph.rs:204:9
+    |
+204 |         lemma_bfs_update_preserves_bounded(distances@, old_distances@, v, new_val, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_all_no_parent` in this scope
+   --> src/Chap54/BFSStPer.rs:143:9
+    |
+143 |         lemma_bfs_all_no_parent(parents@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_update_preserves_parents_bounded` in this scope
+   --> src/Chap54/BFSStPer.rs:167:9
+    |
+167 |         lemma_bfs_update_preserves_parents_bounded(parents@, old_parents@, v, new_val, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_all_unreachable` in this scope
+   --> src/Chap54/BFSStPer.rs:179:9
+    |
+179 |         lemma_bfs_all_unreachable(distances@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_update_preserves_bounded` in this scope
+   --> src/Chap54/BFSStPer.rs:203:9
+    |
+203 |         lemma_bfs_update_preserves_bounded(distances@, old_distances@, v, new_val, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_all_no_parent` in this scope
+   --> src/Chap54/BFSMtEph.rs:120:9
+    |
+120 |         lemma_bfs_all_no_parent(parents@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_update_preserves_parents_bounded` in this scope
+   --> src/Chap54/BFSMtEph.rs:146:9
+    |
+146 |         lemma_bfs_update_preserves_parents_bounded(parents@, old_parents@, v, new_val, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_copy_preserves_parents_bounded` in this scope
+   --> src/Chap54/BFSMtEph.rs:166:9
+    |
+166 |         lemma_bfs_copy_preserves_parents_bounded(original@, copy@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_all_unreachable` in this scope
+   --> src/Chap54/BFSMtEph.rs:179:9
+    |
+179 |         lemma_bfs_all_unreachable(distances@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_update_preserves_bounded` in this scope
+   --> src/Chap54/BFSMtEph.rs:205:9
+    |
+205 |         lemma_bfs_update_preserves_bounded(distances@, old_distances@, v, new_val, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_copy_preserves_bounded` in this scope
+   --> src/Chap54/BFSMtEph.rs:258:9
+    |
+258 |         lemma_bfs_copy_preserves_bounded(original@, copy@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_all_no_parent` in this scope
+   --> src/Chap54/BFSMtPer.rs:119:9
+    |
+119 |         lemma_bfs_all_no_parent(parents@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_update_preserves_parents_bounded` in this scope
+   --> src/Chap54/BFSMtPer.rs:145:9
+    |
+145 |         lemma_bfs_update_preserves_parents_bounded(parents@, old_parents@, v, new_val, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_copy_preserves_parents_bounded` in this scope
+   --> src/Chap54/BFSMtPer.rs:165:9
+    |
+165 |         lemma_bfs_copy_preserves_parents_bounded(original@, copy@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_all_unreachable` in this scope
+   --> src/Chap54/BFSMtPer.rs:178:9
+    |
+178 |         lemma_bfs_all_unreachable(distances@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_update_preserves_bounded` in this scope
+   --> src/Chap54/BFSMtPer.rs:204:9
+    |
+204 |         lemma_bfs_update_preserves_bounded(distances@, old_distances@, v, new_val, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_bfs_copy_preserves_bounded` in this scope
+   --> src/Chap54/BFSMtPer.rs:259:9
+    |
+259 |         lemma_bfs_copy_preserves_bounded(original@, copy@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 137 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 4198MB, peak z3 RSS: 527MB, min free: 17610MB
+Sampled CPU Usage: rust_verify: 63s, z3 children: 24s

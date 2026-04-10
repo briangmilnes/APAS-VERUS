@@ -1,0 +1,45 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error: postcondition not satisfied
+   --> src/Chap53/GraphSearchStEph.rs:103:21
+    |
+103 |               ensures selected.0@.subset_of(frontier@);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+165 | /             if frontier.size() == 0 {
+166 | |                 (AVLTreeSetStEph::empty(), false)
+167 | |             } else {
+168 | |                 let seq = frontier.to_seq();
+...   |
+180 | |                 (result, false)
+181 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap53/GraphSearchStEph.rs:175:33
+    |
+175 |                 let first_ref = seq.nth(0);
+    |                                 ^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:817:54
+    |
+817 |             requires self.spec_avltreeseqsteph_wf(), (index as int) < self.spec_seq().len(),
+    |                                                      -------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeqStEph.rs:817:54
+    |
+817 |             requires self.spec_avltreeseqsteph_wf(), (index as int) < self.spec_seq().len(),
+    |                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+seq.spec_avltreeseqsteph_wf() ✔
+0 < seq.spec_seq().len() ✘
+
+verification results:: 2334 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 28s
+Sampled Memory Usage: peak rust_verify RSS: 5620MB, peak z3 RSS: 692MB, min free: 16478MB
+Sampled CPU Usage: rust_verify: 93s, z3 children: 59s

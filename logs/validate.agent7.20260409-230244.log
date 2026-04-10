@@ -1,0 +1,30 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:115:13
+    |
+ 99 |       proof fn lemma_cycle_not_dag(
+    |  ___________-
+100 | |         graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
+101 | |         dfs_path: Seq<int>,
+102 | |         vertex: int,
+103 | |     )
+    | |_____- at the end of the function body
+...
+115 |               !spec_is_dag(graph),
+    |               ^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+spec_is_dag(old(graph))
+|   (exists |path| spec_is_path(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
++---
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 32s
+Sampled Memory Usage: peak rust_verify RSS: 4968MB, peak z3 RSS: 741MB, min free: 17037MB
+Sampled CPU Usage: rust_verify: 108s, z3 children: 110s

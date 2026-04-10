@@ -1,0 +1,162 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: precondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:505:13
+    |
+330 |             vertex < old(visited)@.len(),
+    |             ---------------------------- failed precondition
+...
+505 |             dfs_finish_order(graph, visited, finish_order, neighbor);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:553:29
+    |
+218 |             spec_has_edge(graph, u, v),
+    |             -------------------------- failed precondition
+...
+553 |                             lemma_reachable_via_edge(graph, vertex as int, neighbor as int, finish_order@[k] as int);
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+neighbor < visited.view().len() ✔
+visited.view().len() == graph.view().len() ✔
+spec_toposortsteph_wf(graph) ✔
+forall |k|
+    let tmp%% = 0 in let tmp%% = k in let tmp%% = finish_order.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        finish_order.view().index(k) < graph.view().len() ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:444:48
+    |
+444 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:458:26
+    |
+458 |                     ==> !old(visited)@[#[trigger] finish_order@[k] as int],
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:461:25
+    |
+461 |                     ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:480:25
+    |
+480 |                     ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:492:18
+    |
+492 |                 !old(visited)@[vertex as int]
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:521:28
+    |
+521 |                         if old(visited)@[finish_order@[k] as int] {
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:516:30
+    |
+516 |                     implies !old(visited)@[#[trigger] finish_order@[k] as int] by {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:537:21
+    |
+537 |                 if !old(visited)@[vertex as int] {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:539:24
+    |
+539 |                     if vis_pre[neighbor as int] {
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:467:29
+    |
+467 |                         ==> old(visited)@[#[trigger] old(finish_order)@[k] as int]))
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:472:29
+    |
+472 |                         ==> old(visited)@[#[trigger] old(finish_order)@[k] as int]))
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:487:29
+    |
+487 |                         ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 4484MB, peak z3 RSS: 387MB, min free: 17763MB
+Sampled CPU Usage: rust_verify: 56s, z3 children: 44s

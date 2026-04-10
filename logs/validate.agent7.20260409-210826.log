@@ -1,0 +1,62 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error: unexpected end of input, expected an expression
+   --> src/Chap54/BFSMtPer.rs:762:23
+    |
+762 |                   proof {
+    |  _______________________^
+763 | |                     // Veracity: NEEDED assert
+764 | |                     assert forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len()
+765 | |                     implies
+...   |
+773 | |                 }
+    | |_________________^
+
+error[E0425]: cannot find type `BFSTreeS` in this scope
+   --> src/Chap54/BFSMtPer.rs:974:30
+    |
+974 |     impl std::fmt::Debug for BFSTreeS {
+    |                              ^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these structs
+    |
+ 30 +     use crate::Chap54::BFSMtEph::BFSMtEph::BFSTreeS;
+    |
+ 30 +     use crate::Chap54::BFSStEph::BFSStEph::BFSTreeS;
+    |
+ 30 +     use crate::Chap54::BFSStPer::BFSStPer::BFSTreeS;
+    |
+
+error[E0425]: cannot find type `BFSTreeS` in this scope
+   --> src/Chap54/BFSMtPer.rs:983:32
+    |
+983 |     impl std::fmt::Display for BFSTreeS {
+    |                                ^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these structs
+    |
+ 30 +     use crate::Chap54::BFSMtEph::BFSMtEph::BFSTreeS;
+    |
+ 30 +     use crate::Chap54::BFSStEph::BFSStEph::BFSTreeS;
+    |
+ 30 +     use crate::Chap54::BFSStPer::BFSStPer::BFSTreeS;
+    |
+
+error[E0425]: cannot find type `BFSMtPer` in this scope
+   --> src/Chap54/BFSMtPer.rs:991:30
+    |
+991 |     impl std::fmt::Debug for BFSMtPer {
+    |                              ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BFSMtPer` in this scope
+   --> src/Chap54/BFSMtPer.rs:997:32
+    |
+997 |     impl std::fmt::Display for BFSMtPer {
+    |                                ^^^^^^^^ not found in this scope
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 2009MB, peak z3 RSS: 266MB, min free: 19301MB
+Sampled CPU Usage: rust_verify: 28s, z3 children: 4s

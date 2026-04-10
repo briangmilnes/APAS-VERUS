@@ -1,0 +1,55 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error[E0425]: cannot find value `priorities` in this scope
+   --> src/Chap53/PQMinStEph.rs:456:17
+    |
+456 |                 priorities.spec_avltreesetsteph_wf(),
+    |                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `priorities` in this scope
+   --> src/Chap53/PQMinStEph.rs:457:17
+    |
+457 |                 priorities@.len() <= j as nat,
+    |                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `priorities` in this scope
+   --> src/Chap53/PQMinStEph.rs:459:17
+    |
+459 |                 priorities@.len() <= j as nat,
+    |                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `priorities` in this scope
+   --> src/Chap53/PQMinStEph.rs:470:33
+    |
+470 |             let ghost old_pri = priorities@;
+    |                                 ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `priorities` in this scope
+   --> src/Chap53/PQMinStEph.rs:471:13
+    |
+471 |             priorities = priorities.union(&AVLTreeSetStEph::singleton(vp));
+    |             ^^^^^^^^^^
+    |
+help: you might have meant to introduce a new binding
+    |
+471 |             let priorities = priorities.union(&AVLTreeSetStEph::singleton(vp));
+    |             +++
+
+error[E0425]: cannot find value `priorities` in this scope
+   --> src/Chap53/PQMinStEph.rs:471:26
+    |
+471 |             priorities = priorities.union(&AVLTreeSetStEph::singleton(vp));
+    |                          ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `priorities` in this scope
+   --> src/Chap53/PQMinStEph.rs:477:19
+    |
+477 |         (visited, priorities)
+    |                   ^^^^^^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 454MB, peak z3 RSS: 0MB, min free: 21536MB
+Sampled CPU Usage: rust_verify: 3s, z3 children: 0s

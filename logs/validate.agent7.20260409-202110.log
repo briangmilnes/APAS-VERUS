@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error: invariant not satisfied at end of loop body
+   --> src/Chap53/PQMinStPer.rs:261:17
+    |
+261 |                 visited@.subset_of(vertex_universe),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2334 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 23s
+Sampled Memory Usage: peak rust_verify RSS: 5094MB, peak z3 RSS: 466MB, min free: 16841MB
+Sampled CPU Usage: rust_verify: 63s, z3 children: 62s

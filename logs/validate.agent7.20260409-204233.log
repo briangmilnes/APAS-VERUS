@@ -1,0 +1,34 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error: precondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:245:9
+    |
+245 |           lemma_bfs_copy_preserves_bounded(original@, copy@, n);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:111:13
+    |
+111 | /             forall|i: int| 0 <= i < original.len() ==>
+112 | |                 #[trigger] copy[i] == original[i],
+    | |_________________________________________________- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap54/BFSSpecsAndLemmas.rs:112:17
+    |
+112 |                 #[trigger] copy[i] == original[i],
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_bfs_distances_bounded(tmp%, n) ✔
+tmp%.len() == tmp%.len() ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(i) == tmp%.index(i) ✘
+
+verification results:: 1357 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 2592MB, peak z3 RSS: 156MB, min free: 19239MB
+Sampled CPU Usage: rust_verify: 31s, z3 children: 10s

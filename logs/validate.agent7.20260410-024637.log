@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: assertion failed
+   --> src/Chap55/SCCStEph.rs:295:25
+    |
+295 |                 implies (#[trigger] transposed@[v][i]) < transposed@.len() by {
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+transposed.view().index(v).index(i) < transposed.view().len() 
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 28s
+Sampled Memory Usage: peak rust_verify RSS: 5451MB, peak z3 RSS: 736MB, min free: 16280MB
+Sampled CPU Usage: rust_verify: 87s, z3 children: 74s

@@ -1,0 +1,81 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: unexpected token, expected `;`
+   --> src/Chap55/TopoSortStEph.rs:285:21
+    |
+285 |             implies spec_has_edge(graph, cycle[k], cycle[k + 1]) by {
+    |                     ^^^^^^^^^^^^^
+
+error[E0432]: unresolved imports `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_toposortsteph_wf`, `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_reachable`, `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_has_edge`, `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_is_path`
+  --> src/Chap55/DFSStEph.rs:31:55
+   |
+31 |     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_toposortsteph_wf, spec_reachable, spec_has_edge, spec_is_path};
+   |                                                       ^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^  ^^^^^^^^^^^^ no `spec_is_path` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |                                                       |                      |               |
+   |                                                       |                      |               no `spec_has_edge` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |                                                       |                      no `spec_reachable` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |                                                       no `spec_toposortsteph_wf` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |
+help: a similar name exists in the module
+   |
+31 -     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_toposortsteph_wf, spec_reachable, spec_has_edge, spec_is_path};
+31 +     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_toposortsteph_wf, spec_reachable, spec_chained_ge, spec_is_path};
+   |
+help: a similar name exists in the module
+   |
+31 -     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_toposortsteph_wf, spec_reachable, spec_has_edge, spec_is_path};
+31 +     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_toposortsteph_wf, spec_reachable, spec_has_edge, spec_iterate};
+   |
+
+error[E0432]: unresolved imports `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_toposortsteph_wf`, `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_is_dag`, `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_has_edge`, `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_is_path`
+  --> src/Chap55/CycleDetectStEph.rs:31:55
+   |
+31 |     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_toposortsteph_wf, spec_is_dag, spec_has_edge, spec_is_path};
+   |                                                       ^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^  ^^^^^^^^^^^^^  ^^^^^^^^^^^^ no `spec_is_path` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |                                                       |                      |            |
+   |                                                       |                      |            no `spec_has_edge` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |                                                       |                      no `spec_is_dag` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |                                                       no `spec_toposortsteph_wf` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |
+help: a similar name exists in the module
+   |
+31 -     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_toposortsteph_wf, spec_is_dag, spec_has_edge, spec_is_path};
+31 +     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_toposortsteph_wf, spec_is_dag, spec_chained_ge, spec_is_path};
+   |
+help: a similar name exists in the module
+   |
+31 -     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_toposortsteph_wf, spec_is_dag, spec_has_edge, spec_is_path};
+31 +     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_toposortsteph_wf, spec_is_dag, spec_has_edge, spec_iterate};
+   |
+
+error[E0432]: unresolved import `crate::Chap55::TopoSortStEph::TopoSortStEph::dfs_finish_order`
+  --> src/Chap55/SCCStEph.rs:29:9
+   |
+29 |     use crate::Chap55::TopoSortStEph::TopoSortStEph::dfs_finish_order;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `dfs_finish_order` in `Chap55::TopoSortStEph::TopoSortStEph`
+
+error[E0432]: unresolved import `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_toposortsteph_wf`
+  --> src/Chap55/SCCStEph.rs:37:9
+   |
+37 |     use crate::Chap55::TopoSortStEph::TopoSortStEph::spec_toposortsteph_wf;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `spec_toposortsteph_wf` in `Chap55::TopoSortStEph::TopoSortStEph`
+
+error[E0425]: cannot find type `TopoSortStEph` in this scope
+   --> src/Chap55/TopoSortStEph.rs:958:30
+    |
+958 |     impl std::fmt::Debug for TopoSortStEph {
+    |                              ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `TopoSortStEph` in this scope
+   --> src/Chap55/TopoSortStEph.rs:964:32
+    |
+964 |     impl std::fmt::Display for TopoSortStEph {
+    |                                ^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+Some errors have detailed explanations: E0425, E0432.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 5030MB, peak z3 RSS: 682MB, min free: 16572MB
+Sampled CPU Usage: rust_verify: 77s, z3 children: 65s

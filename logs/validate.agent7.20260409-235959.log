@@ -1,0 +1,42 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: assertion failed
+   --> src/Chap55/CycleDetectStPer.rs:340:28
+    |
+340 |                     assert(spec_in_path(ext_path, vertex as int));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_in_path(ext_path, vertex)
+|   (exists |k| let tmp%% = 0 in let tmp%% = k in let tmp%% = ext_path.len() in tmp%% <= tmp%% && tmp%% < tmp%% && ext_path.index(k) == vertex) 
++---
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStPer.rs:405:48
+    |
+405 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStPer.rs:300:44
+    |
+300 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 29s
+Sampled Memory Usage: peak rust_verify RSS: 5050MB, peak z3 RSS: 640MB, min free: 17124MB
+Sampled CPU Usage: rust_verify: 96s, z3 children: 81s

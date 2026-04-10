@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: unexpected token, expected `;`
+   --> src/Chap55/DFSStPer.rs:442:21
+    |
+442 |                     implies reachable@.contains(v as usize) by {
+    |                     ^^^^^^^
+
+error[E0425]: cannot find type `DFSStPer` in this scope
+   --> src/Chap55/DFSStPer.rs:472:30
+    |
+472 |     impl std::fmt::Debug for DFSStPer {
+    |                              ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `DFSStPer` in this scope
+   --> src/Chap55/DFSStPer.rs:478:32
+    |
+478 |     impl std::fmt::Display for DFSStPer {
+    |                                ^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3430MB, peak z3 RSS: 371MB, min free: 18444MB
+Sampled CPU Usage: rust_verify: 66s, z3 children: 48s

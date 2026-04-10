@@ -1,0 +1,51 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:381:25
+    |
+381 |                 implies #[trigger] ancestors@[v] == spec_in_path(ext_path, v) by {
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap55/CycleDetectStEph.rs:381:53
+    |
+381 |                 implies #[trigger] ancestors@[v] == spec_in_path(ext_path, v) by {
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ancestors.view().index(v) == spec_in_path(ext_path, v)
+|   ancestors.view().index(v) ==>
+|       spec_in_path(ext_path, v) ✘
+|       |   (exists |k| let tmp%% = 0 in let tmp%% = k in let tmp%% = ext_path.len() in tmp%% <= tmp%% && tmp%% < tmp%% && ext_path.index(k) == v) 
+|       +---
+|   spec_in_path(ext_path, v) ==>
+|       ancestors.view().index(v) ✔
++---
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:466:48
+    |
+466 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:311:44
+    |
+311 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 29s
+Sampled Memory Usage: peak rust_verify RSS: 5979MB, peak z3 RSS: 494MB, min free: 16000MB
+Sampled CPU Usage: rust_verify: 111s, z3 children: 98s

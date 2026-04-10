@@ -1,0 +1,51 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: postcondition not satisfied
+   --> src/Chap55/SCCStEph.rs:89:13
+    |
+ 89 |             finish_order.spec_avltreeseqsteph_wf(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+174 |         AVLTreeSeqStEphS::from_vec(reversed)
+    |         ------------------------------------ at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStEph.rs:174:9
+    |
+174 |         AVLTreeSeqStEphS::from_vec(reversed)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:867:17
+    |
+867 |                 obeys_feq_full::<T>(),
+    |                 --------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:79:13
+    |
+ 79 |         &&& obeys_feq_view_injective::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:867:17
+    |
+867 |                 obeys_feq_full::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_full() ✘
+|   obeys_feq_properties() ✔
+|   obeys_feq_view() ✔
+|   obeys_feq_view_injective() ✘
+|       function is uninterpreted
+|   obeys_feq_clone() ✔
+|   obeys_feq_eq() ✔
++---
+reversed.view().len() < UnsignedMax.Exec(usize::BITS) ✔
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 6515MB, peak z3 RSS: 803MB, min free: 15366MB
+Sampled CPU Usage: rust_verify: 101s, z3 children: 95s

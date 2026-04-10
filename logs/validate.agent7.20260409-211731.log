@@ -1,0 +1,30 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: precondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:820:17
+    |
+237 |             forall|v: int| 0 <= v < graph@.len() ==> #[trigger] ord.contains_key(v),
+    |             ----------------------------------------------------------------------- failed precondition
+...
+820 |                 lemma_acyclic_ord_implies_dag(graph, cur_ord, cur_next);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap55/CycleDetectStEph.rs:237:65
+    |
+237 |             forall|v: int| 0 <= v < graph@.len() ==> #[trigger] ord.contains_key(v),
+    |                                                                 ^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_acyclic_ord(graph, cur_ord, cur_next) ✔
+forall |v|
+    let tmp%% = 0 in let tmp%% = v in let tmp%% = graph.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        cur_ord.dom().contains(v) ✘
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 4182MB, peak z3 RSS: 369MB, min free: 17797MB
+Sampled CPU Usage: rust_verify: 68s, z3 children: 53s

@@ -1,0 +1,30 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:114:13
+    |
+100 |       proof fn lemma_cycle_not_dag_per(
+    |  ___________-
+101 | |         graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
+102 | |         dfs_path: Seq<int>,
+103 | |         vertex: int,
+104 | |     )
+    | |_____- at the end of the function body
+...
+114 |               !spec_is_dag_per(graph),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+spec_is_dag_per(old(graph))
+|   (exists |path| spec_is_path_per(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
++---
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 31s
+Sampled Memory Usage: peak rust_verify RSS: 5890MB, peak z3 RSS: 675MB, min free: 16125MB
+Sampled CPU Usage: rust_verify: 99s, z3 children: 99s

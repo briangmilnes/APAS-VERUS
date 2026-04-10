@@ -1,0 +1,52 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: unexpected token, expected `;`
+   --> src/Chap55/TopoSortStPer.rs:803:25
+    |
+803 |                         implies i < j by {
+    |                         ^^^^^^^
+
+error[E0432]: unresolved imports `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_toposortstper_wf`, `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_reachable_per`, `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_has_edge_per`, `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_is_path_per`
+  --> src/Chap55/DFSStPer.rs:31:55
+   |
+31 |     use crate::Chap55::TopoSortStPer::TopoSortStPer::{spec_toposortstper_wf, spec_reachable_per, spec_has_edge_per, spec_is_path_per};
+   |                                                       ^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^ no `spec_is_path_per` in `Chap55::TopoSortStPer::TopoSortStPer`
+   |                                                       |                      |                   |
+   |                                                       |                      |                   no `spec_has_edge_per` in `Chap55::TopoSortStPer::TopoSortStPer`
+   |                                                       |                      no `spec_reachable_per` in `Chap55::TopoSortStPer::TopoSortStPer`
+   |                                                       no `spec_toposortstper_wf` in `Chap55::TopoSortStPer::TopoSortStPer`
+
+error[E0432]: unresolved imports `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_is_dag_per`, `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_has_edge_per`, `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_is_path_per`
+  --> src/Chap55/CycleDetectStPer.rs:31:55
+   |
+31 |     use crate::Chap55::TopoSortStPer::TopoSortStPer::{spec_is_dag_per, spec_has_edge_per, spec_is_path_per};
+   |                                                       ^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^ no `spec_is_path_per` in `Chap55::TopoSortStPer::TopoSortStPer`
+   |                                                       |                |
+   |                                                       |                no `spec_has_edge_per` in `Chap55::TopoSortStPer::TopoSortStPer`
+   |                                                       no `spec_is_dag_per` in `Chap55::TopoSortStPer::TopoSortStPer`
+
+error[E0432]: unresolved import `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_toposortstper_wf`
+  --> src/Chap55/SCCStPer.rs:37:9
+   |
+37 |     use crate::Chap55::TopoSortStPer::TopoSortStPer::spec_toposortstper_wf;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `spec_toposortstper_wf` in `Chap55::TopoSortStPer::TopoSortStPer`
+
+error[E0425]: cannot find type `TopoSortStPer` in this scope
+   --> src/Chap55/TopoSortStPer.rs:826:30
+    |
+826 |     impl std::fmt::Debug for TopoSortStPer {
+    |                              ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `TopoSortStPer` in this scope
+   --> src/Chap55/TopoSortStPer.rs:832:32
+    |
+832 |     impl std::fmt::Display for TopoSortStPer {
+    |                                ^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 6 previous errors
+
+Some errors have detailed explanations: E0425, E0432.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 704MB, peak z3 RSS: 0MB, min free: 19514MB
+Sampled CPU Usage: rust_verify: 7s, z3 children: 0s

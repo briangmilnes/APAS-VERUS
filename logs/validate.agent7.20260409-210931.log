@@ -1,0 +1,19 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error: unexpected closing delimiter: `}`
+   --> src/Chap54/BFSStEph.rs:509:5
+    |
+356 |                             if dist + 1 < n {
+    |                                             - this delimiter might not be properly closed...
+...
+379 |                                     }
+    |                                     - ...as it matches this but it has different indentation
+...
+509 |     } // verus!
+    |     ^ unexpected closing delimiter
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 16555MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

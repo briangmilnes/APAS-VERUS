@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: unexpected token, expected `;`
+   --> src/Chap55/SCCStEph.rs:421:21
+    |
+421 |             implies visited@[j] by {};
+    |                     ^^^^^^^
+
+error[E0425]: cannot find type `SCCStEph` in this scope
+   --> src/Chap55/SCCStEph.rs:594:30
+    |
+594 |     impl std::fmt::Debug for SCCStEph {
+    |                              ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SCCStEph` in this scope
+   --> src/Chap55/SCCStEph.rs:600:32
+    |
+600 |     impl std::fmt::Display for SCCStEph {
+    |                                ^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 2813MB, peak z3 RSS: 329MB, min free: 19345MB
+Sampled CPU Usage: rust_verify: 52s, z3 children: 37s

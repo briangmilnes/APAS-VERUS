@@ -1,0 +1,18 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: mismatched closing delimiter: `}`
+   --> src/Chap55/CycleDetectStEph.rs:917:68
+    |
+916 |                     proof {
+    |                           - closing delimiter possibly meant for this
+917 |                         let (new_ord, new_next) = lemma_extract_ord(
+    |                                                                    ^ unclosed delimiter
+...
+932 |                     }
+    |                     ^ mismatched closing delimiter
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 18488MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

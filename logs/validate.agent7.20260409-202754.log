@@ -1,0 +1,92 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error: postcondition not satisfied
+   --> src/Chap53/PQMinStEph.rs:180:13
+    |
+180 |             spec_pqminsteph_wf_generic(&search),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+187 |         pq_min_multi(graph, sources, priority_fn, Ghost(vertex_universe))
+    |         ----------------------------------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap53/PQMinStEph.rs:181:13
+    |
+181 |             search.visited@.contains(source@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+187 |         pq_min_multi(graph, sources, priority_fn, Ghost(vertex_universe))
+    |         ----------------------------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap53/PQMinStEph.rs:62:9
+    |
+ 62 |         s.visited@.finite() && s.priorities@.finite()
+    |         ^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^
+...
+180 |             spec_pqminsteph_wf_generic(&search),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+181 |             search.visited@.contains(source@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_pqminsteph_wf_generic(search) ✘
+|   search.visited.view().finite() ✘
+|       function is uninterpreted
+|   search.priorities.view().finite() ✘
+|       function is uninterpreted
++---
+search.visited.view().contains(old(source).view()) ✘
+    function is uninterpreted
+
+error: postcondition not satisfied
+   --> src/Chap53/PQMinStEph.rs:128:17
+    |
+128 |                 spec_pqminsteph_wf_generic(&search),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+151 |          pq_min_multi(graph, sources, priority_fn, Ghost(vertex_universe)) }
+    |          ----------------------------------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap53/PQMinStEph.rs:129:17
+    |
+129 |                 sources@.subset_of(search.visited@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+151 |          pq_min_multi(graph, sources, priority_fn, Ghost(vertex_universe)) }
+    |          ----------------------------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap53/PQMinStEph.rs:62:9
+    |
+ 62 |         s.visited@.finite() && s.priorities@.finite()
+    |         ^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^
+...
+128 |                 spec_pqminsteph_wf_generic(&search),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+129 |                 sources@.subset_of(search.visited@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_pqminsteph_wf_generic(%return) ✘
+|   %return.visited.view().finite() ✘
+|       function is uninterpreted
+|   %return.priorities.view().finite() ✘
+|       function is uninterpreted
++---
+old(sources).view().subset_of(%return.visited.view()) ✘
+|   forall |a|
+|       old(sources).view().contains(a) ==>
+|           %return.visited.view().contains(a) 
+|               function is uninterpreted
++---
+
+verification results:: 2333 verified, 2 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 23s
+Sampled Memory Usage: peak rust_verify RSS: 4302MB, peak z3 RSS: 708MB, min free: 17212MB
+Sampled CPU Usage: rust_verify: 77s, z3 children: 61s

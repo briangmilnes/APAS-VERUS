@@ -1,0 +1,42 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error: precondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:144:9
+    |
+144 |           lemma_bfs_update_preserves_parents_bounded(parents@, old_parents@, v, new_val, n);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:136:13
+    |
+136 | /             forall|j: int| 0 <= j < n && j != v ==>
+137 | |                 #[trigger] parents[j] == old_parents[j],
+    | |_______________________________________________________- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap54/BFSSpecsAndLemmas.rs:137:17
+    |
+137 |                 #[trigger] parents[j] == old_parents[j],
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.len() == n ✔
+tmp%.len() == n ✔
+let tmp%% = 0;
+    let tmp%% = v;
+        let tmp%% = n;
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+new_val < n ✔
+tmp%.index(v) == new_val ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == v) ==>
+        tmp%.index(j) == tmp%.index(j) ✘
+spec_bfs_parents_bounded(tmp%, n) ✔
+
+verification results:: 1357 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 2900MB, peak z3 RSS: 573MB, min free: 18742MB
+Sampled CPU Usage: rust_verify: 43s, z3 children: 28s

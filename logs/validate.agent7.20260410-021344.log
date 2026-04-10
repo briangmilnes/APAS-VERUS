@@ -1,0 +1,25 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: postcondition not satisfied
+  --> src/Chap55/DFSStPer.rs:56:17
+   |
+54 |     proof fn lemma_reachable_self_per(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>, v: int)
+   |           ---------------------------------------------------------------------------------- at the end of the function body
+55 |         requires 0 <= v < graph@.len(),
+56 |         ensures spec_reachable_per(graph, v, v),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+spec_reachable_per(old(graph), old(v), old(v))
+|   (exists |path| spec_is_path_per(old(graph), path) && path.index(0) == old(v) && path.last() == old(v)) 
++---
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 5793MB, peak z3 RSS: 677MB, min free: 16107MB
+Sampled CPU Usage: rust_verify: 128s, z3 children: 119s

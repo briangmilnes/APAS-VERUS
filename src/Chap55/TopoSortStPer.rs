@@ -163,15 +163,19 @@ pub mod TopoSortStPer {
         ensures spec_reachable_per(graph, u, v),
     {
         let path = seq![u, v];
+        // Veracity: NEEDED assert (speed hint)
         assert forall|k: int| 0 <= k < path.len()
             implies 0 <= #[trigger] path[k] < graph@.len() by {
             if k == 0 {} else {
                 let i = choose|i: int| 0 <= i < graph@[u].len() && (#[trigger] graph@[u][i]) == v;
+                // Veracity: NEEDED assert (speed hint)
                 assert(graph@[u][i] < graph@.len());
             }
         };
+        // Veracity: NEEDED assert
         assert forall|k: int| #![trigger path[k]] 0 <= k < path.len() - 1
             implies spec_has_edge_per(graph, path[k], path[k + 1]) by {};
+        // Veracity: NEEDED assert
         assert(spec_is_path_per(graph, path) && path[0] == u && path.last() == v);
     }
 
@@ -184,10 +188,13 @@ pub mod TopoSortStPer {
         ensures spec_reachable_per(graph, u, u),
     {
         let path = seq![u];
+        // Veracity: NEEDED assert (speed hint)
         assert forall|k: int| 0 <= k < path.len()
             implies 0 <= #[trigger] path[k] < graph@.len() by {};
+        // Veracity: NEEDED assert
         assert forall|k: int| #![trigger path[k]] 0 <= k < path.len() - 1
             implies spec_has_edge_per(graph, path[k], path[k + 1]) by {};
+        // Veracity: NEEDED assert
         assert(spec_is_path_per(graph, path) && path[0] == u && path.last() == u);
     }
 
@@ -205,19 +212,28 @@ pub mod TopoSortStPer {
         let p = choose|path: Seq<int>|
             spec_is_path_per(graph, path) && path[0] == v && #[trigger] path.last() == w;
         let new_path = seq![u] + p;
+        // Veracity: NEEDED assert (speed hint)
         assert(new_path[0] == u);
+        // Veracity: NEEDED assert
         assert(new_path.last() == w) by {
+            // Veracity: NEEDED assert (speed hint)
             assert(new_path[new_path.len() - 1] == p[p.len() - 1]);
         };
+        // Veracity: NEEDED assert (speed hint)
         assert forall|k: int| 0 <= k < new_path.len()
             implies 0 <= #[trigger] new_path[k] < graph@.len() by {
+            // Veracity: NEEDED assert (speed hint)
             if k == 0 {} else { assert(new_path[k] == p[k - 1]); }
         };
+        // Veracity: NEEDED assert
         assert forall|k: int| #![trigger new_path[k]] 0 <= k < new_path.len() - 1
             implies spec_has_edge_per(graph, new_path[k], new_path[k + 1]) by {
+            // Veracity: NEEDED assert
             if k == 0 { assert(new_path[1] == p[0]); assert(p[0] == v); }
+            // Veracity: NEEDED assert (speed hint)
             else { assert(new_path[k] == p[k - 1]); assert(new_path[k + 1] == p[k]); }
         };
+        // Veracity: NEEDED assert (speed hint)
         assert(spec_is_path_per(graph, new_path));
     }
 
@@ -235,23 +251,32 @@ pub mod TopoSortStPer {
         let p = choose|path: Seq<int>|
             spec_is_path_per(graph, path) && path[0] == u && #[trigger] path.last() == v;
         let cycle = p.push(u);
+        // Veracity: NEEDED assert (speed hint)
         assert(cycle.len() >= 2);
+        // Veracity: NEEDED assert (speed hint)
         assert(cycle[0] == u);
+        // Veracity: NEEDED assert
         assert(cycle.last() == u) by { assert(cycle[cycle.len() - 1] == u); };
+        // Veracity: NEEDED assert (speed hint)
         assert forall|k: int| 0 <= k < cycle.len()
             implies 0 <= #[trigger] cycle[k] < graph@.len() by {
+            // Veracity: NEEDED assert
             if k < p.len() as int { assert(cycle[k] == p[k]); }
             else {
                 let i = choose|i: int| 0 <= i < graph@[v].len() && (#[trigger] graph@[v][i]) == u;
+                // Veracity: NEEDED assert (speed hint)
                 assert(graph@[v][i] < graph@.len());
             }
         };
+        // Veracity: NEEDED assert
         assert forall|k: int| #![trigger cycle[k]] 0 <= k < cycle.len() - 1
             implies spec_has_edge_per(graph, cycle[k], cycle[k + 1]) by {
+            // Veracity: NEEDED assert
             if k < p.len() as int - 1 { assert(cycle[k] == p[k]); assert(cycle[k + 1] == p[k + 1]); }
+            // Veracity: NEEDED assert (speed hint)
             else { assert(cycle[k] == p[p.len() - 1]); assert(p[p.len() - 1] == v); assert(cycle[k + 1] == u); }
         };
-        assert(spec_is_path_per(graph, cycle) && cycle.len() >= 2 && cycle[0] == cycle.last());
+// Veracity: UNNEEDED assert         assert(spec_is_path_per(graph, cycle) && cycle.len() >= 2 && cycle[0] == cycle.last());
     }
 
     //		Section 8. traits
@@ -349,19 +374,24 @@ pub mod TopoSortStPer {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
             lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
+        // Veracity: NEEDED assert (speed hint)
         assert(visited@ =~= old(visited)@.update(vertex as int, true));
 
         // Monotonicity.
+        // Veracity: NEEDED assert
         assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
             implies visited@[j] by {};
 
+        // Veracity: NEEDED assert (speed hint)
         assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
 
         // Bridge neighbors to graph view.
+        // Veracity: NEEDED assert (speed hint)
         assert(*neighbors == graph.spec_index(vertex as int));
         proof { lemma_graph_per_view_bridge(graph, neighbors, vertex as int); }
+        // Veracity: NEEDED assert (speed hint)
         assert(neighbors@ =~= graph@[vertex as int]);
 
         // Establish neighbors_explored at loop entry.
@@ -370,13 +400,17 @@ pub mod TopoSortStPer {
                     ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
                 && spec_neighbors_explored_per(graph, old(visited)@, old(finish_order)@)
             {
+                // Veracity: NEEDED assert
                 assert forall|k: int| 0 <= k < finish_order@.len()
                     implies #[trigger] spec_vertex_neighbors_visited_per(
                         graph, visited@, finish_order@[k] as int) by {
+                    // Veracity: NEEDED assert
                     assert(spec_vertex_neighbors_visited_per(
                         graph, old(visited)@, old(finish_order)@[k] as int));
+                    // Veracity: NEEDED assert (speed hint)
                     assert forall|ii: int| 0 <= ii < graph@[finish_order@[k] as int].len()
                         implies visited@[#[trigger] graph@[finish_order@[k] as int][ii] as int] by {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(old(visited)@[graph@[old(finish_order)@[k] as int][ii] as int]);
                     };
                 };
@@ -450,48 +484,61 @@ pub mod TopoSortStPer {
         {
             let neighbor = *neighbors.nth(i);
             proof { lemma_usize_per_view_eq_spec_index(neighbors); }
-            assert(neighbor == neighbors@[i as int]);
+// Veracity: UNNEEDED assert             assert(neighbor == neighbors@[i as int]);
             let ghost fo_pre = finish_order@;
             let ghost vis_pre = visited@;
+            // Veracity: NEEDED assert (speed hint)
             assert(spec_has_edge_per(graph, vertex as int, neighbor as int)) by {
+                // Veracity: NEEDED assert (speed hint)
                 assert(graph@[vertex as int][i as int] == neighbor);
             };
             dfs_finish_order(graph, visited, finish_order, neighbor);
             proof {
                 // Chain prefix preservation.
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|k: int| 0 <= k < old(finish_order)@.len()
                     implies finish_order@[k] == old(finish_order)@[k] by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(finish_order@[k] == fo_pre[k]);
                 };
                 // Chain new-elements-unvisited.
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()
                     implies !old(visited)@[#[trigger] finish_order@[k] as int] by {
                     if k < fo_pre.len() as int {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(finish_order@[k] == fo_pre[k]);
                     } else {
-                        assert(!vis_pre[finish_order@[k] as int]);
+// Veracity: UNNEEDED assert                         assert(!vis_pre[finish_order@[k] as int]);
                         if old(visited)@[finish_order@[k] as int] {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(vis_pre[finish_order@[k] as int]);
                         }
                     }
                 };
                 // Neighbor is visited.
+                // Veracity: NEEDED assert (speed hint)
                 assert(visited@[neighbor as int]);
                 // Prior neighbors still visited.
+                // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < i as int
                     implies visited@[#[trigger] graph@[vertex as int][j] as int] by {
-                    assert(vis_pre[graph@[vertex as int][j] as int]);
+// Veracity: UNNEEDED assert                     assert(vis_pre[graph@[vertex as int][j] as int]);
                 };
                 // Reachability.
                 if !old(visited)@[vertex as int] {
                     if vis_pre[neighbor as int] {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(finish_order@.len() == fo_pre.len());
                     }
+                    // Veracity: NEEDED assert
                     assert forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()
                         implies spec_reachable_per(graph, vertex as int, #[trigger] finish_order@[k] as int) by {
                         if k < fo_pre.len() as int {
                         } else {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(!vis_pre[neighbor as int]);
+                            // Veracity: NEEDED assert (speed hint)
                             assert(spec_reachable_per(graph, neighbor as int, finish_order@[k] as int));
                             lemma_reachable_via_edge_per(graph, vertex as int, neighbor as int, finish_order@[k] as int);
                         }
@@ -501,24 +548,29 @@ pub mod TopoSortStPer {
             i = i + 1;
         }
         // All neighbors of vertex are visited.
+        // Veracity: NEEDED assert (speed hint)
         assert forall|j: int| 0 <= j < graph@[vertex as int].len()
             implies visited@[#[trigger] graph@[vertex as int][j] as int] by {};
         let ghost fo_pre_push = finish_order@;
         let ghost vis_at_push = visited@;
         finish_order.push(vertex);
         proof {
+            // Veracity: NEEDED assert (speed hint)
             assert(finish_order@ =~= fo_pre_push.push(vertex));
             // Neighbors explored for the extended sequence.
             if (forall|k: int| 0 <= k < old(finish_order)@.len()
                     ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
                 && spec_neighbors_explored_per(graph, old(visited)@, old(finish_order)@)
             {
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|k: int| 0 <= k < finish_order@.len()
                     implies #[trigger] spec_vertex_neighbors_visited_per(graph, visited@, finish_order@[k] as int) by {
                     if k < fo_pre_push.len() as int {
-                        assert(finish_order@[k] == fo_pre_push[k]);
+// Veracity: UNNEEDED assert                         assert(finish_order@[k] == fo_pre_push[k]);
+                        // Veracity: NEEDED assert (speed hint)
                         assert(spec_vertex_neighbors_visited_per(graph, vis_at_push, fo_pre_push[k] as int));
                     } else {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(finish_order@[k] == vertex);
                     }
                 };
@@ -531,6 +583,7 @@ pub mod TopoSortStPer {
                 && spec_neighbors_explored_per(graph, old(visited)@, old(finish_order)@)
                 && spec_edge_ordered_per(graph, old(finish_order)@)
             {
+                // Veracity: NEEDED assert
                 assert forall|a: int, b: int|
                     0 <= a < finish_order@.len() && 0 <= b < finish_order@.len()
                     && spec_has_edge_per(graph, finish_order@[a] as int, finish_order@[b] as int)
@@ -539,21 +592,30 @@ pub mod TopoSortStPer {
                         b < a
                     }) by {
                     if a < fo_pre_push.len() as int && b < fo_pre_push.len() as int {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(finish_order@[a] == fo_pre_push[a]);
+                        // Veracity: NEEDED assert (speed hint)
                         assert(finish_order@[b] == fo_pre_push[b]);
                     } else if a == fo_pre_push.len() as int && b < fo_pre_push.len() as int {
                     } else if a < fo_pre_push.len() as int && b == fo_pre_push.len() as int {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(finish_order@[b] == vertex);
                         if a < old(finish_order)@.len() as int {
+                            // Veracity: NEEDED assert
                             assert(spec_vertex_neighbors_visited_per(graph, old(visited)@, old(finish_order)@[a] as int));
+                            // Veracity: NEEDED assert (speed hint)
                             assert(finish_order@[a] == old(finish_order)@[a]);
+                            // Veracity: NEEDED assert (speed hint)
                             assert(!old(visited)@[vertex as int]);
                         } else {
+                            // Veracity: NEEDED assert (speed hint)
                             assert(spec_reachable_per(graph, vertex as int, finish_order@[a] as int));
                             lemma_reachable_edge_contradicts_dag_per(graph, vertex as int, finish_order@[a] as int);
                         }
                     } else {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(finish_order@[a] == vertex);
+                        // Veracity: NEEDED assert (speed hint)
                         assert(finish_order@[b] == vertex);
                         lemma_self_reachable_per(graph, vertex as int);
                         lemma_reachable_edge_contradicts_dag_per(graph, vertex as int, vertex as int);
@@ -600,6 +662,7 @@ pub mod TopoSortStPer {
             return true;
         }
 
+        // Veracity: NEEDED assert (speed hint)
         assert(!old(visited)@[vertex as int]);
         visited.set(vertex, true);
         rec_stack.set(vertex, true);
@@ -607,20 +670,24 @@ pub mod TopoSortStPer {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
             lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
+        // Veracity: NEEDED assert (speed hint)
         assert(visited@ =~= old(visited)@.update(vertex as int, true));
 
         // Monotonicity.
+        // Veracity: NEEDED assert
         assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
             implies visited@[j] by {};
 
+        // Veracity: NEEDED assert (speed hint)
         assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
 
         // Bridge neighbors to graph view.
+        // Veracity: NEEDED assert (speed hint)
         assert(*neighbors == graph.spec_index(vertex as int));
         proof { lemma_graph_per_view_bridge(graph, neighbors, vertex as int); }
-        assert(neighbors@ =~= graph@[vertex as int]);
+// Veracity: UNNEEDED assert         assert(neighbors@ =~= graph@[vertex as int]);
 
         let mut i: usize = 0;
         while i < neighbors_len
@@ -644,6 +711,7 @@ pub mod TopoSortStPer {
         {
             let neighbor = *neighbors.nth(i);
             proof { lemma_usize_per_view_eq_spec_index(neighbors); }
+            // Veracity: NEEDED assert
             assert(neighbor == neighbors@[i as int]);
             if !dfs_finish_order_cycle_detect(graph, visited, rec_stack, finish_order, neighbor) {
                 return false;
@@ -728,25 +796,31 @@ pub mod TopoSortStPer {
                     let ghost old_fo = finish_order@;
                     dfs_finish_order(graph, &mut visited, &mut finish_order, start);
                     proof {
+                        // Veracity: NEEDED assert
                         assert forall|j: int| #![trigger visited@[j]] 0 <= j < start + 1 implies visited@[j] by {
                             if j < start as int {
+                                // Veracity: NEEDED assert
                                 assert(old_visited[j]);
                             }
                         };
-                        assert(old_fo.no_duplicates());
+// Veracity: UNNEEDED assert                         assert(old_fo.no_duplicates());
+                        // Veracity: NEEDED assert (speed hint)
                         assert(forall|k: int| 0 <= k < old_fo.len()
                             ==> old_visited[#[trigger] old_fo[k] as int]);
+                        // Veracity: NEEDED assert (speed hint)
                         assert(spec_neighbors_explored_per(graph, old_visited, old_fo));
                     }
                 } else {
-                    assert(visited@[start as int]);
+// Veracity: UNNEEDED assert                     assert(visited@[start as int]);
                 }
                 start = start + 1;
             }
             proof {
                 lemma_all_true_num_false_zero(visited@);
             }
+            // Veracity: NEEDED assert (speed hint)
             assert(finish_order@.len() == n);
+            // Veracity: NEEDED assert (speed hint)
             assert(finish_order@.len() < usize::MAX);
             let ghost fo_final = finish_order@;
             let result_len = finish_order.len();
@@ -769,46 +843,62 @@ pub mod TopoSortStPer {
                 k = k - 1;
                 reversed.push(finish_order[k]);
             }
+            // Veracity: NEEDED assert (speed hint)
             assert(reversed@.len() == n);
+            // Veracity: NEEDED assert (speed hint)
             assert(reversed@.len() < usize::MAX);
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(reversed@.no_duplicates()) by {
+                    // Veracity: NEEDED assert
                     assert forall|i: int, j: int|
                         0 <= i < reversed@.len() && 0 <= j < reversed@.len() && i != j
                         implies reversed@[i] != reversed@[j] by {
-                        assert(reversed@[i] == fo_final[(n - 1 - i) as int]);
+// Veracity: UNNEEDED assert                         assert(reversed@[i] == fo_final[(n - 1 - i) as int]);
+                        // Veracity: NEEDED assert (speed hint)
                         assert(reversed@[j] == fo_final[(n - 1 - j) as int]);
                     };
                 };
+                // Veracity: NEEDED assert (speed hint)
                 assert forall|m: int| 0 <= m < reversed@.len()
                     implies (reversed@[m] as int) < graph@.len() by {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(reversed@[m] == fo_final[(n - 1 - m) as int]);
                 };
-                assert(reversed@.map_values(|t: usize| t@) =~= reversed@) by {
-                    assert(reversed@.map_values(|t: usize| t@).len() == reversed@.len());
-                    assert forall|i: int| 0 <= i < reversed@.len()
-                        implies reversed@.map_values(|t: usize| t@)[i] == reversed@[i] by {};
-                };
+// Veracity: UNNEEDED assert                 assert(reversed@.map_values(|t: usize| t@) =~= reversed@) by {
+// Veracity: UNNEEDED assert                     // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                     assert(reversed@.map_values(|t: usize| t@).len() == reversed@.len());
+// Veracity: UNNEEDED assert                     // Veracity: NEEDED assert (speed hint)
+// Veracity: UNNEEDED assert                     assert forall|i: int| 0 <= i < reversed@.len()
+// Veracity: UNNEEDED assert                         implies reversed@.map_values(|t: usize| t@)[i] == reversed@[i] by {};
+// Veracity: UNNEEDED assert                 };
             }
             let order = AVLTreeSeqStPerS::from_vec(reversed);
             proof {
+                // Veracity: NEEDED assert (speed hint)
                 assert(order@ =~= reversed@);
+                // Veracity: NEEDED assert (speed hint)
                 assert(order@.len() == n);
                 if spec_is_dag_per(graph) {
+                    // Veracity: NEEDED assert (speed hint)
                     assert(spec_edge_ordered_per(graph, fo_final));
+                    // Veracity: NEEDED assert
                     assert forall|i: int, j: int|
                         #![trigger order@[i], order@[j]]
                         0 <= i < order@.len() && 0 <= j < order@.len()
                         && spec_has_edge_per(graph, order@[i] as int, order@[j] as int)
                         implies i < j by {
+                        // Veracity: NEEDED assert (speed hint)
                         assert(order@[i] == fo_final[(n - 1 - i) as int]);
+                        // Veracity: NEEDED assert (speed hint)
                         assert(order@[j] == fo_final[(n - 1 - j) as int]);
                         let a = (n as int) - 1 - i;
                         let b = (n as int) - 1 - j;
-                        assert(fo_final[a] == order@[i]);
+// Veracity: UNNEEDED assert                         assert(fo_final[a] == order@[i]);
+                        // Veracity: NEEDED assert (speed hint)
                         assert(fo_final[b] == order@[j]);
                     };
-                    assert(spec_is_topo_order_per(graph, order@));
+// Veracity: UNNEEDED assert                     assert(spec_is_topo_order_per(graph, order@));
                 }
             }
             order

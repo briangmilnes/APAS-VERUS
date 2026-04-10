@@ -1,0 +1,44 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:852:27
+    |
+852 |             while start < n
+    |                           ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:854:30
+    |
+854 |                     start <= n,
+    |                              ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:855:21
+    |
+855 |                     n == graph@.len(),
+    |                     ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:856:39
+    |
+856 |                     visited@.len() == n,
+    |                                       ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:857:41
+    |
+857 |                     ancestors@.len() == n,
+    |                                         ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:869:27
+    |
+869 |                 decreases n - start,
+    |                           ^ not found in this scope
+
+error: aborting due to 6 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 3197MB, peak z3 RSS: 50MB, min free: 18080MB
+Sampled CPU Usage: rust_verify: 79s, z3 children: 66s

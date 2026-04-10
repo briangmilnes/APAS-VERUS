@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:184:17
+    |
+179 |       proof fn lemma_self_reachable_per(
+    |  ___________-
+180 | |         graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
+181 | |         u: int,
+182 | |     )
+    | |_____- at the end of the function body
+183 |           requires 0 <= u < graph@.len(),
+184 |           ensures spec_reachable_per(graph, u, u),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+spec_reachable_per(old(graph), old(u), old(u))
+|   (exists |path| spec_is_path_per(old(graph), path) && path.index(0) == old(u) && path.last() == old(u)) 
++---
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 34s
+Sampled Memory Usage: peak rust_verify RSS: 7331MB, peak z3 RSS: 693MB, min free: 14047MB
+Sampled CPU Usage: rust_verify: 207s, z3 children: 176s

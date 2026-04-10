@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error[E0425]: cannot find value `idx` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:674:46
+    |
+674 |                     && graph@[vertex as int][idx] == v;
+    |                                              ^^^ not found in this scope
+
+error[E0425]: cannot find value `idx` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:681:46
+    |
+681 |                 assert(graph@[vertex as int][idx] != vertex as int);
+    |                                              ^^^ not found in this scope
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 5240MB, peak z3 RSS: 423MB, min free: 16010MB
+Sampled CPU Usage: rust_verify: 100s, z3 children: 73s

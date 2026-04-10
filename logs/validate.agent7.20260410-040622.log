@@ -1,0 +1,126 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:444:48
+    |
+444 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:458:26
+    |
+458 |                     ==> !old(visited)@[#[trigger] finish_order@[k] as int],
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:461:25
+    |
+461 |                     ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:467:29
+    |
+467 |                         ==> old(visited)@[#[trigger] old(finish_order)@[k] as int]))
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:472:29
+    |
+472 |                         ==> old(visited)@[#[trigger] old(finish_order)@[k] as int]))
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:480:25
+    |
+480 |                     ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:487:29
+    |
+487 |                         ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/TopoSortStEph.rs:492:17
+    |
+492 | /                 !old(visited)@[vertex as int]
+493 | |                     ==> (forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()
+494 | |                         ==> spec_reachable(graph, vertex as int, #[trigger] finish_order@[k] as int)),
+    | |_____________________________________________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:492:18
+    |
+492 |                 !old(visited)@[vertex as int]
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:514:30
+    |
+514 |                     implies !old(visited)@[#[trigger] finish_order@[k] as int] by {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:519:28
+    |
+519 |                         if old(visited)@[finish_order@[k] as int] {
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:533:21
+    |
+533 |                 if !old(visited)@[vertex as int] {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 23s
+Sampled Memory Usage: peak rust_verify RSS: 4828MB, peak z3 RSS: 432MB, min free: 17325MB
+Sampled CPU Usage: rust_verify: 100s, z3 children: 86s

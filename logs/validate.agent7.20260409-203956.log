@@ -1,0 +1,32 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error: precondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:173:9
+    |
+173 |         lemma_bfs_all_unreachable(distances@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:60:13
+    |
+ 60 |             forall|i: int| 0 <= i < n ==> #[trigger] distances[i] == UNREACHABLE,
+    |             -------------------------------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/Chap54/BFSSpecsAndLemmas.rs:60:43
+   |
+60 |             forall|i: int| 0 <= i < n ==> #[trigger] distances[i] == UNREACHABLE,
+   |                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.len() == n ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(i) == UNREACHABLE() ✘
+
+verification results:: 1357 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3440MB, peak z3 RSS: 403MB, min free: 18410MB
+Sampled CPU Usage: rust_verify: 35s, z3 children: 11s

@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: unexpected token, expected `;`
+   --> src/Chap55/DFSStEph.rs:428:17
+    |
+428 |                 implies visited@[graph@[u][j] as int] by {
+    |                 ^^^^^^^
+
+error[E0425]: cannot find type `DFSStEph` in this scope
+   --> src/Chap55/DFSStEph.rs:520:30
+    |
+520 |     impl std::fmt::Debug for DFSStEph {
+    |                              ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `DFSStEph` in this scope
+   --> src/Chap55/DFSStEph.rs:526:32
+    |
+526 |     impl std::fmt::Display for DFSStEph {
+    |                                ^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 1450MB, peak z3 RSS: 155MB, min free: 19434MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 6s

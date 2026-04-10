@@ -1,0 +1,80 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error[E0425]: cannot find value `neighbors` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:456:29
+    |
+456 |         let neighbors_len = neighbors.length();
+    |                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `neighbors` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:460:17
+    |
+460 |         assert(*neighbors == graph.spec_index(vertex as int));
+    |                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `neighbors` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:461:48
+    |
+461 |         proof { lemma_graph_view_bridge(graph, neighbors, vertex as int); }
+    |                                                ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `neighbors` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:463:16
+    |
+463 |         assert(neighbors@ =~= graph@[vertex as int]);
+    |                ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `neighbors` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:491:41
+    |
+491 |                 neighbors_len as int == neighbors.spec_len(),
+    |                                         ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `neighbors` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:493:17
+    |
+493 |                 neighbors@ =~= graph@[vertex as int],
+    |                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `neighbors` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:494:18
+    |
+494 |                 *neighbors == graph.spec_index(vertex as int),
+    |                  ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `neighbors` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:539:29
+    |
+539 |             let neighbor = *neighbors.nth(i);
+    |                             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `neighbors` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:540:52
+    |
+540 |             proof { lemma_usize_view_eq_spec_index(neighbors); }
+    |                                                    ^^^^^^^^^
+    |
+help: a local variable with a similar name exists
+    |
+540 -             proof { lemma_usize_view_eq_spec_index(neighbors); }
+540 +             proof { lemma_usize_view_eq_spec_index(neighbor); }
+    |
+
+error[E0425]: cannot find value `neighbors` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:542:32
+    |
+542 |             assert(neighbor == neighbors@[i as int]);
+    |                                ^^^^^^^^^
+    |
+help: a local variable with a similar name exists
+    |
+542 -             assert(neighbor == neighbors@[i as int]);
+542 +             assert(neighbor == neighbor@[i as int]);
+    |
+
+error: aborting due to 10 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 3163MB, peak z3 RSS: 0MB, min free: 18359MB
+Sampled CPU Usage: rust_verify: 83s, z3 children: 69s

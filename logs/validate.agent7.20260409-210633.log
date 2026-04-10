@@ -1,0 +1,108 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error: postcondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:318:17
+    |
+318 |                 traversal.order.spec_len() > 0,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+962 |         BFSTreeS { parents, order: order_seq }
+    |         -------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:320:17
+    |
+320 |                 traversal.order.spec_index(0) == source,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+962 |         BFSTreeS { parents, order: order_seq }
+    |         -------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:323:17
+    |
+323 |                 spec_parents_bounded(&traversal.parents, graph.spec_len() as int),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+962 |         BFSTreeS { parents, order: order_seq }
+    |         -------------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:893:17
+    |
+155 |             spec_parents_bounded(original, n),
+    |             --------------------------------- failed precondition
+...
+893 |                 lemma_copy_preserves_parents_bounded(&parents, &parents_snapshot, n as int);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:897:17
+    |
+564 | /             forall|j: int| #![trigger frontier@[j]] 0 <= j < frontier@.len() ==>
+565 | |                 frontier@[j] < graph.spec_len(),
+    | |_______________________________________________- failed precondition
+...
+897 | /                 process_frontier_tree_parallel(
+898 | |                     graph_owned, parents_snapshot, current_layer
+899 | |                 );
+    | |_________________^
+
+error: invariant not satisfied before loop
+   --> src/Chap54/BFSMtEph.rs:924:21
+    |
+924 |                     spec_parents_bounded(&parents, n as int),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap54/BFSMtEph.rs:929:21
+    |
+929 |                     order@.len() > 0,
+    |                     ^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap54/BFSMtEph.rs:155:13
+    |
+155 |             spec_parents_bounded(original, n),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_parents_bounded(parents, n) ✘
+|   forall |j|
+|       let tmp%% = 0 in let tmp%% = j in let tmp%% = parents.spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+|           !(parents.spec_index(j) == NO_PARENT()) ==>
+|               parents.spec_index(j) < n 
++---
+parents_snapshot.spec_len() == parents.spec_len() ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = parents.spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        parents_snapshot.spec_index(i) == parents.spec_index(i) ✔
+
+note: recommendation not met
+   --> src/Chap54/BFSMtEph.rs:883:17
+    |
+883 |                 order@[0] == source,
+    |                 ^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap54/BFSMtEph.rs:320:17
+    |
+320 |                 traversal.order.spec_index(0) == source,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:136:24
+    |
+136 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+verification results:: 1356 verified, 2 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 2432MB, peak z3 RSS: 182MB, min free: 19510MB
+Sampled CPU Usage: rust_verify: 48s, z3 children: 58s

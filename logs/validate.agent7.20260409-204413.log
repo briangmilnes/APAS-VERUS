@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error: assertion failed
+   --> src/Chap54/BFSMtPer.rs:218:13
+    |
+218 |             #[trigger] copy@[u][i] < copy@.len()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+copy.view().index(u).index(i) < copy.view().len() 
+
+verification results:: 1357 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 3616MB, peak z3 RSS: 696MB, min free: 18053MB
+Sampled CPU Usage: rust_verify: 64s, z3 children: 48s

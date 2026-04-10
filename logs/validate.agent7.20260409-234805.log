@@ -1,0 +1,120 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: precondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:431:16
+    |
+278 |             vertex < old(visited)@.len(),
+    |             ---------------------------- failed precondition
+...
+431 |             if dfs_check_cycle(graph, visited, ancestors, neighbor, Ghost(ext_path), Ghost(cur_ord), Ghost(cur_next)) {
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStPer.rs:461:24
+    |
+461 |                 assert(old(ancestors)@[neighbor as int] == spec_in_path(dfs_path, neighbor as int));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+neighbor < visited.view().len() ✔
+visited.view().len() == graph.view().len() ✔
+ancestors.view().len() == graph.view().len() ✔
+spec_cycledetectstper_wf(graph) ✔
+forall |k|
+    let tmp%% = 0 in let tmp%% = k in let tmp%% = ext_path.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        let tmp%% = 0;
+            let tmp%% = ext_path.index(k);
+                let tmp%% = graph.view().len();
+                    tmp%% <= tmp%% ✔
+                    tmp%% < tmp%% ✔
+forall |k|
+    let tmp%% = 0 in let tmp%% = k in let tmp%% = ext_path.len() - 1 in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        spec_has_edge_per(graph, ext_path.index(k), ext_path.index(k + 1)) ✔
+ext_path.len() > 0 ==>
+    spec_has_edge_per(graph, ext_path.last(), neighbor) ✔
+forall |v|
+    let tmp%% = 0 in let tmp%% = v in let tmp%% = ancestors.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        ancestors.view().index(v) == spec_in_path(ext_path, v) ✔
+spec_acyclic_ord_per(graph, cur_ord, cur_next) ✔
+forall |v|
+    let tmp%% = 0 in let tmp%% = v in let tmp%% = visited.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && visited.view().index(v) && !(ancestors.view().index(v)) ==>
+        cur_ord.dom().contains(v) ✔
+forall |v|
+    cur_ord.dom().contains(v) ==>
+        visited.view().index(v) ✔
+        !(ancestors.view().index(v)) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+   --> src/Chap55/CycleDetectStPer.rs:395:48
+    |
+395 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStPer.rs:300:44
+    |
+300 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStPer.rs:436:20
+    |
+436 |             assert(visited@[neighbor as int]);
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStPer.rs:447:25
+    |
+447 |                 assert(!ancestors@[neighbor as int]);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStPer.rs:461:24
+    |
+461 |                 assert(old(ancestors)@[neighbor as int] == spec_in_path(dfs_path, neighbor as int));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStPer.rs:463:25
+    |
+463 |                 assert(!old(ancestors)@[neighbor as int]);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 30s
+Sampled Memory Usage: peak rust_verify RSS: 5109MB, peak z3 RSS: 655MB, min free: 17129MB
+Sampled CPU Usage: rust_verify: 105s, z3 children: 95s

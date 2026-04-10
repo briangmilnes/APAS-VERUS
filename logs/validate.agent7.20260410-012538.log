@@ -1,0 +1,25 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: postcondition not satisfied
+  --> src/Chap55/DFSStEph.rs:56:17
+   |
+54 |     proof fn lemma_reachable_self(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, v: int)
+   |           ------------------------------------------------------------------------------ at the end of the function body
+55 |         requires 0 <= v < graph@.len(),
+56 |         ensures spec_reachable(graph, v, v),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+spec_reachable(old(graph), old(v), old(v))
+|   (exists |path| spec_is_path(old(graph), path) && path.index(0) == old(v) && path.last() == old(v)) 
++---
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 6512MB, peak z3 RSS: 532MB, min free: 15632MB
+Sampled CPU Usage: rust_verify: 151s, z3 children: 140s

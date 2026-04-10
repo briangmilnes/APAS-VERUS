@@ -1,0 +1,42 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: assertion failed
+   --> src/Chap55/CycleDetectStPer.rs:580:20
+    |
+580 |             assert(spec_is_valid_ord_per(graph, visited@, ancestors@, ord, next_time, final_ord));
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_is_valid_ord_per(graph, visited.view(), ancestors.view(), ord, next_time, final_ord)
+|   (exists |n| spec_acyclic_ord_per(graph, final_ord, n) && (forall |v| (let tmp%% = 0 in let tmp%% = v in let tmp%% = visited.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && visited.view().index(v) && !(ancestors.view().index(v)) ==> final_ord.dom().contains(v))) && (forall |v| (final_ord.dom().contains(v) ==> visited.view().index(v) && !(ancestors.view().index(v)))) && (forall |v| (ord.dom().contains(v) ==> final_ord.dom().contains(v) && final_ord.index(v) == ord.index(v))) && n >= next_time) 
++---
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStPer.rs:395:48
+    |
+395 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStPer.rs:300:44
+    |
+300 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 28s
+Sampled Memory Usage: peak rust_verify RSS: 5274MB, peak z3 RSS: 859MB, min free: 16755MB
+Sampled CPU Usage: rust_verify: 90s, z3 children: 82s

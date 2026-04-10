@@ -1,0 +1,33 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/CycleDetectStEph.rs:865:21
+    |
+865 |                     forall|j: int| 0 <= j < start as int ==> #[trigger] visited@[j],
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:915:51
+    |
+217 | /             exists|o: Map<int, nat>|
+218 | |                 #[trigger] spec_is_valid_ord(graph, visited, ancestors, prev_ord, prev_next, o),
+    | |_______________________________________________________________________________________________- failed precondition
+...
+915 |                           let (new_ord, new_next) = lemma_extract_ord(
+    |  ___________________________________________________^
+916 | |                             graph, visited@, ancestors@, cur_ord, cur_next,
+917 | |                         );
+    | |_________________________^
+
+note: diagnostics via expansion
+
+note: 
+
+(exists |o| spec_is_valid_ord(graph, tmp%, tmp%, cur_ord, cur_next, o)) 
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 34s
+Sampled Memory Usage: peak rust_verify RSS: 8604MB, peak z3 RSS: 681MB, min free: 12395MB
+Sampled CPU Usage: rust_verify: 208s, z3 children: 177s

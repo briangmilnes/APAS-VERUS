@@ -1,0 +1,36 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+note: recommendation not met
+   --> src/Chap55/CycleDetectStPer.rs:300:44
+    |
+300 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStPer.rs:406:48
+    |
+406 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied before loop
+   --> src/Chap55/CycleDetectStPer.rs:414:17
+    |
+414 | /                 forall|v: int| 0 <= v < ancestors@.len() ==> (
+415 | |                     #[trigger] ancestors@[v] == spec_in_path(ext_path, v)
+416 | |                 ),
+    | |_________________^
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 29s
+Sampled Memory Usage: peak rust_verify RSS: 5094MB, peak z3 RSS: 666MB, min free: 16745MB
+Sampled CPU Usage: rust_verify: 89s, z3 children: 73s

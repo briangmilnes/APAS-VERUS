@@ -1,0 +1,58 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: precondition not satisfied
+   --> src/Chap55/SCCStEph.rs:563:13
+    |
+563 |             AVLTreeSeqStEphS::from_vec(components_vec)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:867:17
+    |
+867 |                 obeys_feq_full::<T>(),
+    |                 --------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:68:58
+    |
+ 68 |         forall|x: T, y: T| #[trigger] x.eq_spec(&y) <==> x == y
+    |                                                          ^^^^^^
+...
+ 79 |         &&& obeys_feq_view_injective::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 80 |         &&& obeys_feq_clone::<T>()
+ 81 |         &&& obeys_feq_eq::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:867:17
+    |
+867 |                 obeys_feq_full::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_full() ✘
+|   obeys_feq_properties() ✔
+|   obeys_feq_view() ✔
+|   obeys_feq_view_injective() ✘
+|       function is uninterpreted
+|   obeys_feq_clone() ✔
+|   obeys_feq_eq() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) == (x == y)
+|   |       |   x.eq_spec(y) ==>
+|   |       |       x == y ✘
+|   |       |       |   x.tree == y.tree 
+|   |       |       +---
+|   |       |   x == y ==>
+|   |       |       x.eq_spec(y) ✔
+|   |       +---
+|   +---
++---
+components_vec.view().len() < UnsignedMax.Exec(usize::BITS) ✔
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 5108MB, peak z3 RSS: 517MB, min free: 16958MB
+Sampled CPU Usage: rust_verify: 116s, z3 children: 132s

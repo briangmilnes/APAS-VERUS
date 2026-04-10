@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:572:29
+    |
+572 |                       implies (exists|v_ref: &V, p_val: P|
+    |  _____________________________^
+573 | |                         v_ref@ == e.1 && priority_fn.ensures((v_ref,), p_val) && p_val@ == e.0.0) by {
+    | |_________________________________________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+(exists |v_ref, p_val| v_ref.view() == e.1 && ClosureEns(priority_fn, (v_ref), p_val) && p_val.view() == e.0.0) 
+
+verification results:: 2334 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 28s
+Sampled Memory Usage: peak rust_verify RSS: 5889MB, peak z3 RSS: 744MB, min free: 15828MB
+Sampled CPU Usage: rust_verify: 104s, z3 children: 114s

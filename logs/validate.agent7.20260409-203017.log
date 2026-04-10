@@ -1,0 +1,109 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error[E0425]: cannot find value `nlen` in this scope
+   --> src/Chap53/PQMinStPer.rs:317:23
+    |
+317 |             while i < nlen
+    |                       ^^^^ not found in this scope
+
+error[E0425]: cannot find value `nlen` in this scope
+   --> src/Chap53/PQMinStPer.rs:319:26
+    |
+319 |                     i <= nlen,
+    |                          ^^^^ not found in this scope
+
+error[E0425]: cannot find value `nlen` in this scope
+   --> src/Chap53/PQMinStPer.rs:320:21
+    |
+320 |                     nlen as nat == neighbors_seq.spec_seq().len(),
+    |                     ^^^^ not found in this scope
+
+error[E0425]: cannot find value `frontier_updated` in this scope
+   --> src/Chap53/PQMinStPer.rs:323:21
+    |
+323 |                     frontier_updated.spec_avltreesetstper_wf(),
+    |                     ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `frontier_updated` in this scope
+   --> src/Chap53/PQMinStPer.rs:332:36
+    |
+332 |                         #[trigger] frontier_updated@.contains(e) ==> vertex_universe.contains(e.1),
+    |                                    ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `frontier_updated` in this scope
+   --> src/Chap53/PQMinStPer.rs:335:36
+    |
+335 |                         #[trigger] frontier_updated@.contains(e) ==> e.0 == (spec_priority(e.1), e.1),
+    |                                    ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `nlen` in this scope
+   --> src/Chap53/PQMinStPer.rs:341:27
+    |
+341 |                 decreases nlen - i,
+    |                           ^^^^ not found in this scope
+
+error[E0425]: cannot find value `frontier_updated` in this scope
+   --> src/Chap53/PQMinStPer.rs:351:40
+    |
+351 |                     let ghost old_fu = frontier_updated@;
+    |                                        ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `frontier_updated` in this scope
+   --> src/Chap53/PQMinStPer.rs:358:41
+    |
+358 |                         let projected = frontier_updated@.map(f);
+    |                                         ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `frontier_updated` in this scope
+   --> src/Chap53/PQMinStPer.rs:359:25
+    |
+359 |                         frontier_updated@.lemma_map_finite(f);
+    |                         ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `frontier_updated` in this scope
+   --> src/Chap53/PQMinStPer.rs:361:55
+    |
+361 |                         vstd::set_lib::lemma_map_size(frontier_updated@, projected, f);
+    |                                                       ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `frontier_updated` in this scope
+   --> src/Chap53/PQMinStPer.rs:366:21
+    |
+366 |                     frontier_updated = frontier_updated.union(&AVLTreeSetStPer::singleton(neighbor_entry));
+    |                     ^^^^^^^^^^^^^^^^
+    |
+help: you might have meant to introduce a new binding
+    |
+366 |                     let frontier_updated = frontier_updated.union(&AVLTreeSetStPer::singleton(neighbor_entry));
+    |                     +++
+
+error[E0425]: cannot find value `frontier_updated` in this scope
+   --> src/Chap53/PQMinStPer.rs:366:40
+    |
+366 |                     frontier_updated = frontier_updated.union(&AVLTreeSetStPer::singleton(neighbor_entry));
+    |                                        ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `frontier_updated` in this scope
+   --> src/Chap53/PQMinStPer.rs:373:40
+    |
+373 | ...                   #[trigger] frontier_updated@.contains(e)
+    |                                  ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `frontier_updated` in this scope
+   --> src/Chap53/PQMinStPer.rs:379:40
+    |
+379 | ...                   #[trigger] frontier_updated@.contains(e)
+    |                                  ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `frontier_updated` in this scope
+   --> src/Chap53/PQMinStPer.rs:389:24
+    |
+389 |             frontier = frontier_updated;
+    |                        ^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 16 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 839MB, peak z3 RSS: 0MB, min free: 19685MB
+Sampled CPU Usage: rust_verify: 7s, z3 children: 0s

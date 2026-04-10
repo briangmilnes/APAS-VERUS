@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error: assertion failed
+   --> src/Chap54/BFSMtEph.rs:218:13
+    |
+218 |             #[trigger] copy@[u][i] < copy@.len()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap54/BFSMtEph.rs:227:20
+    |
+227 |             assert(original@[u][i] == original.spec_index(u).spec_index(i));
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+original.view().index(u).index(i) == original.spec_index(u).spec_index(i) 
+
+verification results:: 1357 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 5232MB, peak z3 RSS: 866MB, min free: 16354MB
+Sampled CPU Usage: rust_verify: 72s, z3 children: 55s

@@ -1,0 +1,32 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error[E0061]: this function takes 2 arguments but 1 argument was supplied
+   --> src/Chap54/BFSStPer.rs:390:27
+    |
+390 |           let mut parents = ArraySeqStPerS::tabulate(
+    |  ___________________________^^^^^^^^^^^^^^^^^^^^^^^^-
+391 | |             &|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT },
+392 | | // Veracity: TESTING proof block             n,
+393 | |         );
+    | |_________- argument #2 of type `usize` is missing
+    |
+note: associated function defined here
+   --> src/Chap19/ArraySeqStPer.rs:363:12
+    |
+363 |         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqStPerS<T>)
+    |            ^^^^^^^^                           ------
+help: provide the argument
+    |
+390 -         let mut parents = ArraySeqStPerS::tabulate(
+391 -             &|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT },
+392 - // Veracity: TESTING proof block             n,
+393 -         );
+390 +         let mut parents = ArraySeqStPerS::tabulate(&|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT }, /* usize */);
+    |
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0061`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 1707MB, peak z3 RSS: 136MB, min free: 16837MB
+Sampled CPU Usage: rust_verify: 36s, z3 children: 53s

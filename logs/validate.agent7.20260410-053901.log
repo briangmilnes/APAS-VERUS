@@ -1,0 +1,64 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap55
+error: precondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:390:17
+    |
+390 |         proof { lemma_bool_array_set_view(visited, old(visited)@, vertex as int, true); }
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap55/DFSSpecsAndLemmas.rs:144:13
+    |
+144 |             a.spec_index(vertex) == val,
+    |             --------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap55/DFSSpecsAndLemmas.rs:144:13
+    |
+144 |             a.spec_index(vertex) == val,
+    |             ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+visited.view().len() == tmp%.len() ✔
+let tmp%% = 0;
+    let tmp%% = vertex;
+        let tmp%% = visited.view().len();
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+visited.spec_index(vertex) == true ✘
+|   visited.spec_index(vertex) ==>
+|       true ✔
+|   true ==>
+|       visited.spec_index(vertex) ✘
+|           not bool type
++---
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == vertex) ==>
+        visited.spec_index(i) == tmp%.index(i) ✔
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:500:48
+    |
+500 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:329:44
+    |
+329 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2378 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 35s
+Sampled Memory Usage: peak rust_verify RSS: 6825MB, peak z3 RSS: 787MB, min free: 13798MB
+Sampled CPU Usage: rust_verify: 120s, z3 children: 141s

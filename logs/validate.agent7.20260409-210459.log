@@ -1,0 +1,116 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:760:54
+    |
+760 |                     assert forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len()
+    |                                                      ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:760:85
+    |
+760 |                     assert forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len()
+    |                                                                                     ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:762:47
+    |
+762 |                         distances.spec_index((distance_updates@[j]).0 as int) == UNREACHABLE
+    |                                               ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:763:29
+    |
+763 |                         && (distance_updates@[j]).0 < n
+    |                             ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:764:29
+    |
+764 |                         && (distance_updates@[j]).1 == current_dist + 1
+    |                             ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:770:54
+    |
+770 |                     assert forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len()
+    |                                                      ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:770:85
+    |
+770 |                     assert forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len()
+    |                                                                                     ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:771:30
+    |
+771 |                     implies (distance_updates@[j]).0 != source
+    |                              ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:778:27
+    |
+778 |                 while k < distance_updates.len()
+    |                           ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:780:35
+    |
+780 |                         0 <= k <= distance_updates@.len(),
+    |                                   ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:793:51
+    |
+793 |                         forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len() ==>
+    |                                                   ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:793:82
+    |
+793 |                         forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len() ==>
+    |                                                                                  ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:794:30
+    |
+794 | ...                   (distance_updates@[j]).0 < graph.spec_len()
+    |                        ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:795:33
+    |
+795 | ...                   && (distance_updates@[j]).1 == current_dist + 1
+    |                           ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:796:33
+    |
+796 | ...                   && (distance_updates@[j]).0 != source,
+    |                           ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:797:31
+    |
+797 |                     decreases distance_updates@.len() - k
+    |                               ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `distance_updates` in this scope
+   --> src/Chap54/BFSMtEph.rs:799:33
+    |
+799 |                     let pair = &distance_updates[k];
+    |                                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `next_vertices` in this scope
+   --> src/Chap54/BFSMtEph.rs:829:33
+    |
+829 |                 current_layer = next_vertices;
+    |                                 ^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 18 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 2177MB, peak z3 RSS: 0MB, min free: 19837MB
+Sampled CPU Usage: rust_verify: 40s, z3 children: 40s

@@ -1,0 +1,278 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:852:13
+    |
+852 |             n,
+    |             ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:855:56
+    |
+855 |         proof { lemma_tabulate_all_no_parent(&parents, n as int); }
+    |                                                        ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:860:96
+    |
+860 |         proof { lemma_set_preserves_parents_bounded(&parents, &pre_set, source as int, source, n as int); }
+    |                                                                                                ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:870:17
+    |
+870 |                 n as int == graph.spec_len(),
+    |                 ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:871:39
+    |
+871 |                 parents.spec_len() == n as int,
+    |                                       ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:872:26
+    |
+872 |                 source < n,
+    |                          ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:873:17
+    |
+873 |                 n > 0,
+    |                 ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:874:17
+    |
+874 |                 n < usize::MAX,
+    |                 ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:877:48
+    |
+877 |                 spec_parents_bounded(&parents, n as int),
+    |                                                ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:879:41
+    |
+879 |                     current_layer@[j] < n,
+    |                                         ^
+    |
+help: a local variable with a similar name exists
+    |
+879 -                     current_layer@[j] < n,
+879 +                     current_layer@[j] < j,
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:881:33
+    |
+881 |                 order@.len() <= n as int,
+    |                                 ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:883:92
+    |
+883 |                 forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==> order@[j] < n,
+    |                                                                                            ^
+    |
+help: a local variable with a similar name exists
+    |
+883 -                 forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==> order@[j] < n,
+883 +                 forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==> order@[j] < j,
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:892:83
+    |
+892 |                 lemma_copy_preserves_parents_bounded(&parents, &parents_snapshot, n as int);
+    |                                                                                   ^ not found in this scope
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:905:47
+    |
+905 |                     && (tree_updates@[j]).0 < n
+    |                                               ^
+    |
+help: a local variable with a similar name exists
+    |
+905 -                     && (tree_updates@[j]).0 < n
+905 +                     && (tree_updates@[j]).0 < j
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:906:47
+    |
+906 |                     && (tree_updates@[j]).1 < n
+    |                                               ^
+    |
+help: a local variable with a similar name exists
+    |
+906 -                     && (tree_updates@[j]).1 < n
+906 +                     && (tree_updates@[j]).1 < j
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:916:43
+    |
+916 |                     parents.spec_len() == n as int,
+    |                                           ^
+    |
+help: a local variable with a similar name exists
+    |
+916 -                     parents.spec_len() == n as int,
+916 +                     parents.spec_len() == k as int,
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:917:21
+    |
+917 |                     n as int == graph.spec_len(),
+    |                     ^
+    |
+help: a local variable with a similar name exists
+    |
+917 -                     n as int == graph.spec_len(),
+917 +                     k as int == graph.spec_len(),
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:918:30
+    |
+918 |                     source < n,
+    |                              ^
+    |
+help: a local variable with a similar name exists
+    |
+918 -                     source < n,
+918 +                     source < k,
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:919:21
+    |
+919 |                     n > 0,
+    |                     ^
+    |
+help: a local variable with a similar name exists
+    |
+919 -                     n > 0,
+919 +                     k > 0,
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:920:21
+    |
+920 |                     n < usize::MAX,
+    |                     ^
+    |
+help: a local variable with a similar name exists
+    |
+920 -                     n < usize::MAX,
+920 +                     k < usize::MAX,
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:923:52
+    |
+923 |                     spec_parents_bounded(&parents, n as int),
+    |                                                    ^
+    |
+help: a local variable with a similar name exists
+    |
+923 -                     spec_parents_bounded(&parents, n as int),
+923 +                     spec_parents_bounded(&parents, k as int),
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:925:48
+    |
+925 |                         (tree_updates@[j]).0 < n && (tree_updates@[j]).1 < n,
+    |                                                ^
+    |
+help: a local variable with a similar name exists
+    |
+925 -                         (tree_updates@[j]).0 < n && (tree_updates@[j]).1 < n,
+925 +                         (tree_updates@[j]).0 < j && (tree_updates@[j]).1 < n,
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:925:76
+    |
+925 |                         (tree_updates@[j]).0 < n && (tree_updates@[j]).1 < n,
+    |                                                                            ^
+    |
+help: a local variable with a similar name exists
+    |
+925 -                         (tree_updates@[j]).0 < n && (tree_updates@[j]).1 < n,
+925 +                         (tree_updates@[j]).0 < n && (tree_updates@[j]).1 < j,
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:927:42
+    |
+927 |                         next_layer@[j] < n,
+    |                                          ^
+    |
+help: a local variable with a similar name exists
+    |
+927 -                         next_layer@[j] < n,
+927 +                         next_layer@[j] < j,
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:929:37
+    |
+929 |                     order@.len() <= n as int,
+    |                                     ^
+    |
+help: a local variable with a similar name exists
+    |
+929 -                     order@.len() <= n as int,
+929 +                     order@.len() <= k as int,
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:931:96
+    |
+931 |                     forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==> order@[j] < n,
+    |                                                                                                ^
+    |
+help: a local variable with a similar name exists
+    |
+931 -                     forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==> order@[j] < n,
+931 +                     forall|j: int| #![trigger order@[j]] 0 <= j < order@.len() ==> order@[j] < j,
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:940:66
+    |
+940 |                 if *parents.nth(v) == NO_PARENT && order.len() < n {
+    |                                                                  ^
+    |
+help: a local variable with a similar name exists
+    |
+940 -                 if *parents.nth(v) == NO_PARENT && order.len() < n {
+940 +                 if *parents.nth(v) == NO_PARENT && order.len() < k {
+    |
+
+error[E0425]: cannot find value `n` in this scope
+   --> src/Chap54/BFSMtEph.rs:949:42
+    |
+949 | ...                   v as int, u, n as int,
+    |                                    ^
+    |
+help: a local variable with a similar name exists
+    |
+949 -                             v as int, u, n as int,
+949 +                             v as int, u, k as int,
+    |
+
+error: aborting due to 28 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 5488MB, peak z3 RSS: 690MB, min free: 16112MB
+Sampled CPU Usage: rust_verify: 107s, z3 children: 129s

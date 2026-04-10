@@ -1,0 +1,73 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap53/PQMinStEph.rs:343:19
+    |
+343 |             while i < nlen
+    |                   ^ not found in this scope
+
+error[E0425]: cannot find value `nlen` in this scope
+   --> src/Chap53/PQMinStEph.rs:343:23
+    |
+343 |             while i < nlen
+    |                       ^^^^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap53/PQMinStEph.rs:345:21
+    |
+345 |                     i <= nlen,
+    |                     ^ not found in this scope
+
+error[E0425]: cannot find value `nlen` in this scope
+   --> src/Chap53/PQMinStEph.rs:345:26
+    |
+345 |                     i <= nlen,
+    |                          ^^^^ not found in this scope
+
+error[E0425]: cannot find value `nlen` in this scope
+   --> src/Chap53/PQMinStEph.rs:346:21
+    |
+346 |                     nlen == neighbors_seq@.len(),
+    |                     ^^^^ not found in this scope
+
+error[E0425]: cannot find value `nlen` in this scope
+   --> src/Chap53/PQMinStEph.rs:374:27
+    |
+374 |                 decreases nlen - i,
+    |                           ^^^^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap53/PQMinStEph.rs:374:34
+    |
+374 |                 decreases nlen - i,
+    |                                  ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap53/PQMinStEph.rs:376:50
+    |
+376 |                 let neighbor = neighbors_seq.nth(i);
+    |                                                  ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap53/PQMinStEph.rs:430:17
+    |
+430 |                 i = i + 1;
+    |                 ^
+    |
+help: you might have meant to introduce a new binding
+    |
+430 |                 let i = i + 1;
+    |                 +++
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap53/PQMinStEph.rs:430:21
+    |
+430 |                 i = i + 1;
+    |                     ^ not found in this scope
+
+error: aborting due to 10 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 1650MB, peak z3 RSS: 88MB, min free: 20244MB
+Sampled CPU Usage: rust_verify: 19s, z3 children: 12s
