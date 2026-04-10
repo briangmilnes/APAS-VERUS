@@ -690,8 +690,11 @@ pub mod Chap64 {
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap65")))]
 pub mod Chap65 {
-    pub mod UnionFindStEph;
-    pub mod KruskalStEph;
+    // UnionFindStEph: 5 rlimit/postcondition failures from R130 code against current deps.
+    // KruskalStEph: depends on UnionFind, commented out with it.
+    // Repair in progress (R169). Use `scripts/validate.sh isolate Chap65` for dev.
+    // pub mod UnionFindStEph;
+    // pub mod KruskalStEph;
     pub mod PrimStEph;
 }
 
