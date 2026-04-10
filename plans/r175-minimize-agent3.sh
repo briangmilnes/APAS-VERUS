@@ -4,6 +4,6 @@ for f in src/Chap43/AugOrderedTableMtEph.rs src/Chap43/AugOrderedTableStEph.rs s
   ~/projects/veracity/target/release/veracity-minimize-proofs \
     -c . -l src/vstdplus --project APAS --chapter Chap43 \
     -F "$f" \
-    -a -p --no-lib-min --fresh --danger \
+    -a -p --no-lib-min --danger \
     --max-incremental 0.00 --max-memory-increase 0.00
 done
