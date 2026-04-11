@@ -1,0 +1,78 @@
+Mode: isolate
+Isolate: including Chap02
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindStEph.rs:161:13
+    |
+161 |             forall|k: V::V| po.dom().contains(k) && k != ra ==> pv::<V>(pn, k) == pv::<V>(po, k),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/UnionFind/UnionFindStEph.rs:161:65
+    |
+161 |             forall|k: V::V| po.dom().contains(k) && k != ra ==> pv::<V>(pn, k) == pv::<V>(po, k),
+    |                                                                 ^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/UnionFind/UnionFindStEph.rs:161:83
+    |
+161 |             forall|k: V::V| po.dom().contains(k) && k != ra ==> pv::<V>(pn, k) == pv::<V>(po, k),
+    |                                                                                   ^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindStEph.rs:591:37
+    |
+591 | ...                   assert forall|k: V::V|
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindStEph.rs:592:41
+    |
+592 | ...                   st_new.contains(k) == (st_old_u + st_old_v).contains(k)
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindStEph.rs:679:37
+    |
+679 | ...                   assert forall|k: V::V|
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindStEph.rs:680:41
+    |
+680 | ...                   st_new.contains(k) == (st_old_v + st_old_u).contains(k)
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindStEph.rs:801:37
+    |
+801 | ...                   assert forall|k: V::V|
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindStEph.rs:802:41
+    |
+802 | ...                   st_new.contains(k) == (st_old_v + st_old_u).contains(k)
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/UnionFind/UnionFindStEph.rs:801:37
+    |
+801 | ...                   assert forall|k: V::V|
+    |                       ^^^^^^
+
+verification results:: 741 verified, 0 errors
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 559MB, peak z3 RSS: 581MB, min free: 26561MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 14s

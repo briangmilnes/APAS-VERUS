@@ -158,7 +158,7 @@ pub mod UnionFindStEph {
             ra != rb,
             pv::<V>(po, ra) == ra, pv::<V>(po, rb) == rb,
             pv::<V>(pn, ra) == rb, pv::<V>(pn, rb) == rb,
-            forall|k: V::V| po.dom().contains(k) && k != ra ==> pv::<V>(pn, k) == pv::<V>(po, k),
+            forall|k: V::V| po.dom().contains(k) && k != ra ==> #[trigger] pv::<V>(pn, k) == pv::<V>(po, k),
             forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k),
             // Old invariants.
             forall|k: V::V| #[trigger] po.dom().contains(k) <==> ro.dom().contains(k),
@@ -589,7 +589,7 @@ pub mod UnionFindStEph {
                                 let st_old_v = spec_subtree::<V>(po, ro, n, root_v@);
                                 assert(st_new =~= st_old_u + st_old_v) by {
                                     assert forall|k: V::V|
-                                        st_new.contains(k) == (st_old_u + st_old_v).contains(k)
+                                        #[trigger] st_new.contains(k) == (st_old_u + st_old_v).contains(k)
                                     by {
                                         if po.dom().contains(k) {
                                             assert(pn.dom().contains(k));
@@ -677,7 +677,7 @@ pub mod UnionFindStEph {
                                 let st_old_u = spec_subtree::<V>(po, ro, n, root_u@);
                                 assert(st_new =~= st_old_v + st_old_u) by {
                                     assert forall|k: V::V|
-                                        st_new.contains(k) == (st_old_v + st_old_u).contains(k)
+                                        #[trigger] st_new.contains(k) == (st_old_v + st_old_u).contains(k)
                                     by {
                                         if po.dom().contains(k) {
                                             assert(pn.dom().contains(k));
@@ -799,7 +799,7 @@ pub mod UnionFindStEph {
                                 let st_old_u = spec_subtree::<V>(po, ro, n, root_u@);
                                 assert(st_new =~= st_old_v + st_old_u) by {
                                     assert forall|k: V::V|
-                                        st_new.contains(k) == (st_old_v + st_old_u).contains(k)
+                                        #[trigger] st_new.contains(k) == (st_old_v + st_old_u).contains(k)
                                     by {
                                         if po.dom().contains(k) {
                                             assert(pn.dom().contains(k));

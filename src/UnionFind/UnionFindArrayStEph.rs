@@ -40,7 +40,7 @@ pub mod UnionFindArrayStEph {
         decreases_when(
             0 <= x && x < n as int && rank.len() == n && parent.len() == n
             && (forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] parent[i] && parent[i] < n as int)
-            && (forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int])
+            && (forall|i: int| 0 <= i < n as int && parent[i] != i ==> #[trigger] rank[i] < rank[parent[i] as int])
             && (forall|i: int| 0 <= i < n as int ==> rank[i] < n as int)
         );
         if x < 0 || x >= n as int { x }
@@ -134,7 +134,7 @@ pub mod UnionFindArrayStEph {
             n > 0, parent.len() == n, rank.len() == n,
             forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] parent[i] && parent[i] < n as int,
             forall|i: int| 0 <= i < n as int ==> #[trigger] rank[i] >= 0,
-            forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int],
+            forall|i: int| 0 <= i < n as int && parent[i] != i ==> #[trigger] rank[i] < rank[parent[i] as int],
             forall|i: int| 0 <= i < n as int ==> rank[i] < n as int,
             0 <= x < n as int,
         ensures spec_is_root(parent, spec_pure_find(parent, rank, n, x)),
@@ -154,11 +154,11 @@ pub mod UnionFindArrayStEph {
             n > 0, po.len() == n, ro.len() == n, pn.len() == n, rn.len() == n,
             forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] po[i] && po[i] < n as int,
             forall|i: int| 0 <= i < n as int ==> #[trigger] ro[i] >= 0,
-            forall|i: int| 0 <= i < n as int && po[i] != i ==> ro[i] < ro[po[i] as int],
+            forall|i: int| 0 <= i < n as int && po[i] != i ==> #[trigger] ro[i] < ro[po[i] as int],
             forall|i: int| 0 <= i < n as int ==> ro[i] < n as int,
             forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] pn[i] && pn[i] < n as int,
             forall|i: int| 0 <= i < n as int ==> #[trigger] rn[i] >= 0,
-            forall|i: int| 0 <= i < n as int && pn[i] != i ==> rn[i] < rn[pn[i] as int],
+            forall|i: int| 0 <= i < n as int && pn[i] != i ==> #[trigger] rn[i] < rn[pn[i] as int],
             forall|i: int| 0 <= i < n as int ==> rn[i] < n as int,
             0 <= ra < n as int, 0 <= rb < n as int, ra != rb,
             po[ra] == ra, po[rb] == rb, pn == po.update(ra, rb),
@@ -201,7 +201,7 @@ pub mod UnionFindArrayStEph {
             n > 0, parent.len() == n, rank.len() == n,
             forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] parent[i] && parent[i] < n as int,
             forall|i: int| 0 <= i < n as int ==> #[trigger] rank[i] >= 0,
-            forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int],
+            forall|i: int| 0 <= i < n as int && parent[i] != i ==> #[trigger] rank[i] < rank[parent[i] as int],
             forall|i: int| 0 <= i < n as int ==> rank[i] < n as int,
             0 <= root < n as int, parent[root] == root, k as int <= root,
         ensures spec_count_with_root(parent, rank, n, root, k) >= 1,
@@ -231,11 +231,11 @@ pub mod UnionFindArrayStEph {
             n > 0, po.len() == n, ro.len() == n, pn.len() == n, rn.len() == n,
             forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] po[i] && po[i] < n as int,
             forall|i: int| 0 <= i < n as int ==> #[trigger] ro[i] >= 0,
-            forall|i: int| 0 <= i < n as int && po[i] != i ==> ro[i] < ro[po[i] as int],
+            forall|i: int| 0 <= i < n as int && po[i] != i ==> #[trigger] ro[i] < ro[po[i] as int],
             forall|i: int| 0 <= i < n as int ==> ro[i] < n as int,
             forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] pn[i] && pn[i] < n as int,
             forall|i: int| 0 <= i < n as int ==> #[trigger] rn[i] >= 0,
-            forall|i: int| 0 <= i < n as int && pn[i] != i ==> rn[i] < rn[pn[i] as int],
+            forall|i: int| 0 <= i < n as int && pn[i] != i ==> #[trigger] rn[i] < rn[pn[i] as int],
             forall|i: int| 0 <= i < n as int ==> rn[i] < n as int,
             0 <= ra < n as int, 0 <= rb < n as int, ra != rb,
             po[ra] == ra, po[rb] == rb, pn == po.update(ra, rb),
@@ -259,11 +259,11 @@ pub mod UnionFindArrayStEph {
             n > 0, po.len() == n, ro.len() == n, pn.len() == n, rn.len() == n,
             forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] po[i] && po[i] < n as int,
             forall|i: int| 0 <= i < n as int ==> #[trigger] ro[i] >= 0,
-            forall|i: int| 0 <= i < n as int && po[i] != i ==> ro[i] < ro[po[i] as int],
+            forall|i: int| 0 <= i < n as int && po[i] != i ==> #[trigger] ro[i] < ro[po[i] as int],
             forall|i: int| 0 <= i < n as int ==> ro[i] < n as int,
             forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] pn[i] && pn[i] < n as int,
             forall|i: int| 0 <= i < n as int ==> #[trigger] rn[i] >= 0,
-            forall|i: int| 0 <= i < n as int && pn[i] != i ==> rn[i] < rn[pn[i] as int],
+            forall|i: int| 0 <= i < n as int && pn[i] != i ==> #[trigger] rn[i] < rn[pn[i] as int],
             forall|i: int| 0 <= i < n as int ==> rn[i] < n as int,
             0 <= ra < n as int, 0 <= rb < n as int, ra != rb,
             po[ra] == ra, po[rb] == rb, pn == po.update(ra, rb),
@@ -286,7 +286,7 @@ pub mod UnionFindArrayStEph {
             n > 0, parent.len() == n, rank.len() == n,
             forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] parent[i] && parent[i] < n as int,
             forall|i: int| 0 <= i < n as int ==> #[trigger] rank[i] >= 0,
-            forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int],
+            forall|i: int| 0 <= i < n as int && parent[i] != i ==> #[trigger] rank[i] < rank[parent[i] as int],
             forall|i: int| 0 <= i < n as int ==> rank[i] < n as int,
             spec_size_rank_inv(UnionFindArrayView { parent, rank, n }),
             0 <= rx < n as int, 0 <= ry < n as int, rx != ry,
