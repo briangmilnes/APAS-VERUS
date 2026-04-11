@@ -15,6 +15,20 @@
 
 ## Read all standards first
 
+## Reference: F* CLRS Chapter 21 implementation
+
+Read these three files for the data structures, specs, and proof strategy.
+They are an F*/Pulse union-find that uses the same array-based approach.
+Translate the ideas to Verus — do NOT copy F* syntax.
+
+1. `~/projects/AlgoStar/autoclrs/ch21-disjoint-sets/CLRS.Ch21.UnionFind.Spec.fst`
+   — Pure spec: uf_forest type, pure_find, pure_union, rank_invariant, compress.
+2. `~/projects/AlgoStar/autoclrs/ch21-disjoint-sets/CLRS.Ch21.UnionFind.Impl.fsti`
+   — API signatures: make_set, find_set, union with full pre/postconditions.
+3. `~/projects/AlgoStar/autoclrs/ch21-disjoint-sets/CLRS.Ch21.UnionFind.Lemmas.fst`
+   — Rank bound proofs: size ≥ 2^rank, log n bound, union preserves invariant.
+   Key: uses `--split_queries always` and rlimit 5. No =~= anywhere.
+
 ## Goal
 
 Build a fresh array-based Union-Find in `src/UnionFind/UnionFindArrayStEph.rs`.
