@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including UnionFind
+error: expected `,`
+   --> src/UnionFind/UnionFindStEph.rs:403:53
+    |
+403 |                         assert(ro[k] as int < n_old as int);
+    |                                                     ^^
+
+error[E0425]: cannot find type `UnionFind` in this scope
+   --> src/UnionFind/UnionFindStEph.rs:782:56
+    |
+782 |     impl<V: StT + Hash + ClonePreservesView> Debug for UnionFind<V> {
+    |                                                        ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFind` in this scope
+   --> src/UnionFind/UnionFindStEph.rs:788:58
+    |
+788 |     impl<V: StT + Hash + ClonePreservesView> Display for UnionFind<V> {
+    |                                                          ^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 21924MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

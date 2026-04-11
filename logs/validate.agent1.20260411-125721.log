@@ -1,0 +1,407 @@
+Mode: isolate
+Isolate: including UnionFind
+error: postcondition not satisfied
+   --> src/UnionFind/UnionFindStEph.rs:96:17
+    |
+ 96 |           ensures spec_is_root_map::<V>(parent, spec_pure_find::<V>(parent, fuel, v)),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+ 99 | /         if pv::<V>(parent, v) != v {
+100 | |             let ghost pv_v = pv::<V>(parent, v);
+101 | |             assert(parent.dom().contains(pv_v)); // trigger forall
+102 | |             if fuel > 1 {
+...   |
+107 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/UnionFind/UnionFindStEph.rs:47:37
+   |
+47 |         parent.dom().contains(v) && pv::<V>(parent, v) == v
+   |                                     ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_is_root_map(old(parent), spec_pure_find(old(parent), old(fuel), old(v)))
+|   old(parent).dom().contains(spec_pure_find(old(parent), old(fuel), old(v))) ✔
+|   pv(old(parent), spec_pure_find(old(parent), old(fuel), old(v))) == spec_pure_find(old(parent), old(fuel), old(v)) ✘
++---
+
+error: postcondition not satisfied
+   --> src/UnionFind/UnionFindStEph.rs:209:77
+    |
+209 |             ensures self.spec_contains(root@), root@ == self.spec_find(v@), self.spec_is_root(root@),
+    |                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+311 |             curr
+    |             ---- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/UnionFind/UnionFindStEph.rs:210:17
+    |
+210 |                 self.spec_is_root(root@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+311 |             curr
+    |             ---- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/UnionFind/UnionFindStEph.rs:209:77
+    |
+209 |             ensures self.spec_contains(root@), root@ == self.spec_find(v@), self.spec_is_root(root@),
+    |                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).spec_contains(%return.view()) ✔
+%return.view() == old(self).spec_find(old(v).view()) ✔
+old(self).spec_is_root(%return.view()) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+old(self).spec_is_root(%return.view()) ✔
+
+error: postcondition not satisfied
+   --> src/UnionFind/UnionFindStEph.rs:154:17
+    |
+154 |           ensures ({
+    |  _________________^
+155 | |             let fo = spec_pure_find::<V>(po, fuel, z);
+156 | |             let fn_ = spec_pure_find::<V>(pn, fuel, z);
+157 | |             if fo == ra { fn_ == rb }
+158 | |             else if fo == rb { fn_ == rb }
+159 | |             else { fn_ == fo }
+160 | |         }),
+    | |__________^ failed this postcondition
+...
+163 | /         if pv::<V>(po, z) == z {
+164 | |             if z == ra {
+165 | |                 assert(pv::<V>(pn, ra) == rb);
+166 | |                 assert(pv::<V>(pn, rb) == rb);
+...   |
+186 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/UnionFind/UnionFindStEph.rs:157:27
+    |
+157 |             if fo == ra { fn_ == rb }
+    |                           ^^^^^^^^^
+158 |             else if fo == rb { fn_ == rb }
+    |                                ^^^^^^^^^
+159 |             else { fn_ == fo }
+    |                    ^^^^^^^^^
+
+note: 
+
+let fo = spec_pure_find(old(po), old(fuel), old(z));
+    let fn_ = spec_pure_find(old(pn), old(fuel), old(z));
+        fo == old(ra) ==>
+            fn_ == old(rb) ✘
+        !(fo == old(ra)) ==>
+            fo == old(rb) ==>
+                fn_ == old(rb) ✘
+            !(fo == old(rb)) ==>
+                fn_ == fo ✘
+
+error: postcondition not satisfied
+   --> src/UnionFind/UnionFindStEph.rs:214:21
+    |
+214 |               ensures self.spec_wf(), self.spec_same_set(u@, v@);
+    |                       ^^^^^^^^^^^^^^ failed this postcondition
+...
+330 | /             if rank_u < rank_v {
+331 | |                 self.parent.insert(root_u.clone_view(), root_v);
+332 | |                 proof {
+333 | |                     let pn = self.parent@;
+...   |
+414 | |             }
+    | |_____________- at the end of the function body
+
+error: possible arithmetic underflow/overflow
+   --> src/UnionFind/UnionFindStEph.rs:387:43
+    |
+387 |                 self.rank.insert(root_u2, rank_u + 1);
+    |                                           ^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/UnionFind/UnionFindStEph.rs:411:21
+    |
+147 |             ra != rb, fuel >= 2,
+    |                       --------- failed precondition
+...
+411 |                     lemma_find_after_link::<V>(po, pn, n, root_v@, root_u@, u@, n);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/UnionFind/UnionFindStEph.rs:412:21
+    |
+147 |             ra != rb, fuel >= 2,
+    |                       --------- failed precondition
+...
+412 |                     lemma_find_after_link::<V>(po, pn, n, root_v@, root_u@, v@, n);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/UnionFind/UnionFindStEph.rs:387:43
+    |
+387 |                 self.rank.insert(root_u2, rank_u + 1);
+    |                                           ^^^^^^^^^^
+
+note: 
+
+usize::BITS == 32 ==>
+    0 <= rank_u + 1 ✔
+    rank_u + 1 < 4294967296 ✘
+usize::BITS == 64 ==>
+    0 <= rank_u + 1 ✔
+    rank_u + 1 < 18446744073709551616 ✘
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindStEph.rs:368:26
+    |
+368 |                         (#[trigger] self.rank@[k] as int) < (self.rank@[pv::<V>(pn, k)] as int)
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindStEph.rs:368:62
+    |
+368 |                         (#[trigger] self.rank@[k] as int) < (self.rank@[pv::<V>(pn, k)] as int)
+    |                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindStEph.rs:399:26
+    |
+399 |                         (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int)
+    |                          ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindStEph.rs:399:54
+    |
+399 |                         (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int)
+    |                                                      ^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindStEph.rs:386:33
+    |
+386 |                 proof { assert((old(self).rank@[root_u@] as int) < n as int); }
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindStEph.rs:342:26
+    |
+342 |                         (#[trigger] self.rank@[k] as int) < (self.rank@[pv::<V>(pn, k)] as int)
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindStEph.rs:342:62
+    |
+342 |                         (#[trigger] self.rank@[k] as int) < (self.rank@[pv::<V>(pn, k)] as int)
+    |                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/UnionFind/UnionFindStEph.rs:116:17
+    |
+116 |           ensures spec_pure_find::<V>(parent, fuel, v) == spec_pure_find::<V>(parent, fuel + 1, v),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+119 | /         if pv::<V>(parent, v) != v && fuel >= 2 {
+120 | |             assert(parent.dom().contains(pv::<V>(parent, v))); // trigger
+121 | |             lemma_more_fuel::<V>(parent, (fuel - 1) as nat, pv::<V>(parent, v));
+122 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+spec_pure_find(old(parent), old(fuel), old(v)) == spec_pure_find(old(parent), clip(nat, old(fuel) + 1), old(v)) 
+
+note: automatically chose triggers for this expression:
+  --> src/UnionFind/UnionFindArrayStEph.rs:43:16
+   |
+43 |             && (forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int])
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+  --> src/UnionFind/UnionFindArrayStEph.rs:43:53
+   |
+43 |             && (forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int])
+   |                                                     ^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:204:13
+    |
+204 |             forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:204:49
+    |
+204 |             forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int],
+    |                                                 ^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:137:13
+    |
+137 |             forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:137:49
+    |
+137 |             forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int],
+    |                                                 ^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:157:13
+    |
+157 |             forall|i: int| 0 <= i < n as int && po[i] != i ==> ro[i] < ro[po[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:157:49
+    |
+157 |             forall|i: int| 0 <= i < n as int && po[i] != i ==> ro[i] < ro[po[i] as int],
+    |                                                 ^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:161:13
+    |
+161 |             forall|i: int| 0 <= i < n as int && pn[i] != i ==> rn[i] < rn[pn[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:161:49
+    |
+161 |             forall|i: int| 0 <= i < n as int && pn[i] != i ==> rn[i] < rn[pn[i] as int],
+    |                                                 ^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:234:13
+    |
+234 |             forall|i: int| 0 <= i < n as int && po[i] != i ==> ro[i] < ro[po[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:234:49
+    |
+234 |             forall|i: int| 0 <= i < n as int && po[i] != i ==> ro[i] < ro[po[i] as int],
+    |                                                 ^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:238:13
+    |
+238 |             forall|i: int| 0 <= i < n as int && pn[i] != i ==> rn[i] < rn[pn[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:238:49
+    |
+238 |             forall|i: int| 0 <= i < n as int && pn[i] != i ==> rn[i] < rn[pn[i] as int],
+    |                                                 ^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:262:13
+    |
+262 |             forall|i: int| 0 <= i < n as int && po[i] != i ==> ro[i] < ro[po[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:262:49
+    |
+262 |             forall|i: int| 0 <= i < n as int && po[i] != i ==> ro[i] < ro[po[i] as int],
+    |                                                 ^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:266:13
+    |
+266 |             forall|i: int| 0 <= i < n as int && pn[i] != i ==> rn[i] < rn[pn[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:266:49
+    |
+266 |             forall|i: int| 0 <= i < n as int && pn[i] != i ==> rn[i] < rn[pn[i] as int],
+    |                                                 ^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:289:13
+    |
+289 |             forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:289:49
+    |
+289 |             forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int],
+    |                                                 ^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindStEph.rs:150:13
+    |
+150 |             forall|k: V::V| po.dom().contains(k) && k != ra ==> pv::<V>(pn, k) == pv::<V>(po, k),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/UnionFind/UnionFindStEph.rs:150:65
+    |
+150 |             forall|k: V::V| po.dom().contains(k) && k != ra ==> pv::<V>(pn, k) == pv::<V>(po, k),
+    |                                                                 ^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/UnionFind/UnionFindStEph.rs:150:83
+    |
+150 |             forall|k: V::V| po.dom().contains(k) && k != ra ==> pv::<V>(pn, k) == pv::<V>(po, k),
+    |                                                                                   ^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/UnionFind/UnionFindStEph.rs:150:13
+    |
+150 |             forall|k: V::V| po.dom().contains(k) && k != ra ==> pv::<V>(pn, k) == pv::<V>(po, k),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 726 verified, 5 errors
+error: aborting due to 9 previous errors
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 535MB, peak z3 RSS: 215MB, min free: 20980MB
+Sampled CPU Usage: rust_verify: 3s, z3 children: 4s
