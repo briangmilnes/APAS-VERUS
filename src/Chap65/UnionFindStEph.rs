@@ -1436,7 +1436,6 @@ pub mod UnionFindStEph {
         );
         lemma_union_wf_frame_fwd_bwd(uf, mid);
         lemma_union_wf_frame_distinct(uf, mid);
-        reveal(spec_rank_lt_elements);
         assert forall|w: <V as View>::V| #[trigger] uf.rank@.contains_key(w)
             implies uf.rank@[w] < uf.elements@.len()
         by {
