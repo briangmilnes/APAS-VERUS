@@ -20,6 +20,7 @@ pub mod Concurrency;
 pub mod ParaPairs;
 pub mod UnionFind {
     pub mod UnionFindArrayStEph;
+    pub mod UnionFindStEph;
 }
 
 pub mod experiments {
