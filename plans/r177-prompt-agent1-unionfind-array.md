@@ -21,6 +21,8 @@ Read these three files for the data structures, specs, and proof strategy.
 They are an F*/Pulse union-find that uses the same array-based approach.
 Translate the ideas to Verus — do NOT copy F* syntax.
 
+0. `~/projects/AlgoStar/autoclrs/ch21-disjoint-sets/README.md`
+   — Overview: fully proven, zero admits/assumes, summary table of all properties.
 1. `~/projects/AlgoStar/autoclrs/ch21-disjoint-sets/CLRS.Ch21.UnionFind.Spec.fst`
    — Pure spec: uf_forest type, pure_find, pure_union, rank_invariant, compress.
 2. `~/projects/AlgoStar/autoclrs/ch21-disjoint-sets/CLRS.Ch21.UnionFind.Impl.fsti`
