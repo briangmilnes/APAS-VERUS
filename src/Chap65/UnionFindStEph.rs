@@ -4,18 +4,15 @@
 //! Implements Union-Find (Disjoint Set Union) with union by rank.
 //! Used in Kruskal's MST algorithm for efficient cycle detection.
 //!
-//! Proof status:
-//! - union_merge: PROVED (R106, agent1 — opaque roots predicate eliminates matching loop).
-//! - union (trait impl): PROVED (R130, agent1 — bridge lemmas + rank bound from wf).
-//!
-//! NOTE: find currently uses root-chasing without path compression (O(log n) per call).
-//! Path compression lemmas are written and commented out — the assembly lemma needs
-//! rlimit work to combine 13 named wf sub-predicates. The algorithm is correct and
-//! fully proved; compression is a performance optimization for future work.
+//! Proof status (R175):
+//! - 3 external_body remain: lemma_union_merge_wf, lemma_union_merge_wf_half_a, fn union.
+//!   All from =~= extensional equality cross-firing with contains_key (117K inst/quantifier).
+//!   Specs are correct, proof bodies present but bypassed at rlimit 30.
+//! - R172-R175: killed 9M spec_elements_distinct matching loop (closed spec_elem_at_neq),
+//!   decomposed wf into 5 opaque groups, proved lemma_rank_lt_elements/assemble_wf/parent_dom_eq.
 //!
 //! Ghost field `roots` maps each element to its canonical representative, allowing
-//! clean specifications without recursive spec functions. Path compression changes
-//! concrete parent pointers but preserves the logical partition (roots).
+//! clean specifications without recursive spec functions.
 
 pub mod UnionFindStEph {
 
@@ -24,7 +21,6 @@ pub mod UnionFindStEph {
 
     use crate::Types::Types::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
-    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::*;
     use crate::vstdplus::feq::feq::feq;
     use std::hash::Hash;
 
