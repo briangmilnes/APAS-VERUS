@@ -18,6 +18,9 @@ pub mod Types;
 pub mod Concurrency;
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap02")))]
 pub mod ParaPairs;
+pub mod UnionFind {
+    pub mod UnionFindArrayStEph;
+}
 
 pub mod experiments {
     // SUCCEEDS

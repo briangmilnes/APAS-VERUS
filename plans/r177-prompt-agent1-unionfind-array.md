@@ -1,4 +1,4 @@
-# R176 Prompt — Agent 1: Array-based UnionFind from scratch. AFK.
+# R177 Prompt — Agent 1: Array-based UnionFind from scratch. AFK.
 
 ## Agent worktree
 
@@ -175,8 +175,8 @@ scripts/validate.sh isolate Chap02
 
 ## Report
 
-Write `plans/agent1-round176-report.md`.
+Write `plans/agent1-round177-report.md`.
 
 ## RCP
 
-`git add -A && git commit -m "R176 Agent 1: array-based UnionFind from scratch"`, then `git push`.
+`git add -A && git commit -m "R177 Agent 1: array-based UnionFind from scratch"`, then `git push`.

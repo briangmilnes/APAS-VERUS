@@ -1,0 +1,543 @@
+Mode: isolate
+Isolate: including Chap02
+error[E0308]: mismatched types
+   --> src/UnionFind/UnionFindArrayStEph.rs:144:49
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized {
+    |     ----------------------------------------- found this type parameter
+...
+144 |             ensures spec_unionfindarraysteph_wf(&uf),
+    |                     --------------------------- ^^^ expected `&UnionFindArray`, found `&Self`
+    |                     |
+    |                     arguments to this function are incorrect
+    |
+    = note: expected reference `&UnionFind::UnionFindArrayStEph::UnionFindArrayStEph::UnionFindArray`
+               found reference `&Self`
+note: function defined here
+   --> src/UnionFind/UnionFindArrayStEph.rs:90:22
+    |
+ 90 |     pub open spec fn spec_unionfindarraysteph_wf(uf: &UnionFindArray) -> bool {
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^ -------------------
+
+error[E0599]: no method named `view` found for type parameter `Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:145:23
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized {
+    |     ----------------------------------------- method `view` not found for this type parameter
+...
+145 |                     uf@.n == n as nat,
+    |                       ^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for type parameter `Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:147:40
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized {
+    |     ----------------------------------------- method `view` not found for this type parameter
+...
+147 |                         spec_is_root(uf@.parent, i);
+    |                                        ^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/UnionFind/UnionFindArrayStEph.rs:152:45
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized {
+    |     ----------------------------------------- found this type parameter
+...
+152 |                 spec_unionfindarraysteph_wf(old(self)),
+    |                 --------------------------- ^^^^^^^^^ expected `&UnionFindArray`, found `&mut Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:      expected reference `&UnionFind::UnionFindArrayStEph::UnionFindArrayStEph::UnionFindArray`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/UnionFind/UnionFindArrayStEph.rs:90:22
+    |
+ 90 |     pub open spec fn spec_unionfindarraysteph_wf(uf: &UnionFindArray) -> bool {
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^ -------------------
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:153:49
+    |
+153 |                 0 <= x && (x as int) < old(self)@.n as int,
+    |                                                 ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/UnionFind/UnionFindArrayStEph.rs:155:45
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized {
+    |     ----------------------------------------- found this type parameter
+...
+155 |                 spec_unionfindarraysteph_wf(self),
+    |                 --------------------------- ^^^^ expected `&UnionFindArray`, found `&mut Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:      expected reference `&UnionFind::UnionFindArrayStEph::UnionFindArrayStEph::UnionFindArray`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/UnionFind/UnionFindArrayStEph.rs:90:22
+    |
+ 90 |     pub open spec fn spec_unionfindarraysteph_wf(uf: &UnionFindArray) -> bool {
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^ -------------------
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:156:21
+    |
+156 |                 self@ == old(self)@,
+    |                     ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:156:35
+    |
+156 |                 self@ == old(self)@,
+    |                                   ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:157:50
+    |
+157 |                 0 <= root && (root as int) < self@.n as int,
+    |                                                  ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:158:51
+    |
+158 |                 root as int == spec_pure_find(self@.parent, self@.n, x as int),
+    |                                                   ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:158:65
+    |
+158 |                 root as int == spec_pure_find(self@.parent, self@.n, x as int),
+    |                                                                 ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:159:34
+    |
+159 |                 spec_is_root(self@.parent, root as int);
+    |                                  ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/UnionFind/UnionFindArrayStEph.rs:164:45
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized {
+    |     ----------------------------------------- found this type parameter
+...
+164 |                 spec_unionfindarraysteph_wf(old(self)),
+    |                 --------------------------- ^^^^^^^^^ expected `&UnionFindArray`, found `&mut Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:      expected reference `&UnionFind::UnionFindArrayStEph::UnionFindArrayStEph::UnionFindArray`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/UnionFind/UnionFindArrayStEph.rs:90:22
+    |
+ 90 |     pub open spec fn spec_unionfindarraysteph_wf(uf: &UnionFindArray) -> bool {
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^ -------------------
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:165:49
+    |
+165 |                 0 <= x && (x as int) < old(self)@.n as int,
+    |                                                 ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:166:49
+    |
+166 |                 0 <= y && (y as int) < old(self)@.n as int,
+    |                                                 ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/UnionFind/UnionFindArrayStEph.rs:168:45
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized {
+    |     ----------------------------------------- found this type parameter
+...
+168 |                 spec_unionfindarraysteph_wf(self),
+    |                 --------------------------- ^^^^ expected `&UnionFindArray`, found `&mut Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:      expected reference `&UnionFind::UnionFindArrayStEph::UnionFindArrayStEph::UnionFindArray`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/UnionFind/UnionFindArrayStEph.rs:90:22
+    |
+ 90 |     pub open spec fn spec_unionfindarraysteph_wf(uf: &UnionFindArray) -> bool {
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^ -------------------
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:169:21
+    |
+169 |                 self@.n == old(self)@.n,
+    |                     ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:169:37
+    |
+169 |                 self@.n == old(self)@.n,
+    |                                     ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:171:35
+    |
+171 |                 spec_same_set(self@, x as int, y as int),
+    |                                   ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:173:45
+    |
+173 |                 forall|z: int| 0 <= z < self@.n as int
+    |                                             ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:174:48
+    |
+174 |                     && spec_pure_find(old(self)@.parent, old(self)@.n, z)
+    |                                                ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:174:67
+    |
+174 |                     && spec_pure_find(old(self)@.parent, old(self)@.n, z)
+    |                                                                   ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:175:52
+    |
+175 |                         != spec_pure_find(old(self)@.parent, old(self)@.n, x as int)
+    |                                                    ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:175:71
+    |
+175 |                         != spec_pure_find(old(self)@.parent, old(self)@.n, x as int)
+    |                                                                       ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:176:48
+    |
+176 |                     && spec_pure_find(old(self)@.parent, old(self)@.n, z)
+    |                                                ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:176:67
+    |
+176 |                     && spec_pure_find(old(self)@.parent, old(self)@.n, z)
+    |                                                                   ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:177:52
+    |
+177 |                         != spec_pure_find(old(self)@.parent, old(self)@.n, y as int)
+    |                                                    ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:177:71
+    |
+177 |                         != spec_pure_find(old(self)@.parent, old(self)@.n, y as int)
+    |                                                                       ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:178:44
+    |
+178 |                     ==> spec_pure_find(self@.parent, self@.n, z)
+    |                                            ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:178:58
+    |
+178 |                     ==> spec_pure_find(self@.parent, self@.n, z)
+    |                                                          ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:179:52
+    |
+179 |                         == spec_pure_find(old(self)@.parent, old(self)@.n, z);
+    |                                                    ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for mutable reference `&mut Self` in the current scope
+   --> src/UnionFind/UnionFindArrayStEph.rs:179:71
+    |
+179 |                         == spec_pure_find(old(self)@.parent, old(self)@.n, z);
+    |                                                                       ^ method not found in `&mut Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/UnionFind/UnionFindArrayStEph.rs:183:50
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized {
+    |     ----------------------------------------- found this type parameter
+...
+183 |             requires spec_unionfindarraysteph_wf(self);
+    |                      --------------------------- ^^^^ expected `&UnionFindArray`, found `&Self`
+    |                      |
+    |                      arguments to this function are incorrect
+    |
+    = note: expected reference `&UnionFind::UnionFindArrayStEph::UnionFindArrayStEph::UnionFindArray`
+               found reference `&Self`
+note: function defined here
+   --> src/UnionFind/UnionFindArrayStEph.rs:90:22
+    |
+ 90 |     pub open spec fn spec_unionfindarraysteph_wf(uf: &UnionFindArray) -> bool {
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^ -------------------
+
+error[E0308]: mismatched types
+   --> src/UnionFind/UnionFindArrayStEph.rs:187:50
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized {
+    |     ----------------------------------------- found this type parameter
+...
+187 |             requires spec_unionfindarraysteph_wf(self),
+    |                      --------------------------- ^^^^ expected `&UnionFindArray`, found `&Self`
+    |                      |
+    |                      arguments to this function are incorrect
+    |
+    = note: expected reference `&UnionFind::UnionFindArrayStEph::UnionFindArrayStEph::UnionFindArray`
+               found reference `&Self`
+note: function defined here
+   --> src/UnionFind/UnionFindArrayStEph.rs:90:22
+    |
+ 90 |     pub open spec fn spec_unionfindarraysteph_wf(uf: &UnionFindArray) -> bool {
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^ -------------------
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+   --> src/UnionFind/UnionFindArrayStEph.rs:188:37
+    |
+188 |             ensures n as nat == self@.n;
+    |                                     ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                               ++++++++++++++++++++++++++++++++++++++++++++++++++
+140 |     pub trait UnionFindArrayStEphTrait: Sized + vstd::string::View {
+    |                                               ++++++++++++++++++++
+
+error: aborting due to 35 previous errors
+
+Some errors have detailed explanations: E0308, E0599.
+For more information about an error, try `rustc --explain E0308`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 19253MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s
