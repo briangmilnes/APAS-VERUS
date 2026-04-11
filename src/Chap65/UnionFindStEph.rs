@@ -21,6 +21,7 @@ pub mod UnionFindStEph {
 
     use crate::Types::Types::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
     use crate::vstdplus::feq::feq::feq;
     use std::hash::Hash;
 

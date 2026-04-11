@@ -1,0 +1,23 @@
+Mode: full
+error[E0433]: failed to resolve: use of undeclared type `HashSetWithViewPlus`
+    --> src/Chap65/UnionFindStEph.rs:2281:33
+     |
+2281 |             let mut roots_set = HashSetWithViewPlus::<V>::new();
+     |                                 ^^^^^^^^^^^^^^^^^^^ use of undeclared type `HashSetWithViewPlus`
+     |
+help: a struct with a similar name exists
+     |
+2281 -             let mut roots_set = HashSetWithViewPlus::<V>::new();
+2281 +             let mut roots_set = HashMapWithViewPlus::<V>::new();
+     |
+help: consider importing this struct
+     |
+  20 +     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
+     |
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0433`.
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 551MB, peak z3 RSS: 0MB, min free: 20756MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s
