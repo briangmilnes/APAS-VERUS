@@ -1,0 +1,79 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap53/PQMinStPer.rs:313:19
+    |
+313 |             while i < nlen
+    |                   ^ not found in this scope
+
+error[E0425]: cannot find value `nlen` in this scope
+   --> src/Chap53/PQMinStPer.rs:313:23
+    |
+313 |             while i < nlen
+    |                       ^^^^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap53/PQMinStPer.rs:315:21
+    |
+315 |                     i <= nlen,
+    |                     ^ not found in this scope
+
+error[E0425]: cannot find value `nlen` in this scope
+   --> src/Chap53/PQMinStPer.rs:315:26
+    |
+315 |                     i <= nlen,
+    |                          ^^^^ not found in this scope
+
+error[E0425]: cannot find value `nlen` in this scope
+   --> src/Chap53/PQMinStPer.rs:316:21
+    |
+316 |                     nlen as nat == neighbors_seq.spec_seq().len(),
+    |                     ^^^^ not found in this scope
+
+error[E0425]: cannot find value `nlen` in this scope
+   --> src/Chap53/PQMinStPer.rs:337:27
+    |
+337 |                 decreases nlen - i,
+    |                           ^^^^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap53/PQMinStPer.rs:337:34
+    |
+337 |                 decreases nlen - i,
+    |                                  ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap53/PQMinStPer.rs:339:50
+    |
+339 |                 let neighbor = neighbors_seq.nth(i);
+    |                                                  ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap53/PQMinStPer.rs:368:72
+    |
+368 |                         assert(vertex_universe.contains(neighbors_seq@[i as int]));
+    |                                                                        ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap53/PQMinStPer.rs:383:17
+    |
+383 |                 i = i + 1;
+    |                 ^
+    |
+help: you might have meant to introduce a new binding
+    |
+383 |                 let i = i + 1;
+    |                 +++
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap53/PQMinStPer.rs:383:21
+    |
+383 |                 i = i + 1;
+    |                     ^ not found in this scope
+
+error: aborting due to 11 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 901MB, peak z3 RSS: 0MB, min free: 22164MB
+Sampled CPU Usage: rust_verify: 9s, z3 children: 0s

@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error: assertion failed
+   --> src/Chap53/PQMinStPer.rs:366:37
+    |
+366 | ...                   implies vertex_universe.contains(e.1) by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+vertex_universe.contains(e.1) 
+    function is uninterpreted
+
+verification results:: 2334 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 2845MB, peak z3 RSS: 378MB, min free: 19965MB
+Sampled CPU Usage: rust_verify: 37s, z3 children: 34s

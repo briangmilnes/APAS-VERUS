@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error[E0425]: cannot find value `old_if` in this scope
+   --> src/Chap53/PQMinStPer.rs:518:24
+    |
+518 |                     if old_if.contains(e) {}
+    |                        ^^^^^^ not found in this scope
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 197MB, peak z3 RSS: 0MB, min free: 22404MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

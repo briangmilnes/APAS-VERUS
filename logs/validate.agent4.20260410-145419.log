@@ -1,0 +1,36 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error: unexpected token, expected `;`
+   --> src/Chap53/PQMinStPer.rs:503:21
+    |
+503 |                     implies vertex_universe.contains(e.1) by {
+    |                     ^^^^^^^
+
+error[E0425]: cannot find type `PQMinResult` in this scope
+   --> src/Chap53/PQMinStPer.rs:544:84
+    |
+544 | ...er> std::fmt::Debug for PQMinResult<V, P> {
+    |                            ^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this struct
+    |
+ 27 +     use crate::Chap53::PQMinStEph::PQMinStEph::PQMinResult;
+    |
+
+error[E0425]: cannot find type `PQMinResult` in this scope
+   --> src/Chap53/PQMinStPer.rs:554:86
+    |
+554 | ...> std::fmt::Display for PQMinResult<V, P> {
+    |                            ^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this struct
+    |
+ 27 +     use crate::Chap53::PQMinStEph::PQMinStEph::PQMinResult;
+    |
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 3109MB, peak z3 RSS: 0MB, min free: 19643MB
+Sampled CPU Usage: rust_verify: 54s, z3 children: 45s
