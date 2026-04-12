@@ -14,11 +14,13 @@
 //	Section 7b. proof fns/broadcast groups
 //	Section 8b. traits
 //	Section 9b. impls
+//	Section 10b. iterators — BSTSplayStEph
 //	Section 12a. derive impls in verus!
 //	Section 12b. derive impls in verus!
 //	Section 13. macros
 //	Section 14a. derive impls outside verus!
 //	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
 
 //		Section 1. module
 
@@ -29,6 +31,7 @@ pub mod BSTSplayStEph {
     //		Section 2. imports
 
     use std::fmt;
+    use std::vec::IntoIter;
 
     use vstd::prelude::*;
 
@@ -1600,6 +1603,119 @@ pub mod BSTSplayStEph {
         }
     }
 
+    //		Section 10b. iterators — BSTSplayStEph
+
+    /// Snapshot iterator over BSTSplayStEph — collects elements via in_order traversal,
+    /// then yields owned T values from the captured Vec.
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSplayStEphIter<T: TotalOrder + Clone> {
+        pub inner: IntoIter<T>,
+    }
+
+    impl<T: TotalOrder + Clone> View for BSTSplayStEphIter<T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant_bstsplaysteph<T: TotalOrder + Clone>(it: &BSTSplayStEphIter<T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<T: TotalOrder + Clone> std::iter::Iterator for BSTSplayStEphIter<T> {
+        type Item = T;
+
+        fn next(&mut self) -> (next: Option<T>)
+            ensures
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match next {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index >= old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& element == old_seq[old_index]
+                        },
+                    }
+                }),
+        {
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for for-loop support over BSTSplayStEphIter.
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSplayStEphGhostIterator<T: TotalOrder + Clone> {
+        pub pos: int,
+        pub elements: Seq<T>,
+    }
+
+    impl<T: TotalOrder + Clone> View for BSTSplayStEphGhostIterator<T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
+    impl<T: TotalOrder + Clone> vstd::pervasive::ForLoopGhostIteratorNew for BSTSplayStEphIter<T> {
+        type GhostIter = BSTSplayStEphGhostIterator<T>;
+        open spec fn ghost_iter(&self) -> BSTSplayStEphGhostIterator<T> {
+            BSTSplayStEphGhostIterator { pos: self@.0, elements: self@.1 }
+        }
+    }
+
+    impl<T: TotalOrder + Clone> vstd::pervasive::ForLoopGhostIterator for BSTSplayStEphGhostIterator<T> {
+        type ExecIter = BSTSplayStEphIter<T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &BSTSplayStEphIter<T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &BSTSplayStEphIter<T>) -> BSTSplayStEphGhostIterator<T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: TotalOrder + Clone> std::iter::IntoIterator for &'a BSTSplayStEph<T> {
+        type Item = T;
+        type IntoIter = BSTSplayStEphIter<T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires self.spec_bstsplaysteph_wf()
+            ensures
+                it@.0 == 0,
+                it@.1.len() == self.spec_in_order().len(),
+                iter_invariant_bstsplaysteph(&it),
+        {
+            let in_ord = self.in_order();
+            BSTSplayStEphIter { inner: in_ord.seq.into_iter() }
+        }
+    }
+
     //		Section 12a. derive impls in verus!
 
 
@@ -1687,6 +1803,32 @@ pub mod BSTSplayStEph {
     impl<T: TotalOrder + Clone> fmt::Display for BSTSplayStEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "BSTSplayStEph(size={})", self.size())
+        }
+    }
+
+    //		Section 14c. derive impls outside verus!
+
+    impl<T: TotalOrder + Clone + fmt::Debug> fmt::Debug for BSTSplayStEphIter<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTSplayStEphIter")
+        }
+    }
+
+    impl<T: TotalOrder + Clone + fmt::Display> fmt::Display for BSTSplayStEphIter<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTSplayStEphIter")
+        }
+    }
+
+    impl<T: TotalOrder + Clone + fmt::Debug> fmt::Debug for BSTSplayStEphGhostIterator<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTSplayStEphGhostIterator")
+        }
+    }
+
+    impl<T: TotalOrder + Clone + fmt::Display> fmt::Display for BSTSplayStEphGhostIterator<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTSplayStEphGhostIterator")
         }
     }
 }

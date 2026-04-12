@@ -12,6 +12,7 @@
 //	Section 7. proof fns
 //	Section 8. traits
 //	Section 9. impls
+//	Section 10. iterators
 //	Section 12. derive impls in verus!
 //	Section 13. macros
 //	Section 14. derive impls outside verus!
@@ -439,6 +440,17 @@ pub mod TableStPer {
             };
             lemma_entries_to_map_get::<K::V, V::V>(self.entries@, sv_idx);
             self.entries.lemma_view_index(sv_idx);
+        }
+
+        /// Returns an iterator over table entries (key-value pairs).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        pub fn iter<'a>(&'a self) -> (it: TableStPerIter<'a, K, V>)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.entries.seq@,
+                iter_invariant_tablestper(&it),
+        {
+            TableStPerIter { inner: self.entries.iter() }
         }
     }
 
@@ -2747,6 +2759,123 @@ pub mod TableStPer {
     }
 
 
+    //		Section 10. iterators
+
+
+    /// Wrapping iterator over a TableStPer — delegates to the backing ArraySeqStPerIter.
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    pub struct TableStPerIter<'a, K: StT + Ord, V: StT> {
+        pub inner: ArraySeqStPerIter<'a, Pair<K, V>>,
+    }
+
+    impl<'a, K: StT + Ord, V: StT> View for TableStPerIter<'a, K, V> {
+        type V = (int, Seq<Pair<K, V>>);
+        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant_tablestper<'a, K: StT + Ord, V: StT>(it: &TableStPerIter<'a, K, V>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<'a, K: StT + Ord, V: StT> std::iter::Iterator for TableStPerIter<'a, K, V> {
+        type Item = &'a Pair<K, V>;
+
+        fn next(&mut self) -> (next: Option<&'a Pair<K, V>>)
+            ensures
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match next {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index >= old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& element == old_seq[old_index]
+                        },
+                    }
+                }),
+        {
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for for-loop support over TableStPerIter.
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    pub struct TableStPerGhostIterator<'a, K: StT + Ord, V: StT> {
+        pub pos: int,
+        pub elements: Seq<Pair<K, V>>,
+        pub phantom: core::marker::PhantomData<&'a Pair<K, V>>,
+    }
+
+    impl<'a, K: StT + Ord, V: StT> View for TableStPerGhostIterator<'a, K, V> {
+        type V = Seq<Pair<K, V>>;
+        open spec fn view(&self) -> Seq<Pair<K, V>> { self.elements.take(self.pos) }
+    }
+
+    impl<'a, K: StT + Ord, V: StT> vstd::pervasive::ForLoopGhostIteratorNew for TableStPerIter<'a, K, V> {
+        type GhostIter = TableStPerGhostIterator<'a, K, V>;
+        open spec fn ghost_iter(&self) -> TableStPerGhostIterator<'a, K, V> {
+            TableStPerGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, K: StT + Ord, V: StT> vstd::pervasive::ForLoopGhostIterator for TableStPerGhostIterator<'a, K, V> {
+        type ExecIter = TableStPerIter<'a, K, V>;
+        type Item = Pair<K, V>;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &TableStPerIter<'a, K, V>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &TableStPerIter<'a, K, V>) -> TableStPerGhostIterator<'a, K, V> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, K: StT + Ord, V: StT> std::iter::IntoIterator for &'a TableStPer<K, V> {
+        type Item = &'a Pair<K, V>;
+        type IntoIter = TableStPerIter<'a, K, V>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.entries.seq@,
+                iter_invariant_tablestper(&it),
+        {
+            self.iter()
+        }
+    }
+
+    //		Section 12. derive impls in verus!
+
+
     #[cfg(verus_keep_ghost)]
     impl<K: StT + Ord + View + PartialEq, V: StT + View + PartialEq> PartialEqSpecImpl for TableStPer<K, V> {
         open spec fn obeys_eq_spec() -> bool { true }
@@ -2807,6 +2936,30 @@ pub mod TableStPer {
     impl<K: StT + Ord, V: StT> std::fmt::Display for TableStPer<K, V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "TableStPer(len={})", self.entries.length())
+        }
+    }
+
+    impl<'a, K: StT + Ord + std::fmt::Debug, V: StT + std::fmt::Debug> std::fmt::Debug for TableStPerIter<'a, K, V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "TableStPerIter")
+        }
+    }
+
+    impl<'a, K: StT + Ord, V: StT> std::fmt::Display for TableStPerIter<'a, K, V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "TableStPerIter")
+        }
+    }
+
+    impl<'a, K: StT + Ord, V: StT> std::fmt::Debug for TableStPerGhostIterator<'a, K, V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "TableStPerGhostIterator")
+        }
+    }
+
+    impl<'a, K: StT + Ord, V: StT> std::fmt::Display for TableStPerGhostIterator<'a, K, V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "TableStPerGhostIterator")
         }
     }
 }

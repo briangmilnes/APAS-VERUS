@@ -13,6 +13,7 @@
 //	Section 7. proof fns
 //	Section 8. traits
 //	Section 9. impls
+//	Section 10. iterators
 //	Section 12. derive impls in verus!
 //	Section 13. macros
 //	Section 14. derive impls outside verus!
@@ -367,6 +368,17 @@ broadcast use {
             // entries@[sv_idx].1 == entries.seq@[sv_idx].1@ (from View for Pair).
             self.entries.lemma_view_index(sv_idx);
             // spec_stored_value(k) == entries.seq@[sv_idx].1, so spec_stored_value(k)@ == self@[k].
+        }
+
+        /// Returns an iterator over table entries (key-value pairs).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        pub fn iter<'a>(&'a self) -> (it: TableStEphIter<'a, K, V>)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.entries.seq@,
+                iter_invariant_table(&it),
+        {
+            TableStEphIter { inner: self.entries.iter() }
         }
     }
 
@@ -2532,6 +2544,120 @@ broadcast use {
     }
 
 
+    //		Section 10. iterators
+
+
+    /// Wrapping iterator over a TableStEph — delegates to the backing ArraySeqStEphIter.
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    pub struct TableStEphIter<'a, K: StT + Ord, V: StT> {
+        pub inner: ArraySeqStEphIter<'a, Pair<K, V>>,
+    }
+
+    impl<'a, K: StT + Ord, V: StT> View for TableStEphIter<'a, K, V> {
+        type V = (int, Seq<Pair<K, V>>);
+        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant_table<'a, K: StT + Ord, V: StT>(it: &TableStEphIter<'a, K, V>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<'a, K: StT + Ord, V: StT> std::iter::Iterator for TableStEphIter<'a, K, V> {
+        type Item = &'a Pair<K, V>;
+
+        fn next(&mut self) -> (next: Option<&'a Pair<K, V>>)
+            ensures
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match next {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index >= old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& element == old_seq[old_index]
+                        },
+                    }
+                }),
+        {
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for for-loop support over TableStEphIter.
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    pub struct TableStEphGhostIterator<'a, K: StT + Ord, V: StT> {
+        pub pos: int,
+        pub elements: Seq<Pair<K, V>>,
+        pub phantom: core::marker::PhantomData<&'a Pair<K, V>>,
+    }
+
+    impl<'a, K: StT + Ord, V: StT> View for TableStEphGhostIterator<'a, K, V> {
+        type V = Seq<Pair<K, V>>;
+        open spec fn view(&self) -> Seq<Pair<K, V>> { self.elements.take(self.pos) }
+    }
+
+    impl<'a, K: StT + Ord, V: StT> vstd::pervasive::ForLoopGhostIteratorNew for TableStEphIter<'a, K, V> {
+        type GhostIter = TableStEphGhostIterator<'a, K, V>;
+        open spec fn ghost_iter(&self) -> TableStEphGhostIterator<'a, K, V> {
+            TableStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, K: StT + Ord, V: StT> vstd::pervasive::ForLoopGhostIterator for TableStEphGhostIterator<'a, K, V> {
+        type ExecIter = TableStEphIter<'a, K, V>;
+        type Item = Pair<K, V>;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &TableStEphIter<'a, K, V>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &TableStEphIter<'a, K, V>) -> TableStEphGhostIterator<'a, K, V> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, K: StT + Ord, V: StT> std::iter::IntoIterator for &'a TableStEph<K, V> {
+        type Item = &'a Pair<K, V>;
+        type IntoIter = TableStEphIter<'a, K, V>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.entries.seq@,
+                iter_invariant_table(&it),
+        {
+            self.iter()
+        }
+    }
+
     impl<K: StT + Ord, V: StT> Default for TableStEph<K, V> {
         fn default() -> Self {
             TableStEph::empty()
@@ -2589,6 +2715,30 @@ broadcast use {
     impl<K: StT + Ord, V: StT> fmt::Display for TableStEph<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "TableStEph(len={})", self.entries.length())
+        }
+    }
+
+    impl<'a, K: StT + Ord + fmt::Debug, V: StT + fmt::Debug> fmt::Debug for TableStEphIter<'a, K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "TableStEphIter")
+        }
+    }
+
+    impl<'a, K: StT + Ord, V: StT> fmt::Display for TableStEphIter<'a, K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "TableStEphIter")
+        }
+    }
+
+    impl<'a, K: StT + Ord, V: StT> fmt::Debug for TableStEphGhostIterator<'a, K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "TableStEphGhostIterator")
+        }
+    }
+
+    impl<'a, K: StT + Ord, V: StT> fmt::Display for TableStEphGhostIterator<'a, K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "TableStEphGhostIterator")
         }
     }
 }

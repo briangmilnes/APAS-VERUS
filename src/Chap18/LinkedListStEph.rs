@@ -867,15 +867,27 @@ pub mod LinkedListStEph {
         type Item = &'a T;
         type IntoIter = LinkedListStEphIter<'a, T>;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
-        fn into_iter(self) -> Self::IntoIter { LinkedListStEphIter { inner: self.seq.iter() } }
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+                iter_invariant(&it),
+        {
+            LinkedListStEphIter { inner: self.seq.iter() }
+        }
     }
 
     impl<T> std::iter::IntoIterator for LinkedListStEphS<T> {
-        // Veracity: NEEDED proof block
         type Item = T;
         type IntoIter = IntoIter<T>;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+        {
+            self.seq.into_iter()
+        }
     }
 
     //		Section 12. derive impls in verus!

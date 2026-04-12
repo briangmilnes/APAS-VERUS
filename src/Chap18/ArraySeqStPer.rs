@@ -14,6 +14,7 @@
 //	Section 9. impls
 //	Section 10. iterators
 //	Section 12. derive impls in verus!
+//	Section 13. macros
 //	Section 14. derive impls outside verus!
 
 //		Section 1. module
@@ -1028,10 +1029,34 @@ pub mod ArraySeqStPer {
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    // IntoIterator impls moved outside verus! — Verus hits ill-typed AIR on
-    // proj%%core!iter.traits.collect.IntoIterator./Item for ArraySeqStPerS.
+    //		Section 13. macros
 
-// Veracity: UNNEEDED proof block 
+    impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStPerS<T> {
+        type Item = &'a T;
+        type IntoIter = ArraySeqStPerIter<'a, T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+                iter_invariant(&it),
+        {
+            ArraySeqStPerIter { inner: self.seq.iter() }
+        }
+    }
+
+    impl<T> std::iter::IntoIterator for ArraySeqStPerS<T> {
+        type Item = T;
+        type IntoIter = IntoIter<T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+        {
+            self.seq.into_iter()
+        }
+    }
+
+// Veracity: UNNEEDED proof block
     impl<T: Clone> Clone for ArraySeqStPerS<T> {
         fn clone(&self) -> (res: Self)
             ensures
@@ -1058,20 +1083,6 @@ pub mod ArraySeqStPer {
     } // verus!
 
     //		Section 14. derive impls outside verus!
-
-
-    // IntoIterator outside verus! — Verus ill-typed AIR on IntoIterator./Item.
-    impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStPerS<T> {
-        type Item = &'a T;
-        type IntoIter = ArraySeqStPerIter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { ArraySeqStPerIter { inner: self.seq.iter() } }
-    }
-
-    impl<T> std::iter::IntoIterator for ArraySeqStPerS<T> {
-        type Item = T;
-        type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
-    }
 
 
     impl<T: Debug> Debug for ArraySeqStPerS<T> {

@@ -23,6 +23,7 @@
 //	Section 7e. proof fns/broadcast groups
 //	Section 8e. traits
 //	Section 9e. impls
+//	Section 10d. iterators — BSTReducedStEph
 //	Section 12a. derive impls in verus!
 //	Section 12b. derive impls in verus!
 //	Section 12c. derive impls in verus!
@@ -33,6 +34,7 @@
 //	Section 14c. derive impls outside verus!
 //	Section 14d. derive impls outside verus!
 //	Section 14e. derive impls outside verus!
+//	Section 14f. derive impls outside verus!
 
 //		Section 1. module
 
@@ -44,6 +46,7 @@ pub mod BSTReducedStEph {
     use std::fmt;
     use std::marker::PhantomData;
     use std::ops::Add;
+    use std::vec::IntoIter;
 
     use vstd::prelude::*;
 
@@ -1588,6 +1591,121 @@ pub mod BSTReducedStEph {
         }
     }
 
+    //		Section 10d. iterators — BSTReducedStEph
+
+    /// Snapshot key iterator over BSTReducedStEph — collects keys via keys() traversal,
+    /// then yields owned K values from the captured Vec.
+    #[verifier::reject_recursive_types(K)]
+    pub struct BSTReducedStEphIter<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> {
+        pub inner: IntoIter<K>,
+        pub phantom: PhantomData<(V, R, Op)>,
+    }
+
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> View for BSTReducedStEphIter<K, V, R, Op> {
+        type V = (int, Seq<K>);
+        open spec fn view(&self) -> (int, Seq<K>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant_bstreducedsteph<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(it: &BSTReducedStEphIter<K, V, R, Op>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> std::iter::Iterator for BSTReducedStEphIter<K, V, R, Op> {
+        type Item = K;
+
+        fn next(&mut self) -> (next: Option<K>)
+            ensures
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match next {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index >= old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& element == old_seq[old_index]
+                        },
+                    }
+                }),
+        {
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for for-loop support over BSTReducedStEphIter.
+    #[verifier::reject_recursive_types(K)]
+    pub struct BSTReducedStEphGhostIterator<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> {
+        pub pos: int,
+        pub elements: Seq<K>,
+        pub phantom: PhantomData<(V, R, Op)>,
+    }
+
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> View for BSTReducedStEphGhostIterator<K, V, R, Op> {
+        type V = Seq<K>;
+        open spec fn view(&self) -> Seq<K> { self.elements.take(self.pos) }
+    }
+
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> vstd::pervasive::ForLoopGhostIteratorNew for BSTReducedStEphIter<K, V, R, Op> {
+        type GhostIter = BSTReducedStEphGhostIterator<K, V, R, Op>;
+        open spec fn ghost_iter(&self) -> BSTReducedStEphGhostIterator<K, V, R, Op> {
+            BSTReducedStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: PhantomData }
+        }
+    }
+
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> vstd::pervasive::ForLoopGhostIterator for BSTReducedStEphGhostIterator<K, V, R, Op> {
+        type ExecIter = BSTReducedStEphIter<K, V, R, Op>;
+        type Item = K;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &BSTReducedStEphIter<K, V, R, Op>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<K> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &BSTReducedStEphIter<K, V, R, Op>) -> BSTReducedStEphGhostIterator<K, V, R, Op> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> std::iter::IntoIterator for &'a BSTReducedStEph<K, V, R, Op> {
+        type Item = K;
+        type IntoIter = BSTReducedStEphIter<K, V, R, Op>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires self.spec_bstreducedsteph_wf(),
+            ensures
+                it@.0 == 0,
+                it@.1.len() == self.spec_size(),
+                iter_invariant_bstreducedsteph(&it),
+        {
+            let ks = self.keys();
+            BSTReducedStEphIter { inner: ks.seq.into_iter(), phantom: PhantomData }
+        }
+    }
+
     //		Section 12a. derive impls in verus!
 
 
@@ -1769,6 +1887,32 @@ pub mod BSTReducedStEph {
     impl fmt::Display for Lnk {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "Lnk")
+        }
+    }
+
+    //		Section 14f. derive impls outside verus!
+
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> fmt::Debug for BSTReducedStEphIter<K, V, R, Op> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTReducedStEphIter")
+        }
+    }
+
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> fmt::Display for BSTReducedStEphIter<K, V, R, Op> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTReducedStEphIter")
+        }
+    }
+
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> fmt::Debug for BSTReducedStEphGhostIterator<K, V, R, Op> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTReducedStEphGhostIterator")
+        }
+    }
+
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> fmt::Display for BSTReducedStEphGhostIterator<K, V, R, Op> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTReducedStEphGhostIterator")
         }
     }
 }

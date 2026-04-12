@@ -18,6 +18,7 @@
 //	Section 7. proof fns/broadcast groups
 //	Section 8. traits
 //	Section 9. impls
+//	Section 10. iterators
 //	Section 12. derive impls in verus!
 //	Section 13. macros
 //	Section 14. derive impls outside verus!
@@ -31,6 +32,7 @@ pub mod AVLTreeSetStPer {
     //		Section 2. imports
 
     use std::fmt;
+    use std::vec::IntoIter;
 
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
@@ -423,6 +425,22 @@ broadcast use {
     //		Section 9. impls
 
 
+    impl<T: StT + Ord + TotalOrder> AVLTreeSetStPer<T> {
+        /// Returns a snapshot iterator over the set elements in sorted order.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — in_order traversal.
+        pub fn iter(&self) -> (it: AVLTreeSetStPerIter<T>)
+            requires self.spec_avltreesetstper_wf()
+            ensures
+                it@.0 == 0,
+                it@.1.len() == self@.len(),
+                iter_invariant_avltreesetstper(&it),
+        {
+            let in_ord = self.tree.in_order();
+            AVLTreeSetStPerIter { inner: in_ord.seq.into_iter() }
+        }
+    }
+
+
     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
         open spec fn spec_avltreesetstper_wf(&self) -> bool {
             self.tree.spec_bstparasteph_wf()
@@ -677,6 +695,119 @@ broadcast use {
         }
     }
 
+    //		Section 10. iterators
+
+
+    /// Snapshot iterator over AVLTreeSetStPer — collects elements via in_order traversal,
+    /// then yields owned T values from the captured Vec.
+    #[verifier::reject_recursive_types(T)]
+    pub struct AVLTreeSetStPerIter<T: StT + Ord + TotalOrder> {
+        pub inner: IntoIter<T>,
+    }
+
+    impl<T: StT + Ord + TotalOrder> View for AVLTreeSetStPerIter<T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant_avltreesetstper<T: StT + Ord + TotalOrder>(it: &AVLTreeSetStPerIter<T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<T: StT + Ord + TotalOrder> std::iter::Iterator for AVLTreeSetStPerIter<T> {
+        type Item = T;
+
+        fn next(&mut self) -> (next: Option<T>)
+            ensures
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match next {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index >= old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& element == old_seq[old_index]
+                        },
+                    }
+                }),
+        {
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for for-loop support over AVLTreeSetStPerIter.
+    #[verifier::reject_recursive_types(T)]
+    pub struct AVLTreeSetStPerGhostIterator<T: StT + Ord + TotalOrder> {
+        pub pos: int,
+        pub elements: Seq<T>,
+    }
+
+    impl<T: StT + Ord + TotalOrder> View for AVLTreeSetStPerGhostIterator<T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
+    impl<T: StT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIteratorNew for AVLTreeSetStPerIter<T> {
+        type GhostIter = AVLTreeSetStPerGhostIterator<T>;
+        open spec fn ghost_iter(&self) -> AVLTreeSetStPerGhostIterator<T> {
+            AVLTreeSetStPerGhostIterator { pos: self@.0, elements: self@.1 }
+        }
+    }
+
+    impl<T: StT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIterator for AVLTreeSetStPerGhostIterator<T> {
+        type ExecIter = AVLTreeSetStPerIter<T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &AVLTreeSetStPerIter<T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &AVLTreeSetStPerIter<T>) -> AVLTreeSetStPerGhostIterator<T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: StT + Ord + TotalOrder> std::iter::IntoIterator for &'a AVLTreeSetStPer<T> {
+        type Item = T;
+        type IntoIter = AVLTreeSetStPerIter<T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires self.spec_avltreesetstper_wf()
+            ensures
+                it@.0 == 0,
+                it@.1.len() == self@.len(),
+                iter_invariant_avltreesetstper(&it),
+        {
+            self.iter()
+        }
+    }
+
     //		Section 12. derive impls in verus!
 
 
@@ -765,4 +896,29 @@ broadcast use {
             write!(f, "}}")
         }
     }
-}
+
+    impl<T: StT + Ord + TotalOrder + fmt::Debug> fmt::Debug for AVLTreeSetStPerIter<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "AVLTreeSetStPerIter")
+        }
+    }
+
+    impl<T: StT + Ord + TotalOrder + fmt::Debug> fmt::Display for AVLTreeSetStPerIter<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "AVLTreeSetStPerIter")
+        }
+    }
+
+    impl<T: StT + Ord + TotalOrder + fmt::Debug> fmt::Debug for AVLTreeSetStPerGhostIterator<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "AVLTreeSetStPerGhostIterator")
+        }
+    }
+
+    impl<T: StT + Ord + TotalOrder + fmt::Debug> fmt::Display for AVLTreeSetStPerGhostIterator<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "AVLTreeSetStPerGhostIterator")
+        }
+    }
+
+} // pub mod AVLTreeSetStPer

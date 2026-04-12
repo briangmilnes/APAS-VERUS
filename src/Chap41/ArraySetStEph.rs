@@ -19,6 +19,7 @@
 //	Section 7. proof fns/broadcast groups
 //	Section 8. traits
 //	Section 9. impls
+//	Section 10. iterators
 //	Section 12. derive impls in verus!
 //	Section 13. macros
 //	Section 14. derive impls outside verus!
@@ -352,6 +353,18 @@ pub mod ArraySetStEph {
             self.elements@.no_duplicates()
             && self@.finite()
             && obeys_feq_full::<T>()
+        }
+
+        /// Returns an iterator over the set elements.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        pub fn iter<'a>(&'a self) -> (it: ArraySetStEphIter<'a, T>)
+            requires self.spec_arraysetsteph_wf()
+            ensures
+                it@.0 == 0,
+                it@.1 == self.elements.seq@,
+                iter_invariant_arraysetseph(&it),
+        {
+            ArraySetStEphIter { inner: self.elements.iter() }
         }
     }
 
@@ -1041,6 +1054,119 @@ pub mod ArraySetStEph {
         }
     }
 
+    //		Section 10. iterators
+
+
+    /// Wrapping iterator over an ArraySetStEph — delegates to the backing ArraySeqStEphIter.
+    #[verifier::reject_recursive_types(T)]
+    pub struct ArraySetStEphIter<'a, T: StT + Ord> {
+        pub inner: ArraySeqStEphIter<'a, T>,
+    }
+
+    impl<'a, T: StT + Ord> View for ArraySetStEphIter<'a, T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant_arraysetseph<'a, T: StT + Ord>(it: &ArraySetStEphIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<'a, T: StT + Ord> std::iter::Iterator for ArraySetStEphIter<'a, T> {
+        type Item = &'a T;
+
+        fn next(&mut self) -> (next: Option<&'a T>)
+            ensures
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match next {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index >= old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& element == old_seq[old_index]
+                        },
+                    }
+                }),
+        {
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for for-loop support over ArraySetStEphIter.
+    #[verifier::reject_recursive_types(T)]
+    pub struct ArraySetStEphGhostIterator<'a, T: StT + Ord> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
+    impl<'a, T: StT + Ord> View for ArraySetStEphGhostIterator<'a, T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
+    impl<'a, T: StT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for ArraySetStEphIter<'a, T> {
+        type GhostIter = ArraySetStEphGhostIterator<'a, T>;
+        open spec fn ghost_iter(&self) -> ArraySetStEphGhostIterator<'a, T> {
+            ArraySetStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, T: StT + Ord> vstd::pervasive::ForLoopGhostIterator for ArraySetStEphGhostIterator<'a, T> {
+        type ExecIter = ArraySetStEphIter<'a, T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &ArraySetStEphIter<'a, T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &ArraySetStEphIter<'a, T>) -> ArraySetStEphGhostIterator<'a, T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: StT + Ord> std::iter::IntoIterator for &'a ArraySetStEph<T> {
+        type Item = &'a T;
+        type IntoIter = ArraySetStEphIter<'a, T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires self.spec_arraysetsteph_wf()
+            ensures
+                it@.0 == 0,
+                it@.1 == self.elements.seq@,
+                iter_invariant_arraysetseph(&it),
+        {
+            self.iter()
+        }
+    }
+
     //		Section 12. derive impls in verus!
 
 
@@ -1148,6 +1274,30 @@ pub mod ArraySetStEph {
                 write!(f, "{}", self.elements.nth(i))?;
             }
             write!(f, "}}")
+        }
+    }
+
+    impl<'a, T: StT + Ord + fmt::Debug> fmt::Debug for ArraySetStEphIter<'a, T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "ArraySetStEphIter")
+        }
+    }
+
+    impl<'a, T: StT + Ord> fmt::Display for ArraySetStEphIter<'a, T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "ArraySetStEphIter")
+        }
+    }
+
+    impl<'a, T: StT + Ord> fmt::Debug for ArraySetStEphGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "ArraySetStEphGhostIterator")
+        }
+    }
+
+    impl<'a, T: StT + Ord> fmt::Display for ArraySetStEphGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "ArraySetStEphGhostIterator")
         }
     }
 }

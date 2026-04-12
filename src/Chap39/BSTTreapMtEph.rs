@@ -19,6 +19,7 @@
 //	Section 4d. type definitions
 //	Section 9d. impls
 //	Section 11b. top level coarse locking
+//	Section 10c. iterators — BSTTreapMtEph
 //	Section 12a. derive impls in verus!
 //	Section 12c. derive impls in verus!
 //	Section 13. macros
@@ -26,6 +27,7 @@
 //	Section 14b. derive impls outside verus!
 //	Section 14c. derive impls outside verus!
 //	Section 14d. derive impls outside verus!
+//	Section 14e. derive impls outside verus!
 
 //		Section 1. module
 
@@ -34,6 +36,8 @@ pub mod BSTTreapMtEph {
 
 
     //		Section 2. imports
+
+    use std::vec::IntoIter;
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
@@ -1489,7 +1493,119 @@ pub mod BSTTreapMtEph {
             spec_bsttreapmteph_link_wf(&v)
         }
     }
-// Veracity: UNNEEDED proof block 
+    //		Section 10c. iterators — BSTTreapMtEph
+
+    /// Snapshot iterator over BSTTreapMtEph — collects elements via in_order traversal,
+    /// then yields owned T values from the captured Vec.
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTTreapMtEphIter<T: StTInMtT + Ord + IsLtTransitive> {
+        pub inner: IntoIter<T>,
+    }
+
+    impl<T: StTInMtT + Ord + IsLtTransitive> View for BSTTreapMtEphIter<T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant_bsttreapmteph<T: StTInMtT + Ord + IsLtTransitive>(it: &BSTTreapMtEphIter<T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<T: StTInMtT + Ord + IsLtTransitive> std::iter::Iterator for BSTTreapMtEphIter<T> {
+        type Item = T;
+
+        fn next(&mut self) -> (next: Option<T>)
+            ensures
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match next {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index >= old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& element == old_seq[old_index]
+                        },
+                    }
+                }),
+        {
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for for-loop support over BSTTreapMtEphIter.
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTTreapMtEphGhostIterator<T: StTInMtT + Ord + IsLtTransitive> {
+        pub pos: int,
+        pub elements: Seq<T>,
+    }
+
+    impl<T: StTInMtT + Ord + IsLtTransitive> View for BSTTreapMtEphGhostIterator<T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
+    impl<T: StTInMtT + Ord + IsLtTransitive> vstd::pervasive::ForLoopGhostIteratorNew for BSTTreapMtEphIter<T> {
+        type GhostIter = BSTTreapMtEphGhostIterator<T>;
+        open spec fn ghost_iter(&self) -> BSTTreapMtEphGhostIterator<T> {
+            BSTTreapMtEphGhostIterator { pos: self@.0, elements: self@.1 }
+        }
+    }
+
+    impl<T: StTInMtT + Ord + IsLtTransitive> vstd::pervasive::ForLoopGhostIterator for BSTTreapMtEphGhostIterator<T> {
+        type ExecIter = BSTTreapMtEphIter<T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &BSTTreapMtEphIter<T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &BSTTreapMtEphIter<T>) -> BSTTreapMtEphGhostIterator<T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: StTInMtT + Ord + IsLtTransitive> std::iter::IntoIterator for &'a BSTTreapMtEph<T> {
+        type Item = T;
+        type IntoIter = BSTTreapMtEphIter<T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1.len() == self@.len(),
+                iter_invariant_bsttreapmteph(&it),
+        {
+            let in_ord = self.in_order();
+            BSTTreapMtEphIter { inner: in_ord.seq.into_iter() }
+        }
+    }
+
+// Veracity: UNNEEDED proof block
 // Veracity: UNNEEDED proof block     //		Section 12a. derive impls in verus!
 // Veracity: UNNEEDED proof block 
 // Veracity: UNNEEDED proof block 
@@ -1627,6 +1743,32 @@ pub mod BSTTreapMtEph {
     impl std::fmt::Display for Lnk {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "Lnk")
+        }
+    }
+
+    //		Section 14e. derive impls outside verus!
+
+    impl<T: StTInMtT + Ord + IsLtTransitive> std::fmt::Debug for BSTTreapMtEphIter<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTTreapMtEphIter")
+        }
+    }
+
+    impl<T: StTInMtT + Ord + IsLtTransitive> std::fmt::Display for BSTTreapMtEphIter<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTTreapMtEphIter")
+        }
+    }
+
+    impl<T: StTInMtT + Ord + IsLtTransitive> std::fmt::Debug for BSTTreapMtEphGhostIterator<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTTreapMtEphGhostIterator")
+        }
+    }
+
+    impl<T: StTInMtT + Ord + IsLtTransitive> std::fmt::Display for BSTTreapMtEphGhostIterator<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BSTTreapMtEphGhostIterator")
         }
     }
 }

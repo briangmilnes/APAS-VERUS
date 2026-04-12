@@ -1629,17 +1629,29 @@ pub mod ArraySeq {
         }
     }
 
-    // Veracity: NEEDED proof block
     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqS<T> {
         type Item = &'a T;
         type IntoIter = ArraySeqIter<'a, T>;
-        fn into_iter(self) -> Self::IntoIter { ArraySeqIter { inner: self.seq.iter() } }
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+                iter_invariant(&it),
+        {
+            ArraySeqIter { inner: self.seq.iter() }
+        }
     }
 
     impl<T> std::iter::IntoIterator for ArraySeqS<T> {
         type Item = T;
         type IntoIter = IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
+        fn into_iter(self) -> (it: Self::IntoIter)
+            ensures
+                it@.0 == 0,
+                it@.1 == self.seq@,
+        {
+            self.seq.into_iter()
+        }
     }
 
     #[verifier::external] // accept hole
