@@ -1,0 +1,127 @@
+Mode: full
+error[E0659]: `iter_invariant` is ambiguous
+   --> src/Chap43/AugOrderedTableStEph.rs:954:17
+    |
+954 |                 iter_invariant(&it),
+    |                 ^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `iter_invariant` could refer to the function imported here
+   --> src/Chap43/AugOrderedTableStEph.rs:35:9
+    |
+ 35 |     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `iter_invariant` to disambiguate
+note: `iter_invariant` could also refer to the function imported here
+   --> src/Chap43/AugOrderedTableStEph.rs:31:9
+    |
+ 31 |     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `iter_invariant` to disambiguate
+
+error[E0659]: `iter_invariant` is ambiguous
+   --> src/Chap43/AugOrderedTableStEph.rs:971:17
+    |
+971 |                 iter_invariant(&it),
+    |                 ^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `iter_invariant` could refer to the function imported here
+   --> src/Chap43/AugOrderedTableStEph.rs:35:9
+    |
+ 35 |     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `iter_invariant` to disambiguate
+note: `iter_invariant` could also refer to the function imported here
+   --> src/Chap43/AugOrderedTableStEph.rs:31:9
+    |
+ 31 |     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `iter_invariant` to disambiguate
+
+error[E0659]: `iter_invariant` is ambiguous
+   --> src/Chap43/AugOrderedTableMtEph.rs:405:17
+    |
+405 |                 iter_invariant(&it);
+    |                 ^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `iter_invariant` could refer to the function imported here
+   --> src/Chap43/AugOrderedTableMtEph.rs:37:9
+    |
+ 37 |     use crate::Chap43::OrderedTableMtEph::OrderedTableMtEph::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `iter_invariant` to disambiguate
+note: `iter_invariant` could also refer to the function imported here
+   --> src/Chap43/AugOrderedTableMtEph.rs:34:9
+    |
+ 34 |     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `iter_invariant` to disambiguate
+
+error[E0659]: `iter_invariant` is ambiguous
+   --> src/Chap43/AugOrderedTableMtEph.rs:905:17
+    |
+905 |                 iter_invariant(&it),
+    |                 ^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `iter_invariant` could refer to the function imported here
+   --> src/Chap43/AugOrderedTableMtEph.rs:37:9
+    |
+ 37 |     use crate::Chap43::OrderedTableMtEph::OrderedTableMtEph::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `iter_invariant` to disambiguate
+note: `iter_invariant` could also refer to the function imported here
+   --> src/Chap43/AugOrderedTableMtEph.rs:34:9
+    |
+ 34 |     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `iter_invariant` to disambiguate
+
+error[E0659]: `iter_invariant` is ambiguous
+    --> src/Chap43/AugOrderedTableStPer.rs:1016:17
+     |
+1016 |                 iter_invariant(&it),
+     |                 ^^^^^^^^^^^^^^ ambiguous name
+     |
+     = note: ambiguous because of multiple glob imports of a name in the same module
+note: `iter_invariant` could refer to the function imported here
+    --> src/Chap43/AugOrderedTableStPer.rs:32:9
+     |
+  32 |     use crate::Chap43::OrderedTableStPer::OrderedTableStPer::*;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `iter_invariant` to disambiguate
+note: `iter_invariant` could also refer to the function imported here
+    --> src/Chap43/AugOrderedTableStPer.rs:31:9
+     |
+  31 |     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `iter_invariant` to disambiguate
+
+error[E0659]: `iter_invariant` is ambiguous
+    --> src/Chap43/AugOrderedTableStPer.rs:1034:17
+     |
+1034 |                 iter_invariant(&it),
+     |                 ^^^^^^^^^^^^^^ ambiguous name
+     |
+     = note: ambiguous because of multiple glob imports of a name in the same module
+note: `iter_invariant` could refer to the function imported here
+    --> src/Chap43/AugOrderedTableStPer.rs:32:9
+     |
+  32 |     use crate::Chap43::OrderedTableStPer::OrderedTableStPer::*;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `iter_invariant` to disambiguate
+note: `iter_invariant` could also refer to the function imported here
+    --> src/Chap43/AugOrderedTableStPer.rs:31:9
+     |
+  31 |     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `iter_invariant` to disambiguate
+
+error: aborting due to 6 previous errors
+
+For more information about this error, try `rustc --explain E0659`.
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 629MB, peak z3 RSS: 0MB, min free: 25293MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 0s

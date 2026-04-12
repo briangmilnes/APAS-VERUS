@@ -12,6 +12,7 @@
 //	Section 7. proof fns/broadcast groups
 //	Section 8. traits
 //	Section 9. impls
+//	Section 10. iterators
 //	Section 12. derive impls in verus!
 //	Section 14. derive impls outside verus!
 
@@ -24,6 +25,7 @@ pub mod OrdKeyMap {
 
     use std::cmp::Ordering::{Equal, Greater, Less};
     use std::fmt::{Debug, Display, Formatter};
+    use std::vec::IntoIter;
 
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
@@ -1032,6 +1034,10 @@ pub mod OrdKeyMap {
                 remaining@.dom() =~= self@.dom().difference(keys@),
                 forall|k: K::V| #[trigger] remaining@.contains_key(k) ==> remaining@[k] == self@[k],
                 remaining@.dom().finite();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn iter(&self) -> (it: OrdKeyMapIter<K, V>)
+            requires self.spec_ordkeymap_wf()
+            ensures it@.0 == 0, iter_invariant_ordkeymap(&it);
     }
 
     //		Section 9. impls
@@ -4799,6 +4805,123 @@ pub mod OrdKeyMap {
                 lemma_view_gen_subset::<K, V>(new_tree@, old_tree);
             }
             remaining
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn iter(&self) -> OrdKeyMapIter<K, V> {
+            let entries = self.collect();
+            OrdKeyMapIter { inner: entries.into_iter() }
+        }
+    }
+
+    //		Section 10. iterators — OrdKeyMap
+
+    /// Consuming iterator over OrdKeyMap entries (Pair<K,V>) in ascending key order.
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    pub struct OrdKeyMapIter<K: StT + Ord, V: StT + Ord> {
+        pub inner: IntoIter<Pair<K, V>>,
+    }
+
+    impl<K: StT + Ord, V: StT + Ord> View for OrdKeyMapIter<K, V> {
+        type V = (int, Seq<Pair<K, V>>);
+        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) {
+            self.inner@
+        }
+    }
+
+    pub open spec fn iter_invariant_ordkeymap<K: StT + Ord, V: StT + Ord>(it: &OrdKeyMapIter<K, V>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<K: StT + Ord, V: StT + Ord> std::iter::Iterator for OrdKeyMapIter<K, V> {
+        type Item = Pair<K, V>;
+        fn next(&mut self) -> (next: Option<Pair<K, V>>)
+            ensures
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match next {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index >= old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& element == old_seq[old_index]
+                        },
+                    }
+                }),
+        {
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for for-loop support over OrdKeyMapIter.
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    pub struct OrdKeyMapGhostIterator<K: StT + Ord, V: StT + Ord> {
+        pub pos: int,
+        pub elements: Seq<Pair<K, V>>,
+    }
+
+    impl<K: StT + Ord, V: StT + Ord> View for OrdKeyMapGhostIterator<K, V> {
+        type V = Seq<Pair<K, V>>;
+        open spec fn view(&self) -> Seq<Pair<K, V>> { self.elements.take(self.pos) }
+    }
+
+    impl<K: StT + Ord, V: StT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for OrdKeyMapIter<K, V> {
+        type GhostIter = OrdKeyMapGhostIterator<K, V>;
+        open spec fn ghost_iter(&self) -> OrdKeyMapGhostIterator<K, V> {
+            OrdKeyMapGhostIterator { pos: self@.0, elements: self@.1 }
+        }
+    }
+
+    impl<K: StT + Ord, V: StT + Ord> vstd::pervasive::ForLoopGhostIterator for OrdKeyMapGhostIterator<K, V> {
+        type ExecIter = OrdKeyMapIter<K, V>;
+        type Item = Pair<K, V>;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &OrdKeyMapIter<K, V>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &OrdKeyMapIter<K, V>) -> OrdKeyMapGhostIterator<K, V> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, K: StT + Ord, V: StT + Ord> std::iter::IntoIterator for &'a OrdKeyMap<K, V> {
+        type Item = Pair<K, V>;
+        type IntoIter = OrdKeyMapIter<K, V>;
+        fn into_iter(self) -> (it: OrdKeyMapIter<K, V>)
+            requires self.spec_ordkeymap_wf()
+            ensures it@.0 == 0, iter_invariant_ordkeymap(&it),
+        {
+            self.iter()
         }
     }
 
