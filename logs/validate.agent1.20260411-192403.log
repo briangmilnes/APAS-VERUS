@@ -1,0 +1,185 @@
+Mode: isolate
+Isolate: including 
+error: while loop: Resource limit (rlimit) exceeded
+   --> src/UnionFind/UnionFindPCStEph.rs:978:13
+    |
+978 |             while steps < n
+    |             ^^^^^^^^^^^^^^^
+
+note: Analyzing prover log for (profile rerun) lib::UnionFind::UnionFindPCStEph::UnionFindPCStEph::UnionFindPC::find ...
+
+Z3 4.12.5
+note: Log analysis complete for (profile rerun) lib::UnionFind::UnionFindPCStEph::UnionFindPCStEph::UnionFindPC::find
+
+note: Profile statistics for lib::UnionFind::UnionFindPCStEph::UnionFindPCStEph::UnionFindPC::find
+
+note: Observed 139,490 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 533485734579 (Instantiated 25,809 times - 18% of the total, cost 20670531) top 1 of 10 user-level quantifiers.
+      
+   --> src/UnionFind/UnionFindPCStEph.rs:105:40
+    |
+105 |           &&& forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
+    |  _____________-                          ^^^^^^^^^^^^^^^^^^^^^^^^
+106 | |                 parent.dom().contains(pv::<V>(parent, k))
+    | |_________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 11148343470 (Instantiated 25,245 times - 18% of the total, cost 441606) top 2 of 10 user-level quantifiers.
+      
+   --> src/UnionFind/UnionFindPCStEph.rs:118:36
+    |
+118 |           forall|z: V::V| #[trigger] po.dom().contains(z) ==>
+    |  _________-                          ^^^^^^^^^^^^^^^^^^^^
+119 | |             spec_pure_find::<V>(pc, rc, nc, z) == spec_pure_find::<V>(po, ro, no, z)
+    | |____________________________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 2901319926 (Instantiated 19,293 times - 13% of the total, cost 150382) top 3 of 10 user-level quantifiers.
+      
+   --> src/UnionFind/UnionFindPCStEph.rs:108:18
+    |
+107 |           &&& forall|k: V::V| parent.dom().contains(k) && pv::<V>(parent, k) != k ==>
+    |  _____________-
+108 | |                 (#[trigger] rank[k] as int) < (rank[pv::<V>(parent, k)] as int)
+    | |__________________^^^^^^^^^^^^^^^^^^___________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 2800063508 (Instantiated 5,314 times - 3% of the total, cost 526922) top 4 of 10 user-level quantifiers.
+      
+   --> src/UnionFind/UnionFindPCStEph.rs:126:25
+    |
+126 |         forall|k: V::V| #[trigger] pa.dom().contains(k) <==> pb.dom().contains(k)
+    |         ----------------^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-------------------------- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1216753924 (Instantiated 34,882 times - 25% of the total, cost 34882) top 5 of 10 user-level quantifiers.
+      
+   --> src/UnionFind/UnionFindPCStEph.rs:104:29
+    |
+104 |         &&& forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k)
+    |             ----------------^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^---------------------------- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 618369885 (Instantiated 9,645 times - 6% of the total, cost 64113) top 6 of 10 user-level quantifiers.
+      
+  --> src/UnionFind/UnionFindPCStEph.rs:75:64
+   |
+73 | /         forall|r: V::V| parent.dom().contains(r) && pv::<V>(parent, r) == r ==>
+74 | |             spec_subtree::<V>(parent, rank, n, r).finite()
+75 | |             && spec_subtree::<V>(parent, rank, n, r).len() >= (#[trigger] rank[r] as nat) + 1
+   | |________________________________________________________________^^^^^^^^^^^^^^^^^^___________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 372258436 (Instantiated 19,294 times - 13% of the total, cost 19294) top 7 of 10 user-level quantifiers.
+      
+   --> src/UnionFind/UnionFindPCStEph.rs:110:18
+    |
+109 |           &&& forall|k: V::V| parent.dom().contains(k) ==>
+    |  _____________-
+110 | |                 (#[trigger] rank[k] as int) < n as int
+    | |__________________^^^^^^^^^^^^^^^^^^__________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 16 (Instantiated 4 times - 0% of the total, cost 4) top 8 of 10 user-level quantifiers.
+      
+ --> vstd/set.rs:967:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 12 (Instantiated 2 times - 0% of the total, cost 6) top 9 of 10 user-level quantifiers.
+      
+ --> vstd/map.rs:259:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 4 (Instantiated 2 times - 0% of the total, cost 2) top 10 of 10 user-level quantifiers.
+      
+ --> vstd/set.rs:742:0
+  |
+  = note: Triggers selected for this quantifier
+
+Z3 4.12.5
+note: Observed 610 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 12283650 (Instantiated 225 times - 36% of the total, cost 54594) top 1 of 14 user-level quantifiers.
+      
+  --> src/UnionFind/UnionFindPCStEph.rs:85:40
+   |
+85 |           &&& forall|k: V::V| #[trigger] uf.parent@.dom().contains(k) ==>
+   |  _____________-                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+86 | |                 uf.parent@.dom().contains(pv::<V>(uf.parent@, k))
+   | |_________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 51984 (Instantiated 228 times - 37% of the total, cost 228) top 2 of 14 user-level quantifiers.
+      
+  --> src/UnionFind/UnionFindPCStEph.rs:84:29
+   |
+84 |         &&& forall|k: V::V| #[trigger] uf.parent@.dom().contains(k) <==> uf.rank@.dom().contains(k)
+   |             ----------------^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-------------------------------- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 9801 (Instantiated 99 times - 16% of the total, cost 99) top 3 of 14 user-level quantifiers.
+      
+   --> src/UnionFind/UnionFindPCStEph.rs:118:36
+    |
+118 |           forall|z: V::V| #[trigger] po.dom().contains(z) ==>
+    |  _________-                          ^^^^^^^^^^^^^^^^^^^^
+119 | |             spec_pure_find::<V>(pc, rc, nc, z) == spec_pure_find::<V>(po, ro, no, z)
+    | |____________________________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 196 (Instantiated 14 times - 2% of the total, cost 14) top 4 of 14 user-level quantifiers.
+      
+  --> src/UnionFind/UnionFindPCStEph.rs:89:18
+   |
+88 |           &&& forall|k: V::V| uf.parent@.dom().contains(k) && pv::<V>(uf.parent@, k) != k ==>
+   |  _____________-
+89 | |                 (#[trigger] uf.rank@[k] as int) < (uf.rank@[pv::<V>(uf.parent@, k)] as int)
+   | |__________________^^^^^^^^^^^^^^^^^^^^^^___________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 196 (Instantiated 14 times - 2% of the total, cost 14) top 5 of 14 user-level quantifiers.
+      
+  --> src/UnionFind/UnionFindPCStEph.rs:92:18
+   |
+91 |           &&& forall|k: V::V| uf.parent@.dom().contains(k) ==>
+   |  _____________-
+92 | |                 (#[trigger] uf.rank@[k] as int) < (uf.parent@.dom().len() as int)
+   | |__________________^^^^^^^^^^^^^^^^^^^^^^_________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 121 (Instantiated 11 times - 1% of the total, cost 11) top 6 of 14 user-level quantifiers.
+      
+  --> src/UnionFind/UnionFindPCStEph.rs:75:64
+   |
+73 | /         forall|r: V::V| parent.dom().contains(r) && pv::<V>(parent, r) == r ==>
+74 | |             spec_subtree::<V>(parent, rank, n, r).finite()
+75 | |             && spec_subtree::<V>(parent, rank, n, r).len() >= (#[trigger] rank[r] as nat) + 1
+   | |________________________________________________________________^^^^^^^^^^^^^^^^^^___________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 16 (Instantiated 4 times - 0% of the total, cost 4) top 7 of 14 user-level quantifiers.
+      
+ --> vstd/set.rs:967:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 16 (Instantiated 4 times - 0% of the total, cost 4) top 8 of 14 user-level quantifiers.
+      
+   --> src/UnionFind/UnionFindPCStEph.rs:108:18
+    |
+107 |           &&& forall|k: V::V| parent.dom().contains(k) && pv::<V>(parent, k) != k ==>
+    |  _____________-
+108 | |                 (#[trigger] rank[k] as int) < (rank[pv::<V>(parent, k)] as int)
+    | |__________________^^^^^^^^^^^^^^^^^^___________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 16 (Instantiated 4 times - 0% of the total, cost 4) top 9 of 14 user-level quantifiers.
+      
+   --> src/UnionFind/UnionFindPCStEph.rs:110:18
+    |
+109 |           &&& forall|k: V::V| parent.dom().contains(k) ==>
+    |  _____________-
+110 | |                 (#[trigger] rank[k] as int) < n as int
+    | |__________________^^^^^^^^^^^^^^^^^^__________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 12 (Instantiated 3 times - 0% of the total, cost 4) top 10 of 14 user-level quantifiers.
+      
+ --> vstd/map.rs:259:0
+  |
+  = note: Triggers selected for this quantifier
+
+verification results:: 758 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 165s
+Sampled Memory Usage: peak rust_verify RSS: 1604MB, peak z3 RSS: 5602MB, min free: 20227MB
+Sampled CPU Usage: rust_verify: 9s, z3 children: 66s

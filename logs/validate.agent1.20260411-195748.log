@@ -1,0 +1,5 @@
+Mode: full
+verification results:: 5730 verified, 0 errors
+Elapsed: 215s
+Sampled Memory Usage: peak rust_verify RSS: 10183MB, peak z3 RSS: 6886MB, min free: 11065MB
+Sampled CPU Usage: rust_verify: 209s, z3 children: 270s

@@ -1,0 +1,36 @@
+Mode: isolate
+Isolate: including 
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/UnionFind/UnionFindPCStEph.rs:495:11
+    |
+495 |       proof fn lemma_build_final_wf<V: StT + Hash + ClonePreservesView>(
+    |  ___________^
+496 | |         uf: &UnionFindPC<V>,
+497 | |         orig_parent: Map<V::V, V>, orig_rank: Map<V::V, usize>, orig_n: nat,
+498 | |     )
+    | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/UnionFind/UnionFindPCStEph.rs:436:11
+    |
+436 |       proof fn lemma_compress_iter<V: View>(
+    |  ___________^
+437 | |         po: Map<V::V, V>, pn: Map<V::V, V>,
+438 | |         rank: Map<V::V, usize>,
+439 | |         orig_parent: Map<V::V, V>, orig_rank: Map<V::V, usize>, orig_n: nat,
+440 | |         root: V::V, curr: V::V, next: V::V,
+441 | |     )
+    | |_____^
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/UnionFind/UnionFindPCStEph.rs:979:13
+    |
+979 |             while steps < n
+    |             ^^^^^^^^^^^^^^^
+
+verification results:: 756 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 126s
+Sampled Memory Usage: peak rust_verify RSS: 606MB, peak z3 RSS: 3831MB, min free: 22647MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 14s

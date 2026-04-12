@@ -75,23 +75,50 @@ pub mod UnionFindPCStEph {
             && spec_subtree::<V>(parent, rank, n, r).len() >= (#[trigger] rank[r] as nat) + 1
     }
 
-    /// Well-formedness.
+    /// Well-formedness. Built from closed light_wf + size_rank_inv so callers
+    /// see opaque booleans instead of raw parent-in-dom / rank-inv foralls.
     pub open spec fn spec_uf_wf<V: StT + Hash + ClonePreservesView>(uf: &UnionFindPC<V>) -> bool {
         &&& obeys_key_model::<V>()
         &&& obeys_feq_view_injective::<V>()
         &&& obeys_feq_full::<V>()
-        &&& uf.parent@.dom().finite()
-        &&& forall|k: V::V| #[trigger] uf.parent@.dom().contains(k) <==> uf.rank@.dom().contains(k)
-        &&& forall|k: V::V| #[trigger] uf.parent@.dom().contains(k) ==>
-                uf.parent@.dom().contains(pv::<V>(uf.parent@, k))
-        // Rank invariant.
-        &&& forall|k: V::V| uf.parent@.dom().contains(k) && pv::<V>(uf.parent@, k) != k ==>
-                (#[trigger] uf.rank@[k] as int) < (uf.rank@[pv::<V>(uf.parent@, k)] as int)
-        // Rank bounded by n.
-        &&& forall|k: V::V| uf.parent@.dom().contains(k) ==>
-                (#[trigger] uf.rank@[k] as int) < (uf.parent@.dom().len() as int)
-        // Size-rank invariant.
+        &&& spec_light_wf::<V>(uf.parent@, uf.rank@, uf.parent@.dom().len())
         &&& spec_size_rank_inv_map::<V>(uf.parent@, uf.rank@, uf.parent@.dom().len())
+    }
+
+    /// Opaque bundle of the forest wf quantifiers, excluding size_rank_inv.
+    /// Opaque (not closed): closed only hides across modules; opaque hides within
+    /// the module too, so Z3 sees one symbol per instance instead of five foralls.
+    #[verifier::opaque]
+    pub open spec fn spec_light_wf<V: View>(
+        parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat,
+    ) -> bool {
+        &&& parent.dom().finite()
+        &&& n == parent.dom().len()
+        &&& forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k)
+        &&& forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
+                parent.dom().contains(pv::<V>(parent, k))
+        &&& forall|k: V::V| parent.dom().contains(k) && pv::<V>(parent, k) != k ==>
+                (#[trigger] rank[k] as int) < (rank[pv::<V>(parent, k)] as int)
+        &&& forall|k: V::V| parent.dom().contains(k) ==>
+                (#[trigger] rank[k] as int) < n as int
+    }
+
+    /// Opaque: all z in po's domain have the same spec_pure_find under (pc, rc, nc) and (po, ro, no).
+    #[verifier::opaque]
+    pub open spec fn spec_find_preserved<V: View>(
+        pc: Map<V::V, V>, rc: Map<V::V, usize>, nc: nat,
+        po: Map<V::V, V>, ro: Map<V::V, usize>, no: nat,
+    ) -> bool {
+        forall|z: V::V| #[trigger] po.dom().contains(z) ==>
+            spec_pure_find::<V>(pc, rc, nc, z) == spec_pure_find::<V>(po, ro, no, z)
+    }
+
+    /// Opaque: pa and pb have the same domain.
+    #[verifier::opaque]
+    pub open spec fn spec_same_domain<V: View>(
+        pa: Map<V::V, V>, pb: Map<V::V, V>,
+    ) -> bool {
+        forall|k: V::V| #[trigger] pa.dom().contains(k) <==> pb.dom().contains(k)
     }
 
     // 7. proof fns
@@ -396,6 +423,157 @@ pub mod UnionFindPCStEph {
         by {}
     }
 
+    /// Single compression iteration, stated in closed preds. Reveals spec_light_wf,
+    /// spec_find_preserved, spec_same_domain in an isolated Z3 context so the caller
+    /// (find()'s loop body) never exposes their raw foralls — avoids parent-in-dom
+    /// self-chaining matching loop.
+    #[verifier::rlimit(200)]
+    proof fn lemma_compress_iter<V: View>(
+        po: Map<V::V, V>, pn: Map<V::V, V>,
+        rank: Map<V::V, usize>,
+        orig_parent: Map<V::V, V>, orig_rank: Map<V::V, usize>, orig_n: nat,
+        root: V::V, curr: V::V, next: V::V,
+    )
+        requires
+            spec_light_wf::<V>(po, rank, orig_n),
+            spec_same_domain::<V>(po, orig_parent),
+            spec_find_preserved::<V>(po, rank, orig_n, orig_parent, orig_rank, orig_n),
+            po.dom().contains(curr), po.dom().contains(root),
+            spec_is_root_map::<V>(po, root),
+            root == spec_pure_find::<V>(po, rank, orig_n, curr),
+            pv::<V>(po, curr) == next,
+            pv::<V>(po, curr) != curr,
+            orig_n == po.dom().len(),
+            // pn characterization (from HashMap::insert).
+            pv::<V>(pn, curr) == root,
+            forall|k: V::V| k != curr && po.dom().contains(k) ==> #[trigger] pv::<V>(pn, k) == pv::<V>(po, k),
+            forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k),
+        ensures
+            spec_light_wf::<V>(pn, rank, orig_n),
+            spec_same_domain::<V>(pn, orig_parent),
+            spec_find_preserved::<V>(pn, rank, orig_n, orig_parent, orig_rank, orig_n),
+            spec_is_root_map::<V>(pn, root),
+            pn.dom().contains(root), pn.dom().contains(next),
+            spec_pure_find::<V>(pn, rank, orig_n, next) == root,
+            orig_n == pn.dom().len(),
+            (rank[next] as int) > (rank[curr] as int),
+    {
+        reveal(spec_light_wf);
+        reveal(spec_find_preserved);
+        reveal(spec_same_domain);
+        let n = orig_n;
+        lemma_rank_lt_find::<V>(po, rank, n, curr);
+        lemma_compress_basic::<V>(po, pn, rank, n, curr, root);
+        lemma_compress_parent_in_dom::<V>(po, pn, curr, root);
+        lemma_compress_rank_inv::<V>(po, pn, rank, curr, root);
+        lemma_compress_step_find::<V>(po, pn, rank, n, curr, root);
+        lemma_compose_find_preserved::<V>(
+            orig_parent, orig_rank, orig_n,
+            po, rank, n,
+            pn, rank, n,
+        );
+        if root == curr {
+            lemma_find_is_root::<V>(po, rank, n, curr);
+            assert(false);
+        }
+        assert(pv::<V>(pn, root) == pv::<V>(po, root));
+        assert(pv::<V>(pn, root) == root);
+        // find(po, next) == find(po, curr) == root (unfold spec_pure_find at curr).
+        assert(spec_pure_find::<V>(po, rank, n, curr) == spec_pure_find::<V>(po, rank, n, next));
+    }
+
+    /// Final-state wf reconstruction. At loop exit (curr == root), build
+    /// size_rank_inv(self.parent@, ...) and spec_uf_wf(self) from orig's invariants
+    /// via find preservation and same domain. Reveals happen inside the lemma.
+    #[verifier::rlimit(80)]
+    proof fn lemma_build_final_wf<V: StT + Hash + ClonePreservesView>(
+        uf: &UnionFindPC<V>,
+        orig_parent: Map<V::V, V>, orig_rank: Map<V::V, usize>, orig_n: nat,
+    )
+        requires
+            obeys_key_model::<V>(),
+            obeys_feq_view_injective::<V>(),
+            obeys_feq_full::<V>(),
+            spec_light_wf::<V>(uf.parent@, uf.rank@, uf.parent@.dom().len()),
+            spec_light_wf::<V>(orig_parent, orig_rank, orig_n),
+            spec_size_rank_inv_map::<V>(orig_parent, orig_rank, orig_n),
+            spec_same_domain::<V>(uf.parent@, orig_parent),
+            spec_find_preserved::<V>(
+                uf.parent@, uf.rank@, uf.parent@.dom().len(),
+                orig_parent, orig_rank, orig_n),
+            uf.rank@ == orig_rank,
+            uf.parent@.dom().len() == orig_n,
+        ensures
+            spec_size_rank_inv_map::<V>(uf.parent@, uf.rank@, uf.parent@.dom().len()),
+    {
+        reveal(spec_light_wf);
+        reveal(spec_find_preserved);
+        reveal(spec_same_domain);
+        assert(spec_size_rank_inv_map::<V>(uf.parent@, uf.rank@, orig_n)) by {
+            assert forall|r: V::V| uf.parent@.dom().contains(r)
+                && pv::<V>(uf.parent@, r) == r implies
+                spec_subtree::<V>(uf.parent@, uf.rank@, orig_n, r).finite()
+                && spec_subtree::<V>(uf.parent@, uf.rank@, orig_n, r).len()
+                    >= (#[trigger] uf.rank@[r] as nat) + 1
+            by {
+                assert(orig_parent.dom().contains(r));
+                lemma_find_is_root::<V>(orig_parent, orig_rank, orig_n, r);
+                assert(pv::<V>(orig_parent, r) == r);
+                let st_new = spec_subtree::<V>(uf.parent@, uf.rank@, orig_n, r);
+                let st_old = spec_subtree::<V>(orig_parent, orig_rank, orig_n, r);
+                assert(st_new.subset_of(st_old)) by {
+                    assert forall|k: V::V| st_new.contains(k) implies
+                        #[trigger] st_old.contains(k)
+                    by { if orig_parent.dom().contains(k) { assert(uf.parent@.dom().contains(k)); } }
+                }
+                assert(st_old.subset_of(st_new)) by {
+                    assert forall|k: V::V| st_old.contains(k) implies
+                        #[trigger] st_new.contains(k)
+                    by { if orig_parent.dom().contains(k) { assert(uf.parent@.dom().contains(k)); } }
+                }
+                assert(st_old.finite());
+                lemma_len_subset::<V::V>(st_new, st_old);
+                lemma_len_subset::<V::V>(st_old, st_new);
+            }
+        }
+    }
+
+    /// rank[k] < n for k in light_wf'd map. Wrapper around reveal.
+    proof fn lemma_rank_lt_n_from_light_wf<V: View>(
+        parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat, k: V::V,
+    )
+        requires spec_light_wf::<V>(parent, rank, n), parent.dom().contains(k),
+        ensures (rank[k] as int) < n as int,
+    {
+        reveal(spec_light_wf);
+    }
+
+    /// pv(parent, curr) == curr ==> find(parent, curr) == curr. Wrapper around reveal
+    /// so callers use closed light_wf instead of exposing raw foralls.
+    proof fn lemma_root_find_self<V: View>(
+        parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat, curr: V::V,
+    )
+        requires spec_light_wf::<V>(parent, rank, n), parent.dom().contains(curr),
+            pv::<V>(parent, curr) == curr,
+        ensures spec_pure_find::<V>(parent, rank, n, curr) == curr,
+    {
+        reveal(spec_light_wf);
+    }
+
+    /// Non-root neighbor: next := pv(parent, curr) lies in domain with higher rank.
+    proof fn lemma_non_root_next<V: View>(
+        parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat, curr: V::V,
+    )
+        requires spec_light_wf::<V>(parent, rank, n), parent.dom().contains(curr),
+            pv::<V>(parent, curr) != curr,
+        ensures
+            parent.dom().contains(pv::<V>(parent, curr)),
+            rank.dom().contains(pv::<V>(parent, curr)),
+            (rank[pv::<V>(parent, curr)] as int) > (rank[curr] as int),
+    {
+        reveal(spec_light_wf);
+    }
+
     /// Compression step part 2: proves find preservation (NO rank re-derivation).
     /// Isolated from rank quantifiers to prevent matching loop.
     proof fn lemma_compress_step_find<V: View>(
@@ -649,7 +827,9 @@ pub mod UnionFindPCStEph {
         }
 
         fn new() -> (uf: Self) {
-            UnionFindPC { parent: HashMapWithViewPlus::new(), rank: HashMapWithViewPlus::new() }
+            let uf = UnionFindPC { parent: HashMapWithViewPlus::new(), rank: HashMapWithViewPlus::new() };
+            proof { reveal(spec_light_wf); }
+            uf
         }
 
         fn insert(&mut self, v: V) {
@@ -661,6 +841,7 @@ pub mod UnionFindPCStEph {
             self.parent.insert(v.clone_view(), v);
             self.rank.insert(v2, 0usize);
             proof {
+                reveal(spec_light_wf);
                 let pn = self.parent@;
                 let rn = self.rank@;
                 let n_new = self.spec_n();
@@ -748,6 +929,7 @@ pub mod UnionFindPCStEph {
                         let is_root = feq(parent_val, &curr);
                         if is_root {
                             proof {
+                                reveal(spec_light_wf);
                                 assert(parent_val@ == curr@);
                                 assert(pv::<V>(self.parent@, curr@) == curr@);
                                 lemma_find_in_dom::<V>(self.parent@, self.rank@, self.spec_n(), v@);
@@ -756,6 +938,7 @@ pub mod UnionFindPCStEph {
                             return curr;
                         }
                         proof {
+                            reveal(spec_light_wf);
                             assert(parent_val@ != curr@);
                             assert(pv::<V>(self.parent@, curr@) == parent_val@);
                             assert(self.parent@.dom().contains(parent_val@));
@@ -766,12 +949,13 @@ pub mod UnionFindPCStEph {
                         steps = steps + 1;
                     },
                     None => {
-                        proof { assert(false); }
+                        proof { reveal(spec_light_wf); assert(false); }
                         return curr;
                     },
                 }
             }
             proof {
+                reveal(spec_light_wf);
                 assert((self.rank@[curr@] as int) >= n as int);
                 assert((self.rank@[curr@] as int) < (self.spec_n() as int));
                 assert(false);
@@ -779,52 +963,41 @@ pub mod UnionFindPCStEph {
             curr
         }
 
-        #[verifier::external_body]
         fn find(&mut self, v: &V) -> (root: V) {
-            let root = self.find_root(v);
-            // Compress path from v to root.
+            // Capture ghost state BEFORE find_root so we can bridge to old(self) directly.
             let ghost orig_parent = self.parent@;
             let ghost orig_rank = self.rank@;
             let ghost orig_n = self.spec_n();
+            let root = self.find_root(v);
             let n = self.parent.len();
             let mut curr = v.clone_view();
             let mut steps: usize = 0;
+            proof {
+                reveal(spec_light_wf);
+                reveal(spec_same_domain);
+                reveal(spec_find_preserved);
+            }
             while steps < n
                 invariant
-                    // Light wf (no size_rank_inv).
                     obeys_key_model::<V>(),
                     obeys_feq_view_injective::<V>(),
                     obeys_feq_full::<V>(),
-                    self.parent@.dom().finite(),
-                    forall|k: V::V| #[trigger] self.parent@.dom().contains(k) <==> self.rank@.dom().contains(k),
-                    forall|k: V::V| self.parent@.dom().contains(k) ==>
-                        self.parent@.dom().contains(#[trigger] pv::<V>(self.parent@, k)),
-                    forall|k: V::V| self.parent@.dom().contains(k) && pv::<V>(self.parent@, k) != k ==>
-                        (#[trigger] self.rank@[k] as int) < (self.rank@[pv::<V>(self.parent@, k)] as int),
-                    forall|k: V::V| self.parent@.dom().contains(k) ==>
-                        (#[trigger] self.rank@[k] as int) < (self.parent@.dom().len() as int),
+                    // Bridge orig ghost values to old(self) — find_root takes &self.
+                    orig_parent == old(self).parent@,
+                    orig_rank == old(self).rank@,
+                    orig_n == old(self).spec_n(),
+                    // Closed predicates — Z3 sees opaque booleans, not raw quantifiers.
+                    spec_light_wf::<V>(self.parent@, self.rank@, self.parent@.dom().len()),
+                    spec_light_wf::<V>(orig_parent, orig_rank, orig_n),
+                    spec_size_rank_inv_map::<V>(orig_parent, orig_rank, orig_n),
+                    spec_same_domain::<V>(self.parent@, orig_parent),
+                    spec_find_preserved::<V>(
+                        self.parent@, self.rank@, self.parent@.dom().len(),
+                        orig_parent, orig_rank, orig_n),
+                    // Small open facts.
                     self.rank@ == orig_rank,
                     self.parent@.dom().len() == orig_n,
                     n == orig_n,
-                    forall|k: V::V| #[trigger] self.parent@.dom().contains(k)
-                        <==> orig_parent.dom().contains(k),
-                    // Find preservation.
-                    forall|z: V::V| orig_parent.dom().contains(z) ==>
-                        spec_pure_find::<V>(self.parent@, self.rank@, self.parent@.dom().len(), z)
-                            == #[trigger] spec_pure_find::<V>(orig_parent, orig_rank, orig_n, z),
-                    // Orig wf (parent-in-domain trigger changed to pv to prevent matching loop).
-                    orig_parent.dom().finite(),
-                    orig_n == orig_parent.dom().len(),
-                    forall|k: V::V| #[trigger] orig_parent.dom().contains(k)
-                        <==> orig_rank.dom().contains(k),
-                    forall|k: V::V| orig_parent.dom().contains(k) ==>
-                        orig_parent.dom().contains(#[trigger] pv::<V>(orig_parent, k)),
-                    forall|k: V::V| orig_parent.dom().contains(k) && pv::<V>(orig_parent, k) != k
-                        ==> (#[trigger] orig_rank[k] as int) < (orig_rank[pv::<V>(orig_parent, k)] as int),
-                    forall|k: V::V| orig_parent.dom().contains(k)
-                        ==> (#[trigger] orig_rank[k] as int) < orig_n as int,
-                    spec_size_rank_inv_map::<V>(orig_parent, orig_rank, orig_n),
-                    // Root and curr.
                     spec_is_root_map::<V>(self.parent@, root@),
                     root@ == spec_pure_find::<V>(orig_parent, orig_rank, orig_n, v@),
                     self.parent@.dom().contains(root@),
@@ -836,34 +1009,19 @@ pub mod UnionFindPCStEph {
             {
                 let same = feq(&curr, &root);
                 if same {
-                    // Prove size_rank_inv to get full wf.
                     proof {
-                        assert forall|r: V::V| self.parent@.dom().contains(r)
-                            && pv::<V>(self.parent@, r) == r implies
-                            spec_subtree::<V>(self.parent@, self.rank@, orig_n, r).finite()
-                            && spec_subtree::<V>(self.parent@, self.rank@, orig_n, r).len()
-                                >= (#[trigger] self.rank@[r] as nat) + 1
-                        by {
-                            assert(orig_parent.dom().contains(r));
-                            lemma_find_is_root::<V>(orig_parent, orig_rank, orig_n, r);
-                            assert(pv::<V>(orig_parent, r) == r);
-                            let st_new = spec_subtree::<V>(self.parent@, self.rank@, orig_n, r);
-                            let st_old = spec_subtree::<V>(orig_parent, orig_rank, orig_n, r);
-                            assert(st_new.subset_of(st_old)) by {
-                                assert forall|k: V::V| st_new.contains(k) implies
-                                    #[trigger] st_old.contains(k)
-                                by { if orig_parent.dom().contains(k) { assert(self.parent@.dom().contains(k)); } }
-                            }
-                            assert(st_old.subset_of(st_new)) by {
-                                assert forall|k: V::V| st_old.contains(k) implies
-                                    #[trigger] st_new.contains(k)
-                                by { if orig_parent.dom().contains(k) { assert(self.parent@.dom().contains(k)); } }
-                            }
-                            let ghost _t = self.rank@[r] as nat;
-                            assert(st_old.finite());
-                            lemma_len_subset::<V::V>(st_new, st_old);
-                            lemma_len_subset::<V::V>(st_old, st_new);
-                        }
+                        lemma_build_final_wf::<V>(self, orig_parent, orig_rank, orig_n);
+                        reveal(spec_find_preserved);
+                        reveal(spec_same_domain);
+                        // Bridge ghost orig to old(self): find_root takes &self, so no mutation.
+                        assert(orig_parent == old(self).parent@);
+                        assert(orig_rank == old(self).rank@);
+                        assert(orig_n == old(self).spec_n());
+                        assert(root@ == old(self).spec_find(v@));
+                        assert(self.spec_n() == old(self).spec_n());
+                        assert forall|z: V::V| old(self).spec_contains(z) implies
+                            self.spec_find(z) == old(self).spec_find(z) by {}
+                        assert forall|z: V::V| old(self).spec_contains(z) <==> self.spec_contains(z) by {}
                     }
                     return root;
                 }
@@ -872,41 +1030,25 @@ pub mod UnionFindPCStEph {
                     Some(next_val) => {
                         let next = next_val.clone_view();
                         proof {
-                            assert(next_val@ != curr@) by {
-                                if pv::<V>(self.parent@, curr@) == curr@ {
-                                    assert(spec_pure_find::<V>(self.parent@, self.rank@, self.spec_n(), curr@) == curr@);
-                                    assert(curr@ == root@);
-                                    assert(false);
-                                }
+                            // Rule out curr being a root (otherwise curr == root).
+                            if pv::<V>(self.parent@, curr@) == curr@ {
+                                lemma_root_find_self::<V>(
+                                    self.parent@, self.rank@, self.parent@.dom().len(), curr@);
+                                assert(curr@ == root@);
+                                assert(false);
                             }
                             assert(pv::<V>(self.parent@, curr@) == next@);
-                            assert(self.parent@.dom().contains(next@));
-                            assert(self.rank@.dom().contains(next@));
-                            assert((self.rank@[next@] as int) > (self.rank@[curr@] as int));
+                            lemma_non_root_next::<V>(
+                                self.parent@, self.rank@, self.parent@.dom().len(), curr@);
                         }
                         let ghost po_step = self.parent@;
                         self.parent.insert(curr.clone_view(), root.clone_view());
                         proof {
-                            let pn_step = self.parent@;
-                            let ghost n_step = self.parent@.dom().len();
-                            assert(pv::<V>(po_step, curr@) != curr@);
-                            lemma_rank_lt_find::<V>(po_step, self.rank@, n_step, curr@);
-                            lemma_compress_basic::<V>(po_step, pn_step, self.rank@, n_step, curr@, root@);
-                            lemma_compress_parent_in_dom::<V>(po_step, pn_step, curr@, root@);
-                            lemma_compress_rank_inv::<V>(po_step, pn_step, self.rank@, curr@, root@);
-                            lemma_compress_step_find::<V>(po_step, pn_step, self.rank@, n_step, curr@, root@);
-                            // Compose find preservation transitively in isolated Z3 context.
-                            lemma_compose_find_preserved::<V>(
+                            lemma_compress_iter::<V>(
+                                po_step, self.parent@, self.rank@,
                                 orig_parent, orig_rank, orig_n,
-                                po_step, self.rank@, n_step,
-                                pn_step, self.rank@, n_step,
+                                root@, curr@, next@,
                             );
-                            // Now forall|z| orig.dom().contains(z) ==> find(pn, z) == find(orig, z).
-                            // Domain propagation.
-                            assert forall|k: V::V| #[trigger] pn_step.dom().contains(k)
-                                <==> orig_parent.dom().contains(k) by {}
-                            assert(pn_step.dom().contains(next@));
-                            assert(orig_parent.dom().contains(next@));
                         }
                         curr = next;
                         steps = steps + 1;
@@ -918,8 +1060,9 @@ pub mod UnionFindPCStEph {
                 }
             }
             proof {
+                lemma_rank_lt_n_from_light_wf::<V>(
+                    self.parent@, self.rank@, self.parent@.dom().len(), curr@);
                 assert((self.rank@[curr@] as int) >= n as int);
-                assert((self.rank@[curr@] as int) < (self.spec_n() as int));
                 assert(false);
             }
             root
@@ -935,6 +1078,7 @@ pub mod UnionFindPCStEph {
             let rank_u = *self.rank.get(&root_u).unwrap_or(&0);
             let rank_v = *self.rank.get(&root_v).unwrap_or(&0);
             proof {
+                reveal(spec_light_wf);
                 // After both finds, self.spec_find preserves all original results.
                 // root_u@ = find(u) and root_v@ = find(v) are roots.
                 // Prove root_u is still a root: find(root_u) = root_u in current state.
@@ -954,6 +1098,7 @@ pub mod UnionFindPCStEph {
             let ghost ro = self.rank@;
             let ghost n = self.spec_n();
             proof {
+                reveal(spec_light_wf);
                 assert(ro.dom().contains(root_u@));
                 assert(ro.dom().contains(root_v@));
                 assert(rank_u == ro[root_u@]);
@@ -962,6 +1107,7 @@ pub mod UnionFindPCStEph {
             if rank_u < rank_v {
                 self.parent.insert(root_u.clone_view(), root_v);
                 proof {
+                    reveal(spec_light_wf);
                     let pn = self.parent@;
                     let rn = self.rank@;
                     assert(rn == ro);
@@ -1034,6 +1180,7 @@ pub mod UnionFindPCStEph {
             } else if rank_u > rank_v {
                 self.parent.insert(root_v.clone_view(), root_u);
                 proof {
+                    reveal(spec_light_wf);
                     let pn = self.parent@;
                     let rn = self.rank@;
                     assert(rn == ro);
@@ -1108,6 +1255,7 @@ pub mod UnionFindPCStEph {
                 self.parent.insert(root_v.clone_view(), root_u.clone_view());
                 let n_len = self.parent.len();
                 proof {
+                    reveal(spec_light_wf);
                     assert(po.dom().finite());
                     assert(po.dom().contains(root_u@)); assert(po.dom().contains(root_v@));
                     assert(ro.dom().contains(root_u@)); assert(ro.dom().contains(root_v@));
@@ -1118,6 +1266,7 @@ pub mod UnionFindPCStEph {
                 }
                 self.rank.insert(root_u2, rank_u + 1);
                 proof {
+                    reveal(spec_light_wf);
                     let pn = self.parent@;
                     let rn = self.rank@;
                     assert(pv::<V>(pn, root_v@) == root_u@);

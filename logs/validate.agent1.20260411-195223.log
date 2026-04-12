@@ -1,0 +1,72 @@
+Mode: isolate
+Isolate: including 
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1013:32
+     |
+1013 |                         assert(orig_parent == old(self).parent@);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1014:32
+     |
+1014 |                         assert(orig_rank == old(self).rank@);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1015:32
+     |
+1015 |                         assert(orig_n == old(self).spec_n());
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+orig_parent =~= old(self).parent.view() 
+
+note: recommendation not met
+    --> src/UnionFind/UnionFindPCStEph.rs:1001:21
+     |
+  43 | /             parent.dom().contains(v)
+  44 | |             && rank.dom().contains(v)
+  45 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k))
+  46 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
+...    |
+  50 | |             && (forall|k: V::V| parent.dom().contains(k) ==>
+  51 | |                     (#[trigger] rank[k] as int) < n as int)
+     | |___________________________________________________________- recommendation not met
+...
+1001 |                       spec_pure_find::<V>(self.parent@, self.rank@, self.parent@.dom().len(), curr@) == root@,
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+    --> src/UnionFind/UnionFindPCStEph.rs:1003:22
+     |
+1003 |                     (self.rank@[curr@] as int) >= steps as int,
+     |                      ^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:998:30
+    |
+ 43 | /             parent.dom().contains(v)
+ 44 | |             && rank.dom().contains(v)
+ 45 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k))
+ 46 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
+...   |
+ 50 | |             && (forall|k: V::V| parent.dom().contains(k) ==>
+ 51 | |                     (#[trigger] rank[k] as int) < n as int)
+    | |___________________________________________________________- recommendation not met
+...
+998 |                       root@ == spec_pure_find::<V>(orig_parent, orig_rank, orig_n, v@),
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 758 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 145s
+Sampled Memory Usage: peak rust_verify RSS: 605MB, peak z3 RSS: 6892MB, min free: 20741MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 15s

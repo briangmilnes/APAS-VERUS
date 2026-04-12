@@ -1,0 +1,768 @@
+Mode: isolate
+Isolate: including 
+error: postcondition not satisfied
+   --> src/UnionFind/UnionFindPCStEph.rs:778:21
+    |
+778 |             ensures uf.spec_wf(), uf.spec_n() == 0;
+    |                     ^^^^^^^^^^^^ failed this postcondition
+...
+830 |             UnionFindPC { parent: HashMapWithViewPlus::new(), rank: HashMapWithViewPlus::new() }
+    |             ------------------------------------------------------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/UnionFind/UnionFindPCStEph.rs:778:21
+    |
+778 |             ensures uf.spec_wf(), uf.spec_n() == 0;
+    |                     ^^^^^^^^^^^^
+
+note: 
+
+%return.spec_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+%return.spec_n() == 0 ✔
+
+error: postcondition not satisfied
+   --> src/UnionFind/UnionFindPCStEph.rs:782:21
+    |
+782 |               ensures self.spec_wf(), self.spec_contains(v@);
+    |                       ^^^^^^^^^^^^^^ failed this postcondition
+...
+841 |               proof {
+    |  ___________________-
+842 | |                 let pn = self.parent@;
+843 | |                 let rn = self.rank@;
+844 | |                 let n_new = self.spec_n();
+...   |
+905 | |             }
+    | |_____________- at the end of the function body
+
+error: assertion failed
+   --> src/UnionFind/UnionFindPCStEph.rs:846:21
+    |
+846 |                     pn.dom().contains(pv::<V>(pn, k))
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/UnionFind/UnionFindPCStEph.rs:852:21
+    |
+852 |                     (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int)
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/UnionFind/UnionFindPCStEph.rs:859:46
+    |
+859 |                         if pk == vv { assert(po.dom().contains(pk)); assert(false); }
+    |                                              ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/UnionFind/UnionFindPCStEph.rs:864:21
+    |
+864 |                     (#[trigger] rn[k] as int) < (n_new as int)
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/UnionFind/UnionFindPCStEph.rs:866:67
+    |
+866 |                     if k == vv { assert(rn[vv] == 0usize); assert(n_new >= 1); }
+    |                                                                   ^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/UnionFind/UnionFindPCStEph.rs:867:35
+    |
+867 |                     else { assert((ro[k] as int) < (n_old as int)); assert(rn[k] == ro[k]); }
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/UnionFind/UnionFindPCStEph.rs:869:24
+    |
+869 |                 assert(spec_size_rank_inv_map::<V>(pn, rn, n_new)) by {
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/UnionFind/UnionFindPCStEph.rs:878:36
+    |
+878 | ...                   assert(spec_pure_find::<V>(pn, rn, n_new, vv) == vv);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/UnionFind/UnionFindPCStEph.rs:884:29
+    |
+884 | ...                   lemma_len_subset::<V::V>(st, pn.dom());
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/set_lib.rs:1098:8
+    |
+    = note: failed precondition
+
+error: assertion failed
+   --> src/UnionFind/UnionFindPCStEph.rs:891:37
+    |
+891 | ...                   st_new.contains(k) == st_old.contains(k)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/UnionFind/UnionFindPCStEph.rs:895:41
+    |
+695 |               n_new == n_old + 1,
+    |               ------------------ failed precondition
+...
+895 | /                                         lemma_find_insert_unchanged::<V>(
+896 | |                                             po, ro, n_old, pn, rn, n_new, vv, k,
+897 | |                                         );
+    | |_________________________________________^
+
+note: diagnostics via expansion
+
+note: 
+
+pn.dom().contains(pv(pn, k)) 
+    function is uninterpreted
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:857:32
+    |
+857 |                         assert(rn[k] == ro[k]);
+    |                                ^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:857:41
+    |
+857 |                         assert(rn[k] == ro[k]);
+    |                                         ^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:860:39
+    |
+860 |                         else { assert(rn[pk] == ro[pk]); }
+    |                                       ^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:860:49
+    |
+860 |                         else { assert(rn[pk] == ro[pk]); }
+    |                                                 ^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:852:22
+    |
+852 |                     (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int)
+    |                      ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:852:50
+    |
+852 |                     (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int)
+    |                                                  ^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:867:36
+    |
+867 |                     else { assert((ro[k] as int) < (n_old as int)); assert(rn[k] == ro[k]); }
+    |                                    ^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:867:76
+    |
+867 |                     else { assert((ro[k] as int) < (n_old as int)); assert(rn[k] == ro[k]); }
+    |                                                                            ^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:867:85
+    |
+867 |                     else { assert((ro[k] as int) < (n_old as int)); assert(rn[k] == ro[k]); }
+    |                                                                                     ^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:864:22
+    |
+864 |                     (#[trigger] rn[k] as int) < (n_new as int)
+    |                      ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:878:36
+    |
+ 43 | /             parent.dom().contains(v)
+ 44 | |             && rank.dom().contains(v)
+ 45 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k))
+ 46 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
+...   |
+ 50 | |             && (forall|k: V::V| parent.dom().contains(k) ==>
+ 51 | |                     (#[trigger] rank[k] as int) < n as int)
+    | |___________________________________________________________- recommendation not met
+...
+878 |                               assert(spec_pure_find::<V>(pn, rn, n_new, vv) == vv);
+    |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:901:36
+    |
+901 | ...                   assert(rn[r] == ro[r]);
+    |                              ^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:901:45
+    |
+901 | ...                   assert(rn[r] == ro[r]);
+    |                                       ^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:872:74
+    |
+872 |                         && spec_subtree::<V>(pn, rn, n_new, r).len() >= (#[trigger] rn[r] as nat) + 1
+    |                                                                          ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/UnionFind/UnionFindPCStEph.rs:786:48
+    |
+786 |             ensures self.spec_contains(root@), root@ == self.spec_find(v@),
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+934 |                             return curr;
+    |                             ----------- at this exit
+
+error: invariant not satisfied at end of loop body
+   --> src/UnionFind/UnionFindPCStEph.rs:917:21
+    |
+917 | /                     spec_pure_find::<V>(self.parent@, self.rank@, self.spec_n(), curr@)
+918 | |                         == spec_pure_find::<V>(self.parent@, self.rank@, self.spec_n(), v@),
+    | |___________________________________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/UnionFind/UnionFindPCStEph.rs:931:33
+    |
+153 |             forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k),
+    |             ------------------------------------------------------------------------------- failed precondition
+...
+931 |                                 lemma_find_in_dom::<V>(self.parent@, self.rank@, self.spec_n(), v@);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/UnionFind/UnionFindPCStEph.rs:932:33
+    |
+177 |             forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k),
+    |             ------------------------------------------------------------------------------- failed precondition
+...
+932 |                                 lemma_find_is_root::<V>(self.parent@, self.rank@, self.spec_n(), v@);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/UnionFind/UnionFindPCStEph.rs:939:36
+    |
+939 | ...                   assert(self.parent@.dom().contains(parent_val@));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/UnionFind/UnionFindPCStEph.rs:940:36
+    |
+940 | ...                   assert(self.rank@.dom().contains(parent_val@));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/UnionFind/UnionFindPCStEph.rs:941:36
+    |
+941 | ...                   assert((self.rank@[parent_val@] as int) > (self.rank@[curr@] as int));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/UnionFind/UnionFindPCStEph.rs:954:24
+    |
+954 |                 assert((self.rank@[curr@] as int) < (self.spec_n() as int));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/UnionFind/UnionFindPCStEph.rs:153:29
+    |
+153 |             forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k),
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^
+154 |             forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
+155 |                 parent.dom().contains(pv::<V>(parent, k)),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+156 |             forall|k: V::V| parent.dom().contains(k) && pv::<V>(parent, k) != k ==>
+157 |                 (#[trigger] rank[k] as int) < (rank[pv::<V>(parent, k)] as int),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.dom().contains(tmp%) ✔
+forall |k|
+    tmp%.dom().contains(k) == tmp%.dom().contains(k) ✘
+    |   tmp%.dom().contains(k) ==>
+    |       tmp%.dom().contains(k) ✘
+    |           function is uninterpreted
+    |   tmp%.dom().contains(k) ==>
+    |       tmp%.dom().contains(k) ✘
+    +---
+forall |k|
+    tmp%.dom().contains(k) ==>
+        tmp%.dom().contains(pv(tmp%, k)) ✘
+            function is uninterpreted
+forall |k|
+    tmp%.dom().contains(k) && !(pv(tmp%, k) == k) ==>
+        tmp%.index(k) < tmp%.index(pv(tmp%, k)) ✘
+forall |k|
+    tmp%.dom().contains(k) ==>
+        tmp%.index(k) < tmp% 
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:918:28
+    |
+ 43 | /             parent.dom().contains(v)
+ 44 | |             && rank.dom().contains(v)
+ 45 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k))
+ 46 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
+...   |
+ 50 | |             && (forall|k: V::V| parent.dom().contains(k) ==>
+ 51 | |                     (#[trigger] rank[k] as int) < n as int)
+    | |___________________________________________________________- recommendation not met
+...
+918 |                           == spec_pure_find::<V>(self.parent@, self.rank@, self.spec_n(), v@),
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:920:22
+    |
+920 |                     (self.rank@[curr@] as int) >= steps as int,
+    |                      ^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:941:72
+    |
+941 | ...                   assert((self.rank@[parent_val@] as int) > (self.rank@[curr@] as int));
+    |                                                                  ^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:917:21
+    |
+ 43 | /             parent.dom().contains(v)
+ 44 | |             && rank.dom().contains(v)
+ 45 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k))
+ 46 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
+...   |
+ 50 | |             && (forall|k: V::V| parent.dom().contains(k) ==>
+ 51 | |                     (#[trigger] rank[k] as int) < n as int)
+    | |___________________________________________________________- recommendation not met
+...
+917 |                       spec_pure_find::<V>(self.parent@, self.rank@, self.spec_n(), curr@)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:954:25
+    |
+954 |                 assert((self.rank@[curr@] as int) < (self.spec_n() as int));
+    |                         ^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:953:25
+    |
+953 |                 assert((self.rank@[curr@] as int) >= n as int);
+    |                         ^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+    --> src/UnionFind/UnionFindPCStEph.rs:794:17
+     |
+ 794 |                 root@ == old(self).spec_find(v@),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1000 |                     return root;
+     |                     ----------- at this exit
+
+error: postcondition not satisfied
+    --> src/UnionFind/UnionFindPCStEph.rs:796:17
+     |
+ 796 | /                 forall|z: V::V| old(self).spec_contains(z) ==>
+ 797 | |                     self.spec_find(z) == old(self).spec_find(z),
+     | |_______________________________________________________________^ failed this postcondition
+...
+1000 |                       return root;
+     |                       ----------- at this exit
+
+error: postcondition not satisfied
+    --> src/UnionFind/UnionFindPCStEph.rs:798:17
+     |
+ 798 |                 forall|z: V::V| old(self).spec_contains(z) <==> self.spec_contains(z),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1000 |                     return root;
+     |                     ----------- at this exit
+
+error: postcondition not satisfied
+    --> src/UnionFind/UnionFindPCStEph.rs:799:17
+     |
+ 799 |                 self.spec_n() == old(self).spec_n();
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1000 |                     return root;
+     |                     ----------- at this exit
+
+error: invariant not satisfied before loop
+   --> src/UnionFind/UnionFindPCStEph.rs:978:21
+    |
+978 |                     spec_same_domain::<V>(self.parent@, orig_parent),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/UnionFind/UnionFindPCStEph.rs:979:21
+    |
+979 | /                     spec_find_preserved::<V>(
+980 | |                         self.parent@, self.rank@, self.parent@.dom().len(),
+981 | |                         orig_parent, orig_rank, orig_n),
+    | |_______________________________________________________^
+
+note: diagnostics via expansion
+   --> src/UnionFind/UnionFindPCStEph.rs:794:17
+    |
+794 |                 root@ == old(self).spec_find(v@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+797 |                     self.spec_find(z) == old(self).spec_find(z),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+798 |                 forall|z: V::V| old(self).spec_contains(z) <==> self.spec_contains(z),
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+799 |                 self.spec_n() == old(self).spec_n();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_wf() ✔
+self.spec_contains(%return.view()) ✔
+%return.view() == old(self).spec_find(old(v).view()) ✘
+self.spec_is_root(%return.view()) ✔
+forall |z|
+    old(self).spec_contains(z) ==>
+        self.spec_find(z) == old(self).spec_find(z) ✘
+forall |z|
+    old(self).spec_contains(z) == self.spec_contains(z) ✘
+self.spec_n() == old(self).spec_n() ✘
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:990:21
+    |
+ 43 | /             parent.dom().contains(v)
+ 44 | |             && rank.dom().contains(v)
+ 45 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k))
+ 46 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
+...   |
+ 50 | |             && (forall|k: V::V| parent.dom().contains(k) ==>
+ 51 | |                     (#[trigger] rank[k] as int) < n as int)
+    | |___________________________________________________________- recommendation not met
+...
+990 |                       spec_pure_find::<V>(self.parent@, self.rank@, self.parent@.dom().len(), curr@) == root@,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:992:22
+    |
+992 |                     (self.rank@[curr@] as int) >= steps as int,
+    |                      ^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:987:30
+    |
+ 43 | /             parent.dom().contains(v)
+ 44 | |             && rank.dom().contains(v)
+ 45 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k))
+ 46 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
+...   |
+ 50 | |             && (forall|k: V::V| parent.dom().contains(k) ==>
+ 51 | |                     (#[trigger] rank[k] as int) < n as int)
+    | |___________________________________________________________- recommendation not met
+...
+987 |                       root@ == spec_pure_find::<V>(orig_parent, orig_rank, orig_n, v@),
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+    --> src/UnionFind/UnionFindPCStEph.rs:1046:9
+     |
+1046 |         fn union(&mut self, u: &V, v: &V) {
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/UnionFind/UnionFindPCStEph.rs:1061:17
+     |
+ 177 |             forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k),
+     |             ------------------------------------------------------------------------------- failed precondition
+...
+1061 |                 lemma_find_is_root::<V>(self.parent@, self.rank@, self.spec_n(), root_u@);
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/UnionFind/UnionFindPCStEph.rs:1062:17
+     |
+ 177 |             forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k),
+     |             ------------------------------------------------------------------------------- failed precondition
+...
+1062 |                 lemma_find_is_root::<V>(self.parent@, self.rank@, self.spec_n(), root_v@);
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1065:24
+     |
+1065 |                 assert(self.spec_is_root(root_u@));
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1074:24
+     |
+1074 |                 assert(ro.dom().contains(root_u@));
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1075:24
+     |
+1075 |                 assert(ro.dom().contains(root_v@));
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1088:25
+     |
+1088 |                         pn.dom().contains(pv::<V>(pn, k))
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1094:25
+     |
+1094 |                         (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int)
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1098:28
+     |
+1098 |                     assert(spec_size_rank_inv_map::<V>(pn, rn, n)) by {
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1114:52
+     |
+1114 | ...                   assert(rn.dom().contains(k));
+     |                              ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+    --> src/UnionFind/UnionFindPCStEph.rs:1116:45
+     |
+ 638 |             forall|k: V::V| #[trigger] po.dom().contains(k) <==> ro.dom().contains(k),
+     |             ------------------------------------------------------------------------- failed precondition
+...
+1116 |                                             lemma_find_after_link::<V>(po, ro, pn, rn, n, root_u@, root_v@, k);
+     |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1134:82
+     |
+1134 | ...                   assert(pn.dom().contains(k)); assert(rn.dom().contains(k)); assert(ro.dom().contains(k));
+     |                                                            ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+    --> src/UnionFind/UnionFindPCStEph.rs:1135:45
+     |
+ 638 |             forall|k: V::V| #[trigger] po.dom().contains(k) <==> ro.dom().contains(k),
+     |             ------------------------------------------------------------------------- failed precondition
+...
+1135 |                                             lemma_find_after_link::<V>(po, ro, pn, rn, n, root_u@, root_v@, k);
+     |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1139:40
+     |
+1139 | ...                   assert(rn.dom().contains(r)); assert(ro.dom().contains(r));
+     |                              ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1146:28
+     |
+1146 |                     assert(rn.dom().contains(u@)); assert(rn.dom().contains(v@));
+     |                            ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1146:59
+     |
+1146 |                     assert(rn.dom().contains(u@)); assert(rn.dom().contains(v@));
+     |                                                           ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+    --> src/UnionFind/UnionFindPCStEph.rs:1148:21
+     |
+ 638 |             forall|k: V::V| #[trigger] po.dom().contains(k) <==> ro.dom().contains(k),
+     |             ------------------------------------------------------------------------- failed precondition
+...
+1148 |                     lemma_find_after_link::<V>(po, ro, pn, rn, n, root_u@, root_v@, u@);
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/UnionFind/UnionFindPCStEph.rs:1149:21
+     |
+ 638 |             forall|k: V::V| #[trigger] po.dom().contains(k) <==> ro.dom().contains(k),
+     |             ------------------------------------------------------------------------- failed precondition
+...
+1149 |                     lemma_find_after_link::<V>(po, ro, pn, rn, n, root_u@, root_v@, v@);
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1160:25
+     |
+1160 |                         pn.dom().contains(pv::<V>(pn, k))
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1166:25
+     |
+1166 |                         (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int)
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/UnionFind/UnionFindPCStEph.rs:1185:82
+     |
+1185 | ...                   assert(pn.dom().contains(k)); assert(rn.dom().contains(k)); assert(ro.dom().contains(k));
+     |                                                            ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/UnionFind/UnionFindPCStEph.rs:177:29
+    |
+177 |             forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k),
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^
+178 |             forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
+179 |                 parent.dom().contains(pv::<V>(parent, k)),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+180 |             forall|k: V::V| parent.dom().contains(k) && pv::<V>(parent, k) != k ==>
+181 |                 (#[trigger] rank[k] as int) < (rank[pv::<V>(parent, k)] as int),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.dom().contains(tmp%) ✔
+forall |k|
+    tmp%.dom().contains(k) == tmp%.dom().contains(k) ✘
+    |   tmp%.dom().contains(k) ==>
+    |       tmp%.dom().contains(k) ✘
+    |           function is uninterpreted
+    |   tmp%.dom().contains(k) ==>
+    |       tmp%.dom().contains(k) ✘
+    +---
+forall |k|
+    tmp%.dom().contains(k) ==>
+        tmp%.dom().contains(pv(tmp%, k)) ✘
+            function is uninterpreted
+forall |k|
+    tmp%.dom().contains(k) && !(pv(tmp%, k) == k) ==>
+        tmp%.index(k) < tmp%.index(pv(tmp%, k)) ✘
+forall |k|
+    tmp%.dom().contains(k) ==>
+        tmp%.index(k) < tmp% 
+
+note: recommendation not met
+    --> src/UnionFind/UnionFindPCStEph.rs:1094:26
+     |
+1094 |                         (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int)
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/UnionFind/UnionFindPCStEph.rs:1094:54
+     |
+1094 |                         (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int)
+     |                                                      ^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/UnionFind/UnionFindPCStEph.rs:1166:26
+     |
+1166 |                         (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int)
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/UnionFind/UnionFindPCStEph.rs:1166:54
+     |
+1166 |                         (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int)
+     |                                                      ^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+verification results:: 752 verified, 7 errors
+error: aborting due to 47 previous errors
+
+Elapsed: 33s
+Sampled Memory Usage: peak rust_verify RSS: 614MB, peak z3 RSS: 4677MB, min free: 22849MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 14s

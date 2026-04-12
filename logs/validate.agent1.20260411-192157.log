@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including 
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/UnionFind/UnionFindPCStEph.rs:978:13
+    |
+978 |             while steps < n
+    |             ^^^^^^^^^^^^^^^
+
+verification results:: 758 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 111s
+Sampled Memory Usage: peak rust_verify RSS: 609MB, peak z3 RSS: 4799MB, min free: 21743MB
+Sampled CPU Usage: rust_verify: 3s, z3 children: 14s

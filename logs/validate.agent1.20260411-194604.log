@@ -1,0 +1,111 @@
+Mode: isolate
+Isolate: including 
+error: postcondition not satisfied
+    --> src/UnionFind/UnionFindPCStEph.rs:794:17
+     |
+ 794 |                 root@ == old(self).spec_find(v@),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1013 |                     return root;
+     |                     ----------- at this exit
+
+error: postcondition not satisfied
+    --> src/UnionFind/UnionFindPCStEph.rs:796:17
+     |
+ 796 | /                 forall|z: V::V| old(self).spec_contains(z) ==>
+ 797 | |                     self.spec_find(z) == old(self).spec_find(z),
+     | |_______________________________________________________________^ failed this postcondition
+...
+1013 |                       return root;
+     |                       ----------- at this exit
+
+error: postcondition not satisfied
+    --> src/UnionFind/UnionFindPCStEph.rs:798:17
+     |
+ 798 |                 forall|z: V::V| old(self).spec_contains(z) <==> self.spec_contains(z),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1013 |                     return root;
+     |                     ----------- at this exit
+
+error: postcondition not satisfied
+    --> src/UnionFind/UnionFindPCStEph.rs:799:17
+     |
+ 799 |                 self.spec_n() == old(self).spec_n();
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1013 |                     return root;
+     |                     ----------- at this exit
+
+note: diagnostics via expansion
+   --> src/UnionFind/UnionFindPCStEph.rs:794:17
+    |
+794 |                 root@ == old(self).spec_find(v@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+797 |                     self.spec_find(z) == old(self).spec_find(z),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+798 |                 forall|z: V::V| old(self).spec_contains(z) <==> self.spec_contains(z),
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+799 |                 self.spec_n() == old(self).spec_n();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_wf() ✔
+self.spec_contains(%return.view()) ✔
+%return.view() == old(self).spec_find(old(v).view()) ✘
+self.spec_is_root(%return.view()) ✔
+forall |z|
+    old(self).spec_contains(z) ==>
+        self.spec_find(z) == old(self).spec_find(z) ✘
+forall |z|
+    old(self).spec_contains(z) == self.spec_contains(z) ✘
+self.spec_n() == old(self).spec_n() ✘
+
+note: recommendation not met
+    --> src/UnionFind/UnionFindPCStEph.rs:1001:21
+     |
+  43 | /             parent.dom().contains(v)
+  44 | |             && rank.dom().contains(v)
+  45 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k))
+  46 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
+...    |
+  50 | |             && (forall|k: V::V| parent.dom().contains(k) ==>
+  51 | |                     (#[trigger] rank[k] as int) < n as int)
+     | |___________________________________________________________- recommendation not met
+...
+1001 |                       spec_pure_find::<V>(self.parent@, self.rank@, self.parent@.dom().len(), curr@) == root@,
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+    --> src/UnionFind/UnionFindPCStEph.rs:1003:22
+     |
+1003 |                     (self.rank@[curr@] as int) >= steps as int,
+     |                      ^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+   --> src/UnionFind/UnionFindPCStEph.rs:998:30
+    |
+ 43 | /             parent.dom().contains(v)
+ 44 | |             && rank.dom().contains(v)
+ 45 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k))
+ 46 | |             && (forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
+...   |
+ 50 | |             && (forall|k: V::V| parent.dom().contains(k) ==>
+ 51 | |                     (#[trigger] rank[k] as int) < n as int)
+    | |___________________________________________________________- recommendation not met
+...
+998 |                       root@ == spec_pure_find::<V>(orig_parent, orig_rank, orig_n, v@),
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 758 verified, 1 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 148s
+Sampled Memory Usage: peak rust_verify RSS: 609MB, peak z3 RSS: 6918MB, min free: 20686MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 14s
