@@ -109,15 +109,15 @@ Just the numbers. Prose is the user's job.
 
 ## Output deliverables
 
-1. `analyses/lecture-data/scale.md` — sections 1.
-2. `analyses/lecture-data/coverage.md` — sections 2.
-3. `analyses/lecture-data/trust-base.md` — sections 3.
-4. `analyses/lecture-data/cost.md` — sections 4.
-5. `analyses/lecture-data/holes-over-time.{md,csv}` + `holes-plot.png` — section 5.
-6. `analyses/lecture-data/minimize-productivity.md` — section 6.
-7. `analyses/lecture-data/eq-clone.md` — section 7.
-8. `analyses/lecture-data/optimization-history.md` — section 8.
-9. `analyses/lecture-data/validate-time-rss.{csv,png}` — section 4 plots.
+1. `lectures/quantitatives/scale.md` — sections 1.
+2. `lectures/quantitatives/coverage.md` — sections 2.
+3. `lectures/quantitatives/trust-base.md` — sections 3.
+4. `lectures/quantitatives/cost.md` — sections 4.
+5. `lectures/quantitatives/holes-over-time.{md,csv}` + `holes-plot.png` — section 5.
+6. `lectures/quantitatives/minimize-productivity.md` — section 6.
+7. `lectures/quantitatives/eq-clone.md` — section 7.
+8. `lectures/quantitatives/optimization-history.md` — section 8.
+9. `lectures/quantitatives/validate-time-rss.{csv,png}` — section 4 plots.
 
 ## Effort estimate
 
