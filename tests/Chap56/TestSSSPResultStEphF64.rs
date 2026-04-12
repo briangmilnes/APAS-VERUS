@@ -4,8 +4,9 @@
 
 use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::*;
+use apas_verus::vstdplus::float::float::WrappedF64;
 
-fn dist(v: f64) -> F64Dist { F64Dist { val: v } }
+fn dist(v: f64) -> WrappedF64 { WrappedF64 { val: v } }
 
 #[test]
 fn test_new() {

@@ -399,7 +399,7 @@ pub mod OrderedSetMtEph {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             locked_val.filter(f, Ghost(spec_pred));
             let ghost new_view = locked_val@;
-// Veracity: UNNEEDED proof block             write_handle.release_write(locked_val);
+            write_handle.release_write(locked_val);
             self.ghost_locked_set = Ghost(new_view);
         }
 

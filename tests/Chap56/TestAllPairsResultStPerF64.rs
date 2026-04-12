@@ -6,7 +6,7 @@ use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap56::AllPairsResultStPerF64::AllPairsResultStPerF64::*;
 use apas_verus::vstdplus::float::float::*;
 
-fn dist(v: f64) -> F64Dist { F64Dist { val: v } }
+fn dist(v: f64) -> WrappedF64 { WrappedF64 { val: v } }
 
 #[test]
 fn test_new() {

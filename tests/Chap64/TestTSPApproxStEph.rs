@@ -7,22 +7,21 @@ use apas_verus::Chap05::SetStEph::SetStEph::*;
 use apas_verus::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
 use apas_verus::Chap64::TSPApproxStEph::TSPApproxStEph::*;
 use apas_verus::SetLit;
-use apas_verus::Types::Types::*;
-use ordered_float::OrderedFloat;
+use apas_verus::vstdplus::float::float::{WrappedF64, finite_dist, zero_dist};
 
 fn create_triangle_graph() -> (
-    LabUnDirGraphStEph<usize, OrderedFloat<f64>>,
-    SetStEph<LabEdge<usize, OrderedFloat<f64>>>,
+    LabUnDirGraphStEph<usize, WrappedF64>,
+    SetStEph<LabEdge<usize, WrappedF64>>,
 ) {
     let vertices = SetLit![0, 1, 2];
     let edges = SetLit![
-        LabEdge(0, 1, OrderedFloat(1.0)),
-        LabEdge(1, 2, OrderedFloat(2.0)),
-        LabEdge(2, 0, OrderedFloat(3.0))
+        LabEdge(0, 1, WrappedF64 { val: 1.0 }),
+        LabEdge(1, 2, WrappedF64 { val: 2.0 }),
+        LabEdge(2, 0, WrappedF64 { val: 3.0 })
     ];
-    let graph = <LabUnDirGraphStEph<usize, OrderedFloat<f64>> as LabUnDirGraphStEphTrait<usize, OrderedFloat<f64>>>::from_vertices_and_labeled_edges(vertices, edges.clone());
+    let graph = <LabUnDirGraphStEph<usize, WrappedF64> as LabUnDirGraphStEphTrait<usize, WrappedF64>>::from_vertices_and_labeled_edges(vertices, edges.clone());
 
-    let spanning_tree = SetLit![LabEdge(0, 1, OrderedFloat(1.0)), LabEdge(1, 2, OrderedFloat(2.0))];
+    let spanning_tree = SetLit![LabEdge(0, 1, WrappedF64 { val: 1.0 }), LabEdge(1, 2, WrappedF64 { val: 2.0 })];
 
     (graph, spanning_tree)
 }
@@ -50,7 +49,7 @@ fn test_tour_weight() {
     let tour = std::vec![0, 1, 2, 0];
     let weight = tour_weight(&graph, &tour);
 
-    assert_eq!(weight, OrderedFloat(6.0));
+    assert_eq!(weight, WrappedF64 { val: 6.0 });
 }
 
 #[test]
@@ -60,5 +59,5 @@ fn test_approx_metric_tsp() {
 
     assert!(tour.len() >= 3);
     assert_eq!(tour[0], tour[tour.len() - 1]);
-    assert!(weight > OrderedFloat(0.0));
+    assert!(weight > zero_dist());
 }

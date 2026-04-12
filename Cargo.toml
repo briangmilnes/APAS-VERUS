@@ -188,37 +188,6 @@ path = "tests/Chap06/TestLabDirGraphMtEph.rs"
 name = "TestLabUnDirGraphMtEph"
 path = "tests/Chap06/TestLabUnDirGraphMtEph.rs"
 
-# [[test]]  # uses apas_ai crate, no source module exists
-# name = "TestWeighedDirGraphMtEphFloat"
-# path = "tests/Chap06/TestWeighedDirGraphMtEphFloat.rs"
-
-# [[test]]  # uses apas_ai crate, no source module exists
-# name = "TestWeighedDirGraphMtEphInt"
-# path = "tests/Chap06/TestWeighedDirGraphMtEphInt.rs"
-
-# [[test]]  # uses apas_ai crate, no source module exists
-# name = "TestWeighedDirGraphStEphFloat"
-# path = "tests/Chap06/TestWeighedDirGraphStEphFloat.rs"
-
-# [[test]]  # uses apas_ai crate, no source module exists
-# name = "TestWeighedDirGraphStEphInt"
-# path = "tests/Chap06/TestWeighedDirGraphStEphInt.rs"
-
-# [[test]]  # uses apas_ai crate, no source module exists
-# name = "TestWeighedUnDirGraphMtEphFloat"
-# path = "tests/Chap06/TestWeighedUnDirGraphMtEphFloat.rs"
-
-# [[test]]  # uses apas_ai crate, no source module exists
-# name = "TestWeighedUnDirGraphMtEphInt"
-# path = "tests/Chap06/TestWeighedUnDirGraphMtEphInt.rs"
-
-# [[test]]  # uses apas_ai crate, no source module exists
-# name = "TestWeighedUnDirGraphStEphFloat"
-# path = "tests/Chap06/TestWeighedUnDirGraphStEphFloat.rs"
-
-# [[test]]  # uses apas_ai crate, no source module exists
-# name = "TestWeighedUnDirGraphStEphInt"
-# path = "tests/Chap06/TestWeighedUnDirGraphStEphInt.rs"
 
 [[test]]
 name = "TestParaPairs"
@@ -1603,9 +1572,9 @@ path = "tests/Chap37/TestBSTBBAlphaMtEph.rs"
 name = "TestBSTBBAlphaStEph"
 path = "tests/Chap37/TestBSTBBAlphaStEph.rs"
 
-# [[test]]  # module BSTMtEph does not exist
-# name = "TestBSTMtEph"
-# path = "tests/Chap37/TestBSTMtEph.rs"
+[[test]]
+name = "TestBSTMtEph"
+path = "tests/Chap37/TestBSTMtEph.rs"
 
 [[test]]
 name = "TestBSTPlainMtEph"
@@ -2071,17 +2040,17 @@ path = "tests/Chap55/TestTopoSortStEph.rs"
 name = "TestTopoSortStPer"
 path = "tests/Chap55/TestTopoSortStPer.rs"
 
-# [[test]]  # references non-existent F64Dist type
-# name = "TestAllPairsResultStEphF64"
-# path = "tests/Chap56/TestAllPairsResultStEphF64.rs"
+[[test]]
+name = "TestAllPairsResultStEphF64"
+path = "tests/Chap56/TestAllPairsResultStEphF64.rs"
 
 [[test]]
 name = "TestAllPairsResultStEphI64"
 path = "tests/Chap56/TestAllPairsResultStEphI64.rs"
 
-# [[test]]  # references non-existent F64Dist type
-# name = "TestAllPairsResultStPerF64"
-# path = "tests/Chap56/TestAllPairsResultStPerF64.rs"
+[[test]]
+name = "TestAllPairsResultStPerF64"
+path = "tests/Chap56/TestAllPairsResultStPerF64.rs"
 
 [[test]]
 name = "TestAllPairsResultStPerI64"
@@ -2103,17 +2072,17 @@ path = "tests/Chap56/TestPathWeightUtilsStEph.rs"
 name = "TestPathWeightUtilsStPer"
 path = "tests/Chap56/TestPathWeightUtilsStPer.rs"
 
-# [[test]]  # references non-existent F64Dist type
-# name = "TestSSSPResultStEphF64"
-# path = "tests/Chap56/TestSSSPResultStEphF64.rs"
+[[test]]
+name = "TestSSSPResultStEphF64"
+path = "tests/Chap56/TestSSSPResultStEphF64.rs"
 
 [[test]]
 name = "TestSSSPResultStEphI64"
 path = "tests/Chap56/TestSSSPResultStEphI64.rs"
 
-# [[test]]  # references non-existent F64Dist type
-# name = "TestSSSPResultStPerF64"
-# path = "tests/Chap56/TestSSSPResultStPerF64.rs"
+[[test]]
+name = "TestSSSPResultStPerF64"
+path = "tests/Chap56/TestSSSPResultStPerF64.rs"
 
 [[test]]
 name = "TestSSSPResultStPerI64"
@@ -2203,9 +2172,9 @@ path = "tests/Chap64/TestSpanTreeMtEph.rs"
 name = "TestSpanTreeStEph"
 path = "tests/Chap64/TestSpanTreeStEph.rs"
 
-# [[test]]  # uses ordered_float (removed crate)
-# name = "TestTSPApproxStEph"
-# path = "tests/Chap64/TestTSPApproxStEph.rs"
+[[test]]
+name = "TestTSPApproxStEph"
+path = "tests/Chap64/TestTSPApproxStEph.rs"
 
 [[test]]
 name = "TestKruskalStEph"
