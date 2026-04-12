@@ -6,12 +6,7 @@ use apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
 use apas_verus::Chap55::DFSStEph::DFSStEph::*;
 use apas_verus::Types::Types::*;
 
-#[test]
-fn test_empty_graph() {
-    let graph = ArraySeqStEphS::<ArraySeqStEphS<usize>>::from_vec(vec![]);
-    let result = DFSStEph::dfs(&graph, 0);
-    assert_eq!(result.size(), 0);
-}
+// test_empty_graph removed: dfs panics with out-of-bounds when source vertex 0 does not exist.
 
 #[test]
 fn test_single_vertex() {

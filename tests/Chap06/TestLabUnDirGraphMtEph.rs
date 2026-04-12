@@ -114,26 +114,19 @@ fn test_neighbors() {
     g.add_labeled_edge(1, 2, "a".to_string());
     g.add_labeled_edge(1, 3, "b".to_string());
     g.add_labeled_edge(2, 4, "c".to_string());
-    
-    let neighbors_1 = g.neighbors(&1);
+
+    let neighbors_1 = g.ng(&1);
     assert_eq!(neighbors_1.size(), 2);
     assert!(set_contains(&neighbors_1, &2));
     assert!(set_contains(&neighbors_1, &3));
-    
-    let neighbors_2 = g.neighbors(&2);
+
+    let neighbors_2 = g.ng(&2);
     assert_eq!(neighbors_2.size(), 2);
     assert!(set_contains(&neighbors_2, &1));
     assert!(set_contains(&neighbors_2, &4));
 }
 
-#[test]
-#[should_panic(expected = "normalize_edge cannot create LabEdge without a label")]
-fn test_normalize_edge() {
-    // This method is broken by design - it panics
-    // Including test to cover the panic path
-    type TestGraph = LabUnDirGraphMtEph<i32, String>;
-    let _ = TestGraph::normalize_edge(1, 2);
-}
+// test_normalize_edge removed: normalize_edge is not a public associated item on LabUnDirGraphMtEph.
 
 #[test]
 fn test_empty_graph_operations() {
@@ -143,7 +136,7 @@ fn test_empty_graph_operations() {
     assert_eq!(g.edges().size(), 0);
     assert!(!g.has_edge(&1, &2));
     assert_eq!(g.get_edge_label(&1, &2), None);
-    assert_eq!(g.neighbors(&1).size(), 0);
+    assert_eq!(g.ng(&1).size(), 0);
 }
 
 #[test]

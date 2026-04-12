@@ -10,7 +10,7 @@ use apas_verus::Types::Types::*;
 fn test_single_node() {
     let adj: Vec<ArraySeqStEphS<usize>> = vec![ArraySeqStEphS::empty()];
     let graph = ArraySeqStEphS::from_vec(adj);
-    let result = TopoSortStEph::topological_sort_opt(&graph);
+    let result = topological_sort_opt(&graph);
     assert!(result.is_some());
     if let Some(order) = result {
         assert_eq!(order.length(), 1);
@@ -23,7 +23,7 @@ fn test_linear_dag() {
     let adj1 = ArraySeqStEphS::from_vec(vec![2]);
     let adj2 = ArraySeqStEphS::empty();
     let graph = ArraySeqStEphS::from_vec(vec![adj0, adj1, adj2]);
-    let result = TopoSortStEph::topological_sort_opt(&graph);
+    let result = topological_sort_opt(&graph);
     assert!(result.is_some());
 }
 
@@ -34,7 +34,7 @@ fn test_dag_with_branches() {
     let adj2 = ArraySeqStEphS::from_vec(vec![3]);
     let adj3 = ArraySeqStEphS::empty();
     let graph = ArraySeqStEphS::from_vec(vec![adj0, adj1, adj2, adj3]);
-    let result = TopoSortStEph::topological_sort_opt(&graph);
+    let result = topological_sort_opt(&graph);
     assert!(result.is_some());
 }
 
@@ -44,7 +44,7 @@ fn test_cycle_returns_none() {
     let adj1 = ArraySeqStEphS::from_vec(vec![2]);
     let adj2 = ArraySeqStEphS::from_vec(vec![0]);
     let graph = ArraySeqStEphS::from_vec(vec![adj0, adj1, adj2]);
-    let result = TopoSortStEph::topological_sort_opt(&graph);
+    let result = topological_sort_opt(&graph);
     assert!(result.is_none());
 }
 
@@ -52,7 +52,7 @@ fn test_cycle_returns_none() {
 fn test_self_loop_returns_none() {
     let adj0 = ArraySeqStEphS::from_vec(vec![0]);
     let graph = ArraySeqStEphS::from_vec(vec![adj0]);
-    let result = TopoSortStEph::topological_sort_opt(&graph);
+    let result = topological_sort_opt(&graph);
     assert!(result.is_none());
 }
 
@@ -63,14 +63,14 @@ fn test_disconnected_components() {
     let adj2 = ArraySeqStEphS::from_vec(vec![3]);
     let adj3 = ArraySeqStEphS::empty();
     let graph = ArraySeqStEphS::from_vec(vec![adj0, adj1, adj2, adj3]);
-    let result = TopoSortStEph::topological_sort_opt(&graph);
+    let result = topological_sort_opt(&graph);
     assert!(result.is_some());
 }
 
 #[test]
 fn test_empty_graph() {
     let graph = ArraySeqStEphS::<ArraySeqStEphS<usize>>::empty();
-    let result = TopoSortStEph::topological_sort_opt(&graph);
+    let result = topological_sort_opt(&graph);
     assert!(result.is_some());
 }
 

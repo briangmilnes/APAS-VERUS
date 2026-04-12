@@ -180,13 +180,13 @@ path = "tests/Chap06/TestWeightedDirGraphStEphU128.rs"
 name = "TestWeightedDirGraphStEphUsize"
 path = "tests/Chap06/TestWeightedDirGraphStEphUsize.rs"
 
-# [[test]]  # API changed: out_neighbors/in_neighbors renamed to n_plus/n_minus
-# name = "TestLabDirGraphMtEph"
-# path = "tests/Chap06/TestLabDirGraphMtEph.rs"
+[[test]]
+name = "TestLabDirGraphMtEph"
+path = "tests/Chap06/TestLabDirGraphMtEph.rs"
 
-# [[test]]  # API changed: neighbors method removed
-# name = "TestLabUnDirGraphMtEph"
-# path = "tests/Chap06/TestLabUnDirGraphMtEph.rs"
+[[test]]
+name = "TestLabUnDirGraphMtEph"
+path = "tests/Chap06/TestLabUnDirGraphMtEph.rs"
 
 # [[test]]  # uses apas_ai crate, no source module exists
 # name = "TestWeighedDirGraphMtEphFloat"
@@ -340,13 +340,13 @@ path = "tests/Chap26/TestScanDCStPer.rs"
 name = "TestScanDCMtPer"
 path = "tests/Chap26/TestScanDCMtPer.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestETSPStEph"
-# path = "tests/Chap26/TestETSPStEph.rs"
+[[test]]
+name = "TestETSPStEph"
+path = "tests/Chap26/TestETSPStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestETSPMtEph"
-# path = "tests/Chap26/TestETSPMtEph.rs"
+[[test]]
+name = "TestETSPMtEph"
+path = "tests/Chap26/TestETSPMtEph.rs"
 
 [[test]]
 name = "TestReduceContractStEph"
@@ -553,9 +553,9 @@ path = "tests/Chap35/TestOrderStatSelectStPer.rs"
 name = "TestQuickSortMtEph"
 path = "tests/Chap36/TestQuickSortMtEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestQuickSortMtEphSlice"
-# path = "tests/Chap36/TestQuickSortMtEphSlice.rs"
+[[test]]
+name = "TestQuickSortMtEphSlice"
+path = "tests/Chap36/TestQuickSortMtEphSlice.rs"
 
 [[test]]
 name = "TestQuickSortStEph"
@@ -757,29 +757,29 @@ path = "tests/Chap43/TestAugOrderedTableStEph.rs"
 name = "TestAugOrderedTableStPer"
 path = "tests/Chap43/TestAugOrderedTableStPer.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestExample43_1"
-# path = "tests/Chap43/TestExample43_1.rs"
+[[test]]
+name = "TestExample43_1"
+path = "tests/Chap43/TestExample43_1.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestOrderedSetMtEph"
-# path = "tests/Chap43/TestOrderedSetMtEph.rs"
+[[test]]
+name = "TestOrderedSetMtEph"
+path = "tests/Chap43/TestOrderedSetMtEph.rs"
 
 [[test]]
 name = "TestOrderedSetStEph"
 path = "tests/Chap43/TestOrderedSetStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestOrderedSetStPer"
-# path = "tests/Chap43/TestOrderedSetStPer.rs"
+[[test]]
+name = "TestOrderedSetStPer"
+path = "tests/Chap43/TestOrderedSetStPer.rs"
 
 [[test]]
 name = "TestOrderedTableMtEph"
 path = "tests/Chap43/TestOrderedTableMtEph.rs"
 
-# [[test]]  # depends on OrderedSetMtEph (commented out)
-# name = "TestOrderedTableMtPer"
-# path = "tests/Chap43/TestOrderedTableMtPer.rs"
+[[test]]
+name = "TestOrderedTableMtPer"
+path = "tests/Chap43/TestOrderedTableMtPer.rs"
 
 [[test]]
 name = "TestOrderedTableStEph"
@@ -789,13 +789,13 @@ path = "tests/Chap43/TestOrderedTableStEph.rs"
 name = "TestOrderedTableStPer"
 path = "tests/Chap43/TestOrderedTableStPer.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestDocumentIndex"
-# path = "tests/Chap44/TestDocumentIndex.rs"
+[[test]]
+name = "TestDocumentIndex"
+path = "tests/Chap44/TestDocumentIndex.rs"
 
-# [[test]]  # depends on DocumentIndex (commented out)
-# name = "TestExample44_1"
-# path = "tests/Chap44/TestExample44_1.rs"
+[[test]]
+name = "TestExample44_1"
+path = "tests/Chap44/TestExample44_1.rs"
 
 [[test]]
 name = "TestBalancedTreePQ"
@@ -1013,9 +1013,9 @@ path = "tests/Chap52/TestEdgeSetGraphStEph.rs"
 name = "TestEdgeSetGraphStPer"
 path = "tests/Chap52/TestEdgeSetGraphStPer.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestGraphSearchMtPer"
-# path = "tests/Chap53/TestGraphSearchMtPer.rs"
+[[test]]
+name = "TestGraphSearchMtPer"
+path = "tests/Chap53/TestGraphSearchMtPer.rs"
 
 [[test]]
 name = "TestGraphSearchStEph"
@@ -1049,37 +1049,37 @@ path = "tests/Chap54/TestBFSStEph.rs"
 name = "TestBFSStPer"
 path = "tests/Chap54/TestBFSStPer.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestCycleDetectStEph"
-# path = "tests/Chap55/TestCycleDetectStEph.rs"
+[[test]]
+name = "TestCycleDetectStEph"
+path = "tests/Chap55/TestCycleDetectStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestCycleDetectStPer"
-# path = "tests/Chap55/TestCycleDetectStPer.rs"
+[[test]]
+name = "TestCycleDetectStPer"
+path = "tests/Chap55/TestCycleDetectStPer.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestDFSStEph"
-# path = "tests/Chap55/TestDFSStEph.rs"
+[[test]]
+name = "TestDFSStEph"
+path = "tests/Chap55/TestDFSStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestDFSStPer"
-# path = "tests/Chap55/TestDFSStPer.rs"
+[[test]]
+name = "TestDFSStPer"
+path = "tests/Chap55/TestDFSStPer.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestSCCStEph"
-# path = "tests/Chap55/TestSCCStEph.rs"
+[[test]]
+name = "TestSCCStEph"
+path = "tests/Chap55/TestSCCStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestSCCStPer"
-# path = "tests/Chap55/TestSCCStPer.rs"
+[[test]]
+name = "TestSCCStPer"
+path = "tests/Chap55/TestSCCStPer.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestTopoSortStEph"
-# path = "tests/Chap55/TestTopoSortStEph.rs"
+[[test]]
+name = "TestTopoSortStEph"
+path = "tests/Chap55/TestTopoSortStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestTopoSortStPer"
-# path = "tests/Chap55/TestTopoSortStPer.rs"
+[[test]]
+name = "TestTopoSortStPer"
+path = "tests/Chap55/TestTopoSortStPer.rs"
 
 # [[test]]  # references non-existent F64Dist type
 # name = "TestAllPairsResultStEphF64"
@@ -1097,13 +1097,13 @@ path = "tests/Chap56/TestAllPairsResultStEphI64.rs"
 name = "TestAllPairsResultStPerI64"
 path = "tests/Chap56/TestAllPairsResultStPerI64.rs"
 
-# [[test]]  # module commented out in lib.rs (uses ordered_float)
-# name = "TestExample56_1"
-# path = "tests/Chap56/TestExample56_1.rs"
+[[test]]
+name = "TestExample56_1"
+path = "tests/Chap56/TestExample56_1.rs"
 
-# [[test]]  # module commented out in lib.rs (uses ordered_float)
-# name = "TestExample56_3"
-# path = "tests/Chap56/TestExample56_3.rs"
+[[test]]
+name = "TestExample56_3"
+path = "tests/Chap56/TestExample56_3.rs"
 
 [[test]]
 name = "TestPathWeightUtilsStEph"
@@ -1165,49 +1165,49 @@ path = "tests/Chap59/TestJohnsonStEphF64.rs"
 name = "TestJohnsonStEphI64"
 path = "tests/Chap59/TestJohnsonStEphI64.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestEdgeContractionMtEph"
-# path = "tests/Chap61/TestEdgeContractionMtEph.rs"
+[[test]]
+name = "TestEdgeContractionMtEph"
+path = "tests/Chap61/TestEdgeContractionMtEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestEdgeContractionStEph"
-# path = "tests/Chap61/TestEdgeContractionStEph.rs"
+[[test]]
+name = "TestEdgeContractionStEph"
+path = "tests/Chap61/TestEdgeContractionStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestVertexMatchingMtEph"
-# path = "tests/Chap61/TestVertexMatchingMtEph.rs"
+[[test]]
+name = "TestVertexMatchingMtEph"
+path = "tests/Chap61/TestVertexMatchingMtEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestVertexMatchingStEph"
-# path = "tests/Chap61/TestVertexMatchingStEph.rs"
+[[test]]
+name = "TestVertexMatchingStEph"
+path = "tests/Chap61/TestVertexMatchingStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestStarContractionMtEph"
-# path = "tests/Chap62/TestStarContractionMtEph.rs"
+[[test]]
+name = "TestStarContractionMtEph"
+path = "tests/Chap62/TestStarContractionMtEph.rs"
 
 [[test]]
 name = "TestStarContractionStEph"
 path = "tests/Chap62/TestStarContractionStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestStarPartitionMtEph"
-# path = "tests/Chap62/TestStarPartitionMtEph.rs"
+[[test]]
+name = "TestStarPartitionMtEph"
+path = "tests/Chap62/TestStarPartitionMtEph.rs"
 
 [[test]]
 name = "TestStarPartitionStEph"
 path = "tests/Chap62/TestStarPartitionStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestConnectivityMtEph"
-# path = "tests/Chap63/TestConnectivityMtEph.rs"
+[[test]]
+name = "TestConnectivityMtEph"
+path = "tests/Chap63/TestConnectivityMtEph.rs"
 
 [[test]]
 name = "TestConnectivityStEph"
 path = "tests/Chap63/TestConnectivityStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestSpanTreeMtEph"
-# path = "tests/Chap64/TestSpanTreeMtEph.rs"
+[[test]]
+name = "TestSpanTreeMtEph"
+path = "tests/Chap64/TestSpanTreeMtEph.rs"
 
 [[test]]
 name = "TestSpanTreeStEph"
@@ -1217,13 +1217,13 @@ path = "tests/Chap64/TestSpanTreeStEph.rs"
 # name = "TestTSPApproxStEph"
 # path = "tests/Chap64/TestTSPApproxStEph.rs"
 
-# [[test]]  # uses ordered_float (removed crate)
-# name = "TestKruskalStEph"
-# path = "tests/Chap65/TestKruskalStEph.rs"
+[[test]]
+name = "TestKruskalStEph"
+path = "tests/Chap65/TestKruskalStEph.rs"
 
-# [[test]]  # uses ordered_float (removed crate)
-# name = "TestPrimStEph"
-# path = "tests/Chap65/TestPrimStEph.rs"
+[[test]]
+name = "TestPrimStEph"
+path = "tests/Chap65/TestPrimStEph.rs"
 
 [[test]]
 name = "TestUnionFindArrayStEph"

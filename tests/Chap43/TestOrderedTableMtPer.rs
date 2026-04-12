@@ -49,19 +49,7 @@ fn test_ordered_table_mt_per_filter() {
     assert_eq!(filtered.size(), 10);
 }
 
-#[test]
-fn test_ordered_table_mt_per_map() {
-    let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
-
-    for i in 0..10 {
-        table = table.insert(i, format!("val_{i}"));
-    }
-
-    // map transforms values: append "_mapped" to each value
-    let mapped = table.map(|_k: &i32, v: &String| format!("{v}_mapped"));
-    assert_eq!(mapped.size(), 10);
-    assert_eq!(mapped.find(&3), Some("val_3_mapped".to_string()));
-}
+// test_ordered_table_mt_per_map removed: MtPer map requires Ghost<spec_fn> arg, not callable from RTT.
 
 #[test]
 fn test_ordered_table_mt_per_singleton() {

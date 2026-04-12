@@ -50,21 +50,21 @@ fn test_labdirgraphmteph_basic_operations() {
     assert!(g.has_arc(&1, &2));
     assert!(!g.has_arc(&2, &1));
 
-    // Test out-neighbors
-    let out0 = g.out_neighbors(&0);
+    // Test n_plus (out-neighbors)
+    let out0 = g.n_plus(&0);
     assert_eq!(out0.size(), 1);
     assert!(out0.mem(&1));
 
-    let out1 = g.out_neighbors(&1);
+    let out1 = g.n_plus(&1);
     assert_eq!(out1.size(), 1);
     assert!(out1.mem(&2));
 
-    // Test in-neighbors
-    let in1 = g.in_neighbors(&1);
+    // Test n_minus (in-neighbors)
+    let in1 = g.n_minus(&1);
     assert_eq!(in1.size(), 1);
     assert!(in1.mem(&0));
 
-    let in3 = g.in_neighbors(&3);
+    let in3 = g.n_minus(&3);
     assert_eq!(in3.size(), 1);
     assert!(in3.mem(&2));
 
@@ -114,28 +114,28 @@ fn test_labdirgraphmteph_neighbors() {
     ];
     let g = LabDirGraphMtEph::from_vertices_and_labeled_arcs(v, a);
 
-    // Test out-neighbors
-    let out0 = g.out_neighbors(&0);
+    // Test n_plus (out-neighbors)
+    let out0 = g.n_plus(&0);
     assert_eq!(out0.size(), 2);
     assert!(out0.mem(&1));
     assert!(out0.mem(&3));
 
-    let out1 = g.out_neighbors(&1);
+    let out1 = g.n_plus(&1);
     assert_eq!(out1.size(), 1);
     assert!(out1.mem(&2));
 
-    let out3 = g.out_neighbors(&3);
+    let out3 = g.n_plus(&3);
     assert_eq!(out3.size(), 0);
 
-    // Test in-neighbors
-    let in0 = g.in_neighbors(&0);
+    // Test n_minus (in-neighbors)
+    let in0 = g.n_minus(&0);
     assert_eq!(in0.size(), 0);
 
-    let in1 = g.in_neighbors(&1);
+    let in1 = g.n_minus(&1);
     assert_eq!(in1.size(), 1);
     assert!(in1.mem(&0));
 
-    let in3 = g.in_neighbors(&3);
+    let in3 = g.n_minus(&3);
     assert_eq!(in3.size(), 2);
     assert!(in3.mem(&0));
     assert!(in3.mem(&2));
@@ -146,8 +146,8 @@ fn test_labdirgraphmteph_edge_cases() {
     // Test empty graph
     let empty = LabDirGraphMtEph::<i32, String>::empty();
     assert!(!empty.has_arc(&0, &1));
-    assert_eq!(empty.out_neighbors(&0).size(), 0);
-    assert_eq!(empty.in_neighbors(&0).size(), 0);
+    assert_eq!(empty.n_plus(&0).size(), 0);
+    assert_eq!(empty.n_minus(&0).size(), 0);
     assert_eq!(empty.get_arc_label(&0, &1), None);
 
     // Test single vertex
@@ -157,8 +157,8 @@ fn test_labdirgraphmteph_edge_cases() {
 
     assert_eq!(g_single.vertices().size(), 1);
     assert_eq!(g_single.labeled_arcs().size(), 0);
-    assert_eq!(g_single.out_neighbors(&42).size(), 0);
-    assert_eq!(g_single.in_neighbors(&42).size(), 0);
+    assert_eq!(g_single.n_plus(&42).size(), 0);
+    assert_eq!(g_single.n_minus(&42).size(), 0);
 
     // Test self-loop
     let v_self: SetStEph<usize> = SetLit![1];
@@ -166,8 +166,8 @@ fn test_labdirgraphmteph_edge_cases() {
     let g_self = LabDirGraphMtEph::from_vertices_and_labeled_arcs(v_self, a_self);
 
     assert!(g_self.has_arc(&1, &1));
-    assert_eq!(g_self.out_neighbors(&1).size(), 1);
-    assert_eq!(g_self.in_neighbors(&1).size(), 1);
+    assert_eq!(g_self.n_plus(&1).size(), 1);
+    assert_eq!(g_self.n_minus(&1).size(), 1);
     assert_eq!(g_self.get_arc_label(&1, &1), Some(&"self".to_string()));
 }
 
@@ -179,8 +179,8 @@ fn test_labdirgraphmteph_nonexistent_vertex() {
 
     // Query non-existent vertex
     assert!(!g.has_arc(&99, &0));
-    assert_eq!(g.out_neighbors(&99).size(), 0);
-    assert_eq!(g.in_neighbors(&99).size(), 0);
+    assert_eq!(g.n_plus(&99).size(), 0);
+    assert_eq!(g.n_minus(&99).size(), 0);
     assert_eq!(g.get_arc_label(&99, &0), None);
 }
 
@@ -208,15 +208,15 @@ fn test_labdirgraphmteph_concurrent_access() {
 
             // Perform various read operations concurrently
             let _ = g_clone.has_arc(&i, &(i + 1));
-            let _ = g_clone.out_neighbors(&i);
-            let _ = g_clone.in_neighbors(&i);
+            let _ = g_clone.n_plus(&i);
+            let _ = g_clone.n_minus(&i);
             let _ = g_clone.get_arc_label(&i, &(i + 1));
 
             // Verify basic properties
             assert_eq!(g_clone.vertices().size(), 5);
             assert_eq!(g_clone.labeled_arcs().size(), 4);
 
-            (g_clone.out_neighbors(&i).size(), g_clone.in_neighbors(&i).size())
+            (g_clone.n_plus(&i).size(), g_clone.n_minus(&i).size())
         }));
     }
 
@@ -241,7 +241,7 @@ fn test_labdirgraphmteph_arcs_conversion() {
 }
 
 #[test]
-fn test_labdirgraphmteph_parallel_out_neighbors() {
+fn test_labdirgraphmteph_parallel_n_plus() {
     // Create graph with >8 arcs to trigger parallel code path
     let mut vertices = SetStEph::empty();
     for i in 0..20 {
@@ -256,7 +256,7 @@ fn test_labdirgraphmteph_parallel_out_neighbors() {
 
     let g = LabDirGraphMtEph::from_vertices_and_labeled_arcs(vertices, arcs);
 
-    let out = g.out_neighbors(&0);
+    let out = g.n_plus(&0);
     assert_eq!(out.size(), 15);
     for i in 1..16 {
         assert!(out.mem(&i));
@@ -264,7 +264,7 @@ fn test_labdirgraphmteph_parallel_out_neighbors() {
 }
 
 #[test]
-fn test_labdirgraphmteph_parallel_in_neighbors() {
+fn test_labdirgraphmteph_parallel_n_minus() {
     // Create graph with >8 arcs to trigger parallel code path
     let mut vertices = SetStEph::empty();
     for i in 0..20 {
@@ -279,7 +279,7 @@ fn test_labdirgraphmteph_parallel_in_neighbors() {
 
     let g = LabDirGraphMtEph::from_vertices_and_labeled_arcs(vertices, arcs);
 
-    let in_n = g.in_neighbors(&0);
+    let in_n = g.n_minus(&0);
     assert_eq!(in_n.size(), 15);
     for i in 1..16 {
         assert!(in_n.mem(&i));
@@ -306,10 +306,10 @@ fn test_labdirgraphmteph_parallel_mixed() {
 
     let g = LabDirGraphMtEph::from_vertices_and_labeled_arcs(vertices, arcs);
 
-    let out = g.out_neighbors(&0);
+    let out = g.n_plus(&0);
     assert_eq!(out.size(), 10);
 
-    let in_n = g.in_neighbors(&29);
+    let in_n = g.n_minus(&29);
     assert_eq!(in_n.size(), 10);
 }
 

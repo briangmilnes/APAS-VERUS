@@ -33,21 +33,7 @@ fn test_contract_to_vertices_mt_cycle() {
     assert!(result.size() > 0);
 }
 
-#[test]
-fn test_contract_with_base_expand_mt() {
-    let graph = create_cycle_graph(6);
-
-    // Simple base function that counts vertices
-    let base = |vertices: &SetStEph<usize>| vertices.size();
-
-    // Expand function that just returns the recursive result
-    let expand = |_v: &SetStEph<usize>, _e: &SetStEph<Edge<usize>>, _centers: &SetStEph<usize>, _part: &HashMapWithViewPlus<usize, usize>, r: usize| r;
-
-    let result = star_contract_mt(&graph, 456, &base, &expand);
-
-    // Should eventually contract to some number of isolated vertices
-    assert!(result > 0);
-}
+// test_contract_with_base_expand_mt removed: star_contract_mt requires Ghost<spec_fn> 5th arg, not callable from RTT.
 
 #[test]
 fn test_determinism_mt() {
