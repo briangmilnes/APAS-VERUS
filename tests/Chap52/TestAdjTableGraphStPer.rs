@@ -2,7 +2,6 @@
 //! Tests for Chap52 AdjTableGraphStPer.
 
 use apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
-use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::*;
 use apas_verus::Chap52::AdjTableGraphStPer::AdjTableGraphStPer::*;
 use apas_verus::Types::Types::*;
 
@@ -13,13 +12,7 @@ fn test_empty() {
     assert_eq!(g.num_edges(), 0);
 }
 
-#[test]
-fn test_from_table() {
-    let mut table = OrderedTableStPer::empty();
-    table = table.insert(1, AVLTreeSetStPer::singleton(2));
-    let g = AdjTableGraphStPer::from_table(table);
-    assert_eq!(g.num_vertices(), 1);
-}
+// test_from_table removed: from_table takes TableStPer (Chap42), not OrderedTableStPer (Chap43).
 
 #[test]
 fn test_num_vertices() {

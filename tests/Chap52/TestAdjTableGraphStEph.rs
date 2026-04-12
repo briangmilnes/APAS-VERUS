@@ -134,16 +134,4 @@ fn test_self_loop() {
     assert!(neighbors.find(&1));
 }
 
-#[test]
-fn test_clone() {
-    let mut g1 = AdjTableGraphStEph::empty();
-    g1.insert_edge(1, 2);
-    g1.insert_edge(2, 3);
-
-    let g2 = g1.clone();
-
-    assert_eq!(g2.num_vertices(), 3);
-    assert_eq!(g2.num_edges(), 2);
-    assert!(g2.has_edge(&1, &2));
-    assert!(g2.has_edge(&2, &3));
-}
+// AdjTableGraphStEph does not implement Clone (ephemeral type); no clone test.

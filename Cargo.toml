@@ -977,33 +977,41 @@ path = "tests/Chap52/TestAdjSeqGraphStEph.rs"
 name = "TestAdjSeqGraphStPer"
 path = "tests/Chap52/TestAdjSeqGraphStPer.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestAdjTableGraphMtPer"
-# path = "tests/Chap52/TestAdjTableGraphMtPer.rs"
+[[test]]
+name = "TestAdjMatrixGraphMtEph"
+path = "tests/Chap52/TestAdjMatrixGraphMtEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestAdjTableGraphStEph"
-# path = "tests/Chap52/TestAdjTableGraphStEph.rs"
+[[test]]
+name = "TestAdjSeqGraphMtEph"
+path = "tests/Chap52/TestAdjSeqGraphMtEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestAdjTableGraphStPer"
-# path = "tests/Chap52/TestAdjTableGraphStPer.rs"
+[[test]]
+name = "TestAdjTableGraphMtPer"
+path = "tests/Chap52/TestAdjTableGraphMtPer.rs"
+
+[[test]]
+name = "TestAdjTableGraphStEph"
+path = "tests/Chap52/TestAdjTableGraphStEph.rs"
+
+[[test]]
+name = "TestAdjTableGraphStPer"
+path = "tests/Chap52/TestAdjTableGraphStPer.rs"
 
 [[test]]
 name = "TestEdgeSetGraphMtEph"
 path = "tests/Chap52/TestEdgeSetGraphMtEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestEdgeSetGraphMtPer"
-# path = "tests/Chap52/TestEdgeSetGraphMtPer.rs"
+[[test]]
+name = "TestEdgeSetGraphMtPer"
+path = "tests/Chap52/TestEdgeSetGraphMtPer.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestEdgeSetGraphStEph"
-# path = "tests/Chap52/TestEdgeSetGraphStEph.rs"
+[[test]]
+name = "TestEdgeSetGraphStEph"
+path = "tests/Chap52/TestEdgeSetGraphStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestEdgeSetGraphStPer"
-# path = "tests/Chap52/TestEdgeSetGraphStPer.rs"
+[[test]]
+name = "TestEdgeSetGraphStPer"
+path = "tests/Chap52/TestEdgeSetGraphStPer.rs"
 
 # [[test]]  # module commented out in lib.rs
 # name = "TestGraphSearchMtPer"
@@ -1216,6 +1224,14 @@ path = "tests/Chap64/TestSpanTreeStEph.rs"
 # [[test]]  # uses ordered_float (removed crate)
 # name = "TestPrimStEph"
 # path = "tests/Chap65/TestPrimStEph.rs"
+
+[[test]]
+name = "TestUnionFindArrayStEph"
+path = "tests/Chap65/TestUnionFindArrayStEph.rs"
+
+[[test]]
+name = "TestUnionFindNoPCStEph"
+path = "tests/Chap65/TestUnionFindNoPCStEph.rs"
 
 [[test]]
 name = "TestUnionFindPCStEph"

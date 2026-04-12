@@ -1,0 +1,167 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent1)
+warning: `apas-verus` (lib test) generated 2 warnings (2 duplicates)
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap52/TestEdgeSetGraphMtPer.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap65/TestUnionFindPCStEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestUnionFindPCStEph") generated 1 warning
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap65/TestUnionFindNoPCStEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap52/TestAdjTableGraphMtPer.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap65/TestUnionFindArrayStEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestEdgeSetGraphMtPer") generated 1 warning
+warning: `apas-verus` (test "TestAdjTableGraphMtPer") generated 1 warning
+warning: `apas-verus` (test "TestUnionFindNoPCStEph") generated 1 warning
+warning: `apas-verus` (test "TestUnionFindArrayStEph") generated 1 warning
+error[E0277]: the trait bound `apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>: Ord` is not satisfied
+   --> tests/Chap52/TestAdjTableGraphStPer.rs:18:21
+    |
+ 18 |     let mut table = OrderedTableStPer::empty();
+    |                     ^^^^^^^^^^^^^^^^^ the trait `Ord` is not implemented for `apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>`
+    |
+help: the trait `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait<K, V>` is implemented for `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>`
+   --> src/Chap43/OrderedTableStPer.rs:516:5
+    |
+516 |     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: required for `OrderedTableStPer<{integer}, AVLTreeSetStPer<{integer}>>` to implement `OrderedTableStPerTrait<{integer}, AVLTreeSetStPer<{integer}>>`
+    = note: the full name for the type has been written to '/home/milnes/projects/APAS-VERUS-agent1/target/release/deps/TestAdjTableGraphStPer-d44e1b9e98189b68.long-type-1767191310427112791.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: the trait bound `apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>: Ord` is not satisfied
+   --> tests/Chap52/TestAdjTableGraphStPer.rs:19:29
+    |
+ 19 |     table = table.insert(1, AVLTreeSetStPer::singleton(2));
+    |                   ------    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Ord` is not implemented for `apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>`
+    |                   |
+    |                   required by a bound introduced by this call
+    |
+note: required by a bound in `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait::insert`
+   --> src/Chap43/OrderedTableStPer.rs:87:74
+    |
+ 87 |     pub trait OrderedTableStPerTrait<K: StT + Ord + TotalOrder, V: StT + Ord>: Sized + View<V = Map<K::V, V::V>> {
+    |                                                                          ^^^ required by this bound in `OrderedTableStPerTrait::insert`
+...
+128 |         fn insert(&self, k: K, v: V) -> (table: Self)
+    |            ------ required by a bound in this associated function
+
+error[E0277]: the trait bound `apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>: Ord` is not satisfied
+   --> tests/Chap52/TestAdjTableGraphStPer.rs:19:26
+    |
+ 19 |     table = table.insert(1, AVLTreeSetStPer::singleton(2));
+    |                   ------ ^ the trait `Ord` is not implemented for `apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>`
+    |                   |
+    |                   required by a bound introduced by this call
+    |
+help: the trait `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait<K, V>` is implemented for `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>`
+   --> src/Chap43/OrderedTableStPer.rs:516:5
+    |
+516 |     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: required for `OrderedTableStPer<{integer}, AVLTreeSetStPer<{integer}>>` to implement `OrderedTableStPerTrait<{integer}, AVLTreeSetStPer<{integer}>>`
+    = note: the full name for the type has been written to '/home/milnes/projects/APAS-VERUS-agent1/target/release/deps/TestAdjTableGraphStPer-d44e1b9e98189b68.long-type-1767191310427112791.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0308]: mismatched types
+   --> tests/Chap52/TestAdjTableGraphStPer.rs:20:44
+    |
+ 20 |     let g = AdjTableGraphStPer::from_table(table);
+    |             ------------------------------ ^^^^^ expected `TableStPer<_, AVLTreeSetStPer<_>>`, found `OrderedTableStPer<{integer}, ...>`
+    |             |
+    |             arguments to this function are incorrect
+    |
+    = note: expected struct `apas_verus::Chap42::TableStPer::TableStPer::TableStPer<_, apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<_>>`
+               found struct `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<{integer}, apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>>`
+note: associated function defined here
+   --> src/Chap52/AdjTableGraphStPer.rs:129:12
+    |
+129 |         fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self)
+    |            ^^^^^^^^^^
+
+error[E0599]: no method named `clone` found for struct `apas_verus::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::AdjTableGraphStEph<V>` in the current scope
+   --> tests/Chap52/TestAdjTableGraphStEph.rs:143:17
+    |
+143 |     let g2 = g1.clone();
+    |                 ^^^^^ method not found in `apas_verus::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::AdjTableGraphStEph<{integer}>`
+
+For more information about this error, try `rustc --explain E0599`.
+Some errors have detailed explanations: E0277, E0308.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `apas-verus` (test "TestAdjTableGraphStPer") due to 4 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (test "TestAdjTableGraphStEph") due to 1 previous error
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 0s
