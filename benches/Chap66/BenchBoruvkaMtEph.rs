@@ -7,6 +7,7 @@ use apas_verus::Chap05::SetStEph::SetStEph::*;
 use apas_verus::Chap66::BoruvkaMtEph::BoruvkaMtEph::*;
 use apas_verus::SetLit;
 use apas_verus::vstdplus::float::float::*;
+use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::set_parallelism;
 
 fn w(v: f64) -> WrappedF64 { WrappedF64 { val: v } }
 
@@ -21,6 +22,7 @@ fn make_chain_graph(n: usize) -> (SetStEph<usize>, SetStEph<LabeledEdge<usize>>)
 }
 
 fn bench_boruvka_mt(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("BoruvkaMtEph");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));

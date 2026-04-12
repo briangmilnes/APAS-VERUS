@@ -4,6 +4,7 @@
 use std::time::Duration;
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
 use apas_verus::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::*;
+use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::set_parallelism;
 
 fn build_tree(n: usize) -> AVLTreeSeqMtPerS<u64> {
     let values: Vec<u64> = (0..n as u64).collect();
@@ -11,6 +12,7 @@ fn build_tree(n: usize) -> AVLTreeSeqMtPerS<u64> {
 }
 
 fn bench_avltreeseq_mtper_build(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("AVLTreeSeqMtPerBuild");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));
@@ -24,6 +26,7 @@ fn bench_avltreeseq_mtper_build(c: &mut Criterion) {
 }
 
 fn bench_avltreeseq_mtper_nth(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("AVLTreeSeqMtPerNth");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));

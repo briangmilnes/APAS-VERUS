@@ -4,8 +4,10 @@
 use std::time::Duration;
 use criterion::{criterion_group, criterion_main, BatchSize, BenchmarkId, Criterion};
 use apas_verus::Chap37::BSTPlainMtEph::BSTPlainMtEph::*;
+use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::set_parallelism;
 
 fn bench_bstplain_mt_insert(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("BSTPlainMtEphInsert");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));
@@ -26,6 +28,7 @@ fn bench_bstplain_mt_insert(c: &mut Criterion) {
 }
 
 fn bench_bstplain_mt_contains(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("BSTPlainMtEphContains");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));

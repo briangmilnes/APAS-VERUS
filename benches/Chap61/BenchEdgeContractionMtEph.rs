@@ -8,6 +8,7 @@ use apas_verus::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
 use apas_verus::Chap61::EdgeContractionMtEph::EdgeContractionMtEph::*;
 use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
+use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::set_parallelism;
 
 fn make_cycle_graph(n: usize) -> UnDirGraphMtEph<usize> {
     let mut vertices: SetStEph<usize> = SetLit![];
@@ -21,6 +22,7 @@ fn make_cycle_graph(n: usize) -> UnDirGraphMtEph<usize> {
 }
 
 fn bench_contract_round_mt(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("EdgeContractionMtEphRound");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));

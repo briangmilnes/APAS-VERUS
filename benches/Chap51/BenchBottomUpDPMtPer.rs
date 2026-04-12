@@ -5,8 +5,10 @@ use std::time::Duration;
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
 use apas_verus::Chap51::BottomUpDPMtPer::BottomUpDPMtPer::*;
 use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS;
+use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::set_parallelism;
 
 fn bench_bottom_up_dp_mt_per(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("BottomUpDPMtPer");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));

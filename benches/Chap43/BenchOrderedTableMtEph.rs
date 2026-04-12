@@ -4,8 +4,10 @@
 use std::time::Duration;
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
 use apas_verus::Chap43::OrderedTableMtEph::OrderedTableMtEph::*;
+use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::set_parallelism;
 
 fn bench_ord_table_mt_insert(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("OrdTableMtEphInsert");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));
@@ -25,6 +27,7 @@ fn bench_ord_table_mt_insert(c: &mut Criterion) {
 }
 
 fn bench_ord_table_mt_lookup(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("OrdTableMtEphLookup");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));

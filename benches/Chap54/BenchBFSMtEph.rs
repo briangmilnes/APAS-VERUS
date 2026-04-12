@@ -5,6 +5,7 @@ use std::time::Duration;
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
 use apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
 use apas_verus::Chap54::BFSMtEph::BFSMtEph::*;
+use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::set_parallelism;
 
 fn make_ring_graph(n: usize) -> ArraySeqMtEphS<ArraySeqMtEphS<usize>> {
     let adj: Vec<ArraySeqMtEphS<usize>> = (0..n)
@@ -14,6 +15,7 @@ fn make_ring_graph(n: usize) -> ArraySeqMtEphS<ArraySeqMtEphS<usize>> {
 }
 
 fn bench_bfs_mt(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("BFSMtEph");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));

@@ -7,12 +7,14 @@ use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
 use apas_verus::Chap27::ScanContractMtEph::ScanContractMtEph::*;
 use apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
 use vstd::prelude::Ghost;
+use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::set_parallelism;
 
 fn build_seq(n: usize) -> ArraySeqMtEphS<usize> {
     ArraySeqMtEphS::<usize>::from_vec((1..=n).collect())
 }
 
 fn bench_scan_parallel(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("ScanContractParallel");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));

@@ -4,8 +4,10 @@
 use std::time::Duration;
 use criterion::{criterion_group, criterion_main, BatchSize, BenchmarkId, Criterion};
 use apas_verus::Chap52::AdjSeqGraphMtEph::AdjSeqGraphMtEph::*;
+use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::set_parallelism;
 
 fn bench_adjseqgraph_mt_eph_build(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("AdjSeqGraphMtEphBuild");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));
@@ -23,6 +25,7 @@ fn bench_adjseqgraph_mt_eph_build(c: &mut Criterion) {
 }
 
 fn bench_adjseqgraph_mt_eph_neighbors(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("AdjSeqGraphMtEphNeighbors");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));

@@ -4,8 +4,10 @@
 use std::time::Duration;
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
 use apas_verus::Chap52::AdjMatrixGraphMtPer::AdjMatrixGraphMtPer::*;
+use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::set_parallelism;
 
 fn bench_adjmatrixgraph_mt_per_num_edges(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("AdjMatrixGraphMtPerNumEdges");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));

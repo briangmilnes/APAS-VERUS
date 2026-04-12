@@ -4,8 +4,10 @@
 use std::time::Duration;
 use criterion::{criterion_group, criterion_main, BatchSize, BenchmarkId, Criterion};
 use apas_verus::Chap52::AdjMatrixGraphMtEph::AdjMatrixGraphMtEph::*;
+use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::set_parallelism;
 
 fn bench_adjmatrixgraph_mt_eph_set_edge(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("AdjMatrixGraphMtEphSetEdge");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));
@@ -26,6 +28,7 @@ fn bench_adjmatrixgraph_mt_eph_set_edge(c: &mut Criterion) {
 }
 
 fn bench_adjmatrixgraph_mt_eph_neighbors(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("AdjMatrixGraphMtEphNeighbors");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));

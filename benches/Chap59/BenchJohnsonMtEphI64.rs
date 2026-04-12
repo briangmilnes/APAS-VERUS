@@ -8,6 +8,7 @@ use apas_verus::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
 use apas_verus::Chap59::JohnsonMtEphI64::JohnsonMtEphI64::*;
 use apas_verus::Types::Types::WeightedEdge;
 use apas_verus::SetLit;
+use apas_verus::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::set_parallelism;
 
 fn make_chain_graph(n: usize) -> WeightedDirGraphStEphI128<usize> {
     let mut vertices: SetStEph<usize> = SetLit![];
@@ -20,6 +21,7 @@ fn make_chain_graph(n: usize) -> WeightedDirGraphStEphI128<usize> {
 }
 
 fn bench_johnson_mt(c: &mut Criterion) {
+    set_parallelism(10);
     let mut group = c.benchmark_group("JohnsonMtEphI64");
     group.sample_size(10);
     group.warm_up_time(Duration::from_millis(100));
