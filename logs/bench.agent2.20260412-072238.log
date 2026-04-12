@@ -1,0 +1,321 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+    Finished `bench` profile [optimized] target(s) in 2.30s
+     Running benches/Chap06/BenchDirGraphMtEph.rs (target/release/deps/BenchDirGraphMtEph-6e4f902a87ca4da3)
+Benchmarking DirGraphMtEphBuild/path_n/32
+Benchmarking DirGraphMtEphBuild/path_n/32: Warming up for 100.00 ms
+Benchmarking DirGraphMtEphBuild/path_n/32: Collecting 10 samples in estimated 400.03 ms (188k iterations)
+Benchmarking DirGraphMtEphBuild/path_n/32: Analyzing
+DirGraphMtEphBuild/path_n/32
+                        time:   [2.1147 µs 2.1219 µs 2.1319 µs]
+Benchmarking DirGraphMtEphBuild/path_n/64
+Benchmarking DirGraphMtEphBuild/path_n/64: Warming up for 100.00 ms
+Benchmarking DirGraphMtEphBuild/path_n/64: Collecting 10 samples in estimated 400.04 ms (88k iterations)
+Benchmarking DirGraphMtEphBuild/path_n/64: Analyzing
+DirGraphMtEphBuild/path_n/64
+                        time:   [4.7733 µs 4.8801 µs 5.0108 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+Benchmarking DirGraphMtEphNeighbors/n_plus/32
+Benchmarking DirGraphMtEphNeighbors/n_plus/32: Warming up for 100.00 ms
+Benchmarking DirGraphMtEphNeighbors/n_plus/32: Collecting 10 samples in estimated 405.70 ms (2035 iterations)
+Benchmarking DirGraphMtEphNeighbors/n_plus/32: Analyzing
+DirGraphMtEphNeighbors/n_plus/32
+                        time:   [200.34 µs 204.94 µs 208.55 µs]
+Benchmarking DirGraphMtEphNeighbors/n_plus/64
+Benchmarking DirGraphMtEphNeighbors/n_plus/64: Warming up for 100.00 ms
+Benchmarking DirGraphMtEphNeighbors/n_plus/64: Collecting 10 samples in estimated 407.71 ms (1595 iterations)
+Benchmarking DirGraphMtEphNeighbors/n_plus/64: Analyzing
+DirGraphMtEphNeighbors/n_plus/64
+                        time:   [249.31 µs 251.72 µs 254.82 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+
+     Running benches/Chap06/BenchDirGraphStEph.rs (target/release/deps/BenchDirGraphStEph-83b9ede2f8b28076)
+Benchmarking DirGraphBuild/path_n/32
+Benchmarking DirGraphBuild/path_n/32: Warming up for 100.00 ms
+Benchmarking DirGraphBuild/path_n/32: Collecting 20 samples in estimated 200.15 ms (91k iterations)
+Benchmarking DirGraphBuild/path_n/32: Analyzing
+DirGraphBuild/path_n/32 time:   [2.1474 µs 2.1585 µs 2.1717 µs]
+                        change: [-13.289% -12.266% -11.024%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Benchmarking DirGraphBuild/path_n/128
+Benchmarking DirGraphBuild/path_n/128: Warming up for 100.00 ms
+Benchmarking DirGraphBuild/path_n/128: Collecting 20 samples in estimated 201.74 ms (21k iterations)
+Benchmarking DirGraphBuild/path_n/128: Analyzing
+DirGraphBuild/path_n/128
+                        time:   [8.9993 µs 9.0540 µs 9.1179 µs]
+                        change: [-9.4300% -8.0550% -6.7415%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
+Benchmarking DirGraphNeighbors/n_plus/32
+Benchmarking DirGraphNeighbors/n_plus/32: Warming up for 100.00 ms
+Benchmarking DirGraphNeighbors/n_plus/32: Collecting 20 samples in estimated 200.00 ms (4.3M iterations)
+Benchmarking DirGraphNeighbors/n_plus/32: Analyzing
+DirGraphNeighbors/n_plus/32
+                        time:   [43.118 ns 44.429 ns 45.947 ns]
+                        change: [-13.693% -10.563% -6.8355%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+Benchmarking DirGraphNeighbors/n_plus/128
+Benchmarking DirGraphNeighbors/n_plus/128: Warming up for 100.00 ms
+Benchmarking DirGraphNeighbors/n_plus/128: Collecting 20 samples in estimated 200.00 ms (1.9M iterations)
+Benchmarking DirGraphNeighbors/n_plus/128: Analyzing
+DirGraphNeighbors/n_plus/128
+                        time:   [100.28 ns 101.52 ns 102.98 ns]
+                        change: [-21.244% -20.302% -19.288%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
+     Running benches/Chap06/BenchLabDirGraphMtEph.rs (target/release/deps/BenchLabDirGraphMtEph-7c889ad8f22d4049)
+Benchmarking LabDirGraphMtEphBuild/path_n/32
+Benchmarking LabDirGraphMtEphBuild/path_n/32: Warming up for 100.00 ms
+Benchmarking LabDirGraphMtEphBuild/path_n/32: Collecting 10 samples in estimated 400.05 ms (169k iterations)
+Benchmarking LabDirGraphMtEphBuild/path_n/32: Analyzing
+LabDirGraphMtEphBuild/path_n/32
+                        time:   [2.5302 µs 2.6347 µs 2.7052 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking LabDirGraphMtEphBuild/path_n/64
+Benchmarking LabDirGraphMtEphBuild/path_n/64: Warming up for 100.00 ms
+Benchmarking LabDirGraphMtEphBuild/path_n/64: Collecting 10 samples in estimated 400.23 ms (82k iterations)
+Benchmarking LabDirGraphMtEphBuild/path_n/64: Analyzing
+LabDirGraphMtEphBuild/path_n/64
+                        time:   [4.7428 µs 4.7642 µs 4.7991 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+Benchmarking LabDirGraphMtEphNPlus/n/32
+Benchmarking LabDirGraphMtEphNPlus/n/32: Warming up for 100.00 ms
+Benchmarking LabDirGraphMtEphNPlus/n/32: Collecting 10 samples in estimated 407.72 ms (1870 iterations)
+Benchmarking LabDirGraphMtEphNPlus/n/32: Analyzing
+LabDirGraphMtEphNPlus/n/32
+                        time:   [212.07 µs 217.38 µs 227.83 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking LabDirGraphMtEphNPlus/n/64
+Benchmarking LabDirGraphMtEphNPlus/n/64: Warming up for 100.00 ms
+Benchmarking LabDirGraphMtEphNPlus/n/64: Collecting 10 samples in estimated 404.38 ms (1540 iterations)
+Benchmarking LabDirGraphMtEphNPlus/n/64: Analyzing
+LabDirGraphMtEphNPlus/n/64
+                        time:   [256.97 µs 262.08 µs 266.39 µs]
+
+     Running benches/Chap06/BenchLabDirGraphStEph.rs (target/release/deps/BenchLabDirGraphStEph-ea38861b43aab26f)
+Benchmarking LabDirGraphStEphBuild/path_n/32
+Benchmarking LabDirGraphStEphBuild/path_n/32: Warming up for 100.00 ms
+Benchmarking LabDirGraphStEphBuild/path_n/32: Collecting 20 samples in estimated 200.18 ms (70k iterations)
+Benchmarking LabDirGraphStEphBuild/path_n/32: Analyzing
+LabDirGraphStEphBuild/path_n/32
+                        time:   [2.7819 µs 2.8172 µs 2.8485 µs]
+Benchmarking LabDirGraphStEphBuild/path_n/128
+Benchmarking LabDirGraphStEphBuild/path_n/128: Warming up for 100.00 ms
+Benchmarking LabDirGraphStEphBuild/path_n/128: Collecting 20 samples in estimated 202.19 ms (19k iterations)
+Benchmarking LabDirGraphStEphBuild/path_n/128: Analyzing
+LabDirGraphStEphBuild/path_n/128
+                        time:   [10.399 µs 10.477 µs 10.566 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+Benchmarking LabDirGraphStEphNPlus/n/32
+Benchmarking LabDirGraphStEphNPlus/n/32: Warming up for 100.00 ms
+Benchmarking LabDirGraphStEphNPlus/n/32: Collecting 20 samples in estimated 200.00 ms (4.8M iterations)
+Benchmarking LabDirGraphStEphNPlus/n/32: Analyzing
+LabDirGraphStEphNPlus/n/32
+                        time:   [41.664 ns 41.866 ns 42.142 ns]
+Benchmarking LabDirGraphStEphNPlus/n/128
+Benchmarking LabDirGraphStEphNPlus/n/128: Warming up for 100.00 ms
+Benchmarking LabDirGraphStEphNPlus/n/128: Collecting 20 samples in estimated 200.02 ms (1.8M iterations)
+Benchmarking LabDirGraphStEphNPlus/n/128: Analyzing
+LabDirGraphStEphNPlus/n/128
+                        time:   [106.63 ns 108.98 ns 111.78 ns]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) low mild
+
+     Running benches/Chap06/BenchLabUnDirGraphMtEph.rs (target/release/deps/BenchLabUnDirGraphMtEph-2789817b21c110a8)
+Benchmarking LabUnDirGraphMtEphBuild/ring_n/32
+Benchmarking LabUnDirGraphMtEphBuild/ring_n/32: Warming up for 100.00 ms
+Benchmarking LabUnDirGraphMtEphBuild/ring_n/32: Collecting 10 samples in estimated 400.04 ms (161k iterations)
+Benchmarking LabUnDirGraphMtEphBuild/ring_n/32: Analyzing
+LabUnDirGraphMtEphBuild/ring_n/32
+                        time:   [2.4650 µs 2.4855 µs 2.5005 µs]
+Benchmarking LabUnDirGraphMtEphBuild/ring_n/64
+Benchmarking LabUnDirGraphMtEphBuild/ring_n/64: Warming up for 100.00 ms
+Benchmarking LabUnDirGraphMtEphBuild/ring_n/64: Collecting 10 samples in estimated 400.12 ms (80k iterations)
+Benchmarking LabUnDirGraphMtEphBuild/ring_n/64: Analyzing
+LabUnDirGraphMtEphBuild/ring_n/64
+                        time:   [5.1077 µs 5.2056 µs 5.3237 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+Benchmarking LabUnDirGraphMtEphNg/ring_n/32
+Benchmarking LabUnDirGraphMtEphNg/ring_n/32: Warming up for 100.00 ms
+Benchmarking LabUnDirGraphMtEphNg/ring_n/32: Collecting 10 samples in estimated 403.42 ms (1980 iterations)
+Benchmarking LabUnDirGraphMtEphNg/ring_n/32: Analyzing
+LabUnDirGraphMtEphNg/ring_n/32
+                        time:   [196.75 µs 201.06 µs 204.82 µs]
+Benchmarking LabUnDirGraphMtEphNg/ring_n/64
+Benchmarking LabUnDirGraphMtEphNg/ring_n/64: Warming up for 100.00 ms
+Benchmarking LabUnDirGraphMtEphNg/ring_n/64: Collecting 10 samples in estimated 411.00 ms (1760 iterations)
+Benchmarking LabUnDirGraphMtEphNg/ring_n/64: Analyzing
+LabUnDirGraphMtEphNg/ring_n/64
+                        time:   [230.39 µs 237.79 µs 246.42 µs]
+
+     Running benches/Chap06/BenchLabUnDirGraphStEph.rs (target/release/deps/BenchLabUnDirGraphStEph-bd22882ed548d903)
+Benchmarking LabUnDirGraphStEphBuild/ring_n/32
+Benchmarking LabUnDirGraphStEphBuild/ring_n/32: Warming up for 100.00 ms
+Benchmarking LabUnDirGraphStEphBuild/ring_n/32: Collecting 20 samples in estimated 200.48 ms (77k iterations)
+Benchmarking LabUnDirGraphStEphBuild/ring_n/32: Analyzing
+LabUnDirGraphStEphBuild/ring_n/32
+                        time:   [3.2008 µs 3.3810 µs 3.5250 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+Benchmarking LabUnDirGraphStEphBuild/ring_n/128
+Benchmarking LabUnDirGraphStEphBuild/ring_n/128: Warming up for 100.00 ms
+Benchmarking LabUnDirGraphStEphBuild/ring_n/128: Collecting 20 samples in estimated 203.41 ms (9240 iterations)
+Benchmarking LabUnDirGraphStEphBuild/ring_n/128: Analyzing
+LabUnDirGraphStEphBuild/ring_n/128
+                        time:   [17.511 µs 18.742 µs 20.642 µs]
+
+Benchmarking LabUnDirGraphStEphNg/ring_n/32
+Benchmarking LabUnDirGraphStEphNg/ring_n/32: Warming up for 100.00 ms
+Benchmarking LabUnDirGraphStEphNg/ring_n/32: Collecting 20 samples in estimated 200.00 ms (2.5M iterations)
+Benchmarking LabUnDirGraphStEphNg/ring_n/32: Analyzing
+LabUnDirGraphStEphNg/ring_n/32
+                        time:   [74.827 ns 90.305 ns 102.65 ns]
+Found 4 outliers among 20 measurements (20.00%)
+  1 (5.00%) high mild
+  3 (15.00%) high severe
+Benchmarking LabUnDirGraphStEphNg/ring_n/128
+Benchmarking LabUnDirGraphStEphNg/ring_n/128: Warming up for 100.00 ms
+Benchmarking LabUnDirGraphStEphNg/ring_n/128: Collecting 20 samples in estimated 200.01 ms (862k iterations)
+Benchmarking LabUnDirGraphStEphNg/ring_n/128: Analyzing
+LabUnDirGraphStEphNg/ring_n/128
+                        time:   [215.56 ns 242.24 ns 278.15 ns]
+Found 3 outliers among 20 measurements (15.00%)
+  3 (15.00%) low severe
+
+     Running benches/Chap06/BenchUnDirGraphMtEph.rs (target/release/deps/BenchUnDirGraphMtEph-6b7f2b606c990897)
+Benchmarking UnDirGraphMtEphBuild/ring_n/32
+Benchmarking UnDirGraphMtEphBuild/ring_n/32: Warming up for 100.00 ms
+Benchmarking UnDirGraphMtEphBuild/ring_n/32: Collecting 10 samples in estimated 400.18 ms (91k iterations)
+Benchmarking UnDirGraphMtEphBuild/ring_n/32: Analyzing
+UnDirGraphMtEphBuild/ring_n/32
+                        time:   [4.6582 µs 4.8108 µs 4.9374 µs]
+Benchmarking UnDirGraphMtEphBuild/ring_n/64
+Benchmarking UnDirGraphMtEphBuild/ring_n/64: Warming up for 100.00 ms
+Benchmarking UnDirGraphMtEphBuild/ring_n/64: Collecting 10 samples in estimated 400.07 ms (65k iterations)
+Benchmarking UnDirGraphMtEphBuild/ring_n/64: Analyzing
+UnDirGraphMtEphBuild/ring_n/64
+                        time:   [5.9483 µs 6.3251 µs 6.7756 µs]
+
+Benchmarking UnDirGraphMtEphNg/ring_n/32
+Benchmarking UnDirGraphMtEphNg/ring_n/32: Warming up for 100.00 ms
+Benchmarking UnDirGraphMtEphNg/ring_n/32: Collecting 10 samples in estimated 402.57 ms (1320 iterations)
+Benchmarking UnDirGraphMtEphNg/ring_n/32: Analyzing
+UnDirGraphMtEphNg/ring_n/32
+                        time:   [252.00 µs 263.55 µs 284.91 µs]
+Benchmarking UnDirGraphMtEphNg/ring_n/64
+Benchmarking UnDirGraphMtEphNg/ring_n/64: Warming up for 100.00 ms
+Benchmarking UnDirGraphMtEphNg/ring_n/64: Collecting 10 samples in estimated 413.40 ms (1045 iterations)
+Benchmarking UnDirGraphMtEphNg/ring_n/64: Analyzing
+UnDirGraphMtEphNg/ring_n/64
+                        time:   [309.56 µs 330.29 µs 355.81 µs]
+
+     Running benches/Chap06/BenchUnDirGraphStEph.rs (target/release/deps/BenchUnDirGraphStEph-d1e0de6d9ed5310f)
+Benchmarking UnDirGraphStEphBuild/ring_n/32
+Benchmarking UnDirGraphStEphBuild/ring_n/32: Warming up for 100.00 ms
+Benchmarking UnDirGraphStEphBuild/ring_n/32: Collecting 20 samples in estimated 200.10 ms (69k iterations)
+Benchmarking UnDirGraphStEphBuild/ring_n/32: Analyzing
+UnDirGraphStEphBuild/ring_n/32
+                        time:   [2.6865 µs 2.7355 µs 2.8045 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking UnDirGraphStEphBuild/ring_n/128
+Benchmarking UnDirGraphStEphBuild/ring_n/128: Warming up for 100.00 ms
+Benchmarking UnDirGraphStEphBuild/ring_n/128: Collecting 20 samples in estimated 202.50 ms (14k iterations)
+Benchmarking UnDirGraphStEphBuild/ring_n/128: Analyzing
+UnDirGraphStEphBuild/ring_n/128
+                        time:   [10.905 µs 11.152 µs 11.381 µs]
+
+Benchmarking UnDirGraphStEphSizeV/ring_n/32
+Benchmarking UnDirGraphStEphSizeV/ring_n/32: Warming up for 100.00 ms
+Benchmarking UnDirGraphStEphSizeV/ring_n/32: Collecting 20 samples in estimated 200.00 ms (1.1B iterations)
+Benchmarking UnDirGraphStEphSizeV/ring_n/32: Analyzing
+UnDirGraphStEphSizeV/ring_n/32
+                        time:   [180.79 ps 183.02 ps 184.89 ps]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking UnDirGraphStEphSizeV/ring_n/128
+Benchmarking UnDirGraphStEphSizeV/ring_n/128: Warming up for 100.00 ms
+Benchmarking UnDirGraphStEphSizeV/ring_n/128: Collecting 20 samples in estimated 200.00 ms (1.3B iterations)
+Benchmarking UnDirGraphStEphSizeV/ring_n/128: Analyzing
+UnDirGraphStEphSizeV/ring_n/128
+                        time:   [155.15 ps 159.44 ps 162.54 ps]
+
+     Running benches/Chap06/BenchWeightedDirGraphStEph.rs (target/release/deps/BenchWeightedDirGraphStEph-13e131ad3909531f)
+Benchmarking WeightedDirGraphBuild/path_n/32
+Benchmarking WeightedDirGraphBuild/path_n/32: Warming up for 100.00 ms
+Benchmarking WeightedDirGraphBuild/path_n/32: Collecting 20 samples in estimated 200.19 ms (32k iterations)
+Benchmarking WeightedDirGraphBuild/path_n/32: Analyzing
+WeightedDirGraphBuild/path_n/32
+                        time:   [5.3524 µs 5.5097 µs 5.6540 µs]
+                        change: [+11.173% +15.822% +21.028%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 3 outliers among 20 measurements (15.00%)
+  3 (15.00%) high mild
+Benchmarking WeightedDirGraphBuild/path_n/128
+Benchmarking WeightedDirGraphBuild/path_n/128: Warming up for 100.00 ms
+Benchmarking WeightedDirGraphBuild/path_n/128: Collecting 20 samples in estimated 201.75 ms (9450 iterations)
+Benchmarking WeightedDirGraphBuild/path_n/128: Analyzing
+WeightedDirGraphBuild/path_n/128
+                        time:   [21.487 µs 22.719 µs 24.113 µs]
+                        change: [+6.5659% +10.485% +15.304%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 3 outliers among 20 measurements (15.00%)
+  3 (15.00%) high severe
+
+Benchmarking WeightedDirGraphNeighbors/out_n/32
+Benchmarking WeightedDirGraphNeighbors/out_n/32: Warming up for 100.00 ms
+Benchmarking WeightedDirGraphNeighbors/out_n/32: Collecting 20 samples in estimated 200.01 ms (3.2M iterations)
+Benchmarking WeightedDirGraphNeighbors/out_n/32: Analyzing
+WeightedDirGraphNeighbors/out_n/32
+                        time:   [60.123 ns 61.546 ns 62.471 ns]
+                        change: [+8.1046% +11.949% +16.101%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking WeightedDirGraphNeighbors/out_n/128
+Benchmarking WeightedDirGraphNeighbors/out_n/128: Warming up for 100.00 ms
+Benchmarking WeightedDirGraphNeighbors/out_n/128: Collecting 20 samples in estimated 200.00 ms (1.5M iterations)
+Benchmarking WeightedDirGraphNeighbors/out_n/128: Analyzing
+WeightedDirGraphNeighbors/out_n/128
+                        time:   [141.69 ns 143.91 ns 146.58 ns]
+                        change: [+2.4794% +7.1842% +10.908%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+Elapsed: 37s

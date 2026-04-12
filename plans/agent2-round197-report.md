@@ -1,106 +1,98 @@
 # Agent 2 — Round 197 Report
 
-## Summary
+## Summary (continued from prior session)
 
-R197 tasked Agent 2 with three deliverables: revive the existing InsertionSort bench,
-build a bench coverage inventory, and add 10 new benchmarks.
-
-All three delivered. 11 total bench files compile and run clean. Validate and RTT are
-clean (zero regressions).
+R197 Part 2: Wrote all missing bench files for chapters with no Mt/new-St coverage,
+registered 47 new `[[bench]]` entries in `Cargo.toml`, ran every chapter isolation
+bench sequentially, fixed four import errors, confirmed all 17 chapters pass.
 
 ---
 
-## Part 1 — Revive Existing Bench
+## New Bench Files Added (this session)
 
-| # | Chap | File | Status |
-|---|------|------|--------|
-| 1 | 03 | BenchInsertionSortStEph.rs | Compiled and ran clean — no changes needed |
+| # | Chap | File | Notes |
+|---|------|------|-------|
+| 1 | 05 | `BenchSetMtEph.rs` | New |
+| 2 | 06 | `BenchDirGraphMtEph.rs` | New |
+| 3 | 06 | `BenchLabDirGraphMtEph.rs` | New |
+| 4 | 06 | `BenchLabDirGraphStEph.rs` | New |
+| 5 | 06 | `BenchLabUnDirGraphMtEph.rs` | New |
+| 6 | 06 | `BenchLabUnDirGraphStEph.rs` | New |
+| 7 | 06 | `BenchUnDirGraphMtEph.rs` | New |
+| 8 | 06 | `BenchUnDirGraphStEph.rs` | New |
+| 9 | 18 | `BenchChap18ArraySeqMtEph.rs` | Renamed from `BenchArraySeqMtEph.rs` (name collision fix) |
+| 10 | 18 | `BenchChap18ArraySeqMtEphSlice.rs` | Renamed |
+| 11 | 18 | `BenchChap18ArraySeqMtPer.rs` | Renamed |
+| 12 | 18 | `BenchChap18ArraySeqStEph.rs` | Renamed |
+| 13 | 18 | `BenchChap18ArraySeqStPer.rs` | Renamed |
+| 14 | 19 | `BenchArraySeqMtEph.rs` | New |
+| 15 | 19 | `BenchArraySeqMtEphSlice.rs` | New |
+| 16 | 19 | `BenchArraySeqStPer.rs` | New |
+| 17 | 26 | `BenchDivConReduceMtPer.rs` | New |
+| 18 | 26 | `BenchETSPMtEph.rs` | New |
+| 19 | 26 | `BenchMergeSortMtPer.rs` | New |
+| 20 | 26 | `BenchScanDCMtPer.rs` | New |
+| 21 | 28 | `BenchMaxContigSubSumDivConOptMtEph.rs` | New |
+| 22 | 28 | `BenchMaxContigSubSumDivConOptStEph.rs` | New |
+| 23 | 28 | `BenchMaxContigSubSumReducedMcsseStEph.rs` | New |
+| 24 | 35 | `BenchOrderStatSelectMtEph.rs` | New |
+| 25 | 35 | `BenchOrderStatSelectMtPer.rs` | New |
+| 26 | 35 | `BenchOrderStatSelectStPer.rs` | New |
+| 27 | 36 | `BenchQuickSortMtEphSlice.rs` | New |
+| 28 | 39 | `BenchBSTParaTreapMtEph.rs` | New |
+| 29 | 40 | `BenchBSTReducedStEph.rs` | New |
+| 30 | 49 | `BenchMinEditDistMtEph.rs` | New |
+| 31 | 49 | `BenchMinEditDistMtPer.rs` | New |
+| 32 | 49 | `BenchSubsetSumMtEph.rs` | New |
+| 33 | 49 | `BenchSubsetSumMtPer.rs` | New |
+| 34 | 50 | `BenchMatrixChainMtEph.rs` | New |
+| 35 | 50 | `BenchMatrixChainMtPer.rs` | New |
+| 36 | 50 | `BenchOptBinSearchTreeMtEph.rs` | New |
+| 37 | 50 | `BenchOptBinSearchTreeMtPer.rs` | New |
+| 38 | 53 | `BenchGraphSearchMtPer.rs` | New |
+| 39 | 53 | `BenchGraphSearchStEph.rs` | New |
+| 40 | 53 | `BenchGraphSearchStPer.rs` | New |
+| 41 | 53 | `BenchPQMinStEph.rs` | New |
+| 42 | 53 | `BenchPQMinStPer.rs` | New |
+| 43 | 57 | `BenchDijkstraStEphF64.rs` | New |
+| 44 | 58 | `BenchBellmanFordStEphF64.rs` | New |
+| 45 | 59 | `BenchJohnsonMtEphF64.rs` | New |
+| 46 | 59 | `BenchJohnsonStEphF64.rs` | New |
+| 47 | 64 | `BenchTSPApproxStEph.rs` | New |
 
-The existing bench was already correct. It compiles against the current `src/` and
-produces stable timings (2µs at n=32, 8.7µs at n=64, 35µs at n=128).
+## Fixes Applied During Isolation Runs
 
----
+| # | Chap | File | Fix |
+|---|------|------|-----|
+| 1 | 35 | `BenchOrderStatSelectMtEph.rs` | Added `ArraySeqMtEphTrait` to import |
+| 2 | 36 | `BenchQuickSortMtEphSlice.rs` | Changed Chap18 import to Chap19 for `ArraySeqMtEphSliceS` |
+| 3 | 49 | `BenchMinEditDistMtEph.rs` | Added `ArraySeqMtEphTrait` to import |
+| 4 | 49 | `BenchSubsetSumMtEph.rs` | Added `ArraySeqMtEphTrait` to import |
 
-## Part 2 — Bench Coverage Inventory
+## Isolation Run Results
 
-Written to: `plans/r197-bench-coverage-inventory.md`
+All 17 chapters passed `scripts/bench.sh isolate ChapNN`:
 
-- 70 algorithm files surveyed across 40 chapters
-- 11 marked "done" (benched as of R197)
-- 18 high-priority gaps remain (see Part 3 + gaps doc)
-- 15 medium-priority gaps
-- ~26 low/skip (Mt-only, pure-spec, data-structure-only)
+| # | Chap | Result |
+|---|------|--------|
+| 1 | 05 | PASS |
+| 2 | 06 | PASS |
+| 3 | 18 | PASS |
+| 4 | 19 | PASS |
+| 5 | 26 | PASS |
+| 6 | 28 | PASS |
+| 7 | 35 | PASS |
+| 8 | 36 | PASS |
+| 9 | 39 | PASS |
+| 10 | 40 | PASS |
+| 11 | 49 | PASS |
+| 12 | 50 | PASS |
+| 13 | 53 | PASS |
+| 14 | 57 | PASS |
+| 15 | 58 | PASS |
+| 16 | 59 | PASS |
+| 17 | 64 | PASS |
 
----
-
-## Part 3 — New Benchmarks Added
-
-10 new bench files created. All run under 1 second wall time per group.
-
-| # | Chap | File | Groups | Bench Names | Timings |
-|---|------|------|--------|-------------|---------|
-| 1 | 19 | BenchArraySeqStEph.rs | ArraySeqAppend, ArraySeqSubseq | append n=256: 315 ns; n=1024: 1.15 µs; subseq n=256: 69 ns; n=1024: 284 ns | |
-| 2 | 26 | BenchMergeSortStPer.rs | MergeSortStPer | reverse n=64: 3.6 µs; n=256: 19.7 µs | |
-| 3 | 28 | BenchMaxContigSubSumOptStEph.rs | MaxContigSubSumOpt | alternating n=256: 286 ns; n=1024: 1.17 µs | |
-| 4 | 35 | BenchOrderStatSelectStEph.rs | OrderStatSelect | median n=64: 1.25 µs; n=256: 3.59 µs | |
-| 5 | 36 | BenchQuickSortStEph.rs | QuickSortFirst, QuickSortMedian3 | first n=32: 5.6 µs / n=128: 65 µs; median3 n=32: 2.1 µs / n=128: 9.4 µs | |
-| 6 | 37 | BenchBSTPlainStEph.rs | BSTInsert, BSTContains | insert n=32: 6.1 µs / n=64: 23.6 µs; contains n=32: 34 ns / n=64: 68 ns | |
-| 7 | 11 | BenchFibonacciStEph.rs | FibIterative, FibRecursive | iter n=30: 13 ns / n=46: 21 ns; rec n=20: 15.9 µs / n=30: 1.97 ms | |
-| 8 | 49 | BenchSubsetSumStEph.rs | SubsetSum | n=10,t=40: 151 ns; n=15,t=80: 333 ns | |
-| 9 | 49 | BenchMinEditDistStEph.rs | MinEditDist | 20×20: 20.9 µs; 40×40: 71.0 µs | |
-| 10 | 65 | BenchUnionFindPCStEph.rs | UnionFindInsert, UnionFindUnion | insert n=64: 4.5 µs / n=256: 18 µs; union n=64: 5.6 µs / n=256: 23 µs | |
-
-All bench files use `sample_size(10)` or `sample_size(20)`, `warm_up_time(100ms)`,
-`measurement_time(200-300ms)`. Every group measured under 700ms wall time.
-
----
-
-## Validation Results
-
-| Step | Result |
-|------|--------|
-| `cargo bench --no-run` | 11 executables compiled, 0 errors |
-| `cargo bench` | All 11 ran, no panics |
-| `scripts/validate.sh` | 5674 verified, 0 errors |
-| `scripts/rtt.sh` | 3776 tests passed, 0 failed |
-
----
-
-## Files Changed
-
-| # | Chap | File | Action |
-|---|------|------|--------|
-| 1 | — | Cargo.toml | Added 10 `[[bench]]` entries |
-| 2 | 11 | benches/Chap11/BenchFibonacciStEph.rs | Created |
-| 3 | 19 | benches/Chap19/BenchArraySeqStEph.rs | Created |
-| 4 | 26 | benches/Chap26/BenchMergeSortStPer.rs | Created |
-| 5 | 28 | benches/Chap28/BenchMaxContigSubSumOptStEph.rs | Created |
-| 6 | 35 | benches/Chap35/BenchOrderStatSelectStEph.rs | Created |
-| 7 | 36 | benches/Chap36/BenchQuickSortStEph.rs | Created |
-| 8 | 37 | benches/Chap37/BenchBSTPlainStEph.rs | Created |
-| 9 | 49 | benches/Chap49/BenchSubsetSumStEph.rs | Created |
-| 10 | 49 | benches/Chap49/BenchMinEditDistStEph.rs | Created |
-| 11 | 65 | benches/Chap65/BenchUnionFindPCStEph.rs | Created |
-| 12 | — | plans/r197-bench-coverage-inventory.md | Created |
-| 13 | — | plans/r197-bench-coverage-gaps-remaining.md | Created |
-| 14 | — | plans/agent2-round197-report.md | This file |
+Full bench run (`scripts/bench.sh all`) awaits user approval.
 
 No `src/` files modified. No `assume`, `accept`, `admit`, or `external_body` added.
-
----
-
-## Remaining Gaps
-
-Full list in `plans/r197-bench-coverage-gaps-remaining.md`.
-
-Top high-priority gaps not addressed in R197:
-
-| # | Chap | File | Blocker |
-|---|------|------|---------|
-| 1 | 37 | BSTAVLStEph | `insert(self, v)` takes ownership — needs `iter_batched` |
-| 2 | 39 | BSTTreapStEph | Same ownership pattern |
-| 3 | 43 | OrderedTableStEph | Complex init (AVL tree backing) |
-| 4 | 45 | BinaryHeapPQ | Need to read PQ API |
-| 5 | 47 | VecChainedHashTableStEph | HashTable struct setup needed |
-| 6 | 57 | DijkstraStEphU64 | Graph construction required |
-| 7 | 65 | KruskalStEph | Graph + UnionFind construction |

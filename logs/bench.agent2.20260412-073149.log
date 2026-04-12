@@ -1,0 +1,111 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+    Finished `bench` profile [optimized] target(s) in 2.21s
+     Running benches/Chap53/BenchGraphSearchMtPer.rs (target/release/deps/BenchGraphSearchMtPer-4f8fc14b3170d3a3)
+Benchmarking GraphSearchMtPerReachable/n/16
+Benchmarking GraphSearchMtPerReachable/n/16: Warming up for 100.00 ms
+Benchmarking GraphSearchMtPerReachable/n/16: Collecting 10 samples in estimated 615.50 ms (110 iterations)
+Benchmarking GraphSearchMtPerReachable/n/16: Analyzing
+GraphSearchMtPerReachable/n/16
+                        time:   [5.1614 ms 5.3291 ms 5.5079 ms]
+Benchmarking GraphSearchMtPerReachable/n/64
+Benchmarking GraphSearchMtPerReachable/n/64: Warming up for 100.00 ms
+
+Warning: Unable to complete 10 samples in 400.0ms. You may wish to increase target time to 450.3ms.
+Benchmarking GraphSearchMtPerReachable/n/64: Collecting 10 samples in estimated 450.34 ms (10 iterations)
+Benchmarking GraphSearchMtPerReachable/n/64: Analyzing
+GraphSearchMtPerReachable/n/64
+                        time:   [43.764 ms 44.384 ms 45.007 ms]
+
+     Running benches/Chap53/BenchGraphSearchStEph.rs (target/release/deps/BenchGraphSearchStEph-d54d8aab65b79072)
+Benchmarking GraphSearchStEphReachable/n/16
+Benchmarking GraphSearchStEphReachable/n/16: Warming up for 100.00 ms
+Benchmarking GraphSearchStEphReachable/n/16: Collecting 20 samples in estimated 330.88 ms (1680 iterations)
+Benchmarking GraphSearchStEphReachable/n/16: Analyzing
+GraphSearchStEphReachable/n/16
+                        time:   [197.66 µs 198.94 µs 200.30 µs]
+Benchmarking GraphSearchStEphReachable/n/64
+Benchmarking GraphSearchStEphReachable/n/64: Warming up for 100.00 ms
+Benchmarking GraphSearchStEphReachable/n/64: Collecting 20 samples in estimated 371.68 ms (40 iterations)
+Benchmarking GraphSearchStEphReachable/n/64: Analyzing
+GraphSearchStEphReachable/n/64
+                        time:   [9.3227 ms 9.5153 ms 9.7231 ms]
+
+     Running benches/Chap53/BenchGraphSearchStPer.rs (target/release/deps/BenchGraphSearchStPer-2417b25496a79f5a)
+Benchmarking GraphSearchStPerReachable/n/16
+Benchmarking GraphSearchStPerReachable/n/16: Warming up for 100.00 ms
+Benchmarking GraphSearchStPerReachable/n/16: Collecting 20 samples in estimated 333.40 ms (1890 iterations)
+Benchmarking GraphSearchStPerReachable/n/16: Analyzing
+GraphSearchStPerReachable/n/16
+                        time:   [176.94 µs 178.32 µs 179.26 µs]
+Benchmarking GraphSearchStPerReachable/n/64
+Benchmarking GraphSearchStPerReachable/n/64: Warming up for 100.00 ms
+Benchmarking GraphSearchStPerReachable/n/64: Collecting 20 samples in estimated 395.61 ms (40 iterations)
+Benchmarking GraphSearchStPerReachable/n/64: Analyzing
+GraphSearchStPerReachable/n/64
+                        time:   [9.8059 ms 9.9813 ms 10.105 ms]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low severe
+
+     Running benches/Chap53/BenchPQMinStEph.rs (target/release/deps/BenchPQMinStEph-428d671e989141c4)
+Benchmarking PQMinStEph/n/16
+Benchmarking PQMinStEph/n/16: Warming up for 100.00 ms
+Benchmarking PQMinStEph/n/16: Collecting 20 samples in estimated 355.64 ms (1260 iterations)
+Benchmarking PQMinStEph/n/16: Analyzing
+PQMinStEph/n/16         time:   [276.62 µs 279.50 µs 282.05 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) low severe
+  1 (5.00%) high mild
+Benchmarking PQMinStEph/n/64
+Benchmarking PQMinStEph/n/64: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 300.0ms. You may wish to increase target time to 312.5ms, or reduce sample count to 10.
+Benchmarking PQMinStEph/n/64: Collecting 20 samples in estimated 312.49 ms (20 iterations)
+Benchmarking PQMinStEph/n/64: Analyzing
+PQMinStEph/n/64         time:   [14.424 ms 14.596 ms 14.773 ms]
+
+     Running benches/Chap53/BenchPQMinStPer.rs (target/release/deps/BenchPQMinStPer-86bab2745873d2ef)
+Benchmarking PQMinStPer/n/16
+Benchmarking PQMinStPer/n/16: Warming up for 100.00 ms
+Benchmarking PQMinStPer/n/16: Collecting 20 samples in estimated 319.79 ms (1260 iterations)
+Benchmarking PQMinStPer/n/16: Analyzing
+PQMinStPer/n/16         time:   [253.86 µs 256.58 µs 259.45 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+Benchmarking PQMinStPer/n/64
+Benchmarking PQMinStPer/n/64: Warming up for 100.00 ms
+
+Warning: Unable to complete 20 samples in 300.0ms. You may wish to increase target time to 309.7ms, or reduce sample count to 10.
+Benchmarking PQMinStPer/n/64: Collecting 20 samples in estimated 309.72 ms (20 iterations)
+Benchmarking PQMinStPer/n/64: Analyzing
+PQMinStPer/n/64         time:   [14.849 ms 14.968 ms 15.104 ms]
+Found 4 outliers among 20 measurements (20.00%)
+  2 (10.00%) high mild
+  2 (10.00%) high severe
+
+Elapsed: 13s

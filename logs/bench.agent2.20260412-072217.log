@@ -1,0 +1,176 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+    Finished `bench` profile [optimized] target(s) in 0.89s
+     Running benches/Chap05/BenchKleeneStPer.rs (target/release/deps/BenchKleeneStPer-bb184db495ff3b00)
+Benchmarking KleeneMemStar/n/16
+Benchmarking KleeneMemStar/n/16: Warming up for 100.00 ms
+Benchmarking KleeneMemStar/n/16: Collecting 20 samples in estimated 200.02 ms (1.5M iterations)
+Benchmarking KleeneMemStar/n/16: Analyzing
+KleeneMemStar/n/16      time:   [145.29 ns 146.88 ns 148.78 ns]
+                        change: [-20.401% -19.127% -17.645%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Benchmarking KleeneMemStar/n/64
+Benchmarking KleeneMemStar/n/64: Warming up for 100.00 ms
+Benchmarking KleeneMemStar/n/64: Collecting 20 samples in estimated 200.10 ms (361k iterations)
+Benchmarking KleeneMemStar/n/64: Analyzing
+KleeneMemStar/n/64      time:   [571.82 ns 575.22 ns 577.90 ns]
+                        change: [-19.725% -17.507% -15.051%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap05/BenchMappingStEph.rs (target/release/deps/BenchMappingStEph-b5c7c30b0d274b46)
+Benchmarking MappingFromVec/n/64
+Benchmarking MappingFromVec/n/64: Warming up for 100.00 ms
+Benchmarking MappingFromVec/n/64: Collecting 20 samples in estimated 200.28 ms (87k iterations)
+Benchmarking MappingFromVec/n/64: Analyzing
+MappingFromVec/n/64     time:   [2.3158 µs 2.3233 µs 2.3305 µs]
+                        change: [-28.863% -28.064% -27.273%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Benchmarking MappingFromVec/n/256
+Benchmarking MappingFromVec/n/256: Warming up for 100.00 ms
+Benchmarking MappingFromVec/n/256: Collecting 20 samples in estimated 200.59 ms (22k iterations)
+Benchmarking MappingFromVec/n/256: Analyzing
+MappingFromVec/n/256    time:   [9.1422 µs 9.1709 µs 9.2012 µs]
+                        change: [-26.831% -26.442% -26.023%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
+Benchmarking MappingMem/n/64
+Benchmarking MappingMem/n/64: Warming up for 100.00 ms
+Benchmarking MappingMem/n/64: Collecting 20 samples in estimated 200.00 ms (18M iterations)
+Benchmarking MappingMem/n/64: Analyzing
+MappingMem/n/64         time:   [10.973 ns 11.038 ns 11.117 ns]
+                        change: [-30.568% -29.995% -29.427%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Benchmarking MappingMem/n/256
+Benchmarking MappingMem/n/256: Warming up for 100.00 ms
+Benchmarking MappingMem/n/256: Collecting 20 samples in estimated 200.00 ms (16M iterations)
+Benchmarking MappingMem/n/256: Analyzing
+MappingMem/n/256        time:   [11.118 ns 11.769 ns 12.699 ns]
+                        change: [-17.715% -12.991% -7.3339%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap05/BenchRelationStEph.rs (target/release/deps/BenchRelationStEph-0b195ef5cfcb4557)
+Benchmarking RelationFromVec/n/64
+Benchmarking RelationFromVec/n/64: Warming up for 100.00 ms
+Benchmarking RelationFromVec/n/64: Collecting 20 samples in estimated 200.01 ms (84k iterations)
+Benchmarking RelationFromVec/n/64: Analyzing
+RelationFromVec/n/64    time:   [2.3509 µs 2.3803 µs 2.4116 µs]
+                        change: [-24.998% -24.150% -23.218%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Benchmarking RelationFromVec/n/256
+Benchmarking RelationFromVec/n/256: Warming up for 100.00 ms
+Benchmarking RelationFromVec/n/256: Collecting 20 samples in estimated 200.05 ms (21k iterations)
+Benchmarking RelationFromVec/n/256: Analyzing
+RelationFromVec/n/256   time:   [9.3466 µs 9.4335 µs 9.5477 µs]
+                        change: [-24.988% -22.367% -19.489%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
+Benchmarking RelationMem/n/64
+Benchmarking RelationMem/n/64: Warming up for 100.00 ms
+Benchmarking RelationMem/n/64: Collecting 20 samples in estimated 200.00 ms (18M iterations)
+Benchmarking RelationMem/n/64: Analyzing
+RelationMem/n/64        time:   [10.876 ns 10.914 ns 10.958 ns]
+                        change: [-25.869% -25.296% -24.599%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking RelationMem/n/256
+Benchmarking RelationMem/n/256: Warming up for 100.00 ms
+Benchmarking RelationMem/n/256: Collecting 20 samples in estimated 200.00 ms (17M iterations)
+Benchmarking RelationMem/n/256: Analyzing
+RelationMem/n/256       time:   [11.712 ns 11.814 ns 11.903 ns]
+                        change: [-15.414% -14.354% -13.363%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
+     Running benches/Chap05/BenchSetMtEph.rs (target/release/deps/BenchSetMtEph-bb19b668e1d09a5f)
+Benchmarking SetMtEphInsert/n/64
+Benchmarking SetMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking SetMtEphInsert/n/64: Collecting 10 samples in estimated 400.09 ms (222k iterations)
+Benchmarking SetMtEphInsert/n/64: Analyzing
+SetMtEphInsert/n/64     time:   [1.8226 µs 1.8251 µs 1.8281 µs]
+Benchmarking SetMtEphInsert/n/256
+Benchmarking SetMtEphInsert/n/256: Warming up for 100.00 ms
+Benchmarking SetMtEphInsert/n/256: Collecting 10 samples in estimated 400.12 ms (55k iterations)
+Benchmarking SetMtEphInsert/n/256: Analyzing
+SetMtEphInsert/n/256    time:   [7.2020 µs 7.2529 µs 7.2845 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) low mild
+
+Benchmarking SetMtEphUnion/n/64
+Benchmarking SetMtEphUnion/n/64: Warming up for 100.00 ms
+Benchmarking SetMtEphUnion/n/64: Collecting 10 samples in estimated 400.08 ms (229k iterations)
+Benchmarking SetMtEphUnion/n/64: Analyzing
+SetMtEphUnion/n/64      time:   [1.7095 µs 1.7210 µs 1.7404 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking SetMtEphUnion/n/256
+Benchmarking SetMtEphUnion/n/256: Warming up for 100.00 ms
+Benchmarking SetMtEphUnion/n/256: Collecting 10 samples in estimated 400.26 ms (60k iterations)
+Benchmarking SetMtEphUnion/n/256: Analyzing
+SetMtEphUnion/n/256     time:   [6.7015 µs 6.7384 µs 6.7697 µs]
+
+     Running benches/Chap05/BenchSetStEph.rs (target/release/deps/BenchSetStEph-fa964fd22061a507)
+Benchmarking SetInsert/n/64
+Benchmarking SetInsert/n/64: Warming up for 100.00 ms
+Benchmarking SetInsert/n/64: Collecting 20 samples in estimated 200.20 ms (109k iterations)
+Benchmarking SetInsert/n/64: Analyzing
+SetInsert/n/64          time:   [1.8580 µs 1.8681 µs 1.8777 µs]
+                        change: [-17.044% -16.376% -15.683%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Benchmarking SetInsert/n/256
+Benchmarking SetInsert/n/256: Warming up for 100.00 ms
+Benchmarking SetInsert/n/256: Collecting 20 samples in estimated 200.65 ms (26k iterations)
+Benchmarking SetInsert/n/256: Analyzing
+SetInsert/n/256         time:   [7.3526 µs 7.3769 µs 7.4100 µs]
+                        change: [-24.482% -23.073% -20.986%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
+Benchmarking SetUnion/n/64
+Benchmarking SetUnion/n/64: Warming up for 100.00 ms
+Benchmarking SetUnion/n/64: Collecting 20 samples in estimated 200.27 ms (109k iterations)
+Benchmarking SetUnion/n/64: Analyzing
+SetUnion/n/64           time:   [1.8684 µs 1.8911 µs 1.9117 µs]
+                        change: [-19.224% -17.976% -16.855%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking SetUnion/n/256
+Benchmarking SetUnion/n/256: Warming up for 100.00 ms
+Benchmarking SetUnion/n/256: Collecting 20 samples in estimated 200.84 ms (30k iterations)
+Benchmarking SetUnion/n/256: Analyzing
+SetUnion/n/256          time:   [6.7139 µs 6.7471 µs 6.7948 µs]
+                        change: [-23.815% -22.559% -21.264%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 4 outliers among 20 measurements (20.00%)
+  3 (15.00%) high mild
+  1 (5.00%) high severe
+
+Elapsed: 17s

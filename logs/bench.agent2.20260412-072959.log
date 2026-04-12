@@ -1,0 +1,167 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+    Finished `bench` profile [optimized] target(s) in 1.05s
+     Running benches/Chap49/BenchMinEditDistMtEph.rs (target/release/deps/BenchMinEditDistMtEph-2ae7d08e1f5f0c0a)
+Benchmarking MinEditDistMtEph/n_x_n/20
+Benchmarking MinEditDistMtEph/n_x_n/20: Warming up for 100.00 ms
+
+Warning: Unable to complete 10 samples in 400.0ms. You may wish to increase target time to 6.5s.
+Benchmarking MinEditDistMtEph/n_x_n/20: Collecting 10 samples in estimated 6.5017 s (10 iterations)
+Benchmarking MinEditDistMtEph/n_x_n/20: Analyzing
+MinEditDistMtEph/n_x_n/20
+                        time:   [62.082 ms 68.489 ms 74.540 ms]
+Benchmarking MinEditDistMtEph/n_x_n/40
+Benchmarking MinEditDistMtEph/n_x_n/40: Warming up for 100.00 ms
+
+Warning: Unable to complete 10 samples in 400.0ms. You may wish to increase target time to 1.0s.
+Benchmarking MinEditDistMtEph/n_x_n/40: Collecting 10 samples in estimated 1.0068 s (10 iterations)
+Benchmarking MinEditDistMtEph/n_x_n/40: Analyzing
+MinEditDistMtEph/n_x_n/40
+                        time:   [91.756 ms 109.78 ms 128.15 ms]
+
+     Running benches/Chap49/BenchMinEditDistMtPer.rs (target/release/deps/BenchMinEditDistMtPer-2fde72e5a345fcde)
+Benchmarking MinEditDistMtPer/n_x_n/20
+Benchmarking MinEditDistMtPer/n_x_n/20: Warming up for 100.00 ms
+Benchmarking MinEditDistMtPer/n_x_n/20: Collecting 10 samples in estimated 495.70 ms (20 iterations)
+Benchmarking MinEditDistMtPer/n_x_n/20: Analyzing
+MinEditDistMtPer/n_x_n/20
+                        time:   [25.360 ms 28.011 ms 30.666 ms]
+Benchmarking MinEditDistMtPer/n_x_n/40
+Benchmarking MinEditDistMtPer/n_x_n/40: Warming up for 100.00 ms
+
+Warning: Unable to complete 10 samples in 400.0ms. You may wish to increase target time to 1.2s.
+Benchmarking MinEditDistMtPer/n_x_n/40: Collecting 10 samples in estimated 1.1524 s (10 iterations)
+Benchmarking MinEditDistMtPer/n_x_n/40: Analyzing
+MinEditDistMtPer/n_x_n/40
+                        time:   [4.3026 s 5.2079 s 6.0598 s]
+
+     Running benches/Chap49/BenchMinEditDistStEph.rs (target/release/deps/BenchMinEditDistStEph-6e2dfadb8fa50c57)
+Benchmarking MinEditDist/n_x_n/20
+Benchmarking MinEditDist/n_x_n/20: Warming up for 100.00 ms
+Benchmarking MinEditDist/n_x_n/20: Collecting 10 samples in estimated 300.68 ms (11k iterations)
+Benchmarking MinEditDist/n_x_n/20: Analyzing
+MinEditDist/n_x_n/20    time:   [26.010 µs 26.806 µs 27.548 µs]
+                        change: [+7.7107% +9.9744% +12.075%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+Benchmarking MinEditDist/n_x_n/40
+Benchmarking MinEditDist/n_x_n/40: Warming up for 100.00 ms
+Benchmarking MinEditDist/n_x_n/40: Collecting 10 samples in estimated 304.12 ms (3135 iterations)
+Benchmarking MinEditDist/n_x_n/40: Analyzing
+MinEditDist/n_x_n/40    time:   [94.002 µs 94.836 µs 96.284 µs]
+                        change: [+8.4316% +9.9785% +11.527%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+     Running benches/Chap49/BenchMinEditDistStPer.rs (target/release/deps/BenchMinEditDistStPer-c26e59f75a478c15)
+Benchmarking MinEditDistStPer/n_x_n/20
+Benchmarking MinEditDistStPer/n_x_n/20: Warming up for 100.00 ms
+Benchmarking MinEditDistStPer/n_x_n/20: Collecting 10 samples in estimated 301.00 ms (11k iterations)
+Benchmarking MinEditDistStPer/n_x_n/20: Analyzing
+MinEditDistStPer/n_x_n/20
+                        time:   [27.522 µs 27.715 µs 27.886 µs]
+                        change: [+6.8781% +9.8057% +12.885%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking MinEditDistStPer/n_x_n/40
+Benchmarking MinEditDistStPer/n_x_n/40: Warming up for 100.00 ms
+Benchmarking MinEditDistStPer/n_x_n/40: Collecting 10 samples in estimated 300.16 ms (2915 iterations)
+Benchmarking MinEditDistStPer/n_x_n/40: Analyzing
+MinEditDistStPer/n_x_n/40
+                        time:   [96.933 µs 97.470 µs 97.963 µs]
+                        change: [+11.073% +13.550% +16.364%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+     Running benches/Chap49/BenchSubsetSumMtEph.rs (target/release/deps/BenchSubsetSumMtEph-c66d49a3b64b6735)
+Benchmarking SubsetSumMtEph/n10_t40/10
+Benchmarking SubsetSumMtEph/n10_t40/10: Warming up for 100.00 ms
+Benchmarking SubsetSumMtEph/n10_t40/10: Collecting 10 samples in estimated 504.75 ms (110 iterations)
+Benchmarking SubsetSumMtEph/n10_t40/10: Analyzing
+SubsetSumMtEph/n10_t40/10
+                        time:   [3.5625 ms 5.4451 ms 6.9137 ms]
+Benchmarking SubsetSumMtEph/n15_t80/15
+Benchmarking SubsetSumMtEph/n15_t80/15: Warming up for 100.00 ms
+Benchmarking SubsetSumMtEph/n15_t80/15: Collecting 10 samples in estimated 571.15 ms (30 iterations)
+Benchmarking SubsetSumMtEph/n15_t80/15: Analyzing
+SubsetSumMtEph/n15_t80/15
+                        time:   [101.99 ms 251.08 ms 427.88 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+
+     Running benches/Chap49/BenchSubsetSumMtPer.rs (target/release/deps/BenchSubsetSumMtPer-c73fcb7f49ff9772)
+Benchmarking SubsetSumMtPer/n10_t40/10
+Benchmarking SubsetSumMtPer/n10_t40/10: Warming up for 100.00 ms
+Benchmarking SubsetSumMtPer/n10_t40/10: Collecting 10 samples in estimated 498.54 ms (165 iterations)
+Benchmarking SubsetSumMtPer/n10_t40/10: Analyzing
+SubsetSumMtPer/n10_t40/10
+                        time:   [2.1485 ms 2.7074 ms 3.1336 ms]
+Benchmarking SubsetSumMtPer/n15_t80/15
+Benchmarking SubsetSumMtPer/n15_t80/15: Warming up for 100.00 ms
+
+Warning: Unable to complete 10 samples in 400.0ms. You may wish to increase target time to 769.0ms or enable flat sampling.
+Benchmarking SubsetSumMtPer/n15_t80/15: Collecting 10 samples in estimated 769.00 ms (55 iterations)
+Benchmarking SubsetSumMtPer/n15_t80/15: Analyzing
+SubsetSumMtPer/n15_t80/15
+                        time:   [12.897 ms 34.110 ms 46.248 ms]
+
+     Running benches/Chap49/BenchSubsetSumStEph.rs (target/release/deps/BenchSubsetSumStEph-ce23aca6d3b0488c)
+Benchmarking SubsetSum/n10_t40/10
+Benchmarking SubsetSum/n10_t40/10: Warming up for 100.00 ms
+Benchmarking SubsetSum/n10_t40/10: Collecting 10 samples in estimated 300.00 ms (999k iterations)
+Benchmarking SubsetSum/n10_t40/10: Analyzing
+SubsetSum/n10_t40/10    time:   [242.14 ns 250.03 ns 256.77 ns]
+                        change: [+18.713% +25.698% +34.312%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking SubsetSum/n15_t80/15
+Benchmarking SubsetSum/n15_t80/15: Warming up for 100.00 ms
+Benchmarking SubsetSum/n15_t80/15: Collecting 10 samples in estimated 300.01 ms (544k iterations)
+Benchmarking SubsetSum/n15_t80/15: Analyzing
+SubsetSum/n15_t80/15    time:   [512.01 ns 520.47 ns 529.55 ns]
+                        change: [+28.325% +30.479% +32.842%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+     Running benches/Chap49/BenchSubsetSumStPer.rs (target/release/deps/BenchSubsetSumStPer-8866dc8b05eaf9b8)
+Benchmarking SubsetSumStPer/n10_t40/10
+Benchmarking SubsetSumStPer/n10_t40/10: Warming up for 100.00 ms
+Benchmarking SubsetSumStPer/n10_t40/10: Collecting 10 samples in estimated 300.01 ms (1.1M iterations)
+Benchmarking SubsetSumStPer/n10_t40/10: Analyzing
+SubsetSumStPer/n10_t40/10
+                        time:   [308.07 ns 337.20 ns 357.21 ns]
+                        change: [+47.112% +57.308% +69.503%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking SubsetSumStPer/n15_t80/15
+Benchmarking SubsetSumStPer/n15_t80/15: Warming up for 100.00 ms
+Benchmarking SubsetSumStPer/n15_t80/15: Collecting 10 samples in estimated 300.02 ms (527k iterations)
+Benchmarking SubsetSumStPer/n15_t80/15: Analyzing
+SubsetSumStPer/n15_t80/15
+                        time:   [488.80 ns 636.15 ns 726.85 ns]
+                        change: [+21.707% +37.964% +57.802%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+
+Elapsed: 82s

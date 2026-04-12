@@ -1,0 +1,66 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+    Finished `bench` profile [optimized] target(s) in 1.01s
+     Running benches/Chap58/BenchBellmanFordStEphF64.rs (target/release/deps/BenchBellmanFordStEphF64-eeaaa15a25b91cc1)
+Benchmarking BellmanFordStEphF64/chain_n/16
+Benchmarking BellmanFordStEphF64/chain_n/16: Warming up for 100.00 ms
+Benchmarking BellmanFordStEphF64/chain_n/16: Collecting 10 samples in estimated 300.14 ms (16k iterations)
+Benchmarking BellmanFordStEphF64/chain_n/16: Analyzing
+BellmanFordStEphF64/chain_n/16
+                        time:   [18.095 µs 18.179 µs 18.293 µs]
+Benchmarking BellmanFordStEphF64/chain_n/32
+Benchmarking BellmanFordStEphF64/chain_n/32: Warming up for 100.00 ms
+Benchmarking BellmanFordStEphF64/chain_n/32: Collecting 10 samples in estimated 300.55 ms (2585 iterations)
+Benchmarking BellmanFordStEphF64/chain_n/32: Analyzing
+BellmanFordStEphF64/chain_n/32
+                        time:   [106.31 µs 113.10 µs 118.21 µs]
+
+     Running benches/Chap58/BenchBellmanFordStEphI64.rs (target/release/deps/BenchBellmanFordStEphI64-45ec4b1c61ddfb74)
+Benchmarking BellmanFordStEphI64/chain_n/16
+Benchmarking BellmanFordStEphI64/chain_n/16: Warming up for 100.00 ms
+Benchmarking BellmanFordStEphI64/chain_n/16: Collecting 10 samples in estimated 301.03 ms (13k iterations)
+Benchmarking BellmanFordStEphI64/chain_n/16: Analyzing
+BellmanFordStEphI64/chain_n/16
+                        time:   [23.084 µs 23.369 µs 23.613 µs]
+                        change: [+19.980% +22.825% +25.771%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) low mild
+Benchmarking BellmanFordStEphI64/chain_n/32
+Benchmarking BellmanFordStEphI64/chain_n/32: Warming up for 100.00 ms
+Benchmarking BellmanFordStEphI64/chain_n/32: Collecting 10 samples in estimated 303.27 ms (2475 iterations)
+Benchmarking BellmanFordStEphI64/chain_n/32: Analyzing
+BellmanFordStEphI64/chain_n/32
+                        time:   [111.80 µs 118.32 µs 124.19 µs]
+                        change: [+16.475% +23.568% +29.593%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+
+Elapsed: 6s

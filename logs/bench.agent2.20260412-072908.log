@@ -1,0 +1,175 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+    Finished `bench` profile [optimized] target(s) in 0.82s
+     Running benches/Chap39/BenchBSTParaTreapMtEph.rs (target/release/deps/BenchBSTParaTreapMtEph-40bea21a67277a2a)
+Benchmarking BSTParaTreapMtEphInsert/n/32
+Benchmarking BSTParaTreapMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTParaTreapMtEphInsert/n/32: Collecting 10 samples in estimated 403.77 ms (5335 iterations)
+Benchmarking BSTParaTreapMtEphInsert/n/32: Analyzing
+BSTParaTreapMtEphInsert/n/32
+                        time:   [74.732 µs 74.922 µs 75.246 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking BSTParaTreapMtEphInsert/n/64
+Benchmarking BSTParaTreapMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTParaTreapMtEphInsert/n/64: Collecting 10 samples in estimated 408.95 ms (1210 iterations)
+Benchmarking BSTParaTreapMtEphInsert/n/64: Analyzing
+BSTParaTreapMtEphInsert/n/64
+                        time:   [335.73 µs 341.48 µs 346.04 µs]
+
+Benchmarking BSTParaTreapMtEphFind/n/32
+Benchmarking BSTParaTreapMtEphFind/n/32: Warming up for 100.00 ms
+Benchmarking BSTParaTreapMtEphFind/n/32: Collecting 10 samples in estimated 400.10 ms (184k iterations)
+Benchmarking BSTParaTreapMtEphFind/n/32: Analyzing
+BSTParaTreapMtEphFind/n/32
+                        time:   [1.8443 µs 1.8941 µs 1.9938 µs]
+Benchmarking BSTParaTreapMtEphFind/n/64
+Benchmarking BSTParaTreapMtEphFind/n/64: Warming up for 100.00 ms
+Benchmarking BSTParaTreapMtEphFind/n/64: Collecting 10 samples in estimated 400.32 ms (48k iterations)
+Benchmarking BSTParaTreapMtEphFind/n/64: Analyzing
+BSTParaTreapMtEphFind/n/64
+                        time:   [8.0471 µs 8.0942 µs 8.1461 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap39/BenchBSTSetTreapMtEph.rs (target/release/deps/BenchBSTSetTreapMtEph-4a37b611e26540a5)
+Benchmarking BSTSetTreapMtEphInsert/n/32
+Benchmarking BSTSetTreapMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTSetTreapMtEphInsert/n/32: Collecting 10 samples in estimated 403.03 ms (5390 iterations)
+Benchmarking BSTSetTreapMtEphInsert/n/32: Analyzing
+BSTSetTreapMtEphInsert/n/32
+                        time:   [74.179 µs 74.737 µs 75.626 µs]
+                        change: [-4.0182% -3.2380% -2.2899%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking BSTSetTreapMtEphInsert/n/64
+Benchmarking BSTSetTreapMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTSetTreapMtEphInsert/n/64: Collecting 10 samples in estimated 406.77 ms (1100 iterations)
+Benchmarking BSTSetTreapMtEphInsert/n/64: Analyzing
+BSTSetTreapMtEphInsert/n/64
+                        time:   [349.34 µs 356.12 µs 364.12 µs]
+                        change: [+1.5594% +3.6272% +6.4053%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+Benchmarking BSTSetTreapMtEphContains/n/32
+Benchmarking BSTSetTreapMtEphContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTSetTreapMtEphContains/n/32: Collecting 10 samples in estimated 300.03 ms (163k iterations)
+Benchmarking BSTSetTreapMtEphContains/n/32: Analyzing
+BSTSetTreapMtEphContains/n/32
+                        time:   [1.7671 µs 1.7956 µs 1.8223 µs]
+                        change: [-4.6523% -2.6748% -0.6789%] (p = 0.02 < 0.05)
+                        Change within noise threshold.
+Benchmarking BSTSetTreapMtEphContains/n/64
+Benchmarking BSTSetTreapMtEphContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTSetTreapMtEphContains/n/64: Collecting 10 samples in estimated 300.13 ms (35k iterations)
+Benchmarking BSTSetTreapMtEphContains/n/64: Analyzing
+BSTSetTreapMtEphContains/n/64
+                        time:   [7.8303 µs 7.9071 µs 8.0312 µs]
+                        change: [-6.5654% -3.9321% -1.1539%] (p = 0.02 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap39/BenchBSTTreapMtEph.rs (target/release/deps/BenchBSTTreapMtEph-c63e3b06efd9cdc2)
+Benchmarking BSTTreapMtEphInsert/n/32
+Benchmarking BSTTreapMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTTreapMtEphInsert/n/32: Collecting 10 samples in estimated 400.10 ms (172k iterations)
+Benchmarking BSTTreapMtEphInsert/n/32: Analyzing
+BSTTreapMtEphInsert/n/32
+                        time:   [2.3794 µs 2.4206 µs 2.4456 µs]
+                        change: [-8.9380% -7.1401% -5.1931%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking BSTTreapMtEphInsert/n/64
+Benchmarking BSTTreapMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTTreapMtEphInsert/n/64: Collecting 10 samples in estimated 400.11 ms (46k iterations)
+Benchmarking BSTTreapMtEphInsert/n/64: Analyzing
+BSTTreapMtEphInsert/n/64
+                        time:   [8.5374 µs 8.6897 µs 8.8590 µs]
+                        change: [-3.1301% -0.0924% +4.2615%] (p = 0.97 > 0.05)
+                        No change in performance detected.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+
+Benchmarking BSTTreapMtEphContains/n/32
+Benchmarking BSTTreapMtEphContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTTreapMtEphContains/n/32: Collecting 10 samples in estimated 300.00 ms (19M iterations)
+Benchmarking BSTTreapMtEphContains/n/32: Analyzing
+BSTTreapMtEphContains/n/32
+                        time:   [15.506 ns 15.540 ns 15.581 ns]
+                        change: [-6.7563% -5.5881% -4.4007%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking BSTTreapMtEphContains/n/64
+Benchmarking BSTTreapMtEphContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTTreapMtEphContains/n/64: Collecting 10 samples in estimated 300.00 ms (11M iterations)
+Benchmarking BSTTreapMtEphContains/n/64: Analyzing
+BSTTreapMtEphContains/n/64
+                        time:   [26.136 ns 26.228 ns 26.326 ns]
+                        change: [-1.5675% -0.4742% +0.5013%] (p = 0.44 > 0.05)
+                        No change in performance detected.
+
+     Running benches/Chap39/BenchBSTTreapStEph.rs (target/release/deps/BenchBSTTreapStEph-9d14ec7ef9d1fb11)
+Benchmarking TreapInsert/n/32
+Benchmarking TreapInsert/n/32: Warming up for 100.00 ms
+Benchmarking TreapInsert/n/32: Collecting 20 samples in estimated 300.19 ms (268k iterations)
+Benchmarking TreapInsert/n/32: Analyzing
+TreapInsert/n/32        time:   [1.0770 µs 1.0910 µs 1.1040 µs]
+                        change: [-15.390% -11.598% -7.7987%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Benchmarking TreapInsert/n/64
+Benchmarking TreapInsert/n/64: Warming up for 100.00 ms
+Benchmarking TreapInsert/n/64: Collecting 20 samples in estimated 300.19 ms (107k iterations)
+Benchmarking TreapInsert/n/64: Analyzing
+TreapInsert/n/64        time:   [2.8156 µs 2.8363 µs 2.8640 µs]
+                        change: [-7.2211% -5.9106% -4.5572%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
+Benchmarking TreapContains/n/32
+Benchmarking TreapContains/n/32: Warming up for 100.00 ms
+Benchmarking TreapContains/n/32: Collecting 20 samples in estimated 200.00 ms (58M iterations)
+Benchmarking TreapContains/n/32: Analyzing
+TreapContains/n/32      time:   [3.2445 ns 3.2682 ns 3.3057 ns]
+                        change: [+1.8037% +4.8478% +8.2256%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking TreapContains/n/64
+Benchmarking TreapContains/n/64: Warming up for 100.00 ms
+Benchmarking TreapContains/n/64: Collecting 20 samples in estimated 200.00 ms (137M iterations)
+Benchmarking TreapContains/n/64: Analyzing
+TreapContains/n/64      time:   [1.4104 ns 1.4326 ns 1.4634 ns]
+                        change: [-8.2609% -5.3628% -2.2711%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 6 outliers among 20 measurements (30.00%)
+  2 (10.00%) low mild
+  1 (5.00%) high mild
+  3 (15.00%) high severe
+
+Elapsed: 18s

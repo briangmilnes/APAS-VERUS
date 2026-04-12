@@ -1,0 +1,107 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+    Finished `bench` profile [optimized] target(s) in 0.83s
+     Running benches/Chap36/BenchQuickSortMtEph.rs (target/release/deps/BenchQuickSortMtEph-cd77818066d17cfb)
+Benchmarking QuickSortFirstMt/n/64
+Benchmarking QuickSortFirstMt/n/64: Warming up for 100.00 ms
+Benchmarking QuickSortFirstMt/n/64: Collecting 10 samples in estimated 404.62 ms (2970 iterations)
+Benchmarking QuickSortFirstMt/n/64: Analyzing
+QuickSortFirstMt/n/64   time:   [137.20 µs 139.02 µs 140.88 µs]
+                        change: [-4.4057% -1.8437% +0.8207%] (p = 0.21 > 0.05)
+                        No change in performance detected.
+Benchmarking QuickSortFirstMt/n/256
+Benchmarking QuickSortFirstMt/n/256: Warming up for 100.00 ms
+Benchmarking QuickSortFirstMt/n/256: Collecting 10 samples in estimated 403.74 ms (1100 iterations)
+Benchmarking QuickSortFirstMt/n/256: Analyzing
+QuickSortFirstMt/n/256  time:   [372.12 µs 375.37 µs 378.46 µs]
+                        change: [-4.9035% -1.4850% +3.5588%] (p = 0.54 > 0.05)
+                        No change in performance detected.
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+
+     Running benches/Chap36/BenchQuickSortMtEphSlice.rs (target/release/deps/BenchQuickSortMtEphSlice-07894c9e85706c58)
+Benchmarking QuickSortFirstMtSlice/n/64
+Benchmarking QuickSortFirstMtSlice/n/64: Warming up for 100.00 ms
+Benchmarking QuickSortFirstMtSlice/n/64: Collecting 10 samples in estimated 441.64 ms (275 iterations)
+Benchmarking QuickSortFirstMtSlice/n/64: Analyzing
+QuickSortFirstMtSlice/n/64
+                        time:   [1.5334 ms 1.5555 ms 1.5946 ms]
+Benchmarking QuickSortFirstMtSlice/n/256
+Benchmarking QuickSortFirstMtSlice/n/256: Warming up for 100.00 ms
+Benchmarking QuickSortFirstMtSlice/n/256: Collecting 10 samples in estimated 479.50 ms (110 iterations)
+Benchmarking QuickSortFirstMtSlice/n/256: Analyzing
+QuickSortFirstMtSlice/n/256
+                        time:   [4.2711 ms 4.3278 ms 4.4164 ms]
+
+     Running benches/Chap36/BenchQuickSortStEph.rs (target/release/deps/BenchQuickSortStEph-dfaad387e44b1aa9)
+Benchmarking QuickSortFirst/reverse/32
+Benchmarking QuickSortFirst/reverse/32: Warming up for 100.00 ms
+Benchmarking QuickSortFirst/reverse/32: Collecting 10 samples in estimated 250.20 ms (37k iterations)
+Benchmarking QuickSortFirst/reverse/32: Analyzing
+QuickSortFirst/reverse/32
+                        time:   [6.5164 µs 6.8737 µs 7.2569 µs]
+                        change: [-11.299% -8.8713% -5.4169%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+Benchmarking QuickSortFirst/reverse/128
+Benchmarking QuickSortFirst/reverse/128: Warming up for 100.00 ms
+Benchmarking QuickSortFirst/reverse/128: Collecting 10 samples in estimated 252.24 ms (3190 iterations)
+Benchmarking QuickSortFirst/reverse/128: Analyzing
+QuickSortFirst/reverse/128
+                        time:   [79.165 µs 79.818 µs 80.404 µs]
+                        change: [-14.095% -8.2259% -3.3532%] (p = 0.01 < 0.05)
+                        Performance has improved.
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) low severe
+
+Benchmarking QuickSortMedian3/reverse/32
+Benchmarking QuickSortMedian3/reverse/32: Warming up for 100.00 ms
+Benchmarking QuickSortMedian3/reverse/32: Collecting 10 samples in estimated 250.12 ms (101k iterations)
+Benchmarking QuickSortMedian3/reverse/32: Analyzing
+QuickSortMedian3/reverse/32
+                        time:   [2.3122 µs 2.3711 µs 2.4431 µs]
+                        change: [-11.982% -9.8747% -8.0582%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+Benchmarking QuickSortMedian3/reverse/128
+Benchmarking QuickSortMedian3/reverse/128: Warming up for 100.00 ms
+Benchmarking QuickSortMedian3/reverse/128: Collecting 10 samples in estimated 250.22 ms (23k iterations)
+Benchmarking QuickSortMedian3/reverse/128: Analyzing
+QuickSortMedian3/reverse/128
+                        time:   [10.581 µs 10.626 µs 10.692 µs]
+                        change: [-16.377% -14.413% -12.587%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+Elapsed: 10s

@@ -1,0 +1,174 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+    Finished `bench` profile [optimized] target(s) in 2.00s
+     Running benches/Chap50/BenchMatrixChainMtEph.rs (target/release/deps/BenchMatrixChainMtEph-3e2470d64901e554)
+Benchmarking MatrixChainMtEph/n_matrices/6
+Benchmarking MatrixChainMtEph/n_matrices/6: Warming up for 100.00 ms
+Benchmarking MatrixChainMtEph/n_matrices/6: Collecting 10 samples in estimated 400.17 ms (64k iterations)
+Benchmarking MatrixChainMtEph/n_matrices/6: Analyzing
+MatrixChainMtEph/n_matrices/6
+                        time:   [5.3366 µs 5.4999 µs 5.6269 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+Benchmarking MatrixChainMtEph/n_matrices/10
+Benchmarking MatrixChainMtEph/n_matrices/10: Warming up for 100.00 ms
+Benchmarking MatrixChainMtEph/n_matrices/10: Collecting 10 samples in estimated 400.26 ms (20k iterations)
+Benchmarking MatrixChainMtEph/n_matrices/10: Analyzing
+MatrixChainMtEph/n_matrices/10
+                        time:   [20.330 µs 20.977 µs 21.698 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap50/BenchMatrixChainMtPer.rs (target/release/deps/BenchMatrixChainMtPer-da480bf195d482d9)
+Benchmarking MatrixChainMtPer/n_matrices/6
+Benchmarking MatrixChainMtPer/n_matrices/6: Warming up for 100.00 ms
+Benchmarking MatrixChainMtPer/n_matrices/6: Collecting 10 samples in estimated 400.04 ms (78k iterations)
+Benchmarking MatrixChainMtPer/n_matrices/6: Analyzing
+MatrixChainMtPer/n_matrices/6
+                        time:   [4.7219 µs 4.8330 µs 5.0060 µs]
+Benchmarking MatrixChainMtPer/n_matrices/10
+Benchmarking MatrixChainMtPer/n_matrices/10: Warming up for 100.00 ms
+Benchmarking MatrixChainMtPer/n_matrices/10: Collecting 10 samples in estimated 400.77 ms (22k iterations)
+Benchmarking MatrixChainMtPer/n_matrices/10: Analyzing
+MatrixChainMtPer/n_matrices/10
+                        time:   [17.712 µs 17.889 µs 18.227 µs]
+
+     Running benches/Chap50/BenchMatrixChainStEph.rs (target/release/deps/BenchMatrixChainStEph-f52649acd181f364)
+Benchmarking MatrixChainStEph/n_matrices/6
+Benchmarking MatrixChainStEph/n_matrices/6: Warming up for 100.00 ms
+Benchmarking MatrixChainStEph/n_matrices/6: Collecting 10 samples in estimated 300.08 ms (88k iterations)
+Benchmarking MatrixChainStEph/n_matrices/6: Analyzing
+MatrixChainStEph/n_matrices/6
+                        time:   [3.4115 µs 3.4474 µs 3.5047 µs]
+                        change: [+33.454% +38.308% +44.069%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking MatrixChainStEph/n_matrices/10
+Benchmarking MatrixChainStEph/n_matrices/10: Warming up for 100.00 ms
+Benchmarking MatrixChainStEph/n_matrices/10: Collecting 10 samples in estimated 300.15 ms (25k iterations)
+Benchmarking MatrixChainStEph/n_matrices/10: Analyzing
+MatrixChainStEph/n_matrices/10
+                        time:   [12.093 µs 12.720 µs 13.127 µs]
+                        change: [+16.077% +19.108% +22.370%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap50/BenchMatrixChainStPer.rs (target/release/deps/BenchMatrixChainStPer-b89c6150f46115dc)
+Benchmarking MatrixChainStPer/n_matrices/6
+Benchmarking MatrixChainStPer/n_matrices/6: Warming up for 100.00 ms
+Benchmarking MatrixChainStPer/n_matrices/6: Collecting 10 samples in estimated 300.10 ms (94k iterations)
+Benchmarking MatrixChainStPer/n_matrices/6: Analyzing
+MatrixChainStPer/n_matrices/6
+                        time:   [3.2963 µs 3.3228 µs 3.3648 µs]
+                        change: [+22.566% +24.115% +25.724%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 4 outliers among 10 measurements (40.00%)
+  2 (20.00%) low severe
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking MatrixChainStPer/n_matrices/10
+Benchmarking MatrixChainStPer/n_matrices/10: Warming up for 100.00 ms
+Benchmarking MatrixChainStPer/n_matrices/10: Collecting 10 samples in estimated 300.35 ms (22k iterations)
+Benchmarking MatrixChainStPer/n_matrices/10: Analyzing
+MatrixChainStPer/n_matrices/10
+                        time:   [13.342 µs 13.435 µs 13.519 µs]
+                        change: [+35.147% +36.839% +38.420%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+     Running benches/Chap50/BenchOptBinSearchTreeMtEph.rs (target/release/deps/BenchOptBinSearchTreeMtEph-5982133504fd5c60)
+Benchmarking OBSTMtEph/n_keys/6
+Benchmarking OBSTMtEph/n_keys/6: Warming up for 100.00 ms
+Benchmarking OBSTMtEph/n_keys/6: Collecting 10 samples in estimated 403.72 ms (1100 iterations)
+Benchmarking OBSTMtEph/n_keys/6: Analyzing
+OBSTMtEph/n_keys/6      time:   [340.59 µs 349.53 µs 357.58 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking OBSTMtEph/n_keys/10
+Benchmarking OBSTMtEph/n_keys/10: Warming up for 100.00 ms
+Benchmarking OBSTMtEph/n_keys/10: Collecting 10 samples in estimated 435.54 ms (220 iterations)
+Benchmarking OBSTMtEph/n_keys/10: Analyzing
+OBSTMtEph/n_keys/10     time:   [1.7994 ms 1.8809 ms 1.9439 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+
+     Running benches/Chap50/BenchOptBinSearchTreeMtPer.rs (target/release/deps/BenchOptBinSearchTreeMtPer-9b087e3ef47a79e6)
+Benchmarking OBSTMtPer/n_keys/6
+Benchmarking OBSTMtPer/n_keys/6: Warming up for 100.00 ms
+Benchmarking OBSTMtPer/n_keys/6: Collecting 10 samples in estimated 406.44 ms (935 iterations)
+Benchmarking OBSTMtPer/n_keys/6: Analyzing
+OBSTMtPer/n_keys/6      time:   [378.38 µs 410.05 µs 456.16 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking OBSTMtPer/n_keys/10
+Benchmarking OBSTMtPer/n_keys/10: Warming up for 100.00 ms
+Benchmarking OBSTMtPer/n_keys/10: Collecting 10 samples in estimated 472.14 ms (165 iterations)
+Benchmarking OBSTMtPer/n_keys/10: Analyzing
+OBSTMtPer/n_keys/10     time:   [2.3933 ms 2.5602 ms 2.8052 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+
+     Running benches/Chap50/BenchOptBinSearchTreeStEph.rs (target/release/deps/BenchOptBinSearchTreeStEph-d25202f70ce44c55)
+Benchmarking OBSTStEph/n_keys/6
+Benchmarking OBSTStEph/n_keys/6: Warming up for 100.00 ms
+Benchmarking OBSTStEph/n_keys/6: Collecting 10 samples in estimated 300.02 ms (81k iterations)
+Benchmarking OBSTStEph/n_keys/6: Analyzing
+OBSTStEph/n_keys/6      time:   [3.3941 µs 3.5741 µs 3.7261 µs]
+                        change: [+22.513% +26.328% +29.556%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+Benchmarking OBSTStEph/n_keys/10
+Benchmarking OBSTStEph/n_keys/10: Warming up for 100.00 ms
+Benchmarking OBSTStEph/n_keys/10: Collecting 10 samples in estimated 300.15 ms (22k iterations)
+Benchmarking OBSTStEph/n_keys/10: Analyzing
+OBSTStEph/n_keys/10     time:   [14.274 µs 14.367 µs 14.511 µs]
+                        change: [+24.330% +26.592% +28.666%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+     Running benches/Chap50/BenchOptBinSearchTreeStPer.rs (target/release/deps/BenchOptBinSearchTreeStPer-2eb5b4ce067c87fb)
+Benchmarking OBSTStPer/n_keys/6
+Benchmarking OBSTStPer/n_keys/6: Warming up for 100.00 ms
+Benchmarking OBSTStPer/n_keys/6: Collecting 10 samples in estimated 300.04 ms (86k iterations)
+Benchmarking OBSTStPer/n_keys/6: Analyzing
+OBSTStPer/n_keys/6      time:   [3.1657 µs 3.4173 µs 3.7135 µs]
+                        change: [+15.208% +21.442% +27.486%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking OBSTStPer/n_keys/10
+Benchmarking OBSTStPer/n_keys/10: Warming up for 100.00 ms
+Benchmarking OBSTStPer/n_keys/10: Collecting 10 samples in estimated 300.66 ms (24k iterations)
+Benchmarking OBSTStPer/n_keys/10: Analyzing
+OBSTStPer/n_keys/10     time:   [12.352 µs 12.409 µs 12.486 µs]
+                        change: [+13.974% +15.839% +17.936%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+Elapsed: 21s
