@@ -521,13 +521,13 @@ path = "tests/Chap28/TestMaxContigSubSumDivConOptStEph.rs"
 name = "TestMaxContigSubSumDivConStEph"
 path = "tests/Chap28/TestMaxContigSubSumDivConStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestMaxContigSubSumOptMtEph"
-# path = "tests/Chap28/TestMaxContigSubSumOptMtEph.rs"
+[[test]]
+name = "TestMaxContigSubSumOptMtEph"
+path = "tests/Chap28/TestMaxContigSubSumOptMtEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestMaxContigSubSumOptStEph"
-# path = "tests/Chap28/TestMaxContigSubSumOptStEph.rs"
+[[test]]
+name = "TestMaxContigSubSumOptStEph"
+path = "tests/Chap28/TestMaxContigSubSumOptStEph.rs"
 
 [[test]]
 name = "TestMaxContigSubSumReducedStEph"
