@@ -12,6 +12,7 @@
 //	Section 5b. view impls
 //	Section 8b. traits
 //	Section 9b. impls
+//	Section 10b. iterators
 //	Section 11a. top level coarse locking
 //	Section 12b. derive impls in verus!
 //	Section 14. derive impls outside verus!
@@ -318,6 +319,11 @@ pub mod OrderedTableMtPer {
             where Self: Sized
             requires self.spec_orderedtablemtper_wf()
             ensures self@.dom().finite();
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- acquires read lock, calls StPer iter, releases lock
+        fn iter(&self) -> (it: OrderedTableMtPerIter<K, V>)
+            requires self.spec_orderedtablemtper_wf()
+            ensures it@.0 == 0, iter_invariant_orderedtablemtper(&it);
     }
 
     //		Section 9b. impls
@@ -744,6 +750,130 @@ pub mod OrderedTableMtPer {
             proof { use_type_invariant(self); }
             read_handle.release_read();
             (from_st_table(left), from_st_table(right))
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- acquires read lock, snapshots via StPer iter, releases lock
+        fn iter(&self) -> (it: OrderedTableMtPerIter<K, V>) {
+            proof { use_type_invariant(self); }
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            proof { assert(inner.spec_orderedtablestper_wf()); }
+            let st_iter = inner.iter();
+            read_handle.release_read();
+            OrderedTableMtPerIter { inner: st_iter }
+        }
+    }
+
+    //		Section 10b. iterators
+
+
+    pub open spec fn iter_invariant_orderedtablemtper<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static>(
+        it: &OrderedTableMtPerIter<K, V>
+    ) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    pub struct OrderedTableMtPerIter<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> {
+        pub inner: OrderedTableStPerIter<K, V>,
+    }
+
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPerIter<K, V> {
+        type V = (int, Seq<Pair<K, V>>);
+        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) {
+            self.inner@
+        }
+    }
+
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> std::iter::Iterator for OrderedTableMtPerIter<K, V> {
+        type Item = Pair<K, V>;
+        fn next(&mut self) -> (next: Option<Pair<K, V>>)
+            ensures
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match next {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index >= old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& element == old_seq[old_index]
+                        },
+                    }
+                }),
+        {
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for for-loop support over OrderedTableMtPerIter.
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    pub struct OrderedTableMtPerGhostIterator<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> {
+        pub pos: int,
+        pub elements: Seq<Pair<K, V>>,
+    }
+
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPerGhostIterator<K, V> {
+        type V = Seq<Pair<K, V>>;
+        open spec fn view(&self) -> Seq<Pair<K, V>> { self.elements.take(self.pos) }
+    }
+
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> vstd::pervasive::ForLoopGhostIteratorNew for OrderedTableMtPerIter<K, V> {
+        type GhostIter = OrderedTableMtPerGhostIterator<K, V>;
+        open spec fn ghost_iter(&self) -> OrderedTableMtPerGhostIterator<K, V> {
+            OrderedTableMtPerGhostIterator { pos: self@.0, elements: self@.1 }
+        }
+    }
+
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> vstd::pervasive::ForLoopGhostIterator for OrderedTableMtPerGhostIterator<K, V> {
+        type ExecIter = OrderedTableMtPerIter<K, V>;
+        type Item = Pair<K, V>;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &OrderedTableMtPerIter<K, V>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &OrderedTableMtPerIter<K, V>) -> OrderedTableMtPerGhostIterator<K, V> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> std::iter::IntoIterator for &'a OrderedTableMtPer<K, V> {
+        type Item = Pair<K, V>;
+        type IntoIter = OrderedTableMtPerIter<K, V>;
+        fn into_iter(self) -> (it: OrderedTableMtPerIter<K, V>)
+            requires self.spec_orderedtablemtper_wf()
+            ensures it@.0 == 0, iter_invariant_orderedtablemtper(&it),
+        {
+            self.iter()
         }
     }
 

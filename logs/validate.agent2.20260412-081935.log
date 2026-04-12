@@ -1,0 +1,17 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error[E0609]: no field `elements` on type `&'a Self`
+   --> src/Chap41/ArraySetStEph.rs:352:31
+    |
+219 |     pub trait ArraySetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
+    |     --------------------------------------------------------------------------------- type parameter 'Self' declared here
+...
+352 |                 it@.1 == self.elements.seq@,
+    |                               ^^^^^^^^ unknown field
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0609`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 500MB, peak z3 RSS: 0MB, min free: 27418MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

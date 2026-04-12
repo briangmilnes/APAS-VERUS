@@ -1,0 +1,47 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:2113:40
+     |
+2087 |             forall|t: T| (#[trigger] left@.contains(t@)) ==> t.cmp_spec(&key) == Less,
+     |             ------------------------------------------------------------------------- failed precondition
+...
+2113 |                     let merged_right = join_with_priority_st(lr, key, priority, right);
+     |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:2087:82
+     |
+2087 |             forall|t: T| (#[trigger] left@.contains(t@)) ==> t.cmp_spec(&key) == Less,
+     |                                                                                  ^^^^
+
+note: 
+
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+lr.view().finite() ✔
+right.view().finite() ✔
+lr.view().disjoint(right.view()) ✔
+!(lr.view().contains(key.view())) ✔
+!(right.view().contains(key.view())) ✔
+clip(nat, lr.view().len() + right.view().len()) < UnsignedMax.Exec(usize::BITS) ✔
+forall |t|
+    lr.view().contains(t.view()) ==>
+        t.cmp_spec(key) == Less ✘
+        |   !(t.cmp_spec(key) is Equal) ✔
+        |   !(t.cmp_spec(key) is Greater) ✘
+        +---
+forall |t|
+    right.view().contains(t.view()) ==>
+        t.cmp_spec(key) == Greater ✔
+spec_param_wf_link(lr.root) ✔
+spec_param_wf_link(right.root) ✔
+lr.spec_bsttreapsteph_wf() ✔
+right.spec_bsttreapsteph_wf() ✔
+
+verification results:: 1299 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 12151MB, peak z3 RSS: 7018MB, min free: 7760MB
+Sampled CPU Usage: rust_verify: 250s, z3 children: 202s

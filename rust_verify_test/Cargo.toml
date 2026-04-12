@@ -162,6 +162,14 @@ path = "tests/Chap37/ProveBSTSetRBMtEph.rs"
 name = "ProveBSTSetSplayMtEph"
 path = "tests/Chap37/ProveBSTSetSplayMtEph.rs"
 
+[[test]]
+name = "ProveBSTPlainMtEph"
+path = "tests/Chap37/ProveBSTPlainMtEph.rs"
+
+[[test]]
+name = "ProveBSTRBMtEph"
+path = "tests/Chap37/ProveBSTRBMtEph.rs"
+
 # Chap43 iterator proof tests
 [[test]]
 name = "ProveOrderedSetStEph"
@@ -182,6 +190,14 @@ path = "tests/Chap43/ProveOrderedTableStPer.rs"
 [[test]]
 name = "ProveOrderedTableMtEph"
 path = "tests/Chap43/ProveOrderedTableMtEph.rs"
+
+[[test]]
+name = "ProveOrderedSetMtEph"
+path = "tests/Chap43/ProveOrderedSetMtEph.rs"
+
+[[test]]
+name = "ProveOrderedTableMtPer"
+path = "tests/Chap43/ProveOrderedTableMtPer.rs"
 
 # SKIPPED: ProveAugOrderedTable{StEph,StPer,MtEph} — Verus can't verify Clone on reducer fn items
 
@@ -216,6 +232,15 @@ path = "tests/Chap41/ProveAVLTreeSetStEph.rs"
 [[test]]
 name = "ProveAVLTreeSetStPer"
 path = "tests/Chap41/ProveAVLTreeSetStPer.rs"
+
+[[test]]
+name = "ProveOrdKeyMap"
+path = "tests/Chap41/ProveOrdKeyMap.rs"
+
+# Chap42 iterator proof tests
+[[test]]
+name = "ProveTableMtEph"
+path = "tests/Chap42/ProveTableMtEph.rs"
 
 # Standards proof tests
 [[test]]

@@ -11,6 +11,7 @@
 //	Section 7. proof fns/broadcast groups
 //	Section 8. traits
 //	Section 9. impls
+//	Section 10. iterators
 //	Section 13. macros
 //	Section 14. derive impls outside verus!
 
@@ -29,12 +30,15 @@ pub mod BSTPlainStEph {
 {
 
 
+    use std::vec::IntoIter;
+
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::Chap37::BSTSpecsAndLemmas::BSTSpecsAndLemmas::*;
     #[cfg(verus_keep_ghost)]
     pub use crate::Chap37::BSTSpecsAndLemmas::BSTSpecsAndLemmas::{
         lemma_node_contains, lemma_bst_left, lemma_bst_right,
     };
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
     //		Section 4. type definitions
@@ -682,6 +686,137 @@ pub mod BSTPlainStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
         fn maximum(&self) -> (max: Option<&T>) {
             self.root.max_node()
+        }
+    }
+
+    //		Section 10. iterators — BSTPlainStEph
+
+    /// Snapshot iterator over BSTPlainStEph elements in ascending key order.
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTPlainStEphIter<T: TotalOrder + Clone> {
+        pub inner: IntoIter<T>,
+    }
+
+    impl<T: TotalOrder + Clone> View for BSTPlainStEphIter<T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant_bstplainsteph<T: TotalOrder + Clone>(it: &BSTPlainStEphIter<T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<T: TotalOrder + Clone> std::iter::Iterator for BSTPlainStEphIter<T> {
+        type Item = T;
+        fn next(&mut self) -> (next: Option<T>)
+            ensures
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match next {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index >= old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& element == old_seq[old_index]
+                        },
+                    }
+                }),
+        {
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for for-loop support over BSTPlainStEphIter.
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTPlainStEphGhostIterator<T: TotalOrder + Clone> {
+        pub pos: int,
+        pub elements: Seq<T>,
+    }
+
+    impl<T: TotalOrder + Clone> View for BSTPlainStEphGhostIterator<T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
+    impl<T: TotalOrder + Clone> vstd::pervasive::ForLoopGhostIteratorNew for BSTPlainStEphIter<T> {
+        type GhostIter = BSTPlainStEphGhostIterator<T>;
+        open spec fn ghost_iter(&self) -> BSTPlainStEphGhostIterator<T> {
+            BSTPlainStEphGhostIterator { pos: self@.0, elements: self@.1 }
+        }
+    }
+
+    impl<T: TotalOrder + Clone> vstd::pervasive::ForLoopGhostIterator for BSTPlainStEphGhostIterator<T> {
+        type ExecIter = BSTPlainStEphIter<T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &BSTPlainStEphIter<T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &BSTPlainStEphIter<T>) -> BSTPlainStEphGhostIterator<T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: TotalOrder + Clone> std::iter::IntoIterator for &'a BSTPlainStEph<T> where T: Clone + Eq {
+        type Item = T;
+        type IntoIter = BSTPlainStEphIter<T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires
+                self.spec_bstplainsteph_wf(),
+                self.root.spec_size() <= usize::MAX,
+                obeys_feq_clone::<T>(),
+            ensures
+                it@.0 == 0,
+                it@.1 =~= self.root.spec_in_order(),
+                iter_invariant_bstplainsteph(&it),
+        {
+            let traversal = self.root.in_order();
+            BSTPlainStEphIter { inner: traversal.into_iter() }
+        }
+    }
+
+    impl<T: TotalOrder> BSTPlainStEph<T> {
+        /// Returns a snapshot iterator over the tree elements in ascending key order.
+        /// - Alg Analysis: Code review (Claude Sonnet 4.6): Work O(n), Span O(n) — in-order traversal.
+        pub fn iter(&self) -> (it: BSTPlainStEphIter<T>) where T: Clone + Eq
+            requires
+                self.spec_bstplainsteph_wf(),
+                self.root.spec_size() <= usize::MAX,
+                obeys_feq_clone::<T>(),
+            ensures
+                it@.0 == 0,
+                it@.1 =~= self.root.spec_in_order(),
+                iter_invariant_bstplainsteph(&it),
+        {
+            self.into_iter()
         }
     }
 

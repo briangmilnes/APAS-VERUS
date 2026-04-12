@@ -1,0 +1,129 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: unknown start of token: \u{2014}
+    --> src/Chap38/BSTParaStEph.rs:1660:79
+     |
+1660 |         / - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — in_order traversal.
+     |                                                                               ^
+     |
+help: Unicode character '—' (Em Dash) looks like '-' (Minus/Hyphen), but it is not
+     |
+1660 -         / - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — in_order traversal.
+1660 +         / - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) - in_order traversal.
+     |
+
+error: expected one of: `default`, `broadcast`, `fn`, `const`, `type`, identifier, `self`, `super`, `crate`, `::`
+    --> src/Chap38/BSTParaStEph.rs:1660:9
+     |
+1660 |         / - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — in_order traversal.
+     |         ^
+
+error[E0425]: cannot find type `BSTParaStEphInv` in this scope
+    --> src/Chap38/BSTParaStEph.rs:1774:34
+     |
+1774 |     impl<T: StT + Ord> Debug for BSTParaStEphInv<T> {
+     |                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTParaStEphInv` in this scope
+    --> src/Chap38/BSTParaStEph.rs:1780:36
+     |
+1780 |     impl<T: StT + Ord> Display for BSTParaStEphInv<T> {
+     |                                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `Exposed` in this scope
+    --> src/Chap38/BSTParaStEph.rs:1788:46
+     |
+1788 |     impl<T: StT + Ord + Display> Display for Exposed<T> {
+     |                                              ^^^^^^^ not found in this scope
+     |
+help: consider importing this enum
+     |
+  42 +     use crate::Chap38::BSTParaMtEph::BSTParaMtEph::Exposed;
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+    --> src/Chap38/BSTParaStEph.rs:1791:17
+     |
+1791 |                 Exposed::Leaf => write!(f, "Leaf"),
+     |                 ^^^^^^^ use of undeclared type `Exposed`
+     |
+help: consider importing this enum
+     |
+  42 +     use crate::Chap38::BSTParaMtEph::BSTParaMtEph::Exposed;
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+    --> src/Chap38/BSTParaStEph.rs:1792:17
+     |
+1792 |                 Exposed::Node(l, k, r) => write!(f, "Node({}, {}, {})", l, k, r),
+     |                 ^^^^^^^ use of undeclared type `Exposed`
+     |
+help: consider importing this enum
+     |
+  42 +     use crate::Chap38::BSTParaMtEph::BSTParaMtEph::Exposed;
+     |
+
+error[E0425]: cannot find type `NodeInner` in this scope
+    --> src/Chap38/BSTParaStEph.rs:1799:46
+     |
+1799 |     impl<T: StT + Ord + Display> Display for NodeInner<T> {
+     |                                              ^^^^^^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+  42 +     use crate::Chap38::BSTParaMtEph::BSTParaMtEph::NodeInner;
+     |
+
+error[E0425]: cannot find type `ParamBST` in this scope
+    --> src/Chap38/BSTParaStEph.rs:1807:62
+     |
+1807 |     impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for ParamBST<T> {
+     |                                                              ^^^^^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+  42 +     use crate::Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST;
+     |
+
+error[E0425]: cannot find type `ParamBST` in this scope
+    --> src/Chap38/BSTParaStEph.rs:1813:46
+     |
+1813 |     impl<T: StT + Ord + Display> Display for ParamBST<T> {
+     |                                              ^^^^^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+  42 +     use crate::Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST;
+     |
+
+error[E0425]: cannot find type `ParamBSTIter` in this scope
+    --> src/Chap38/BSTParaStEph.rs:1821:62
+     |
+1821 |     impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for ParamBSTIter<T> {
+     |                                                              ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamBSTIter` in this scope
+    --> src/Chap38/BSTParaStEph.rs:1827:46
+     |
+1827 |     impl<T: StT + Ord + Display> Display for ParamBSTIter<T> {
+     |                                              ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamBSTGhostIterator` in this scope
+    --> src/Chap38/BSTParaStEph.rs:1833:62
+     |
+1833 |     impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for ParamBSTGhostIterator<T> {
+     |                                                              ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamBSTGhostIterator` in this scope
+    --> src/Chap38/BSTParaStEph.rs:1839:46
+     |
+1839 |     impl<T: StT + Ord + Display> Display for ParamBSTGhostIterator<T> {
+     |                                              ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 14 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 24492MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

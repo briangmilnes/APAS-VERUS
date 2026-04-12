@@ -19,6 +19,7 @@
 //	Section 5d. view impls
 //	Section 8d. traits
 //	Section 9d. impls
+//	Section 10d. iterators
 //	Section 11c. top level coarse locking
 //	Section 12d. derive impls in verus!
 //	Section 13. macros
@@ -1248,6 +1249,10 @@ pub mod BSTRBMtEph {
                 self.spec_bstrbmteph_wf(),
                 forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn iter(&self) -> (it: BSTRBMtEphIter<T>)
+            requires self.spec_bstrbmteph_wf()
+            ensures it@.0 == 0, iter_invariant_bstrbmteph(&it);
     }
 
     //		Section 9d. impls
@@ -1503,6 +1508,129 @@ pub mod BSTRBMtEph {
             let accumulated = data.reduce_parallel(&op, identity);
             handle.release_read();
             accumulated
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn iter(&self) -> BSTRBMtEphIter<T> {
+            let seq = self.in_order();
+            BSTRBMtEphIter { snapshot: seq.seq, pos: 0 }
+        }
+    }
+
+    //		Section 10d. iterators — BSTRBMtEph
+
+    /// Snapshot iterator over BSTRBMtEph elements in ascending key order.
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTRBMtEphIter<T: StTInMtT + Ord + TotalOrder> {
+        pub snapshot: Vec<T>,
+        pub pos: usize,
+    }
+
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTRBMtEphIter<T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) {
+            (self.pos as int, self.snapshot@)
+        }
+    }
+
+    pub open spec fn iter_invariant_bstrbmteph<T: StTInMtT + Ord + TotalOrder>(it: &BSTRBMtEphIter<T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<T: StTInMtT + Ord + TotalOrder> std::iter::Iterator for BSTRBMtEphIter<T> {
+        type Item = T;
+        fn next(&mut self) -> (next: Option<T>)
+            ensures
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match next {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index >= old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& element == old_seq[old_index]
+                        },
+                    }
+                }),
+        {
+            if self.pos >= self.snapshot.len() {
+                None
+            } else {
+                let item = self.snapshot[self.pos].clone();
+                self.pos = self.pos + 1;
+                proof { assume(item == old(self)@.1[old(self)@.0]); }
+                Some(item)
+            }
+        }
+    }
+
+    /// Ghost iterator for for-loop support over BSTRBMtEphIter.
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTRBMtEphGhostIterator<T: StTInMtT + Ord + TotalOrder> {
+        pub pos: int,
+        pub elements: Seq<T>,
+    }
+
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTRBMtEphGhostIterator<T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
+    impl<T: StTInMtT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIteratorNew for BSTRBMtEphIter<T> {
+        type GhostIter = BSTRBMtEphGhostIterator<T>;
+        open spec fn ghost_iter(&self) -> BSTRBMtEphGhostIterator<T> {
+            BSTRBMtEphGhostIterator { pos: self@.0, elements: self@.1 }
+        }
+    }
+
+    impl<T: StTInMtT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIterator for BSTRBMtEphGhostIterator<T> {
+        type ExecIter = BSTRBMtEphIter<T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &BSTRBMtEphIter<T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &BSTRBMtEphIter<T>) -> BSTRBMtEphGhostIterator<T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: StTInMtT + Ord + TotalOrder> std::iter::IntoIterator for &'a BSTRBMtEph<T> {
+        type Item = T;
+        type IntoIter = BSTRBMtEphIter<T>;
+        fn into_iter(self) -> (it: BSTRBMtEphIter<T>)
+            requires self.spec_bstrbmteph_wf()
+            ensures it@.0 == 0, iter_invariant_bstrbmteph(&it),
+        {
+            self.iter()
         }
     }
 
