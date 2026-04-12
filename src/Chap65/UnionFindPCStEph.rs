@@ -13,6 +13,7 @@ pub mod UnionFindPCStEph {
 
     use vstd::prelude::*;
     use vstd::set_lib::*;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
 
     use crate::Types::Types::*;
@@ -779,7 +780,12 @@ pub mod UnionFindPCStEph {
 
         fn insert(&mut self, v: V)
             requires old(self).spec_wf(), !old(self).spec_contains(v@),
-            ensures self.spec_wf(), self.spec_contains(v@);
+            ensures
+                self.spec_wf(),
+                self.spec_contains(v@),
+                forall|z: V::V| z != v@ ==>
+                    (#[trigger] self.spec_contains(z) <==> old(self).spec_contains(z)),
+                self.spec_n() == old(self).spec_n() + 1;
 
         fn find_root(&self, v: &V) -> (root: V)
             requires self.spec_wf(), self.spec_contains(v@),
@@ -800,12 +806,19 @@ pub mod UnionFindPCStEph {
 
         fn union(&mut self, u: &V, v: &V)
             requires old(self).spec_wf(), old(self).spec_contains(u@), old(self).spec_contains(v@),
-            ensures self.spec_wf(), self.spec_same_set(u@, v@);
+            ensures
+                self.spec_wf(),
+                self.spec_same_set(u@, v@),
+                forall|z: V::V| old(self).spec_contains(z) <==> self.spec_contains(z),
+                self.spec_n() == old(self).spec_n();
 
         fn equals(&mut self, u: &V, v: &V) -> (eq: bool)
             requires old(self).spec_wf(), old(self).spec_contains(u@), old(self).spec_contains(v@),
-            ensures eq == old(self).spec_same_set(u@, v@),
-                self.spec_wf();
+            ensures
+                eq == old(self).spec_same_set(u@, v@),
+                self.spec_wf(),
+                forall|z: V::V| old(self).spec_contains(z) <==> self.spec_contains(z),
+                self.spec_n() == old(self).spec_n();
 
         fn size(&self) -> (n: usize) requires self.spec_wf(), ensures n as nat == self.spec_n();
     }

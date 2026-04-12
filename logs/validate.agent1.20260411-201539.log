@@ -1,0 +1,45 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+error[E0433]: failed to resolve: could not find `UnionFindStEph` in `Chap65`
+  --> src/Chap65/KruskalStEph.rs:20:24
+   |
+20 |     use crate::Chap65::UnionFindStEph::UnionFindStEph::*;
+   |                        ^^^^^^^^^^^^^^ could not find `UnionFindStEph` in `Chap65`
+
+error[E0433]: failed to resolve: could not find `UnionFindStEph` in `Chap65`
+  --> src/Chap65/KruskalStEph.rs:38:28
+   |
+38 |         use crate::Chap65::UnionFindStEph::UnionFindStEph::*;
+   |                            ^^^^^^^^^^^^^^ could not find `UnionFindStEph` in `Chap65`
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+  --> src/Chap65/KruskalStEph.rs:44:73
+   |
+44 |         pub open spec fn opaque_spec_unionfindsteph_wf<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
+   |                                                                         ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+  --> src/Chap65/KruskalStEph.rs:50:22
+   |
+50 |             uf: &mut UnionFindStEph<V>,
+   |                      ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+   --> src/Chap65/KruskalStEph.rs:134:18
+    |
+134 |         uf: &mut UnionFindStEph<V>,
+    |                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+   --> src/Chap65/KruskalStEph.rs:327:22
+    |
+327 |         let mut uf = UnionFindStEph::new();
+    |                      ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error: aborting due to 6 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 216MB, peak z3 RSS: 0MB, min free: 27396MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

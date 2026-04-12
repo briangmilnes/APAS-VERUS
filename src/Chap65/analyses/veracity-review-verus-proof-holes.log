@@ -22,17 +22,24 @@ Table of Contents:
 
 ✓ KruskalStEph.rs
    1 clean proof function
-⚠ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:493: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       489 |         fn clone(&self) -> (cloned: Self)
-            ...
-       491 |         {
-       492 |             let cloned = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
-       494 |             cloned
-       495 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:251: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
-✓ UnionFindStEph.rs
-   24 clean proof functions
+ℹ PrimStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:506: info: accept()
+   Info: 1 total
+   4 clean proof functions
+✓ UnionFindArrayStEph.rs
+   11 clean proof functions
+✓ UnionFindNoPCStEph.rs
+   5 clean proof functions
+❌ UnionFindPCStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindPCStEph.rs:92: error: opaque - #[verifier::opaque]
+        93 |     pub open spec fn spec_light_wf<V: View>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindPCStEph.rs:108: error: opaque - #[verifier::opaque]
+       109 |     pub open spec fn spec_find_preserved<V: View>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindPCStEph.rs:118: error: opaque - #[verifier::opaque]
+       119 |     pub open spec fn spec_same_domain<V: View>(
+   Holes: 3 total
+      3 × opaque
+   Proof functions: 18 total (18 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -44,7 +51,9 @@ Table of Contents:
 
 KruskalStEph  depends upon only clean modules
 PrimStEph  depends upon only clean modules
-UnionFindStEph  depends upon only clean modules
+UnionFindArrayStEph  depends upon only clean modules
+UnionFindNoPCStEph  depends upon only clean modules
+UnionFindPCStEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
@@ -52,54 +61,45 @@ UnionFindStEph  depends upon only clean modules
 
 KruskalStEph.rs  depends upon only clean modules
 PrimStEph.rs  depends upon only clean modules
-UnionFindStEph.rs  depends upon only clean modules
+UnionFindArrayStEph.rs  depends upon only clean modules
+UnionFindNoPCStEph.rs  depends upon only clean modules
+UnionFindPCStEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   3 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
-   3 total
+   4 clean (no holes, no errors; 80%)
+   1 holed (holes or errors, 20%)
+   5 total
 
 Proof Functions:
-   29 clean (100%)
+   39 clean (100%)
    0 holed (0%)
-   29 total
+   39 total
 
 Function Specs:
-   32 exec fns with complete spec (requires+ensures) (34%)
-   2 exec fns missing spec (2%)
-   59 proof/spec fns clean (63%)
+   50 exec fns with complete spec (requires+ensures) (34%)
+   2 exec fns missing spec (1%)
+   95 proof/spec fns clean (64%)
    0 proof/spec fns with holes (0%)
-   93 total fns
+   147 total fns
 
 
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
+Holes Found: 3 (actionable)
+   3 × opaque (100%)
+Real Proof Targets: 3 (all actionable)
 
-Warnings: 1 total
-   1 × assume_eq_clone_workaround
-
-Structural (info only): 1
-   1 × OPAQUE_EXTERNAL
-
-No proof holes found! All proofs are complete.
+Accepted (reviewed): 1 total
+   1 × accept()
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 15:36:04 -07:00
-Ended:     2026-04-06 15:36:04 -07:00
-Duration:  80ms
-
-Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-===========
-
-Started:   2026-04-06 15:36:04 -07:00
-Ended:     2026-04-06 15:36:04 -07:00
-Duration:  80ms
+Started:   2026-04-11 20:37:20 -07:00
+Ended:     2026-04-11 20:37:20 -07:00
+Duration:  52ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

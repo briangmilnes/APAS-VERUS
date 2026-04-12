@@ -18,12 +18,6 @@ pub mod Types;
 pub mod Concurrency;
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap02")))]
 pub mod ParaPairs;
-pub mod UnionFind {
-    pub mod UnionFindArrayStEph;
-    pub mod UnionFindStEph;
-    pub mod UnionFindPCStEph;
-}
-
 pub mod experiments {
     // SUCCEEDS
 //    pub mod accept;                                       // SUCCEEDS: accept(b) with admit replaces raw assume(b)
@@ -695,7 +689,9 @@ pub mod Chap64 {
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap65")))]
 pub mod Chap65 {
-    pub mod UnionFindStEph;
+    pub mod UnionFindNoPCStEph;
+    pub mod UnionFindPCStEph;
+    pub mod UnionFindArrayStEph;
     pub mod KruskalStEph;
     pub mod PrimStEph;
 }
