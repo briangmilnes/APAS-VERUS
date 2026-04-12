@@ -1,0 +1,13 @@
+Mode: full
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1442:9
+     |
+1442 |         reveal(spec_rank_lt_elements);
+     |         ^^^^^^
+
+verification results:: 5667 verified, 0 errors
+warning: 1 warning emitted
+
+Elapsed: 81s
+Sampled Memory Usage: peak rust_verify RSS: 10064MB, peak z3 RSS: 497MB, min free: 17152MB
+Sampled CPU Usage: rust_verify: 206s, z3 children: 122s

@@ -462,6 +462,56 @@ name = "BenchInsertionSortStEph"
 path = "benches/Chap03/BenchInsertionSortStEph.rs"
 harness = false
 
+[[bench]]
+name = "BenchArraySeqStEph"
+path = "benches/Chap19/BenchArraySeqStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchMergeSortStPer"
+path = "benches/Chap26/BenchMergeSortStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchMaxContigSubSumOptStEph"
+path = "benches/Chap28/BenchMaxContigSubSumOptStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchOrderStatSelectStEph"
+path = "benches/Chap35/BenchOrderStatSelectStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchQuickSortStEph"
+path = "benches/Chap36/BenchQuickSortStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTPlainStEph"
+path = "benches/Chap37/BenchBSTPlainStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchSubsetSumStEph"
+path = "benches/Chap49/BenchSubsetSumStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchMinEditDistStEph"
+path = "benches/Chap49/BenchMinEditDistStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchUnionFindPCStEph"
+path = "benches/Chap65/BenchUnionFindPCStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchFibonacciStEph"
+path = "benches/Chap11/BenchFibonacciStEph.rs"
+harness = false
+
 [dev-dependencies]
 criterion = { version = "0.5", features = ["html_reports"] }
 # rust_verify_test_macros requires nightly - use verus-proof-time-testing project instead
