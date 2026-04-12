@@ -1,0 +1,15 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+error: invariant not satisfied before loop
+   --> src/Chap65/KruskalStEph.rs:322:17
+    |
+322 | /                 forall|k: <V as View>::V| uf.spec_contains(k) ==>
+323 | |                     exists|j: int| 0 <= j < vi && #[trigger] vertex_seq@[j]@ == k,
+    | |_________________________________________________________________________________^
+
+verification results:: 2615 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 164s
+Sampled Memory Usage: peak rust_verify RSS: 2895MB, peak z3 RSS: 6892MB, min free: 17725MB
+Sampled CPU Usage: rust_verify: 42s, z3 children: 57s

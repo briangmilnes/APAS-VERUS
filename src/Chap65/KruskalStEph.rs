@@ -2,11 +2,12 @@
 //! Chapter 65: Kruskal's MST Algorithm (Sequential Ephemeral)
 //!
 //! Implements Algorithm 65.2: Kruskal's algorithm for computing Minimum Spanning Trees.
-//! Uses Union-Find data structure for efficient cycle detection.
+//! Uses Union-Find with path compression for efficient cycle detection.
 //!
 //! Proof status:
-//! - opaque_spec_unionfindsteph_wf: removed opaque (R130 — wf is already closed, double opacity unnecessary).
-//! - kruskal_process_edge: PROVED (R130, agent1 — union now proved, wf propagation is automatic).
+//! - R196: rewired from old UnionFindStEph to UnionFindPCStEph (path compression).
+//!   The old uf_opaque_wrappers nested module was deleted: PC's spec_wf is already
+//!   bundled around opaque spec_light_wf (R195), so an outer wrapper is redundant.
 
 pub mod KruskalStEph {
 
@@ -17,7 +18,7 @@ pub mod KruskalStEph {
     use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
     use crate::Types::Types::*;
     use std::hash::Hash;
-    use crate::Chap65::UnionFindStEph::UnionFindStEph::*;
+    use crate::Chap65::UnionFindPCStEph::UnionFindPCStEph::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_view_injective};
     use crate::vstdplus::pervasives_plus::pervasives_plus::vec_swap;
@@ -28,51 +29,33 @@ pub mod KruskalStEph {
 
     pub type T<V> = LabUnDirGraphStEph<V, u64>;
 
-    /// Nested module isolating UF wf quantifiers from LabEdge broadcast groups.
-    /// The broadcast groups in the outer module cause Z3 divergence when combined
-    /// with the 13 quantified conjuncts of spec_unionfindsteph_wf.
-    pub mod uf_opaque_wrappers {
-        use vstd::prelude::*;
-        use crate::Chap05::SetStEph::SetStEph::*;
-        use crate::Types::Types::*;
-        use crate::Chap65::UnionFindStEph::UnionFindStEph::*;
-        use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
+    verus! {
 
-        verus! {
-
-        /// Wrapper for UF well-formedness. Delegates to the closed spec_unionfindsteph_wf.
-        pub open spec fn opaque_spec_unionfindsteph_wf<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
-            uf.spec_unionfindsteph_wf()
+    /// Process one edge: if endpoints are in different components, add to MST and union.
+    pub fn kruskal_process_edge<V: HashOrd>(
+        uf: &mut UnionFindPC<V>,
+        mst_edges: &mut SetStEph<LabEdge<V, u64>>,
+        edge: LabEdge<V, u64>,
+    )
+        requires
+            old(uf).spec_wf(),
+            old(mst_edges).spec_setsteph_wf(),
+            old(uf).spec_contains(edge@.0),
+            old(uf).spec_contains(edge@.1),
+        ensures
+            uf.spec_wf(),
+            mst_edges.spec_setsteph_wf(),
+            forall|z: <V as View>::V| old(uf).spec_contains(z) <==> uf.spec_contains(z),
+    {
+        let u = edge.0.clone_view();
+        let v = edge.1.clone_view();
+        if !uf.equals(&u, &v) {
+            let _ = mst_edges.insert(edge);
+            uf.union(&u, &v);
         }
-
-        /// Process one edge: if endpoints are in different components, add to MST and union.
-        pub fn kruskal_process_edge<V: HashOrd>(
-            uf: &mut UnionFindStEph<V>,
-            mst_edges: &mut SetStEph<LabEdge<V, u64>>,
-            edge: LabEdge<V, u64>,
-        )
-            requires
-                opaque_spec_unionfindsteph_wf(old(uf)),
-                old(mst_edges).spec_setsteph_wf(),
-                old(uf)@.parent.contains_key(edge@.0),
-                old(uf)@.parent.contains_key(edge@.1),
-            ensures
-                opaque_spec_unionfindsteph_wf(uf),
-                mst_edges.spec_setsteph_wf(),
-                uf@.parent.dom() =~= old(uf)@.parent.dom(),
-        {
-            let u = edge.0.clone_view();
-            let v = edge.1.clone_view();
-            if !uf.equals(&u, &v) {
-                let _ = mst_edges.insert(edge);
-                uf.union(&u, &v);
-            }
-        }
-
-        } // verus!
     }
 
-    use uf_opaque_wrappers::*;
+    } // verus!
 
     verus! {
 
@@ -85,7 +68,7 @@ pub mod KruskalStEph {
     /// Prove that a sorted edge's endpoints are in the UF domain.
     /// Chains: sort provenance -> pre_sort view -> edge_seq view -> mapped_es -> labeled -> graph@.A -> graph wf -> UF.
     /// Factored out to reduce rlimit pressure on the greedy loop.
-    proof fn lemma_sorted_edge_in_uf<V: HashOrd>(
+    proof fn lemma_sorted_edge_in_graph_v<V: HashOrd>(
         edges_vec_i: LabEdge<V, u64>,
         pre_sort: Seq<LabEdge<V, u64>>,
         edge_seq: Seq<LabEdge<V, u64>>,
@@ -93,7 +76,6 @@ pub mod KruskalStEph {
         labeled_view: Set<(<V as View>::V, <V as View>::V, u64)>,
         graph_V: Set<<V as View>::V>,
         graph_A: Set<(<V as View>::V, <V as View>::V, u64)>,
-        uf_parent_dom: Set<<V as View>::V>,
     )
         requires
             pre_sort.contains(edges_vec_i),
@@ -104,10 +86,9 @@ pub mod KruskalStEph {
                 labeled_view.contains(x) <==> mapped_es.contains(x),
             labeled_view =~= graph_A,
             spec_labgraphview_wf(LabGraphView { V: graph_V, A: graph_A }),
-            forall|v: <V as View>::V| #[trigger] graph_V.contains(v) ==> uf_parent_dom.contains(v),
         ensures
-            uf_parent_dom.contains(edges_vec_i@.0),
-            uf_parent_dom.contains(edges_vec_i@.1),
+            graph_V.contains(edges_vec_i@.0),
+            graph_V.contains(edges_vec_i@.1),
     {
         let j = choose|j: int| 0 <= j < pre_sort.len() && pre_sort[j] == edges_vec_i;
         assert(j < edge_seq.len());
@@ -131,7 +112,7 @@ pub mod KruskalStEph {
 
     /// Greedy edge-adding phase of Kruskal's algorithm.
     fn kruskal_greedy_phase<V: HashOrd>(
-        uf: &mut UnionFindStEph<V>,
+        uf: &mut UnionFindPC<V>,
         mst_edges: &mut SetStEph<LabEdge<V, u64>>,
         edges_vec: &Vec<LabEdge<V, u64>>,
         Ghost(pre_sort): Ghost<Seq<LabEdge<V, u64>>>,
@@ -142,10 +123,10 @@ pub mod KruskalStEph {
         Ghost(graph_A): Ghost<Set<(<V as View>::V, <V as View>::V, u64)>>,
     )
         requires
-            old(uf).spec_unionfindsteph_wf(),
+            old(uf).spec_wf(),
             old(mst_edges).spec_setsteph_wf(),
             forall|v: <V as View>::V| #[trigger] graph_V.contains(v) ==>
-                old(uf)@.parent.contains_key(v),
+                old(uf).spec_contains(v),
             forall|k: int| 0 <= k < edges_vec@.len() ==>
                 pre_sort.contains(#[trigger] edges_vec@[k]),
             pre_sort.len() == edge_seq.len(),
@@ -159,20 +140,14 @@ pub mod KruskalStEph {
         ensures
             mst_edges.spec_setsteph_wf(),
     {
-        let ghost initial_dom = uf@.parent.dom();
-
-        // Establish opaque wf for the loop invariant.
-        proof { assert(opaque_spec_unionfindsteph_wf(uf)) by { reveal(opaque_spec_unionfindsteph_wf); }; }
-
         let mut i: usize = 0;
         while i < edges_vec.len()
             invariant
                 0 <= i <= edges_vec@.len(),
-                opaque_spec_unionfindsteph_wf(uf),
+                uf.spec_wf(),
                 mst_edges.spec_setsteph_wf(),
-                uf@.parent.dom() =~= initial_dom,
                 forall|v: <V as View>::V| #[trigger] graph_V.contains(v) ==>
-                    initial_dom.contains(v),
+                    uf.spec_contains(v),
                 pre_sort.len() == edge_seq.len(),
                 forall|k: int| 0 <= k < edges_vec@.len() ==>
                     pre_sort.contains(#[trigger] edges_vec@[k]),
@@ -187,11 +162,11 @@ pub mod KruskalStEph {
         {
             let edge = edges_vec[i].clone_view();
 
-            // Prove endpoints are in UF domain.
+            // Prove endpoints are in graph_V → loop invariant gives uf.spec_contains.
             proof {
-                lemma_sorted_edge_in_uf::<V>(
+                lemma_sorted_edge_in_graph_v::<V>(
                     edges_vec@[i as int], pre_sort, edge_seq, mapped_es,
-                    labeled_view, graph_V, graph_A, initial_dom,
+                    labeled_view, graph_V, graph_A,
                 );
             }
 
@@ -324,7 +299,7 @@ pub mod KruskalStEph {
         proof { assert(LabEdge_feq_trigger::<V, u64>()); }
 
         let mut mst_edges: SetStEph<LabEdge<V, u64>> = SetStEph::empty();
-        let mut uf = UnionFindStEph::new();
+        let mut uf: UnionFindPC<V> = UnionFindPC::new();
 
         // Convert sets to Vecs for index-based iteration (avoids loop-break info loss).
         let vertex_seq = graph.vertices().to_seq();
@@ -332,34 +307,61 @@ pub mod KruskalStEph {
         let ghost labeled_view = labeled@;
         let edge_seq = labeled.to_seq();
 
-        // Phase 1: Insert all vertices into union-find.
+        // Phase 1: Insert all vertices into union-find. PC's insert requires the
+        // vertex not already be present — we discharge that from vertex_seq's
+        // no_duplicates and view-injectivity.
+        // Establish the empty-uf base case: spec_n == 0 (from new()) implies parent@.dom() is empty.
+        proof {
+            crate::vstdplus::feq::feq::lemma_reveal_view_injective::<V>();
+            reveal(crate::Chap65::UnionFindPCStEph::UnionFindPCStEph::spec_light_wf);
+            assert(uf.parent@.dom().finite());
+            assert(uf.parent@.dom().len() == 0);
+            uf.parent@.dom().lemma_len0_is_empty();
+        }
         let mut vi: usize = 0;
         while vi < vertex_seq.len()
             invariant
                 0 <= vi <= vertex_seq@.len(),
-                uf.spec_unionfindsteph_wf(),
+                uf.spec_wf(),
+                vertex_seq@.no_duplicates(),
+                obeys_feq_view_injective::<V>(),
                 forall|j: int| 0 <= j < vi ==>
-                    uf@.parent.contains_key(#[trigger] vertex_seq@[j]@),
+                    uf.spec_contains(#[trigger] vertex_seq@[j]@),
+                forall|k: <V as View>::V| uf.spec_contains(k) ==>
+                    exists|j: int| 0 <= j < vi && #[trigger] vertex_seq@[j]@ == k,
             decreases vertex_seq@.len() - vi,
         {
+            // Prove !uf.spec_contains(vertex_seq[vi]@) — distinct views imply distinct V values.
+            proof {
+                crate::vstdplus::feq::feq::lemma_reveal_view_injective::<V>();
+                if uf.spec_contains(vertex_seq@[vi as int]@) {
+                    let j = choose|j: int| 0 <= j < vi
+                        && #[trigger] vertex_seq@[j]@ == vertex_seq@[vi as int]@;
+                    // View injectivity: equal views ==> equal V values.
+                    assert(vertex_seq@[j] == vertex_seq@[vi as int]);
+                    // no_duplicates says distinct indices have distinct values.
+                    assert(j != vi as int);
+                    assert(vertex_seq@.no_duplicates());
+                    assert(vertex_seq@[j] != vertex_seq@[vi as int]);
+                    assert(false);
+                }
+            }
             uf.insert(vertex_seq[vi].clone_view());
             vi += 1;
         }
 
         // Bridge: all graph vertices are now in UF.
-        // After while: vi >= vertex_seq.len(), so all vertex_seq elements are in UF.
         proof {
             let mapped_vs = vertex_seq@.map(|_i: int, t: V| t@);
             assert forall|v: <V as View>::V| #[trigger] graph@.V.contains(v) implies
-                uf@.parent.contains_key(v)
+                uf.spec_contains(v)
             by {
-                // v in graph@.V = graph.vertices()@ <==> mapped_vs.contains(v).
                 assert(mapped_vs.contains(v));
                 let j = choose|j: int| 0 <= j < mapped_vs.len() && mapped_vs[j] == v;
                 assert(mapped_vs.len() == vertex_seq@.len());
                 assert(mapped_vs[j] == vertex_seq@[j]@);
                 assert(0 <= j && j < vertex_seq@.len());
-                assert(uf@.parent.contains_key(vertex_seq@[j]@));
+                assert(uf.spec_contains(vertex_seq@[j]@));
             };
         }
 

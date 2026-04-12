@@ -1218,8 +1218,8 @@ path = "tests/Chap64/TestSpanTreeStEph.rs"
 # path = "tests/Chap65/TestPrimStEph.rs"
 
 [[test]]
-name = "TestUnionFindStEph"
-path = "tests/Chap65/TestUnionFindStEph.rs"
+name = "TestUnionFindPCStEph"
+path = "tests/Chap65/TestUnionFindPCStEph.rs"
 
 [[test]]
 name = "TestBoruvkaMtEph"

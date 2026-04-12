@@ -1,12 +1,13 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
-//! Union-Find (Disjoint Set Union) — HashMap-based, Sequential Ephemeral.
+//! Union-Find (Disjoint Set Union) — HashMap-based, Sequential Ephemeral, no path compression.
 //!
 //! Generic UnionFind using HashMapWithViewPlus. Real proofs: spec_pure_find
 //! returns canonical root, union merges sets. Rank-based termination for
-//! spec_pure_find with decreases_when guard.
+//! spec_pure_find with decreases_when guard. The companion `UnionFindPCStEph`
+//! adds path compression on `find()` (mutating self).
 
-pub mod UnionFindStEph {
+pub mod UnionFindNoPCStEph {
 
     use std::fmt::{Debug, Display, Formatter};
     use std::hash::Hash;
