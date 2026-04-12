@@ -95,6 +95,10 @@ path = "tests/Chap18/ProveLinkedListStEph.rs"
 name = "ProveLinkedListStPer"
 path = "tests/Chap18/ProveLinkedListStPer.rs"
 
+[[test]]
+name = "ProveChap18ArraySeqMtEphSlice"
+path = "tests/Chap18/ProveArraySeqMtEphSlice.rs"
+
 # Chap19 proof tests
 [[test]]
 name = "ProveChap19ArraySeqStEph"

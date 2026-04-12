@@ -587,6 +587,7 @@ pub mod Chap52 {
     pub mod AdjTableGraphMtPer;
     pub mod EdgeSetGraphStEph;
     pub mod EdgeSetGraphStPer;
+    pub mod EdgeSetGraphMtEph;
     pub mod EdgeSetGraphMtPer;
 }
 

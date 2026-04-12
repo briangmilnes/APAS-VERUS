@@ -1028,6 +1028,11 @@ path = "benches/Chap52/BenchEdgeSetGraphMtPer.rs"
 harness = false
 
 [[bench]]
+name = "BenchEdgeSetGraphMtEph"
+path = "benches/Chap52/BenchEdgeSetGraphMtEph.rs"
+harness = false
+
+[[bench]]
 name = "BenchEdgeSetGraphStEph"
 path = "benches/Chap52/BenchEdgeSetGraphStEph.rs"
 harness = false

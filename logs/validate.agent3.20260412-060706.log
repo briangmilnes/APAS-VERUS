@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: expected `,`
+   --> src/Chap52/EdgeSetGraphMtEph.rs:280:47
+    |
+280 |                         assert(i as nat < len as nat);
+    |                                               ^^
+
+error[E0425]: cannot find type `EdgeSetGraphMtEph` in this scope
+   --> src/Chap52/EdgeSetGraphMtEph.rs:449:111
+    |
+449 |     impl<V: StTInMtT + Ord + TotalOrder + ClonePreservesView + std::fmt::Debug + 'static> std::fmt::Debug for EdgeSetGraphMtEph<V> {
+    |                                                                                                               ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `EdgeSetGraphMtEph` in this scope
+   --> src/Chap52/EdgeSetGraphMtEph.rs:458:115
+    |
+458 | ...::Display + 'static> std::fmt::Display for EdgeSetGraphMtEph<V> {
+    |                                               ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 321MB, peak z3 RSS: 0MB, min free: 26389MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

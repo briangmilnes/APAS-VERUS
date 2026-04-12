@@ -1,0 +1,57 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphMtEph.rs:282:21
+    |
+282 |                     neighbors.insert(w);
+    |                     ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtEph.rs:234:17
+    |
+234 |                 old(self)@.len() + 1 < usize::MAX as nat,
+    |                 ---------------------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+neighbors.spec_avltreesetmteph_wf() ✔
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+clip(nat, neighbors.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphMtEph.rs:324:13
+    |
+324 |             self.vertices.delete(&v_clone);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtEph.rs:219:17
+    |
+219 |                 old(self)@.len() < usize::MAX as nat,
+    |                 ------------------------------------ failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetMtEph.rs:219:17
+    |
+219 |                 old(self)@.len() < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.vertices.spec_avltreesetmteph_wf() ✔
+self.vertices.view().len() < UnsignedMax.Exec(usize::BITS) ✘
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+
+verification results:: 3035 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 2700MB, peak z3 RSS: 392MB, min free: 23548MB
+Sampled CPU Usage: rust_verify: 44s, z3 children: 48s

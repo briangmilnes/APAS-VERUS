@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error: assertion failed
+   --> src/Chap52/EdgeSetGraphMtEph.rs:288:32
+    |
+288 |                         assert(neighbors@.len() + 1 < usize::MAX as nat);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+clip(nat, neighbors.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+verification results:: 3036 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 2704MB, peak z3 RSS: 382MB, min free: 23499MB
+Sampled CPU Usage: rust_verify: 41s, z3 children: 46s

@@ -41,7 +41,8 @@
       "WebFetch(domain:smtlib.cs.uiowa.edu)",
       "WebFetch(domain:smt-lib.github.io)",
       "WebFetch(domain:smt-lib.org)",
-      "WebFetch(domain:microsoft.github.io)"
+      "WebFetch(domain:microsoft.github.io)",
+      "Bash(grep --line-buffered -E \"ProveChap18ArraySeqMtEphSlice|FAILED|test result|error|ok$\")"
     ]
   }
 }
