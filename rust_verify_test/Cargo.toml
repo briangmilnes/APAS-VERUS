@@ -194,10 +194,28 @@ path = "tests/Chap54/ProveBFSStEph.rs"
 name = "ProveBFSMtEph"
 path = "tests/Chap54/ProveBFSMtEph.rs"
 
+# Chap38 proof tests
+[[test]]
+name = "ProveParamBSTStEph"
+path = "tests/Chap38/ProveParamBSTStEph.rs"
+
+# Chap39 proof tests
+[[test]]
+name = "ProveBSTTreapMtEph"
+path = "tests/Chap39/ProveBSTTreapMtEph.rs"
+
 # Chap41 proof tests
 [[test]]
 name = "ProveAVLTreeSetMtEph"
 path = "tests/Chap41/ProveAVLTreeSetMtEph.rs"
+
+[[test]]
+name = "ProveAVLTreeSetStEph"
+path = "tests/Chap41/ProveAVLTreeSetStEph.rs"
+
+[[test]]
+name = "ProveAVLTreeSetStPer"
+path = "tests/Chap41/ProveAVLTreeSetStPer.rs"
 
 # Standards proof tests
 [[test]]
