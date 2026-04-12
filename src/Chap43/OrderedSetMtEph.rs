@@ -414,7 +414,7 @@ pub mod OrderedSetMtEph {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             locked_val.intersection(other_ref);
             write_handle.release_write(locked_val);
-// Veracity: UNNEEDED proof block             other_read.release_read();
+            other_read.release_read();
             self.ghost_locked_set = Ghost(old_view.intersect(other_view));
         }
 
@@ -431,7 +431,7 @@ pub mod OrderedSetMtEph {
             proof { assume(locked_val@.len() + other_ref@.len() < usize::MAX as nat); } // RWLOCK_GHOST
             locked_val.union(other_ref);
             write_handle.release_write(locked_val);
-// Veracity: UNNEEDED proof block             other_read.release_read();
+            other_read.release_read();
             self.ghost_locked_set = Ghost(old_view.union(other_view));
         }
 

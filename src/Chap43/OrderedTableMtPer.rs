@@ -614,7 +614,7 @@ pub mod OrderedTableMtPer {
             let last = inner.last_key();
             // Veracity: NEEDED assert (speed hint)
             proof { assert(inner@ == self@); }
-// Veracity: UNNEEDED proof block             read_handle.release_read();
+            read_handle.release_read();
             last
         }
 
@@ -694,7 +694,7 @@ pub mod OrderedTableMtPer {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let range = inner.get_key_range(k1, k2);
-// Veracity: UNNEEDED proof block             read_handle.release_read();
+            read_handle.release_read();
 // Veracity: UNNEEDED proof block             proof {
 // Veracity: UNNEEDED proof block                 lemma_pair_set_to_map_dom_finite(range.tree.inner@);
 // Veracity: UNNEEDED proof block             }

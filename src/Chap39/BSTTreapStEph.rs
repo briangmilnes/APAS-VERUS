@@ -1333,7 +1333,7 @@ pub mod BSTTreapStEph {
                                 assert(Self::spec_link_size_wf(&Some(rotated)));
                                 // Veracity: NEEDED assert
                                 assert(Self::spec_link_size_wf(&rotated.left));
-// Veracity: UNNEEDED proof block                                 rotated.left = Self::delete_link(rotated.left.take(), target);
+                                rotated.left = Self::delete_link(rotated.left.take(), target);
                                 Self::update_size(&mut rotated);
                                 // Veracity: NEEDED proof block
                                 proof {
