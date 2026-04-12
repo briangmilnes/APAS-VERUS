@@ -1,0 +1,205 @@
+Mode: full
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/UnionFind/UnionFindPCStEph.rs:792:13
+    |
+792 |             while steps < n
+    |             ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+  --> src/UnionFind/UnionFindArrayStEph.rs:43:16
+   |
+43 |             && (forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int])
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+  --> src/UnionFind/UnionFindArrayStEph.rs:43:53
+   |
+43 |             && (forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int])
+   |                                                     ^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:204:13
+    |
+204 |             forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:204:49
+    |
+204 |             forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int],
+    |                                                 ^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:137:13
+    |
+137 |             forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:137:49
+    |
+137 |             forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int],
+    |                                                 ^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:157:13
+    |
+157 |             forall|i: int| 0 <= i < n as int && po[i] != i ==> ro[i] < ro[po[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:157:49
+    |
+157 |             forall|i: int| 0 <= i < n as int && po[i] != i ==> ro[i] < ro[po[i] as int],
+    |                                                 ^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:161:13
+    |
+161 |             forall|i: int| 0 <= i < n as int && pn[i] != i ==> rn[i] < rn[pn[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:161:49
+    |
+161 |             forall|i: int| 0 <= i < n as int && pn[i] != i ==> rn[i] < rn[pn[i] as int],
+    |                                                 ^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:234:13
+    |
+234 |             forall|i: int| 0 <= i < n as int && po[i] != i ==> ro[i] < ro[po[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:234:49
+    |
+234 |             forall|i: int| 0 <= i < n as int && po[i] != i ==> ro[i] < ro[po[i] as int],
+    |                                                 ^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:238:13
+    |
+238 |             forall|i: int| 0 <= i < n as int && pn[i] != i ==> rn[i] < rn[pn[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:238:49
+    |
+238 |             forall|i: int| 0 <= i < n as int && pn[i] != i ==> rn[i] < rn[pn[i] as int],
+    |                                                 ^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:262:13
+    |
+262 |             forall|i: int| 0 <= i < n as int && po[i] != i ==> ro[i] < ro[po[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:262:49
+    |
+262 |             forall|i: int| 0 <= i < n as int && po[i] != i ==> ro[i] < ro[po[i] as int],
+    |                                                 ^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:266:13
+    |
+266 |             forall|i: int| 0 <= i < n as int && pn[i] != i ==> rn[i] < rn[pn[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:266:49
+    |
+266 |             forall|i: int| 0 <= i < n as int && pn[i] != i ==> rn[i] < rn[pn[i] as int],
+    |                                                 ^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindArrayStEph.rs:289:13
+    |
+289 |             forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindArrayStEph.rs:289:49
+    |
+289 |             forall|i: int| 0 <= i < n as int && parent[i] != i ==> rank[i] < rank[parent[i] as int],
+    |                                                 ^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindStEph.rs:160:13
+    |
+160 |             forall|k: V::V| po.dom().contains(k) && k != ra ==> pv::<V>(pn, k) == pv::<V>(po, k),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/UnionFind/UnionFindStEph.rs:160:65
+    |
+160 |             forall|k: V::V| po.dom().contains(k) && k != ra ==> pv::<V>(pn, k) == pv::<V>(po, k),
+    |                                                                 ^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/UnionFind/UnionFindStEph.rs:160:83
+    |
+160 |             forall|k: V::V| po.dom().contains(k) && k != ra ==> pv::<V>(pn, k) == pv::<V>(po, k),
+    |                                                                                   ^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindStEph.rs:590:37
+    |
+590 | ...                   assert forall|k: V::V|
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindStEph.rs:591:41
+    |
+591 | ...                   st_new.contains(k) == (st_old_u + st_old_v).contains(k)
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindStEph.rs:678:37
+    |
+678 | ...                   assert forall|k: V::V|
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindStEph.rs:679:41
+    |
+679 | ...                   st_new.contains(k) == (st_old_v + st_old_u).contains(k)
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/UnionFind/UnionFindStEph.rs:800:37
+    |
+800 | ...                   assert forall|k: V::V|
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/UnionFind/UnionFindStEph.rs:801:41
+    |
+801 | ...                   st_new.contains(k) == (st_old_v + st_old_u).contains(k)
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/UnionFind/UnionFindStEph.rs:800:37
+    |
+800 | ...                   assert forall|k: V::V|
+    |                       ^^^^^^
+
+verification results:: 5724 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 229s
+Sampled Memory Usage: peak rust_verify RSS: 10214MB, peak z3 RSS: 1569MB, min free: 14972MB
+Sampled CPU Usage: rust_verify: 207s, z3 children: 300s
