@@ -1,0 +1,74 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtEph.rs:435:25
+    |
+435 |             let inner = OrderedTableStEph::empty();
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:100:17
+    |
+100 |                 obeys_feq_full::<Pair<K, V>>(),
+    |                 ------------------------------ failed precondition
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:50:13
+    |
+ 50 |         &&& feq_reflexive::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^
+ 51 |         &&& feq_symmetric::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^
+ 52 |         &&& feq_transitive::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^
+...
+ 77 |         &&& obeys_feq_properties::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 78 |         &&& obeys_feq_view::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:100:17
+    |
+100 |                 obeys_feq_full::<Pair<K, V>>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_fulls() ✔
+obeys_feq_full() ✘
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+obeys_cmp_spec() 
+view_ord_consistent() 
+spec_pair_key_determines_order() 
+obeys_cmp_spec() 
+view_ord_consistent() 
+
+verification results:: 2779 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 4756MB, peak z3 RSS: 373MB, min free: 18059MB
+Sampled CPU Usage: rust_verify: 80s, z3 children: 82s

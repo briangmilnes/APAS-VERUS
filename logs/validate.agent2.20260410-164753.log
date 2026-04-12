@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find value `read_handle` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:645:25
+    |
+645 |             let inner = read_handle.borrow();
+    |                         ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `read_handle` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:648:13
+    |
+648 |             read_handle.release_read();
+    |             ^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 2508MB, peak z3 RSS: 267MB, min free: 20339MB
+Sampled CPU Usage: rust_verify: 22s, z3 children: 7s

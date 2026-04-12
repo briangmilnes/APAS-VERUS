@@ -1,0 +1,57 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error[E0046]: not all trait items implemented, missing: `delete`
+   --> src/Chap43/OrderedTableMtEph.rs:412:5
+    |
+190 | /         fn delete(&mut self, k: &K) -> (updated: Option<V>)
+191 | |             requires
+192 | |                 old(self).spec_orderedtablemteph_wf(),
+193 | |                 obeys_view_eq::<K>(),
+194 | |             ensures self@ == old(self)@.remove(k@), self@.dom().finite();
+    | |_________________________________________________________________________- `delete` from trait
+...
+412 |       impl<K: MtKey, V: MtVal + Ord> OrderedTableMtEphTrait<K, V> for OrderedTableMtEph<K, V> {
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `delete` in implementation
+
+error[E0308]: mismatched types
+   --> src/Chap43/OrderedTableMtEph.rs:496:45
+    |
+412 |     impl<K: MtKey, V: MtVal + Ord> OrderedTableMtEphTrait<K, V> for OrderedTableMtEph<K, V> {
+    |          - found this type parameter
+...
+496 |             let updated = locked_val.delete(k);
+    |                                      ------ ^ expected `&K`, found type parameter `K`
+    |                                      |
+    |                                      arguments to this method are incorrect
+    |
+    = note:   expected reference `&_`
+            found type parameter `_`
+note: method defined here
+   --> src/Chap43/OrderedTableStEph.rs:168:12
+    |
+168 |         fn delete(&mut self, k: &K) -> (updated: Option<V>)
+    |            ^^^^^^            -
+help: consider borrowing here
+    |
+496 |             let updated = locked_val.delete(&k);
+    |                                             +
+
+error[E0308]: mismatched types
+   --> src/Chap43/OrderedTableMtEph.rs:500:13
+    |
+476 |         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F) {
+    |                                                                                                 - expected `()` because of default return type
+...
+500 |             updated
+    |             ^^^^^^^ expected `()`, found `Option<V>`
+    |
+    = note: expected unit type `()`
+                    found enum `std::option::Option<V>`
+
+error: aborting due to 3 previous errors
+
+Some errors have detailed explanations: E0046, E0308.
+For more information about an error, try `rustc --explain E0046`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 2564MB, peak z3 RSS: 0MB, min free: 20254MB
+Sampled CPU Usage: rust_verify: 43s, z3 children: 46s

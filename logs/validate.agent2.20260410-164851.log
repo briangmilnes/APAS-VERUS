@@ -1,0 +1,368 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap43/OrderedTableMtEph.rs:525:13
+    |
+525 |             proof {
+    |             ^^^^^
+
+error[E0425]: cannot find type `OrderedTableMtEphInv` in this scope
+    --> src/Chap43/OrderedTableMtEph.rs:1059:25
+     |
+1059 |     impl fmt::Debug for OrderedTableMtEphInv {
+     |                         ^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:66:5
+     |
+  66 |     pub struct OrderedTableStEph<K: StT + Ord + TotalOrder, V: StT + Ord> {
+     |     --------------------------------------------------------------------- similarly named struct `OrderedTableStEph` defined here
+     |
+help: a struct with a similar name exists
+     |
+1059 -     impl fmt::Debug for OrderedTableMtEphInv {
+1059 +     impl fmt::Debug for OrderedTableStEph {
+     |
+
+error[E0425]: cannot find type `OrderedTableMtEphInv` in this scope
+    --> src/Chap43/OrderedTableMtEph.rs:1065:27
+     |
+1065 |     impl fmt::Display for OrderedTableMtEphInv {
+     |                           ^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:66:5
+     |
+  66 |     pub struct OrderedTableStEph<K: StT + Ord + TotalOrder, V: StT + Ord> {
+     |     --------------------------------------------------------------------- similarly named struct `OrderedTableStEph` defined here
+     |
+help: a struct with a similar name exists
+     |
+1065 -     impl fmt::Display for OrderedTableMtEphInv {
+1065 +     impl fmt::Display for OrderedTableStEph {
+     |
+
+error[E0425]: cannot find type `OrderedTableMtEph` in this scope
+    --> src/Chap43/OrderedTableMtEph.rs:1075:52
+     |
+1075 |     unsafe impl<K: MtKey, V: MtVal + Ord> Send for OrderedTableMtEph<K, V> {}
+     |                                                    ^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:66:5
+     |
+  66 |     pub struct OrderedTableStEph<K: StT + Ord + TotalOrder, V: StT + Ord> {
+     |     --------------------------------------------------------------------- similarly named struct `OrderedTableStEph` defined here
+     |
+help: a struct with a similar name exists
+     |
+1075 -     unsafe impl<K: MtKey, V: MtVal + Ord> Send for OrderedTableMtEph<K, V> {}
+1075 +     unsafe impl<K: MtKey, V: MtVal + Ord> Send for OrderedTableStEph<K, V> {}
+     |
+
+error[E0425]: cannot find type `OrderedTableMtEph` in this scope
+    --> src/Chap43/OrderedTableMtEph.rs:1076:52
+     |
+1076 |     unsafe impl<K: MtKey, V: MtVal + Ord> Sync for OrderedTableMtEph<K, V> {}
+     |                                                    ^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:66:5
+     |
+  66 |     pub struct OrderedTableStEph<K: StT + Ord + TotalOrder, V: StT + Ord> {
+     |     --------------------------------------------------------------------- similarly named struct `OrderedTableStEph` defined here
+     |
+help: a struct with a similar name exists
+     |
+1076 -     unsafe impl<K: MtKey, V: MtVal + Ord> Sync for OrderedTableMtEph<K, V> {}
+1076 +     unsafe impl<K: MtKey, V: MtVal + Ord> Sync for OrderedTableStEph<K, V> {}
+     |
+
+error[E0425]: cannot find type `OrderedTableMtEph` in this scope
+    --> src/Chap43/OrderedTableMtEph.rs:1078:50
+     |
+1078 |     impl<K: MtKey, V: MtVal + Ord> PartialEq for OrderedTableMtEph<K, V> {
+     |                                                  ^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:66:5
+     |
+  66 |     pub struct OrderedTableStEph<K: StT + Ord + TotalOrder, V: StT + Ord> {
+     |     --------------------------------------------------------------------- similarly named struct `OrderedTableStEph` defined here
+     |
+help: a struct with a similar name exists
+     |
+1078 -     impl<K: MtKey, V: MtVal + Ord> PartialEq for OrderedTableMtEph<K, V> {
+1078 +     impl<K: MtKey, V: MtVal + Ord> PartialEq for OrderedTableStEph<K, V> {
+     |
+
+error[E0425]: cannot find type `OrderedTableMtEph` in this scope
+    --> src/Chap43/OrderedTableMtEph.rs:1089:48
+     |
+1089 |     impl<K: MtKey, V: MtVal + Ord> Default for OrderedTableMtEph<K, V> {
+     |                                                ^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:66:5
+     |
+  66 |     pub struct OrderedTableStEph<K: StT + Ord + TotalOrder, V: StT + Ord> {
+     |     --------------------------------------------------------------------- similarly named struct `OrderedTableStEph` defined here
+     |
+help: a struct with a similar name exists
+     |
+1089 -     impl<K: MtKey, V: MtVal + Ord> Default for OrderedTableMtEph<K, V> {
+1089 +     impl<K: MtKey, V: MtVal + Ord> Default for OrderedTableStEph<K, V> {
+     |
+
+error[E0425]: cannot find type `OrderedTableMtEph` in this scope
+    --> src/Chap43/OrderedTableMtEph.rs:1093:51
+     |
+1093 |     impl<K: MtKey, V: MtVal + Ord> fmt::Debug for OrderedTableMtEph<K, V> {
+     |                                                   ^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:66:5
+     |
+  66 |     pub struct OrderedTableStEph<K: StT + Ord + TotalOrder, V: StT + Ord> {
+     |     --------------------------------------------------------------------- similarly named struct `OrderedTableStEph` defined here
+     |
+help: a struct with a similar name exists
+     |
+1093 -     impl<K: MtKey, V: MtVal + Ord> fmt::Debug for OrderedTableMtEph<K, V> {
+1093 +     impl<K: MtKey, V: MtVal + Ord> fmt::Debug for OrderedTableStEph<K, V> {
+     |
+
+error[E0425]: cannot find type `OrderedTableMtEph` in this scope
+    --> src/Chap43/OrderedTableMtEph.rs:1099:53
+     |
+1099 |     impl<K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableMtEph<K, V> {
+     |                                                     ^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:66:5
+     |
+  66 |     pub struct OrderedTableStEph<K: StT + Ord + TotalOrder, V: StT + Ord> {
+     |     --------------------------------------------------------------------- similarly named struct `OrderedTableStEph` defined here
+     |
+help: a struct with a similar name exists
+     |
+1099 -     impl<K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableMtEph<K, V> {
+1099 +     impl<K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableStEph<K, V> {
+     |
+
+error[E0425]: cannot find type `OrderedTableMtEphIter` in this scope
+    --> src/Chap43/OrderedTableMtEph.rs:1105:55
+     |
+1105 |     impl<'a, K: MtKey, V: MtVal + Ord> fmt::Debug for OrderedTableMtEphIter<'a, K, V> {
+     |                                                       ^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:1792:5
+     |
+1792 |     pub struct OrderedTableStEphIter<K: StT + Ord + TotalOrder, V: StT + Ord> {
+     |     ------------------------------------------------------------------------- similarly named struct `OrderedTableStEphIter` defined here
+     |
+help: a struct with a similar name exists
+     |
+1105 -     impl<'a, K: MtKey, V: MtVal + Ord> fmt::Debug for OrderedTableMtEphIter<'a, K, V> {
+1105 +     impl<'a, K: MtKey, V: MtVal + Ord> fmt::Debug for OrderedTableStEphIter<'a, K, V> {
+     |
+
+error[E0425]: cannot find type `OrderedTableMtEphIter` in this scope
+    --> src/Chap43/OrderedTableMtEph.rs:1111:57
+     |
+1111 |     impl<'a, K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableMtEphIter<'a, K, V> {
+     |                                                         ^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:1792:5
+     |
+1792 |     pub struct OrderedTableStEphIter<K: StT + Ord + TotalOrder, V: StT + Ord> {
+     |     ------------------------------------------------------------------------- similarly named struct `OrderedTableStEphIter` defined here
+     |
+help: a struct with a similar name exists
+     |
+1111 -     impl<'a, K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableMtEphIter<'a, K, V> {
+1111 +     impl<'a, K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableStEphIter<'a, K, V> {
+     |
+
+error[E0425]: cannot find type `OrderedTableMtEphGhostIterator` in this scope
+    --> src/Chap43/OrderedTableMtEph.rs:1117:55
+     |
+1117 |     impl<'a, K: MtKey, V: MtVal + Ord> fmt::Debug for OrderedTableMtEphGhostIterator<'a, K, V> {
+     |                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:1833:5
+     |
+1833 |     pub struct OrderedTableStEphGhostIterator<K: StT + Ord + TotalOrder, V: StT + Ord> {
+     |     ---------------------------------------------------------------------------------- similarly named struct `OrderedTableStEphGhostIterator` defined here
+     |
+help: a struct with a similar name exists
+     |
+1117 -     impl<'a, K: MtKey, V: MtVal + Ord> fmt::Debug for OrderedTableMtEphGhostIterator<'a, K, V> {
+1117 +     impl<'a, K: MtKey, V: MtVal + Ord> fmt::Debug for OrderedTableStEphGhostIterator<'a, K, V> {
+     |
+
+error[E0425]: cannot find type `OrderedTableMtEphGhostIterator` in this scope
+    --> src/Chap43/OrderedTableMtEph.rs:1123:57
+     |
+1123 |     impl<'a, K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableMtEphGhostIterator<'a, K, V> {
+     |                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:1833:5
+     |
+1833 |     pub struct OrderedTableStEphGhostIterator<K: StT + Ord + TotalOrder, V: StT + Ord> {
+     |     ---------------------------------------------------------------------------------- similarly named struct `OrderedTableStEphGhostIterator` defined here
+     |
+help: a struct with a similar name exists
+     |
+1123 -     impl<'a, K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableMtEphGhostIterator<'a, K, V> {
+1123 +     impl<'a, K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableStEphGhostIterator<'a, K, V> {
+     |
+
+error[E0425]: cannot find type `OrderedTableMtEph` in this scope
+  --> src/Chap43/AugOrderedTableMtEph.rs:74:25
+   |
+74 |         pub base_table: OrderedTableMtEph<K, V>,
+   |                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtEphIter` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:401:39
+    |
+ 73 |     pub struct AugOrderedTableMtEph<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> {
+    |     --------------------------------------------------------------------------- similarly named struct `AugOrderedTableMtEph` defined here
+...
+401 |         fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+    |                                       ^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+401 -         fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+401 +         fn iter<'a>(&'a self) -> (it: AugOrderedTableMtEph<'a, K, V>)
+    |
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:405:17
+    |
+405 |                 iter_invariant(&it);
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these functions
+    |
+ 29 +     use crate::Chap18::ArraySeq::ArraySeq::iter_invariant;
+    |
+ 29 +     use crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::iter_invariant;
+    |
+ 29 +     use crate::Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice::iter_invariant;
+    |
+ 29 +     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::iter_invariant;
+    |
+    = and 16 other candidates
+
+error[E0425]: cannot find type `OrderedTableMtEph` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:428:16
+    |
+ 73 |     pub struct AugOrderedTableMtEph<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> {
+    |     --------------------------------------------------------------------------- similarly named struct `AugOrderedTableMtEph` defined here
+...
+428 |         base: &OrderedTableMtEph<K, V>,
+    |                ^^^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+428 |         base: &AugOrderedTableMtEph<K, V>,
+    |                +++
+
+error[E0425]: cannot find type `OrderedTableMtEphIter` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:892:39
+    |
+ 73 |     pub struct AugOrderedTableMtEph<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> {
+    |     --------------------------------------------------------------------------- similarly named struct `AugOrderedTableMtEph` defined here
+...
+892 |         fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+    |                                       ^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+892 -         fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+892 +         fn iter<'a>(&'a self) -> (it: AugOrderedTableMtEph<'a, K, V>)
+    |
+
+error[E0425]: cannot find type `OrderedTableMtEphIter` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:903:25
+    |
+ 73 |     pub struct AugOrderedTableMtEph<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> {
+    |     --------------------------------------------------------------------------- similarly named struct `AugOrderedTableMtEph` defined here
+...
+903 |         type IntoIter = OrderedTableMtEphIter<'a, K, V>;
+    |                         ^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+903 -         type IntoIter = OrderedTableMtEphIter<'a, K, V>;
+903 +         type IntoIter = AugOrderedTableMtEph<'a, K, V>;
+    |
+
+error[E0425]: cannot find type `OrderedTableMtEphIter` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:905:36
+    |
+ 73 |     pub struct AugOrderedTableMtEph<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> {
+    |     --------------------------------------------------------------------------- similarly named struct `AugOrderedTableMtEph` defined here
+...
+905 |         fn into_iter(self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+    |                                    ^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+905 -         fn into_iter(self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+905 +         fn into_iter(self) -> (it: AugOrderedTableMtEph<'a, K, V>)
+    |
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:909:17
+    |
+909 |                 iter_invariant(&it),
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these functions
+    |
+ 29 +     use crate::Chap18::ArraySeq::ArraySeq::iter_invariant;
+    |
+ 29 +     use crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::iter_invariant;
+    |
+ 29 +     use crate::Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice::iter_invariant;
+    |
+ 29 +     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::iter_invariant;
+    |
+    = and 16 other candidates
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtEph`
+   --> src/Chap43/AugOrderedTableMtEph.rs:479:24
+    |
+479 |             let base = OrderedTableMtEph::empty();
+    |                        ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtEph`
+    |
+help: a struct with a similar name exists
+    |
+479 |             let base = AugOrderedTableMtEph::empty();
+    |                        +++
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtEph`
+   --> src/Chap43/AugOrderedTableMtEph.rs:495:24
+    |
+495 |             let base = OrderedTableMtEph::singleton(k, v.clone());
+    |                        ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtEph`
+    |
+help: a struct with a similar name exists
+    |
+495 |             let base = AugOrderedTableMtEph::singleton(k, v.clone());
+    |                        +++
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtEph`
+   --> src/Chap43/AugOrderedTableMtEph.rs:565:30
+    |
+565 |             let base_table = OrderedTableMtEph::tabulate(f, keys);
+    |                              ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtEph`
+    |
+help: a struct with a similar name exists
+    |
+565 |             let base_table = AugOrderedTableMtEph::tabulate(f, keys);
+    |                              +++
+
+error: aborting due to 24 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 1862MB, peak z3 RSS: 0MB, min free: 21280MB
+Sampled CPU Usage: rust_verify: 15s, z3 children: 0s

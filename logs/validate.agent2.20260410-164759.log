@@ -1,0 +1,38 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find value `locked_val` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:634:13
+    |
+634 |             locked_val.subtract(keys);
+    |             ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `locked_val` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:635:28
+    |
+635 |             proof { assume(locked_val.spec_orderedtablesteph_wf()); }
+    |                            ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `locked_val` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:636:34
+    |
+636 |             let ghost new_view = locked_val@;
+    |                                  ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `write_handle` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:637:13
+    |
+637 |             write_handle.release_write(locked_val);
+    |             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `locked_val` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:637:40
+    |
+637 |             write_handle.release_write(locked_val);
+    |                                        ^^^^^^^^^^ not found in this scope
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 2657MB, peak z3 RSS: 316MB, min free: 20037MB
+Sampled CPU Usage: rust_verify: 41s, z3 children: 44s

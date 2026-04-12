@@ -1,0 +1,19 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: unexpected closing delimiter: `}`
+    --> src/Chap43/OrderedTableMtEph.rs:1126:1
+     |
+ 551 |         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F) {
+     |                                                                                                    - this delimiter might not be properly closed...
+...
+ 577 |             }
+     |             - ...as it matches this but it has different indentation
+...
+1126 | }
+     | ^ unexpected closing delimiter
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 22582MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s
