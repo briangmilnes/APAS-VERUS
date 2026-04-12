@@ -283,3 +283,34 @@ fn test_table_persistence() {
     assert_eq!(table3.find(&1), Some("one".to_string()));
     assert_eq!(table3.find(&2), Some("two".to_string()));
 }
+
+#[test]
+fn test_into_iter_collects_all_pairs() {
+    let table = TableStPer::<i32, i32>::empty();
+    let table = table.insert(1, 10, |_old, new| new.clone());
+    let table = table.insert(2, 20, |_old, new| new.clone());
+    let table = table.insert(3, 30, |_old, new| new.clone());
+    let pairs: Vec<(i32, i32)> = (&table).into_iter().map(|p| (p.0, p.1)).collect();
+    assert_eq!(pairs.len(), 3);
+    let key_sum: i32 = pairs.iter().map(|(k, _)| k).sum();
+    assert_eq!(key_sum, 6);
+}
+
+#[test]
+fn test_into_iter_empty() {
+    let table = TableStPer::<i32, i32>::empty();
+    let count = (&table).into_iter().count();
+    assert_eq!(count, 0);
+}
+
+#[test]
+fn test_into_iter_for_loop() {
+    let table = TableStPer::<i32, i32>::empty();
+    let table = table.insert(10, 100, |_old, new| new.clone());
+    let table = table.insert(20, 200, |_old, new| new.clone());
+    let mut key_sum = 0i32;
+    for pair in &table {
+        key_sum += pair.0;
+    }
+    assert_eq!(key_sum, 30);
+}

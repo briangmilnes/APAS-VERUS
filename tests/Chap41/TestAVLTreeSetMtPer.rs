@@ -436,3 +436,37 @@ fn test_from_seq_parallel_sort() {
     assert!(set.find(&1));
     assert!(set.find(&12));
 }
+
+#[test]
+fn test_into_iter_collects_all_elements() {
+    let s = AVLTreeSetMtPerLit![5, 3, 7, 1, 9, 4, 6];
+    let collected: Vec<i32> = (&s).into_iter().collect();
+    assert_eq!(collected.len(), 7);
+    let mut sorted = collected.clone();
+    sorted.sort();
+    assert_eq!(sorted, vec![1, 3, 4, 5, 6, 7, 9]);
+}
+
+#[test]
+fn test_into_iter_empty() {
+    let s: AVLTreeSetMtPer<i32> = AVLTreeSetMtPer::empty();
+    let collected: Vec<i32> = (&s).into_iter().collect();
+    assert!(collected.is_empty());
+}
+
+#[test]
+fn test_into_iter_singleton() {
+    let s = AVLTreeSetMtPer::singleton(42i32);
+    let collected: Vec<i32> = (&s).into_iter().collect();
+    assert_eq!(collected, vec![42]);
+}
+
+#[test]
+fn test_into_iter_for_loop() {
+    let s = AVLTreeSetMtPerLit![10, 20, 30];
+    let mut sum = 0i32;
+    for v in &s {
+        sum += v;
+    }
+    assert_eq!(sum, 60);
+}

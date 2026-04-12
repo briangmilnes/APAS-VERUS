@@ -330,3 +330,34 @@ fn table_insert_duplicate_key_combines() {
     assert_eq!(table.size(), 1);
     assert_eq!(table.find(&1), Some(30)); // 10 + 20
 }
+
+#[test]
+fn test_into_iter_collects_all_pairs() {
+    let mut table = TableStEph::<i32, i32>::empty();
+    table.insert(1, 10, |_old, new| *new);
+    table.insert(2, 20, |_old, new| *new);
+    table.insert(3, 30, |_old, new| *new);
+    let pairs: Vec<(i32, i32)> = (&table).into_iter().map(|p| (p.0, p.1)).collect();
+    assert_eq!(pairs.len(), 3);
+    let key_sum: i32 = pairs.iter().map(|(k, _)| k).sum();
+    assert_eq!(key_sum, 6);
+}
+
+#[test]
+fn test_into_iter_empty() {
+    let table = TableStEph::<i32, i32>::empty();
+    let count = (&table).into_iter().count();
+    assert_eq!(count, 0);
+}
+
+#[test]
+fn test_into_iter_for_loop() {
+    let mut table = TableStEph::<i32, i32>::empty();
+    table.insert(10, 100, |_old, new| *new);
+    table.insert(20, 200, |_old, new| *new);
+    let mut key_sum = 0i32;
+    for pair in &table {
+        key_sum += pair.0;
+    }
+    assert_eq!(key_sum, 30);
+}

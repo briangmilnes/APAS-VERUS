@@ -396,3 +396,37 @@ fn test_extremes() {
     assert_eq!(tree.minimum(), Some(&i32::MIN));
     assert_eq!(tree.maximum(), Some(&i32::MAX));
 }
+
+#[test]
+fn test_into_iter_collects_all_elements() {
+    let mut tree: BSTTreapStEph<i32> = Default::default();
+    tree.insert(5, rand_priority());
+    tree.insert(3, rand_priority());
+    tree.insert(7, rand_priority());
+    tree.insert(1, rand_priority());
+    tree.insert(9, rand_priority());
+    let collected: Vec<i32> = (&tree).into_iter().collect();
+    let mut sorted = collected.clone();
+    sorted.sort();
+    assert_eq!(sorted, vec![1, 3, 5, 7, 9]);
+}
+
+#[test]
+fn test_into_iter_empty() {
+    let tree: BSTTreapStEph<i32> = BSTTreapStEphLit![];
+    let collected: Vec<i32> = (&tree).into_iter().collect();
+    assert!(collected.is_empty());
+}
+
+#[test]
+fn test_into_iter_for_loop() {
+    let mut tree: BSTTreapStEph<i32> = Default::default();
+    tree.insert(10, rand_priority());
+    tree.insert(20, rand_priority());
+    tree.insert(30, rand_priority());
+    let mut sum = 0i32;
+    for v in &tree {
+        sum += v;
+    }
+    assert_eq!(sum, 60);
+}

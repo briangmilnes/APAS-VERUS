@@ -487,3 +487,29 @@ fn test_trait_impl_as_tree() {
     let tree: &ParamTreap<i32> = <BSTSetTreapMtEph<i32> as BSTSetTreapMtEphTrait<i32>>::as_tree(&set);
     assert_eq!(tree.size(), 1);
 }
+
+#[test]
+fn test_into_iter_collects_all_elements() {
+    let set: BSTSetTreapMtEph<i32> = BSTSetTreapMtEphLit![5, 3, 7, 1, 9];
+    let collected: Vec<i32> = (&set).into_iter().collect();
+    let mut sorted = collected.clone();
+    sorted.sort();
+    assert_eq!(sorted, vec![1, 3, 5, 7, 9]);
+}
+
+#[test]
+fn test_into_iter_empty() {
+    let set: BSTSetTreapMtEph<i32> = BSTSetTreapMtEphLit![];
+    let collected: Vec<i32> = (&set).into_iter().collect();
+    assert!(collected.is_empty());
+}
+
+#[test]
+fn test_into_iter_for_loop() {
+    let set: BSTSetTreapMtEph<i32> = BSTSetTreapMtEphLit![10, 20, 30];
+    let mut sum = 0i32;
+    for v in &set {
+        sum += v;
+    }
+    assert_eq!(sum, 60);
+}

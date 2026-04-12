@@ -420,3 +420,35 @@ fn test_countop_trait() {
     assert_eq!(<CountOp<i32> as ReduceOp<i32, usize>>::combine(3, 7), 10);
     assert_eq!(<CountOp<i32> as ReduceOp<i32, usize>>::lift(&42), 1);
 }
+
+#[test]
+fn test_into_iter_collects_keys() {
+    let mut bst: BSTSumStEph<i32, i32> = BSTreeReduced::new();
+    bst.insert(5, 50, rand_priority());
+    bst.insert(3, 30, rand_priority());
+    bst.insert(7, 70, rand_priority());
+    let collected: Vec<i32> = (&bst).into_iter().collect();
+    let mut sorted = collected.clone();
+    sorted.sort();
+    assert_eq!(sorted, vec![3, 5, 7]);
+}
+
+#[test]
+fn test_into_iter_empty() {
+    let bst: BSTSumStEph<i32, i32> = BSTreeReduced::new();
+    let collected: Vec<i32> = (&bst).into_iter().collect();
+    assert!(collected.is_empty());
+}
+
+#[test]
+fn test_into_iter_for_loop() {
+    let mut bst: BSTSumStEph<i32, i32> = BSTreeReduced::new();
+    bst.insert(10, 100, rand_priority());
+    bst.insert(20, 200, rand_priority());
+    bst.insert(30, 300, rand_priority());
+    let mut sum = 0i32;
+    for k in &bst {
+        sum += k;
+    }
+    assert_eq!(sum, 60);
+}

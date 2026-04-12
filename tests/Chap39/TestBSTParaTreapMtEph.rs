@@ -390,3 +390,29 @@ fn test_reduce_empty() {
     let sum = tree.reduce(|a, b| a + b, 0);
     assert_eq!(sum, 0);
 }
+
+#[test]
+fn test_into_iter_collects_all_elements() {
+    let tree: ParamTreap<i32> = ParamTreapLit![5, 3, 7, 1, 9];
+    let collected: Vec<i32> = (&tree).into_iter().collect();
+    let mut sorted = collected.clone();
+    sorted.sort();
+    assert_eq!(sorted, vec![1, 3, 5, 7, 9]);
+}
+
+#[test]
+fn test_into_iter_empty() {
+    let tree: ParamTreap<i32> = ParamTreapLit![];
+    let collected: Vec<i32> = (&tree).into_iter().collect();
+    assert!(collected.is_empty());
+}
+
+#[test]
+fn test_into_iter_for_loop() {
+    let tree: ParamTreap<i32> = ParamTreapLit![10, 20, 30];
+    let mut sum = 0i32;
+    for v in &tree {
+        sum += v;
+    }
+    assert_eq!(sum, 60);
+}

@@ -493,3 +493,30 @@ fn test_debug_format() {
     let debug = format!("{:?}", tree);
     assert!(debug.contains("BSTTreapMtEph"));
 }
+
+#[test]
+fn test_into_iter_collects_all_elements() {
+    let tree: BSTTreapMtEph<i32> = BSTTreapMtEphLit![5, 3, 7, 1, 9];
+    let collected: Vec<i32> = (&tree).into_iter().collect();
+    assert_eq!(collected.len(), 5);
+    let mut sorted = collected.clone();
+    sorted.sort();
+    assert_eq!(sorted, vec![1, 3, 5, 7, 9]);
+}
+
+#[test]
+fn test_into_iter_empty() {
+    let tree: BSTTreapMtEph<i32> = BSTTreapMtEphLit![];
+    let collected: Vec<i32> = (&tree).into_iter().collect();
+    assert!(collected.is_empty());
+}
+
+#[test]
+fn test_into_iter_for_loop() {
+    let tree: BSTTreapMtEph<i32> = BSTTreapMtEphLit![10, 20, 30];
+    let mut sum = 0i32;
+    for v in &tree {
+        sum += v;
+    }
+    assert_eq!(sum, 60);
+}
