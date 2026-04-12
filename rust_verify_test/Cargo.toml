@@ -127,6 +127,10 @@ path = "tests/Chap23/ProvePrimTreeSeqStPer.rs"
 
 # Chap37 iterator proof tests
 [[test]]
+name = "ProveBSTSplayStEph"
+path = "tests/Chap37/ProveBSTSplayStEph.rs"
+
+[[test]]
 name = "ProveAVLTreeSeq"
 path = "tests/Chap37/ProveAVLTreeSeq.rs"
 
@@ -201,10 +205,43 @@ path = "tests/Chap38/ProveParamBSTStEph.rs"
 
 # Chap39 proof tests
 [[test]]
+name = "ProveBSTTreapStEph"
+path = "tests/Chap39/ProveBSTTreapStEph.rs"
+
+[[test]]
+name = "ProveBSTSetTreapMtEph"
+path = "tests/Chap39/ProveBSTSetTreapMtEph.rs"
+
+[[test]]
+name = "ProveBSTParaTreapMtEph"
+path = "tests/Chap39/ProveBSTParaTreapMtEph.rs"
+
+[[test]]
 name = "ProveBSTTreapMtEph"
 path = "tests/Chap39/ProveBSTTreapMtEph.rs"
 
+# Chap40 proof tests
+[[test]]
+name = "ProveBSTSizeStEph"
+path = "tests/Chap40/ProveBSTSizeStEph.rs"
+
+[[test]]
+name = "ProveBSTKeyValueStEph"
+path = "tests/Chap40/ProveBSTKeyValueStEph.rs"
+
+[[test]]
+name = "ProveBSTReducedStEph"
+path = "tests/Chap40/ProveBSTReducedStEph.rs"
+
 # Chap41 proof tests
+[[test]]
+name = "ProveArraySetStEph"
+path = "tests/Chap41/ProveArraySetStEph.rs"
+
+[[test]]
+name = "ProveAVLTreeSetMtPer"
+path = "tests/Chap41/ProveAVLTreeSetMtPer.rs"
+
 [[test]]
 name = "ProveAVLTreeSetMtEph"
 path = "tests/Chap41/ProveAVLTreeSetMtEph.rs"
@@ -216,6 +253,15 @@ path = "tests/Chap41/ProveAVLTreeSetStEph.rs"
 [[test]]
 name = "ProveAVLTreeSetStPer"
 path = "tests/Chap41/ProveAVLTreeSetStPer.rs"
+
+# Chap42 proof tests
+[[test]]
+name = "ProveTableStEph"
+path = "tests/Chap42/ProveTableStEph.rs"
+
+[[test]]
+name = "ProveTableStPer"
+path = "tests/Chap42/ProveTableStPer.rs"
 
 # Standards proof tests
 [[test]]

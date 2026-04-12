@@ -430,3 +430,22 @@ fn test_into_iter_for_loop() {
     }
     assert_eq!(sum, 60);
 }
+
+#[test]
+fn test_delete_requires_left_recursion_after_rotation() {
+    // Exercises the rotate_left → recurse-left branch in delete_link (line 1339).
+    // Tree structure after inserts: root=30(p=300), left=10(p=200), right=50(p=100).
+    // Deleting 30: left_pri=200 > right_pri=100, so rotate_left(30):
+    //   50 becomes root, 30 becomes 50's left child (30.left=10, 30.right=None).
+    // Recurse into rotated.left=30: only left child (10) → return Some(10).
+    // Final tree: root=50, left=10, right=None.
+    let mut tree: BSTTreapStEph<i32> = Default::default();
+    tree.insert(30, 300u64);
+    tree.insert(10, 200u64);
+    tree.insert(50, 100u64);
+    tree.delete(&30);
+    assert!(!tree.contains(&30));
+    assert!(tree.contains(&10));
+    assert!(tree.contains(&50));
+    assert_eq!(tree.size(), 2);
+}
