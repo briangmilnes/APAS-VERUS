@@ -8,8 +8,19 @@
 //! - R196: rewired from old UnionFindStEph to UnionFindPCStEph (path compression).
 //!   The old uf_opaque_wrappers nested module was deleted: PC's spec_wf is already
 //!   bundled around opaque spec_light_wf (R195), so an outer wrapper is redundant.
+//
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions — struct KruskalStEph
+//	Section 7. proof fns/broadcast groups — struct KruskalStEph
+//	Section 8. traits — struct KruskalStEph
+//	Section 9. impls — struct KruskalStEph
 
 pub mod KruskalStEph {
+
+	//		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap05::SetStEph::SetStEph::*;
@@ -31,39 +42,18 @@ pub mod KruskalStEph {
 
     verus! {
 
-    /// Process one edge: if endpoints are in different components, add to MST and union.
-    pub fn kruskal_process_edge<V: HashOrd>(
-        uf: &mut UnionFindPC<V>,
-        mst_edges: &mut SetStEph<LabEdge<V, u64>>,
-        edge: LabEdge<V, u64>,
-    )
-        requires
-            old(uf).spec_wf(),
-            old(mst_edges).spec_setsteph_wf(),
-            old(uf).spec_contains(edge@.0),
-            old(uf).spec_contains(edge@.1),
-        ensures
-            uf.spec_wf(),
-            mst_edges.spec_setsteph_wf(),
-            forall|z: <V as View>::V| old(uf).spec_contains(z) <==> uf.spec_contains(z),
-    {
-        let u = edge.0.clone_view();
-        let v = edge.1.clone_view();
-        if !uf.equals(&u, &v) {
-            let _ = mst_edges.insert(edge);
-            uf.union(&u, &v);
-        }
-    }
-
-    } // verus!
-
-    verus! {
+	//		Section 3. broadcast use
 
     broadcast use {
         crate::Types::Types::group_LabEdge_axioms,
     };
 
-    // 3a. proof fns
+	//		Section 4. type definitions — struct KruskalStEph
+
+    /// Namespace struct for trait impl.
+    pub struct KruskalStEph;
+
+	//		Section 7. proof fns/broadcast groups — struct KruskalStEph
 
     /// Prove that a sorted edge's endpoints are in the UF domain.
     /// Chains: sort provenance -> pre_sort view -> edge_seq view -> mapped_es -> labeled -> graph@.A -> graph wf -> UF.
@@ -103,12 +93,61 @@ pub mod KruskalStEph {
         assert(graph_V.contains(edge_seq[j]@.1));
     }
 
-    // 4. type definitions
+	//		Section 8. traits — struct KruskalStEph
 
-    /// Namespace struct for trait impl.
-    pub struct KruskalStEph;
+    pub trait KruskalStEphTrait {
+        /// Well-formedness for sequential Kruskal MST algorithm input.
+        open spec fn spec_kruskalsteph_wf<V: HashOrd>(graph: &LabUnDirGraphStEph<V, u64>) -> bool {
+            spec_labgraphview_wf(graph@)
+        }
 
-    // 8. traits
+        /// Kruskal's MST algorithm.
+        /// APAS: Work O(m log m), Span O(m log m) where m = |E|
+        fn kruskal_mst<V: HashOrd>(
+            graph: &LabUnDirGraphStEph<V, u64>,
+        ) -> SetStEph<LabEdge<V, u64>>
+            requires Self::spec_kruskalsteph_wf(graph);
+
+        /// Compute total weight of MST.
+        /// APAS: Work O(m), Span O(1)
+        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
+            requires mst.spec_setsteph_wf(),
+            ensures mst@.len() == 0 ==> total == 0;
+
+        /// Verify MST has correct size.
+        /// APAS: Work O(1), Span O(1)
+        fn verify_mst_size<V: HashOrd>(
+            graph: &LabUnDirGraphStEph<V, u64>,
+            mst: &SetStEph<LabEdge<V, u64>>,
+        ) -> bool
+            requires Self::spec_kruskalsteph_wf(graph), mst.spec_setsteph_wf();
+    }
+
+	//		Section 9. impls — struct KruskalStEph
+
+    /// Process one edge: if endpoints are in different components, add to MST and union.
+    pub fn kruskal_process_edge<V: HashOrd>(
+        uf: &mut UnionFindPC<V>,
+        mst_edges: &mut SetStEph<LabEdge<V, u64>>,
+        edge: LabEdge<V, u64>,
+    )
+        requires
+            old(uf).spec_wf(),
+            old(mst_edges).spec_setsteph_wf(),
+            old(uf).spec_contains(edge@.0),
+            old(uf).spec_contains(edge@.1),
+        ensures
+            uf.spec_wf(),
+            mst_edges.spec_setsteph_wf(),
+            forall|z: <V as View>::V| old(uf).spec_contains(z) <==> uf.spec_contains(z),
+    {
+        let u = edge.0.clone_view();
+        let v = edge.1.clone_view();
+        if !uf.equals(&u, &v) {
+            let _ = mst_edges.insert(edge);
+            uf.union(&u, &v);
+        }
+    }
 
     /// Greedy edge-adding phase of Kruskal's algorithm.
     fn kruskal_greedy_phase<V: HashOrd>(
@@ -173,34 +212,6 @@ pub mod KruskalStEph {
             kruskal_process_edge(uf, mst_edges, edge);
             i = i + 1;
         }
-    }
-
-    pub trait KruskalStEphTrait {
-        /// Well-formedness for sequential Kruskal MST algorithm input.
-        open spec fn spec_kruskalsteph_wf<V: HashOrd>(graph: &LabUnDirGraphStEph<V, u64>) -> bool {
-            spec_labgraphview_wf(graph@)
-        }
-
-        /// Kruskal's MST algorithm.
-        /// APAS: Work O(m log m), Span O(m log m) where m = |E|
-        fn kruskal_mst<V: HashOrd>(
-            graph: &LabUnDirGraphStEph<V, u64>,
-        ) -> SetStEph<LabEdge<V, u64>>
-            requires Self::spec_kruskalsteph_wf(graph);
-
-        /// Compute total weight of MST.
-        /// APAS: Work O(m), Span O(1)
-        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
-            requires mst.spec_setsteph_wf(),
-            ensures mst@.len() == 0 ==> total == 0;
-
-        /// Verify MST has correct size.
-        /// APAS: Work O(1), Span O(1)
-        fn verify_mst_size<V: HashOrd>(
-            graph: &LabUnDirGraphStEph<V, u64>,
-            mst: &SetStEph<LabEdge<V, u64>>,
-        ) -> bool
-            requires Self::spec_kruskalsteph_wf(graph), mst.spec_setsteph_wf();
     }
 
     /// Sort edges by weight — selection sort.

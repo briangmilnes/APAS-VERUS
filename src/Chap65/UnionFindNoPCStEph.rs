@@ -6,8 +6,20 @@
 //! returns canonical root, union merges sets. Rank-based termination for
 //! spec_pure_find with decreases_when guard. The companion `UnionFindPCStEph`
 //! adds path compression on `find()` (mutating self).
+//
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions — struct UnionFind
+//	Section 6. spec fns — struct UnionFind
+//	Section 7. proof fns/broadcast groups — struct UnionFind
+//	Section 8. traits — struct UnionFind
+//	Section 9. impls — struct UnionFind
+//	Section 14. derive impls outside verus! — struct UnionFind
 
 pub mod UnionFindNoPCStEph {
+
+	//		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter};
     use std::hash::Hash;
@@ -24,13 +36,15 @@ pub mod UnionFindNoPCStEph {
 
     verus! {
 
+	//		Section 4. type definitions — struct UnionFind
+
     #[verifier::reject_recursive_types(V)]
     pub struct UnionFind<V: StT + Hash + ClonePreservesView> {
         pub parent: HashMapWithViewPlus<V, V>,
         pub rank: HashMapWithViewPlus<V, usize>,
     }
 
-    // 6. spec fns
+	//		Section 6. spec fns — struct UnionFind
 
     /// Parent view: parent[k]@.
     pub open spec fn pv<V: View>(parent: Map<V::V, V>, k: V::V) -> V::V { parent[k]@ }
@@ -96,7 +110,7 @@ pub mod UnionFindNoPCStEph {
         &&& spec_size_rank_inv_map::<V>(uf.parent@, uf.rank@, uf.parent@.dom().len())
     }
 
-    // 7. proof fns
+	//		Section 7. proof fns/broadcast groups — struct UnionFind
 
     /// spec_pure_find result is in the domain.
     proof fn lemma_find_in_dom<V: View>(
@@ -315,7 +329,7 @@ pub mod UnionFindNoPCStEph {
         // So r + 1 <= n/2. Since n >= 2*(r+1) >= 2, r + 1 < n.
     }
 
-    // 8. traits
+	//		Section 8. traits — struct UnionFind
 
     pub trait UnionFindStEphTrait<V: StT + Hash + ClonePreservesView>: Sized {
         spec fn spec_wf(&self) -> bool;
@@ -349,7 +363,7 @@ pub mod UnionFindNoPCStEph {
         fn size(&self) -> (n: usize) requires self.spec_wf(), ensures n as nat == self.spec_n();
     }
 
-    // 9. impls
+	//		Section 9. impls — struct UnionFind
 
     impl<V: StT + Hash + ClonePreservesView> UnionFindStEphTrait<V> for UnionFind<V> {
         open spec fn spec_wf(&self) -> bool { spec_uf_wf(self) }
@@ -864,6 +878,8 @@ pub mod UnionFindNoPCStEph {
     }
 
     } // verus!
+
+	//		Section 14. derive impls outside verus! — struct UnionFind
 
     impl<V: StT + Hash + ClonePreservesView> Debug for UnionFind<V> {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {

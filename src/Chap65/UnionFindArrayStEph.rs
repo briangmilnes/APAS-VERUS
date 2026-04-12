@@ -5,18 +5,30 @@
 //! Array-based union-find with union by rank (no path compression).
 //! Elements are indices [0, n). Spec uses pure_find with rank-based termination.
 //! Size-rank invariant: each root's subtree has >= rank+1 elements.
+//
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions — struct UnionFindArray
+//	Section 5. view impls — struct UnionFindArray
+//	Section 6. spec fns — struct UnionFindArray
+//	Section 7. proof fns/broadcast groups — struct UnionFindArray
+//	Section 8. traits — struct UnionFindArray
+//	Section 9. impls — struct UnionFindArray
 
 pub mod UnionFindArrayStEph {
+
+	//		Section 2. imports
 
     use vstd::prelude::*;
 
     verus! {
 
-    // 4. type definitions
+	//		Section 4. type definitions — struct UnionFindArray
 
     pub struct UnionFindArray { pub parent: Vec<usize>, pub rank: Vec<usize> }
 
-    // 5. view impls
+	//		Section 5. view impls — struct UnionFindArray
 
     pub struct UnionFindArrayView { pub parent: Seq<int>, pub rank: Seq<int>, pub n: nat }
 
@@ -31,7 +43,7 @@ pub mod UnionFindArrayStEph {
         }
     }
 
-    // 6. spec fns
+	//		Section 6. spec fns — struct UnionFindArray
 
     pub open spec fn spec_pure_find(parent: Seq<int>, rank: Seq<int>, n: nat, x: int) -> int
         recommends 0 <= x < n as int, parent.len() == n, rank.len() == n,
@@ -96,7 +108,7 @@ pub mod UnionFindArrayStEph {
         else { (if rank[k as int] > threshold { 1nat } else { 0nat }) + spec_count_above(rank, threshold, k + 1, n) }
     }
 
-    // 7. proof fns
+	//		Section 7. proof fns/broadcast groups — struct UnionFindArray
 
     proof fn lemma_count_above_mono(rank: Seq<int>, r1: int, r2: int, k: nat, n: nat)
         requires rank.len() == n, r1 <= r2,
@@ -304,7 +316,7 @@ pub mod UnionFindArrayStEph {
         // 2*(r+1) <= n, and n >= 2*(r+1) >= 2. So r+1 <= n/2 < n.
     }
 
-    // 8. traits
+	//		Section 8. traits — struct UnionFindArray
 
     pub trait UnionFindArrayStEphTrait: Sized + View<V = UnionFindArrayView> {
         spec fn spec_unionfindarraysteph_wf(&self) -> bool;
@@ -339,7 +351,7 @@ pub mod UnionFindArrayStEph {
             requires self.spec_unionfindarraysteph_wf(), ensures n as nat == self@.n;
     }
 
-    // 9. impls
+	//		Section 9. impls — struct UnionFindArray
 
     impl UnionFindArrayStEphTrait for UnionFindArray {
         open spec fn spec_unionfindarraysteph_wf(&self) -> bool {
