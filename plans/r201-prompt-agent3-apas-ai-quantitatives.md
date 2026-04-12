@@ -48,10 +48,36 @@ development vs. stray fixes.
 
 ## Goal
 
-Produce `lectures/quantitatives/apas-ai-snapshot.md` — a parallel
+Produce `lectures/quantitatives/apas-ai-snapshot.md` (inside the
+APAS-VERUS worktree, **not** in `~/projects/APAS-AI`) — a parallel
 to the existing APAS-VERUS `scale.md` / `cost.md` / etc. files —
 capturing everything quantitative about APAS-AI that an AI or
 human can extract without reading every source file.
+
+## File-naming rule (MANDATORY)
+
+All APAS-AI data files go in
+`/home/milnes/projects/APAS-VERUS-agent3/lectures/quantitatives/`
+(or the equivalent `lectures/quantitatives/` inside your worktree).
+**NEVER** write output to the APAS-AI project at
+`~/projects/APAS-AI`.
+
+Every file written must have a distinct name — the existing
+APAS-VERUS quantitatives files use unqualified names (`scale.md`,
+`trust-base.md`, `cost.md`, `holes-over-time.md`,
+`minimize-productivity.md`, `eq-clone.md`,
+`optimization-history.md`, `README.md`). **Your APAS-AI files MUST
+be prefixed with `apas-ai-` to avoid any collision**, e.g.:
+
+- `lectures/quantitatives/apas-ai-snapshot.md` — main report
+- `lectures/quantitatives/raw/apas-ai-rusticate-count-loc.log`
+- `lectures/quantitatives/raw/apas-ai-veracity-count-loc.log`
+- `lectures/quantitatives/raw/apas-ai-git-log.txt` (optional)
+
+Before any write, `ls lectures/quantitatives/` and confirm no
+filename you're about to create already exists. If one does,
+rename yours with an additional disambiguator rather than
+overwriting.
 
 ## Plan
 
@@ -84,7 +110,7 @@ tables (check `src/bin/count_loc.rs` source or `--help`). Then run
 it against the `apas-ai/` library subdirectory and capture output.
 
 Put the raw output at
-`lectures/quantitatives/raw/rusticate-count-loc-apas-ai.log`.
+`lectures/quantitatives/raw/apas-ai-rusticate-count-loc.log`.
 
 ### Step 3: Run veracity-count-loc on APAS-AI
 
@@ -99,7 +125,7 @@ separation, that's not applicable here (APAS-AI has no Verus) —
 the totals (rust / comments / tests) are what matter.
 
 Put the raw output at
-`lectures/quantitatives/raw/veracity-count-loc-apas-ai.log`.
+`lectures/quantitatives/raw/apas-ai-veracity-count-loc.log`.
 
 ### Step 4: Git metadata extraction
 
@@ -176,11 +202,12 @@ sections (follow the style of the existing `scale.md`):
 
 ### Step 7: Raw artifacts
 
-Keep raw output logs at `lectures/quantitatives/raw/` so the user
-or a future agent can re-derive without re-running. Files:
-- `rusticate-count-loc-apas-ai.log`
-- `veracity-count-loc-apas-ai.log`
-- (Optional) `git-log-apas-ai.txt` — `git log --format='%ad %h %s' --date=short`
+Keep raw output logs at `lectures/quantitatives/raw/` inside the
+APAS-VERUS worktree so the user or a future agent can re-derive
+without re-running. Files:
+- `apas-ai-rusticate-count-loc.log`
+- `apas-ai-veracity-count-loc.log`
+- (Optional) `apas-ai-git-log.txt` — `git log --format='%ad %h %s' --date=short`
 
 ### Step 8: Validate + commit
 
