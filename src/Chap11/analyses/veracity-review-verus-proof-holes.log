@@ -21,17 +21,17 @@ Table of Contents:
 =================================================================
 
 ℹ FibonacciMtEph2Threads.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:166: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:174: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:172: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:181: info: accept()
    Info: 2 total
 ℹ FibonacciMtEphRecomputes.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:162: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:170: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:168: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:177: info: accept()
    Info: 2 total
 ✓ FibonacciMtPerAllThreads.rs
 ℹ FibonacciMtPerTSM.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:156: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:164: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:162: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:171: info: accept()
    Info: 2 total
 ✓ FibonacciStEph.rs
    3 clean proof functions
@@ -94,12 +94,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 15:35:58 -07:00
-Ended:     2026-04-06 15:35:58 -07:00
-Duration:  17ms
+Started:   2026-04-12 15:12:41 -07:00
+Ended:     2026-04-12 15:12:41 -07:00
+Duration:  4ms
 
 Full output: src/Chap11/analyses/veracity-review-verus-proof-holes.log
-:00
-Duration:  17ms
-
-Full output: src/Chap11/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap11/analyses/veracity-review-verus-proof-holes.log

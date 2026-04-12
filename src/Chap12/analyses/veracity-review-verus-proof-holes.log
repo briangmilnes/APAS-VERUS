@@ -22,27 +22,27 @@ Table of Contents:
 
 ℹ Exercise12_1.rs
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:40: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:87: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:96: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:105: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:111: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:123: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:83: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:92: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:101: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:107: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:118: info: external_body_accept_hole
    Info: 6 total
 ✓ Exercise12_2.rs
 ℹ Exercise12_5.rs
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:41: info: external_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:52: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:67: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:111: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:119: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:134: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:150: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:156: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:167: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:129: info: unsafe_block_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:141: info: unsafe_block_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:143: info: unsafe_block_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:174: info: unsafe_block_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:106: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:114: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:129: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:145: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:151: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:162: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:124: info: unsafe_block_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:136: info: unsafe_block_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:138: info: unsafe_block_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:169: info: unsafe_block_accept_hole
    Info: 13 total
 
 =================================================================
@@ -93,8 +93,8 @@ Real Proof Targets: 0 (all actionable)
 Accepted (reviewed): 19 total
    13 × external_body_accept_hole
    4 × unsafe_block_accept_hole
-   1 × external_accept_hole
    1 × trivial_spec_wf
+   1 × external_accept_hole
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -102,12 +102,12 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 15:35:58 -07:00
-Ended:     2026-04-06 15:35:58 -07:00
-Duration:  13ms
+Started:   2026-04-12 15:12:41 -07:00
+Ended:     2026-04-12 15:12:41 -07:00
+Duration:  4ms
 
 Full output: src/Chap12/analyses/veracity-review-verus-proof-holes.log
-8 -07:00
-Duration:  13ms
+41 -07:00
+Duration:  4ms
 
 Full output: src/Chap12/analyses/veracity-review-verus-proof-holes.log

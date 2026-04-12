@@ -20,44 +20,21 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-⚠ TableMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2704: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2700 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      2702 |         {
-      2703 |             let equal = self.entries == other.entries;
-      2705 |             equal
-      2706 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2716: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2710 |         fn clone(&self) -> (cloned: Self)
-            ...
-      2714 |                 entries: self.entries.clone(),
-      2715 |             };
-      2717 |             cloned
-      2718 |         }
-⚠ TableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2729: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2725 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      2727 |         {
-      2728 |             let equal = self.entries == other.entries;
-      2730 |             equal
-      2731 |         }
-⚠ TableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2779: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2775 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      2777 |         {
-      2778 |             let equal = self.entries == other.entries;
-      2780 |             equal
-      2781 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2790: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2785 |         fn clone(&self) -> (cloned: Self)
-            ...
-      2788 |             let cloned = TableStPer { entries: self.entries.clone() };
-      2789 |             proof {
-      2791 |                 lemma_seq_map_cloned_view_eq(
-      2792 |                     self.entries.seq@,
+ℹ TableMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2549: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2561: info: accept()
+   Info: 2 total
+✓ TableSpecsAndLemmas.rs
+   15 clean proof functions
+ℹ TableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2680: info: accept()
+   Info: 1 total
+   1 clean proof function
+ℹ TableStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2892: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2903: info: accept()
+   Info: 2 total
+   5 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -68,6 +45,7 @@ Table of Contents:
 =================================================================
 
 TableMtEph  depends upon only clean modules
+TableSpecsAndLemmas  depends upon only clean modules
 TableStEph  depends upon only clean modules
 TableStPer  depends upon only clean modules
 
@@ -76,6 +54,7 @@ TableStPer  depends upon only clean modules
 =================================================================
 
 TableMtEph.rs  depends upon only clean modules
+TableSpecsAndLemmas.rs  depends upon only clean modules
 TableStEph.rs  depends upon only clean modules
 TableStPer.rs  depends upon only clean modules
 
@@ -84,44 +63,38 @@ TableStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   3 clean (no holes, no errors; 100%)
+   4 clean (no holes, no errors; 100%)
    0 holed (holes or errors, 0%)
-   3 total
+   4 total
 
 Proof Functions:
-   33 clean (100%)
+   21 clean (100%)
    0 holed (0%)
-   33 total
+   21 total
 
 Function Specs:
-   118 exec fns with complete spec (requires+ensures) (63%)
+   128 exec fns with complete spec (requires+ensures) (60%)
    3 exec fns missing spec (1%)
-   66 proof/spec fns clean (35%)
+   80 proof/spec fns clean (37%)
    0 proof/spec fns with holes (0%)
-   187 total fns
+   211 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Warnings: 5 total
-   5 × assume_eq_clone_workaround
+Accepted (reviewed): 5 total
+   5 × accept()
 
-No proof holes found! All proofs are complete.
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 15:36:01 -07:00
-Ended:     2026-04-06 15:36:01 -07:00
-Duration:  292ms
+Started:   2026-04-12 15:12:42 -07:00
+Ended:     2026-04-12 15:12:42 -07:00
+Duration:  93ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
-============
-
-Started:   2026-04-06 15:36:01 -07:00
-Ended:     2026-04-06 15:36:01 -07:00
-Duration:  292ms
-
-Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap42/analyses/veracity-review-verus-proof-holes.log

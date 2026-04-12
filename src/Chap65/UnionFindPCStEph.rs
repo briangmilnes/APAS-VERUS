@@ -103,7 +103,7 @@ pub mod UnionFindPCStEph {
     /// Opaque bundle of the forest wf quantifiers, excluding size_rank_inv.
     /// Opaque (not closed): closed only hides across modules; opaque hides within
     /// the module too, so Z3 sees one symbol per instance instead of five foralls.
-    #[verifier::opaque]
+    #[verifier::opaque] // accept hole
     pub open spec fn spec_light_wf<V: View>(
         parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat,
     ) -> bool {
@@ -119,7 +119,7 @@ pub mod UnionFindPCStEph {
     }
 
     /// Opaque: all z in po's domain have the same spec_pure_find under (pc, rc, nc) and (po, ro, no).
-    #[verifier::opaque]
+    #[verifier::opaque] // accept hole
     pub open spec fn spec_find_preserved<V: View>(
         pc: Map<V::V, V>, rc: Map<V::V, usize>, nc: nat,
         po: Map<V::V, V>, ro: Map<V::V, usize>, no: nat,
@@ -129,7 +129,7 @@ pub mod UnionFindPCStEph {
     }
 
     /// Opaque: pa and pb have the same domain.
-    #[verifier::opaque]
+    #[verifier::opaque] // accept hole
     pub open spec fn spec_same_domain<V: View>(
         pa: Map<V::V, V>, pb: Map<V::V, V>,
     ) -> bool {

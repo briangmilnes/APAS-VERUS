@@ -23,56 +23,36 @@ Table of Contents:
 ✓ AdjMatrixGraphMtEph.rs
 ✓ AdjMatrixGraphMtPer.rs
 ✓ AdjMatrixGraphStEph.rs
-⚠ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjMatrixGraphStPer.rs:626: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       622 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       624 |         {
-       625 |             let equal = self.matrix == other.matrix && self.n == other.n;
-       627 |             equal
-       628 |         }
+ℹ AdjMatrixGraphStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:665: info: accept()
+   Info: 1 total
 ✓ AdjSeqGraphMtEph.rs
 ✓ AdjSeqGraphMtPer.rs
 ✓ AdjSeqGraphStEph.rs
-⚠ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjSeqGraphStPer.rs:614: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       610 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       612 |         {
-       613 |             let equal = self.adj == other.adj;
-       615 |             equal
-       616 |         }
+ℹ AdjSeqGraphStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:647: info: accept()
+   Info: 1 total
 ✓ AdjTableGraphMtPer.rs
 ✓ AdjTableGraphSpecsAndLemmas.rs
    18 clean proof functions
 ✓ AdjTableGraphStEph.rs
 ✓ AdjTableGraphStPer.rs
    3 clean proof functions
+ℹ EdgeSetGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtEph.rs:438: info: accept()
+   Info: 1 total
+   1 clean proof function
 ✓ EdgeSetGraphMtPer.rs
    1 clean proof function
-⚠ EdgeSetGraphStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStEph.rs:446: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       439 |         fn clone(&self) -> (cloned: Self)
-            ...
-       444 |                 edges: self.edges.clone(),
-       445 |             };
-       447 |             cloned
-       448 |         }
-⚠ EdgeSetGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStPer.rs:424: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       417 |         fn clone(&self) -> (cloned: Self)
-            ...
-       422 |                 edges: self.edges.clone(),
-       423 |             };
-       425 |             cloned
-       426 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStPer.rs:440: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       436 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       438 |         {
-       439 |             let equal = self.vertices == other.vertices && self.edges == other.edges;
-       441 |             equal
-       442 |         }
+ℹ EdgeSetGraphStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:478: info: accept()
+   Info: 1 total
+   1 clean proof function
+ℹ EdgeSetGraphStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:456: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:473: info: accept()
+   Info: 2 total
+   1 clean proof function
 
 =================================================================
 2. Depends Upon
@@ -94,6 +74,7 @@ AdjTableGraphMtPer  depends upon only clean modules
 AdjTableGraphSpecsAndLemmas  depends upon only clean modules
 AdjTableGraphStEph  depends upon only clean modules
 AdjTableGraphStPer  depends upon only clean modules
+EdgeSetGraphMtEph  depends upon only clean modules
 EdgeSetGraphMtPer  depends upon only clean modules
 EdgeSetGraphStEph  depends upon only clean modules
 EdgeSetGraphStPer  depends upon only clean modules
@@ -114,6 +95,7 @@ AdjTableGraphMtPer.rs  depends upon only clean modules
 AdjTableGraphSpecsAndLemmas.rs  depends upon only clean modules
 AdjTableGraphStEph.rs  depends upon only clean modules
 AdjTableGraphStPer.rs  depends upon only clean modules
+EdgeSetGraphMtEph.rs  depends upon only clean modules
 EdgeSetGraphMtPer.rs  depends upon only clean modules
 EdgeSetGraphStEph.rs  depends upon only clean modules
 EdgeSetGraphStPer.rs  depends upon only clean modules
@@ -123,37 +105,38 @@ EdgeSetGraphStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   15 clean (no holes, no errors; 100%)
+   16 clean (no holes, no errors; 100%)
    0 holed (holes or errors, 0%)
-   15 total
+   16 total
 
 Proof Functions:
-   24 clean (100%)
+   25 clean (100%)
    0 holed (0%)
-   24 total
+   25 total
 
 Function Specs:
-   308 exec fns with complete spec (requires+ensures) (67%)
+   336 exec fns with complete spec (requires+ensures) (67%)
    0 exec fns missing spec (0%)
-   150 proof/spec fns clean (32%)
+   160 proof/spec fns clean (32%)
    0 proof/spec fns with holes (0%)
-   458 total fns
+   496 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Warnings: 5 total
-   5 × assume_eq_clone_workaround
+Accepted (reviewed): 6 total
+   6 × accept()
 
-No proof holes found! All proofs are complete.
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-08 12:09:48 -07:00
-Ended:     2026-04-08 12:09:49 -07:00
-Duration:  77ms
+Started:   2026-04-12 15:12:42 -07:00
+Ended:     2026-04-12 15:12:42 -07:00
+Duration:  71ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+yses/veracity-review-verus-proof-holes.log

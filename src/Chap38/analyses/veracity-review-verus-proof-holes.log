@@ -20,29 +20,19 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-⚠ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1996: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1989 |         fn clone(&self) -> (cloned: Self)
-            ...
-      1994 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
-      1995 |             };
-      1997 |             cloned
-      1998 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:2014: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2005 |         fn clone(&self) -> (cloned: Self)
-            ...
-      2012 |                 right: self.right.clone(),
-      2013 |             };
-      2015 |             cloned
-      2016 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:115: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:2099: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:2100: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
-   Info: 1 total
+ℹ BSTParaMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:118: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1717: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1736: info: accept()
+   Info: 3 total
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1822: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1823: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
+   Info: 2 × structural_false_positive
+✓ BSTParaSpecsAndLemmas.rs
+   6 clean proof functions
 ℹ BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:103: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:107: info: fn_missing_requires
    Info: 1 total
-   5 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -53,6 +43,7 @@ Table of Contents:
 =================================================================
 
 BSTParaMtEph  depends upon only clean modules
+BSTParaSpecsAndLemmas  depends upon only clean modules
 BSTParaStEph  depends upon only clean modules
 
 =================================================================
@@ -60,6 +51,7 @@ BSTParaStEph  depends upon only clean modules
 =================================================================
 
 BSTParaMtEph.rs  depends upon only clean modules
+BSTParaSpecsAndLemmas.rs  depends upon only clean modules
 BSTParaStEph.rs  depends upon only clean modules
 
 =================================================================
@@ -67,50 +59,42 @@ BSTParaStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 100%)
+   3 clean (no holes, no errors; 100%)
    0 holed (holes or errors, 0%)
-   2 total
+   3 total
 
 Proof Functions:
-   11 clean (100%)
+   6 clean (100%)
    0 holed (0%)
-   11 total
+   6 total
 
 Function Specs:
-   108 exec fns with complete spec (requires+ensures) (77%)
+   111 exec fns with complete spec (requires+ensures) (75%)
    3 exec fns missing spec (2%)
-   29 proof/spec fns clean (20%)
+   33 proof/spec fns clean (22%)
    0 proof/spec fns with holes (0%)
-   140 total fns
+   147 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Warnings: 2 total
-   2 × assume_eq_clone_workaround
-
-Accepted (reviewed): 2 total
+Accepted (reviewed): 4 total
    2 × fn_missing_requires
+   2 × accept()
 
 Structural (info only): 2
    2 × UNSAFE_SEND_SYNC
 
-No proof holes found! All proofs are complete.
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 15:36:00 -07:00
-Ended:     2026-04-06 15:36:00 -07:00
-Duration:  132ms
+Started:   2026-04-12 15:12:41 -07:00
+Ended:     2026-04-12 15:12:42 -07:00
+Duration:  33ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
-==============
-
-Started:   2026-04-06 15:36:00 -07:00
-Ended:     2026-04-06 15:36:00 -07:00
-Duration:  132ms
-
-Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
+/Chap38/analyses/veracity-review-verus-proof-holes.log

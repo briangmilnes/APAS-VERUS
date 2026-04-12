@@ -21,21 +21,21 @@ Table of Contents:
 =================================================================
 
 ✓ CycleDetectStEph.rs
-   6 clean proof functions
+   4 clean proof functions
 ✓ CycleDetectStPer.rs
-   6 clean proof functions
+   4 clean proof functions
+✓ DFSSpecsAndLemmas.rs
+   10 clean proof functions
 ✓ DFSStEph.rs
-   7 clean proof functions
+   4 clean proof functions
 ✓ DFSStPer.rs
-   6 clean proof functions
+   4 clean proof functions
 ✓ SCCStEph.rs
-   3 clean proof functions
 ✓ SCCStPer.rs
-   2 clean proof functions
 ✓ TopoSortStEph.rs
-   12 clean proof functions
+   4 clean proof functions
 ✓ TopoSortStPer.rs
-   6 clean proof functions
+   4 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -47,6 +47,7 @@ Table of Contents:
 
 CycleDetectStEph  depends upon only clean modules
 CycleDetectStPer  depends upon only clean modules
+DFSSpecsAndLemmas  depends upon only clean modules
 DFSStEph  depends upon only clean modules
 DFSStPer  depends upon only clean modules
 SCCStEph  depends upon only clean modules
@@ -60,6 +61,7 @@ TopoSortStPer  depends upon only clean modules
 
 CycleDetectStEph.rs  depends upon only clean modules
 CycleDetectStPer.rs  depends upon only clean modules
+DFSSpecsAndLemmas.rs  depends upon only clean modules
 DFSStEph.rs  depends upon only clean modules
 DFSStPer.rs  depends upon only clean modules
 SCCStEph.rs  depends upon only clean modules
@@ -72,21 +74,21 @@ TopoSortStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   8 clean (no holes, no errors; 100%)
+   9 clean (no holes, no errors; 100%)
    0 holed (holes or errors, 0%)
-   8 total
+   9 total
 
 Proof Functions:
-   48 clean (100%)
+   34 clean (100%)
    0 holed (0%)
-   48 total
+   34 total
 
 Function Specs:
-   33 exec fns with complete spec (requires+ensures) (28%)
-   2 exec fns missing spec (1%)
-   79 proof/spec fns clean (69%)
+   33 exec fns with complete spec (requires+ensures) (33%)
+   2 exec fns missing spec (2%)
+   65 proof/spec fns clean (65%)
    0 proof/spec fns with holes (0%)
-   114 total fns
+   100 total fns
 
 
 Holes Found: 0 (actionable)
@@ -98,8 +100,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-08 11:22:35 -07:00
-Ended:     2026-04-08 11:22:35 -07:00
-Duration:  70ms
+Started:   2026-04-12 15:12:42 -07:00
+Ended:     2026-04-12 15:12:42 -07:00
+Duration:  47ms
 
 Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap55/analyses/veracity-review-verus-proof-holes.log

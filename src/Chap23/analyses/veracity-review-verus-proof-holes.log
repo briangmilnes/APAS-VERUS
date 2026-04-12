@@ -20,71 +20,20 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-⚠ BalBinTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:520: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       508 |     fn clone_tree<T: Clone>(t: &BalBinTree<T>) -> (c: BalBinTree<T>)
-            ...
-       518 |             })),
-       519 |         };
-       521 |         c
-       522 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:831: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       823 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       829 |                 (BalBinTree::Node(a), BalBinTree::Node(b)) => {
-       830 |                     let equal = a.left == b.left && a.value == b.value && a.right == b.right;
-       832 |                     equal
-       833 |                 },
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:867: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       863 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       865 |         {
-       866 |             let equal = self.left == other.left && self.value == other.value && self.right == other.right;
-       868 |             equal
-       869 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:883: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       875 |         fn clone(&self) -> (cloned: Self)
-            ...
-       881 |                 right: clone_tree(&self.right),
-       882 |             };
-       884 |             cloned
-       885 |         }
-⚠ PrimTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:926: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       922 |         fn clone(&self) -> (cloned: Self)
-            ...
-       924 |         {
-       925 |             let cloned = PrimTreeSeqStS { seq: self.seq.clone() };
-       927 |             cloned
-       928 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:938: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       934 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       936 |         {
-       937 |             let equal = self.seq == other.seq;
-       939 |             equal
-       940 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:965: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       957 |         fn clone(&self) -> (cloned: Self)
-            ...
-       963 |                 PrimTreeSeqStTree::Two(l, r) => PrimTreeSeqStTree::Two(l.clone(), r.clone()),
-       964 |             };
-       966 |             cloned
-       967 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:983: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       973 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       981 |                 (PrimTreeSeqStTree::One(a), PrimTreeSeqStTree::One(b)) => {
-       982 |                     let equal = *a == *b;
-       984 |                     equal
-       985 |                 },
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:988: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       973 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       986 |                 (PrimTreeSeqStTree::Two(l1, r1), PrimTreeSeqStTree::Two(l2, r2)) => {
-       987 |                     let equal = *l1 == *l2 && *r1 == *r2;
-       989 |                     equal
-       990 |                 },
+ℹ BalBinTreeStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:504: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:813: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:849: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:866: info: accept()
+   Info: 4 total
+   2 clean proof functions
+ℹ PrimTreeSeqStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:961: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:973: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1002: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1020: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1026: info: accept()
+   Info: 5 total
 
 =================================================================
 2. Depends Upon
@@ -129,24 +78,18 @@ Function Specs:
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Warnings: 9 total
-   9 × assume_eq_clone_workaround
+Accepted (reviewed): 9 total
+   9 × accept()
 
-No proof holes found! All proofs are complete.
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 15:35:59 -07:00
-Ended:     2026-04-06 15:35:59 -07:00
-Duration:  60ms
+Started:   2026-04-12 15:12:41 -07:00
+Ended:     2026-04-12 15:12:41 -07:00
+Duration:  18ms
 
 Full output: src/Chap23/analyses/veracity-review-verus-proof-holes.log
-==================
-
-Started:   2026-04-06 15:35:59 -07:00
-Ended:     2026-04-06 15:35:59 -07:00
-Duration:  60ms
-
-Full output: src/Chap23/analyses/veracity-review-verus-proof-holes.log
+-proof-holes.log

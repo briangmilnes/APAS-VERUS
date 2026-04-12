@@ -824,7 +824,7 @@ pub mod BSTBBAlphaMtEph {
             } else {
                 let item = self.snapshot[self.pos].clone();
                 self.pos = self.pos + 1;
-                proof { assume(item == old(self)@.1[old(self)@.0]); }
+                proof { accept(item == old(self)@.1[old(self)@.0]); }
                 Some(item)
             }
         }

@@ -22,36 +22,23 @@ Table of Contents:
 
 ✓ KleeneStPer.rs
    9 clean proof functions
-⚠ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:644: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       633 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       642 |             }
-       643 |             // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
-       645 |             r
-       646 |         }
+ℹ MappingStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:659: info: accept()
+   Info: 1 total
 ✓ RelationStEph.rs
-⚠ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1233: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1229 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1231 |         {
-      1232 |             let equal = self.elements == other.elements;
-      1234 |             equal
-      1235 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1159: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1169: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1190: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1178: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
-   Info: 3 total
-⚠ SetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:946: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       941 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       944 |             let equal = self.elements == other.elements;
-       945 |             // HashSetWithView* eq is external_body so we have to trust it here.
-       947 |             equal
-       948 |         }
+ℹ SetMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1145: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1156: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1179: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1223: info: accept()
+   Info: 4 total
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1166: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
+   Info: 1 × structural_false_positive
+   1 clean proof function
+ℹ SetStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:950: info: accept()
+   Info: 1 total
+   1 clean proof function
 
 =================================================================
 2. Depends Upon
@@ -102,30 +89,21 @@ Function Specs:
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Warnings: 3 total
-   3 × assume_eq_clone_workaround
-
-Accepted (reviewed): 3 total
-   3 × accept()
+Accepted (reviewed): 6 total
+   6 × accept()
 
 Structural (info only): 1
    1 × RWLOCK_GHOST
 
-No proof holes found! All proofs are complete.
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 15:35:58 -07:00
-Ended:     2026-04-06 15:35:58 -07:00
-Duration:  94ms
+Started:   2026-04-12 15:12:41 -07:00
+Ended:     2026-04-12 15:12:41 -07:00
+Duration:  31ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
-==================
-
-Started:   2026-04-06 15:35:58 -07:00
-Ended:     2026-04-06 15:35:58 -07:00
-Duration:  94ms
-
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log

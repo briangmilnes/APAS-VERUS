@@ -24,10 +24,9 @@ Table of Contents:
    3 clean proof functions
 ✓ DivConReduceStPer.rs
 ℹ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:207: info: structural_false_positive OPAQUE_EXTERNAL lemma_combined_cycle — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:636: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
-   Info: 2 × structural_false_positive
-   4 clean proof functions
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:607: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
+   Info: 1 × structural_false_positive
+   5 clean proof functions
 ✓ ETSPStEph.rs
    4 clean proof functions
 ✓ MergeSortMtPer.rs
@@ -79,23 +78,23 @@ Modules:
    8 total
 
 Proof Functions:
-   18 clean (100%)
+   19 clean (100%)
    0 holed (0%)
-   18 total
+   19 total
 
 Function Specs:
-   61 exec fns with complete spec (requires+ensures) (49%)
+   61 exec fns with complete spec (requires+ensures) (48%)
    1 exec fns missing spec (0%)
-   62 proof/spec fns clean (50%)
+   64 proof/spec fns clean (50%)
    0 proof/spec fns with holes (0%)
-   124 total fns
+   126 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Structural (info only): 2
-   2 × OPAQUE_EXTERNAL
+Structural (info only): 1
+   1 × OPAQUE_EXTERNAL
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -103,15 +102,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 15:35:59 -07:00
-Ended:     2026-04-06 15:35:59 -07:00
-Duration:  96ms
+Started:   2026-04-12 15:12:41 -07:00
+Ended:     2026-04-12 15:12:41 -07:00
+Duration:  30ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
-=====
-
-Started:   2026-04-06 15:35:59 -07:00
-Ended:     2026-04-06 15:35:59 -07:00
-Duration:  96ms
-
-Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
+of-holes.log

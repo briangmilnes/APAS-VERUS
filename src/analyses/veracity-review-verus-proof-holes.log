@@ -1,5 +1,5 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/
-Full output: src/analyses/veracity-review-verus-proof-holes.log
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -e benches -e tests -e rust_verify_test -e src/vstdplus -e src/standards -e src/experiments /home/milnes/projects/APAS-VERUS
+Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
   1. File Holes
@@ -20,9 +20,13 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ Chap02/FibonacciHFScheduler.rs
+✓ bugs/f64-bitvector-crash/reproducer.rs
+   1 clean proof function
+✓ bugs/ice-set-type-projection/reproducer.rs
+   4 clean proof functions
+✓ src/Chap02/FibonacciHFScheduler.rs
    5 clean proof functions
-ℹ Chap02/HFSchedulerMtEph.rs
+ℹ src/Chap02/HFSchedulerMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:95: info: external_type_specification_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:96: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:109: info: external_body_accept_hole
@@ -34,14 +38,14 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:174: info: structural_false_positive THREAD_SPAWN spawn — #[verifier::external_body] // accept hole [high]
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:195: info: structural_false_positive THREAD_SPAWN wait — #[verifier::external_body] // accept hole [medium]
    Info: 4 × structural_false_positive
-✓ Chap03/InsertionSortStEph.rs
-✓ Chap05/KleeneStPer.rs
+✓ src/Chap03/InsertionSortStEph.rs
+✓ src/Chap05/KleeneStPer.rs
    9 clean proof functions
-ℹ Chap05/MappingStEph.rs
+ℹ src/Chap05/MappingStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:659: info: accept()
    Info: 1 total
-✓ Chap05/RelationStEph.rs
-ℹ Chap05/SetMtEph.rs
+✓ src/Chap05/RelationStEph.rs
+ℹ src/Chap05/SetMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1145: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1156: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1179: info: accept()
@@ -50,11 +54,11 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1166: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
    Info: 1 × structural_false_positive
    1 clean proof function
-ℹ Chap05/SetStEph.rs
+ℹ src/Chap05/SetStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:950: info: accept()
    Info: 1 total
    1 clean proof function
-ℹ Chap06/DirGraphMtEph.rs
+ℹ src/Chap06/DirGraphMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1056: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1068: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1080: info: accept()
@@ -67,16 +71,16 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1164: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1175: info: accept()
    Info: 11 total
-✓ Chap06/DirGraphStEph.rs
-ℹ Chap06/LabDirGraphMtEph.rs
+✓ src/Chap06/DirGraphStEph.rs
+ℹ src/Chap06/LabDirGraphMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:919: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:930: info: accept()
    Info: 2 total
 /home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:892: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
 /home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:905: info: structural_false_positive RWLOCK_GHOST add_labeled_arc — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
    Info: 2 × structural_false_positive
-✓ Chap06/LabDirGraphStEph.rs
-ℹ Chap06/LabUnDirGraphMtEph.rs
+✓ src/Chap06/LabDirGraphStEph.rs
+ℹ src/Chap06/LabUnDirGraphMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:834: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:846: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:858: info: accept()
@@ -86,8 +90,8 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:893: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
 /home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:905: info: structural_false_positive RWLOCK_GHOST add_labeled_edge — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
    Info: 2 × structural_false_positive
-✓ Chap06/LabUnDirGraphStEph.rs
-ℹ Chap06/UnDirGraphMtEph.rs
+✓ src/Chap06/LabUnDirGraphStEph.rs
+ℹ src/Chap06/UnDirGraphMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:708: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:720: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:732: info: accept()
@@ -96,36 +100,36 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:769: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:780: info: accept()
    Info: 7 total
-✓ Chap06/UnDirGraphStEph.rs
-✓ Chap06/WeightedDirGraphStEphF64.rs
-✓ Chap06/WeightedDirGraphStEphI128.rs
-✓ Chap06/WeightedDirGraphStEphI16.rs
-✓ Chap06/WeightedDirGraphStEphI32.rs
-✓ Chap06/WeightedDirGraphStEphI64.rs
-✓ Chap06/WeightedDirGraphStEphI8.rs
-✓ Chap06/WeightedDirGraphStEphIsize.rs
-✓ Chap06/WeightedDirGraphStEphU128.rs
-✓ Chap06/WeightedDirGraphStEphU16.rs
-✓ Chap06/WeightedDirGraphStEphU32.rs
-✓ Chap06/WeightedDirGraphStEphU64.rs
-✓ Chap06/WeightedDirGraphStEphU8.rs
-✓ Chap06/WeightedDirGraphStEphUsize.rs
-ℹ Chap11/FibonacciMtEph2Threads.rs
+✓ src/Chap06/UnDirGraphStEph.rs
+✓ src/Chap06/WeightedDirGraphStEphF64.rs
+✓ src/Chap06/WeightedDirGraphStEphI128.rs
+✓ src/Chap06/WeightedDirGraphStEphI16.rs
+✓ src/Chap06/WeightedDirGraphStEphI32.rs
+✓ src/Chap06/WeightedDirGraphStEphI64.rs
+✓ src/Chap06/WeightedDirGraphStEphI8.rs
+✓ src/Chap06/WeightedDirGraphStEphIsize.rs
+✓ src/Chap06/WeightedDirGraphStEphU128.rs
+✓ src/Chap06/WeightedDirGraphStEphU16.rs
+✓ src/Chap06/WeightedDirGraphStEphU32.rs
+✓ src/Chap06/WeightedDirGraphStEphU64.rs
+✓ src/Chap06/WeightedDirGraphStEphU8.rs
+✓ src/Chap06/WeightedDirGraphStEphUsize.rs
+ℹ src/Chap11/FibonacciMtEph2Threads.rs
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:172: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:181: info: accept()
    Info: 2 total
-ℹ Chap11/FibonacciMtEphRecomputes.rs
+ℹ src/Chap11/FibonacciMtEphRecomputes.rs
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:168: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:177: info: accept()
    Info: 2 total
-✓ Chap11/FibonacciMtPerAllThreads.rs
-ℹ Chap11/FibonacciMtPerTSM.rs
+✓ src/Chap11/FibonacciMtPerAllThreads.rs
+ℹ src/Chap11/FibonacciMtPerTSM.rs
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:162: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:171: info: accept()
    Info: 2 total
-✓ Chap11/FibonacciStEph.rs
+✓ src/Chap11/FibonacciStEph.rs
    3 clean proof functions
-ℹ Chap12/Exercise12_1.rs
+ℹ src/Chap12/Exercise12_1.rs
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:40: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:83: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:92: info: external_body_accept_hole
@@ -133,8 +137,8 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:107: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:118: info: external_body_accept_hole
    Info: 6 total
-✓ Chap12/Exercise12_2.rs
-ℹ Chap12/Exercise12_5.rs
+✓ src/Chap12/Exercise12_2.rs
+ℹ src/Chap12/Exercise12_5.rs
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:41: info: external_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:52: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:67: info: trivial_spec_wf
@@ -149,137 +153,137 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:138: info: unsafe_block_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:169: info: unsafe_block_accept_hole
    Info: 13 total
-ℹ Chap17/MathSeq.rs
+ℹ src/Chap17/MathSeq.rs
 /home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:695: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:709: info: accept()
    Info: 2 total
-ℹ Chap18/ArraySeq.rs
+ℹ src/Chap18/ArraySeq.rs
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1518: info: external_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1645: info: external_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1681: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1657: info: external_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1693: info: accept()
    Info: 3 total
    10 clean proof functions
-ℹ Chap18/ArraySeqMtEph.rs
+ℹ src/Chap18/ArraySeqMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:101: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1937: info: accept()
    Info: 2 total
    2 clean proof functions
-ℹ Chap18/ArraySeqMtEphSlice.rs
+ℹ src/Chap18/ArraySeqMtEphSlice.rs
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEphSlice.rs:1695: info: accept()
    Info: 1 total
    5 clean proof functions
-ℹ Chap18/ArraySeqMtPer.rs
+ℹ src/Chap18/ArraySeqMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:339: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1884: info: accept()
    Info: 2 total
    2 clean proof functions
-✓ Chap18/ArraySeqSpecsAndLemmas.rs
+✓ src/Chap18/ArraySeqSpecsAndLemmas.rs
    2 clean proof functions
-ℹ Chap18/ArraySeqStEph.rs
+ℹ src/Chap18/ArraySeqStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:342: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1093: info: accept()
    Info: 2 total
    1 clean proof function
-ℹ Chap18/ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:332: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1053: info: accept()
+ℹ src/Chap18/ArraySeqStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:333: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1078: info: accept()
    Info: 2 total
    1 clean proof function
-ℹ Chap18/LinkedListStEph.rs
+ℹ src/Chap18/LinkedListStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:284: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:898: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:912: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:910: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:924: info: accept()
    Info: 3 total
    1 clean proof function
-ℹ Chap18/LinkedListStPer.rs
+ℹ src/Chap18/LinkedListStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:276: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:880: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:894: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:892: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:906: info: accept()
    Info: 3 total
    1 clean proof function
-ℹ Chap19/ArraySeqMtEph.rs
+ℹ src/Chap19/ArraySeqMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:433: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1728: info: accept()
    Info: 2 total
    4 clean proof functions
-ℹ Chap19/ArraySeqMtEphSlice.rs
+ℹ src/Chap19/ArraySeqMtEphSlice.rs
 /home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEphSlice.rs:1722: info: accept()
    Info: 1 total
    5 clean proof functions
-✓ Chap19/ArraySeqSpecsAndLemmas.rs
+✓ src/Chap19/ArraySeqSpecsAndLemmas.rs
    2 clean proof functions
-ℹ Chap19/ArraySeqStEph.rs
+ℹ src/Chap19/ArraySeqStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:413: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1177: info: accept()
    Info: 2 total
    4 clean proof functions
-ℹ Chap19/ArraySeqStPer.rs
+ℹ src/Chap19/ArraySeqStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:401: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:1178: info: accept()
    Info: 2 total
    4 clean proof functions
-✓ Chap21/Exercise21_5.rs
+✓ src/Chap21/Exercise21_5.rs
    1 clean proof function
-✓ Chap21/Exercise21_6.rs
-✓ Chap21/Exercise21_7.rs
-✓ Chap21/Exercise21_8.rs
+✓ src/Chap21/Exercise21_6.rs
+✓ src/Chap21/Exercise21_7.rs
+✓ src/Chap21/Exercise21_8.rs
    5 clean proof functions
-✓ Chap21/Exercise21_9.rs
+✓ src/Chap21/Exercise21_9.rs
    3 clean proof functions
-ℹ Chap23/BalBinTreeStEph.rs
+ℹ src/Chap23/BalBinTreeStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:504: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:813: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:849: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:866: info: accept()
    Info: 4 total
    2 clean proof functions
-ℹ Chap23/PrimTreeSeqStPer.rs
+ℹ src/Chap23/PrimTreeSeqStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:961: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:973: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1002: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1020: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1026: info: accept()
    Info: 5 total
-✓ Chap26/DivConReduceMtPer.rs
+✓ src/Chap26/DivConReduceMtPer.rs
    3 clean proof functions
-✓ Chap26/DivConReduceStPer.rs
-ℹ Chap26/ETSPMtEph.rs
+✓ src/Chap26/DivConReduceStPer.rs
+ℹ src/Chap26/ETSPMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:607: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
    5 clean proof functions
-✓ Chap26/ETSPStEph.rs
+✓ src/Chap26/ETSPStEph.rs
    4 clean proof functions
-✓ Chap26/MergeSortMtPer.rs
+✓ src/Chap26/MergeSortMtPer.rs
    4 clean proof functions
-✓ Chap26/MergeSortStPer.rs
+✓ src/Chap26/MergeSortStPer.rs
    1 clean proof function
-✓ Chap26/ScanDCMtPer.rs
+✓ src/Chap26/ScanDCMtPer.rs
    1 clean proof function
-✓ Chap26/ScanDCStPer.rs
+✓ src/Chap26/ScanDCStPer.rs
    1 clean proof function
-✓ Chap27/ContractSpecsAndLemmas.rs
+✓ src/Chap27/ContractSpecsAndLemmas.rs
    8 clean proof functions
-✓ Chap27/ReduceContractMtEph.rs
-✓ Chap27/ReduceContractStEph.rs
-✓ Chap27/ScanContractMtEph.rs
-✓ Chap27/ScanContractStEph.rs
-✓ Chap28/MCSSSpec.rs
+✓ src/Chap27/ReduceContractMtEph.rs
+✓ src/Chap27/ReduceContractStEph.rs
+✓ src/Chap27/ScanContractMtEph.rs
+✓ src/Chap27/ScanContractStEph.rs
+✓ src/Chap28/MCSSSpec.rs
    10 clean proof functions
-✓ Chap28/MaxContigSubSumBruteStEph.rs
-✓ Chap28/MaxContigSubSumDivConMtEph.rs
-✓ Chap28/MaxContigSubSumDivConOptMtEph.rs
-✓ Chap28/MaxContigSubSumDivConOptStEph.rs
+✓ src/Chap28/MaxContigSubSumBruteStEph.rs
+✓ src/Chap28/MaxContigSubSumDivConMtEph.rs
+✓ src/Chap28/MaxContigSubSumDivConOptMtEph.rs
+✓ src/Chap28/MaxContigSubSumDivConOptStEph.rs
    1 clean proof function
-✓ Chap28/MaxContigSubSumDivConStEph.rs
+✓ src/Chap28/MaxContigSubSumDivConStEph.rs
    1 clean proof function
-✓ Chap28/MaxContigSubSumIterStEph.rs
+✓ src/Chap28/MaxContigSubSumIterStEph.rs
    2 clean proof functions
-✓ Chap28/MaxContigSubSumOptMtEph.rs
-✓ Chap28/MaxContigSubSumOptStEph.rs
+✓ src/Chap28/MaxContigSubSumOptMtEph.rs
+✓ src/Chap28/MaxContigSubSumOptStEph.rs
    1 clean proof function
-✓ Chap28/MaxContigSubSumReducedMcsseStEph.rs
-✓ Chap28/MaxContigSubSumReducedStEph.rs
-ℹ Chap30/Probability.rs
+✓ src/Chap28/MaxContigSubSumReducedMcsseStEph.rs
+✓ src/Chap28/MaxContigSubSumReducedStEph.rs
+ℹ src/Chap30/Probability.rs
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:76: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:112: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:118: info: external_body_accept_hole
@@ -293,25 +297,25 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:180: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] // accept hole [high]
 /home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:191: info: structural_false_positive STD_TRAIT_IMPL hash — #[verifier::external_body]  // accept hole [high]
    Info: 4 × structural_false_positive
-ℹ Chap35/OrderStatSelectMtEph.rs
+ℹ src/Chap35/OrderStatSelectMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:171: info: fn_missing_requires
    Info: 1 total
    3 clean proof functions
-ℹ Chap35/OrderStatSelectMtPer.rs
+ℹ src/Chap35/OrderStatSelectMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:171: info: fn_missing_requires
    Info: 1 total
    3 clean proof functions
-✓ Chap35/OrderStatSelectStEph.rs
+✓ src/Chap35/OrderStatSelectStEph.rs
    1 clean proof function
-✓ Chap35/OrderStatSelectStPer.rs
+✓ src/Chap35/OrderStatSelectStPer.rs
    1 clean proof function
-✓ Chap36/QuickSortMtEph.rs
+✓ src/Chap36/QuickSortMtEph.rs
    2 clean proof functions
-✓ Chap36/QuickSortMtEphSlice.rs
+✓ src/Chap36/QuickSortMtEphSlice.rs
    3 clean proof functions
-✓ Chap36/QuickSortStEph.rs
+✓ src/Chap36/QuickSortStEph.rs
    2 clean proof functions
-ℹ Chap37/AVLTreeSeq.rs
+ℹ src/Chap37/AVLTreeSeq.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1357: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1358: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1359: info: accept()
@@ -320,7 +324,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1222: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
    Info: 1 × structural_false_positive
    3 clean proof functions
-ℹ Chap37/AVLTreeSeqMtPer.rs
+ℹ src/Chap37/AVLTreeSeqMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:1001: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:1002: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:1003: info: accept()
@@ -330,7 +334,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:863: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
    2 clean proof functions
-ℹ Chap37/AVLTreeSeqStEph.rs
+ℹ src/Chap37/AVLTreeSeqStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1257: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1377: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1378: info: accept()
@@ -339,7 +343,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1293: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
    Info: 1 × structural_false_positive
    4 clean proof functions
-ℹ Chap37/AVLTreeSeqStPer.rs
+ℹ src/Chap37/AVLTreeSeqStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:926: info: fn_missing_requires
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:1097: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:1098: info: accept()
@@ -349,90 +353,94 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:977: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
    Info: 1 × structural_false_positive
    4 clean proof functions
-ℹ Chap37/BSTAVLMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:909: info: accept()
-   Info: 1 total
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:836: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:862: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:874: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:886: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:897: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:908: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
+ℹ src/Chap37/BSTAVLMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:914: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:1009: info: accept()
+   Info: 2 total
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:841: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:867: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:879: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:891: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:902: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:913: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
    Info: 6 × structural_false_positive
-✓ Chap37/BSTAVLStEph.rs
-ℹ Chap37/BSTBBAlphaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:716: info: accept()
-   Info: 1 total
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:629: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:652: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:667: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:679: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:692: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:703: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:715: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:729: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() == 0 ==> min.is_none()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:730: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() > 0 ==> min.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:731: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> self@.tree_contains(min.unwrap())); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:743: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() == 0 ==> max.is_none()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:744: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() > 0 ==> max.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:745: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> self@.tree_contains(max.unwrap())); [medium]
+✓ src/Chap37/BSTAVLStEph.rs
+ℹ src/Chap37/BSTBBAlphaMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:721: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:827: info: accept()
+   Info: 2 total
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:634: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:657: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == tree); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:672: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:684: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:697: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:708: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:720: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:734: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() == 0 ==> min.is_none()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:735: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() > 0 ==> min.is_some()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:736: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> self@.tree_contains(min.unwrap())); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:748: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() == 0 ==> max.is_none()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:749: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() > 0 ==> max.is_some()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:750: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> self@.tree_contains(max.unwrap())); [medium]
    Info: 13 × structural_false_positive
-✓ Chap37/BSTBBAlphaStEph.rs
-ℹ Chap37/BSTPlainMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:695: info: accept()
-   Info: 1 total
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:609: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:632: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:647: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:658: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:670: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:682: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:694: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:708: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() == 0 ==> min.is_none()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:709: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() > 0 ==> min.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:710: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> self@.tree_contains(min.unwrap())); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:722: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() == 0 ==> max.is_none()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:723: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() > 0 ==> max.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:724: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> self@.tree_contains(max.unwrap())); [medium]
+✓ src/Chap37/BSTBBAlphaStEph.rs
+ℹ src/Chap37/BSTPlainMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:700: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:806: info: accept()
+   Info: 2 total
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:614: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:637: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == tree); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:652: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:663: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:675: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:687: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:699: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:713: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() == 0 ==> min.is_none()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:714: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() > 0 ==> min.is_some()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:715: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> self@.tree_contains(min.unwrap())); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:727: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() == 0 ==> max.is_none()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:728: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() > 0 ==> max.is_some()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:729: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> self@.tree_contains(max.unwrap())); [medium]
    Info: 13 × structural_false_positive
-✓ Chap37/BSTPlainStEph.rs
-ℹ Chap37/BSTRBMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:382: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1117: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1434: info: accept()
-   Info: 3 total
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1291: info: structural_false_positive RWLOCK_GHOST from_sorted_slice — assume(spec_is_bst_link(ghost_link)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1304: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1378: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1391: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1402: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@.spec_size() == 0)); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1420: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1433: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
+✓ src/Chap37/BSTPlainStEph.rs
+ℹ src/Chap37/BSTRBMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:383: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1119: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1439: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1566: info: accept()
+   Info: 4 total
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1298: info: structural_false_positive RWLOCK_GHOST from_sorted_slice — assume(spec_is_bst_link(ghost_link)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1310: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1388: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1400: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1410: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@.spec_size() == 0)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1426: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1438: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
    Info: 7 × structural_false_positive
    5 clean proof functions
-✓ Chap37/BSTRBStEph.rs
-ℹ Chap37/BSTSetAVLMtEph.rs
+✓ src/Chap37/BSTRBStEph.rs
+ℹ src/Chap37/BSTSetAVLMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetAVLMtEph.rs:181: info: fn_missing_requires
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetAVLMtEph.rs:599: info: accept()
    Info: 2 total
-ℹ Chap37/BSTSetBBAlphaMtEph.rs
+ℹ src/Chap37/BSTSetBBAlphaMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:180: info: fn_missing_requires
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:552: info: accept()
    Info: 2 total
-ℹ Chap37/BSTSetPlainMtEph.rs
+ℹ src/Chap37/BSTSetPlainMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:180: info: fn_missing_requires
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:552: info: accept()
    Info: 2 total
-ℹ Chap37/BSTSetRBMtEph.rs
+ℹ src/Chap37/BSTSetRBMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:180: info: fn_missing_requires
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:598: info: accept()
    Info: 2 total
-ℹ Chap37/BSTSetSplayMtEph.rs
+ℹ src/Chap37/BSTSetSplayMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:616: info: accept()
    Info: 1 total
-✓ Chap37/BSTSpecsAndLemmas.rs
+✓ src/Chap37/BSTSpecsAndLemmas.rs
    11 clean proof functions
-ℹ Chap37/BSTSplayMtEph.rs
+ℹ src/Chap37/BSTSplayMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1542: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1996: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:2098: info: accept()
@@ -453,9 +461,9 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:2023: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> forall|x: T| link_contains(self@, x [medium]
    Info: 14 × structural_false_positive
    3 clean proof functions
-✓ Chap37/BSTSplayStEph.rs
+✓ src/Chap37/BSTSplayStEph.rs
    3 clean proof functions
-ℹ Chap38/BSTParaMtEph.rs
+ℹ src/Chap38/BSTParaMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:118: info: fn_missing_requires
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1717: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1736: info: accept()
@@ -463,88 +471,88 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1822: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1823: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
    Info: 2 × structural_false_positive
-✓ Chap38/BSTParaSpecsAndLemmas.rs
+✓ src/Chap38/BSTParaSpecsAndLemmas.rs
    6 clean proof functions
-ℹ Chap38/BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:104: info: fn_missing_requires
+ℹ src/Chap38/BSTParaStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:107: info: fn_missing_requires
    Info: 1 total
-ℹ Chap39/BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:75: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:85: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1689: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1690: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1691: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1700: info: accept()
+ℹ src/Chap39/BSTParaTreapMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:78: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:88: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1806: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1807: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1808: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1817: info: accept()
    Info: 6 total
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:216: info: structural_false_positive OPAQUE_EXTERNAL priority_for — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1776: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Send for ParamTreap<T> {} [high]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1777: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Sync for ParamTreap<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:219: info: structural_false_positive OPAQUE_EXTERNAL priority_for — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1893: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Send for ParamTreap<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1894: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Sync for ParamTreap<T> {} [high]
    Info: 3 × structural_false_positive
-ℹ Chap39/BSTSetTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:437: info: accept()
+ℹ src/Chap39/BSTSetTreapMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:553: info: accept()
    Info: 1 total
-ℹ Chap39/BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1242: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1463: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1478: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1503: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1504: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1514: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1535: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1536: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1543: info: accept()
+ℹ src/Chap39/BSTTreapMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1246: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1467: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1482: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1619: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1620: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1630: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1651: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1652: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1659: info: accept()
    Info: 9 total
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1241: info: structural_false_positive RWLOCK_GHOST find — assume(result.is_some() <==> self@.contains(target@)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1263: info: structural_false_positive RWLOCK_GHOST size — proof { assume(result as nat == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1294: info: structural_false_positive RWLOCK_GHOST minimum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1307: info: structural_false_positive RWLOCK_GHOST maximum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1321: info: structural_false_positive RWLOCK_GHOST in_order — proof { assume(ordered@.len() == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1335: info: structural_false_positive RWLOCK_GHOST pre_order — proof { assume(preordered@.len() == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1245: info: structural_false_positive RWLOCK_GHOST find — assume(result.is_some() <==> self@.contains(target@)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1267: info: structural_false_positive RWLOCK_GHOST size — proof { assume(result as nat == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1298: info: structural_false_positive RWLOCK_GHOST minimum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1311: info: structural_false_positive RWLOCK_GHOST maximum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1325: info: structural_false_positive RWLOCK_GHOST in_order — proof { assume(ordered@.len() == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1339: info: structural_false_positive RWLOCK_GHOST pre_order — proof { assume(preordered@.len() == self@.len()); } [medium]
    Info: 6 × structural_false_positive
    25 clean proof functions
-✓ Chap39/BSTTreapSpecsAndLemmas.rs
+✓ src/Chap39/BSTTreapSpecsAndLemmas.rs
    11 clean proof functions
-ℹ Chap39/BSTTreapStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1932: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1937: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1952: info: accept()
+ℹ src/Chap39/BSTTreapStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1935: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1940: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1955: info: accept()
    Info: 3 total
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1959: info: structural_false_positive OPAQUE_EXTERNAL priority_for_st — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1962: info: structural_false_positive OPAQUE_EXTERNAL priority_for_st — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
    21 clean proof functions
-ℹ Chap40/BSTKeyValueStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1391: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1472: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1472: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1500: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1521: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1521: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1524: info: accept()
+ℹ src/Chap40/BSTKeyValueStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1394: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1590: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1590: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1618: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1639: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1639: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1642: info: accept()
    Info: 7 total
    14 clean proof functions
-ℹ Chap40/BSTReducedStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:166: info: external_body_accept_hole
+ℹ src/Chap40/BSTReducedStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:169: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:192: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1557: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1597: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1597: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1656: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1656: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1659: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:172: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:195: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1560: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1715: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1715: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1774: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1774: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1777: info: accept()
    Info: 9 total
    8 clean proof functions
-ℹ Chap40/BSTSizeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1438: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1456: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1456: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1484: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1502: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1502: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1505: info: accept()
+ℹ src/Chap40/BSTSizeStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1441: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1572: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1572: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1600: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1618: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1618: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1621: info: accept()
    Info: 7 total
    8 clean proof functions
-❌ Chap41/AVLTreeSetMtEph.rs
+❌ src/Chap41/AVLTreeSetMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:681: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Send for AVLTreeSetMtEp...
        682 |     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtEph<T> {}
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:682: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtEp...
@@ -554,175 +562,177 @@ Table of Contents:
    Holes: 2 total
       2 × unsafe impl
    Info: 1 total
-❌ Chap41/AVLTreeSetMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:625: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Send for AVLTreeSetMtPe...
-       626 |     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtPer<T> {}
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:626: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtPe...
-       627 | 
-       628 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtPer<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:592: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:511: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:518: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+❌ src/Chap41/AVLTreeSetMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:739: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Send for AVLTreeSetMtPe...
+       740 |     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtPer<T> {}
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:740: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtPe...
+       741 | 
+       742 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtPerIter<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:706: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:513: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:520: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
    Holes: 2 total
       2 × unsafe impl
    Info: 2 × structural_false_positive
       2 × STD_TRAIT_IMPL
    Info: 1 total
-ℹ Chap41/AVLTreeSetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:824: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:825: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:826: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:827: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:831: info: accept()
+ℹ src/Chap41/AVLTreeSetStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:953: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:954: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:955: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:956: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:960: info: accept()
    Info: 5 total
    5 clean proof functions
-ℹ Chap41/AVLTreeSetStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:701: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:702: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:703: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:704: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:708: info: accept()
+ℹ src/Chap41/AVLTreeSetStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:832: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:833: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:834: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:835: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:839: info: accept()
    Info: 5 total
    4 clean proof functions
-ℹ Chap41/ArraySetEnumMtEph.rs
+ℹ src/Chap41/ArraySetEnumMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:979: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:993: info: accept()
    Info: 2 total
    7 clean proof functions
-ℹ Chap41/ArraySetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1065: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1066: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1089: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1103: info: accept()
+ℹ src/Chap41/ArraySetStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1191: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1192: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1215: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1229: info: accept()
    Info: 4 total
    7 clean proof functions
-✓ Chap41/OrdKeyMap.rs
+✓ src/Chap41/OrdKeyMap.rs
    26 clean proof functions
-ℹ Chap42/TableMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2427: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2439: info: accept()
+ℹ src/Chap42/TableMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2549: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2561: info: accept()
    Info: 2 total
-✓ Chap42/TableSpecsAndLemmas.rs
+✓ src/Chap42/TableSpecsAndLemmas.rs
    15 clean proof functions
-ℹ Chap42/TableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2554: info: accept()
+ℹ src/Chap42/TableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2680: info: accept()
    Info: 1 total
    1 clean proof function
-ℹ Chap42/TableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2763: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2774: info: accept()
+ℹ src/Chap42/TableStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2892: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2903: info: accept()
    Info: 2 total
    5 clean proof functions
-✓ Chap43/AugOrderedTableMtEph.rs
+✓ src/Chap43/AugOrderedTableMtEph.rs
    1 clean proof function
-ℹ Chap43/AugOrderedTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:967: info: accept()
+ℹ src/Chap43/AugOrderedTableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:989: info: accept()
    Info: 1 total
    1 clean proof function
-✓ Chap43/AugOrderedTableStPer.rs
+✓ src/Chap43/AugOrderedTableStPer.rs
    1 clean proof function
-ℹ Chap43/OrderedSetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:324: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:359: info: structural_false_positive RWLOCK_GHOST find — proof { assume(found == self@.contains(x@)); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:374: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:431: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val@.len() + other_ref@.len() < usize: [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:463: info: structural_false_positive RWLOCK_GHOST to_seq — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:526: info: structural_false_positive RWLOCK_GHOST first — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:542: info: structural_false_positive RWLOCK_GHOST last — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:557: info: structural_false_positive RWLOCK_GHOST previous — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:571: info: structural_false_positive RWLOCK_GHOST next — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:579: info: structural_false_positive RWLOCK_GHOST split — proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:586: info: structural_false_positive RWLOCK_GHOST split — assume(left.spec_orderedsetsteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:587: info: structural_false_positive RWLOCK_GHOST split — assume(right.spec_orderedsetsteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:602: info: structural_false_positive RWLOCK_GHOST join — proof { assume(locked_val@.len() + other_inner@.len() < usiz [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:623: info: structural_false_positive RWLOCK_GHOST get_range — proof { assume(range.spec_orderedsetsteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:637: info: structural_false_positive RWLOCK_GHOST rank — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:652: info: structural_false_positive RWLOCK_GHOST select — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:660: info: structural_false_positive RWLOCK_GHOST split_rank — proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:667: info: structural_false_positive RWLOCK_GHOST split_rank — assume(left.spec_orderedsetsteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:668: info: structural_false_positive RWLOCK_GHOST split_rank — assume(right.spec_orderedsetsteph_wf()); [medium]
+ℹ src/Chap43/OrderedSetMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:731: info: accept()
+   Info: 1 total
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:329: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:364: info: structural_false_positive RWLOCK_GHOST find — proof { assume(found == self@.contains(x@)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:379: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:436: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val@.len() + other_ref@.len() < usize: [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:468: info: structural_false_positive RWLOCK_GHOST to_seq — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:531: info: structural_false_positive RWLOCK_GHOST first — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:547: info: structural_false_positive RWLOCK_GHOST last — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:562: info: structural_false_positive RWLOCK_GHOST previous — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:576: info: structural_false_positive RWLOCK_GHOST next — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:584: info: structural_false_positive RWLOCK_GHOST split — proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:591: info: structural_false_positive RWLOCK_GHOST split — assume(left.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:592: info: structural_false_positive RWLOCK_GHOST split — assume(right.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:607: info: structural_false_positive RWLOCK_GHOST join — proof { assume(locked_val@.len() + other_inner@.len() < usiz [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:628: info: structural_false_positive RWLOCK_GHOST get_range — proof { assume(range.spec_orderedsetsteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:642: info: structural_false_positive RWLOCK_GHOST rank — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:657: info: structural_false_positive RWLOCK_GHOST select — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:665: info: structural_false_positive RWLOCK_GHOST split_rank — proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:672: info: structural_false_positive RWLOCK_GHOST split_rank — assume(left.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:673: info: structural_false_positive RWLOCK_GHOST split_rank — assume(right.spec_orderedsetsteph_wf()); [medium]
    Info: 19 × structural_false_positive
-✓ Chap43/OrderedSetStEph.rs
+✓ src/Chap43/OrderedSetStEph.rs
    3 clean proof functions
-✓ Chap43/OrderedSetStPer.rs
+✓ src/Chap43/OrderedSetStPer.rs
    3 clean proof functions
-✓ Chap43/OrderedSpecsAndLemmas.rs
+✓ src/Chap43/OrderedSpecsAndLemmas.rs
    11 clean proof functions
-ℹ Chap43/OrderedTableMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:984: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:988: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:989: info: accept()
+ℹ src/Chap43/OrderedTableMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1021: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1025: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1026: info: accept()
    Info: 3 total
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:425: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:454: info: structural_false_positive RWLOCK_GHOST find — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:475: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(!locked_val@.contains_key(k@) ==> locked_val@ [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:477: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:493: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:502: info: structural_false_positive RWLOCK_GHOST domain — assume(self@.dom().finite()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:507: info: structural_false_positive RWLOCK_GHOST domain — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:557: info: structural_false_positive RWLOCK_GHOST intersection — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:575: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val@.dom().len() + other_ref@.dom().le [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:577: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:594: info: structural_false_positive RWLOCK_GHOST difference — proof { assume(other_ref.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:596: info: structural_false_positive RWLOCK_GHOST difference — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:611: info: structural_false_positive RWLOCK_GHOST restrict — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:625: info: structural_false_positive RWLOCK_GHOST subtract — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:633: info: structural_false_positive RWLOCK_GHOST reduce — proof { assume(self@.dom().finite()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:636: info: structural_false_positive RWLOCK_GHOST reduce — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:644: info: structural_false_positive RWLOCK_GHOST collect — proof { assume(self@.dom().finite()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:658: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:660: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:671: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:673: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:684: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:686: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:697: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:699: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:714: info: structural_false_positive RWLOCK_GHOST split_key — proof { assume(empty_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:717: info: structural_false_positive RWLOCK_GHOST split_key — assume(left_inner.spec_orderedtablesteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:718: info: structural_false_positive RWLOCK_GHOST split_key — assume(right_inner.spec_orderedtablesteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:736: info: structural_false_positive RWLOCK_GHOST get_key_range — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:739: info: structural_false_positive RWLOCK_GHOST get_key_range — proof { assume(st_range.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:751: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:764: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:777: info: structural_false_positive RWLOCK_GHOST split_rank_key — proof { assume(empty_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:780: info: structural_false_positive RWLOCK_GHOST split_rank_key — assume(left.spec_orderedtablesteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:781: info: structural_false_positive RWLOCK_GHOST split_rank_key — assume(right.spec_orderedtablesteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:790: info: structural_false_positive RWLOCK_GHOST iter — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:822: info: structural_false_positive RWLOCK_GHOST from_st — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:936: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1042: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal + Ord> Send for OrderedTableMtEph<K, V> {} [high]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1043: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal + Ord> Sync for OrderedTableMtEph<K, V> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:459: info: structural_false_positive RWLOCK_GHOST find — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:480: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(!locked_val@.contains_key(k@) ==> locked_val@ [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:482: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:499: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:509: info: structural_false_positive RWLOCK_GHOST domain — assume(self@.dom().finite()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:514: info: structural_false_positive RWLOCK_GHOST domain — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:567: info: structural_false_positive RWLOCK_GHOST intersection — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:587: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val@.dom().len() + other_ref@.dom().le [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:589: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:609: info: structural_false_positive RWLOCK_GHOST difference — proof { assume(other_ref.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:611: info: structural_false_positive RWLOCK_GHOST difference — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:629: info: structural_false_positive RWLOCK_GHOST restrict — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:645: info: structural_false_positive RWLOCK_GHOST subtract — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:653: info: structural_false_positive RWLOCK_GHOST reduce — proof { assume(self@.dom().finite()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:657: info: structural_false_positive RWLOCK_GHOST reduce — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:665: info: structural_false_positive RWLOCK_GHOST collect — proof { assume(self@.dom().finite()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:679: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:681: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:692: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:694: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:705: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:707: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:718: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:721: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:738: info: structural_false_positive RWLOCK_GHOST split_key — proof { assume(empty_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:741: info: structural_false_positive RWLOCK_GHOST split_key — assume(left_inner.spec_orderedtablesteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:742: info: structural_false_positive RWLOCK_GHOST split_key — assume(right_inner.spec_orderedtablesteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:764: info: structural_false_positive RWLOCK_GHOST get_key_range — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:767: info: structural_false_positive RWLOCK_GHOST get_key_range — proof { assume(st_range.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:779: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:792: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:806: info: structural_false_positive RWLOCK_GHOST split_rank_key — proof { assume(empty_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:809: info: structural_false_positive RWLOCK_GHOST split_rank_key — assume(left.spec_orderedtablesteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:810: info: structural_false_positive RWLOCK_GHOST split_rank_key — assume(right.spec_orderedtablesteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:819: info: structural_false_positive RWLOCK_GHOST iter — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:855: info: structural_false_positive RWLOCK_GHOST from_st — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:972: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1079: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal + Ord> Send for OrderedTableMtEph<K, V> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1080: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal + Ord> Sync for OrderedTableMtEph<K, V> {} [high]
    Info: 40 × structural_false_positive
-ℹ Chap43/OrderedTableMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:775: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:776: info: accept()
+ℹ src/Chap43/OrderedTableMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:905: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:906: info: accept()
    Info: 2 total
-✓ Chap43/OrderedTableStEph.rs
-ℹ Chap43/OrderedTableStPer.rs
+✓ src/Chap43/OrderedTableStEph.rs
+ℹ src/Chap43/OrderedTableStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1519: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1531: info: accept()
    Info: 2 total
-ℹ Chap44/DocumentIndex.rs
+ℹ src/Chap44/DocumentIndex.rs
 /home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:645: info: accept()
    Info: 1 total
 /home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:651: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
    Info: 1 × structural_false_positive
-ℹ Chap45/BalancedTreePQ.rs
+ℹ src/Chap45/BalancedTreePQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:859: info: accept()
    Info: 1 total
    1 clean proof function
-ℹ Chap45/BinaryHeapPQ.rs
+ℹ src/Chap45/BinaryHeapPQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1847: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1864: info: accept()
    Info: 2 total
    5 clean proof functions
-ℹ Chap45/HeapsortExample.rs
+ℹ src/Chap45/HeapsortExample.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:115: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:132: info: accept()
    Info: 2 total
    1 clean proof function
-ℹ Chap45/LeftistHeapPQ.rs
+ℹ src/Chap45/LeftistHeapPQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:733: info: fn_missing_requires
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1196: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1218: info: accept()
@@ -730,194 +740,198 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1257: info: accept()
    Info: 5 total
    4 clean proof functions
-ℹ Chap45/SortedListPQ.rs
+ℹ src/Chap45/SortedListPQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1255: info: accept()
    Info: 1 total
    4 clean proof functions
-ℹ Chap45/UnsortedListPQ.rs
+ℹ src/Chap45/UnsortedListPQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:846: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:862: info: accept()
    Info: 2 total
    1 clean proof function
-✓ Chap47/ChainedHashTable.rs
+✓ src/Chap47/ChainedHashTable.rs
    5 clean proof functions
-ℹ Chap47/DoubleHashFlatHashTableStEph.rs
+ℹ src/Chap47/DoubleHashFlatHashTableStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:104: info: structural_false_positive OPAQUE_EXTERNAL second_hash — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
    1 clean proof function
-ℹ Chap47/FlatHashTable.rs
+ℹ src/Chap47/FlatHashTable.rs
 /home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:268: info: accept()
    Info: 1 total
    4 clean proof functions
-✓ Chap47/LinProbFlatHashTableStEph.rs
-✓ Chap47/LinkedListChainedHashTableStEph.rs
+✓ src/Chap47/LinProbFlatHashTableStEph.rs
+✓ src/Chap47/LinkedListChainedHashTableStEph.rs
    1 clean proof function
-✓ Chap47/ParaHashTableStEph.rs
+✓ src/Chap47/ParaHashTableStEph.rs
    6 clean proof functions
-✓ Chap47/QuadProbFlatHashTableStEph.rs
+✓ src/Chap47/QuadProbFlatHashTableStEph.rs
    6 clean proof functions
-ℹ Chap47/StructChainedHashTable.rs
+ℹ src/Chap47/StructChainedHashTable.rs
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:880: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:898: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:931: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:946: info: accept()
    Info: 4 total
    1 clean proof function
-✓ Chap47/VecChainedHashTableStEph.rs
+✓ src/Chap47/VecChainedHashTableStEph.rs
    1 clean proof function
-✓ Chap49/MinEditDistMtEph.rs
-✓ Chap49/MinEditDistMtPer.rs
-✓ Chap49/MinEditDistStEph.rs
-✓ Chap49/MinEditDistStPer.rs
-✓ Chap49/SubsetSumMtEph.rs
-✓ Chap49/SubsetSumMtPer.rs
-✓ Chap49/SubsetSumStEph.rs
-✓ Chap49/SubsetSumStPer.rs
-ℹ Chap50/MatrixChainMtEph.rs
+✓ src/Chap49/MinEditDistMtEph.rs
+✓ src/Chap49/MinEditDistMtPer.rs
+✓ src/Chap49/MinEditDistStEph.rs
+✓ src/Chap49/MinEditDistStPer.rs
+✓ src/Chap49/SubsetSumMtEph.rs
+✓ src/Chap49/SubsetSumMtPer.rs
+✓ src/Chap49/SubsetSumStEph.rs
+✓ src/Chap49/SubsetSumStPer.rs
+ℹ src/Chap50/MatrixChainMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:609: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:632: info: accept()
    Info: 2 total
-ℹ Chap50/MatrixChainMtPer.rs
+ℹ src/Chap50/MatrixChainMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:488: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:507: info: accept()
    Info: 2 total
-ℹ Chap50/MatrixChainStEph.rs
+ℹ src/Chap50/MatrixChainStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:450: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:467: info: accept()
    Info: 2 total
-ℹ Chap50/MatrixChainStPer.rs
+ℹ src/Chap50/MatrixChainStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:410: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:426: info: accept()
    Info: 2 total
-ℹ Chap50/OptBinSearchTreeMtEph.rs
+ℹ src/Chap50/OptBinSearchTreeMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:510: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:530: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:553: info: accept()
    Info: 3 total
-ℹ Chap50/OptBinSearchTreeMtPer.rs
+ℹ src/Chap50/OptBinSearchTreeMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:389: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:408: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:426: info: accept()
    Info: 3 total
-ℹ Chap50/OptBinSearchTreeStEph.rs
+ℹ src/Chap50/OptBinSearchTreeStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:324: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:343: info: accept()
    Info: 2 total
-ℹ Chap50/OptBinSearchTreeStPer.rs
+ℹ src/Chap50/OptBinSearchTreeStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:290: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:309: info: accept()
    Info: 2 total
-ℹ Chap51/BottomUpDPMtEph.rs
+ℹ src/Chap51/BottomUpDPMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:180: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:486: info: accept()
    Info: 2 total
    2 clean proof functions
-ℹ Chap51/BottomUpDPMtPer.rs
+ℹ src/Chap51/BottomUpDPMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:160: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:457: info: accept()
    Info: 2 total
    2 clean proof functions
-ℹ Chap51/BottomUpDPStEph.rs
+ℹ src/Chap51/BottomUpDPStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:181: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:505: info: accept()
    Info: 2 total
    2 clean proof functions
-ℹ Chap51/BottomUpDPStPer.rs
+ℹ src/Chap51/BottomUpDPStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:161: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:469: info: accept()
    Info: 2 total
    2 clean proof functions
-✓ Chap51/SeqSpecsAndLemmas.rs
+✓ src/Chap51/SeqSpecsAndLemmas.rs
    1 clean proof function
-ℹ Chap51/TopDownDPMtEph.rs
+ℹ src/Chap51/TopDownDPMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:81: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:509: info: accept()
    Info: 2 total
    2 clean proof functions
-ℹ Chap51/TopDownDPMtPer.rs
+ℹ src/Chap51/TopDownDPMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:81: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:469: info: accept()
    Info: 2 total
    2 clean proof functions
-ℹ Chap51/TopDownDPStEph.rs
+ℹ src/Chap51/TopDownDPStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:395: info: accept()
    Info: 1 total
    2 clean proof functions
-ℹ Chap51/TopDownDPStPer.rs
+ℹ src/Chap51/TopDownDPStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:359: info: accept()
    Info: 1 total
    2 clean proof functions
-✓ Chap52/AdjMatrixGraphMtEph.rs
-✓ Chap52/AdjMatrixGraphMtPer.rs
-✓ Chap52/AdjMatrixGraphStEph.rs
-ℹ Chap52/AdjMatrixGraphStPer.rs
+✓ src/Chap52/AdjMatrixGraphMtEph.rs
+✓ src/Chap52/AdjMatrixGraphMtPer.rs
+✓ src/Chap52/AdjMatrixGraphStEph.rs
+ℹ src/Chap52/AdjMatrixGraphStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:665: info: accept()
    Info: 1 total
-✓ Chap52/AdjSeqGraphMtEph.rs
-✓ Chap52/AdjSeqGraphMtPer.rs
-✓ Chap52/AdjSeqGraphStEph.rs
-ℹ Chap52/AdjSeqGraphStPer.rs
+✓ src/Chap52/AdjSeqGraphMtEph.rs
+✓ src/Chap52/AdjSeqGraphMtPer.rs
+✓ src/Chap52/AdjSeqGraphStEph.rs
+ℹ src/Chap52/AdjSeqGraphStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:647: info: accept()
    Info: 1 total
-✓ Chap52/AdjTableGraphMtPer.rs
-✓ Chap52/AdjTableGraphSpecsAndLemmas.rs
+✓ src/Chap52/AdjTableGraphMtPer.rs
+✓ src/Chap52/AdjTableGraphSpecsAndLemmas.rs
    18 clean proof functions
-✓ Chap52/AdjTableGraphStEph.rs
-✓ Chap52/AdjTableGraphStPer.rs
+✓ src/Chap52/AdjTableGraphStEph.rs
+✓ src/Chap52/AdjTableGraphStPer.rs
    3 clean proof functions
-✓ Chap52/EdgeSetGraphMtPer.rs
+ℹ src/Chap52/EdgeSetGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtEph.rs:438: info: accept()
+   Info: 1 total
    1 clean proof function
-ℹ Chap52/EdgeSetGraphStEph.rs
+✓ src/Chap52/EdgeSetGraphMtPer.rs
+   1 clean proof function
+ℹ src/Chap52/EdgeSetGraphStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:478: info: accept()
    Info: 1 total
    1 clean proof function
-ℹ Chap52/EdgeSetGraphStPer.rs
+ℹ src/Chap52/EdgeSetGraphStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:456: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:473: info: accept()
    Info: 2 total
    1 clean proof function
-✓ Chap53/GraphSearchMtPer.rs
-✓ Chap53/GraphSearchStEph.rs
-✓ Chap53/GraphSearchStPer.rs
-✓ Chap53/PQMinStEph.rs
-✓ Chap53/PQMinStPer.rs
-✓ Chap54/BFSMtEph.rs
+✓ src/Chap53/GraphSearchMtPer.rs
+✓ src/Chap53/GraphSearchStEph.rs
+✓ src/Chap53/GraphSearchStPer.rs
+✓ src/Chap53/PQMinStEph.rs
+✓ src/Chap53/PQMinStPer.rs
+✓ src/Chap54/BFSMtEph.rs
    7 clean proof functions
-✓ Chap54/BFSMtPer.rs
+✓ src/Chap54/BFSMtPer.rs
    7 clean proof functions
-✓ Chap54/BFSSpecsAndLemmas.rs
+✓ src/Chap54/BFSSpecsAndLemmas.rs
    6 clean proof functions
-✓ Chap54/BFSStEph.rs
+✓ src/Chap54/BFSStEph.rs
    4 clean proof functions
-✓ Chap54/BFSStPer.rs
+✓ src/Chap54/BFSStPer.rs
    4 clean proof functions
-✓ Chap55/CycleDetectStEph.rs
+✓ src/Chap55/CycleDetectStEph.rs
    4 clean proof functions
-✓ Chap55/CycleDetectStPer.rs
+✓ src/Chap55/CycleDetectStPer.rs
    4 clean proof functions
-✓ Chap55/DFSSpecsAndLemmas.rs
+✓ src/Chap55/DFSSpecsAndLemmas.rs
    10 clean proof functions
-✓ Chap55/DFSStEph.rs
+✓ src/Chap55/DFSStEph.rs
    4 clean proof functions
-✓ Chap55/DFSStPer.rs
+✓ src/Chap55/DFSStPer.rs
    4 clean proof functions
-✓ Chap55/SCCStEph.rs
-✓ Chap55/SCCStPer.rs
-✓ Chap55/TopoSortStEph.rs
+✓ src/Chap55/SCCStEph.rs
+✓ src/Chap55/SCCStPer.rs
+✓ src/Chap55/TopoSortStEph.rs
    4 clean proof functions
-✓ Chap55/TopoSortStPer.rs
+✓ src/Chap55/TopoSortStPer.rs
    4 clean proof functions
-✓ Chap56/AllPairsResultStEphF64.rs
-✓ Chap56/AllPairsResultStEphI64.rs
-✓ Chap56/AllPairsResultStPerF64.rs
-✓ Chap56/AllPairsResultStPerI64.rs
-✓ Chap56/PathWeightUtilsStEph.rs
-✓ Chap56/PathWeightUtilsStPer.rs
-✓ Chap56/SSSPResultStEphF64.rs
-✓ Chap56/SSSPResultStEphI64.rs
-✓ Chap56/SSSPResultStPerF64.rs
-✓ Chap56/SSSPResultStPerI64.rs
-ℹ Chap57/DijkstraStEphF64.rs
+✓ src/Chap56/AllPairsResultStEphF64.rs
+✓ src/Chap56/AllPairsResultStEphI64.rs
+✓ src/Chap56/AllPairsResultStPerF64.rs
+✓ src/Chap56/AllPairsResultStPerI64.rs
+✓ src/Chap56/PathWeightUtilsStEph.rs
+✓ src/Chap56/PathWeightUtilsStPer.rs
+✓ src/Chap56/SSSPResultStEphF64.rs
+✓ src/Chap56/SSSPResultStEphI64.rs
+✓ src/Chap56/SSSPResultStPerF64.rs
+✓ src/Chap56/SSSPResultStPerI64.rs
+ℹ src/Chap57/DijkstraStEphF64.rs
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:145: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:147: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:149: info: external_body_accept_hole
@@ -930,58 +944,70 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:134: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
    6 clean proof functions
-ℹ Chap57/DijkstraStEphU64.rs
+ℹ src/Chap57/DijkstraStEphU64.rs
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:111: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:128: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
    4 clean proof functions
-✓ Chap57/StackStEph.rs
-✓ Chap58/BellmanFordStEphF64.rs
-✓ Chap58/BellmanFordStEphI64.rs
-✓ Chap59/JohnsonMtEphF64.rs
-✓ Chap59/JohnsonMtEphI64.rs
-✓ Chap59/JohnsonStEphF64.rs
-✓ Chap59/JohnsonStEphI64.rs
-ℹ Chap61/EdgeContractionMtEph.rs
+✓ src/Chap57/StackStEph.rs
+✓ src/Chap58/BellmanFordStEphF64.rs
+✓ src/Chap58/BellmanFordStEphI64.rs
+✓ src/Chap59/JohnsonMtEphF64.rs
+✓ src/Chap59/JohnsonMtEphI64.rs
+✓ src/Chap59/JohnsonStEphF64.rs
+✓ src/Chap59/JohnsonStEphI64.rs
+ℹ src/Chap61/EdgeContractionMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:99: info: structural_false_positive OPAQUE_EXTERNAL edge_contract_mt — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
-✓ Chap61/EdgeContractionStEph.rs
-ℹ Chap61/VertexMatchingMtEph.rs
+✓ src/Chap61/EdgeContractionStEph.rs
+ℹ src/Chap61/VertexMatchingMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:147: info: structural_false_positive OPAQUE_EXTERNAL select_edges_parallel — #[verifier::external_body] [medium]
 /home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:180: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
    Info: 2 × structural_false_positive
-✓ Chap61/VertexMatchingStEph.rs
-✓ Chap62/StarContractionMtEph.rs
-✓ Chap62/StarContractionStEph.rs
-ℹ Chap62/StarPartitionMtEph.rs
+✓ src/Chap61/VertexMatchingStEph.rs
+✓ src/Chap62/StarContractionMtEph.rs
+✓ src/Chap62/StarContractionStEph.rs
+ℹ src/Chap62/StarPartitionMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionMtEph.rs:128: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
-✓ Chap62/StarPartitionStEph.rs
-✓ Chap63/ConnectivityMtEph.rs
-✓ Chap63/ConnectivityStEph.rs
-✓ Chap64/SpanTreeMtEph.rs
-✓ Chap64/SpanTreeStEph.rs
-✓ Chap64/TSPApproxStEph.rs
-✓ Chap65/KruskalStEph.rs
+✓ src/Chap62/StarPartitionStEph.rs
+✓ src/Chap63/ConnectivityMtEph.rs
+✓ src/Chap63/ConnectivityStEph.rs
+✓ src/Chap64/SpanTreeMtEph.rs
+✓ src/Chap64/SpanTreeStEph.rs
+✓ src/Chap64/TSPApproxStEph.rs
+✓ src/Chap65/KruskalStEph.rs
    1 clean proof function
-ℹ Chap65/PrimStEph.rs
+ℹ src/Chap65/PrimStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:506: info: accept()
    Info: 1 total
    4 clean proof functions
-✓ Chap65/UnionFindStEph.rs
-   24 clean proof functions
-ℹ Chap66/BoruvkaMtEph.rs
+✓ src/Chap65/UnionFindArrayStEph.rs
+   11 clean proof functions
+✓ src/Chap65/UnionFindNoPCStEph.rs
+   5 clean proof functions
+❌ src/Chap65/UnionFindPCStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:106: error: opaque - #[verifier::opaque] // accept hole
+       107 |     pub open spec fn spec_light_wf<V: View>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:122: error: opaque - #[verifier::opaque] // accept hole
+       123 |     pub open spec fn spec_find_preserved<V: View>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:132: error: opaque - #[verifier::opaque] // accept hole
+       133 |     pub open spec fn spec_same_domain<V: View>(
+   Holes: 3 total
+      3 × opaque
+   Proof functions: 18 total (18 clean, 0 holed)
+ℹ src/Chap66/BoruvkaMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:1129: info: accept()
    Info: 1 total
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:195: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
-ℹ Chap66/BoruvkaStEph.rs
+ℹ src/Chap66/BoruvkaStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:565: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
    Info: 1 × structural_false_positive
-ℹ Concurrency.rs
+ℹ src/Concurrency.rs
 /home/milnes/projects/APAS-VERUS/src/Concurrency.rs:26: info: external_body_accept_hole
    Info: 1 total
-✓ ParaPairs.rs
+✓ src/ParaPairs.rs
 
 =================================================================
 2. Depends Upon
@@ -1188,6 +1214,7 @@ Chap52::AdjTableGraphMtPer  depends upon holed modules: Chap41::AVLTreeSetMtPer
 Chap52::AdjTableGraphSpecsAndLemmas  depends upon only clean modules
 Chap52::AdjTableGraphStEph  depends upon only clean modules
 Chap52::AdjTableGraphStPer  depends upon only clean modules
+Chap52::EdgeSetGraphMtEph  depends upon holed modules: Chap41::AVLTreeSetMtEph
 Chap52::EdgeSetGraphMtPer  depends upon holed modules: Chap41::AVLTreeSetMtPer
 Chap52::EdgeSetGraphStEph  depends upon only clean modules
 Chap52::EdgeSetGraphStPer  depends upon only clean modules
@@ -1242,323 +1269,336 @@ Chap63::ConnectivityStEph  depends upon only clean modules
 Chap64::SpanTreeMtEph  depends upon only clean modules
 Chap64::SpanTreeStEph  depends upon only clean modules
 Chap64::TSPApproxStEph  depends upon only clean modules
-Chap65::KruskalStEph  depends upon only clean modules
+Chap65::KruskalStEph  depends upon holed modules: Chap65::UnionFindPCStEph
 Chap65::PrimStEph  depends upon only clean modules
-Chap65::UnionFindStEph  depends upon only clean modules
+Chap65::UnionFindArrayStEph  depends upon only clean modules
+Chap65::UnionFindNoPCStEph  depends upon only clean modules
+Chap65::UnionFindPCStEph  depends upon only clean modules
 Chap66::BoruvkaMtEph  depends upon only clean modules
 Chap66::BoruvkaStEph  depends upon only clean modules
 Concurrency  depends upon only clean modules
 ParaPairs  depends upon only clean modules
+bugs::f64-bitvector-crash::reproducer  depends upon only clean modules
+bugs::ice-set-type-projection::reproducer  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-Chap02/FibonacciHFScheduler.rs  depends upon only clean modules
-Chap02/HFSchedulerMtEph.rs  depends upon only clean modules
-Chap03/InsertionSortStEph.rs  depends upon only clean modules
-Chap05/KleeneStPer.rs  depends upon only clean modules
-Chap05/MappingStEph.rs  depends upon only clean modules
-Chap05/RelationStEph.rs  depends upon only clean modules
-Chap05/SetMtEph.rs  depends upon only clean modules
-Chap05/SetStEph.rs  depends upon only clean modules
-Chap06/DirGraphMtEph.rs  depends upon only clean modules
-Chap06/DirGraphStEph.rs  depends upon only clean modules
-Chap06/LabDirGraphMtEph.rs  depends upon only clean modules
-Chap06/LabDirGraphStEph.rs  depends upon only clean modules
-Chap06/LabUnDirGraphMtEph.rs  depends upon only clean modules
-Chap06/LabUnDirGraphStEph.rs  depends upon only clean modules
-Chap06/UnDirGraphMtEph.rs  depends upon only clean modules
-Chap06/UnDirGraphStEph.rs  depends upon only clean modules
-Chap06/WeightedDirGraphStEphF64.rs  depends upon only clean modules
-Chap06/WeightedDirGraphStEphI128.rs  depends upon only clean modules
-Chap06/WeightedDirGraphStEphI16.rs  depends upon only clean modules
-Chap06/WeightedDirGraphStEphI32.rs  depends upon only clean modules
-Chap06/WeightedDirGraphStEphI64.rs  depends upon only clean modules
-Chap06/WeightedDirGraphStEphI8.rs  depends upon only clean modules
-Chap06/WeightedDirGraphStEphIsize.rs  depends upon only clean modules
-Chap06/WeightedDirGraphStEphU128.rs  depends upon only clean modules
-Chap06/WeightedDirGraphStEphU16.rs  depends upon only clean modules
-Chap06/WeightedDirGraphStEphU32.rs  depends upon only clean modules
-Chap06/WeightedDirGraphStEphU64.rs  depends upon only clean modules
-Chap06/WeightedDirGraphStEphU8.rs  depends upon only clean modules
-Chap06/WeightedDirGraphStEphUsize.rs  depends upon only clean modules
-Chap11/FibonacciMtEph2Threads.rs  depends upon only clean modules
-Chap11/FibonacciMtEphRecomputes.rs  depends upon only clean modules
-Chap11/FibonacciMtPerAllThreads.rs  depends upon only clean modules
-Chap11/FibonacciMtPerTSM.rs  depends upon only clean modules
-Chap11/FibonacciStEph.rs  depends upon only clean modules
-Chap12/Exercise12_1.rs  depends upon only clean modules
-Chap12/Exercise12_2.rs  depends upon only clean modules
-Chap12/Exercise12_5.rs  depends upon only clean modules
-Chap17/MathSeq.rs  depends upon only clean modules
-Chap18/ArraySeq.rs  depends upon only clean modules
-Chap18/ArraySeqMtEph.rs  depends upon only clean modules
-Chap18/ArraySeqMtEphSlice.rs  depends upon only clean modules
-Chap18/ArraySeqMtPer.rs  depends upon only clean modules
-Chap18/ArraySeqSpecsAndLemmas.rs  depends upon only clean modules
-Chap18/ArraySeqStEph.rs  depends upon only clean modules
-Chap18/ArraySeqStPer.rs  depends upon only clean modules
-Chap18/LinkedListStEph.rs  depends upon only clean modules
-Chap18/LinkedListStPer.rs  depends upon only clean modules
-Chap19/ArraySeqMtEph.rs  depends upon only clean modules
-Chap19/ArraySeqMtEphSlice.rs  depends upon only clean modules
-Chap19/ArraySeqSpecsAndLemmas.rs  depends upon only clean modules
-Chap19/ArraySeqStEph.rs  depends upon only clean modules
-Chap19/ArraySeqStPer.rs  depends upon only clean modules
-Chap21/Exercise21_5.rs  depends upon only clean modules
-Chap21/Exercise21_6.rs  depends upon only clean modules
-Chap21/Exercise21_7.rs  depends upon only clean modules
-Chap21/Exercise21_8.rs  depends upon only clean modules
-Chap21/Exercise21_9.rs  depends upon only clean modules
-Chap23/BalBinTreeStEph.rs  depends upon only clean modules
-Chap23/PrimTreeSeqStPer.rs  depends upon only clean modules
-Chap26/DivConReduceMtPer.rs  depends upon only clean modules
-Chap26/DivConReduceStPer.rs  depends upon only clean modules
-Chap26/ETSPMtEph.rs  depends upon only clean modules
-Chap26/ETSPStEph.rs  depends upon only clean modules
-Chap26/MergeSortMtPer.rs  depends upon only clean modules
-Chap26/MergeSortStPer.rs  depends upon only clean modules
-Chap26/ScanDCMtPer.rs  depends upon only clean modules
-Chap26/ScanDCStPer.rs  depends upon only clean modules
-Chap27/ContractSpecsAndLemmas.rs  depends upon only clean modules
-Chap27/ReduceContractMtEph.rs  depends upon only clean modules
-Chap27/ReduceContractStEph.rs  depends upon only clean modules
-Chap27/ScanContractMtEph.rs  depends upon only clean modules
-Chap27/ScanContractStEph.rs  depends upon only clean modules
-Chap28/MCSSSpec.rs  depends upon only clean modules
-Chap28/MaxContigSubSumBruteStEph.rs  depends upon only clean modules
-Chap28/MaxContigSubSumDivConMtEph.rs  depends upon only clean modules
-Chap28/MaxContigSubSumDivConOptMtEph.rs  depends upon only clean modules
-Chap28/MaxContigSubSumDivConOptStEph.rs  depends upon only clean modules
-Chap28/MaxContigSubSumDivConStEph.rs  depends upon only clean modules
-Chap28/MaxContigSubSumIterStEph.rs  depends upon only clean modules
-Chap28/MaxContigSubSumOptMtEph.rs  depends upon only clean modules
-Chap28/MaxContigSubSumOptStEph.rs  depends upon only clean modules
-Chap28/MaxContigSubSumReducedMcsseStEph.rs  depends upon only clean modules
-Chap28/MaxContigSubSumReducedStEph.rs  depends upon only clean modules
-Chap30/Probability.rs  depends upon only clean modules
-Chap35/OrderStatSelectMtEph.rs  depends upon only clean modules
-Chap35/OrderStatSelectMtPer.rs  depends upon only clean modules
-Chap35/OrderStatSelectStEph.rs  depends upon only clean modules
-Chap35/OrderStatSelectStPer.rs  depends upon only clean modules
-Chap36/QuickSortMtEph.rs  depends upon only clean modules
-Chap36/QuickSortMtEphSlice.rs  depends upon only clean modules
-Chap36/QuickSortStEph.rs  depends upon only clean modules
-Chap37/AVLTreeSeq.rs  depends upon only clean modules
-Chap37/AVLTreeSeqMtPer.rs  depends upon only clean modules
-Chap37/AVLTreeSeqStEph.rs  depends upon only clean modules
-Chap37/AVLTreeSeqStPer.rs  depends upon only clean modules
-Chap37/BSTAVLMtEph.rs  depends upon only clean modules
-Chap37/BSTAVLStEph.rs  depends upon only clean modules
-Chap37/BSTBBAlphaMtEph.rs  depends upon only clean modules
-Chap37/BSTBBAlphaStEph.rs  depends upon only clean modules
-Chap37/BSTPlainMtEph.rs  depends upon only clean modules
-Chap37/BSTPlainStEph.rs  depends upon only clean modules
-Chap37/BSTRBMtEph.rs  depends upon only clean modules
-Chap37/BSTRBStEph.rs  depends upon only clean modules
-Chap37/BSTSetAVLMtEph.rs  depends upon only clean modules
-Chap37/BSTSetBBAlphaMtEph.rs  depends upon only clean modules
-Chap37/BSTSetPlainMtEph.rs  depends upon only clean modules
-Chap37/BSTSetRBMtEph.rs  depends upon only clean modules
-Chap37/BSTSetSplayMtEph.rs  depends upon only clean modules
-Chap37/BSTSpecsAndLemmas.rs  depends upon only clean modules
-Chap37/BSTSplayMtEph.rs  depends upon only clean modules
-Chap37/BSTSplayStEph.rs  depends upon only clean modules
-Chap38/BSTParaMtEph.rs  depends upon only clean modules
-Chap38/BSTParaSpecsAndLemmas.rs  depends upon only clean modules
-Chap38/BSTParaStEph.rs  depends upon only clean modules
-Chap39/BSTParaTreapMtEph.rs  depends upon only clean modules
-Chap39/BSTSetTreapMtEph.rs  depends upon only clean modules
-Chap39/BSTTreapMtEph.rs  depends upon only clean modules
-Chap39/BSTTreapSpecsAndLemmas.rs  depends upon only clean modules
-Chap39/BSTTreapStEph.rs  depends upon only clean modules
-Chap40/BSTKeyValueStEph.rs  depends upon only clean modules
-Chap40/BSTReducedStEph.rs  depends upon only clean modules
-Chap40/BSTSizeStEph.rs  depends upon only clean modules
-Chap41/AVLTreeSetMtEph.rs  depends upon only clean modules
-Chap41/AVLTreeSetMtPer.rs  depends upon only clean modules
-Chap41/AVLTreeSetStEph.rs  depends upon only clean modules
-Chap41/AVLTreeSetStPer.rs  depends upon only clean modules
-Chap41/ArraySetEnumMtEph.rs  depends upon only clean modules
-Chap41/ArraySetStEph.rs  depends upon only clean modules
-Chap41/OrdKeyMap.rs  depends upon only clean modules
-Chap42/TableMtEph.rs  depends upon only clean modules
-Chap42/TableSpecsAndLemmas.rs  depends upon only clean modules
-Chap42/TableStEph.rs  depends upon only clean modules
-Chap42/TableStPer.rs  depends upon only clean modules
-Chap43/AugOrderedTableMtEph.rs  depends upon only clean modules
-Chap43/AugOrderedTableStEph.rs  depends upon only clean modules
-Chap43/AugOrderedTableStPer.rs  depends upon only clean modules
-Chap43/OrderedSetMtEph.rs  depends upon only clean modules
-Chap43/OrderedSetStEph.rs  depends upon only clean modules
-Chap43/OrderedSetStPer.rs  depends upon only clean modules
-Chap43/OrderedSpecsAndLemmas.rs  depends upon only clean modules
-Chap43/OrderedTableMtEph.rs  depends upon only clean modules
-Chap43/OrderedTableMtPer.rs  depends upon only clean modules
-Chap43/OrderedTableStEph.rs  depends upon only clean modules
-Chap43/OrderedTableStPer.rs  depends upon only clean modules
-Chap44/DocumentIndex.rs  depends upon only clean modules
-Chap45/BalancedTreePQ.rs  depends upon only clean modules
-Chap45/BinaryHeapPQ.rs  depends upon only clean modules
-Chap45/HeapsortExample.rs  depends upon only clean modules
-Chap45/LeftistHeapPQ.rs  depends upon only clean modules
-Chap45/SortedListPQ.rs  depends upon only clean modules
-Chap45/UnsortedListPQ.rs  depends upon only clean modules
-Chap47/ChainedHashTable.rs  depends upon only clean modules
-Chap47/DoubleHashFlatHashTableStEph.rs  depends upon only clean modules
-Chap47/FlatHashTable.rs  depends upon only clean modules
-Chap47/LinProbFlatHashTableStEph.rs  depends upon only clean modules
-Chap47/LinkedListChainedHashTableStEph.rs  depends upon only clean modules
-Chap47/ParaHashTableStEph.rs  depends upon only clean modules
-Chap47/QuadProbFlatHashTableStEph.rs  depends upon only clean modules
-Chap47/StructChainedHashTable.rs  depends upon only clean modules
-Chap47/VecChainedHashTableStEph.rs  depends upon only clean modules
-Chap49/MinEditDistMtEph.rs  depends upon only clean modules
-Chap49/MinEditDistMtPer.rs  depends upon only clean modules
-Chap49/MinEditDistStEph.rs  depends upon only clean modules
-Chap49/MinEditDistStPer.rs  depends upon only clean modules
-Chap49/SubsetSumMtEph.rs  depends upon only clean modules
-Chap49/SubsetSumMtPer.rs  depends upon only clean modules
-Chap49/SubsetSumStEph.rs  depends upon only clean modules
-Chap49/SubsetSumStPer.rs  depends upon only clean modules
-Chap50/MatrixChainMtEph.rs  depends upon only clean modules
-Chap50/MatrixChainMtPer.rs  depends upon only clean modules
-Chap50/MatrixChainStEph.rs  depends upon only clean modules
-Chap50/MatrixChainStPer.rs  depends upon only clean modules
-Chap50/OptBinSearchTreeMtEph.rs  depends upon only clean modules
-Chap50/OptBinSearchTreeMtPer.rs  depends upon only clean modules
-Chap50/OptBinSearchTreeStEph.rs  depends upon only clean modules
-Chap50/OptBinSearchTreeStPer.rs  depends upon only clean modules
-Chap51/BottomUpDPMtEph.rs  depends upon only clean modules
-Chap51/BottomUpDPMtPer.rs  depends upon only clean modules
-Chap51/BottomUpDPStEph.rs  depends upon only clean modules
-Chap51/BottomUpDPStPer.rs  depends upon only clean modules
-Chap51/SeqSpecsAndLemmas.rs  depends upon only clean modules
-Chap51/TopDownDPMtEph.rs  depends upon only clean modules
-Chap51/TopDownDPMtPer.rs  depends upon only clean modules
-Chap51/TopDownDPStEph.rs  depends upon only clean modules
-Chap51/TopDownDPStPer.rs  depends upon only clean modules
-Chap52/AdjMatrixGraphMtEph.rs  depends upon only clean modules
-Chap52/AdjMatrixGraphMtPer.rs  depends upon only clean modules
-Chap52/AdjMatrixGraphStEph.rs  depends upon only clean modules
-Chap52/AdjMatrixGraphStPer.rs  depends upon only clean modules
-Chap52/AdjSeqGraphMtEph.rs  depends upon only clean modules
-Chap52/AdjSeqGraphMtPer.rs  depends upon only clean modules
-Chap52/AdjSeqGraphStEph.rs  depends upon only clean modules
-Chap52/AdjSeqGraphStPer.rs  depends upon only clean modules
-Chap52/AdjTableGraphMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer
-Chap52/AdjTableGraphSpecsAndLemmas.rs  depends upon only clean modules
-Chap52/AdjTableGraphStEph.rs  depends upon only clean modules
-Chap52/AdjTableGraphStPer.rs  depends upon only clean modules
-Chap52/EdgeSetGraphMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer
-Chap52/EdgeSetGraphStEph.rs  depends upon only clean modules
-Chap52/EdgeSetGraphStPer.rs  depends upon only clean modules
-Chap53/GraphSearchMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer
-Chap53/GraphSearchStEph.rs  depends upon only clean modules
-Chap53/GraphSearchStPer.rs  depends upon only clean modules
-Chap53/PQMinStEph.rs  depends upon only clean modules
-Chap53/PQMinStPer.rs  depends upon only clean modules
-Chap54/BFSMtEph.rs  depends upon only clean modules
-Chap54/BFSMtPer.rs  depends upon only clean modules
-Chap54/BFSSpecsAndLemmas.rs  depends upon only clean modules
-Chap54/BFSStEph.rs  depends upon only clean modules
-Chap54/BFSStPer.rs  depends upon only clean modules
-Chap55/CycleDetectStEph.rs  depends upon only clean modules
-Chap55/CycleDetectStPer.rs  depends upon only clean modules
-Chap55/DFSSpecsAndLemmas.rs  depends upon only clean modules
-Chap55/DFSStEph.rs  depends upon only clean modules
-Chap55/DFSStPer.rs  depends upon only clean modules
-Chap55/SCCStEph.rs  depends upon only clean modules
-Chap55/SCCStPer.rs  depends upon only clean modules
-Chap55/TopoSortStEph.rs  depends upon only clean modules
-Chap55/TopoSortStPer.rs  depends upon only clean modules
-Chap56/AllPairsResultStEphF64.rs  depends upon only clean modules
-Chap56/AllPairsResultStEphI64.rs  depends upon only clean modules
-Chap56/AllPairsResultStPerF64.rs  depends upon only clean modules
-Chap56/AllPairsResultStPerI64.rs  depends upon only clean modules
-Chap56/PathWeightUtilsStEph.rs  depends upon only clean modules
-Chap56/PathWeightUtilsStPer.rs  depends upon only clean modules
-Chap56/SSSPResultStEphF64.rs  depends upon only clean modules
-Chap56/SSSPResultStEphI64.rs  depends upon only clean modules
-Chap56/SSSPResultStPerF64.rs  depends upon only clean modules
-Chap56/SSSPResultStPerI64.rs  depends upon only clean modules
-Chap57/DijkstraStEphF64.rs  depends upon only clean modules
-Chap57/DijkstraStEphU64.rs  depends upon only clean modules
-Chap57/StackStEph.rs  depends upon only clean modules
-Chap58/BellmanFordStEphF64.rs  depends upon only clean modules
-Chap58/BellmanFordStEphI64.rs  depends upon only clean modules
-Chap59/JohnsonMtEphF64.rs  depends upon only clean modules
-Chap59/JohnsonMtEphI64.rs  depends upon only clean modules
-Chap59/JohnsonStEphF64.rs  depends upon only clean modules
-Chap59/JohnsonStEphI64.rs  depends upon only clean modules
-Chap61/EdgeContractionMtEph.rs  depends upon only clean modules
-Chap61/EdgeContractionStEph.rs  depends upon only clean modules
-Chap61/VertexMatchingMtEph.rs  depends upon only clean modules
-Chap61/VertexMatchingStEph.rs  depends upon only clean modules
-Chap62/StarContractionMtEph.rs  depends upon only clean modules
-Chap62/StarContractionStEph.rs  depends upon only clean modules
-Chap62/StarPartitionMtEph.rs  depends upon only clean modules
-Chap62/StarPartitionStEph.rs  depends upon only clean modules
-Chap63/ConnectivityMtEph.rs  depends upon only clean modules
-Chap63/ConnectivityStEph.rs  depends upon only clean modules
-Chap64/SpanTreeMtEph.rs  depends upon only clean modules
-Chap64/SpanTreeStEph.rs  depends upon only clean modules
-Chap64/TSPApproxStEph.rs  depends upon only clean modules
-Chap65/KruskalStEph.rs  depends upon only clean modules
-Chap65/PrimStEph.rs  depends upon only clean modules
-Chap65/UnionFindStEph.rs  depends upon only clean modules
-Chap66/BoruvkaMtEph.rs  depends upon only clean modules
-Chap66/BoruvkaStEph.rs  depends upon only clean modules
-Concurrency.rs  depends upon only clean modules
-ParaPairs.rs  depends upon only clean modules
+src/Chap02/FibonacciHFScheduler.rs  depends upon only clean modules
+src/Chap02/HFSchedulerMtEph.rs  depends upon only clean modules
+src/Chap03/InsertionSortStEph.rs  depends upon only clean modules
+src/Chap05/KleeneStPer.rs  depends upon only clean modules
+src/Chap05/MappingStEph.rs  depends upon only clean modules
+src/Chap05/RelationStEph.rs  depends upon only clean modules
+src/Chap05/SetMtEph.rs  depends upon only clean modules
+src/Chap05/SetStEph.rs  depends upon only clean modules
+src/Chap06/DirGraphMtEph.rs  depends upon only clean modules
+src/Chap06/DirGraphStEph.rs  depends upon only clean modules
+src/Chap06/LabDirGraphMtEph.rs  depends upon only clean modules
+src/Chap06/LabDirGraphStEph.rs  depends upon only clean modules
+src/Chap06/LabUnDirGraphMtEph.rs  depends upon only clean modules
+src/Chap06/LabUnDirGraphStEph.rs  depends upon only clean modules
+src/Chap06/UnDirGraphMtEph.rs  depends upon only clean modules
+src/Chap06/UnDirGraphStEph.rs  depends upon only clean modules
+src/Chap06/WeightedDirGraphStEphF64.rs  depends upon only clean modules
+src/Chap06/WeightedDirGraphStEphI128.rs  depends upon only clean modules
+src/Chap06/WeightedDirGraphStEphI16.rs  depends upon only clean modules
+src/Chap06/WeightedDirGraphStEphI32.rs  depends upon only clean modules
+src/Chap06/WeightedDirGraphStEphI64.rs  depends upon only clean modules
+src/Chap06/WeightedDirGraphStEphI8.rs  depends upon only clean modules
+src/Chap06/WeightedDirGraphStEphIsize.rs  depends upon only clean modules
+src/Chap06/WeightedDirGraphStEphU128.rs  depends upon only clean modules
+src/Chap06/WeightedDirGraphStEphU16.rs  depends upon only clean modules
+src/Chap06/WeightedDirGraphStEphU32.rs  depends upon only clean modules
+src/Chap06/WeightedDirGraphStEphU64.rs  depends upon only clean modules
+src/Chap06/WeightedDirGraphStEphU8.rs  depends upon only clean modules
+src/Chap06/WeightedDirGraphStEphUsize.rs  depends upon only clean modules
+src/Chap11/FibonacciMtEph2Threads.rs  depends upon only clean modules
+src/Chap11/FibonacciMtEphRecomputes.rs  depends upon only clean modules
+src/Chap11/FibonacciMtPerAllThreads.rs  depends upon only clean modules
+src/Chap11/FibonacciMtPerTSM.rs  depends upon only clean modules
+src/Chap11/FibonacciStEph.rs  depends upon only clean modules
+src/Chap12/Exercise12_1.rs  depends upon only clean modules
+src/Chap12/Exercise12_2.rs  depends upon only clean modules
+src/Chap12/Exercise12_5.rs  depends upon only clean modules
+src/Chap17/MathSeq.rs  depends upon only clean modules
+src/Chap18/ArraySeq.rs  depends upon only clean modules
+src/Chap18/ArraySeqMtEph.rs  depends upon only clean modules
+src/Chap18/ArraySeqMtEphSlice.rs  depends upon only clean modules
+src/Chap18/ArraySeqMtPer.rs  depends upon only clean modules
+src/Chap18/ArraySeqSpecsAndLemmas.rs  depends upon only clean modules
+src/Chap18/ArraySeqStEph.rs  depends upon only clean modules
+src/Chap18/ArraySeqStPer.rs  depends upon only clean modules
+src/Chap18/LinkedListStEph.rs  depends upon only clean modules
+src/Chap18/LinkedListStPer.rs  depends upon only clean modules
+src/Chap19/ArraySeqMtEph.rs  depends upon only clean modules
+src/Chap19/ArraySeqMtEphSlice.rs  depends upon only clean modules
+src/Chap19/ArraySeqSpecsAndLemmas.rs  depends upon only clean modules
+src/Chap19/ArraySeqStEph.rs  depends upon only clean modules
+src/Chap19/ArraySeqStPer.rs  depends upon only clean modules
+src/Chap21/Exercise21_5.rs  depends upon only clean modules
+src/Chap21/Exercise21_6.rs  depends upon only clean modules
+src/Chap21/Exercise21_7.rs  depends upon only clean modules
+src/Chap21/Exercise21_8.rs  depends upon only clean modules
+src/Chap21/Exercise21_9.rs  depends upon only clean modules
+src/Chap23/BalBinTreeStEph.rs  depends upon only clean modules
+src/Chap23/PrimTreeSeqStPer.rs  depends upon only clean modules
+src/Chap26/DivConReduceMtPer.rs  depends upon only clean modules
+src/Chap26/DivConReduceStPer.rs  depends upon only clean modules
+src/Chap26/ETSPMtEph.rs  depends upon only clean modules
+src/Chap26/ETSPStEph.rs  depends upon only clean modules
+src/Chap26/MergeSortMtPer.rs  depends upon only clean modules
+src/Chap26/MergeSortStPer.rs  depends upon only clean modules
+src/Chap26/ScanDCMtPer.rs  depends upon only clean modules
+src/Chap26/ScanDCStPer.rs  depends upon only clean modules
+src/Chap27/ContractSpecsAndLemmas.rs  depends upon only clean modules
+src/Chap27/ReduceContractMtEph.rs  depends upon only clean modules
+src/Chap27/ReduceContractStEph.rs  depends upon only clean modules
+src/Chap27/ScanContractMtEph.rs  depends upon only clean modules
+src/Chap27/ScanContractStEph.rs  depends upon only clean modules
+src/Chap28/MCSSSpec.rs  depends upon only clean modules
+src/Chap28/MaxContigSubSumBruteStEph.rs  depends upon only clean modules
+src/Chap28/MaxContigSubSumDivConMtEph.rs  depends upon only clean modules
+src/Chap28/MaxContigSubSumDivConOptMtEph.rs  depends upon only clean modules
+src/Chap28/MaxContigSubSumDivConOptStEph.rs  depends upon only clean modules
+src/Chap28/MaxContigSubSumDivConStEph.rs  depends upon only clean modules
+src/Chap28/MaxContigSubSumIterStEph.rs  depends upon only clean modules
+src/Chap28/MaxContigSubSumOptMtEph.rs  depends upon only clean modules
+src/Chap28/MaxContigSubSumOptStEph.rs  depends upon only clean modules
+src/Chap28/MaxContigSubSumReducedMcsseStEph.rs  depends upon only clean modules
+src/Chap28/MaxContigSubSumReducedStEph.rs  depends upon only clean modules
+src/Chap30/Probability.rs  depends upon only clean modules
+src/Chap35/OrderStatSelectMtEph.rs  depends upon only clean modules
+src/Chap35/OrderStatSelectMtPer.rs  depends upon only clean modules
+src/Chap35/OrderStatSelectStEph.rs  depends upon only clean modules
+src/Chap35/OrderStatSelectStPer.rs  depends upon only clean modules
+src/Chap36/QuickSortMtEph.rs  depends upon only clean modules
+src/Chap36/QuickSortMtEphSlice.rs  depends upon only clean modules
+src/Chap36/QuickSortStEph.rs  depends upon only clean modules
+src/Chap37/AVLTreeSeq.rs  depends upon only clean modules
+src/Chap37/AVLTreeSeqMtPer.rs  depends upon only clean modules
+src/Chap37/AVLTreeSeqStEph.rs  depends upon only clean modules
+src/Chap37/AVLTreeSeqStPer.rs  depends upon only clean modules
+src/Chap37/BSTAVLMtEph.rs  depends upon only clean modules
+src/Chap37/BSTAVLStEph.rs  depends upon only clean modules
+src/Chap37/BSTBBAlphaMtEph.rs  depends upon only clean modules
+src/Chap37/BSTBBAlphaStEph.rs  depends upon only clean modules
+src/Chap37/BSTPlainMtEph.rs  depends upon only clean modules
+src/Chap37/BSTPlainStEph.rs  depends upon only clean modules
+src/Chap37/BSTRBMtEph.rs  depends upon only clean modules
+src/Chap37/BSTRBStEph.rs  depends upon only clean modules
+src/Chap37/BSTSetAVLMtEph.rs  depends upon only clean modules
+src/Chap37/BSTSetBBAlphaMtEph.rs  depends upon only clean modules
+src/Chap37/BSTSetPlainMtEph.rs  depends upon only clean modules
+src/Chap37/BSTSetRBMtEph.rs  depends upon only clean modules
+src/Chap37/BSTSetSplayMtEph.rs  depends upon only clean modules
+src/Chap37/BSTSpecsAndLemmas.rs  depends upon only clean modules
+src/Chap37/BSTSplayMtEph.rs  depends upon only clean modules
+src/Chap37/BSTSplayStEph.rs  depends upon only clean modules
+src/Chap38/BSTParaMtEph.rs  depends upon only clean modules
+src/Chap38/BSTParaSpecsAndLemmas.rs  depends upon only clean modules
+src/Chap38/BSTParaStEph.rs  depends upon only clean modules
+src/Chap39/BSTParaTreapMtEph.rs  depends upon only clean modules
+src/Chap39/BSTSetTreapMtEph.rs  depends upon only clean modules
+src/Chap39/BSTTreapMtEph.rs  depends upon only clean modules
+src/Chap39/BSTTreapSpecsAndLemmas.rs  depends upon only clean modules
+src/Chap39/BSTTreapStEph.rs  depends upon only clean modules
+src/Chap40/BSTKeyValueStEph.rs  depends upon only clean modules
+src/Chap40/BSTReducedStEph.rs  depends upon only clean modules
+src/Chap40/BSTSizeStEph.rs  depends upon only clean modules
+src/Chap41/AVLTreeSetMtEph.rs  depends upon only clean modules
+src/Chap41/AVLTreeSetMtPer.rs  depends upon only clean modules
+src/Chap41/AVLTreeSetStEph.rs  depends upon only clean modules
+src/Chap41/AVLTreeSetStPer.rs  depends upon only clean modules
+src/Chap41/ArraySetEnumMtEph.rs  depends upon only clean modules
+src/Chap41/ArraySetStEph.rs  depends upon only clean modules
+src/Chap41/OrdKeyMap.rs  depends upon only clean modules
+src/Chap42/TableMtEph.rs  depends upon only clean modules
+src/Chap42/TableSpecsAndLemmas.rs  depends upon only clean modules
+src/Chap42/TableStEph.rs  depends upon only clean modules
+src/Chap42/TableStPer.rs  depends upon only clean modules
+src/Chap43/AugOrderedTableMtEph.rs  depends upon only clean modules
+src/Chap43/AugOrderedTableStEph.rs  depends upon only clean modules
+src/Chap43/AugOrderedTableStPer.rs  depends upon only clean modules
+src/Chap43/OrderedSetMtEph.rs  depends upon only clean modules
+src/Chap43/OrderedSetStEph.rs  depends upon only clean modules
+src/Chap43/OrderedSetStPer.rs  depends upon only clean modules
+src/Chap43/OrderedSpecsAndLemmas.rs  depends upon only clean modules
+src/Chap43/OrderedTableMtEph.rs  depends upon only clean modules
+src/Chap43/OrderedTableMtPer.rs  depends upon only clean modules
+src/Chap43/OrderedTableStEph.rs  depends upon only clean modules
+src/Chap43/OrderedTableStPer.rs  depends upon only clean modules
+src/Chap44/DocumentIndex.rs  depends upon only clean modules
+src/Chap45/BalancedTreePQ.rs  depends upon only clean modules
+src/Chap45/BinaryHeapPQ.rs  depends upon only clean modules
+src/Chap45/HeapsortExample.rs  depends upon only clean modules
+src/Chap45/LeftistHeapPQ.rs  depends upon only clean modules
+src/Chap45/SortedListPQ.rs  depends upon only clean modules
+src/Chap45/UnsortedListPQ.rs  depends upon only clean modules
+src/Chap47/ChainedHashTable.rs  depends upon only clean modules
+src/Chap47/DoubleHashFlatHashTableStEph.rs  depends upon only clean modules
+src/Chap47/FlatHashTable.rs  depends upon only clean modules
+src/Chap47/LinProbFlatHashTableStEph.rs  depends upon only clean modules
+src/Chap47/LinkedListChainedHashTableStEph.rs  depends upon only clean modules
+src/Chap47/ParaHashTableStEph.rs  depends upon only clean modules
+src/Chap47/QuadProbFlatHashTableStEph.rs  depends upon only clean modules
+src/Chap47/StructChainedHashTable.rs  depends upon only clean modules
+src/Chap47/VecChainedHashTableStEph.rs  depends upon only clean modules
+src/Chap49/MinEditDistMtEph.rs  depends upon only clean modules
+src/Chap49/MinEditDistMtPer.rs  depends upon only clean modules
+src/Chap49/MinEditDistStEph.rs  depends upon only clean modules
+src/Chap49/MinEditDistStPer.rs  depends upon only clean modules
+src/Chap49/SubsetSumMtEph.rs  depends upon only clean modules
+src/Chap49/SubsetSumMtPer.rs  depends upon only clean modules
+src/Chap49/SubsetSumStEph.rs  depends upon only clean modules
+src/Chap49/SubsetSumStPer.rs  depends upon only clean modules
+src/Chap50/MatrixChainMtEph.rs  depends upon only clean modules
+src/Chap50/MatrixChainMtPer.rs  depends upon only clean modules
+src/Chap50/MatrixChainStEph.rs  depends upon only clean modules
+src/Chap50/MatrixChainStPer.rs  depends upon only clean modules
+src/Chap50/OptBinSearchTreeMtEph.rs  depends upon only clean modules
+src/Chap50/OptBinSearchTreeMtPer.rs  depends upon only clean modules
+src/Chap50/OptBinSearchTreeStEph.rs  depends upon only clean modules
+src/Chap50/OptBinSearchTreeStPer.rs  depends upon only clean modules
+src/Chap51/BottomUpDPMtEph.rs  depends upon only clean modules
+src/Chap51/BottomUpDPMtPer.rs  depends upon only clean modules
+src/Chap51/BottomUpDPStEph.rs  depends upon only clean modules
+src/Chap51/BottomUpDPStPer.rs  depends upon only clean modules
+src/Chap51/SeqSpecsAndLemmas.rs  depends upon only clean modules
+src/Chap51/TopDownDPMtEph.rs  depends upon only clean modules
+src/Chap51/TopDownDPMtPer.rs  depends upon only clean modules
+src/Chap51/TopDownDPStEph.rs  depends upon only clean modules
+src/Chap51/TopDownDPStPer.rs  depends upon only clean modules
+src/Chap52/AdjMatrixGraphMtEph.rs  depends upon only clean modules
+src/Chap52/AdjMatrixGraphMtPer.rs  depends upon only clean modules
+src/Chap52/AdjMatrixGraphStEph.rs  depends upon only clean modules
+src/Chap52/AdjMatrixGraphStPer.rs  depends upon only clean modules
+src/Chap52/AdjSeqGraphMtEph.rs  depends upon only clean modules
+src/Chap52/AdjSeqGraphMtPer.rs  depends upon only clean modules
+src/Chap52/AdjSeqGraphStEph.rs  depends upon only clean modules
+src/Chap52/AdjSeqGraphStPer.rs  depends upon only clean modules
+src/Chap52/AdjTableGraphMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer
+src/Chap52/AdjTableGraphSpecsAndLemmas.rs  depends upon only clean modules
+src/Chap52/AdjTableGraphStEph.rs  depends upon only clean modules
+src/Chap52/AdjTableGraphStPer.rs  depends upon only clean modules
+src/Chap52/EdgeSetGraphMtEph.rs  depends upon holed modules: Chap41::AVLTreeSetMtEph
+src/Chap52/EdgeSetGraphMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer
+src/Chap52/EdgeSetGraphStEph.rs  depends upon only clean modules
+src/Chap52/EdgeSetGraphStPer.rs  depends upon only clean modules
+src/Chap53/GraphSearchMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer
+src/Chap53/GraphSearchStEph.rs  depends upon only clean modules
+src/Chap53/GraphSearchStPer.rs  depends upon only clean modules
+src/Chap53/PQMinStEph.rs  depends upon only clean modules
+src/Chap53/PQMinStPer.rs  depends upon only clean modules
+src/Chap54/BFSMtEph.rs  depends upon only clean modules
+src/Chap54/BFSMtPer.rs  depends upon only clean modules
+src/Chap54/BFSSpecsAndLemmas.rs  depends upon only clean modules
+src/Chap54/BFSStEph.rs  depends upon only clean modules
+src/Chap54/BFSStPer.rs  depends upon only clean modules
+src/Chap55/CycleDetectStEph.rs  depends upon only clean modules
+src/Chap55/CycleDetectStPer.rs  depends upon only clean modules
+src/Chap55/DFSSpecsAndLemmas.rs  depends upon only clean modules
+src/Chap55/DFSStEph.rs  depends upon only clean modules
+src/Chap55/DFSStPer.rs  depends upon only clean modules
+src/Chap55/SCCStEph.rs  depends upon only clean modules
+src/Chap55/SCCStPer.rs  depends upon only clean modules
+src/Chap55/TopoSortStEph.rs  depends upon only clean modules
+src/Chap55/TopoSortStPer.rs  depends upon only clean modules
+src/Chap56/AllPairsResultStEphF64.rs  depends upon only clean modules
+src/Chap56/AllPairsResultStEphI64.rs  depends upon only clean modules
+src/Chap56/AllPairsResultStPerF64.rs  depends upon only clean modules
+src/Chap56/AllPairsResultStPerI64.rs  depends upon only clean modules
+src/Chap56/PathWeightUtilsStEph.rs  depends upon only clean modules
+src/Chap56/PathWeightUtilsStPer.rs  depends upon only clean modules
+src/Chap56/SSSPResultStEphF64.rs  depends upon only clean modules
+src/Chap56/SSSPResultStEphI64.rs  depends upon only clean modules
+src/Chap56/SSSPResultStPerF64.rs  depends upon only clean modules
+src/Chap56/SSSPResultStPerI64.rs  depends upon only clean modules
+src/Chap57/DijkstraStEphF64.rs  depends upon only clean modules
+src/Chap57/DijkstraStEphU64.rs  depends upon only clean modules
+src/Chap57/StackStEph.rs  depends upon only clean modules
+src/Chap58/BellmanFordStEphF64.rs  depends upon only clean modules
+src/Chap58/BellmanFordStEphI64.rs  depends upon only clean modules
+src/Chap59/JohnsonMtEphF64.rs  depends upon only clean modules
+src/Chap59/JohnsonMtEphI64.rs  depends upon only clean modules
+src/Chap59/JohnsonStEphF64.rs  depends upon only clean modules
+src/Chap59/JohnsonStEphI64.rs  depends upon only clean modules
+src/Chap61/EdgeContractionMtEph.rs  depends upon only clean modules
+src/Chap61/EdgeContractionStEph.rs  depends upon only clean modules
+src/Chap61/VertexMatchingMtEph.rs  depends upon only clean modules
+src/Chap61/VertexMatchingStEph.rs  depends upon only clean modules
+src/Chap62/StarContractionMtEph.rs  depends upon only clean modules
+src/Chap62/StarContractionStEph.rs  depends upon only clean modules
+src/Chap62/StarPartitionMtEph.rs  depends upon only clean modules
+src/Chap62/StarPartitionStEph.rs  depends upon only clean modules
+src/Chap63/ConnectivityMtEph.rs  depends upon only clean modules
+src/Chap63/ConnectivityStEph.rs  depends upon only clean modules
+src/Chap64/SpanTreeMtEph.rs  depends upon only clean modules
+src/Chap64/SpanTreeStEph.rs  depends upon only clean modules
+src/Chap64/TSPApproxStEph.rs  depends upon only clean modules
+src/Chap65/KruskalStEph.rs  depends upon holed modules: Chap65::UnionFindPCStEph
+src/Chap65/PrimStEph.rs  depends upon only clean modules
+src/Chap65/UnionFindArrayStEph.rs  depends upon only clean modules
+src/Chap65/UnionFindNoPCStEph.rs  depends upon only clean modules
+src/Chap65/UnionFindPCStEph.rs  depends upon only clean modules
+src/Chap66/BoruvkaMtEph.rs  depends upon only clean modules
+src/Chap66/BoruvkaStEph.rs  depends upon only clean modules
+src/Concurrency.rs  depends upon only clean modules
+src/ParaPairs.rs  depends upon only clean modules
+bugs/f64-bitvector-crash/reproducer.rs  depends upon only clean modules
+bugs/ice-set-type-projection/reproducer.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   256 clean (no holes, no errors; 99%)
-   2 holed (holes or errors, 0%)
-   258 total
+   260 clean (no holes, no errors; 98%)
+   3 holed (holes or errors, 1%)
+   263 total
 
 Proof Functions:
-   532 clean (100%)
+   548 clean (100%)
    0 holed (0%)
-   532 total
+   548 total
 
 Function Specs:
-   5782 exec fns with complete spec (requires+ensures) (67%)
+   5910 exec fns with complete spec (requires+ensures) (65%)
    56 exec fns missing spec (0%)
-   2774 proof/spec fns clean (32%)
+   3098 proof/spec fns clean (34%)
    0 proof/spec fns with holes (0%)
-   8612 total fns
+   9064 total fns
 
 
-Holes Found: 4 (actionable)
-   4 × unsafe impl (100%)
-Real Proof Targets: 4 (all actionable)
+Holes Found: 7 (actionable)
+   4 × unsafe impl (57%)
+   3 × opaque (42%)
+Real Proof Targets: 7 (all actionable)
 
-Accepted (reviewed): 284 total
-   210 × accept()
+Per-Chapter Holes:
+  Chap41:  4  Chap65:  3
+
+Accepted (reviewed): 290 total
+   216 × accept()
    33 × external_body_accept_hole
    16 × trivial_spec_wf
    15 × fn_missing_requires
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
-   1 × struct_outside_verus_accept_hole
    1 × enum_outside_verus_accept_hole
+   1 × struct_outside_verus_accept_hole
    1 × external_type_specification_accept_hole
 
 Accepted by Chapter:
   Chap02:  5  Chap05:  6  Chap06: 25
   Chap11:  6  Chap12: 19  Chap17:  2
   Chap18: 18  Chap19:  7  Chap23:  9
-  Chap30:  7  Chap35:  2  Chap37: 35
+  Chap30:  7  Chap35:  2  Chap37: 39
   Chap38:  4  Chap39: 19  Chap40: 23
-  Chap41: 18  Chap42:  5  Chap43:  8
+  Chap41: 18  Chap42:  5  Chap43:  9
   Chap44:  1  Chap45: 13  Chap47:  5
-  Chap50: 18  Chap51: 14  Chap52:  5
+  Chap50: 18  Chap51: 14  Chap52:  6
   Chap57:  7  Chap65:  1  Chap66:  1
 
 Structural (info only): 157
@@ -1569,11 +1609,160 @@ Structural (info only): 157
    4 × THREAD_SPAWN
 
 =================================================================
+4. Proof Targets
+=================================================================
+
+   Holes = proof gaps (assume, admit, external_body, trivial spec*wf, proof_fn_with_holes, etc.).
+
+=================================================================
+4.1. Worst src/* Directories (all dirs, by holes)
+=================================================================
+
+   1  Chap41  (4 holes, 7 files)
+   2  Chap65  (3 holes, 5 files)
+   3  Chap42  (0 holes, 4 files)
+   4  Chap50  (0 holes, 8 files)
+   5  Chap66  (0 holes, 2 files)
+   6  Chap39  (0 holes, 5 files)
+   7  Chap35  (0 holes, 4 files)
+   8  Chap56  (0 holes, 10 files)
+   9  Chap40  (0 holes, 3 files)
+   10  Chap17  (0 holes, 1 files)
+   11  Chap55  (0 holes, 9 files)
+   12  Chap30  (0 holes, 1 files)
+   13  Chap61  (0 holes, 4 files)
+   14  Chap05  (0 holes, 5 files)
+   15  Chap58  (0 holes, 2 files)
+   16  Chap43  (0 holes, 11 files)
+   17  Chap44  (0 holes, 1 files)
+   18  Chap52  (0 holes, 16 files)
+   19  Chap21  (0 holes, 5 files)
+   20  Chap62  (0 holes, 4 files)
+   21  Chap64  (0 holes, 3 files)
+   22  Chap23  (0 holes, 2 files)
+   23  Chap36  (0 holes, 3 files)
+   24  Chap45  (0 holes, 6 files)
+   25  Chap37  (0 holes, 20 files)
+   26  Chap28  (0 holes, 11 files)
+   27  Chap53  (0 holes, 5 files)
+   28  Chap12  (0 holes, 3 files)
+   29  Chap03  (0 holes, 1 files)
+   30  Chap57  (0 holes, 3 files)
+   31  Chap51  (0 holes, 9 files)
+   32  Chap02  (0 holes, 2 files)
+   33  Chap54  (0 holes, 5 files)
+   34  Concurrency  (0 holes, 1 files)
+   35  Chap49  (0 holes, 8 files)
+   36  Chap27  (0 holes, 5 files)
+   37  Chap26  (0 holes, 8 files)
+   38  Chap63  (0 holes, 2 files)
+   39  Chap11  (0 holes, 5 files)
+   40  Chap38  (0 holes, 3 files)
+   41  ParaPairs  (0 holes, 1 files)
+   42  Chap59  (0 holes, 4 files)
+   43  Chap06  (0 holes, 21 files)
+   44  Chap47  (0 holes, 9 files)
+   45  Chap19  (0 holes, 5 files)
+   46  Chap18  (0 holes, 9 files)
+
+=================================================================
+4.2. Next Target Files (clean deps only, by holes)
+=================================================================
+
+   1  src/Chap65/UnionFindPCStEph.rs  (3 holes)
+   2  src/Chap41/AVLTreeSetMtEph.rs  (2 holes)
+   3  src/Chap41/AVLTreeSetMtPer.rs  (2 holes)
+
+=================================================================
+4.3. Next Target Directories
+=================================================================
+
+   1  src/Chap41  (4 holes, 7 files)
+
+=================================================================
+4.4. Not Verusified
+=================================================================
+
+   None
+
+=================================================================
+4.5. Not Verusified (clean deps only)
+=================================================================
+
+   None
+
+=================================================================
+4.6. Chapter by Chapter Proof Targeting
+=================================================================
+
+Chapter Status — 46 chapters, 44 clean, 2 holed, 7 holes (global), 261 modules
+
+CLEAN CHAPTERS (44)
+  Chapter        Files
+  -------------- -----
+  Chap02             2
+  Chap03             1
+  Chap05             5
+  Chap06            21
+  Chap11             5
+  Chap12             3
+  Chap17             1
+  Chap18             9
+  Chap19             5
+  Chap21             5
+  Chap23             2
+  Chap26             8
+  Chap27             5
+  Chap28            11
+  Chap30             1
+  Chap35             4
+  Chap36             3
+  Chap37            20
+  Chap38             3
+  Chap39             5
+  Chap40             3
+  Chap42             4
+  Chap43            11
+  Chap44             1
+  Chap45             6
+  Chap47             9
+  Chap49             8
+  Chap50             8
+  Chap51             9
+  Chap52            16
+  Chap53             5
+  Chap54             5
+  Chap55             9
+  Chap56            10
+  Chap57             3
+  Chap58             2
+  Chap59             4
+  Chap61             4
+  Chap62             4
+  Chap63             2
+  Chap64             3
+  Chap66             2
+  Concurrency        1
+  ParaPairs          1
+
+HOLED CHAPTERS (2) — 7 holes
+  Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
+  -------------- ----- -----  --------  -----------------------------------
+  Chap41             4     7  YES       
+  Chap65             3     5  internal  Chap65::UnionFindPCStEph
+
+DEPENDENCY CHAIN (chapter-level, external only)
+  Chapter         Blocked by chapters
+  --------------  -------------------
+  Chap52          Chap41
+  Chap53          Chap41
+
+=================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-10 12:45:59 -07:00
-Ended:     2026-04-10 12:46:00 -07:00
-Duration:  1761ms
+Started:   2026-04-12 15:12:43 -07:00
+Ended:     2026-04-12 15:12:44 -07:00
+Duration:  1583ms
 
-Full output: src/analyses/veracity-review-verus-proof-holes.log
+Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

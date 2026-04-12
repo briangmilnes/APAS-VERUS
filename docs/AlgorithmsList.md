@@ -1,9 +1,5 @@
 # Algorithms List for Literature Search
 
-I want you to review scholarly sources for formal proofs of the following algorithms in their single-threaded/multi-threaded, persistent (non-mutable) ephemeral (mutable) versions.
-
-As well as code libraries for formal proof languages at least including: Rocq, F*, Dafny, Verus, Isabelle and Lean. 
-
 Generated 2026-04-12 from `main`. Covers all `src/Chap*/` files
 (excluding `Example*.rs` and `Problem*.rs` per CLAUDE.md).
 
@@ -41,22 +37,76 @@ prior formal verification / publication.
 - **MtPer** = multi-threaded persistent (thread-safe persistent,
   usually Arc-shared).
 
+Raw total: 263 source files. Collapsed into 243 rows by merging
+pure-numeric-type variant families.
+
 | # | Chap | Algorithm | Mt? | Per/Eph | File | Description |
 |---|------|-----------|-----|---------|------|-------------|
+| 1 | 02 | FibonacciHFScheduler | - | - | FibonacciHFScheduler | Fibonacci computed via the Help-First work-stealing scheduler; demonstrates fork-join parallelism with a bounded global thread pool. |
 | 2 | 02 | HFScheduler | Yes | Eph | HFSchedulerMtEph | Help-First (HF) work-stealing scheduler for fork-join parallelism with a bounded global pool; Blelloch-style scheduling primitive. |
+| 3 | 03 | InsertionSort | No | Eph | InsertionSortStEph | Insertion sort on a mutable slice/array; O(n^2) comparison-based stable in-place sort. |
 | 4 | 05 | Kleene | No | Per | KleeneStPer | Kleene star/plus closure over a finite alphabet; iterative fixed-point computation for formal language theory. |
+| 5 | 05 | Mapping | No | Eph | MappingStEph | Finite mapping (partial function) from keys to values; set-theoretic function abstraction built over relations. |
+| 6 | 05 | Relation | No | Eph | RelationStEph | Binary relation as a set of pairs; set-theoretic abstraction supporting composition, restriction, domain/range operations. |
+| 7 | 05 | Set | Yes | Eph | SetMtEph | Unordered finite set data structure built on hash set; supports insert, contains, union, intersection, difference. |
+| 8 | 05 | Set | No | Eph | SetStEph | Unordered finite set data structure built on hash set; supports insert, contains, union, intersection, difference. |
+| 9 | 06 | DirGraph | Yes | Eph | DirGraphMtEph | Directed graph represented as (V, A) with arcs as a set of ordered pairs; set-of-arcs representation. |
+| 10 | 06 | DirGraph | No | Eph | DirGraphStEph | Directed graph represented as (V, A) with arcs as a set of ordered pairs; set-of-arcs representation. |
+| 11 | 06 | LabDirGraph | Yes | Eph | LabDirGraphMtEph | Labeled directed graph; directed arcs carry labels/weights from a finite set. |
+| 12 | 06 | LabDirGraph | No | Eph | LabDirGraphStEph | Labeled directed graph; directed arcs carry labels/weights from a finite set. |
+| 13 | 06 | LabUnDirGraph | Yes | Eph | LabUnDirGraphMtEph | Labeled undirected graph; edges are unordered pairs carrying labels/weights. |
+| 14 | 06 | LabUnDirGraph | No | Eph | LabUnDirGraphStEph | Labeled undirected graph; edges are unordered pairs carrying labels/weights. |
+| 15 | 06 | UnDirGraph | Yes | Eph | UnDirGraphMtEph | Undirected graph as a set of unordered edge pairs; symmetric arc representation. |
+| 16 | 06 | UnDirGraph | No | Eph | UnDirGraphStEph | Undirected graph as a set of unordered edge pairs; symmetric arc representation. |
+| 17 | 06 | WeightedDirGraph | No | Eph | WeightedDirGraphStEphF64 (×13 numeric types: F64,I128,I16,I32,I64,I8,Isize,U128,U16,U32,U64,U8,Usize) | Weighted directed graph parameterized over numeric weight type (F64/I8/I16/I32/I64/I128/Isize/U8/U16/U32/U64/U128/Usize); arcs carry numeric weights for shortest-path and MST algorithms. |
+| 18 | 11 | Fibonacci | Yes | Eph | FibonacciMtEph2Threads (variant: 2Threads) | Fibonacci number computation; basic recursion, iteration, and parallel divide-and-conquer variants. |
+| 19 | 11 | Fibonacci | Yes | Eph | FibonacciMtEphRecomputes (variant: Recomputes) | Fibonacci number computation; basic recursion, iteration, and parallel divide-and-conquer variants. |
+| 20 | 11 | Fibonacci | Yes | Per | FibonacciMtPerAllThreads (variant: AllThreads) | Fibonacci number computation; basic recursion, iteration, and parallel divide-and-conquer variants. |
+| 21 | 11 | Fibonacci | Yes | Per | FibonacciMtPerTSM (variant: TSM) | Fibonacci number computation; basic recursion, iteration, and parallel divide-and-conquer variants. |
+| 22 | 11 | Fibonacci | No | Eph | FibonacciStEph | Fibonacci number computation; basic recursion, iteration, and parallel divide-and-conquer variants. |
+| 23 | 12 | Exercise12_1 | - | - | Exercise12_1 | Chapter 12 exercise on recurrences/asymptotic analysis. |
+| 24 | 12 | Exercise12_2 | - | - | Exercise12_2 | Chapter 12 exercise on recurrences/asymptotic analysis. |
+| 25 | 12 | Exercise12_5 | - | - | Exercise12_5 | Chapter 12 exercise on recurrences/asymptotic analysis. |
+| 26 | 17 | MathSeq | - | - | MathSeq | Mathematical sequence (integer-indexed Seq[T]); foundational abstraction for APAS sequence algorithms. |
+| 27 | 18 | ArraySeq | Yes | Eph | ArraySeqMtEph | Array-backed sequence (Vec-based); Chapter 18 reference implementation of the sequence ADT. |
+| 28 | 18 | ArraySeq | Yes | Eph | ArraySeqMtEphSlice (variant: Slice) | Array-backed sequence (Vec-based); Chapter 18 reference implementation of the sequence ADT. |
+| 29 | 18 | ArraySeq | Yes | Per | ArraySeqMtPer | Array-backed sequence (Vec-based); Chapter 18 reference implementation of the sequence ADT. |
+| 30 | 18 | ArraySeq | - | - | ArraySeq | Array-backed sequence (Vec-based); Chapter 18 reference implementation of the sequence ADT. |
+| 31 | 18 | ArraySeqSpecsAndLemmas | - | - | ArraySeqSpecsAndLemmas | Shared specs and lemmas for Chapter 18 ArraySeq implementations. |
+| 32 | 18 | ArraySeq | No | Eph | ArraySeqStEph | Array-backed sequence (Vec-based); Chapter 18 reference implementation of the sequence ADT. |
+| 33 | 18 | ArraySeq | No | Per | ArraySeqStPer | Array-backed sequence (Vec-based); Chapter 18 reference implementation of the sequence ADT. |
+| 34 | 18 | LinkedList | No | Eph | LinkedListStEph | Singly-linked-list sequence; Chapter 18 alternative representation contrasting with array sequence cost. |
+| 35 | 18 | LinkedList | No | Per | LinkedListStPer | Singly-linked-list sequence; Chapter 18 alternative representation contrasting with array sequence cost. |
+| 36 | 19 | ArraySeq | Yes | Eph | ArraySeqMtEph | Chapter 19 array sequence variant (enumerable/bounded case); refines Chapter 18's ArraySeq. |
+| 37 | 19 | ArraySeq | Yes | Eph | ArraySeqMtEphSlice (variant: Slice) | Chapter 19 array sequence variant (enumerable/bounded case); refines Chapter 18's ArraySeq. |
+| 38 | 19 | ArraySeqSpecsAndLemmas | - | - | ArraySeqSpecsAndLemmas | Shared specs and lemmas for Chapter 19 ArraySeq implementations. |
+| 39 | 19 | ArraySeq | No | Eph | ArraySeqStEph | Chapter 19 array sequence variant (enumerable/bounded case); refines Chapter 18's ArraySeq. |
+| 40 | 19 | ArraySeq | No | Per | ArraySeqStPer | Chapter 19 array sequence variant (enumerable/bounded case); refines Chapter 18's ArraySeq. |
+| 41 | 21 | Algorithm21_1 | - | - | Algorithm21_1 | Chapter 21 Algorithm 21.1; sequence manipulation algorithm from APAS Chapter 21. |
+| 42 | 21 | Algorithm21_2 | - | - | Algorithm21_2 | Chapter 21 Algorithm 21.2; sequence manipulation algorithm from APAS Chapter 21. |
+| 43 | 21 | Algorithm21_5 | - | - | Algorithm21_5 | Chapter 21 Algorithm 21.5; sequence manipulation algorithm from APAS Chapter 21. |
+| 44 | 21 | Algorithm21_6 | - | - | Algorithm21_6 | Chapter 21 Algorithm 21.6; sequence manipulation algorithm from APAS Chapter 21. |
+| 45 | 21 | Exercise21_5 | - | - | Exercise21_5 | Chapter 21 exercise 21.5. |
+| 46 | 21 | Exercise21_6 | - | - | Exercise21_6 | Chapter 21 exercise 21.6. |
+| 47 | 21 | Exercise21_7 | - | - | Exercise21_7 | Chapter 21 exercise 21.7. |
+| 48 | 21 | Exercise21_8 | - | - | Exercise21_8 | Chapter 21 exercise 21.8. |
+| 49 | 21 | Exercise21_9 | - | - | Exercise21_9 | Chapter 21 exercise 21.9. |
 | 50 | 23 | BalBinTree | No | Eph | BalBinTreeStEph | Balanced binary tree; height-balanced tree used as substrate for various sequence representations. |
 | 51 | 23 | PrimTreeSeq | No | Per | PrimTreeSeqStPer | Primitive-tree-based sequence; sequence ADT implemented over a primitive (perfectly balanced) binary tree. |
 | 52 | 26 | DivConReduce | Yes | Per | DivConReduceMtPer | Divide-and-conquer reduce (fold over a monoid); canonical parallel reduction pattern with O(log n) span. |
 | 53 | 26 | DivConReduce | No | Per | DivConReduceStPer | Divide-and-conquer reduce (fold over a monoid); canonical parallel reduction pattern with O(log n) span. |
 | 54 | 26 | ETSP | Yes | Eph | ETSPMtEph | Euclidean TSP approximation via divide-and-conquer; 2D Euclidean Traveling Salesman Problem approximation. |
 | 55 | 26 | ETSP | No | Eph | ETSPStEph | Euclidean TSP approximation via divide-and-conquer; 2D Euclidean Traveling Salesman Problem approximation. |
+| 56 | 26 | MergeSort | Yes | Per | MergeSortMtPer | Merge sort with divide-and-conquer recursion; O(n log n) comparison-based stable sort, Blelloch-style parallel variant. |
+| 57 | 26 | MergeSort | No | Per | MergeSortStPer | Merge sort with divide-and-conquer recursion; O(n log n) comparison-based stable sort, Blelloch-style parallel variant. |
 | 58 | 26 | ScanDC | Yes | Per | ScanDCMtPer | Scan (prefix sums) via divide-and-conquer; parallel prefix computation over an associative operator. |
 | 59 | 26 | ScanDC | No | Per | ScanDCStPer | Scan (prefix sums) via divide-and-conquer; parallel prefix computation over an associative operator. |
+| 60 | 27 | ContractSpecsAndLemmas | - | - | ContractSpecsAndLemmas | Shared specs and lemmas for contraction-based parallel algorithms. |
 | 61 | 27 | ReduceContract | Yes | Eph | ReduceContractMtEph | Reduce via the contraction pattern; iterative halving of the input with combining step per round. |
 | 62 | 27 | ReduceContract | No | Eph | ReduceContractStEph | Reduce via the contraction pattern; iterative halving of the input with combining step per round. |
 | 63 | 27 | ScanContract | Yes | Eph | ScanContractMtEph | Scan via the contraction pattern; iterative halving prefix-sum computation. |
 | 64 | 27 | ScanContract | No | Eph | ScanContractStEph | Scan via the contraction pattern; iterative halving prefix-sum computation. |
+| 65 | 28 | MaxContigSubSumBrute | No | Eph | MaxContigSubSumBruteStEph | Maximum contiguous subsequence sum, brute force O(n^3); Kadane problem baseline. |
 | 66 | 28 | MaxContigSubSumDivCon | Yes | Eph | MaxContigSubSumDivConMtEph | Maximum contiguous subsequence sum via divide-and-conquer; O(n log n) recursive combining. |
 | 67 | 28 | MaxContigSubSumDivConOpt | Yes | Eph | MaxContigSubSumDivConOptMtEph | Maximum contiguous subsequence sum, optimized divide-and-conquer; single-pass recursive version. |
 | 68 | 28 | MaxContigSubSumDivConOpt | No | Eph | MaxContigSubSumDivConOptStEph | Maximum contiguous subsequence sum, optimized divide-and-conquer; single-pass recursive version. |
@@ -67,10 +117,14 @@ prior formal verification / publication.
 | 73 | 28 | MaxContigSubSumReducedMcsse | No | Eph | MaxContigSubSumReducedMcsseStEph | Maximum contiguous subsequence sum via the MCSSE monoid; parallel reduction with four-component state. |
 | 74 | 28 | MaxContigSubSumReduced | No | Eph | MaxContigSubSumReducedStEph | Maximum contiguous subsequence sum via a monoid reduction; parallel O(log n) span using algebraic combining. |
 | 75 | 28 | MCSSSpec | - | - | MCSSSpec | Specification for maximum contiguous subsequence sum variants; shared correctness spec. |
+| 76 | 30 | Probability | - | - | Probability | Probability abstractions; combinatorial probability utilities for randomized algorithm analysis. |
 | 77 | 35 | OrderStatSelect | Yes | Eph | OrderStatSelectMtEph | Order statistic selection; quickselect-style k-th smallest element in linear expected time, with parallel divide-and-conquer variant. |
 | 78 | 35 | OrderStatSelect | Yes | Per | OrderStatSelectMtPer | Order statistic selection; quickselect-style k-th smallest element in linear expected time, with parallel divide-and-conquer variant. |
 | 79 | 35 | OrderStatSelect | No | Eph | OrderStatSelectStEph | Order statistic selection; quickselect-style k-th smallest element in linear expected time, with parallel divide-and-conquer variant. |
 | 80 | 35 | OrderStatSelect | No | Per | OrderStatSelectStPer | Order statistic selection; quickselect-style k-th smallest element in linear expected time, with parallel divide-and-conquer variant. |
+| 81 | 36 | QuickSort | Yes | Eph | QuickSortMtEph | Quicksort with three-way partitioning; randomized O(n log n) expected, parallel divide-and-conquer variant. |
+| 82 | 36 | QuickSort | Yes | Eph | QuickSortMtEphSlice (variant: Slice) | Quicksort with three-way partitioning; randomized O(n log n) expected, parallel divide-and-conquer variant. |
+| 83 | 36 | QuickSort | No | Eph | QuickSortStEph | Quicksort with three-way partitioning; randomized O(n log n) expected, parallel divide-and-conquer variant. |
 | 84 | 37 | AVLTreeSeq | Yes | Per | AVLTreeSeqMtPer | Sequence ADT over an AVL-balanced tree; O(log n) insert/delete with sequence semantics. |
 | 85 | 37 | AVLTreeSeq | - | - | AVLTreeSeq | Sequence ADT over an AVL-balanced tree; O(log n) insert/delete with sequence semantics. |
 | 86 | 37 | AVLTreeSeq | No | Eph | AVLTreeSeqStEph | Sequence ADT over an AVL-balanced tree; O(log n) insert/delete with sequence semantics. |
@@ -88,6 +142,7 @@ prior formal verification / publication.
 | 98 | 37 | BSTSetPlain | Yes | Eph | BSTSetPlainMtEph | Set ADT over an unbalanced BST; O(h) operations. |
 | 99 | 37 | BSTSetRB | Yes | Eph | BSTSetRBMtEph | Set ADT over a red-black BST; ordered set with O(log n) operations. |
 | 100 | 37 | BSTSetSplay | Yes | Eph | BSTSetSplayMtEph | Set ADT over a splay tree; amortized O(log n) operations with self-adjusting access. |
+| 101 | 37 | BSTSpecsAndLemmas | - | - | BSTSpecsAndLemmas | Shared BST specifications and lemmas across balanced/unbalanced variants. |
 | 102 | 37 | BSTSplay | Yes | Eph | BSTSplayMtEph | Splay tree; self-adjusting binary search tree with amortized O(log n) operations. |
 | 103 | 37 | BSTSplay | No | Eph | BSTSplayStEph | Splay tree; self-adjusting binary search tree with amortized O(log n) operations. |
 | 104 | 38 | BSTPara | Yes | Eph | BSTParaMtEph | Parallel BST (Blelloch-style parallel ordered tree); split/union/intersection in O(log^2 n) span. |
@@ -96,6 +151,7 @@ prior formal verification / publication.
 | 107 | 39 | BSTParaTreap | Yes | Eph | BSTParaTreapMtEph | Treap (randomized search tree) with parallel split/union; randomized balance via priorities. |
 | 108 | 39 | BSTSetTreap | Yes | Eph | BSTSetTreapMtEph | Set ADT over a treap; randomized-balance ordered set. |
 | 109 | 39 | BSTTreap | Yes | Eph | BSTTreapMtEph | Treap binary search tree; randomized-balance BST with O(log n) expected operations. |
+| 110 | 39 | BSTTreapSpecsAndLemmas | - | - | BSTTreapSpecsAndLemmas | Shared specifications and lemmas for treap variants. |
 | 111 | 39 | BSTTreap | No | Eph | BSTTreapStEph | Treap binary search tree; randomized-balance BST with O(log n) expected operations. |
 | 112 | 40 | BSTKeyValue | No | Eph | BSTKeyValueStEph | Key-value BST; binary search tree mapping keys to values (dictionary ADT). |
 | 113 | 40 | BSTReduced | No | Eph | BSTReducedStEph | Reduced BST with an aggregation monoid at each node; supports range reductions. |
@@ -108,6 +164,7 @@ prior formal verification / publication.
 | 120 | 41 | AVLTreeSet | No | Per | AVLTreeSetStPer | Set ADT backed by an AVL tree; balanced ordered set. |
 | 121 | 41 | OrdKeyMap | - | - | OrdKeyMap | Ordered key-value map; sorted map ADT. |
 | 122 | 42 | Table | Yes | Eph | TableMtEph | Table (associative map) ADT; fundamental APAS key-value collection with parallel operations. |
+| 123 | 42 | TableSpecsAndLemmas | - | - | TableSpecsAndLemmas | Shared table specifications and lemmas. |
 | 124 | 42 | Table | No | Eph | TableStEph | Table (associative map) ADT; fundamental APAS key-value collection with parallel operations. |
 | 125 | 42 | Table | No | Per | TableStPer | Table (associative map) ADT; fundamental APAS key-value collection with parallel operations. |
 | 126 | 43 | AugOrderedTable | Yes | Eph | AugOrderedTableMtEph | Augmented ordered table with reduction monoid; ordered key-value map supporting range queries via augmentation. |
@@ -116,6 +173,7 @@ prior formal verification / publication.
 | 129 | 43 | OrderedSet | Yes | Eph | OrderedSetMtEph | Ordered set ADT; sorted-element set with split/rank. |
 | 130 | 43 | OrderedSet | No | Eph | OrderedSetStEph | Ordered set ADT; sorted-element set with split/rank. |
 | 131 | 43 | OrderedSet | No | Per | OrderedSetStPer | Ordered set ADT; sorted-element set with split/rank. |
+| 132 | 43 | OrderedSpecsAndLemmas | - | - | OrderedSpecsAndLemmas | Shared ordered-table/set specifications and lemmas. |
 | 133 | 43 | OrderedTable | Yes | Eph | OrderedTableMtEph | Ordered key-value table; sorted key-value map with split/join. |
 | 134 | 43 | OrderedTable | Yes | Per | OrderedTableMtPer | Ordered key-value table; sorted key-value map with split/join. |
 | 135 | 43 | OrderedTable | No | Eph | OrderedTableStEph | Ordered key-value table; sorted key-value map with split/join. |
@@ -156,6 +214,7 @@ prior formal verification / publication.
 | 170 | 51 | BottomUpDP | Yes | Per | BottomUpDPMtPer | Bottom-up dynamic programming framework. |
 | 171 | 51 | BottomUpDP | No | Eph | BottomUpDPStEph | Bottom-up dynamic programming framework. |
 | 172 | 51 | BottomUpDP | No | Per | BottomUpDPStPer | Bottom-up dynamic programming framework. |
+| 173 | 51 | SeqSpecsAndLemmas | - | - | SeqSpecsAndLemmas | Shared sequence specifications and lemmas for DP. |
 | 174 | 51 | TopDownDP | Yes | Eph | TopDownDPMtEph | Top-down (memoized) dynamic programming framework. |
 | 175 | 51 | TopDownDP | Yes | Per | TopDownDPMtPer | Top-down (memoized) dynamic programming framework. |
 | 176 | 51 | TopDownDP | No | Eph | TopDownDPStEph | Top-down (memoized) dynamic programming framework. |
@@ -169,6 +228,7 @@ prior formal verification / publication.
 | 184 | 52 | AdjSeqGraph | No | Eph | AdjSeqGraphStEph | Adjacency sequence graph representation; list-of-lists graph, O(V+E) space. |
 | 185 | 52 | AdjSeqGraph | No | Per | AdjSeqGraphStPer | Adjacency sequence graph representation; list-of-lists graph, O(V+E) space. |
 | 186 | 52 | AdjTableGraph | Yes | Per | AdjTableGraphMtPer | Adjacency table graph representation; map-of-sets graph with keyed adjacency lookup. |
+| 187 | 52 | AdjTableGraphSpecsAndLemmas | - | - | AdjTableGraphSpecsAndLemmas | Shared specifications and lemmas for adjacency-table graph variants. |
 | 188 | 52 | AdjTableGraph | No | Eph | AdjTableGraphStEph | Adjacency table graph representation; map-of-sets graph with keyed adjacency lookup. |
 | 189 | 52 | AdjTableGraph | No | Per | AdjTableGraphStPer | Adjacency table graph representation; map-of-sets graph with keyed adjacency lookup. |
 | 190 | 52 | EdgeSetGraph | Yes | Eph | EdgeSetGraphMtEph | Edge-set graph representation; graph as a set of edges (V, A⊆V×V), O(E) space. |
@@ -182,10 +242,12 @@ prior formal verification / publication.
 | 198 | 53 | PQMin | No | Per | PQMinStPer | Priority queue min-extraction operation. |
 | 199 | 54 | BFS | Yes | Eph | BFSMtEph | Breadth-first search; parallel level-synchronous BFS in addition to sequential. |
 | 200 | 54 | BFS | Yes | Per | BFSMtPer | Breadth-first search; parallel level-synchronous BFS in addition to sequential. |
+| 201 | 54 | BFSSpecsAndLemmas | - | - | BFSSpecsAndLemmas | Shared BFS specifications and lemmas. |
 | 202 | 54 | BFS | No | Eph | BFSStEph | Breadth-first search; parallel level-synchronous BFS in addition to sequential. |
 | 203 | 54 | BFS | No | Per | BFSStPer | Breadth-first search; parallel level-synchronous BFS in addition to sequential. |
 | 204 | 55 | CycleDetect | No | Eph | CycleDetectStEph | Cycle detection in a directed graph; DFS-based or coloring-based cycle predicate. |
 | 205 | 55 | CycleDetect | No | Per | CycleDetectStPer | Cycle detection in a directed graph; DFS-based or coloring-based cycle predicate. |
+| 206 | 55 | DFSSpecsAndLemmas | - | - | DFSSpecsAndLemmas | Shared DFS specifications and lemmas. |
 | 207 | 55 | DFS | No | Eph | DFSStEph | Depth-first search; standard iterative/recursive DFS traversal. |
 | 208 | 55 | DFS | No | Per | DFSStPer | Depth-first search; standard iterative/recursive DFS traversal. |
 | 209 | 55 | SCC | No | Eph | SCCStEph | Strongly connected components; Tarjan-style or Kosaraju-style SCC decomposition. |
@@ -199,6 +261,7 @@ prior formal verification / publication.
 | 217 | 56 | SSSPResult | No | Eph | SSSPResultStEphF64 (×2 numeric types: F64,I64) | Single-source shortest path result container (distance + predecessor arrays). |
 | 218 | 56 | SSSPResult | No | Per | SSSPResultStPerF64 (×2 numeric types: F64,I64) | Single-source shortest path result container (distance + predecessor arrays). |
 | 219 | 57 | Dijkstra | No | Eph | DijkstraStEphF64 (×2 numeric types: F64,U64) | Dijkstra's single-source shortest-path algorithm with priority queue; O((V+E) log V). |
+| 220 | 57 | Stack | No | Eph | StackStEph | Stack data structure. |
 | 221 | 58 | BellmanFord | No | Eph | BellmanFordStEphF64 (×2 numeric types: F64,I64) | Bellman-Ford single-source shortest-path algorithm; O(V*E), handles negative edge weights. |
 | 222 | 59 | Johnson | Yes | Eph | JohnsonMtEphF64 (×2 numeric types: F64,I64) | Johnson's all-pairs shortest-path algorithm; reweighting plus n Dijkstra runs, O(V^2 log V + V*E). |
 | 223 | 59 | Johnson | No | Eph | JohnsonStEphF64 (×2 numeric types: F64,I64) | Johnson's all-pairs shortest-path algorithm; reweighting plus n Dijkstra runs, O(V^2 log V + V*E). |

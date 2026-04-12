@@ -20,17 +20,13 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-⚠ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:1120: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1116 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1118 |         {
-      1119 |             let equal = self.0 == other.0 && self.1 == other.1 && self.2.eq(&other.2) && self.3 == other.3;
-      1121 |             equal
-      1122 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:194: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
+ℹ BoruvkaMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:1129: info: accept()
+   Info: 1 total
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:195: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
+   Info: 1 × structural_false_positive
 ℹ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:555: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:565: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
    Info: 1 × structural_false_positive
 
 =================================================================
@@ -76,28 +72,22 @@ Function Specs:
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Warnings: 1 total
-   1 × assume_eq_clone_workaround
+Accepted (reviewed): 1 total
+   1 × accept()
 
 Structural (info only): 2
    1 × STD_TRAIT_IMPL
    1 × OPAQUE_EXTERNAL
 
-No proof holes found! All proofs are complete.
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 15:36:04 -07:00
-Ended:     2026-04-06 15:36:04 -07:00
-Duration:  42ms
+Started:   2026-04-12 15:12:42 -07:00
+Ended:     2026-04-12 15:12:43 -07:00
+Duration:  14ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
-===============
-
-Started:   2026-04-06 15:36:04 -07:00
-Ended:     2026-04-06 15:36:04 -07:00
-Duration:  42ms
-
-Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
+c/Chap66/analyses/veracity-review-verus-proof-holes.log

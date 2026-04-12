@@ -23,7 +23,7 @@ Table of Contents:
 ✓ KruskalStEph.rs
    1 clean proof function
 ℹ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:506: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:506: info: accept()
    Info: 1 total
    4 clean proof functions
 ✓ UnionFindArrayStEph.rs
@@ -31,12 +31,12 @@ Table of Contents:
 ✓ UnionFindNoPCStEph.rs
    5 clean proof functions
 ❌ UnionFindPCStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindPCStEph.rs:92: error: opaque - #[verifier::opaque]
-        93 |     pub open spec fn spec_light_wf<V: View>(
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindPCStEph.rs:108: error: opaque - #[verifier::opaque]
-       109 |     pub open spec fn spec_find_preserved<V: View>(
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindPCStEph.rs:118: error: opaque - #[verifier::opaque]
-       119 |     pub open spec fn spec_same_domain<V: View>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:106: error: opaque - #[verifier::opaque] // accept hole
+       107 |     pub open spec fn spec_light_wf<V: View>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:122: error: opaque - #[verifier::opaque] // accept hole
+       123 |     pub open spec fn spec_find_preserved<V: View>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:132: error: opaque - #[verifier::opaque] // accept hole
+       133 |     pub open spec fn spec_same_domain<V: View>(
    Holes: 3 total
       3 × opaque
    Proof functions: 18 total (18 clean, 0 holed)
@@ -98,8 +98,9 @@ Accepted (reviewed): 1 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-11 20:37:20 -07:00
-Ended:     2026-04-11 20:37:20 -07:00
-Duration:  52ms
+Started:   2026-04-12 15:12:42 -07:00
+Ended:     2026-04-12 15:12:42 -07:00
+Duration:  40ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+nalyses/veracity-review-verus-proof-holes.log
