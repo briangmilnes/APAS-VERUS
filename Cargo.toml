@@ -463,8 +463,78 @@ path = "benches/Chap03/BenchInsertionSortStEph.rs"
 harness = false
 
 [[bench]]
+name = "BenchKleeneStPer"
+path = "benches/Chap05/BenchKleeneStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchMappingStEph"
+path = "benches/Chap05/BenchMappingStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchRelationStEph"
+path = "benches/Chap05/BenchRelationStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchSetStEph"
+path = "benches/Chap05/BenchSetStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchDirGraphStEph"
+path = "benches/Chap06/BenchDirGraphStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchWeightedDirGraphStEph"
+path = "benches/Chap06/BenchWeightedDirGraphStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchFibonacciStEph"
+path = "benches/Chap11/BenchFibonacciStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchLinkedListStEph"
+path = "benches/Chap18/BenchLinkedListStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchLinkedListStPer"
+path = "benches/Chap18/BenchLinkedListStPer.rs"
+harness = false
+
+[[bench]]
 name = "BenchArraySeqStEph"
 path = "benches/Chap19/BenchArraySeqStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchAlgorithm21"
+path = "benches/Chap21/BenchAlgorithm21.rs"
+harness = false
+
+[[bench]]
+name = "BenchBalBinTreeStEph"
+path = "benches/Chap23/BenchBalBinTreeStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchPrimTreeSeqStPer"
+path = "benches/Chap23/BenchPrimTreeSeqStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchDivConReduceStPer"
+path = "benches/Chap26/BenchDivConReduceStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchETSPStEph"
+path = "benches/Chap26/BenchETSPStEph.rs"
 harness = false
 
 [[bench]]
@@ -473,8 +543,58 @@ path = "benches/Chap26/BenchMergeSortStPer.rs"
 harness = false
 
 [[bench]]
+name = "BenchScanDCStPer"
+path = "benches/Chap26/BenchScanDCStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchReduceContractMtEph"
+path = "benches/Chap27/BenchReduceContractMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchReduceContractStEph"
+path = "benches/Chap27/BenchReduceContractStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchScanContractMtEph"
+path = "benches/Chap27/BenchScanContractMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchScanContractStEph"
+path = "benches/Chap27/BenchScanContractStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchMaxContigSubSumBruteStEph"
+path = "benches/Chap28/BenchMaxContigSubSumBruteStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchMaxContigSubSumDivConStEph"
+path = "benches/Chap28/BenchMaxContigSubSumDivConStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchMaxContigSubSumIterStEph"
+path = "benches/Chap28/BenchMaxContigSubSumIterStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchMaxContigSubSumMtEph"
+path = "benches/Chap28/BenchMaxContigSubSumMtEph.rs"
+harness = false
+
+[[bench]]
 name = "BenchMaxContigSubSumOptStEph"
 path = "benches/Chap28/BenchMaxContigSubSumOptStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchMaxContigSubSumReducedStEph"
+path = "benches/Chap28/BenchMaxContigSubSumReducedStEph.rs"
 harness = false
 
 [[bench]]
@@ -483,8 +603,53 @@ path = "benches/Chap35/BenchOrderStatSelectStEph.rs"
 harness = false
 
 [[bench]]
+name = "BenchQuickSortMtEph"
+path = "benches/Chap36/BenchQuickSortMtEph.rs"
+harness = false
+
+[[bench]]
 name = "BenchQuickSortStEph"
 path = "benches/Chap36/BenchQuickSortStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchAVLTreeSeqMtPer"
+path = "benches/Chap37/BenchAVLTreeSeqMtPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchAVLTreeSeqStEph"
+path = "benches/Chap37/BenchAVLTreeSeqStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchAVLTreeSeqStPer"
+path = "benches/Chap37/BenchAVLTreeSeqStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTAVLMtEph"
+path = "benches/Chap37/BenchBSTAVLMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTAVLStEph"
+path = "benches/Chap37/BenchBSTAVLStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTBBAlphaMtEph"
+path = "benches/Chap37/BenchBSTBBAlphaMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTBBAlphaStEph"
+path = "benches/Chap37/BenchBSTBBAlphaStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTPlainMtEph"
+path = "benches/Chap37/BenchBSTPlainMtEph.rs"
 harness = false
 
 [[bench]]
@@ -493,8 +658,233 @@ path = "benches/Chap37/BenchBSTPlainStEph.rs"
 harness = false
 
 [[bench]]
-name = "BenchSubsetSumStEph"
-path = "benches/Chap49/BenchSubsetSumStEph.rs"
+name = "BenchBSTRBMtEph"
+path = "benches/Chap37/BenchBSTRBMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTRBStEph"
+path = "benches/Chap37/BenchBSTRBStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTSetAVLMtEph"
+path = "benches/Chap37/BenchBSTSetAVLMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTSetBBAlphaMtEph"
+path = "benches/Chap37/BenchBSTSetBBAlphaMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTSetPlainMtEph"
+path = "benches/Chap37/BenchBSTSetPlainMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTSetRBMtEph"
+path = "benches/Chap37/BenchBSTSetRBMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTSetSplayMtEph"
+path = "benches/Chap37/BenchBSTSetSplayMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTSplayMtEph"
+path = "benches/Chap37/BenchBSTSplayMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTSplayStEph"
+path = "benches/Chap37/BenchBSTSplayStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTParaMtEph"
+path = "benches/Chap38/BenchBSTParaMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTParaStEph"
+path = "benches/Chap38/BenchBSTParaStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTSetTreapMtEph"
+path = "benches/Chap39/BenchBSTSetTreapMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTTreapMtEph"
+path = "benches/Chap39/BenchBSTTreapMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTTreapStEph"
+path = "benches/Chap39/BenchBSTTreapStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTKeyValueStEph"
+path = "benches/Chap40/BenchBSTKeyValueStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBSTSizeStEph"
+path = "benches/Chap40/BenchBSTSizeStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchArraySetEnumMtEph"
+path = "benches/Chap41/BenchArraySetEnumMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchArraySetStEph"
+path = "benches/Chap41/BenchArraySetStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchAVLTreeSetMtEph"
+path = "benches/Chap41/BenchAVLTreeSetMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchAVLTreeSetMtPer"
+path = "benches/Chap41/BenchAVLTreeSetMtPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchAVLTreeSetStEph"
+path = "benches/Chap41/BenchAVLTreeSetStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchAVLTreeSetStPer"
+path = "benches/Chap41/BenchAVLTreeSetStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchTableMtEph"
+path = "benches/Chap42/BenchTableMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchTableStEph"
+path = "benches/Chap42/BenchTableStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchTableStPer"
+path = "benches/Chap42/BenchTableStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchAugOrderedTableMtEph"
+path = "benches/Chap43/BenchAugOrderedTableMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchAugOrderedTableStEph"
+path = "benches/Chap43/BenchAugOrderedTableStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchAugOrderedTableStPer"
+path = "benches/Chap43/BenchAugOrderedTableStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchOrderedSetMtEph"
+path = "benches/Chap43/BenchOrderedSetMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchOrderedSetStEph"
+path = "benches/Chap43/BenchOrderedSetStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchOrderedSetStPer"
+path = "benches/Chap43/BenchOrderedSetStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchOrderedTableMtEph"
+path = "benches/Chap43/BenchOrderedTableMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchOrderedTableMtPer"
+path = "benches/Chap43/BenchOrderedTableMtPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchOrderedTableStEph"
+path = "benches/Chap43/BenchOrderedTableStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchOrderedTableStPer"
+path = "benches/Chap43/BenchOrderedTableStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchDocumentIndex"
+path = "benches/Chap44/BenchDocumentIndex.rs"
+harness = false
+
+[[bench]]
+name = "BenchBalancedTreePQ"
+path = "benches/Chap45/BenchBalancedTreePQ.rs"
+harness = false
+
+[[bench]]
+name = "BenchBinaryHeapPQ"
+path = "benches/Chap45/BenchBinaryHeapPQ.rs"
+harness = false
+
+[[bench]]
+name = "BenchLeftistHeapPQ"
+path = "benches/Chap45/BenchLeftistHeapPQ.rs"
+harness = false
+
+[[bench]]
+name = "BenchSortedListPQ"
+path = "benches/Chap45/BenchSortedListPQ.rs"
+harness = false
+
+[[bench]]
+name = "BenchUnsortedListPQ"
+path = "benches/Chap45/BenchUnsortedListPQ.rs"
+harness = false
+
+[[bench]]
+name = "BenchDoubleHashFlatHashTable"
+path = "benches/Chap47/BenchDoubleHashFlatHashTable.rs"
+harness = false
+
+[[bench]]
+name = "BenchLinkedListChainedHashTable"
+path = "benches/Chap47/BenchLinkedListChainedHashTable.rs"
+harness = false
+
+[[bench]]
+name = "BenchLinProbFlatHashTable"
+path = "benches/Chap47/BenchLinProbFlatHashTable.rs"
+harness = false
+
+[[bench]]
+name = "BenchQuadProbFlatHashTable"
+path = "benches/Chap47/BenchQuadProbFlatHashTable.rs"
+harness = false
+
+[[bench]]
+name = "BenchVecChainedHashTable"
+path = "benches/Chap47/BenchVecChainedHashTable.rs"
 harness = false
 
 [[bench]]
@@ -503,13 +893,323 @@ path = "benches/Chap49/BenchMinEditDistStEph.rs"
 harness = false
 
 [[bench]]
+name = "BenchMinEditDistStPer"
+path = "benches/Chap49/BenchMinEditDistStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchSubsetSumStEph"
+path = "benches/Chap49/BenchSubsetSumStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchSubsetSumStPer"
+path = "benches/Chap49/BenchSubsetSumStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchMatrixChainStEph"
+path = "benches/Chap50/BenchMatrixChainStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchMatrixChainStPer"
+path = "benches/Chap50/BenchMatrixChainStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchOptBinSearchTreeStEph"
+path = "benches/Chap50/BenchOptBinSearchTreeStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchOptBinSearchTreeStPer"
+path = "benches/Chap50/BenchOptBinSearchTreeStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchBottomUpDPMtEph"
+path = "benches/Chap51/BenchBottomUpDPMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBottomUpDPMtPer"
+path = "benches/Chap51/BenchBottomUpDPMtPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchBottomUpDPStEph"
+path = "benches/Chap51/BenchBottomUpDPStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBottomUpDPStPer"
+path = "benches/Chap51/BenchBottomUpDPStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchTopDownDPMtEph"
+path = "benches/Chap51/BenchTopDownDPMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchTopDownDPMtPer"
+path = "benches/Chap51/BenchTopDownDPMtPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchTopDownDPStEph"
+path = "benches/Chap51/BenchTopDownDPStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchTopDownDPStPer"
+path = "benches/Chap51/BenchTopDownDPStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchAdjMatrixGraphMtEph"
+path = "benches/Chap52/BenchAdjMatrixGraphMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchAdjMatrixGraphMtPer"
+path = "benches/Chap52/BenchAdjMatrixGraphMtPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchAdjMatrixGraphStEph"
+path = "benches/Chap52/BenchAdjMatrixGraphStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchAdjMatrixGraphStPer"
+path = "benches/Chap52/BenchAdjMatrixGraphStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchAdjSeqGraphMtEph"
+path = "benches/Chap52/BenchAdjSeqGraphMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchAdjSeqGraphMtPer"
+path = "benches/Chap52/BenchAdjSeqGraphMtPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchAdjSeqGraphStEph"
+path = "benches/Chap52/BenchAdjSeqGraphStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchAdjSeqGraphStPer"
+path = "benches/Chap52/BenchAdjSeqGraphStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchAdjTableGraphMtPer"
+path = "benches/Chap52/BenchAdjTableGraphMtPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchAdjTableGraphStEph"
+path = "benches/Chap52/BenchAdjTableGraphStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchAdjTableGraphStPer"
+path = "benches/Chap52/BenchAdjTableGraphStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchEdgeSetGraphMtPer"
+path = "benches/Chap52/BenchEdgeSetGraphMtPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchEdgeSetGraphStEph"
+path = "benches/Chap52/BenchEdgeSetGraphStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchEdgeSetGraphStPer"
+path = "benches/Chap52/BenchEdgeSetGraphStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchBFSMtEph"
+path = "benches/Chap54/BenchBFSMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBFSMtPer"
+path = "benches/Chap54/BenchBFSMtPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchBFSStEph"
+path = "benches/Chap54/BenchBFSStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBFSStPer"
+path = "benches/Chap54/BenchBFSStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchCycleDetectStEph"
+path = "benches/Chap55/BenchCycleDetectStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchCycleDetectStPer"
+path = "benches/Chap55/BenchCycleDetectStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchDFSStEph"
+path = "benches/Chap55/BenchDFSStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchDFSStPer"
+path = "benches/Chap55/BenchDFSStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchSCCStEph"
+path = "benches/Chap55/BenchSCCStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchSCCStPer"
+path = "benches/Chap55/BenchSCCStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchTopoSortStEph"
+path = "benches/Chap55/BenchTopoSortStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchTopoSortStPer"
+path = "benches/Chap55/BenchTopoSortStPer.rs"
+harness = false
+
+[[bench]]
+name = "BenchDijkstraStEphU64"
+path = "benches/Chap57/BenchDijkstraStEphU64.rs"
+harness = false
+
+[[bench]]
+name = "BenchBellmanFordStEphI64"
+path = "benches/Chap58/BenchBellmanFordStEphI64.rs"
+harness = false
+
+[[bench]]
+name = "BenchJohnsonMtEphI64"
+path = "benches/Chap59/BenchJohnsonMtEphI64.rs"
+harness = false
+
+[[bench]]
+name = "BenchJohnsonStEphI64"
+path = "benches/Chap59/BenchJohnsonStEphI64.rs"
+harness = false
+
+[[bench]]
+name = "BenchEdgeContractionMtEph"
+path = "benches/Chap61/BenchEdgeContractionMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchEdgeContractionStEph"
+path = "benches/Chap61/BenchEdgeContractionStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchVertexMatchingMtEph"
+path = "benches/Chap61/BenchVertexMatchingMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchVertexMatchingStEph"
+path = "benches/Chap61/BenchVertexMatchingStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchStarContractionMtEph"
+path = "benches/Chap62/BenchStarContractionMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchStarContractionStEph"
+path = "benches/Chap62/BenchStarContractionStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchStarPartitionMtEph"
+path = "benches/Chap62/BenchStarPartitionMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchStarPartitionStEph"
+path = "benches/Chap62/BenchStarPartitionStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchConnectivityMtEph"
+path = "benches/Chap63/BenchConnectivityMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchConnectivityStEph"
+path = "benches/Chap63/BenchConnectivityStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchSpanTreeMtEph"
+path = "benches/Chap64/BenchSpanTreeMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchSpanTreeStEph"
+path = "benches/Chap64/BenchSpanTreeStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchKruskalStEph"
+path = "benches/Chap65/BenchKruskalStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchPrimStEph"
+path = "benches/Chap65/BenchPrimStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchUnionFindArrayStEph"
+path = "benches/Chap65/BenchUnionFindArrayStEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchUnionFindNoPCStEph"
+path = "benches/Chap65/BenchUnionFindNoPCStEph.rs"
+harness = false
+
+[[bench]]
 name = "BenchUnionFindPCStEph"
 path = "benches/Chap65/BenchUnionFindPCStEph.rs"
 harness = false
 
 [[bench]]
-name = "BenchFibonacciStEph"
-path = "benches/Chap11/BenchFibonacciStEph.rs"
+name = "BenchBoruvkaMtEph"
+path = "benches/Chap66/BenchBoruvkaMtEph.rs"
+harness = false
+
+[[bench]]
+name = "BenchBoruvkaStEph"
+path = "benches/Chap66/BenchBoruvkaStEph.rs"
 harness = false
 
 [dev-dependencies]
