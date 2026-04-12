@@ -1,0 +1,95 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+    Finished `bench` profile [optimized] target(s) in 1.28s
+     Running benches/Chap59/BenchJohnsonMtEphF64.rs (target/release/deps/BenchJohnsonMtEphF64-60b73ec5b41018c5)
+Benchmarking JohnsonMtEphF64/chain_n/8
+Benchmarking JohnsonMtEphF64/chain_n/8: Warming up for 100.00 ms
+Benchmarking JohnsonMtEphF64/chain_n/8: Collecting 10 samples in estimated 403.30 ms (2420 iterations)
+Benchmarking JohnsonMtEphF64/chain_n/8: Analyzing
+JohnsonMtEphF64/chain_n/8
+                        time:   [159.92 µs 163.76 µs 166.84 µs]
+Benchmarking JohnsonMtEphF64/chain_n/16
+Benchmarking JohnsonMtEphF64/chain_n/16: Warming up for 100.00 ms
+Benchmarking JohnsonMtEphF64/chain_n/16: Collecting 10 samples in estimated 411.21 ms (1430 iterations)
+Benchmarking JohnsonMtEphF64/chain_n/16: Analyzing
+JohnsonMtEphF64/chain_n/16
+                        time:   [318.37 µs 338.81 µs 364.64 µs]
+
+     Running benches/Chap59/BenchJohnsonMtEphI64.rs (target/release/deps/BenchJohnsonMtEphI64-40904a1ac5697bb0)
+Benchmarking JohnsonMtEphI64/chain_n/8
+Benchmarking JohnsonMtEphI64/chain_n/8: Warming up for 100.00 ms
+Benchmarking JohnsonMtEphI64/chain_n/8: Collecting 10 samples in estimated 409.52 ms (2310 iterations)
+Benchmarking JohnsonMtEphI64/chain_n/8: Analyzing
+JohnsonMtEphI64/chain_n/8
+                        time:   [180.82 µs 207.22 µs 231.31 µs]
+                        change: [+30.496% +42.247% +58.581%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking JohnsonMtEphI64/chain_n/16
+Benchmarking JohnsonMtEphI64/chain_n/16: Warming up for 100.00 ms
+Benchmarking JohnsonMtEphI64/chain_n/16: Collecting 10 samples in estimated 415.51 ms (1210 iterations)
+Benchmarking JohnsonMtEphI64/chain_n/16: Analyzing
+JohnsonMtEphI64/chain_n/16
+                        time:   [335.05 µs 373.90 µs 395.67 µs]
+                        change: [+60.408% +75.098% +88.142%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+     Running benches/Chap59/BenchJohnsonStEphF64.rs (target/release/deps/BenchJohnsonStEphF64-dd3fc5816817a351)
+Benchmarking JohnsonStEphF64/chain_n/8
+Benchmarking JohnsonStEphF64/chain_n/8: Warming up for 100.00 ms
+Benchmarking JohnsonStEphF64/chain_n/8: Collecting 10 samples in estimated 300.04 ms (13k iterations)
+Benchmarking JohnsonStEphF64/chain_n/8: Analyzing
+JohnsonStEphF64/chain_n/8
+                        time:   [23.336 µs 23.659 µs 23.879 µs]
+Benchmarking JohnsonStEphF64/chain_n/16
+Benchmarking JohnsonStEphF64/chain_n/16: Warming up for 100.00 ms
+Benchmarking JohnsonStEphF64/chain_n/16: Collecting 10 samples in estimated 300.68 ms (5170 iterations)
+Benchmarking JohnsonStEphF64/chain_n/16: Analyzing
+JohnsonStEphF64/chain_n/16
+                        time:   [63.724 µs 67.406 µs 71.057 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap59/BenchJohnsonStEphI64.rs (target/release/deps/BenchJohnsonStEphI64-c1eea2a84b6062b9)
+Benchmarking JohnsonStEphI64/chain_n/8
+Benchmarking JohnsonStEphI64/chain_n/8: Warming up for 100.00 ms
+Benchmarking JohnsonStEphI64/chain_n/8: Collecting 10 samples in estimated 300.34 ms (12k iterations)
+Benchmarking JohnsonStEphI64/chain_n/8: Analyzing
+JohnsonStEphI64/chain_n/8
+                        time:   [21.438 µs 21.791 µs 22.288 µs]
+                        change: [+40.248% +42.913% +45.520%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking JohnsonStEphI64/chain_n/16
+Benchmarking JohnsonStEphI64/chain_n/16: Warming up for 100.00 ms
+Benchmarking JohnsonStEphI64/chain_n/16: Collecting 10 samples in estimated 300.46 ms (3575 iterations)
+Benchmarking JohnsonStEphI64/chain_n/16: Analyzing
+JohnsonStEphI64/chain_n/16
+                        time:   [91.768 µs 92.877 µs 93.790 µs]
+                        change: [+60.737% +63.822% +67.062%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+Elapsed: 13s

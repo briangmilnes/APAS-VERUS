@@ -1,0 +1,137 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+error[E0599]: no function or associated item named `from_vec` found for struct `apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` in the current scope
+    --> benches/Chap49/BenchMinEditDistMtEph.rs:11:40
+     |
+  11 |     let source = ArraySeqMtEphS::<u8>::from_vec((0..src_len as u8).collect());
+     |                                        ^^^^^^^^ function or associated item not found in `apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<u8>`
+     |
+note: if you're trying to build a new `apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<u8>` consider using one of the following associated functions:
+      apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::<T>::map_par
+      apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::<T>::filter_par
+    --> src/Chap19/ArraySeqMtEph.rs:1038:9
+     |
+1038 | /         pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
+1039 | |             a: &ArraySeqMtEphS<T>,
+1040 | |             f: F,
+1041 | |         ) -> (mapped: ArraySeqMtEphS<U>)
+1042 | |             where T: Clone + Send + Sync + Eq + 'static
+     | |_______________________________________________________^
+...
+1271 | /         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
+1272 | |             a: &ArraySeqMtEphS<T>,
+1273 | |             pred: F,
+1274 | |         ) -> (filtered: ArraySeqMtEphS<T>)
+1275 | |             where T: Clone + Send + Sync + Eq + 'static
+     | |_______________________________________________________^
+     = help: items from traits can only be used if the trait is in scope
+help: trait `ArraySeqMtEphTrait` which provides `from_vec` is implemented but not in scope; perhaps you want to import it
+     |
+   4 + use apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphTrait;
+     |
+help: there is an associated function `from` with a similar name
+     |
+  11 -     let source = ArraySeqMtEphS::<u8>::from_vec((0..src_len as u8).collect());
+  11 +     let source = ArraySeqMtEphS::<u8>::from((0..src_len as u8).collect());
+     |
+
+error[E0599]: no function or associated item named `from_vec` found for struct `apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` in the current scope
+    --> benches/Chap49/BenchMinEditDistMtEph.rs:12:40
+     |
+  12 |     let target = ArraySeqMtEphS::<u8>::from_vec((10..10 + tgt_len as u8).collect());
+     |                                        ^^^^^^^^ function or associated item not found in `apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<u8>`
+     |
+note: if you're trying to build a new `apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<u8>` consider using one of the following associated functions:
+      apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::<T>::map_par
+      apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::<T>::filter_par
+    --> src/Chap19/ArraySeqMtEph.rs:1038:9
+     |
+1038 | /         pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
+1039 | |             a: &ArraySeqMtEphS<T>,
+1040 | |             f: F,
+1041 | |         ) -> (mapped: ArraySeqMtEphS<U>)
+1042 | |             where T: Clone + Send + Sync + Eq + 'static
+     | |_______________________________________________________^
+...
+1271 | /         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
+1272 | |             a: &ArraySeqMtEphS<T>,
+1273 | |             pred: F,
+1274 | |         ) -> (filtered: ArraySeqMtEphS<T>)
+1275 | |             where T: Clone + Send + Sync + Eq + 'static
+     | |_______________________________________________________^
+     = help: items from traits can only be used if the trait is in scope
+help: trait `ArraySeqMtEphTrait` which provides `from_vec` is implemented but not in scope; perhaps you want to import it
+     |
+   4 + use apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphTrait;
+     |
+help: there is an associated function `from` with a similar name
+     |
+  12 -     let target = ArraySeqMtEphS::<u8>::from_vec((10..10 + tgt_len as u8).collect());
+  12 +     let target = ArraySeqMtEphS::<u8>::from((10..10 + tgt_len as u8).collect());
+     |
+
+error[E0599]: no function or associated item named `from_vec` found for struct `apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` in the current scope
+    --> benches/Chap49/BenchSubsetSumMtEph.rs:11:43
+     |
+  11 |     let multiset = ArraySeqMtEphS::<i32>::from_vec((1..=n as i32).collect());
+     |                                           ^^^^^^^^ function or associated item not found in `apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<i32>`
+     |
+note: if you're trying to build a new `apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<i32>` consider using one of the following associated functions:
+      apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::<T>::map_par
+      apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::<T>::filter_par
+    --> src/Chap19/ArraySeqMtEph.rs:1038:9
+     |
+1038 | /         pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
+1039 | |             a: &ArraySeqMtEphS<T>,
+1040 | |             f: F,
+1041 | |         ) -> (mapped: ArraySeqMtEphS<U>)
+1042 | |             where T: Clone + Send + Sync + Eq + 'static
+     | |_______________________________________________________^
+...
+1271 | /         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
+1272 | |             a: &ArraySeqMtEphS<T>,
+1273 | |             pred: F,
+1274 | |         ) -> (filtered: ArraySeqMtEphS<T>)
+1275 | |             where T: Clone + Send + Sync + Eq + 'static
+     | |_______________________________________________________^
+     = help: items from traits can only be used if the trait is in scope
+help: trait `ArraySeqMtEphTrait` which provides `from_vec` is implemented but not in scope; perhaps you want to import it
+     |
+   4 + use apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphTrait;
+     |
+help: there is an associated function `from` with a similar name
+     |
+  11 -     let multiset = ArraySeqMtEphS::<i32>::from_vec((1..=n as i32).collect());
+  11 +     let multiset = ArraySeqMtEphS::<i32>::from((1..=n as i32).collect());
+     |
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `apas-verus` (bench "BenchMinEditDistMtEph") due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (bench "BenchSubsetSumMtEph") due to 1 previous error
+Elapsed: 1s

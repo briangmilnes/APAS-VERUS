@@ -1,0 +1,300 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+warning: `apas-verus` (lib test) generated 2 warnings (2 duplicates)
+    Finished `bench` profile [optimized] target(s) in 0.04s
+     Running unittests src/lib.rs (target/release/deps/apas_verus-a10677e0a90d6260)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running benches/Chap19/BenchArraySeqStEph.rs (target/release/deps/BenchArraySeqStEph-b82e15cf3be7721d)
+Benchmarking ArraySeqAppend/n/256
+Benchmarking ArraySeqAppend/n/256: Warming up for 100.00 ms
+Benchmarking ArraySeqAppend/n/256: Collecting 20 samples in estimated 200.02 ms (647k iterations)
+Benchmarking ArraySeqAppend/n/256: Analyzing
+ArraySeqAppend/n/256    time:   [313.95 ns 315.26 ns 316.38 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking ArraySeqAppend/n/1024
+Benchmarking ArraySeqAppend/n/1024: Warming up for 100.00 ms
+Benchmarking ArraySeqAppend/n/1024: Collecting 20 samples in estimated 200.16 ms (173k iterations)
+Benchmarking ArraySeqAppend/n/1024: Analyzing
+ArraySeqAppend/n/1024   time:   [1.1412 µs 1.1460 µs 1.1508 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+Benchmarking ArraySeqSubseq/half/256
+Benchmarking ArraySeqSubseq/half/256: Warming up for 100.00 ms
+Benchmarking ArraySeqSubseq/half/256: Collecting 20 samples in estimated 200.00 ms (2.9M iterations)
+Benchmarking ArraySeqSubseq/half/256: Analyzing
+ArraySeqSubseq/half/256 time:   [69.155 ns 69.393 ns 69.653 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking ArraySeqSubseq/half/1024
+Benchmarking ArraySeqSubseq/half/1024: Warming up for 100.00 ms
+Benchmarking ArraySeqSubseq/half/1024: Collecting 20 samples in estimated 200.04 ms (686k iterations)
+Benchmarking ArraySeqSubseq/half/1024: Analyzing
+ArraySeqSubseq/half/1024
+                        time:   [283.78 ns 284.57 ns 285.45 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap37/BenchBSTPlainStEph.rs (target/release/deps/BenchBSTPlainStEph-07d41f7f4eae5291)
+Benchmarking BSTInsert/interleaved/32
+Benchmarking BSTInsert/interleaved/32: Warming up for 100.00 ms
+Benchmarking BSTInsert/interleaved/32: Collecting 10 samples in estimated 250.33 ms (39k iterations)
+Benchmarking BSTInsert/interleaved/32: Analyzing
+BSTInsert/interleaved/32
+                        time:   [6.0930 µs 6.1024 µs 6.1171 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking BSTInsert/interleaved/64
+Benchmarking BSTInsert/interleaved/64: Warming up for 100.00 ms
+Benchmarking BSTInsert/interleaved/64: Collecting 10 samples in estimated 250.77 ms (10k iterations)
+Benchmarking BSTInsert/interleaved/64: Analyzing
+BSTInsert/interleaved/64
+                        time:   [23.571 µs 23.628 µs 23.738 µs]
+
+Benchmarking BSTContains/hit/32
+Benchmarking BSTContains/hit/32: Warming up for 100.00 ms
+Benchmarking BSTContains/hit/32: Collecting 20 samples in estimated 200.00 ms (5.8M iterations)
+Benchmarking BSTContains/hit/32: Analyzing
+BSTContains/hit/32      time:   [34.263 ns 34.370 ns 34.531 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking BSTContains/hit/64
+Benchmarking BSTContains/hit/64: Warming up for 100.00 ms
+Benchmarking BSTContains/hit/64: Collecting 20 samples in estimated 200.00 ms (2.9M iterations)
+Benchmarking BSTContains/hit/64: Analyzing
+BSTContains/hit/64      time:   [68.317 ns 68.564 ns 68.853 ns]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+
+     Running benches/Chap11/BenchFibonacciStEph.rs (target/release/deps/BenchFibonacciStEph-e979a69ab9fc2b08)
+Benchmarking FibIterative/n/30
+Benchmarking FibIterative/n/30: Warming up for 100.00 ms
+Benchmarking FibIterative/n/30: Collecting 20 samples in estimated 200.00 ms (14M iterations)
+Benchmarking FibIterative/n/30: Analyzing
+FibIterative/n/30       time:   [13.173 ns 13.597 ns 14.045 ns]
+Benchmarking FibIterative/n/46
+Benchmarking FibIterative/n/46: Warming up for 100.00 ms
+Benchmarking FibIterative/n/46: Collecting 20 samples in estimated 200.00 ms (9.4M iterations)
+Benchmarking FibIterative/n/46: Analyzing
+FibIterative/n/46       time:   [20.610 ns 21.202 ns 21.851 ns]
+
+Benchmarking FibRecursive/n/20
+Benchmarking FibRecursive/n/20: Warming up for 100.00 ms
+Benchmarking FibRecursive/n/20: Collecting 20 samples in estimated 201.31 ms (12k iterations)
+Benchmarking FibRecursive/n/20: Analyzing
+FibRecursive/n/20       time:   [15.873 µs 15.931 µs 16.021 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking FibRecursive/n/30
+Benchmarking FibRecursive/n/30: Warming up for 100.00 ms
+Benchmarking FibRecursive/n/30: Collecting 20 samples in estimated 200.39 ms (100 iterations)
+Benchmarking FibRecursive/n/30: Analyzing
+FibRecursive/n/30       time:   [1.9606 ms 1.9769 ms 1.9974 ms]
+Found 3 outliers among 20 measurements (15.00%)
+  1 (5.00%) high mild
+  2 (10.00%) high severe
+
+     Running benches/Chap03/BenchInsertionSortStEph.rs (target/release/deps/BenchInsertionSortStEph-5a0a3fa03aa491d8)
+Benchmarking InsertionSortSt/reverse/32
+Benchmarking InsertionSortSt/reverse/32: Warming up for 300.00 ms
+Benchmarking InsertionSortSt/reverse/32: Collecting 30 samples in estimated 1.0003 s (473k iterations)
+Benchmarking InsertionSortSt/reverse/32: Analyzing
+InsertionSortSt/reverse/32
+                        time:   [2.0904 µs 2.1038 µs 2.1203 µs]
+                        change: [+0.0479% +0.8274% +1.7178%] (p = 0.06 > 0.05)
+                        No change in performance detected.
+Found 2 outliers among 30 measurements (6.67%)
+  2 (6.67%) high mild
+Benchmarking InsertionSortSt/reverse/64
+Benchmarking InsertionSortSt/reverse/64: Warming up for 300.00 ms
+Benchmarking InsertionSortSt/reverse/64: Collecting 30 samples in estimated 1.0021 s (114k iterations)
+Benchmarking InsertionSortSt/reverse/64: Analyzing
+InsertionSortSt/reverse/64
+                        time:   [8.6531 µs 8.7019 µs 8.7583 µs]
+                        change: [-0.9028% -0.0811% +0.8593%] (p = 0.86 > 0.05)
+                        No change in performance detected.
+Found 2 outliers among 30 measurements (6.67%)
+  1 (3.33%) high mild
+  1 (3.33%) high severe
+Benchmarking InsertionSortSt/reverse/128
+Benchmarking InsertionSortSt/reverse/128: Warming up for 300.00 ms
+Benchmarking InsertionSortSt/reverse/128: Collecting 30 samples in estimated 1.0004 s (28k iterations)
+Benchmarking InsertionSortSt/reverse/128: Analyzing
+InsertionSortSt/reverse/128
+                        time:   [35.071 µs 35.184 µs 35.312 µs]
+                        change: [-0.1503% +0.4909% +1.1332%] (p = 0.15 > 0.05)
+                        No change in performance detected.
+Found 2 outliers among 30 measurements (6.67%)
+  2 (6.67%) high mild
+
+     Running benches/Chap28/BenchMaxContigSubSumOptStEph.rs (target/release/deps/BenchMaxContigSubSumOptStEph-ed9e92f6a74fcaef)
+Benchmarking MaxContigSubSumOpt/alternating/256
+Benchmarking MaxContigSubSumOpt/alternating/256: Warming up for 100.00 ms
+Benchmarking MaxContigSubSumOpt/alternating/256: Collecting 20 samples in estimated 250.04 ms (883k iterations)
+Benchmarking MaxContigSubSumOpt/alternating/256: Analyzing
+MaxContigSubSumOpt/alternating/256
+                        time:   [285.47 ns 285.80 ns 286.19 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking MaxContigSubSumOpt/alternating/1024
+Benchmarking MaxContigSubSumOpt/alternating/1024: Warming up for 100.00 ms
+Benchmarking MaxContigSubSumOpt/alternating/1024: Collecting 20 samples in estimated 250.23 ms (213k iterations)
+Benchmarking MaxContigSubSumOpt/alternating/1024: Analyzing
+MaxContigSubSumOpt/alternating/1024
+                        time:   [1.1562 µs 1.1674 µs 1.1783 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+
+     Running benches/Chap26/BenchMergeSortStPer.rs (target/release/deps/BenchMergeSortStPer-ccd6c5f788809bed)
+Benchmarking MergeSortStPer/reverse/64
+Benchmarking MergeSortStPer/reverse/64: Warming up for 100.00 ms
+Benchmarking MergeSortStPer/reverse/64: Collecting 10 samples in estimated 300.13 ms (80k iterations)
+Benchmarking MergeSortStPer/reverse/64: Analyzing
+MergeSortStPer/reverse/64
+                        time:   [3.6120 µs 3.6296 µs 3.6570 µs]
+Benchmarking MergeSortStPer/reverse/256
+Benchmarking MergeSortStPer/reverse/256: Warming up for 100.00 ms
+Benchmarking MergeSortStPer/reverse/256: Collecting 10 samples in estimated 300.83 ms (15k iterations)
+Benchmarking MergeSortStPer/reverse/256: Analyzing
+MergeSortStPer/reverse/256
+                        time:   [19.542 µs 19.690 µs 19.799 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+
+     Running benches/Chap49/BenchMinEditDistStEph.rs (target/release/deps/BenchMinEditDistStEph-6e2dfadb8fa50c57)
+Benchmarking MinEditDist/n_x_n/20
+Benchmarking MinEditDist/n_x_n/20: Warming up for 100.00 ms
+Benchmarking MinEditDist/n_x_n/20: Collecting 10 samples in estimated 300.08 ms (14k iterations)
+Benchmarking MinEditDist/n_x_n/20: Analyzing
+MinEditDist/n_x_n/20    time:   [20.757 µs 20.929 µs 21.115 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking MinEditDist/n_x_n/40
+Benchmarking MinEditDist/n_x_n/40: Warming up for 100.00 ms
+Benchmarking MinEditDist/n_x_n/40: Collecting 10 samples in estimated 301.66 ms (4345 iterations)
+Benchmarking MinEditDist/n_x_n/40: Analyzing
+MinEditDist/n_x_n/40    time:   [70.798 µs 70.954 µs 71.117 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap35/BenchOrderStatSelectStEph.rs (target/release/deps/BenchOrderStatSelectStEph-7fe1658dd532613e)
+Benchmarking OrderStatSelect/median/64
+Benchmarking OrderStatSelect/median/64: Warming up for 100.00 ms
+Benchmarking OrderStatSelect/median/64: Collecting 10 samples in estimated 300.03 ms (238k iterations)
+Benchmarking OrderStatSelect/median/64: Analyzing
+OrderStatSelect/median/64
+                        time:   [1.2443 µs 1.2517 µs 1.2556 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) low mild
+Benchmarking OrderStatSelect/median/256
+Benchmarking OrderStatSelect/median/256: Warming up for 100.00 ms
+Benchmarking OrderStatSelect/median/256: Collecting 10 samples in estimated 300.13 ms (77k iterations)
+Benchmarking OrderStatSelect/median/256: Analyzing
+OrderStatSelect/median/256
+                        time:   [3.4633 µs 3.5911 µs 3.7099 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+
+     Running benches/Chap36/BenchQuickSortStEph.rs (target/release/deps/BenchQuickSortStEph-dfaad387e44b1aa9)
+Benchmarking QuickSortFirst/reverse/32
+Benchmarking QuickSortFirst/reverse/32: Warming up for 100.00 ms
+Benchmarking QuickSortFirst/reverse/32: Collecting 10 samples in estimated 250.12 ms (41k iterations)
+Benchmarking QuickSortFirst/reverse/32: Analyzing
+QuickSortFirst/reverse/32
+                        time:   [5.4397 µs 5.5832 µs 5.7552 µs]
+Benchmarking QuickSortFirst/reverse/128
+Benchmarking QuickSortFirst/reverse/128: Warming up for 100.00 ms
+Benchmarking QuickSortFirst/reverse/128: Collecting 10 samples in estimated 252.36 ms (3575 iterations)
+Benchmarking QuickSortFirst/reverse/128: Analyzing
+QuickSortFirst/reverse/128
+                        time:   [63.209 µs 65.172 µs 68.511 µs]
+
+Benchmarking QuickSortMedian3/reverse/32
+Benchmarking QuickSortMedian3/reverse/32: Warming up for 100.00 ms
+Benchmarking QuickSortMedian3/reverse/32: Collecting 10 samples in estimated 250.04 ms (120k iterations)
+Benchmarking QuickSortMedian3/reverse/32: Analyzing
+QuickSortMedian3/reverse/32
+                        time:   [2.0225 µs 2.0509 µs 2.0958 µs]
+Benchmarking QuickSortMedian3/reverse/128
+Benchmarking QuickSortMedian3/reverse/128: Warming up for 100.00 ms
+Benchmarking QuickSortMedian3/reverse/128: Collecting 10 samples in estimated 250.35 ms (25k iterations)
+Benchmarking QuickSortMedian3/reverse/128: Analyzing
+QuickSortMedian3/reverse/128
+                        time:   [9.3976 µs 9.4460 µs 9.5118 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+
+     Running benches/Chap49/BenchSubsetSumStEph.rs (target/release/deps/BenchSubsetSumStEph-ce23aca6d3b0488c)
+Benchmarking SubsetSum/n10_t40/10
+Benchmarking SubsetSum/n10_t40/10: Warming up for 100.00 ms
+Benchmarking SubsetSum/n10_t40/10: Collecting 10 samples in estimated 300.01 ms (1.7M iterations)
+Benchmarking SubsetSum/n10_t40/10: Analyzing
+SubsetSum/n10_t40/10    time:   [150.07 ns 151.18 ns 151.86 ns]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) high severe
+Benchmarking SubsetSum/n15_t80/15
+Benchmarking SubsetSum/n15_t80/15: Warming up for 100.00 ms
+Benchmarking SubsetSum/n15_t80/15: Collecting 10 samples in estimated 300.01 ms (805k iterations)
+Benchmarking SubsetSum/n15_t80/15: Analyzing
+SubsetSum/n15_t80/15    time:   [329.69 ns 333.46 ns 337.43 ns]
+
+     Running benches/Chap65/BenchUnionFindPCStEph.rs (target/release/deps/BenchUnionFindPCStEph-a9d3c8f4724ebbf6)
+Benchmarking UnionFindInsert/n/64
+Benchmarking UnionFindInsert/n/64: Warming up for 100.00 ms
+Benchmarking UnionFindInsert/n/64: Collecting 10 samples in estimated 250.08 ms (54k iterations)
+Benchmarking UnionFindInsert/n/64: Analyzing
+UnionFindInsert/n/64    time:   [4.3154 µs 4.5403 µs 4.6693 µs]
+Benchmarking UnionFindInsert/n/256
+Benchmarking UnionFindInsert/n/256: Warming up for 100.00 ms
+Benchmarking UnionFindInsert/n/256: Collecting 10 samples in estimated 250.48 ms (13k iterations)
+Benchmarking UnionFindInsert/n/256: Analyzing
+UnionFindInsert/n/256   time:   [17.753 µs 18.444 µs 18.796 µs]
+
+Benchmarking UnionFindUnion/chain_n/64
+Benchmarking UnionFindUnion/chain_n/64: Warming up for 100.00 ms
+Benchmarking UnionFindUnion/chain_n/64: Collecting 10 samples in estimated 250.50 ms (25k iterations)
+Benchmarking UnionFindUnion/chain_n/64: Analyzing
+UnionFindUnion/chain_n/64
+                        time:   [5.5744 µs 5.6285 µs 5.6802 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking UnionFindUnion/chain_n/256
+Benchmarking UnionFindUnion/chain_n/256: Warming up for 100.00 ms
+Benchmarking UnionFindUnion/chain_n/256: Collecting 10 samples in estimated 251.87 ms (6215 iterations)
+Benchmarking UnionFindUnion/chain_n/256: Analyzing
+UnionFindUnion/chain_n/256
+                        time:   [22.778 µs 23.044 µs 23.312 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+

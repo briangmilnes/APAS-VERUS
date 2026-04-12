@@ -1,0 +1,63 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+error[E0277]: the trait bound `ArraySeqMtEphSliceS<u64>: QuickSortMtEphSliceTrait<u64>` is not satisfied
+   --> benches/Chap36/BenchQuickSortMtEphSlice.rs:24:26
+    |
+ 24 |                 |mut a| <ArraySeqMtEphSliceS<u64> as QuickSortMtEphSliceTrait<u64>>::quick_sort_first(&mut a),
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+    |
+    = help: the trait `apas_verus::Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::QuickSortMtEphSliceTrait<u64>` is not implemented for `apas_verus::Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<u64>`
+help: the trait `apas_verus::Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::QuickSortMtEphSliceTrait<T>` is implemented for `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`
+   --> src/Chap36/QuickSortMtEphSlice.rs:480:5
+    |
+480 | /     impl<T: StTInMtT + TotalOrder> QuickSortMtEphSliceTrait<T>
+481 | |         for ArraySeqMtEphSliceS<T>
+    | |__________________________________^
+    = note: the full name for the type has been written to '/home/milnes/projects/APAS-VERUS-agent2/target/release/deps/BenchQuickSortMtEphSlice-07894c9e85706c58.long-type-12369897617337772004.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0308]: mismatched types
+   --> benches/Chap36/BenchQuickSortMtEphSlice.rs:24:103
+    |
+ 24 |                 |mut a| <ArraySeqMtEphSliceS<u64> as QuickSortMtEphSliceTrait<u64>>::quick_sort_first(&mut a),
+    |                         ----------------------------------------------------------------------------- ^^^^^^ expected `ArraySeqMtEphSliceS<u64>`, found a different `ArraySeqMtEphSliceS<u64>`
+    |                         |
+    |                         arguments to this function are incorrect
+    |
+    = note: expected mutable reference `&mut apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<u64>`
+               found mutable reference `&mut apas_verus::Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<u64>`
+note: associated function defined here
+   --> src/Chap36/QuickSortMtEphSlice.rs:216:12
+    |
+216 |         fn quick_sort_first(a: &mut ArraySeqMtEphSliceS<T>)
+    |            ^^^^^^^^^^^^^^^^
+
+Some errors have detailed explanations: E0277, E0308.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `apas-verus` (bench "BenchQuickSortMtEphSlice") due to 2 previous errors
+Elapsed: 0s

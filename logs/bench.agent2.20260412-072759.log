@@ -1,0 +1,202 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+    Finished `bench` profile [optimized] target(s) in 1.16s
+     Running benches/Chap28/BenchMaxContigSubSumBruteStEph.rs (target/release/deps/BenchMaxContigSubSumBruteStEph-cf42f37286007ae3)
+Benchmarking MCSSBrute/n/32
+Benchmarking MCSSBrute/n/32: Warming up for 100.00 ms
+Benchmarking MCSSBrute/n/32: Collecting 20 samples in estimated 300.01 ms (1.1M iterations)
+Benchmarking MCSSBrute/n/32: Analyzing
+MCSSBrute/n/32          time:   [266.34 ns 274.90 ns 282.58 ns]
+                        change: [+12.283% +14.853% +17.097%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 3 outliers among 20 measurements (15.00%)
+  1 (5.00%) low severe
+  1 (5.00%) low mild
+  1 (5.00%) high mild
+Benchmarking MCSSBrute/n/64
+Benchmarking MCSSBrute/n/64: Warming up for 100.00 ms
+Benchmarking MCSSBrute/n/64: Collecting 20 samples in estimated 300.19 ms (304k iterations)
+Benchmarking MCSSBrute/n/64: Analyzing
+MCSSBrute/n/64          time:   [994.62 ns 1.0192 µs 1.0526 µs]
+                        change: [-8.8689% -2.4632% +3.1601%] (p = 0.50 > 0.05)
+                        No change in performance detected.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+
+     Running benches/Chap28/BenchMaxContigSubSumDivConOptMtEph.rs (target/release/deps/BenchMaxContigSubSumDivConOptMtEph-6489ce17b0643c72)
+Benchmarking MCSSdivconOptMt/n/64
+Benchmarking MCSSdivconOptMt/n/64: Warming up for 100.00 ms
+Benchmarking MCSSdivconOptMt/n/64: Collecting 10 samples in estimated 400.05 ms (186k iterations)
+Benchmarking MCSSdivconOptMt/n/64: Analyzing
+MCSSdivconOptMt/n/64    time:   [2.0497 µs 2.0646 µs 2.0883 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking MCSSdivconOptMt/n/256
+Benchmarking MCSSdivconOptMt/n/256: Warming up for 100.00 ms
+Benchmarking MCSSdivconOptMt/n/256: Collecting 10 samples in estimated 400.19 ms (45k iterations)
+Benchmarking MCSSdivconOptMt/n/256: Analyzing
+MCSSdivconOptMt/n/256   time:   [8.6519 µs 8.7170 µs 8.8404 µs]
+
+     Running benches/Chap28/BenchMaxContigSubSumDivConOptStEph.rs (target/release/deps/BenchMaxContigSubSumDivConOptStEph-fed420385ac2af70)
+Benchmarking MCSSdivconOptSt/n/64
+Benchmarking MCSSdivconOptSt/n/64: Warming up for 100.00 ms
+Benchmarking MCSSdivconOptSt/n/64: Collecting 20 samples in estimated 200.28 ms (91k iterations)
+Benchmarking MCSSdivconOptSt/n/64: Analyzing
+MCSSdivconOptSt/n/64    time:   [2.1720 µs 2.1851 µs 2.2000 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+Benchmarking MCSSdivconOptSt/n/256
+Benchmarking MCSSdivconOptSt/n/256: Warming up for 100.00 ms
+Benchmarking MCSSdivconOptSt/n/256: Collecting 20 samples in estimated 200.14 ms (22k iterations)
+Benchmarking MCSSdivconOptSt/n/256: Analyzing
+MCSSdivconOptSt/n/256   time:   [9.1420 µs 9.2110 µs 9.2977 µs]
+
+     Running benches/Chap28/BenchMaxContigSubSumDivConStEph.rs (target/release/deps/BenchMaxContigSubSumDivConStEph-678e785df554ed47)
+Benchmarking MCSSdivcon/n/64
+Benchmarking MCSSdivcon/n/64: Warming up for 100.00 ms
+Benchmarking MCSSdivcon/n/64: Collecting 20 samples in estimated 200.15 ms (95k iterations)
+Benchmarking MCSSdivcon/n/64: Analyzing
+MCSSdivcon/n/64         time:   [2.0535 µs 2.0772 µs 2.1124 µs]
+                        change: [-4.7390% -2.2651% +0.3555%] (p = 0.10 > 0.05)
+                        No change in performance detected.
+Benchmarking MCSSdivcon/n/256
+Benchmarking MCSSdivcon/n/256: Warming up for 100.00 ms
+Benchmarking MCSSdivcon/n/256: Collecting 20 samples in estimated 200.68 ms (23k iterations)
+Benchmarking MCSSdivcon/n/256: Analyzing
+MCSSdivcon/n/256        time:   [8.7729 µs 8.8347 µs 8.8988 µs]
+                        change: [-9.1757% -8.0266% -6.7597%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low mild
+  1 (5.00%) high severe
+
+     Running benches/Chap28/BenchMaxContigSubSumIterStEph.rs (target/release/deps/BenchMaxContigSubSumIterStEph-46a1f6fe4a3ec6c2)
+Benchmarking MCSSIter/n/64
+Benchmarking MCSSIter/n/64: Warming up for 100.00 ms
+Benchmarking MCSSIter/n/64: Collecting 20 samples in estimated 200.00 ms (7.6M iterations)
+Benchmarking MCSSIter/n/64: Analyzing
+MCSSIter/n/64           time:   [26.122 ns 26.370 ns 26.622 ns]
+                        change: [-8.2295% -6.9587% -5.8051%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Benchmarking MCSSIter/n/256
+Benchmarking MCSSIter/n/256: Warming up for 100.00 ms
+Benchmarking MCSSIter/n/256: Collecting 20 samples in estimated 200.02 ms (1.6M iterations)
+Benchmarking MCSSIter/n/256: Analyzing
+MCSSIter/n/256          time:   [123.42 ns 124.81 ns 126.33 ns]
+                        change: [+0.5976% +1.6635% +2.7365%] (p = 0.01 < 0.05)
+                        Change within noise threshold.
+
+     Running benches/Chap28/BenchMaxContigSubSumMtEph.rs (target/release/deps/BenchMaxContigSubSumMtEph-d49d4d7781a7e33c)
+Benchmarking MCSSdivconMt/n/64
+Benchmarking MCSSdivconMt/n/64: Warming up for 100.00 ms
+Benchmarking MCSSdivconMt/n/64: Collecting 10 samples in estimated 400.10 ms (173k iterations)
+Benchmarking MCSSdivconMt/n/64: Analyzing
+MCSSdivconMt/n/64       time:   [2.1632 µs 2.2594 µs 2.3572 µs]
+                        change: [-4.0837% +0.0862% +3.6026%] (p = 0.96 > 0.05)
+                        No change in performance detected.
+Benchmarking MCSSdivconMt/n/256
+Benchmarking MCSSdivconMt/n/256: Warming up for 100.00 ms
+Benchmarking MCSSdivconMt/n/256: Collecting 10 samples in estimated 400.51 ms (41k iterations)
+Benchmarking MCSSdivconMt/n/256: Analyzing
+MCSSdivconMt/n/256      time:   [8.9860 µs 9.0811 µs 9.1715 µs]
+                        change: [-9.9621% -8.7077% -7.3759%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
+Benchmarking MCSSOptMt/n/64
+Benchmarking MCSSOptMt/n/64: Warming up for 100.00 ms
+Benchmarking MCSSOptMt/n/64: Collecting 10 samples in estimated 400.01 ms (3.8M iterations)
+Benchmarking MCSSOptMt/n/64: Analyzing
+MCSSOptMt/n/64          time:   [103.17 ns 104.30 ns 105.91 ns]
+                        change: [-20.101% -16.013% -11.773%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Benchmarking MCSSOptMt/n/256
+Benchmarking MCSSOptMt/n/256: Warming up for 100.00 ms
+Benchmarking MCSSOptMt/n/256: Collecting 10 samples in estimated 400.01 ms (1.2M iterations)
+Benchmarking MCSSOptMt/n/256: Analyzing
+MCSSOptMt/n/256         time:   [337.65 ns 340.93 ns 344.22 ns]
+                        change: [-18.554% -16.111% -13.304%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap28/BenchMaxContigSubSumOptStEph.rs (target/release/deps/BenchMaxContigSubSumOptStEph-ed9e92f6a74fcaef)
+Benchmarking MaxContigSubSumOpt/alternating/256
+Benchmarking MaxContigSubSumOpt/alternating/256: Warming up for 100.00 ms
+Benchmarking MaxContigSubSumOpt/alternating/256: Collecting 20 samples in estimated 250.01 ms (764k iterations)
+Benchmarking MaxContigSubSumOpt/alternating/256: Analyzing
+MaxContigSubSumOpt/alternating/256
+                        time:   [329.58 ns 332.76 ns 336.61 ns]
+                        change: [-9.9348% -8.9141% -7.8576%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking MaxContigSubSumOpt/alternating/1024
+Benchmarking MaxContigSubSumOpt/alternating/1024: Warming up for 100.00 ms
+Benchmarking MaxContigSubSumOpt/alternating/1024: Collecting 20 samples in estimated 250.25 ms (189k iterations)
+Benchmarking MaxContigSubSumOpt/alternating/1024: Analyzing
+MaxContigSubSumOpt/alternating/1024
+                        time:   [1.3312 µs 1.3455 µs 1.3595 µs]
+                        change: [-6.8697% -5.9987% -5.0519%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap28/BenchMaxContigSubSumReducedMcsseStEph.rs (target/release/deps/BenchMaxContigSubSumReducedMcsseStEph-924af24bfe3c9c18)
+Benchmarking MCSSReducedMcsse/n/64
+Benchmarking MCSSReducedMcsse/n/64: Warming up for 100.00 ms
+Benchmarking MCSSReducedMcsse/n/64: Collecting 20 samples in estimated 200.17 ms (178k iterations)
+Benchmarking MCSSReducedMcsse/n/64: Analyzing
+MCSSReducedMcsse/n/64   time:   [1.1141 µs 1.1377 µs 1.1788 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  1 (5.00%) high mild
+  2 (10.00%) high severe
+Benchmarking MCSSReducedMcsse/n/256
+Benchmarking MCSSReducedMcsse/n/256: Warming up for 100.00 ms
+Benchmarking MCSSReducedMcsse/n/256: Collecting 20 samples in estimated 200.04 ms (13k iterations)
+Benchmarking MCSSReducedMcsse/n/256: Analyzing
+MCSSReducedMcsse/n/256  time:   [15.124 µs 15.193 µs 15.276 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  3 (15.00%) high mild
+
+     Running benches/Chap28/BenchMaxContigSubSumReducedStEph.rs (target/release/deps/BenchMaxContigSubSumReducedStEph-2ee88340d23728a2)
+Benchmarking MCSSReduced/n/64
+Benchmarking MCSSReduced/n/64: Warming up for 100.00 ms
+Benchmarking MCSSReduced/n/64: Collecting 20 samples in estimated 200.14 ms (205k iterations)
+Benchmarking MCSSReduced/n/64: Analyzing
+MCSSReduced/n/64        time:   [959.95 ns 965.17 ns 972.36 ns]
+                        change: [-0.4578% +0.3388% +1.0778%] (p = 0.43 > 0.05)
+                        No change in performance detected.
+Benchmarking MCSSReduced/n/256
+Benchmarking MCSSReduced/n/256: Warming up for 100.00 ms
+Benchmarking MCSSReduced/n/256: Collecting 20 samples in estimated 201.86 ms (12k iterations)
+Benchmarking MCSSReduced/n/256: Analyzing
+MCSSReduced/n/256       time:   [15.592 µs 15.651 µs 15.735 µs]
+                        change: [-0.2470% +1.6984% +3.7186%] (p = 0.11 > 0.05)
+                        No change in performance detected.
+
+Elapsed: 21s

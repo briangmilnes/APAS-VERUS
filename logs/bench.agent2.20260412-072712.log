@@ -1,0 +1,155 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+    Finished `bench` profile [optimized] target(s) in 1.24s
+     Running benches/Chap19/BenchArraySeqMtEph.rs (target/release/deps/BenchArraySeqMtEph-079408c5ee0c81aa)
+Benchmarking Chap19ArraySeqMtEphAppend/n/256
+Benchmarking Chap19ArraySeqMtEphAppend/n/256: Warming up for 100.00 ms
+Benchmarking Chap19ArraySeqMtEphAppend/n/256: Collecting 10 samples in estimated 400.01 ms (1.1M iterations)
+Benchmarking Chap19ArraySeqMtEphAppend/n/256: Analyzing
+Chap19ArraySeqMtEphAppend/n/256
+                        time:   [409.48 ns 417.22 ns 430.16 ns]
+Benchmarking Chap19ArraySeqMtEphAppend/n/1024
+Benchmarking Chap19ArraySeqMtEphAppend/n/1024: Warming up for 100.00 ms
+Benchmarking Chap19ArraySeqMtEphAppend/n/1024: Collecting 10 samples in estimated 400.04 ms (291k iterations)
+Benchmarking Chap19ArraySeqMtEphAppend/n/1024: Analyzing
+Chap19ArraySeqMtEphAppend/n/1024
+                        time:   [1.2874 µs 1.3039 µs 1.3374 µs]
+
+Benchmarking Chap19ArraySeqMtEphLength/n/256
+Benchmarking Chap19ArraySeqMtEphLength/n/256: Warming up for 100.00 ms
+Benchmarking Chap19ArraySeqMtEphLength/n/256: Collecting 10 samples in estimated 400.00 ms (2.8B iterations)
+Benchmarking Chap19ArraySeqMtEphLength/n/256: Analyzing
+Chap19ArraySeqMtEphLength/n/256
+                        time:   [130.27 ps 134.98 ps 143.27 ps]
+Benchmarking Chap19ArraySeqMtEphLength/n/1024
+Benchmarking Chap19ArraySeqMtEphLength/n/1024: Warming up for 100.00 ms
+Benchmarking Chap19ArraySeqMtEphLength/n/1024: Collecting 10 samples in estimated 400.00 ms (3.0B iterations)
+Benchmarking Chap19ArraySeqMtEphLength/n/1024: Analyzing
+Chap19ArraySeqMtEphLength/n/1024
+                        time:   [129.66 ps 132.40 ps 136.51 ps]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+
+     Running benches/Chap19/BenchArraySeqMtEphSlice.rs (target/release/deps/BenchArraySeqMtEphSlice-41427f0f9f75c0b8)
+Benchmarking Chap19ArraySeqMtEphSliceAppend/n/256
+Benchmarking Chap19ArraySeqMtEphSliceAppend/n/256: Warming up for 100.00 ms
+Benchmarking Chap19ArraySeqMtEphSliceAppend/n/256: Collecting 10 samples in estimated 400.00 ms (1.0M iterations)
+Benchmarking Chap19ArraySeqMtEphSliceAppend/n/256: Analyzing
+Chap19ArraySeqMtEphSliceAppend/n/256
+                        time:   [358.27 ns 368.59 ns 378.83 ns]
+Benchmarking Chap19ArraySeqMtEphSliceAppend/n/1024
+Benchmarking Chap19ArraySeqMtEphSliceAppend/n/1024: Warming up for 100.00 ms
+Benchmarking Chap19ArraySeqMtEphSliceAppend/n/1024: Collecting 10 samples in estimated 400.01 ms (324k iterations)
+Benchmarking Chap19ArraySeqMtEphSliceAppend/n/1024: Analyzing
+Chap19ArraySeqMtEphSliceAppend/n/1024
+                        time:   [1.2410 µs 1.2487 µs 1.2578 µs]
+
+Benchmarking Chap19ArraySeqMtEphSliceLength/n/256
+Benchmarking Chap19ArraySeqMtEphSliceLength/n/256: Warming up for 100.00 ms
+Benchmarking Chap19ArraySeqMtEphSliceLength/n/256: Collecting 10 samples in estimated 400.00 ms (2.9B iterations)
+Benchmarking Chap19ArraySeqMtEphSliceLength/n/256: Analyzing
+Chap19ArraySeqMtEphSliceLength/n/256
+                        time:   [132.16 ps 134.58 ps 136.30 ps]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) low mild
+Benchmarking Chap19ArraySeqMtEphSliceLength/n/1024
+Benchmarking Chap19ArraySeqMtEphSliceLength/n/1024: Warming up for 100.00 ms
+Benchmarking Chap19ArraySeqMtEphSliceLength/n/1024: Collecting 10 samples in estimated 400.00 ms (3.0B iterations)
+Benchmarking Chap19ArraySeqMtEphSliceLength/n/1024: Analyzing
+Chap19ArraySeqMtEphSliceLength/n/1024
+                        time:   [123.24 ps 124.13 ps 125.90 ps]
+
+     Running benches/Chap19/BenchArraySeqStEph.rs (target/release/deps/BenchArraySeqStEph-b82e15cf3be7721d)
+Benchmarking ArraySeqAppend/n/256
+Benchmarking ArraySeqAppend/n/256: Warming up for 100.00 ms
+Benchmarking ArraySeqAppend/n/256: Collecting 20 samples in estimated 200.02 ms (546k iterations)
+Benchmarking ArraySeqAppend/n/256: Analyzing
+ArraySeqAppend/n/256    time:   [365.19 ns 370.61 ns 377.16 ns]
+                        change: [-23.546% -18.334% -13.489%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking ArraySeqAppend/n/1024
+Benchmarking ArraySeqAppend/n/1024: Warming up for 100.00 ms
+Benchmarking ArraySeqAppend/n/1024: Collecting 20 samples in estimated 200.12 ms (143k iterations)
+Benchmarking ArraySeqAppend/n/1024: Analyzing
+ArraySeqAppend/n/1024   time:   [1.3967 µs 1.4108 µs 1.4295 µs]
+                        change: [-15.350% -14.199% -13.138%] (p = 0.00 < 0.05)
+                        Performance has improved.
+
+Benchmarking ArraySeqSubseq/half/256
+Benchmarking ArraySeqSubseq/half/256: Warming up for 100.00 ms
+Benchmarking ArraySeqSubseq/half/256: Collecting 20 samples in estimated 200.01 ms (2.4M iterations)
+Benchmarking ArraySeqSubseq/half/256: Analyzing
+ArraySeqSubseq/half/256 time:   [74.579 ns 75.713 ns 76.796 ns]
+                        change: [-32.493% -28.067% -24.281%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking ArraySeqSubseq/half/1024
+Benchmarking ArraySeqSubseq/half/1024: Warming up for 100.00 ms
+Benchmarking ArraySeqSubseq/half/1024: Collecting 20 samples in estimated 200.06 ms (610k iterations)
+Benchmarking ArraySeqSubseq/half/1024: Analyzing
+ArraySeqSubseq/half/1024
+                        time:   [330.14 ns 341.81 ns 353.63 ns]
+                        change: [-19.919% -14.195% -6.6636%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+
+     Running benches/Chap19/BenchArraySeqStPer.rs (target/release/deps/BenchArraySeqStPer-94ad3cb46e33a67c)
+Benchmarking Chap19ArraySeqStPerAppend/n/256
+Benchmarking Chap19ArraySeqStPerAppend/n/256: Warming up for 100.00 ms
+Benchmarking Chap19ArraySeqStPerAppend/n/256: Collecting 20 samples in estimated 200.06 ms (525k iterations)
+Benchmarking Chap19ArraySeqStPerAppend/n/256: Analyzing
+Chap19ArraySeqStPerAppend/n/256
+                        time:   [365.74 ns 369.36 ns 373.24 ns]
+Benchmarking Chap19ArraySeqStPerAppend/n/1024
+Benchmarking Chap19ArraySeqStPerAppend/n/1024: Warming up for 100.00 ms
+Benchmarking Chap19ArraySeqStPerAppend/n/1024: Collecting 20 samples in estimated 200.06 ms (154k iterations)
+Benchmarking Chap19ArraySeqStPerAppend/n/1024: Analyzing
+Chap19ArraySeqStPerAppend/n/1024
+                        time:   [1.3278 µs 1.3347 µs 1.3420 µs]
+
+Benchmarking Chap19ArraySeqStPerSubseq/half/256
+Benchmarking Chap19ArraySeqStPerSubseq/half/256: Warming up for 100.00 ms
+Benchmarking Chap19ArraySeqStPerSubseq/half/256: Collecting 20 samples in estimated 200.01 ms (2.6M iterations)
+Benchmarking Chap19ArraySeqStPerSubseq/half/256: Analyzing
+Chap19ArraySeqStPerSubseq/half/256
+                        time:   [74.315 ns 74.840 ns 75.574 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking Chap19ArraySeqStPerSubseq/half/1024
+Benchmarking Chap19ArraySeqStPerSubseq/half/1024: Warming up for 100.00 ms
+Benchmarking Chap19ArraySeqStPerSubseq/half/1024: Collecting 20 samples in estimated 200.06 ms (600k iterations)
+Benchmarking Chap19ArraySeqStPerSubseq/half/1024: Analyzing
+Chap19ArraySeqStPerSubseq/half/1024
+                        time:   [324.07 ns 328.40 ns 331.64 ns]
+
+Elapsed: 16s

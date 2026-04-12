@@ -1,0 +1,105 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+    Finished `bench` profile [optimized] target(s) in 0.86s
+     Running benches/Chap40/BenchBSTKeyValueStEph.rs (target/release/deps/BenchBSTKeyValueStEph-341c6b5cae4cd438)
+Benchmarking BSTKVInsert/n/32
+Benchmarking BSTKVInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTKVInsert/n/32: Collecting 20 samples in estimated 300.13 ms (274k iterations)
+Benchmarking BSTKVInsert/n/32: Analyzing
+BSTKVInsert/n/32        time:   [1.0872 µs 1.1173 µs 1.1417 µs]
+                        change: [-15.639% -14.454% -13.414%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low severe
+  1 (5.00%) high mild
+Benchmarking BSTKVInsert/n/64
+Benchmarking BSTKVInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTKVInsert/n/64: Collecting 20 samples in estimated 300.58 ms (93k iterations)
+Benchmarking BSTKVInsert/n/64: Analyzing
+BSTKVInsert/n/64        time:   [3.1349 µs 3.1705 µs 3.2037 µs]
+                        change: [-36.589% -35.280% -33.961%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+
+     Running benches/Chap40/BenchBSTReducedStEph.rs (target/release/deps/BenchBSTReducedStEph-7cc41bfa1a18d545)
+Benchmarking BSTReducedStEphInsert/n/32
+Benchmarking BSTReducedStEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTReducedStEphInsert/n/32: Collecting 20 samples in estimated 300.14 ms (235k iterations)
+Benchmarking BSTReducedStEphInsert/n/32: Analyzing
+BSTReducedStEphInsert/n/32
+                        time:   [1.2124 µs 1.2411 µs 1.2633 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) low mild
+  1 (5.00%) high mild
+Benchmarking BSTReducedStEphInsert/n/64
+Benchmarking BSTReducedStEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTReducedStEphInsert/n/64: Collecting 20 samples in estimated 300.61 ms (85k iterations)
+Benchmarking BSTReducedStEphInsert/n/64: Analyzing
+BSTReducedStEphInsert/n/64
+                        time:   [3.3567 µs 3.3788 µs 3.4087 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+
+Benchmarking BSTReducedStEphRangeReduce/n/32
+Benchmarking BSTReducedStEphRangeReduce/n/32: Warming up for 100.00 ms
+Benchmarking BSTReducedStEphRangeReduce/n/32: Collecting 20 samples in estimated 300.00 ms (2.3B iterations)
+Benchmarking BSTReducedStEphRangeReduce/n/32: Analyzing
+BSTReducedStEphRangeReduce/n/32
+                        time:   [122.63 ps 123.52 ps 124.78 ps]
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) low mild
+  1 (5.00%) high mild
+Benchmarking BSTReducedStEphRangeReduce/n/64
+Benchmarking BSTReducedStEphRangeReduce/n/64: Warming up for 100.00 ms
+Benchmarking BSTReducedStEphRangeReduce/n/64: Collecting 20 samples in estimated 300.00 ms (2.3B iterations)
+Benchmarking BSTReducedStEphRangeReduce/n/64: Analyzing
+BSTReducedStEphRangeReduce/n/64
+                        time:   [124.68 ps 126.61 ps 128.50 ps]
+
+     Running benches/Chap40/BenchBSTSizeStEph.rs (target/release/deps/BenchBSTSizeStEph-80a1ef61978229c1)
+Benchmarking BSTSizeInsert/n/32
+Benchmarking BSTSizeInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTSizeInsert/n/32: Collecting 20 samples in estimated 300.17 ms (277k iterations)
+Benchmarking BSTSizeInsert/n/32: Analyzing
+BSTSizeInsert/n/32      time:   [1.1154 µs 1.1223 µs 1.1309 µs]
+                        change: [-2.5156% -1.4446% -0.3573%] (p = 0.02 < 0.05)
+                        Change within noise threshold.
+Found 4 outliers among 20 measurements (20.00%)
+  2 (10.00%) low mild
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+Benchmarking BSTSizeInsert/n/64
+Benchmarking BSTSizeInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTSizeInsert/n/64: Collecting 20 samples in estimated 300.27 ms (102k iterations)
+Benchmarking BSTSizeInsert/n/64: Analyzing
+BSTSizeInsert/n/64      time:   [3.0338 µs 3.0594 µs 3.0817 µs]
+                        change: [+2.2820% +4.6566% +7.6132%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+Elapsed: 8s

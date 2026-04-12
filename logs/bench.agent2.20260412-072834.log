@@ -1,0 +1,99 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+    Finished `bench` profile [optimized] target(s) in 0.84s
+     Running benches/Chap35/BenchOrderStatSelectMtEph.rs (target/release/deps/BenchOrderStatSelectMtEph-93bdb09f6cbe319a)
+Benchmarking OrderStatSelectMtEph/median/64
+Benchmarking OrderStatSelectMtEph/median/64: Warming up for 100.00 ms
+Benchmarking OrderStatSelectMtEph/median/64: Collecting 10 samples in estimated 406.85 ms (330 iterations)
+Benchmarking OrderStatSelectMtEph/median/64: Analyzing
+OrderStatSelectMtEph/median/64
+                        time:   [1.1047 ms 1.1510 ms 1.1974 ms]
+Benchmarking OrderStatSelectMtEph/median/256
+Benchmarking OrderStatSelectMtEph/median/256: Warming up for 100.00 ms
+Benchmarking OrderStatSelectMtEph/median/256: Collecting 10 samples in estimated 434.64 ms (220 iterations)
+Benchmarking OrderStatSelectMtEph/median/256: Analyzing
+OrderStatSelectMtEph/median/256
+                        time:   [1.8412 ms 1.9293 ms 2.0036 ms]
+
+     Running benches/Chap35/BenchOrderStatSelectMtPer.rs (target/release/deps/BenchOrderStatSelectMtPer-5324947ad0bcde00)
+Benchmarking OrderStatSelectMtPer/median/64
+Benchmarking OrderStatSelectMtPer/median/64: Warming up for 100.00 ms
+Benchmarking OrderStatSelectMtPer/median/64: Collecting 10 samples in estimated 445.84 ms (385 iterations)
+Benchmarking OrderStatSelectMtPer/median/64: Analyzing
+OrderStatSelectMtPer/median/64
+                        time:   [1.0844 ms 1.1532 ms 1.2292 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking OrderStatSelectMtPer/median/256
+Benchmarking OrderStatSelectMtPer/median/256: Warming up for 100.00 ms
+Benchmarking OrderStatSelectMtPer/median/256: Collecting 10 samples in estimated 444.16 ms (220 iterations)
+Benchmarking OrderStatSelectMtPer/median/256: Analyzing
+OrderStatSelectMtPer/median/256
+                        time:   [1.8404 ms 1.9204 ms 1.9731 ms]
+
+     Running benches/Chap35/BenchOrderStatSelectStEph.rs (target/release/deps/BenchOrderStatSelectStEph-7fe1658dd532613e)
+Benchmarking OrderStatSelect/median/64
+Benchmarking OrderStatSelect/median/64: Warming up for 100.00 ms
+Benchmarking OrderStatSelect/median/64: Collecting 10 samples in estimated 300.06 ms (189k iterations)
+Benchmarking OrderStatSelect/median/64: Analyzing
+OrderStatSelect/median/64
+                        time:   [1.5468 µs 1.5543 µs 1.5608 µs]
+                        change: [-9.5989% -8.1713% -6.8693%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+Benchmarking OrderStatSelect/median/256
+Benchmarking OrderStatSelect/median/256: Warming up for 100.00 ms
+Benchmarking OrderStatSelect/median/256: Collecting 10 samples in estimated 300.02 ms (74k iterations)
+Benchmarking OrderStatSelect/median/256: Analyzing
+OrderStatSelect/median/256
+                        time:   [3.9796 µs 4.0170 µs 4.0553 µs]
+                        change: [-15.079% -10.985% -6.3814%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+
+     Running benches/Chap35/BenchOrderStatSelectStPer.rs (target/release/deps/BenchOrderStatSelectStPer-1cf21b789af2b4cb)
+Benchmarking OrderStatSelectStPer/median/64
+Benchmarking OrderStatSelectStPer/median/64: Warming up for 100.00 ms
+Benchmarking OrderStatSelectStPer/median/64: Collecting 20 samples in estimated 200.11 ms (137k iterations)
+Benchmarking OrderStatSelectStPer/median/64: Analyzing
+OrderStatSelectStPer/median/64
+                        time:   [1.4068 µs 1.4132 µs 1.4198 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low mild
+  1 (5.00%) high severe
+Benchmarking OrderStatSelectStPer/median/256
+Benchmarking OrderStatSelectStPer/median/256: Warming up for 100.00 ms
+Benchmarking OrderStatSelectStPer/median/256: Collecting 20 samples in estimated 200.57 ms (48k iterations)
+Benchmarking OrderStatSelectStPer/median/256: Analyzing
+OrderStatSelectStPer/median/256
+                        time:   [4.0600 µs 4.0909 µs 4.1211 µs]
+
+Elapsed: 9s

@@ -1,0 +1,3264 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+warning: `apas-verus` (lib test) generated 2 warnings (2 duplicates)
+    Finished `bench` profile [optimized] target(s) in 0.08s
+     Running unittests src/lib.rs (target/release/deps/apas_verus-a10677e0a90d6260)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running benches/Chap37/BenchAVLTreeSeqMtPer.rs (target/release/deps/BenchAVLTreeSeqMtPer-1336c673f3349a77)
+Benchmarking AVLTreeSeqMtPerBuild/n/32
+Benchmarking AVLTreeSeqMtPerBuild/n/32: Warming up for 100.00 ms
+Benchmarking AVLTreeSeqMtPerBuild/n/32: Collecting 10 samples in estimated 400.00 ms (518k iterations)
+Benchmarking AVLTreeSeqMtPerBuild/n/32: Analyzing
+AVLTreeSeqMtPerBuild/n/32
+                        time:   [772.32 ns 777.57 ns 785.34 ns]
+Benchmarking AVLTreeSeqMtPerBuild/n/64
+Benchmarking AVLTreeSeqMtPerBuild/n/64: Warming up for 100.00 ms
+Benchmarking AVLTreeSeqMtPerBuild/n/64: Collecting 10 samples in estimated 400.01 ms (176k iterations)
+Benchmarking AVLTreeSeqMtPerBuild/n/64: Analyzing
+AVLTreeSeqMtPerBuild/n/64
+                        time:   [2.2656 µs 2.2762 µs 2.2878 µs]
+
+Benchmarking AVLTreeSeqMtPerNth/n/32
+Benchmarking AVLTreeSeqMtPerNth/n/32: Warming up for 100.00 ms
+Benchmarking AVLTreeSeqMtPerNth/n/32: Collecting 10 samples in estimated 200.00 ms (234M iterations)
+Benchmarking AVLTreeSeqMtPerNth/n/32: Analyzing
+AVLTreeSeqMtPerNth/n/32 time:   [837.71 ps 868.50 ps 883.85 ps]
+Benchmarking AVLTreeSeqMtPerNth/n/64
+Benchmarking AVLTreeSeqMtPerNth/n/64: Warming up for 100.00 ms
+Benchmarking AVLTreeSeqMtPerNth/n/64: Collecting 10 samples in estimated 200.00 ms (243M iterations)
+Benchmarking AVLTreeSeqMtPerNth/n/64: Analyzing
+AVLTreeSeqMtPerNth/n/64 time:   [815.81 ps 824.29 ps 831.95 ps]
+
+     Running benches/Chap37/BenchAVLTreeSeqStEph.rs (target/release/deps/BenchAVLTreeSeqStEph-1cc90315129eae05)
+Benchmarking AVLTreeSeqBuild/n/32
+Benchmarking AVLTreeSeqBuild/n/32: Warming up for 100.00 ms
+Benchmarking AVLTreeSeqBuild/n/32: Collecting 20 samples in estimated 300.22 ms (278k iterations)
+Benchmarking AVLTreeSeqBuild/n/32: Analyzing
+AVLTreeSeqBuild/n/32    time:   [1.0732 µs 1.0949 µs 1.1205 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking AVLTreeSeqBuild/n/64
+Benchmarking AVLTreeSeqBuild/n/64: Warming up for 100.00 ms
+Benchmarking AVLTreeSeqBuild/n/64: Collecting 20 samples in estimated 300.43 ms (97k iterations)
+Benchmarking AVLTreeSeqBuild/n/64: Analyzing
+AVLTreeSeqBuild/n/64    time:   [3.0204 µs 3.0818 µs 3.1223 µs]
+
+Benchmarking AVLTreeSeqContains/n/32
+Benchmarking AVLTreeSeqContains/n/32: Warming up for 100.00 ms
+Benchmarking AVLTreeSeqContains/n/32: Collecting 20 samples in estimated 200.00 ms (3.2M iterations)
+Benchmarking AVLTreeSeqContains/n/32: Analyzing
+AVLTreeSeqContains/n/32 time:   [60.705 ns 61.346 ns 61.905 ns]
+Benchmarking AVLTreeSeqContains/n/64
+Benchmarking AVLTreeSeqContains/n/64: Warming up for 100.00 ms
+Benchmarking AVLTreeSeqContains/n/64: Collecting 20 samples in estimated 200.01 ms (1.4M iterations)
+Benchmarking AVLTreeSeqContains/n/64: Analyzing
+AVLTreeSeqContains/n/64 time:   [130.47 ns 131.69 ns 133.04 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap37/BenchAVLTreeSeqStPer.rs (target/release/deps/BenchAVLTreeSeqStPer-871329dcf3fa4f27)
+Benchmarking AVLTreeSeqStPerBuild/n/32
+Benchmarking AVLTreeSeqStPerBuild/n/32: Warming up for 100.00 ms
+Benchmarking AVLTreeSeqStPerBuild/n/32: Collecting 10 samples in estimated 300.03 ms (359k iterations)
+Benchmarking AVLTreeSeqStPerBuild/n/32: Analyzing
+AVLTreeSeqStPerBuild/n/32
+                        time:   [793.09 ns 797.23 ns 803.53 ns]
+Benchmarking AVLTreeSeqStPerBuild/n/64
+Benchmarking AVLTreeSeqStPerBuild/n/64: Warming up for 100.00 ms
+Benchmarking AVLTreeSeqStPerBuild/n/64: Collecting 10 samples in estimated 300.01 ms (129k iterations)
+Benchmarking AVLTreeSeqStPerBuild/n/64: Analyzing
+AVLTreeSeqStPerBuild/n/64
+                        time:   [2.2741 µs 2.2984 µs 2.3129 µs]
+
+Benchmarking AVLTreeSeqStPerNth/n/32
+Benchmarking AVLTreeSeqStPerNth/n/32: Warming up for 100.00 ms
+Benchmarking AVLTreeSeqStPerNth/n/32: Collecting 10 samples in estimated 200.00 ms (238M iterations)
+Benchmarking AVLTreeSeqStPerNth/n/32: Analyzing
+AVLTreeSeqStPerNth/n/32 time:   [800.32 ps 802.40 ps 806.16 ps]
+Benchmarking AVLTreeSeqStPerNth/n/64
+Benchmarking AVLTreeSeqStPerNth/n/64: Warming up for 100.00 ms
+Benchmarking AVLTreeSeqStPerNth/n/64: Collecting 10 samples in estimated 200.00 ms (249M iterations)
+Benchmarking AVLTreeSeqStPerNth/n/64: Analyzing
+AVLTreeSeqStPerNth/n/64 time:   [753.21 ps 767.93 ps 780.96 ps]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap41/BenchAVLTreeSetMtEph.rs (target/release/deps/BenchAVLTreeSetMtEph-ce86ed34381a690a)
+Benchmarking AVLTreeSetMtEphInsert/n/32
+Benchmarking AVLTreeSetMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking AVLTreeSetMtEphInsert/n/32: Collecting 10 samples in estimated 402.68 ms (8195 iterations)
+Benchmarking AVLTreeSetMtEphInsert/n/32: Analyzing
+AVLTreeSetMtEphInsert/n/32
+                        time:   [46.398 µs 46.799 µs 47.213 µs]
+Benchmarking AVLTreeSetMtEphInsert/n/64
+Benchmarking AVLTreeSetMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking AVLTreeSetMtEphInsert/n/64: Collecting 10 samples in estimated 411.57 ms (1870 iterations)
+Benchmarking AVLTreeSetMtEphInsert/n/64: Analyzing
+AVLTreeSetMtEphInsert/n/64
+                        time:   [199.62 µs 201.35 µs 203.10 µs]
+
+     Running benches/Chap41/BenchAVLTreeSetMtPer.rs (target/release/deps/BenchAVLTreeSetMtPer-7701d6882243328c)
+Benchmarking AVLTreeSetMtPerInsert/n/32
+Benchmarking AVLTreeSetMtPerInsert/n/32: Warming up for 100.00 ms
+Benchmarking AVLTreeSetMtPerInsert/n/32: Collecting 10 samples in estimated 400.63 ms (4235 iterations)
+Benchmarking AVLTreeSetMtPerInsert/n/32: Analyzing
+AVLTreeSetMtPerInsert/n/32
+                        time:   [90.570 µs 91.124 µs 91.742 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking AVLTreeSetMtPerInsert/n/64
+Benchmarking AVLTreeSetMtPerInsert/n/64: Warming up for 100.00 ms
+Benchmarking AVLTreeSetMtPerInsert/n/64: Collecting 10 samples in estimated 405.90 ms (990 iterations)
+Benchmarking AVLTreeSetMtPerInsert/n/64: Analyzing
+AVLTreeSetMtPerInsert/n/64
+                        time:   [399.14 µs 402.18 µs 405.44 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap41/BenchAVLTreeSetStEph.rs (target/release/deps/BenchAVLTreeSetStEph-7f3f8226b9f50fd2)
+Benchmarking AVLSetInsert/n/32
+Benchmarking AVLSetInsert/n/32: Warming up for 100.00 ms
+Benchmarking AVLSetInsert/n/32: Collecting 20 samples in estimated 303.40 ms (7770 iterations)
+Benchmarking AVLSetInsert/n/32: Analyzing
+AVLSetInsert/n/32       time:   [34.927 µs 35.150 µs 35.423 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking AVLSetInsert/n/64
+Benchmarking AVLSetInsert/n/64: Warming up for 100.00 ms
+Benchmarking AVLSetInsert/n/64: Collecting 20 samples in estimated 322.26 ms (1890 iterations)
+Benchmarking AVLSetInsert/n/64: Analyzing
+AVLSetInsert/n/64       time:   [158.78 µs 161.14 µs 164.52 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+
+Benchmarking AVLSetUnion/n/32
+Benchmarking AVLSetUnion/n/32: Warming up for 100.00 ms
+Benchmarking AVLSetUnion/n/32: Collecting 20 samples in estimated 205.32 ms (1680 iterations)
+Benchmarking AVLSetUnion/n/32: Analyzing
+AVLSetUnion/n/32        time:   [119.73 µs 121.72 µs 123.92 µs]
+Benchmarking AVLSetUnion/n/64
+Benchmarking AVLSetUnion/n/64: Warming up for 100.00 ms
+Benchmarking AVLSetUnion/n/64: Collecting 20 samples in estimated 200.14 ms (420 iterations)
+Benchmarking AVLSetUnion/n/64: Analyzing
+AVLSetUnion/n/64        time:   [459.19 µs 466.13 µs 473.01 µs]
+
+     Running benches/Chap41/BenchAVLTreeSetStPer.rs (target/release/deps/BenchAVLTreeSetStPer-e018b7a2de9557f9)
+Benchmarking AVLTreeSetStPerInsert/n/32
+Benchmarking AVLTreeSetStPerInsert/n/32: Warming up for 100.00 ms
+Benchmarking AVLTreeSetStPerInsert/n/32: Collecting 10 samples in estimated 400.51 ms (5665 iterations)
+Benchmarking AVLTreeSetStPerInsert/n/32: Analyzing
+AVLTreeSetStPerInsert/n/32
+                        time:   [68.789 µs 69.714 µs 71.040 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking AVLTreeSetStPerInsert/n/64
+Benchmarking AVLTreeSetStPerInsert/n/64: Warming up for 100.00 ms
+Benchmarking AVLTreeSetStPerInsert/n/64: Collecting 10 samples in estimated 402.97 ms (1265 iterations)
+Benchmarking AVLTreeSetStPerInsert/n/64: Analyzing
+AVLTreeSetStPerInsert/n/64
+                        time:   [302.14 µs 304.90 µs 307.26 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap52/BenchAdjMatrixGraphMtEph.rs (target/release/deps/BenchAdjMatrixGraphMtEph-198e465380914da3)
+Benchmarking AdjMatrixGraphMtEphSetEdge/n/16
+Benchmarking AdjMatrixGraphMtEphSetEdge/n/16: Warming up for 100.00 ms
+Benchmarking AdjMatrixGraphMtEphSetEdge/n/16: Collecting 10 samples in estimated 400.16 ms (55k iterations)
+Benchmarking AdjMatrixGraphMtEphSetEdge/n/16: Analyzing
+AdjMatrixGraphMtEphSetEdge/n/16
+                        time:   [6.7189 µs 6.7868 µs 6.8215 µs]
+Benchmarking AdjMatrixGraphMtEphSetEdge/n/32
+Benchmarking AdjMatrixGraphMtEphSetEdge/n/32: Warming up for 100.00 ms
+Benchmarking AdjMatrixGraphMtEphSetEdge/n/32: Collecting 10 samples in estimated 402.04 ms (8195 iterations)
+Benchmarking AdjMatrixGraphMtEphSetEdge/n/32: Analyzing
+AdjMatrixGraphMtEphSetEdge/n/32
+                        time:   [44.975 µs 46.775 µs 47.981 µs]
+
+Benchmarking AdjMatrixGraphMtEphNeighbors/n/16
+Benchmarking AdjMatrixGraphMtEphNeighbors/n/16: Warming up for 100.00 ms
+Benchmarking AdjMatrixGraphMtEphNeighbors/n/16: Collecting 10 samples in estimated 200.00 ms (17M iterations)
+Benchmarking AdjMatrixGraphMtEphNeighbors/n/16: Analyzing
+AdjMatrixGraphMtEphNeighbors/n/16
+                        time:   [10.190 ns 10.648 ns 11.545 ns]
+Benchmarking AdjMatrixGraphMtEphNeighbors/n/32
+Benchmarking AdjMatrixGraphMtEphNeighbors/n/32: Warming up for 100.00 ms
+Benchmarking AdjMatrixGraphMtEphNeighbors/n/32: Collecting 10 samples in estimated 200.00 ms (10M iterations)
+Benchmarking AdjMatrixGraphMtEphNeighbors/n/32: Analyzing
+AdjMatrixGraphMtEphNeighbors/n/32
+                        time:   [19.751 ns 19.875 ns 20.064 ns]
+
+     Running benches/Chap52/BenchAdjMatrixGraphMtPer.rs (target/release/deps/BenchAdjMatrixGraphMtPer-d7a70b54b3fb2736)
+Benchmarking AdjMatrixGraphMtPerNumEdges/n/16
+Benchmarking AdjMatrixGraphMtPerNumEdges/n/16: Warming up for 100.00 ms
+Benchmarking AdjMatrixGraphMtPerNumEdges/n/16: Collecting 10 samples in estimated 200.00 ms (203M iterations)
+Benchmarking AdjMatrixGraphMtPerNumEdges/n/16: Analyzing
+AdjMatrixGraphMtPerNumEdges/n/16
+                        time:   [950.73 ps 960.35 ps 974.15 ps]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking AdjMatrixGraphMtPerNumEdges/n/32
+Benchmarking AdjMatrixGraphMtPerNumEdges/n/32: Warming up for 100.00 ms
+Benchmarking AdjMatrixGraphMtPerNumEdges/n/32: Collecting 10 samples in estimated 200.00 ms (216M iterations)
+Benchmarking AdjMatrixGraphMtPerNumEdges/n/32: Analyzing
+AdjMatrixGraphMtPerNumEdges/n/32
+                        time:   [891.72 ps 900.64 ps 918.30 ps]
+
+     Running benches/Chap52/BenchAdjMatrixGraphStEph.rs (target/release/deps/BenchAdjMatrixGraphStEph-b4f13ad518b6cf74)
+Benchmarking AdjMatrixGraphStEph/set_edge/16
+Benchmarking AdjMatrixGraphStEph/set_edge/16: Warming up for 100.00 ms
+Benchmarking AdjMatrixGraphStEph/set_edge/16: Collecting 10 samples in estimated 300.00 ms (699k iterations)
+Benchmarking AdjMatrixGraphStEph/set_edge/16: Analyzing
+AdjMatrixGraphStEph/set_edge/16
+                        time:   [447.43 ns 451.68 ns 458.51 ns]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking AdjMatrixGraphStEph/set_edge/32
+Benchmarking AdjMatrixGraphStEph/set_edge/32: Warming up for 100.00 ms
+Benchmarking AdjMatrixGraphStEph/set_edge/32: Collecting 10 samples in estimated 300.08 ms (212k iterations)
+Benchmarking AdjMatrixGraphStEph/set_edge/32: Analyzing
+AdjMatrixGraphStEph/set_edge/32
+                        time:   [1.4003 µs 1.4205 µs 1.4419 µs]
+
+     Running benches/Chap52/BenchAdjMatrixGraphStPer.rs (target/release/deps/BenchAdjMatrixGraphStPer-2e517ba615fb1022)
+Benchmarking AdjMatrixGraphStPerNeighbors/n/16
+Benchmarking AdjMatrixGraphStPerNeighbors/n/16: Warming up for 100.00 ms
+Benchmarking AdjMatrixGraphStPerNeighbors/n/16: Collecting 10 samples in estimated 200.00 ms (22M iterations)
+Benchmarking AdjMatrixGraphStPerNeighbors/n/16: Analyzing
+AdjMatrixGraphStPerNeighbors/n/16
+                        time:   [9.1824 ns 9.3493 ns 9.6751 ns]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking AdjMatrixGraphStPerNeighbors/n/32
+Benchmarking AdjMatrixGraphStPerNeighbors/n/32: Warming up for 100.00 ms
+Benchmarking AdjMatrixGraphStPerNeighbors/n/32: Collecting 10 samples in estimated 200.00 ms (13M iterations)
+Benchmarking AdjMatrixGraphStPerNeighbors/n/32: Analyzing
+AdjMatrixGraphStPerNeighbors/n/32
+                        time:   [15.361 ns 15.484 ns 15.670 ns]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap52/BenchAdjSeqGraphMtEph.rs (target/release/deps/BenchAdjSeqGraphMtEph-97c42b82059de674)
+Benchmarking AdjSeqGraphMtEphBuild/n/16
+Benchmarking AdjSeqGraphMtEphBuild/n/16: Warming up for 100.00 ms
+Benchmarking AdjSeqGraphMtEphBuild/n/16: Collecting 10 samples in estimated 400.00 ms (2.5M iterations)
+Benchmarking AdjSeqGraphMtEphBuild/n/16: Analyzing
+AdjSeqGraphMtEphBuild/n/16
+                        time:   [7.7791 ns 8.0995 ns 8.3245 ns]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+Benchmarking AdjSeqGraphMtEphBuild/n/32
+Benchmarking AdjSeqGraphMtEphBuild/n/32: Warming up for 100.00 ms
+Benchmarking AdjSeqGraphMtEphBuild/n/32: Collecting 10 samples in estimated 400.00 ms (1.5M iterations)
+Benchmarking AdjSeqGraphMtEphBuild/n/32: Analyzing
+AdjSeqGraphMtEphBuild/n/32
+                        time:   [8.0434 ns 8.2790 ns 8.4767 ns]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+
+Benchmarking AdjSeqGraphMtEphNeighbors/n/16
+Benchmarking AdjSeqGraphMtEphNeighbors/n/16: Warming up for 100.00 ms
+Benchmarking AdjSeqGraphMtEphNeighbors/n/16: Collecting 10 samples in estimated 200.00 ms (61M iterations)
+Benchmarking AdjSeqGraphMtEphNeighbors/n/16: Analyzing
+AdjSeqGraphMtEphNeighbors/n/16
+                        time:   [3.1141 ns 3.1407 ns 3.1748 ns]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking AdjSeqGraphMtEphNeighbors/n/32
+Benchmarking AdjSeqGraphMtEphNeighbors/n/32: Warming up for 100.00 ms
+Benchmarking AdjSeqGraphMtEphNeighbors/n/32: Collecting 10 samples in estimated 200.00 ms (59M iterations)
+Benchmarking AdjSeqGraphMtEphNeighbors/n/32: Analyzing
+AdjSeqGraphMtEphNeighbors/n/32
+                        time:   [3.0029 ns 3.1049 ns 3.2301 ns]
+
+     Running benches/Chap52/BenchAdjSeqGraphMtPer.rs (target/release/deps/BenchAdjSeqGraphMtPer-6de298d83ad00b16)
+Benchmarking AdjSeqGraphMtPerBuild/n/16
+Benchmarking AdjSeqGraphMtPerBuild/n/16: Warming up for 100.00 ms
+Benchmarking AdjSeqGraphMtPerBuild/n/16: Collecting 10 samples in estimated 400.10 ms (151k iterations)
+Benchmarking AdjSeqGraphMtPerBuild/n/16: Analyzing
+AdjSeqGraphMtPerBuild/n/16
+                        time:   [2.5193 µs 2.5277 µs 2.5369 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking AdjSeqGraphMtPerBuild/n/32
+Benchmarking AdjSeqGraphMtPerBuild/n/32: Warming up for 100.00 ms
+Benchmarking AdjSeqGraphMtPerBuild/n/32: Collecting 10 samples in estimated 400.54 ms (28k iterations)
+Benchmarking AdjSeqGraphMtPerBuild/n/32: Analyzing
+AdjSeqGraphMtPerBuild/n/32
+                        time:   [13.818 µs 14.079 µs 14.478 µs]
+
+     Running benches/Chap52/BenchAdjSeqGraphStEph.rs (target/release/deps/BenchAdjSeqGraphStEph-9e23ec7599fcbf3f)
+Benchmarking AdjSeqGraphStEph/set_edge/16
+Benchmarking AdjSeqGraphStEph/set_edge/16: Warming up for 100.00 ms
+Benchmarking AdjSeqGraphStEph/set_edge/16: Collecting 10 samples in estimated 300.00 ms (20M iterations)
+Benchmarking AdjSeqGraphStEph/set_edge/16: Analyzing
+AdjSeqGraphStEph/set_edge/16
+                        time:   [13.858 ns 14.659 ns 15.304 ns]
+Benchmarking AdjSeqGraphStEph/set_edge/32
+Benchmarking AdjSeqGraphStEph/set_edge/32: Warming up for 100.00 ms
+Benchmarking AdjSeqGraphStEph/set_edge/32: Collecting 10 samples in estimated 300.00 ms (21M iterations)
+Benchmarking AdjSeqGraphStEph/set_edge/32: Analyzing
+AdjSeqGraphStEph/set_edge/32
+                        time:   [14.079 ns 14.210 ns 14.391 ns]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+
+     Running benches/Chap52/BenchAdjSeqGraphStPer.rs (target/release/deps/BenchAdjSeqGraphStPer-7190f1b3d64adaa9)
+Benchmarking AdjSeqGraphStPerBuild/n/16
+Benchmarking AdjSeqGraphStPerBuild/n/16: Warming up for 100.00 ms
+Benchmarking AdjSeqGraphStPerBuild/n/16: Collecting 10 samples in estimated 400.08 ms (145k iterations)
+Benchmarking AdjSeqGraphStPerBuild/n/16: Analyzing
+AdjSeqGraphStPerBuild/n/16
+                        time:   [2.5569 µs 2.5789 µs 2.6025 µs]
+Benchmarking AdjSeqGraphStPerBuild/n/32
+Benchmarking AdjSeqGraphStPerBuild/n/32: Warming up for 100.00 ms
+Benchmarking AdjSeqGraphStPerBuild/n/32: Collecting 10 samples in estimated 400.64 ms (27k iterations)
+Benchmarking AdjSeqGraphStPerBuild/n/32: Analyzing
+AdjSeqGraphStPerBuild/n/32
+                        time:   [13.376 µs 13.548 µs 13.880 µs]
+
+     Running benches/Chap52/BenchAdjTableGraphMtPer.rs (target/release/deps/BenchAdjTableGraphMtPer-a8f0a26a75d83f58)
+Benchmarking AdjTableGraphMtPerBuild/n/16
+Benchmarking AdjTableGraphMtPerBuild/n/16: Warming up for 100.00 ms
+Benchmarking AdjTableGraphMtPerBuild/n/16: Collecting 10 samples in estimated 421.74 ms (935 iterations)
+Benchmarking AdjTableGraphMtPerBuild/n/16: Analyzing
+AdjTableGraphMtPerBuild/n/16
+                        time:   [438.14 µs 444.20 µs 452.13 µs]
+Benchmarking AdjTableGraphMtPerBuild/n/32
+Benchmarking AdjTableGraphMtPerBuild/n/32: Warming up for 100.00 ms
+Benchmarking AdjTableGraphMtPerBuild/n/32: Collecting 10 samples in estimated 440.45 ms (220 iterations)
+Benchmarking AdjTableGraphMtPerBuild/n/32: Analyzing
+AdjTableGraphMtPerBuild/n/32
+                        time:   [1.7326 ms 1.7542 ms 1.7915 ms]
+
+     Running benches/Chap52/BenchAdjTableGraphStEph.rs (target/release/deps/BenchAdjTableGraphStEph-750a77634330c515)
+Benchmarking AdjTableGraphStEph/insert_edge/16
+Benchmarking AdjTableGraphStEph/insert_edge/16: Warming up for 100.00 ms
+Benchmarking AdjTableGraphStEph/insert_edge/16: Collecting 10 samples in estimated 300.81 ms (11k iterations)
+Benchmarking AdjTableGraphStEph/insert_edge/16: Analyzing
+AdjTableGraphStEph/insert_edge/16
+                        time:   [25.380 µs 25.779 µs 26.232 µs]
+Benchmarking AdjTableGraphStEph/insert_edge/32
+Benchmarking AdjTableGraphStEph/insert_edge/32: Warming up for 100.00 ms
+Benchmarking AdjTableGraphStEph/insert_edge/32: Collecting 10 samples in estimated 305.74 ms (2585 iterations)
+Benchmarking AdjTableGraphStEph/insert_edge/32: Analyzing
+AdjTableGraphStEph/insert_edge/32
+                        time:   [107.36 µs 111.80 µs 117.55 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap52/BenchAdjTableGraphStPer.rs (target/release/deps/BenchAdjTableGraphStPer-f0003c3cece9d832)
+Benchmarking AdjTableGraphStPerBuild/n/16
+Benchmarking AdjTableGraphStPerBuild/n/16: Warming up for 100.00 ms
+Benchmarking AdjTableGraphStPerBuild/n/16: Collecting 10 samples in estimated 400.05 ms (15k iterations)
+Benchmarking AdjTableGraphStPerBuild/n/16: Analyzing
+AdjTableGraphStPerBuild/n/16
+                        time:   [25.463 µs 25.645 µs 25.797 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking AdjTableGraphStPerBuild/n/32
+Benchmarking AdjTableGraphStPerBuild/n/32: Warming up for 100.00 ms
+Benchmarking AdjTableGraphStPerBuild/n/32: Collecting 10 samples in estimated 401.33 ms (3575 iterations)
+Benchmarking AdjTableGraphStPerBuild/n/32: Analyzing
+AdjTableGraphStPerBuild/n/32
+                        time:   [108.88 µs 111.67 µs 115.78 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+
+     Running benches/Chap21/BenchAlgorithm21.rs (target/release/deps/BenchAlgorithm21-eb1f5c5c9a34dd49)
+Benchmarking Points2DTabFlat/n/16
+Benchmarking Points2DTabFlat/n/16: Warming up for 100.00 ms
+Benchmarking Points2DTabFlat/n/16: Collecting 20 samples in estimated 200.06 ms (240k iterations)
+Benchmarking Points2DTabFlat/n/16: Analyzing
+Points2DTabFlat/n/16    time:   [839.06 ns 858.43 ns 881.50 ns]
+Benchmarking Points2DTabFlat/n/64
+Benchmarking Points2DTabFlat/n/64: Warming up for 100.00 ms
+Benchmarking Points2DTabFlat/n/64: Collecting 20 samples in estimated 200.48 ms (19k iterations)
+Benchmarking Points2DTabFlat/n/64: Analyzing
+Points2DTabFlat/n/64    time:   [10.131 µs 10.201 µs 10.283 µs]
+
+Benchmarking Points3DTabFlat/n/8
+Benchmarking Points3DTabFlat/n/8: Warming up for 100.00 ms
+Benchmarking Points3DTabFlat/n/8: Collecting 20 samples in estimated 200.20 ms (50k iterations)
+Benchmarking Points3DTabFlat/n/8: Analyzing
+Points3DTabFlat/n/8     time:   [3.8103 µs 3.9122 µs 4.0009 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low severe
+  1 (5.00%) low mild
+Benchmarking Points3DTabFlat/n/16
+Benchmarking Points3DTabFlat/n/16: Warming up for 100.00 ms
+Benchmarking Points3DTabFlat/n/16: Collecting 20 samples in estimated 201.67 ms (6930 iterations)
+Benchmarking Points3DTabFlat/n/16: Analyzing
+Points3DTabFlat/n/16    time:   [27.711 µs 28.389 µs 29.502 µs]
+
+Benchmarking PrimesBF/n/100
+Benchmarking PrimesBF/n/100: Warming up for 100.00 ms
+Benchmarking PrimesBF/n/100: Collecting 10 samples in estimated 300.09 ms (53k iterations)
+Benchmarking PrimesBF/n/100: Analyzing
+PrimesBF/n/100          time:   [5.4923 µs 5.6050 µs 5.6839 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking PrimesBF/n/500
+Benchmarking PrimesBF/n/500: Warming up for 100.00 ms
+Benchmarking PrimesBF/n/500: Collecting 10 samples in estimated 300.95 ms (5830 iterations)
+Benchmarking PrimesBF/n/500: Analyzing
+PrimesBF/n/500          time:   [39.749 µs 43.146 µs 45.715 µs]
+
+Benchmarking PrimeSieve/n/1000
+Benchmarking PrimeSieve/n/1000: Warming up for 100.00 ms
+Benchmarking PrimeSieve/n/1000: Collecting 10 samples in estimated 300.80 ms (20k iterations)
+Benchmarking PrimeSieve/n/1000: Analyzing
+PrimeSieve/n/1000       time:   [14.049 µs 14.203 µs 14.386 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+Benchmarking PrimeSieve/n/5000
+Benchmarking PrimeSieve/n/5000: Warming up for 100.00 ms
+Benchmarking PrimeSieve/n/5000: Collecting 10 samples in estimated 300.08 ms (5170 iterations)
+Benchmarking PrimeSieve/n/5000: Analyzing
+PrimeSieve/n/5000       time:   [55.789 µs 57.090 µs 59.060 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+
+     Running benches/Chap19/BenchArraySeqStEph.rs (target/release/deps/BenchArraySeqStEph-b82e15cf3be7721d)
+Benchmarking ArraySeqAppend/n/256
+Benchmarking ArraySeqAppend/n/256: Warming up for 100.00 ms
+Benchmarking ArraySeqAppend/n/256: Collecting 20 samples in estimated 200.03 ms (391k iterations)
+Benchmarking ArraySeqAppend/n/256: Analyzing
+ArraySeqAppend/n/256    time:   [431.28 ns 453.29 ns 477.48 ns]
+                        change: [+36.582% +44.582% +53.976%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking ArraySeqAppend/n/1024
+Benchmarking ArraySeqAppend/n/1024: Warming up for 100.00 ms
+Benchmarking ArraySeqAppend/n/1024: Collecting 20 samples in estimated 200.14 ms (90k iterations)
+Benchmarking ArraySeqAppend/n/1024: Analyzing
+ArraySeqAppend/n/1024   time:   [1.6315 µs 1.6501 µs 1.6658 µs]
+                        change: [+43.222% +44.645% +46.312%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) low mild
+  1 (5.00%) high severe
+
+Benchmarking ArraySeqSubseq/half/256
+Benchmarking ArraySeqSubseq/half/256: Warming up for 100.00 ms
+Benchmarking ArraySeqSubseq/half/256: Collecting 20 samples in estimated 200.01 ms (1.8M iterations)
+Benchmarking ArraySeqSubseq/half/256: Analyzing
+ArraySeqSubseq/half/256 time:   [100.06 ns 103.34 ns 107.92 ns]
+                        change: [+46.563% +53.087% +62.499%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+Benchmarking ArraySeqSubseq/half/1024
+Benchmarking ArraySeqSubseq/half/1024: Warming up for 100.00 ms
+Benchmarking ArraySeqSubseq/half/1024: Collecting 20 samples in estimated 200.09 ms (447k iterations)
+Benchmarking ArraySeqSubseq/half/1024: Analyzing
+ArraySeqSubseq/half/1024
+                        time:   [416.24 ns 419.79 ns 423.92 ns]
+                        change: [+47.083% +48.423% +49.905%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+     Running benches/Chap41/BenchArraySetEnumMtEph.rs (target/release/deps/BenchArraySetEnumMtEph-526a3031ce181591)
+Benchmarking ArraySetEnumMtEphInsert/n/32
+Benchmarking ArraySetEnumMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking ArraySetEnumMtEphInsert/n/32: Collecting 10 samples in estimated 400.00 ms (3.6M iterations)
+Benchmarking ArraySetEnumMtEphInsert/n/32: Analyzing
+ArraySetEnumMtEphInsert/n/32
+                        time:   [66.044 ns 69.324 ns 72.260 ns]
+Benchmarking ArraySetEnumMtEphInsert/n/64
+Benchmarking ArraySetEnumMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking ArraySetEnumMtEphInsert/n/64: Collecting 10 samples in estimated 400.01 ms (2.0M iterations)
+Benchmarking ArraySetEnumMtEphInsert/n/64: Analyzing
+ArraySetEnumMtEphInsert/n/64
+                        time:   [132.52 ns 134.33 ns 137.22 ns]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+
+     Running benches/Chap41/BenchArraySetStEph.rs (target/release/deps/BenchArraySetStEph-c83a393f9a19e41e)
+Benchmarking ArraySetInsert/n/32
+Benchmarking ArraySetInsert/n/32: Warming up for 100.00 ms
+Benchmarking ArraySetInsert/n/32: Collecting 20 samples in estimated 300.18 ms (97k iterations)
+Benchmarking ArraySetInsert/n/32: Analyzing
+ArraySetInsert/n/32     time:   [2.9996 µs 3.1837 µs 3.3704 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) low mild
+Benchmarking ArraySetInsert/n/64
+Benchmarking ArraySetInsert/n/64: Warming up for 100.00 ms
+Benchmarking ArraySetInsert/n/64: Collecting 20 samples in estimated 300.47 ms (24k iterations)
+Benchmarking ArraySetInsert/n/64: Analyzing
+ArraySetInsert/n/64     time:   [13.611 µs 14.815 µs 16.712 µs]
+
+Benchmarking ArraySetUnion/n/32
+Benchmarking ArraySetUnion/n/32: Warming up for 100.00 ms
+Benchmarking ArraySetUnion/n/32: Collecting 20 samples in estimated 200.04 ms (571k iterations)
+Benchmarking ArraySetUnion/n/32: Analyzing
+ArraySetUnion/n/32      time:   [356.27 ns 381.86 ns 422.41 ns]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low mild
+  1 (5.00%) high severe
+Benchmarking ArraySetUnion/n/64
+Benchmarking ArraySetUnion/n/64: Warming up for 100.00 ms
+Benchmarking ArraySetUnion/n/64: Collecting 20 samples in estimated 200.04 ms (130k iterations)
+Benchmarking ArraySetUnion/n/64: Analyzing
+ArraySetUnion/n/64      time:   [1.1639 µs 1.2077 µs 1.2574 µs]
+
+     Running benches/Chap43/BenchAugOrderedTableMtEph.rs (target/release/deps/BenchAugOrderedTableMtEph-e342ad62c0685d99)
+Benchmarking AugOrdTableMtEphInsert/n/32
+Benchmarking AugOrdTableMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking AugOrdTableMtEphInsert/n/32: Collecting 10 samples in estimated 417.75 ms (550 iterations)
+Benchmarking AugOrdTableMtEphInsert/n/32: Analyzing
+AugOrdTableMtEphInsert/n/32
+                        time:   [726.70 µs 780.92 µs 849.25 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking AugOrdTableMtEphInsert/n/64
+Benchmarking AugOrdTableMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking AugOrdTableMtEphInsert/n/64: Collecting 10 samples in estimated 619.88 ms (110 iterations)
+Benchmarking AugOrdTableMtEphInsert/n/64: Analyzing
+AugOrdTableMtEphInsert/n/64
+                        time:   [5.3857 ms 5.5038 ms 5.6711 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap43/BenchAugOrderedTableStEph.rs (target/release/deps/BenchAugOrderedTableStEph-5a7a5bfa02d1909a)
+Benchmarking AugOrdTableStEphInsert/n/32
+Benchmarking AugOrdTableStEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking AugOrdTableStEphInsert/n/32: Collecting 20 samples in estimated 310.23 ms (420 iterations)
+Benchmarking AugOrdTableStEphInsert/n/32: Analyzing
+AugOrdTableStEphInsert/n/32
+                        time:   [735.22 µs 743.64 µs 752.09 µs]
+Benchmarking AugOrdTableStEphInsert/n/64
+Benchmarking AugOrdTableStEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking AugOrdTableStEphInsert/n/64: Collecting 20 samples in estimated 322.73 ms (60 iterations)
+Benchmarking AugOrdTableStEphInsert/n/64: Analyzing
+AugOrdTableStEphInsert/n/64
+                        time:   [4.9858 ms 5.1317 ms 5.2776 ms]
+
+     Running benches/Chap43/BenchAugOrderedTableStPer.rs (target/release/deps/BenchAugOrderedTableStPer-07689763756906a2)
+Benchmarking AugOrdTableStPerInsert/n/32
+Benchmarking AugOrdTableStPerInsert/n/32: Warming up for 100.00 ms
+Benchmarking AugOrdTableStPerInsert/n/32: Collecting 20 samples in estimated 341.87 ms (420 iterations)
+Benchmarking AugOrdTableStPerInsert/n/32: Analyzing
+AugOrdTableStPerInsert/n/32
+                        time:   [746.32 µs 765.28 µs 790.92 µs]
+Benchmarking AugOrdTableStPerInsert/n/64
+Benchmarking AugOrdTableStPerInsert/n/64: Warming up for 100.00 ms
+Benchmarking AugOrdTableStPerInsert/n/64: Collecting 20 samples in estimated 313.20 ms (60 iterations)
+Benchmarking AugOrdTableStPerInsert/n/64: Analyzing
+AugOrdTableStPerInsert/n/64
+                        time:   [5.4509 ms 5.6540 ms 5.8896 ms]
+Found 5 outliers among 20 measurements (25.00%)
+  1 (5.00%) low severe
+  2 (10.00%) low mild
+  2 (10.00%) high severe
+
+     Running benches/Chap54/BenchBFSMtEph.rs (target/release/deps/BenchBFSMtEph-ab9ed5e9aa1fe051)
+Benchmarking BFSMtEph/ring_n/64
+Benchmarking BFSMtEph/ring_n/64: Warming up for 100.00 ms
+Benchmarking BFSMtEph/ring_n/64: Collecting 10 samples in estimated 402.14 ms (2750 iterations)
+Benchmarking BFSMtEph/ring_n/64: Analyzing
+BFSMtEph/ring_n/64      time:   [141.82 µs 146.22 µs 150.28 µs]
+Benchmarking BFSMtEph/ring_n/128
+Benchmarking BFSMtEph/ring_n/128: Warming up for 100.00 ms
+Benchmarking BFSMtEph/ring_n/128: Collecting 10 samples in estimated 435.44 ms (660 iterations)
+Benchmarking BFSMtEph/ring_n/128: Analyzing
+BFSMtEph/ring_n/128     time:   [700.67 µs 732.65 µs 753.21 µs]
+
+     Running benches/Chap54/BenchBFSMtPer.rs (target/release/deps/BenchBFSMtPer-87a586fabb0a017a)
+Benchmarking BFSMtPer/n/32
+Benchmarking BFSMtPer/n/32: Warming up for 100.00 ms
+Benchmarking BFSMtPer/n/32: Collecting 10 samples in estimated 400.02 ms (18k iterations)
+Benchmarking BFSMtPer/n/32: Analyzing
+BFSMtPer/n/32           time:   [20.427 µs 22.362 µs 24.813 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking BFSMtPer/n/64
+Benchmarking BFSMtPer/n/64: Warming up for 100.00 ms
+Benchmarking BFSMtPer/n/64: Collecting 10 samples in estimated 408.23 ms (1980 iterations)
+Benchmarking BFSMtPer/n/64: Analyzing
+BFSMtPer/n/64           time:   [184.33 µs 188.13 µs 191.58 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+
+     Running benches/Chap54/BenchBFSStEph.rs (target/release/deps/BenchBFSStEph-7a4e8495a6cdab8b)
+Benchmarking BFSStEph/ring_n/64
+Benchmarking BFSStEph/ring_n/64: Warming up for 100.00 ms
+Benchmarking BFSStEph/ring_n/64: Collecting 10 samples in estimated 300.02 ms (631k iterations)
+Benchmarking BFSStEph/ring_n/64: Analyzing
+BFSStEph/ring_n/64      time:   [462.88 ns 468.52 ns 479.22 ns]
+Benchmarking BFSStEph/ring_n/128
+Benchmarking BFSStEph/ring_n/128: Warming up for 100.00 ms
+Benchmarking BFSStEph/ring_n/128: Collecting 10 samples in estimated 300.02 ms (324k iterations)
+Benchmarking BFSStEph/ring_n/128: Analyzing
+BFSStEph/ring_n/128     time:   [894.82 ns 914.66 ns 958.02 ns]
+
+     Running benches/Chap54/BenchBFSStPer.rs (target/release/deps/BenchBFSStPer-684d741b5040cce4)
+Benchmarking BFSStPer/ring_n/64
+Benchmarking BFSStPer/ring_n/64: Warming up for 100.00 ms
+Benchmarking BFSStPer/ring_n/64: Collecting 10 samples in estimated 300.25 ms (64k iterations)
+Benchmarking BFSStPer/ring_n/64: Analyzing
+BFSStPer/ring_n/64      time:   [4.0415 µs 4.2029 µs 4.3983 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking BFSStPer/ring_n/128
+Benchmarking BFSStPer/ring_n/128: Warming up for 100.00 ms
+Benchmarking BFSStPer/ring_n/128: Collecting 10 samples in estimated 300.33 ms (19k iterations)
+Benchmarking BFSStPer/ring_n/128: Analyzing
+BFSStPer/ring_n/128     time:   [12.598 µs 12.842 µs 13.110 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+
+     Running benches/Chap37/BenchBSTAVLMtEph.rs (target/release/deps/BenchBSTAVLMtEph-780af52eb52ca069)
+Benchmarking BSTAVLMtEphInsert/n/32
+Benchmarking BSTAVLMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTAVLMtEphInsert/n/32: Collecting 10 samples in estimated 400.11 ms (31k iterations)
+Benchmarking BSTAVLMtEphInsert/n/32: Analyzing
+BSTAVLMtEphInsert/n/32  time:   [10.780 µs 11.415 µs 12.132 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking BSTAVLMtEphInsert/n/64
+Benchmarking BSTAVLMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTAVLMtEphInsert/n/64: Collecting 10 samples in estimated 401.77 ms (9405 iterations)
+Benchmarking BSTAVLMtEphInsert/n/64: Analyzing
+BSTAVLMtEphInsert/n/64  time:   [40.670 µs 41.454 µs 42.044 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+
+Benchmarking BSTAVLMtEphContains/n/32
+Benchmarking BSTAVLMtEphContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTAVLMtEphContains/n/32: Collecting 10 samples in estimated 300.00 ms (16M iterations)
+Benchmarking BSTAVLMtEphContains/n/32: Analyzing
+BSTAVLMtEphContains/n/32
+                        time:   [20.246 ns 20.560 ns 20.953 ns]
+Benchmarking BSTAVLMtEphContains/n/64
+Benchmarking BSTAVLMtEphContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTAVLMtEphContains/n/64: Collecting 10 samples in estimated 300.00 ms (15M iterations)
+Benchmarking BSTAVLMtEphContains/n/64: Analyzing
+BSTAVLMtEphContains/n/64
+                        time:   [18.448 ns 19.340 ns 20.136 ns]
+
+     Running benches/Chap37/BenchBSTAVLStEph.rs (target/release/deps/BenchBSTAVLStEph-f30520bb533d0345)
+Benchmarking BSTAVLInsert/n/32
+Benchmarking BSTAVLInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTAVLInsert/n/32: Collecting 20 samples in estimated 300.25 ms (30k iterations)
+Benchmarking BSTAVLInsert/n/32: Analyzing
+BSTAVLInsert/n/32       time:   [8.4068 µs 8.5550 µs 8.6726 µs]
+Benchmarking BSTAVLInsert/n/64
+Benchmarking BSTAVLInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTAVLInsert/n/64: Collecting 20 samples in estimated 302.05 ms (11k iterations)
+Benchmarking BSTAVLInsert/n/64: Analyzing
+BSTAVLInsert/n/64       time:   [25.705 µs 26.177 µs 26.642 µs]
+
+Benchmarking BSTAVLContains/n/32
+Benchmarking BSTAVLContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTAVLContains/n/32: Collecting 20 samples in estimated 200.00 ms (21M iterations)
+Benchmarking BSTAVLContains/n/32: Analyzing
+BSTAVLContains/n/32     time:   [9.3305 ns 9.4588 ns 9.5872 ns]
+Benchmarking BSTAVLContains/n/64
+Benchmarking BSTAVLContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTAVLContains/n/64: Collecting 20 samples in estimated 200.00 ms (20M iterations)
+Benchmarking BSTAVLContains/n/64: Analyzing
+BSTAVLContains/n/64     time:   [10.078 ns 10.140 ns 10.208 ns]
+
+     Running benches/Chap37/BenchBSTBBAlphaMtEph.rs (target/release/deps/BenchBSTBBAlphaMtEph-ed195e1a710a9465)
+Benchmarking BSTBBAlphaMtEphInsert/n/32
+Benchmarking BSTBBAlphaMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTBBAlphaMtEphInsert/n/32: Collecting 10 samples in estimated 400.48 ms (30k iterations)
+Benchmarking BSTBBAlphaMtEphInsert/n/32: Analyzing
+BSTBBAlphaMtEphInsert/n/32
+                        time:   [13.018 µs 13.326 µs 13.572 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking BSTBBAlphaMtEphInsert/n/64
+Benchmarking BSTBBAlphaMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTBBAlphaMtEphInsert/n/64: Collecting 10 samples in estimated 400.83 ms (8690 iterations)
+Benchmarking BSTBBAlphaMtEphInsert/n/64: Analyzing
+BSTBBAlphaMtEphInsert/n/64
+                        time:   [47.689 µs 50.317 µs 53.264 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+Benchmarking BSTBBAlphaMtEphContains/n/32
+Benchmarking BSTBBAlphaMtEphContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTBBAlphaMtEphContains/n/32: Collecting 10 samples in estimated 300.00 ms (10M iterations)
+Benchmarking BSTBBAlphaMtEphContains/n/32: Analyzing
+BSTBBAlphaMtEphContains/n/32
+                        time:   [29.836 ns 30.299 ns 30.627 ns]
+Benchmarking BSTBBAlphaMtEphContains/n/64
+Benchmarking BSTBBAlphaMtEphContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTBBAlphaMtEphContains/n/64: Collecting 10 samples in estimated 300.00 ms (4.1M iterations)
+Benchmarking BSTBBAlphaMtEphContains/n/64: Analyzing
+BSTBBAlphaMtEphContains/n/64
+                        time:   [48.242 ns 53.612 ns 60.485 ns]
+
+     Running benches/Chap37/BenchBSTBBAlphaStEph.rs (target/release/deps/BenchBSTBBAlphaStEph-7728efe4f5ae2a17)
+Benchmarking BSTBBInsert/n/32
+Benchmarking BSTBBInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTBBInsert/n/32: Collecting 20 samples in estimated 301.86 ms (31k iterations)
+Benchmarking BSTBBInsert/n/32: Analyzing
+BSTBBInsert/n/32        time:   [8.1919 µs 8.4317 µs 8.7856 µs]
+Benchmarking BSTBBInsert/n/64
+Benchmarking BSTBBInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTBBInsert/n/64: Collecting 20 samples in estimated 309.51 ms (5880 iterations)
+Benchmarking BSTBBInsert/n/64: Analyzing
+BSTBBInsert/n/64        time:   [43.023 µs 46.857 µs 50.814 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) low severe
+
+Benchmarking BSTBBContains/n/32
+Benchmarking BSTBBContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTBBContains/n/32: Collecting 20 samples in estimated 200.00 ms (7.2M iterations)
+Benchmarking BSTBBContains/n/32: Analyzing
+BSTBBContains/n/32      time:   [23.589 ns 24.585 ns 26.345 ns]
+Benchmarking BSTBBContains/n/64
+Benchmarking BSTBBContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTBBContains/n/64: Collecting 20 samples in estimated 200.00 ms (4.1M iterations)
+Benchmarking BSTBBContains/n/64: Analyzing
+BSTBBContains/n/64      time:   [46.111 ns 57.714 ns 68.608 ns]
+Found 3 outliers among 20 measurements (15.00%)
+  3 (15.00%) high mild
+
+     Running benches/Chap40/BenchBSTKeyValueStEph.rs (target/release/deps/BenchBSTKeyValueStEph-341c6b5cae4cd438)
+Benchmarking BSTKVInsert/n/32
+Benchmarking BSTKVInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTKVInsert/n/32: Collecting 20 samples in estimated 300.28 ms (220k iterations)
+Benchmarking BSTKVInsert/n/32: Analyzing
+BSTKVInsert/n/32        time:   [1.2830 µs 1.2903 µs 1.3005 µs]
+Benchmarking BSTKVInsert/n/64
+Benchmarking BSTKVInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTKVInsert/n/64: Collecting 20 samples in estimated 300.50 ms (64k iterations)
+Benchmarking BSTKVInsert/n/64: Analyzing
+BSTKVInsert/n/64        time:   [4.8490 µs 4.9378 µs 5.0024 µs]
+
+     Running benches/Chap38/BenchBSTParaMtEph.rs (target/release/deps/BenchBSTParaMtEph-cf61918c5c765126)
+Benchmarking BSTParaMtEphInsert/n/32
+Benchmarking BSTParaMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTParaMtEphInsert/n/32: Collecting 10 samples in estimated 401.27 ms (5335 iterations)
+Benchmarking BSTParaMtEphInsert/n/32: Analyzing
+BSTParaMtEphInsert/n/32 time:   [64.579 µs 66.751 µs 69.337 µs]
+Benchmarking BSTParaMtEphInsert/n/64
+Benchmarking BSTParaMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTParaMtEphInsert/n/64: Collecting 10 samples in estimated 413.07 ms (1320 iterations)
+Benchmarking BSTParaMtEphInsert/n/64: Analyzing
+BSTParaMtEphInsert/n/64 time:   [300.06 µs 307.34 µs 311.71 µs]
+
+     Running benches/Chap38/BenchBSTParaStEph.rs (target/release/deps/BenchBSTParaStEph-0771bf5e1cfa3c18)
+Benchmarking BSTParaInsert/n/32
+Benchmarking BSTParaInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTParaInsert/n/32: Collecting 20 samples in estimated 301.81 ms (5460 iterations)
+Benchmarking BSTParaInsert/n/32: Analyzing
+BSTParaInsert/n/32      time:   [48.549 µs 49.815 µs 51.142 µs]
+Benchmarking BSTParaInsert/n/64
+Benchmarking BSTParaInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTParaInsert/n/64: Collecting 20 samples in estimated 314.14 ms (1260 iterations)
+Benchmarking BSTParaInsert/n/64: Analyzing
+BSTParaInsert/n/64      time:   [239.13 µs 242.85 µs 247.07 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+
+Benchmarking BSTParaFind/n/32
+Benchmarking BSTParaFind/n/32: Warming up for 100.00 ms
+Benchmarking BSTParaFind/n/32: Collecting 20 samples in estimated 207.61 ms (5040 iterations)
+Benchmarking BSTParaFind/n/32: Analyzing
+BSTParaFind/n/32        time:   [40.226 µs 42.287 µs 44.236 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking BSTParaFind/n/64
+Benchmarking BSTParaFind/n/64: Warming up for 100.00 ms
+Benchmarking BSTParaFind/n/64: Collecting 20 samples in estimated 202.65 ms (1260 iterations)
+Benchmarking BSTParaFind/n/64: Analyzing
+BSTParaFind/n/64        time:   [173.59 µs 177.96 µs 183.56 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+
+     Running benches/Chap37/BenchBSTPlainMtEph.rs (target/release/deps/BenchBSTPlainMtEph-0c28d01663785edc)
+Benchmarking BSTPlainMtEphInsert/n/32
+Benchmarking BSTPlainMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTPlainMtEphInsert/n/32: Collecting 10 samples in estimated 400.07 ms (33k iterations)
+Benchmarking BSTPlainMtEphInsert/n/32: Analyzing
+BSTPlainMtEphInsert/n/32
+                        time:   [12.771 µs 12.994 µs 13.322 µs]
+Benchmarking BSTPlainMtEphInsert/n/64
+Benchmarking BSTPlainMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTPlainMtEphInsert/n/64: Collecting 10 samples in estimated 401.88 ms (7315 iterations)
+Benchmarking BSTPlainMtEphInsert/n/64: Analyzing
+BSTPlainMtEphInsert/n/64
+                        time:   [47.873 µs 50.053 µs 51.379 µs]
+
+Benchmarking BSTPlainMtEphContains/n/32
+Benchmarking BSTPlainMtEphContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTPlainMtEphContains/n/32: Collecting 10 samples in estimated 300.00 ms (9.5M iterations)
+Benchmarking BSTPlainMtEphContains/n/32: Analyzing
+BSTPlainMtEphContains/n/32
+                        time:   [29.650 ns 30.966 ns 31.706 ns]
+Benchmarking BSTPlainMtEphContains/n/64
+Benchmarking BSTPlainMtEphContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTPlainMtEphContains/n/64: Collecting 10 samples in estimated 300.00 ms (3.3M iterations)
+Benchmarking BSTPlainMtEphContains/n/64: Analyzing
+BSTPlainMtEphContains/n/64
+                        time:   [85.762 ns 86.886 ns 89.021 ns]
+
+     Running benches/Chap37/BenchBSTPlainStEph.rs (target/release/deps/BenchBSTPlainStEph-07d41f7f4eae5291)
+Benchmarking BSTInsert/interleaved/32
+Benchmarking BSTInsert/interleaved/32: Warming up for 100.00 ms
+Benchmarking BSTInsert/interleaved/32: Collecting 10 samples in estimated 250.27 ms (24k iterations)
+Benchmarking BSTInsert/interleaved/32: Analyzing
+BSTInsert/interleaved/32
+                        time:   [9.4568 µs 9.5368 µs 9.6915 µs]
+                        change: [+55.437% +57.008% +58.674%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking BSTInsert/interleaved/64
+Benchmarking BSTInsert/interleaved/64: Warming up for 100.00 ms
+Benchmarking BSTInsert/interleaved/64: Collecting 10 samples in estimated 250.70 ms (6930 iterations)
+Benchmarking BSTInsert/interleaved/64: Analyzing
+BSTInsert/interleaved/64
+                        time:   [32.005 µs 32.742 µs 34.128 µs]
+                        change: [+36.803% +41.084% +46.428%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+
+Benchmarking BSTContains/hit/32
+Benchmarking BSTContains/hit/32: Warming up for 100.00 ms
+Benchmarking BSTContains/hit/32: Collecting 20 samples in estimated 200.00 ms (3.7M iterations)
+Benchmarking BSTContains/hit/32: Analyzing
+BSTContains/hit/32      time:   [86.949 ns 92.541 ns 95.778 ns]
+                        change: [+101.03% +127.40% +151.68%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking BSTContains/hit/64
+Benchmarking BSTContains/hit/64: Warming up for 100.00 ms
+Benchmarking BSTContains/hit/64: Collecting 20 samples in estimated 200.02 ms (2.0M iterations)
+Benchmarking BSTContains/hit/64: Analyzing
+BSTContains/hit/64      time:   [95.190 ns 99.204 ns 105.35 ns]
+                        change: [+42.297% +57.397% +73.352%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap37/BenchBSTRBMtEph.rs (target/release/deps/BenchBSTRBMtEph-7646796c172ef0ec)
+Benchmarking BSTRBMtEphInsert/n/32
+Benchmarking BSTRBMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTRBMtEphInsert/n/32: Collecting 10 samples in estimated 400.02 ms (132k iterations)
+Benchmarking BSTRBMtEphInsert/n/32: Analyzing
+BSTRBMtEphInsert/n/32   time:   [2.9351 µs 3.0038 µs 3.0724 µs]
+Benchmarking BSTRBMtEphInsert/n/64
+Benchmarking BSTRBMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTRBMtEphInsert/n/64: Collecting 10 samples in estimated 400.15 ms (30k iterations)
+Benchmarking BSTRBMtEphInsert/n/64: Analyzing
+BSTRBMtEphInsert/n/64   time:   [9.8315 µs 10.691 µs 11.818 µs]
+
+Benchmarking BSTRBMtEphContains/n/32
+Benchmarking BSTRBMtEphContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTRBMtEphContains/n/32: Collecting 10 samples in estimated 300.00 ms (12M iterations)
+Benchmarking BSTRBMtEphContains/n/32: Analyzing
+BSTRBMtEphContains/n/32 time:   [19.567 ns 20.390 ns 21.519 ns]
+Benchmarking BSTRBMtEphContains/n/64
+Benchmarking BSTRBMtEphContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTRBMtEphContains/n/64: Collecting 10 samples in estimated 300.00 ms (12M iterations)
+Benchmarking BSTRBMtEphContains/n/64: Analyzing
+BSTRBMtEphContains/n/64 time:   [24.863 ns 25.090 ns 25.325 ns]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+
+     Running benches/Chap37/BenchBSTRBStEph.rs (target/release/deps/BenchBSTRBStEph-f3df4ac75182697e)
+Benchmarking BSTRBInsert/n/32
+Benchmarking BSTRBInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTRBInsert/n/32: Collecting 20 samples in estimated 301.17 ms (32k iterations)
+Benchmarking BSTRBInsert/n/32: Analyzing
+BSTRBInsert/n/32        time:   [8.5589 µs 8.6509 µs 8.7134 µs]
+Benchmarking BSTRBInsert/n/64
+Benchmarking BSTRBInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTRBInsert/n/64: Collecting 20 samples in estimated 302.72 ms (7560 iterations)
+Benchmarking BSTRBInsert/n/64: Analyzing
+BSTRBInsert/n/64        time:   [34.537 µs 34.925 µs 35.324 µs]
+
+Benchmarking BSTRBContains/n/32
+Benchmarking BSTRBContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTRBContains/n/32: Collecting 20 samples in estimated 200.00 ms (6.4M iterations)
+Benchmarking BSTRBContains/n/32: Analyzing
+BSTRBContains/n/32      time:   [23.578 ns 24.454 ns 26.014 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking BSTRBContains/n/64
+Benchmarking BSTRBContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTRBContains/n/64: Collecting 20 samples in estimated 200.00 ms (4.6M iterations)
+Benchmarking BSTRBContains/n/64: Analyzing
+BSTRBContains/n/64      time:   [34.909 ns 36.053 ns 37.713 ns]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+
+     Running benches/Chap37/BenchBSTSetAVLMtEph.rs (target/release/deps/BenchBSTSetAVLMtEph-2321f8f76bcf2120)
+Benchmarking BSTSetAVLMtEphInsert/n/32
+Benchmarking BSTSetAVLMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTSetAVLMtEphInsert/n/32: Collecting 10 samples in estimated 400.52 ms (42k iterations)
+Benchmarking BSTSetAVLMtEphInsert/n/32: Analyzing
+BSTSetAVLMtEphInsert/n/32
+                        time:   [9.6963 µs 9.7195 µs 9.7469 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking BSTSetAVLMtEphInsert/n/64
+Benchmarking BSTSetAVLMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTSetAVLMtEphInsert/n/64: Collecting 10 samples in estimated 401.55 ms (13k iterations)
+Benchmarking BSTSetAVLMtEphInsert/n/64: Analyzing
+BSTSetAVLMtEphInsert/n/64
+                        time:   [30.521 µs 31.717 µs 32.962 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+
+Benchmarking BSTSetAVLMtEphContains/n/32
+Benchmarking BSTSetAVLMtEphContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTSetAVLMtEphContains/n/32: Collecting 10 samples in estimated 300.00 ms (21M iterations)
+Benchmarking BSTSetAVLMtEphContains/n/32: Analyzing
+BSTSetAVLMtEphContains/n/32
+                        time:   [14.466 ns 14.613 ns 14.782 ns]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking BSTSetAVLMtEphContains/n/64
+Benchmarking BSTSetAVLMtEphContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTSetAVLMtEphContains/n/64: Collecting 10 samples in estimated 300.00 ms (20M iterations)
+Benchmarking BSTSetAVLMtEphContains/n/64: Analyzing
+BSTSetAVLMtEphContains/n/64
+                        time:   [14.901 ns 15.011 ns 15.190 ns]
+Found 4 outliers among 10 measurements (40.00%)
+  2 (20.00%) low mild
+  2 (20.00%) high mild
+
+     Running benches/Chap37/BenchBSTSetBBAlphaMtEph.rs (target/release/deps/BenchBSTSetBBAlphaMtEph-472a28d38857eff2)
+Benchmarking BSTSetBBAlphaMtEphInsert/n/32
+Benchmarking BSTSetBBAlphaMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTSetBBAlphaMtEphInsert/n/32: Collecting 10 samples in estimated 400.59 ms (36k iterations)
+Benchmarking BSTSetBBAlphaMtEphInsert/n/32: Analyzing
+BSTSetBBAlphaMtEphInsert/n/32
+                        time:   [10.558 µs 10.604 µs 10.713 µs]
+Benchmarking BSTSetBBAlphaMtEphInsert/n/64
+Benchmarking BSTSetBBAlphaMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTSetBBAlphaMtEphInsert/n/64: Collecting 10 samples in estimated 401.60 ms (10k iterations)
+Benchmarking BSTSetBBAlphaMtEphInsert/n/64: Analyzing
+BSTSetBBAlphaMtEphInsert/n/64
+                        time:   [38.666 µs 38.918 µs 39.172 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+
+Benchmarking BSTSetBBAlphaMtEphContains/n/32
+Benchmarking BSTSetBBAlphaMtEphContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTSetBBAlphaMtEphContains/n/32: Collecting 10 samples in estimated 300.00 ms (12M iterations)
+Benchmarking BSTSetBBAlphaMtEphContains/n/32: Analyzing
+BSTSetBBAlphaMtEphContains/n/32
+                        time:   [24.818 ns 24.910 ns 25.059 ns]
+Benchmarking BSTSetBBAlphaMtEphContains/n/64
+Benchmarking BSTSetBBAlphaMtEphContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTSetBBAlphaMtEphContains/n/64: Collecting 10 samples in estimated 300.00 ms (6.5M iterations)
+Benchmarking BSTSetBBAlphaMtEphContains/n/64: Analyzing
+BSTSetBBAlphaMtEphContains/n/64
+                        time:   [43.472 ns 43.743 ns 44.177 ns]
+
+     Running benches/Chap37/BenchBSTSetPlainMtEph.rs (target/release/deps/BenchBSTSetPlainMtEph-279d49ec0e4e76a1)
+Benchmarking BSTSetPlainMtEphInsert/n/32
+Benchmarking BSTSetPlainMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTSetPlainMtEphInsert/n/32: Collecting 10 samples in estimated 400.05 ms (37k iterations)
+Benchmarking BSTSetPlainMtEphInsert/n/32: Analyzing
+BSTSetPlainMtEphInsert/n/32
+                        time:   [10.512 µs 10.581 µs 10.677 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking BSTSetPlainMtEphInsert/n/64
+Benchmarking BSTSetPlainMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTSetPlainMtEphInsert/n/64: Collecting 10 samples in estimated 401.44 ms (9570 iterations)
+Benchmarking BSTSetPlainMtEphInsert/n/64: Analyzing
+BSTSetPlainMtEphInsert/n/64
+                        time:   [40.166 µs 40.505 µs 40.771 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+Benchmarking BSTSetPlainMtEphContains/n/32
+Benchmarking BSTSetPlainMtEphContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTSetPlainMtEphContains/n/32: Collecting 10 samples in estimated 300.00 ms (14M iterations)
+Benchmarking BSTSetPlainMtEphContains/n/32: Analyzing
+BSTSetPlainMtEphContains/n/32
+                        time:   [21.129 ns 22.587 ns 23.607 ns]
+Benchmarking BSTSetPlainMtEphContains/n/64
+Benchmarking BSTSetPlainMtEphContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTSetPlainMtEphContains/n/64: Collecting 10 samples in estimated 300.00 ms (7.5M iterations)
+Benchmarking BSTSetPlainMtEphContains/n/64: Analyzing
+BSTSetPlainMtEphContains/n/64
+                        time:   [39.553 ns 39.962 ns 40.678 ns]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap37/BenchBSTSetRBMtEph.rs (target/release/deps/BenchBSTSetRBMtEph-0631f13486b36751)
+Benchmarking BSTSetRBMtEphInsert/n/32
+Benchmarking BSTSetRBMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTSetRBMtEphInsert/n/32: Collecting 10 samples in estimated 400.09 ms (166k iterations)
+Benchmarking BSTSetRBMtEphInsert/n/32: Analyzing
+BSTSetRBMtEphInsert/n/32
+                        time:   [2.4889 µs 2.5133 µs 2.5543 µs]
+Benchmarking BSTSetRBMtEphInsert/n/64
+Benchmarking BSTSetRBMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTSetRBMtEphInsert/n/64: Collecting 10 samples in estimated 400.35 ms (59k iterations)
+Benchmarking BSTSetRBMtEphInsert/n/64: Analyzing
+BSTSetRBMtEphInsert/n/64
+                        time:   [6.6449 µs 6.6783 µs 6.7260 µs]
+
+Benchmarking BSTSetRBMtEphContains/n/32
+Benchmarking BSTSetRBMtEphContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTSetRBMtEphContains/n/32: Collecting 10 samples in estimated 300.00 ms (19M iterations)
+Benchmarking BSTSetRBMtEphContains/n/32: Analyzing
+BSTSetRBMtEphContains/n/32
+                        time:   [15.602 ns 15.680 ns 15.804 ns]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking BSTSetRBMtEphContains/n/64
+Benchmarking BSTSetRBMtEphContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTSetRBMtEphContains/n/64: Collecting 10 samples in estimated 300.00 ms (18M iterations)
+Benchmarking BSTSetRBMtEphContains/n/64: Analyzing
+BSTSetRBMtEphContains/n/64
+                        time:   [16.572 ns 16.690 ns 16.807 ns]
+
+     Running benches/Chap37/BenchBSTSetSplayMtEph.rs (target/release/deps/BenchBSTSetSplayMtEph-b229ec3ada20ad9d)
+Benchmarking BSTSetSplayMtEphInsert/n/32
+Benchmarking BSTSetSplayMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTSetSplayMtEphInsert/n/32: Collecting 10 samples in estimated 400.06 ms (327k iterations)
+Benchmarking BSTSetSplayMtEphInsert/n/32: Analyzing
+BSTSetSplayMtEphInsert/n/32
+                        time:   [1.2070 µs 1.2190 µs 1.2421 µs]
+Benchmarking BSTSetSplayMtEphInsert/n/64
+Benchmarking BSTSetSplayMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTSetSplayMtEphInsert/n/64: Collecting 10 samples in estimated 400.08 ms (124k iterations)
+Benchmarking BSTSetSplayMtEphInsert/n/64: Analyzing
+BSTSetSplayMtEphInsert/n/64
+                        time:   [3.1116 µs 3.1270 µs 3.1565 µs]
+
+Benchmarking BSTSetSplayMtEphContains/n/32
+Benchmarking BSTSetSplayMtEphContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTSetSplayMtEphContains/n/32: Collecting 10 samples in estimated 300.00 ms (11M iterations)
+Benchmarking BSTSetSplayMtEphContains/n/32: Analyzing
+BSTSetSplayMtEphContains/n/32
+                        time:   [26.836 ns 27.135 ns 27.648 ns]
+Benchmarking BSTSetSplayMtEphContains/n/64
+Benchmarking BSTSetSplayMtEphContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTSetSplayMtEphContains/n/64: Collecting 10 samples in estimated 300.00 ms (6.7M iterations)
+Benchmarking BSTSetSplayMtEphContains/n/64: Analyzing
+BSTSetSplayMtEphContains/n/64
+                        time:   [43.157 ns 43.354 ns 43.564 ns]
+
+     Running benches/Chap39/BenchBSTSetTreapMtEph.rs (target/release/deps/BenchBSTSetTreapMtEph-4a37b611e26540a5)
+Benchmarking BSTSetTreapMtEphInsert/n/32
+Benchmarking BSTSetTreapMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTSetTreapMtEphInsert/n/32: Collecting 10 samples in estimated 402.85 ms (5170 iterations)
+Benchmarking BSTSetTreapMtEphInsert/n/32: Analyzing
+BSTSetTreapMtEphInsert/n/32
+                        time:   [76.886 µs 77.300 µs 77.940 µs]
+Benchmarking BSTSetTreapMtEphInsert/n/64
+Benchmarking BSTSetTreapMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTSetTreapMtEphInsert/n/64: Collecting 10 samples in estimated 406.33 ms (1100 iterations)
+Benchmarking BSTSetTreapMtEphInsert/n/64: Analyzing
+BSTSetTreapMtEphInsert/n/64
+                        time:   [344.31 µs 346.77 µs 349.45 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+
+Benchmarking BSTSetTreapMtEphContains/n/32
+Benchmarking BSTSetTreapMtEphContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTSetTreapMtEphContains/n/32: Collecting 10 samples in estimated 300.05 ms (154k iterations)
+Benchmarking BSTSetTreapMtEphContains/n/32: Analyzing
+BSTSetTreapMtEphContains/n/32
+                        time:   [1.7940 µs 1.8040 µs 1.8229 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking BSTSetTreapMtEphContains/n/64
+Benchmarking BSTSetTreapMtEphContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTSetTreapMtEphContains/n/64: Collecting 10 samples in estimated 300.26 ms (37k iterations)
+Benchmarking BSTSetTreapMtEphContains/n/64: Analyzing
+BSTSetTreapMtEphContains/n/64
+                        time:   [8.1266 µs 8.2494 µs 8.4379 µs]
+
+     Running benches/Chap40/BenchBSTSizeStEph.rs (target/release/deps/BenchBSTSizeStEph-80a1ef61978229c1)
+Benchmarking BSTSizeInsert/n/32
+Benchmarking BSTSizeInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTSizeInsert/n/32: Collecting 20 samples in estimated 300.15 ms (265k iterations)
+Benchmarking BSTSizeInsert/n/32: Analyzing
+BSTSizeInsert/n/32      time:   [1.1191 µs 1.1270 µs 1.1378 µs]
+Benchmarking BSTSizeInsert/n/64
+Benchmarking BSTSizeInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTSizeInsert/n/64: Collecting 20 samples in estimated 300.21 ms (99k iterations)
+Benchmarking BSTSizeInsert/n/64: Analyzing
+BSTSizeInsert/n/64      time:   [2.7738 µs 2.8743 µs 2.9490 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) low severe
+  1 (5.00%) low mild
+
+     Running benches/Chap37/BenchBSTSplayMtEph.rs (target/release/deps/BenchBSTSplayMtEph-eb2bec9aad918c0f)
+Benchmarking BSTSplayMtEphInsert/n/32
+Benchmarking BSTSplayMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTSplayMtEphInsert/n/32: Collecting 10 samples in estimated 400.05 ms (323k iterations)
+Benchmarking BSTSplayMtEphInsert/n/32: Analyzing
+BSTSplayMtEphInsert/n/32
+                        time:   [1.2516 µs 1.2899 µs 1.3146 µs]
+Benchmarking BSTSplayMtEphInsert/n/64
+Benchmarking BSTSplayMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTSplayMtEphInsert/n/64: Collecting 10 samples in estimated 400.03 ms (131k iterations)
+Benchmarking BSTSplayMtEphInsert/n/64: Analyzing
+BSTSplayMtEphInsert/n/64
+                        time:   [2.9451 µs 2.9635 µs 2.9850 µs]
+
+Benchmarking BSTSplayMtEphContains/n/32
+Benchmarking BSTSplayMtEphContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTSplayMtEphContains/n/32: Collecting 10 samples in estimated 300.00 ms (11M iterations)
+Benchmarking BSTSplayMtEphContains/n/32: Analyzing
+BSTSplayMtEphContains/n/32
+                        time:   [26.354 ns 26.589 ns 26.954 ns]
+Benchmarking BSTSplayMtEphContains/n/64
+Benchmarking BSTSplayMtEphContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTSplayMtEphContains/n/64: Collecting 10 samples in estimated 300.00 ms (6.7M iterations)
+Benchmarking BSTSplayMtEphContains/n/64: Analyzing
+BSTSplayMtEphContains/n/64
+                        time:   [42.415 ns 42.616 ns 42.925 ns]
+
+     Running benches/Chap37/BenchBSTSplayStEph.rs (target/release/deps/BenchBSTSplayStEph-506ca59e8f3e7442)
+Benchmarking BSTSplayInsert/n/32
+Benchmarking BSTSplayInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTSplayInsert/n/32: Collecting 20 samples in estimated 300.05 ms (231k iterations)
+Benchmarking BSTSplayInsert/n/32: Analyzing
+BSTSplayInsert/n/32     time:   [737.23 ns 740.34 ns 745.19 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low severe
+Benchmarking BSTSplayInsert/n/64
+Benchmarking BSTSplayInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTSplayInsert/n/64: Collecting 20 samples in estimated 300.41 ms (106k iterations)
+Benchmarking BSTSplayInsert/n/64: Analyzing
+BSTSplayInsert/n/64     time:   [1.7870 µs 1.7943 µs 1.8034 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) low mild
+  1 (5.00%) high mild
+
+Benchmarking BSTSplayContains/n/32
+Benchmarking BSTSplayContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTSplayContains/n/32: Collecting 20 samples in estimated 200.00 ms (9.1M iterations)
+Benchmarking BSTSplayContains/n/32: Analyzing
+BSTSplayContains/n/32   time:   [21.464 ns 21.577 ns 21.707 ns]
+Benchmarking BSTSplayContains/n/64
+Benchmarking BSTSplayContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTSplayContains/n/64: Collecting 20 samples in estimated 200.00 ms (4.3M iterations)
+Benchmarking BSTSplayContains/n/64: Analyzing
+BSTSplayContains/n/64   time:   [46.575 ns 46.843 ns 47.112 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap39/BenchBSTTreapMtEph.rs (target/release/deps/BenchBSTTreapMtEph-c63e3b06efd9cdc2)
+Benchmarking BSTTreapMtEphInsert/n/32
+Benchmarking BSTTreapMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking BSTTreapMtEphInsert/n/32: Collecting 10 samples in estimated 400.05 ms (156k iterations)
+Benchmarking BSTTreapMtEphInsert/n/32: Analyzing
+BSTTreapMtEphInsert/n/32
+                        time:   [2.5078 µs 2.5804 µs 2.6552 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking BSTTreapMtEphInsert/n/64
+Benchmarking BSTTreapMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking BSTTreapMtEphInsert/n/64: Collecting 10 samples in estimated 400.32 ms (44k iterations)
+Benchmarking BSTTreapMtEphInsert/n/64: Analyzing
+BSTTreapMtEphInsert/n/64
+                        time:   [8.6300 µs 8.6953 µs 8.8212 µs]
+
+Benchmarking BSTTreapMtEphContains/n/32
+Benchmarking BSTTreapMtEphContains/n/32: Warming up for 100.00 ms
+Benchmarking BSTTreapMtEphContains/n/32: Collecting 10 samples in estimated 300.00 ms (19M iterations)
+Benchmarking BSTTreapMtEphContains/n/32: Analyzing
+BSTTreapMtEphContains/n/32
+                        time:   [16.188 ns 16.423 ns 16.665 ns]
+Benchmarking BSTTreapMtEphContains/n/64
+Benchmarking BSTTreapMtEphContains/n/64: Warming up for 100.00 ms
+Benchmarking BSTTreapMtEphContains/n/64: Collecting 10 samples in estimated 300.00 ms (12M iterations)
+Benchmarking BSTTreapMtEphContains/n/64: Analyzing
+BSTTreapMtEphContains/n/64
+                        time:   [26.035 ns 26.145 ns 26.383 ns]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+
+     Running benches/Chap39/BenchBSTTreapStEph.rs (target/release/deps/BenchBSTTreapStEph-9d14ec7ef9d1fb11)
+Benchmarking TreapInsert/n/32
+Benchmarking TreapInsert/n/32: Warming up for 100.00 ms
+Benchmarking TreapInsert/n/32: Collecting 20 samples in estimated 300.00 ms (252k iterations)
+Benchmarking TreapInsert/n/32: Analyzing
+TreapInsert/n/32        time:   [1.1517 µs 1.1886 µs 1.2307 µs]
+Benchmarking TreapInsert/n/64
+Benchmarking TreapInsert/n/64: Warming up for 100.00 ms
+Benchmarking TreapInsert/n/64: Collecting 20 samples in estimated 300.33 ms (102k iterations)
+Benchmarking TreapInsert/n/64: Analyzing
+TreapInsert/n/64        time:   [2.9589 µs 2.9845 µs 3.0135 µs]
+
+Benchmarking TreapContains/n/32
+Benchmarking TreapContains/n/32: Warming up for 100.00 ms
+Benchmarking TreapContains/n/32: Collecting 20 samples in estimated 200.00 ms (63M iterations)
+Benchmarking TreapContains/n/32: Analyzing
+TreapContains/n/32      time:   [3.1701 ns 3.2252 ns 3.3005 ns]
+Found 3 outliers among 20 measurements (15.00%)
+  3 (15.00%) high mild
+Benchmarking TreapContains/n/64
+Benchmarking TreapContains/n/64: Warming up for 100.00 ms
+Benchmarking TreapContains/n/64: Collecting 20 samples in estimated 200.00 ms (130M iterations)
+Benchmarking TreapContains/n/64: Analyzing
+TreapContains/n/64      time:   [1.4384 ns 1.4691 ns 1.5156 ns]
+
+     Running benches/Chap23/BenchBalBinTreeStEph.rs (target/release/deps/BenchBalBinTreeStEph-612f4e7ca93b8e19)
+Benchmarking BalBinTreeBuild/depth/6
+Benchmarking BalBinTreeBuild/depth/6: Warming up for 100.00 ms
+Benchmarking BalBinTreeBuild/depth/6: Collecting 20 samples in estimated 200.16 ms (176k iterations)
+Benchmarking BalBinTreeBuild/depth/6: Analyzing
+BalBinTreeBuild/depth/6 time:   [1.0375 µs 1.0708 µs 1.0996 µs]
+Benchmarking BalBinTreeBuild/depth/8
+Benchmarking BalBinTreeBuild/depth/8: Warming up for 100.00 ms
+Benchmarking BalBinTreeBuild/depth/8: Collecting 20 samples in estimated 200.83 ms (26k iterations)
+Benchmarking BalBinTreeBuild/depth/8: Analyzing
+BalBinTreeBuild/depth/8 time:   [7.4589 µs 7.5631 µs 7.6894 µs]
+
+Benchmarking BalBinTreeInOrder/depth/6
+Benchmarking BalBinTreeInOrder/depth/6: Warming up for 100.00 ms
+Benchmarking BalBinTreeInOrder/depth/6: Collecting 20 samples in estimated 200.10 ms (131k iterations)
+Benchmarking BalBinTreeInOrder/depth/6: Analyzing
+BalBinTreeInOrder/depth/6
+                        time:   [1.5751 µs 1.5855 µs 1.5951 µs]
+Benchmarking BalBinTreeInOrder/depth/8
+Benchmarking BalBinTreeInOrder/depth/8: Warming up for 100.00 ms
+Benchmarking BalBinTreeInOrder/depth/8: Collecting 20 samples in estimated 200.68 ms (30k iterations)
+Benchmarking BalBinTreeInOrder/depth/8: Analyzing
+BalBinTreeInOrder/depth/8
+                        time:   [6.5691 µs 6.6081 µs 6.6643 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap45/BenchBalancedTreePQ.rs (target/release/deps/BenchBalancedTreePQ-ecde01b38e14937f)
+Benchmarking BalancedTreePQInsert/n/32
+Benchmarking BalancedTreePQInsert/n/32: Warming up for 100.00 ms
+Benchmarking BalancedTreePQInsert/n/32: Collecting 20 samples in estimated 302.56 ms (16k iterations)
+Benchmarking BalancedTreePQInsert/n/32: Analyzing
+BalancedTreePQInsert/n/32
+                        time:   [17.844 µs 17.982 µs 18.091 µs]
+Benchmarking BalancedTreePQInsert/n/64
+Benchmarking BalancedTreePQInsert/n/64: Warming up for 100.00 ms
+Benchmarking BalancedTreePQInsert/n/64: Collecting 20 samples in estimated 304.41 ms (3150 iterations)
+Benchmarking BalancedTreePQInsert/n/64: Analyzing
+BalancedTreePQInsert/n/64
+                        time:   [89.853 µs 94.131 µs 98.634 µs]
+Found 5 outliers among 20 measurements (25.00%)
+  3 (15.00%) low severe
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+
+Benchmarking BalancedTreePQDeleteMin/n/32
+Benchmarking BalancedTreePQDeleteMin/n/32: Warming up for 100.00 ms
+Benchmarking BalancedTreePQDeleteMin/n/32: Collecting 20 samples in estimated 202.05 ms (7980 iterations)
+Benchmarking BalancedTreePQDeleteMin/n/32: Analyzing
+BalancedTreePQDeleteMin/n/32
+                        time:   [1.5090 µs 1.5380 µs 1.5717 µs]
+Benchmarking BalancedTreePQDeleteMin/n/64
+Benchmarking BalancedTreePQDeleteMin/n/64: Warming up for 100.00 ms
+Benchmarking BalancedTreePQDeleteMin/n/64: Collecting 20 samples in estimated 207.45 ms (1890 iterations)
+Benchmarking BalancedTreePQDeleteMin/n/64: Analyzing
+BalancedTreePQDeleteMin/n/64
+                        time:   [2.9485 µs 3.0173 µs 3.1439 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+
+     Running benches/Chap58/BenchBellmanFordStEphI64.rs (target/release/deps/BenchBellmanFordStEphI64-45ec4b1c61ddfb74)
+Benchmarking BellmanFordStEphI64/chain_n/16
+Benchmarking BellmanFordStEphI64/chain_n/16: Warming up for 100.00 ms
+Benchmarking BellmanFordStEphI64/chain_n/16: Collecting 10 samples in estimated 300.74 ms (16k iterations)
+Benchmarking BellmanFordStEphI64/chain_n/16: Analyzing
+BellmanFordStEphI64/chain_n/16
+                        time:   [18.371 µs 18.520 µs 18.705 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking BellmanFordStEphI64/chain_n/32
+Benchmarking BellmanFordStEphI64/chain_n/32: Warming up for 100.00 ms
+Benchmarking BellmanFordStEphI64/chain_n/32: Collecting 10 samples in estimated 300.43 ms (2915 iterations)
+Benchmarking BellmanFordStEphI64/chain_n/32: Analyzing
+BellmanFordStEphI64/chain_n/32
+                        time:   [94.588 µs 95.764 µs 98.046 µs]
+
+     Running benches/Chap45/BenchBinaryHeapPQ.rs (target/release/deps/BenchBinaryHeapPQ-7c055027cc9d30f9)
+Benchmarking BinaryHeapPQInsert/n/32
+Benchmarking BinaryHeapPQInsert/n/32: Warming up for 100.00 ms
+Benchmarking BinaryHeapPQInsert/n/32: Collecting 20 samples in estimated 300.19 ms (199k iterations)
+Benchmarking BinaryHeapPQInsert/n/32: Analyzing
+BinaryHeapPQInsert/n/32 time:   [1.4884 µs 1.5017 µs 1.5162 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+Benchmarking BinaryHeapPQInsert/n/64
+Benchmarking BinaryHeapPQInsert/n/64: Warming up for 100.00 ms
+Benchmarking BinaryHeapPQInsert/n/64: Collecting 20 samples in estimated 300.36 ms (75k iterations)
+Benchmarking BinaryHeapPQInsert/n/64: Analyzing
+BinaryHeapPQInsert/n/64 time:   [3.9856 µs 4.0256 µs 4.0621 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low severe
+  1 (5.00%) high severe
+
+Benchmarking BinaryHeapPQDeleteMin/n/32
+Benchmarking BinaryHeapPQDeleteMin/n/32: Warming up for 100.00 ms
+Benchmarking BinaryHeapPQDeleteMin/n/32: Collecting 20 samples in estimated 200.50 ms (78k iterations)
+Benchmarking BinaryHeapPQDeleteMin/n/32: Analyzing
+BinaryHeapPQDeleteMin/n/32
+                        time:   [1.1761 µs 1.1850 µs 1.1954 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking BinaryHeapPQDeleteMin/n/64
+Benchmarking BinaryHeapPQDeleteMin/n/64: Warming up for 100.00 ms
+Benchmarking BinaryHeapPQDeleteMin/n/64: Collecting 20 samples in estimated 200.51 ms (31k iterations)
+Benchmarking BinaryHeapPQDeleteMin/n/64: Analyzing
+BinaryHeapPQDeleteMin/n/64
+                        time:   [3.0931 µs 3.3043 µs 3.5108 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  1 (5.00%) low mild
+  2 (10.00%) high mild
+
+     Running benches/Chap66/BenchBoruvkaMtEph.rs (target/release/deps/BenchBoruvkaMtEph-5c940f82c05da388)
+Benchmarking BoruvkaMtEph/chain_n/16
+Benchmarking BoruvkaMtEph/chain_n/16: Warming up for 100.00 ms
+Benchmarking BoruvkaMtEph/chain_n/16: Collecting 10 samples in estimated 742.57 ms (110 iterations)
+Benchmarking BoruvkaMtEph/chain_n/16: Analyzing
+BoruvkaMtEph/chain_n/16 time:   [5.1131 ms 5.3724 ms 5.8598 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low severe
+  2 (20.00%) high severe
+Benchmarking BoruvkaMtEph/chain_n/32
+Benchmarking BoruvkaMtEph/chain_n/32: Warming up for 100.00 ms
+
+Warning: Unable to complete 10 samples in 400.0ms. You may wish to increase target time to 456.8ms or enable flat sampling.
+Benchmarking BoruvkaMtEph/chain_n/32: Collecting 10 samples in estimated 456.80 ms (55 iterations)
+Benchmarking BoruvkaMtEph/chain_n/32: Analyzing
+BoruvkaMtEph/chain_n/32 time:   [8.5401 ms 8.7801 ms 9.1264 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low mild
+  2 (20.00%) high mild
+
+     Running benches/Chap66/BenchBoruvkaStEph.rs (target/release/deps/BenchBoruvkaStEph-501571e9be29c894)
+Benchmarking BoruvkaStEph/chain_n/16
+Benchmarking BoruvkaStEph/chain_n/16: Warming up for 100.00 ms
+Benchmarking BoruvkaStEph/chain_n/16: Collecting 10 samples in estimated 300.33 ms (21k iterations)
+Benchmarking BoruvkaStEph/chain_n/16: Analyzing
+BoruvkaStEph/chain_n/16 time:   [13.297 µs 13.872 µs 14.353 µs]
+Benchmarking BoruvkaStEph/chain_n/32
+Benchmarking BoruvkaStEph/chain_n/32: Warming up for 100.00 ms
+Benchmarking BoruvkaStEph/chain_n/32: Collecting 10 samples in estimated 300.97 ms (8635 iterations)
+Benchmarking BoruvkaStEph/chain_n/32: Analyzing
+BoruvkaStEph/chain_n/32 time:   [35.273 µs 36.154 µs 36.979 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+
+     Running benches/Chap51/BenchBottomUpDPMtEph.rs (target/release/deps/BenchBottomUpDPMtEph-1b2aac42e0326d6e)
+Benchmarking BottomUpDPMtEph/n_x_n/20
+Benchmarking BottomUpDPMtEph/n_x_n/20: Warming up for 100.00 ms
+Benchmarking BottomUpDPMtEph/n_x_n/20: Collecting 10 samples in estimated 400.13 ms (129k iterations)
+Benchmarking BottomUpDPMtEph/n_x_n/20: Analyzing
+BottomUpDPMtEph/n_x_n/20
+                        time:   [2.5952 µs 2.6580 µs 2.6907 µs]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking BottomUpDPMtEph/n_x_n/40
+Benchmarking BottomUpDPMtEph/n_x_n/40: Warming up for 100.00 ms
+Benchmarking BottomUpDPMtEph/n_x_n/40: Collecting 10 samples in estimated 400.14 ms (40k iterations)
+Benchmarking BottomUpDPMtEph/n_x_n/40: Analyzing
+BottomUpDPMtEph/n_x_n/40
+                        time:   [9.4105 µs 9.4842 µs 9.6390 µs]
+
+     Running benches/Chap51/BenchBottomUpDPMtPer.rs (target/release/deps/BenchBottomUpDPMtPer-b7566f90a0255cd3)
+Benchmarking BottomUpDPMtPer/n_x_n/20
+Benchmarking BottomUpDPMtPer/n_x_n/20: Warming up for 100.00 ms
+Benchmarking BottomUpDPMtPer/n_x_n/20: Collecting 10 samples in estimated 400.06 ms (124k iterations)
+Benchmarking BottomUpDPMtPer/n_x_n/20: Analyzing
+BottomUpDPMtPer/n_x_n/20
+                        time:   [2.6867 µs 2.8739 µs 3.1919 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking BottomUpDPMtPer/n_x_n/40
+Benchmarking BottomUpDPMtPer/n_x_n/40: Warming up for 100.00 ms
+Benchmarking BottomUpDPMtPer/n_x_n/40: Collecting 10 samples in estimated 400.38 ms (42k iterations)
+Benchmarking BottomUpDPMtPer/n_x_n/40: Analyzing
+BottomUpDPMtPer/n_x_n/40
+                        time:   [9.2190 µs 9.5596 µs 9.7466 µs]
+
+     Running benches/Chap51/BenchBottomUpDPStEph.rs (target/release/deps/BenchBottomUpDPStEph-92276d6dc241cd97)
+Benchmarking BottomUpDPStEph/n_x_n/20
+Benchmarking BottomUpDPStEph/n_x_n/20: Warming up for 100.00 ms
+Benchmarking BottomUpDPStEph/n_x_n/20: Collecting 10 samples in estimated 300.11 ms (111k iterations)
+Benchmarking BottomUpDPStEph/n_x_n/20: Analyzing
+BottomUpDPStEph/n_x_n/20
+                        time:   [2.6075 µs 2.6394 µs 2.6768 µs]
+Benchmarking BottomUpDPStEph/n_x_n/40
+Benchmarking BottomUpDPStEph/n_x_n/40: Warming up for 100.00 ms
+Benchmarking BottomUpDPStEph/n_x_n/40: Collecting 10 samples in estimated 300.45 ms (30k iterations)
+Benchmarking BottomUpDPStEph/n_x_n/40: Analyzing
+BottomUpDPStEph/n_x_n/40
+                        time:   [9.4796 µs 9.6141 µs 9.7804 µs]
+
+     Running benches/Chap51/BenchBottomUpDPStPer.rs (target/release/deps/BenchBottomUpDPStPer-5e2c3dac4de0ad30)
+Benchmarking BottomUpDPStPer/n_x_n/20
+Benchmarking BottomUpDPStPer/n_x_n/20: Warming up for 100.00 ms
+Benchmarking BottomUpDPStPer/n_x_n/20: Collecting 10 samples in estimated 300.01 ms (94k iterations)
+Benchmarking BottomUpDPStPer/n_x_n/20: Analyzing
+BottomUpDPStPer/n_x_n/20
+                        time:   [2.8146 µs 2.8592 µs 2.8827 µs]
+Benchmarking BottomUpDPStPer/n_x_n/40
+Benchmarking BottomUpDPStPer/n_x_n/40: Warming up for 100.00 ms
+Benchmarking BottomUpDPStPer/n_x_n/40: Collecting 10 samples in estimated 300.44 ms (27k iterations)
+Benchmarking BottomUpDPStPer/n_x_n/40: Analyzing
+BottomUpDPStPer/n_x_n/40
+                        time:   [11.070 µs 11.337 µs 11.535 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+
+     Running benches/Chap63/BenchConnectivityMtEph.rs (target/release/deps/BenchConnectivityMtEph-2858272f6110bda3)
+Benchmarking ConnectivityMtEph/n/16
+Benchmarking ConnectivityMtEph/n/16: Warming up for 100.00 ms
+Benchmarking ConnectivityMtEph/n/16: Collecting 10 samples in estimated 577.64 ms (165 iterations)
+Benchmarking ConnectivityMtEph/n/16: Analyzing
+ConnectivityMtEph/n/16  time:   [3.3072 ms 3.3503 ms 3.3964 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking ConnectivityMtEph/n/32
+Benchmarking ConnectivityMtEph/n/32: Warming up for 100.00 ms
+Benchmarking ConnectivityMtEph/n/32: Collecting 10 samples in estimated 581.73 ms (110 iterations)
+Benchmarking ConnectivityMtEph/n/32: Analyzing
+ConnectivityMtEph/n/32  time:   [4.8231 ms 4.8799 ms 4.9160 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+
+     Running benches/Chap63/BenchConnectivityStEph.rs (target/release/deps/BenchConnectivityStEph-393b1f1ee6d90f15)
+Benchmarking ConnectivityStEph/ring_n/16
+Benchmarking ConnectivityStEph/ring_n/16: Warming up for 100.00 ms
+Benchmarking ConnectivityStEph/ring_n/16: Collecting 10 samples in estimated 300.21 ms (72k iterations)
+Benchmarking ConnectivityStEph/ring_n/16: Analyzing
+ConnectivityStEph/ring_n/16
+                        time:   [4.1433 µs 4.3270 µs 4.4740 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking ConnectivityStEph/ring_n/32
+Benchmarking ConnectivityStEph/ring_n/32: Warming up for 100.00 ms
+Benchmarking ConnectivityStEph/ring_n/32: Collecting 10 samples in estimated 300.06 ms (29k iterations)
+Benchmarking ConnectivityStEph/ring_n/32: Analyzing
+ConnectivityStEph/ring_n/32
+                        time:   [9.7734 µs 10.055 µs 10.457 µs]
+
+     Running benches/Chap55/BenchCycleDetectStEph.rs (target/release/deps/BenchCycleDetectStEph-455474c80608432c)
+Benchmarking CycleDetectStEph/dag_n/32
+Benchmarking CycleDetectStEph/dag_n/32: Warming up for 100.00 ms
+Benchmarking CycleDetectStEph/dag_n/32: Collecting 10 samples in estimated 300.00 ms (1.4M iterations)
+Benchmarking CycleDetectStEph/dag_n/32: Analyzing
+CycleDetectStEph/dag_n/32
+                        time:   [219.41 ns 225.04 ns 230.33 ns]
+Benchmarking CycleDetectStEph/dag_n/64
+Benchmarking CycleDetectStEph/dag_n/64: Warming up for 100.00 ms
+Benchmarking CycleDetectStEph/dag_n/64: Collecting 10 samples in estimated 300.01 ms (721k iterations)
+Benchmarking CycleDetectStEph/dag_n/64: Analyzing
+CycleDetectStEph/dag_n/64
+                        time:   [403.94 ns 414.84 ns 431.01 ns]
+
+     Running benches/Chap55/BenchCycleDetectStPer.rs (target/release/deps/BenchCycleDetectStPer-0cee229177883456)
+Benchmarking CycleDetectStPer/dag_n/32
+Benchmarking CycleDetectStPer/dag_n/32: Warming up for 100.00 ms
+Benchmarking CycleDetectStPer/dag_n/32: Collecting 10 samples in estimated 300.02 ms (868k iterations)
+Benchmarking CycleDetectStPer/dag_n/32: Analyzing
+CycleDetectStPer/dag_n/32
+                        time:   [330.27 ns 333.45 ns 336.09 ns]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+Benchmarking CycleDetectStPer/dag_n/64
+Benchmarking CycleDetectStPer/dag_n/64: Warming up for 100.00 ms
+Benchmarking CycleDetectStPer/dag_n/64: Collecting 10 samples in estimated 300.00 ms (464k iterations)
+Benchmarking CycleDetectStPer/dag_n/64: Analyzing
+CycleDetectStPer/dag_n/64
+                        time:   [629.86 ns 662.27 ns 697.57 ns]
+
+     Running benches/Chap55/BenchDFSStEph.rs (target/release/deps/BenchDFSStEph-5a738cfecc2706f3)
+Benchmarking DFSStEph/chain_n/32
+Benchmarking DFSStEph/chain_n/32: Warming up for 100.00 ms
+Benchmarking DFSStEph/chain_n/32: Collecting 10 samples in estimated 300.27 ms (7260 iterations)
+Benchmarking DFSStEph/chain_n/32: Analyzing
+DFSStEph/chain_n/32     time:   [40.541 µs 41.785 µs 42.890 µs]
+Benchmarking DFSStEph/chain_n/64
+Benchmarking DFSStEph/chain_n/64: Warming up for 100.00 ms
+Benchmarking DFSStEph/chain_n/64: Collecting 10 samples in estimated 300.27 ms (1705 iterations)
+Benchmarking DFSStEph/chain_n/64: Analyzing
+DFSStEph/chain_n/64     time:   [166.99 µs 169.02 µs 170.33 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+
+     Running benches/Chap55/BenchDFSStPer.rs (target/release/deps/BenchDFSStPer-0caa73c5f1309669)
+Benchmarking DFSStPer/chain_n/32
+Benchmarking DFSStPer/chain_n/32: Warming up for 100.00 ms
+Benchmarking DFSStPer/chain_n/32: Collecting 10 samples in estimated 300.55 ms (4015 iterations)
+Benchmarking DFSStPer/chain_n/32: Analyzing
+DFSStPer/chain_n/32     time:   [73.520 µs 73.807 µs 74.002 µs]
+Benchmarking DFSStPer/chain_n/64
+Benchmarking DFSStPer/chain_n/64: Warming up for 100.00 ms
+Benchmarking DFSStPer/chain_n/64: Collecting 10 samples in estimated 312.45 ms (935 iterations)
+Benchmarking DFSStPer/chain_n/64: Analyzing
+DFSStPer/chain_n/64     time:   [323.86 µs 325.14 µs 328.31 µs]
+
+     Running benches/Chap57/BenchDijkstraStEphU64.rs (target/release/deps/BenchDijkstraStEphU64-966fd936df7e676f)
+Benchmarking DijkstraStEphU64/chain_n/16
+Benchmarking DijkstraStEphU64/chain_n/16: Warming up for 100.00 ms
+Benchmarking DijkstraStEphU64/chain_n/16: Collecting 10 samples in estimated 300.11 ms (136k iterations)
+Benchmarking DijkstraStEphU64/chain_n/16: Analyzing
+DijkstraStEphU64/chain_n/16
+                        time:   [2.2316 µs 2.2481 µs 2.2686 µs]
+Benchmarking DijkstraStEphU64/chain_n/32
+Benchmarking DijkstraStEphU64/chain_n/32: Warming up for 100.00 ms
+Benchmarking DijkstraStEphU64/chain_n/32: Collecting 10 samples in estimated 300.20 ms (65k iterations)
+Benchmarking DijkstraStEphU64/chain_n/32: Analyzing
+DijkstraStEphU64/chain_n/32
+                        time:   [4.5274 µs 4.5547 µs 4.5960 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap06/BenchDirGraphStEph.rs (target/release/deps/BenchDirGraphStEph-83b9ede2f8b28076)
+Benchmarking DirGraphBuild/path_n/32
+Benchmarking DirGraphBuild/path_n/32: Warming up for 100.00 ms
+Benchmarking DirGraphBuild/path_n/32: Collecting 20 samples in estimated 200.03 ms (82k iterations)
+Benchmarking DirGraphBuild/path_n/32: Analyzing
+DirGraphBuild/path_n/32 time:   [2.4918 µs 2.5045 µs 2.5189 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low severe
+  1 (5.00%) low mild
+Benchmarking DirGraphBuild/path_n/128
+Benchmarking DirGraphBuild/path_n/128: Warming up for 100.00 ms
+Benchmarking DirGraphBuild/path_n/128: Collecting 20 samples in estimated 201.48 ms (21k iterations)
+Benchmarking DirGraphBuild/path_n/128: Analyzing
+DirGraphBuild/path_n/128
+                        time:   [9.7345 µs 9.8074 µs 9.9332 µs]
+
+Benchmarking DirGraphNeighbors/n_plus/32
+Benchmarking DirGraphNeighbors/n_plus/32: Warming up for 100.00 ms
+Benchmarking DirGraphNeighbors/n_plus/32: Collecting 20 samples in estimated 200.00 ms (4.0M iterations)
+Benchmarking DirGraphNeighbors/n_plus/32: Analyzing
+DirGraphNeighbors/n_plus/32
+                        time:   [49.673 ns 50.057 ns 50.516 ns]
+Benchmarking DirGraphNeighbors/n_plus/128
+Benchmarking DirGraphNeighbors/n_plus/128: Warming up for 100.00 ms
+Benchmarking DirGraphNeighbors/n_plus/128: Collecting 20 samples in estimated 200.00 ms (1.5M iterations)
+Benchmarking DirGraphNeighbors/n_plus/128: Analyzing
+DirGraphNeighbors/n_plus/128
+                        time:   [126.77 ns 127.67 ns 128.74 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap26/BenchDivConReduceStPer.rs (target/release/deps/BenchDivConReduceStPer-91278585cf053f6e)
+Benchmarking DivConMaxElement/n/64
+Benchmarking DivConMaxElement/n/64: Warming up for 100.00 ms
+Benchmarking DivConMaxElement/n/64: Collecting 20 samples in estimated 200.00 ms (5.0M iterations)
+Benchmarking DivConMaxElement/n/64: Analyzing
+DivConMaxElement/n/64   time:   [39.720 ns 40.043 ns 40.395 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking DivConMaxElement/n/256
+Benchmarking DivConMaxElement/n/256: Warming up for 100.00 ms
+Benchmarking DivConMaxElement/n/256: Collecting 20 samples in estimated 200.00 ms (1.2M iterations)
+Benchmarking DivConMaxElement/n/256: Analyzing
+DivConMaxElement/n/256  time:   [163.45 ns 167.40 ns 171.46 ns]
+Found 3 outliers among 20 measurements (15.00%)
+  1 (5.00%) low mild
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+
+Benchmarking DivConSum/n/64
+Benchmarking DivConSum/n/64: Warming up for 100.00 ms
+Benchmarking DivConSum/n/64: Collecting 20 samples in estimated 200.00 ms (29M iterations)
+Benchmarking DivConSum/n/64: Analyzing
+DivConSum/n/64          time:   [6.5298 ns 6.7649 ns 6.9307 ns]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low severe
+  1 (5.00%) low mild
+Benchmarking DivConSum/n/256
+Benchmarking DivConSum/n/256: Warming up for 100.00 ms
+Benchmarking DivConSum/n/256: Collecting 20 samples in estimated 200.00 ms (8.3M iterations)
+Benchmarking DivConSum/n/256: Analyzing
+DivConSum/n/256         time:   [23.252 ns 23.930 ns 24.718 ns]
+
+     Running benches/Chap44/BenchDocumentIndex.rs (target/release/deps/BenchDocumentIndex-0d35a8905bad6a36)
+Benchmarking DocIndexMake/n_docs/4
+Benchmarking DocIndexMake/n_docs/4: Warming up for 100.00 ms
+Benchmarking DocIndexMake/n_docs/4: Collecting 20 samples in estimated 301.96 ms (9450 iterations)
+Benchmarking DocIndexMake/n_docs/4: Analyzing
+DocIndexMake/n_docs/4   time:   [30.526 µs 30.710 µs 30.999 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+Benchmarking DocIndexMake/n_docs/8
+Benchmarking DocIndexMake/n_docs/8: Warming up for 100.00 ms
+Benchmarking DocIndexMake/n_docs/8: Collecting 20 samples in estimated 309.49 ms (2730 iterations)
+Benchmarking DocIndexMake/n_docs/8: Analyzing
+DocIndexMake/n_docs/8   time:   [110.87 µs 111.66 µs 112.74 µs]
+
+Benchmarking DocIndexFind/find_rust
+Benchmarking DocIndexFind/find_rust: Warming up for 100.00 ms
+Benchmarking DocIndexFind/find_rust: Collecting 20 samples in estimated 200.07 ms (499k iterations)
+Benchmarking DocIndexFind/find_rust: Analyzing
+DocIndexFind/find_rust  time:   [357.86 ns 362.15 ns 365.50 ns]
+Found 3 outliers among 20 measurements (15.00%)
+  1 (5.00%) high mild
+  2 (10.00%) high severe
+
+     Running benches/Chap47/BenchDoubleHashFlatHashTable.rs (target/release/deps/BenchDoubleHashFlatHashTable-0bfe2a193f0c50b3)
+Benchmarking DblHashInsert/n/16
+Benchmarking DblHashInsert/n/16: Warming up for 100.00 ms
+Benchmarking DblHashInsert/n/16: Collecting 20 samples in estimated 300.07 ms (830k iterations)
+Benchmarking DblHashInsert/n/16: Analyzing
+DblHashInsert/n/16      time:   [358.55 ns 370.51 ns 380.62 ns]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+Benchmarking DblHashInsert/n/32
+Benchmarking DblHashInsert/n/32: Warming up for 100.00 ms
+Benchmarking DblHashInsert/n/32: Collecting 20 samples in estimated 300.04 ms (424k iterations)
+Benchmarking DblHashInsert/n/32: Analyzing
+DblHashInsert/n/32      time:   [724.96 ns 731.07 ns 738.69 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+Benchmarking DblHashLookup/n/16
+Benchmarking DblHashLookup/n/16: Warming up for 100.00 ms
+Benchmarking DblHashLookup/n/16: Collecting 20 samples in estimated 200.00 ms (24M iterations)
+Benchmarking DblHashLookup/n/16: Analyzing
+DblHashLookup/n/16      time:   [8.1722 ns 8.3161 ns 8.4958 ns]
+Benchmarking DblHashLookup/n/32
+Benchmarking DblHashLookup/n/32: Warming up for 100.00 ms
+Benchmarking DblHashLookup/n/32: Collecting 20 samples in estimated 200.00 ms (28M iterations)
+Benchmarking DblHashLookup/n/32: Analyzing
+DblHashLookup/n/32      time:   [7.4304 ns 7.5359 ns 7.6492 ns]
+
+     Running benches/Chap26/BenchETSPStEph.rs (target/release/deps/BenchETSPStEph-063045355096a1e3)
+Benchmarking ETSPStEph/n/8
+Benchmarking ETSPStEph/n/8: Warming up for 100.00 ms
+Benchmarking ETSPStEph/n/8: Collecting 10 samples in estimated 400.00 ms (1.8M iterations)
+Benchmarking ETSPStEph/n/8: Analyzing
+ETSPStEph/n/8           time:   [210.73 ns 225.23 ns 238.97 ns]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking ETSPStEph/n/16
+Benchmarking ETSPStEph/n/16: Warming up for 100.00 ms
+Benchmarking ETSPStEph/n/16: Collecting 10 samples in estimated 400.03 ms (668k iterations)
+Benchmarking ETSPStEph/n/16: Analyzing
+ETSPStEph/n/16          time:   [609.99 ns 665.91 ns 691.43 ns]
+
+     Running benches/Chap61/BenchEdgeContractionMtEph.rs (target/release/deps/BenchEdgeContractionMtEph-9c77a045a9af4837)
+Benchmarking EdgeContractionMtEphRound/n/16
+Benchmarking EdgeContractionMtEphRound/n/16: Warming up for 100.00 ms
+Benchmarking EdgeContractionMtEphRound/n/16: Collecting 10 samples in estimated 407.47 ms (1210 iterations)
+Benchmarking EdgeContractionMtEphRound/n/16: Analyzing
+EdgeContractionMtEphRound/n/16
+                        time:   [326.32 µs 330.89 µs 335.89 µs]
+Benchmarking EdgeContractionMtEphRound/n/32
+Benchmarking EdgeContractionMtEphRound/n/32: Warming up for 100.00 ms
+Benchmarking EdgeContractionMtEphRound/n/32: Collecting 10 samples in estimated 409.26 ms (1045 iterations)
+Benchmarking EdgeContractionMtEphRound/n/32: Analyzing
+EdgeContractionMtEphRound/n/32
+                        time:   [383.69 µs 388.60 µs 396.09 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+
+     Running benches/Chap61/BenchEdgeContractionStEph.rs (target/release/deps/BenchEdgeContractionStEph-73954559d2069d46)
+Benchmarking EdgeContractionStEphRound/n/16
+Benchmarking EdgeContractionStEphRound/n/16: Warming up for 100.00 ms
+Benchmarking EdgeContractionStEphRound/n/16: Collecting 10 samples in estimated 400.12 ms (132k iterations)
+Benchmarking EdgeContractionStEphRound/n/16: Analyzing
+EdgeContractionStEphRound/n/16
+                        time:   [2.5714 µs 2.7185 µs 2.9275 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+Benchmarking EdgeContractionStEphRound/n/32
+Benchmarking EdgeContractionStEphRound/n/32: Warming up for 100.00 ms
+Benchmarking EdgeContractionStEphRound/n/32: Collecting 10 samples in estimated 400.15 ms (64k iterations)
+Benchmarking EdgeContractionStEphRound/n/32: Analyzing
+EdgeContractionStEphRound/n/32
+                        time:   [5.8845 µs 5.9419 µs 6.0495 µs]
+
+     Running benches/Chap52/BenchEdgeSetGraphMtPer.rs (target/release/deps/BenchEdgeSetGraphMtPer-cd90e9f954894e15)
+Benchmarking EdgeSetGraphMtPerBuild/n/16
+Benchmarking EdgeSetGraphMtPerBuild/n/16: Warming up for 100.00 ms
+Benchmarking EdgeSetGraphMtPerBuild/n/16: Collecting 10 samples in estimated 403.44 ms (4290 iterations)
+Benchmarking EdgeSetGraphMtPerBuild/n/16: Analyzing
+EdgeSetGraphMtPerBuild/n/16
+                        time:   [93.372 µs 95.447 µs 99.808 µs]
+Benchmarking EdgeSetGraphMtPerBuild/n/32
+Benchmarking EdgeSetGraphMtPerBuild/n/32: Warming up for 100.00 ms
+Benchmarking EdgeSetGraphMtPerBuild/n/32: Collecting 10 samples in estimated 415.41 ms (1045 iterations)
+Benchmarking EdgeSetGraphMtPerBuild/n/32: Analyzing
+EdgeSetGraphMtPerBuild/n/32
+                        time:   [389.53 µs 391.67 µs 396.94 µs]
+
+     Running benches/Chap52/BenchEdgeSetGraphStEph.rs (target/release/deps/BenchEdgeSetGraphStEph-c89c36c263db7af8)
+Benchmarking EdgeSetGraphStEph/insert_edge/16
+Benchmarking EdgeSetGraphStEph/insert_edge/16: Warming up for 100.00 ms
+Benchmarking EdgeSetGraphStEph/insert_edge/16: Collecting 10 samples in estimated 302.17 ms (7590 iterations)
+Benchmarking EdgeSetGraphStEph/insert_edge/16: Analyzing
+EdgeSetGraphStEph/insert_edge/16
+                        time:   [38.715 µs 39.515 µs 40.192 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking EdgeSetGraphStEph/insert_edge/32
+Benchmarking EdgeSetGraphStEph/insert_edge/32: Warming up for 100.00 ms
+Benchmarking EdgeSetGraphStEph/insert_edge/32: Collecting 10 samples in estimated 304.27 ms (1705 iterations)
+Benchmarking EdgeSetGraphStEph/insert_edge/32: Analyzing
+EdgeSetGraphStEph/insert_edge/32
+                        time:   [176.08 µs 177.56 µs 179.35 µs]
+
+     Running benches/Chap52/BenchEdgeSetGraphStPer.rs (target/release/deps/BenchEdgeSetGraphStPer-672d67a62cb3437c)
+Benchmarking EdgeSetGraphStPerBuild/n/16
+Benchmarking EdgeSetGraphStPerBuild/n/16: Warming up for 100.00 ms
+Benchmarking EdgeSetGraphStPerBuild/n/16: Collecting 10 samples in estimated 403.06 ms (5830 iterations)
+Benchmarking EdgeSetGraphStPerBuild/n/16: Analyzing
+EdgeSetGraphStPerBuild/n/16
+                        time:   [71.543 µs 72.749 µs 74.821 µs]
+Benchmarking EdgeSetGraphStPerBuild/n/32
+Benchmarking EdgeSetGraphStPerBuild/n/32: Warming up for 100.00 ms
+Benchmarking EdgeSetGraphStPerBuild/n/32: Collecting 10 samples in estimated 412.53 ms (1375 iterations)
+Benchmarking EdgeSetGraphStPerBuild/n/32: Analyzing
+EdgeSetGraphStPerBuild/n/32
+                        time:   [307.62 µs 315.21 µs 326.49 µs]
+
+     Running benches/Chap11/BenchFibonacciStEph.rs (target/release/deps/BenchFibonacciStEph-e979a69ab9fc2b08)
+Benchmarking FibIterative/n/30
+Benchmarking FibIterative/n/30: Warming up for 100.00 ms
+Benchmarking FibIterative/n/30: Collecting 20 samples in estimated 200.00 ms (13M iterations)
+Benchmarking FibIterative/n/30: Analyzing
+FibIterative/n/30       time:   [14.329 ns 14.842 ns 15.422 ns]
+                        change: [+4.0516% +7.7721% +11.898%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking FibIterative/n/46
+Benchmarking FibIterative/n/46: Warming up for 100.00 ms
+Benchmarking FibIterative/n/46: Collecting 20 samples in estimated 200.00 ms (8.7M iterations)
+Benchmarking FibIterative/n/46: Analyzing
+FibIterative/n/46       time:   [21.659 ns 22.123 ns 22.671 ns]
+                        change: [+3.3059% +7.5776% +12.245%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+Benchmarking FibRecursive/n/20
+Benchmarking FibRecursive/n/20: Warming up for 100.00 ms
+Benchmarking FibRecursive/n/20: Collecting 20 samples in estimated 203.15 ms (10k iterations)
+Benchmarking FibRecursive/n/20: Analyzing
+FibRecursive/n/20       time:   [17.178 µs 17.924 µs 19.026 µs]
+                        change: [+13.797% +18.743% +23.037%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking FibRecursive/n/30
+Benchmarking FibRecursive/n/30: Warming up for 100.00 ms
+Benchmarking FibRecursive/n/30: Collecting 20 samples in estimated 204.51 ms (80 iterations)
+Benchmarking FibRecursive/n/30: Analyzing
+FibRecursive/n/30       time:   [2.4367 ms 2.4565 ms 2.4770 ms]
+                        change: [+22.685% +24.259% +25.738%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap03/BenchInsertionSortStEph.rs (target/release/deps/BenchInsertionSortStEph-5a0a3fa03aa491d8)
+Benchmarking InsertionSortSt/reverse/32
+Benchmarking InsertionSortSt/reverse/32: Warming up for 300.00 ms
+Benchmarking InsertionSortSt/reverse/32: Collecting 30 samples in estimated 1.0003 s (429k iterations)
+Benchmarking InsertionSortSt/reverse/32: Analyzing
+InsertionSortSt/reverse/32
+                        time:   [2.4560 µs 2.5212 µs 2.5838 µs]
+                        change: [+14.832% +17.149% +19.670%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking InsertionSortSt/reverse/64
+Benchmarking InsertionSortSt/reverse/64: Warming up for 300.00 ms
+Benchmarking InsertionSortSt/reverse/64: Collecting 30 samples in estimated 1.0037 s (104k iterations)
+Benchmarking InsertionSortSt/reverse/64: Analyzing
+InsertionSortSt/reverse/64
+                        time:   [9.4075 µs 9.4788 µs 9.5423 µs]
+                        change: [+7.3341% +8.8074% +10.355%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 3 outliers among 30 measurements (10.00%)
+  2 (6.67%) low mild
+  1 (3.33%) high severe
+Benchmarking InsertionSortSt/reverse/128
+Benchmarking InsertionSortSt/reverse/128: Warming up for 300.00 ms
+Benchmarking InsertionSortSt/reverse/128: Collecting 30 samples in estimated 1.0138 s (27k iterations)
+Benchmarking InsertionSortSt/reverse/128: Analyzing
+InsertionSortSt/reverse/128
+                        time:   [38.387 µs 38.580 µs 38.730 µs]
+                        change: [+7.8028% +8.8637% +9.7695%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 4 outliers among 30 measurements (13.33%)
+  1 (3.33%) low severe
+  2 (6.67%) low mild
+  1 (3.33%) high severe
+
+     Running benches/Chap59/BenchJohnsonMtEphI64.rs (target/release/deps/BenchJohnsonMtEphI64-40904a1ac5697bb0)
+Benchmarking JohnsonMtEphI64/chain_n/8
+Benchmarking JohnsonMtEphI64/chain_n/8: Warming up for 100.00 ms
+Benchmarking JohnsonMtEphI64/chain_n/8: Collecting 10 samples in estimated 401.09 ms (2750 iterations)
+Benchmarking JohnsonMtEphI64/chain_n/8: Analyzing
+JohnsonMtEphI64/chain_n/8
+                        time:   [134.06 µs 135.64 µs 137.56 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking JohnsonMtEphI64/chain_n/16
+Benchmarking JohnsonMtEphI64/chain_n/16: Warming up for 100.00 ms
+Benchmarking JohnsonMtEphI64/chain_n/16: Collecting 10 samples in estimated 409.81 ms (1925 iterations)
+Benchmarking JohnsonMtEphI64/chain_n/16: Analyzing
+JohnsonMtEphI64/chain_n/16
+                        time:   [197.38 µs 210.35 µs 225.26 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+
+     Running benches/Chap59/BenchJohnsonStEphI64.rs (target/release/deps/BenchJohnsonStEphI64-c1eea2a84b6062b9)
+Benchmarking JohnsonStEphI64/chain_n/8
+Benchmarking JohnsonStEphI64/chain_n/8: Warming up for 100.00 ms
+Benchmarking JohnsonStEphI64/chain_n/8: Collecting 10 samples in estimated 300.29 ms (21k iterations)
+Benchmarking JohnsonStEphI64/chain_n/8: Analyzing
+JohnsonStEphI64/chain_n/8
+                        time:   [15.073 µs 15.315 µs 15.556 µs]
+Benchmarking JohnsonStEphI64/chain_n/16
+Benchmarking JohnsonStEphI64/chain_n/16: Warming up for 100.00 ms
+Benchmarking JohnsonStEphI64/chain_n/16: Collecting 10 samples in estimated 302.80 ms (5555 iterations)
+Benchmarking JohnsonStEphI64/chain_n/16: Analyzing
+JohnsonStEphI64/chain_n/16
+                        time:   [54.646 µs 55.330 µs 56.692 µs]
+
+     Running benches/Chap05/BenchKleeneStPer.rs (target/release/deps/BenchKleeneStPer-bb184db495ff3b00)
+Benchmarking KleeneMemStar/n/16
+Benchmarking KleeneMemStar/n/16: Warming up for 100.00 ms
+Benchmarking KleeneMemStar/n/16: Collecting 20 samples in estimated 200.00 ms (1.2M iterations)
+Benchmarking KleeneMemStar/n/16: Analyzing
+KleeneMemStar/n/16      time:   [178.32 ns 179.89 ns 181.56 ns]
+Benchmarking KleeneMemStar/n/64
+Benchmarking KleeneMemStar/n/64: Warming up for 100.00 ms
+Benchmarking KleeneMemStar/n/64: Collecting 20 samples in estimated 200.08 ms (305k iterations)
+Benchmarking KleeneMemStar/n/64: Analyzing
+KleeneMemStar/n/64      time:   [666.48 ns 703.03 ns 727.93 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+
+     Running benches/Chap65/BenchKruskalStEph.rs (target/release/deps/BenchKruskalStEph-d3bfd29422618e13)
+Benchmarking KruskalStEph/chain_n/16
+Benchmarking KruskalStEph/chain_n/16: Warming up for 100.00 ms
+Benchmarking KruskalStEph/chain_n/16: Collecting 10 samples in estimated 300.10 ms (61k iterations)
+Benchmarking KruskalStEph/chain_n/16: Analyzing
+KruskalStEph/chain_n/16 time:   [4.8871 µs 4.9277 µs 4.9730 µs]
+Benchmarking KruskalStEph/chain_n/32
+Benchmarking KruskalStEph/chain_n/32: Warming up for 100.00 ms
+Benchmarking KruskalStEph/chain_n/32: Collecting 10 samples in estimated 300.15 ms (26k iterations)
+Benchmarking KruskalStEph/chain_n/32: Analyzing
+KruskalStEph/chain_n/32 time:   [11.196 µs 11.296 µs 11.430 µs]
+
+     Running benches/Chap45/BenchLeftistHeapPQ.rs (target/release/deps/BenchLeftistHeapPQ-fbc0adfb6c77d417)
+Benchmarking LeftistHeapPQInsert/n/32
+Benchmarking LeftistHeapPQInsert/n/32: Warming up for 100.00 ms
+Benchmarking LeftistHeapPQInsert/n/32: Collecting 20 samples in estimated 302.87 ms (14k iterations)
+Benchmarking LeftistHeapPQInsert/n/32: Analyzing
+LeftistHeapPQInsert/n/32
+                        time:   [20.053 µs 20.174 µs 20.312 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking LeftistHeapPQInsert/n/64
+Benchmarking LeftistHeapPQInsert/n/64: Warming up for 100.00 ms
+Benchmarking LeftistHeapPQInsert/n/64: Collecting 20 samples in estimated 326.39 ms (2520 iterations)
+Benchmarking LeftistHeapPQInsert/n/64: Analyzing
+LeftistHeapPQInsert/n/64
+                        time:   [119.40 µs 122.76 µs 127.84 µs]
+
+Benchmarking LeftistHeapPQDeleteMin/n/32
+Benchmarking LeftistHeapPQDeleteMin/n/32: Warming up for 100.00 ms
+Benchmarking LeftistHeapPQDeleteMin/n/32: Collecting 20 samples in estimated 206.63 ms (5250 iterations)
+Benchmarking LeftistHeapPQDeleteMin/n/32: Analyzing
+LeftistHeapPQDeleteMin/n/32
+                        time:   [2.1441 µs 2.1698 µs 2.2019 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking LeftistHeapPQDeleteMin/n/64
+Benchmarking LeftistHeapPQDeleteMin/n/64: Warming up for 100.00 ms
+Benchmarking LeftistHeapPQDeleteMin/n/64: Collecting 20 samples in estimated 213.29 ms (1470 iterations)
+Benchmarking LeftistHeapPQDeleteMin/n/64: Analyzing
+LeftistHeapPQDeleteMin/n/64
+                        time:   [4.2308 µs 4.3031 µs 4.3686 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+
+     Running benches/Chap47/BenchLinProbFlatHashTable.rs (target/release/deps/BenchLinProbFlatHashTable-a657182de1a81c85)
+Benchmarking LinProbHashInsert/n/16
+Benchmarking LinProbHashInsert/n/16: Warming up for 100.00 ms
+Benchmarking LinProbHashInsert/n/16: Collecting 20 samples in estimated 300.00 ms (2.0M iterations)
+Benchmarking LinProbHashInsert/n/16: Analyzing
+LinProbHashInsert/n/16  time:   [147.52 ns 148.80 ns 150.24 ns]
+Benchmarking LinProbHashInsert/n/32
+Benchmarking LinProbHashInsert/n/32: Warming up for 100.00 ms
+Benchmarking LinProbHashInsert/n/32: Collecting 20 samples in estimated 300.03 ms (1.4M iterations)
+Benchmarking LinProbHashInsert/n/32: Analyzing
+LinProbHashInsert/n/32  time:   [223.29 ns 224.28 ns 225.31 ns]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+
+Benchmarking LinProbHashLookup/n/16
+Benchmarking LinProbHashLookup/n/16: Warming up for 100.00 ms
+Benchmarking LinProbHashLookup/n/16: Collecting 20 samples in estimated 200.00 ms (60M iterations)
+Benchmarking LinProbHashLookup/n/16: Analyzing
+LinProbHashLookup/n/16  time:   [2.8273 ns 2.8636 ns 2.8943 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+Benchmarking LinProbHashLookup/n/32
+Benchmarking LinProbHashLookup/n/32: Warming up for 100.00 ms
+Benchmarking LinProbHashLookup/n/32: Collecting 20 samples in estimated 200.00 ms (64M iterations)
+Benchmarking LinProbHashLookup/n/32: Analyzing
+LinProbHashLookup/n/32  time:   [2.9043 ns 2.9466 ns 2.9808 ns]
+
+     Running benches/Chap47/BenchLinkedListChainedHashTable.rs (target/release/deps/BenchLinkedListChainedHashTable-3f27e926c19ea98b)
+Benchmarking LLChainHashInsert/n/32
+Benchmarking LLChainHashInsert/n/32: Warming up for 100.00 ms
+Benchmarking LLChainHashInsert/n/32: Collecting 20 samples in estimated 300.13 ms (313k iterations)
+Benchmarking LLChainHashInsert/n/32: Analyzing
+LLChainHashInsert/n/32  time:   [805.98 ns 860.50 ns 928.28 ns]
+Found 3 outliers among 20 measurements (15.00%)
+  3 (15.00%) low severe
+Benchmarking LLChainHashInsert/n/64
+Benchmarking LLChainHashInsert/n/64: Warming up for 100.00 ms
+Benchmarking LLChainHashInsert/n/64: Collecting 20 samples in estimated 300.40 ms (87k iterations)
+Benchmarking LLChainHashInsert/n/64: Analyzing
+LLChainHashInsert/n/64  time:   [2.9205 µs 3.0475 µs 3.1854 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low mild
+  1 (5.00%) high mild
+
+Benchmarking LLChainHashLookup/n/32
+Benchmarking LLChainHashLookup/n/32: Warming up for 100.00 ms
+Benchmarking LLChainHashLookup/n/32: Collecting 20 samples in estimated 200.00 ms (92M iterations)
+Benchmarking LLChainHashLookup/n/32: Analyzing
+LLChainHashLookup/n/32  time:   [2.1907 ns 2.2042 ns 2.2213 ns]
+Benchmarking LLChainHashLookup/n/64
+Benchmarking LLChainHashLookup/n/64: Warming up for 100.00 ms
+Benchmarking LLChainHashLookup/n/64: Collecting 20 samples in estimated 200.00 ms (100M iterations)
+Benchmarking LLChainHashLookup/n/64: Analyzing
+LLChainHashLookup/n/64  time:   [2.0102 ns 2.0330 ns 2.0551 ns]
+
+     Running benches/Chap18/BenchLinkedListStEph.rs (target/release/deps/BenchLinkedListStEph-9beba9bc2a48a0f0)
+Benchmarking LinkedListAppend/n/64
+Benchmarking LinkedListAppend/n/64: Warming up for 100.00 ms
+Benchmarking LinkedListAppend/n/64: Collecting 20 samples in estimated 200.01 ms (2.2M iterations)
+Benchmarking LinkedListAppend/n/64: Analyzing
+LinkedListAppend/n/64   time:   [80.001 ns 82.738 ns 86.267 ns]
+Found 4 outliers among 20 measurements (20.00%)
+  2 (10.00%) low severe
+  2 (10.00%) low mild
+Benchmarking LinkedListAppend/n/256
+Benchmarking LinkedListAppend/n/256: Warming up for 100.00 ms
+Benchmarking LinkedListAppend/n/256: Collecting 20 samples in estimated 200.05 ms (613k iterations)
+Benchmarking LinkedListAppend/n/256: Analyzing
+LinkedListAppend/n/256  time:   [329.51 ns 332.72 ns 336.98 ns]
+
+Benchmarking LinkedListNth/last/64
+Benchmarking LinkedListNth/last/64: Warming up for 100.00 ms
+Benchmarking LinkedListNth/last/64: Collecting 20 samples in estimated 200.00 ms (1.4B iterations)
+Benchmarking LinkedListNth/last/64: Analyzing
+LinkedListNth/last/64   time:   [146.22 ps 146.87 ps 147.58 ps]
+Found 4 outliers among 20 measurements (20.00%)
+  2 (10.00%) low mild
+  2 (10.00%) high mild
+Benchmarking LinkedListNth/last/256
+Benchmarking LinkedListNth/last/256: Warming up for 100.00 ms
+Benchmarking LinkedListNth/last/256: Collecting 20 samples in estimated 200.00 ms (1.4B iterations)
+Benchmarking LinkedListNth/last/256: Analyzing
+LinkedListNth/last/256  time:   [140.29 ps 143.72 ps 146.75 ps]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap18/BenchLinkedListStPer.rs (target/release/deps/BenchLinkedListStPer-b6c580fbb5843770)
+Benchmarking LinkedListPerAppend/n/64
+Benchmarking LinkedListPerAppend/n/64: Warming up for 100.00 ms
+Benchmarking LinkedListPerAppend/n/64: Collecting 20 samples in estimated 200.01 ms (2.7M iterations)
+Benchmarking LinkedListPerAppend/n/64: Analyzing
+LinkedListPerAppend/n/64
+                        time:   [74.787 ns 75.956 ns 77.941 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking LinkedListPerAppend/n/256
+Benchmarking LinkedListPerAppend/n/256: Warming up for 100.00 ms
+Benchmarking LinkedListPerAppend/n/256: Collecting 20 samples in estimated 200.02 ms (634k iterations)
+Benchmarking LinkedListPerAppend/n/256: Analyzing
+LinkedListPerAppend/n/256
+                        time:   [312.72 ns 314.01 ns 315.43 ns]
+
+     Running benches/Chap05/BenchMappingStEph.rs (target/release/deps/BenchMappingStEph-b5c7c30b0d274b46)
+Benchmarking MappingFromVec/n/64
+Benchmarking MappingFromVec/n/64: Warming up for 100.00 ms
+Benchmarking MappingFromVec/n/64: Collecting 20 samples in estimated 200.00 ms (63k iterations)
+Benchmarking MappingFromVec/n/64: Analyzing
+MappingFromVec/n/64     time:   [3.2121 µs 3.2384 µs 3.2731 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+Benchmarking MappingFromVec/n/256
+Benchmarking MappingFromVec/n/256: Warming up for 100.00 ms
+Benchmarking MappingFromVec/n/256: Collecting 20 samples in estimated 202.67 ms (16k iterations)
+Benchmarking MappingFromVec/n/256: Analyzing
+MappingFromVec/n/256    time:   [12.354 µs 12.424 µs 12.489 µs]
+
+Benchmarking MappingMem/n/64
+Benchmarking MappingMem/n/64: Warming up for 100.00 ms
+Benchmarking MappingMem/n/64: Collecting 20 samples in estimated 200.00 ms (14M iterations)
+Benchmarking MappingMem/n/64: Analyzing
+MappingMem/n/64         time:   [15.652 ns 15.734 ns 15.849 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking MappingMem/n/256
+Benchmarking MappingMem/n/256: Warming up for 100.00 ms
+Benchmarking MappingMem/n/256: Collecting 20 samples in estimated 200.00 ms (14M iterations)
+Benchmarking MappingMem/n/256: Analyzing
+MappingMem/n/256        time:   [13.648 ns 13.722 ns 13.807 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap50/BenchMatrixChainStEph.rs (target/release/deps/BenchMatrixChainStEph-f52649acd181f364)
+Benchmarking MatrixChainStEph/n_matrices/6
+Benchmarking MatrixChainStEph/n_matrices/6: Warming up for 100.00 ms
+Benchmarking MatrixChainStEph/n_matrices/6: Collecting 10 samples in estimated 300.04 ms (103k iterations)
+Benchmarking MatrixChainStEph/n_matrices/6: Analyzing
+MatrixChainStEph/n_matrices/6
+                        time:   [2.5448 µs 2.5836 µs 2.6291 µs]
+Benchmarking MatrixChainStEph/n_matrices/10
+Benchmarking MatrixChainStEph/n_matrices/10: Warming up for 100.00 ms
+Benchmarking MatrixChainStEph/n_matrices/10: Collecting 10 samples in estimated 300.33 ms (29k iterations)
+Benchmarking MatrixChainStEph/n_matrices/10: Analyzing
+MatrixChainStEph/n_matrices/10
+                        time:   [10.311 µs 10.446 µs 10.601 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap50/BenchMatrixChainStPer.rs (target/release/deps/BenchMatrixChainStPer-b89c6150f46115dc)
+Benchmarking MatrixChainStPer/n_matrices/6
+Benchmarking MatrixChainStPer/n_matrices/6: Warming up for 100.00 ms
+Benchmarking MatrixChainStPer/n_matrices/6: Collecting 10 samples in estimated 300.05 ms (112k iterations)
+Benchmarking MatrixChainStPer/n_matrices/6: Analyzing
+MatrixChainStPer/n_matrices/6
+                        time:   [2.6302 µs 2.6480 µs 2.6822 µs]
+Benchmarking MatrixChainStPer/n_matrices/10
+Benchmarking MatrixChainStPer/n_matrices/10: Warming up for 100.00 ms
+Benchmarking MatrixChainStPer/n_matrices/10: Collecting 10 samples in estimated 300.54 ms (31k iterations)
+Benchmarking MatrixChainStPer/n_matrices/10: Analyzing
+MatrixChainStPer/n_matrices/10
+                        time:   [9.7466 µs 9.8935 µs 10.030 µs]
+Found 4 outliers among 10 measurements (40.00%)
+  2 (20.00%) low severe
+  2 (20.00%) high severe
+
+     Running benches/Chap28/BenchMaxContigSubSumBruteStEph.rs (target/release/deps/BenchMaxContigSubSumBruteStEph-cf42f37286007ae3)
+Benchmarking MCSSBrute/n/32
+Benchmarking MCSSBrute/n/32: Warming up for 100.00 ms
+Benchmarking MCSSBrute/n/32: Collecting 20 samples in estimated 300.00 ms (1.2M iterations)
+Benchmarking MCSSBrute/n/32: Analyzing
+MCSSBrute/n/32          time:   [240.56 ns 241.70 ns 243.42 ns]
+Benchmarking MCSSBrute/n/64
+Benchmarking MCSSBrute/n/64: Warming up for 100.00 ms
+Benchmarking MCSSBrute/n/64: Collecting 20 samples in estimated 300.01 ms (297k iterations)
+Benchmarking MCSSBrute/n/64: Analyzing
+MCSSBrute/n/64          time:   [977.80 ns 1.0176 µs 1.0765 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+
+     Running benches/Chap28/BenchMaxContigSubSumDivConStEph.rs (target/release/deps/BenchMaxContigSubSumDivConStEph-678e785df554ed47)
+Benchmarking MCSSdivcon/n/64
+Benchmarking MCSSdivcon/n/64: Warming up for 100.00 ms
+Benchmarking MCSSdivcon/n/64: Collecting 20 samples in estimated 200.09 ms (82k iterations)
+Benchmarking MCSSdivcon/n/64: Analyzing
+MCSSdivcon/n/64         time:   [2.2172 µs 2.2315 µs 2.2428 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) low mild
+Benchmarking MCSSdivcon/n/256
+Benchmarking MCSSdivcon/n/256: Warming up for 100.00 ms
+Benchmarking MCSSdivcon/n/256: Collecting 20 samples in estimated 201.48 ms (21k iterations)
+Benchmarking MCSSdivcon/n/256: Analyzing
+MCSSdivcon/n/256        time:   [9.5101 µs 9.5858 µs 9.6692 µs]
+
+     Running benches/Chap28/BenchMaxContigSubSumIterStEph.rs (target/release/deps/BenchMaxContigSubSumIterStEph-46a1f6fe4a3ec6c2)
+Benchmarking MCSSIter/n/64
+Benchmarking MCSSIter/n/64: Warming up for 100.00 ms
+Benchmarking MCSSIter/n/64: Collecting 20 samples in estimated 200.00 ms (7.3M iterations)
+Benchmarking MCSSIter/n/64: Analyzing
+MCSSIter/n/64           time:   [27.693 ns 27.837 ns 28.013 ns]
+Benchmarking MCSSIter/n/256
+Benchmarking MCSSIter/n/256: Warming up for 100.00 ms
+Benchmarking MCSSIter/n/256: Collecting 20 samples in estimated 200.02 ms (1.5M iterations)
+Benchmarking MCSSIter/n/256: Analyzing
+MCSSIter/n/256          time:   [122.34 ns 123.38 ns 124.35 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap28/BenchMaxContigSubSumMtEph.rs (target/release/deps/BenchMaxContigSubSumMtEph-d49d4d7781a7e33c)
+Benchmarking MCSSdivconMt/n/64
+Benchmarking MCSSdivconMt/n/64: Warming up for 100.00 ms
+Benchmarking MCSSdivconMt/n/64: Collecting 10 samples in estimated 400.11 ms (170k iterations)
+Benchmarking MCSSdivconMt/n/64: Analyzing
+MCSSdivconMt/n/64       time:   [2.2781 µs 2.2906 µs 2.3102 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking MCSSdivconMt/n/256
+Benchmarking MCSSdivconMt/n/256: Warming up for 100.00 ms
+Benchmarking MCSSdivconMt/n/256: Collecting 10 samples in estimated 400.54 ms (40k iterations)
+Benchmarking MCSSdivconMt/n/256: Analyzing
+MCSSdivconMt/n/256      time:   [9.7798 µs 9.9567 µs 10.125 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+
+Benchmarking MCSSOptMt/n/64
+Benchmarking MCSSOptMt/n/64: Warming up for 100.00 ms
+Benchmarking MCSSOptMt/n/64: Collecting 10 samples in estimated 400.00 ms (3.4M iterations)
+Benchmarking MCSSOptMt/n/64: Analyzing
+MCSSOptMt/n/64          time:   [117.54 ns 123.71 ns 129.60 ns]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) high severe
+Benchmarking MCSSOptMt/n/256
+Benchmarking MCSSOptMt/n/256: Warming up for 100.00 ms
+Benchmarking MCSSOptMt/n/256: Collecting 10 samples in estimated 400.01 ms (981k iterations)
+Benchmarking MCSSOptMt/n/256: Analyzing
+MCSSOptMt/n/256         time:   [380.27 ns 389.67 ns 406.20 ns]
+
+     Running benches/Chap28/BenchMaxContigSubSumOptStEph.rs (target/release/deps/BenchMaxContigSubSumOptStEph-ed9e92f6a74fcaef)
+Benchmarking MaxContigSubSumOpt/alternating/256
+Benchmarking MaxContigSubSumOpt/alternating/256: Warming up for 100.00 ms
+Benchmarking MaxContigSubSumOpt/alternating/256: Collecting 20 samples in estimated 250.05 ms (693k iterations)
+Benchmarking MaxContigSubSumOpt/alternating/256: Analyzing
+MaxContigSubSumOpt/alternating/256
+                        time:   [361.26 ns 363.39 ns 365.80 ns]
+                        change: [+27.058% +27.861% +28.676%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low mild
+  1 (5.00%) high mild
+Benchmarking MaxContigSubSumOpt/alternating/1024
+Benchmarking MaxContigSubSumOpt/alternating/1024: Warming up for 100.00 ms
+Benchmarking MaxContigSubSumOpt/alternating/1024: Collecting 20 samples in estimated 250.15 ms (183k iterations)
+Benchmarking MaxContigSubSumOpt/alternating/1024: Analyzing
+MaxContigSubSumOpt/alternating/1024
+                        time:   [1.4209 µs 1.4290 µs 1.4387 µs]
+                        change: [+20.699% +22.036% +23.381%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+     Running benches/Chap28/BenchMaxContigSubSumReducedStEph.rs (target/release/deps/BenchMaxContigSubSumReducedStEph-2ee88340d23728a2)
+Benchmarking MCSSReduced/n/64
+Benchmarking MCSSReduced/n/64: Warming up for 100.00 ms
+Benchmarking MCSSReduced/n/64: Collecting 20 samples in estimated 200.05 ms (207k iterations)
+Benchmarking MCSSReduced/n/64: Analyzing
+MCSSReduced/n/64        time:   [951.52 ns 958.94 ns 966.70 ns]
+Benchmarking MCSSReduced/n/256
+Benchmarking MCSSReduced/n/256: Warming up for 100.00 ms
+Benchmarking MCSSReduced/n/256: Collecting 20 samples in estimated 202.20 ms (12k iterations)
+Benchmarking MCSSReduced/n/256: Analyzing
+MCSSReduced/n/256       time:   [14.820 µs 15.016 µs 15.248 µs]
+
+     Running benches/Chap26/BenchMergeSortStPer.rs (target/release/deps/BenchMergeSortStPer-ccd6c5f788809bed)
+Benchmarking MergeSortStPer/reverse/64
+Benchmarking MergeSortStPer/reverse/64: Warming up for 100.00 ms
+Benchmarking MergeSortStPer/reverse/64: Collecting 10 samples in estimated 300.12 ms (66k iterations)
+Benchmarking MergeSortStPer/reverse/64: Analyzing
+MergeSortStPer/reverse/64
+                        time:   [5.0878 µs 5.1820 µs 5.2391 µs]
+                        change: [+31.748% +36.919% +41.334%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking MergeSortStPer/reverse/256
+Benchmarking MergeSortStPer/reverse/256: Warming up for 100.00 ms
+Benchmarking MergeSortStPer/reverse/256: Collecting 10 samples in estimated 301.16 ms (12k iterations)
+Benchmarking MergeSortStPer/reverse/256: Analyzing
+MergeSortStPer/reverse/256
+                        time:   [24.213 µs 24.518 µs 25.066 µs]
+                        change: [+24.050% +25.595% +27.194%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+     Running benches/Chap49/BenchMinEditDistStEph.rs (target/release/deps/BenchMinEditDistStEph-6e2dfadb8fa50c57)
+Benchmarking MinEditDist/n_x_n/20
+Benchmarking MinEditDist/n_x_n/20: Warming up for 100.00 ms
+Benchmarking MinEditDist/n_x_n/20: Collecting 10 samples in estimated 301.14 ms (12k iterations)
+Benchmarking MinEditDist/n_x_n/20: Analyzing
+MinEditDist/n_x_n/20    time:   [24.675 µs 24.871 µs 25.127 µs]
+                        change: [+17.812% +19.058% +20.432%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking MinEditDist/n_x_n/40
+Benchmarking MinEditDist/n_x_n/40: Warming up for 100.00 ms
+Benchmarking MinEditDist/n_x_n/40: Collecting 10 samples in estimated 301.18 ms (3575 iterations)
+Benchmarking MinEditDist/n_x_n/40: Analyzing
+MinEditDist/n_x_n/40    time:   [85.758 µs 86.795 µs 87.866 µs]
+                        change: [+21.526% +22.758% +23.916%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+     Running benches/Chap49/BenchMinEditDistStPer.rs (target/release/deps/BenchMinEditDistStPer-c26e59f75a478c15)
+Benchmarking MinEditDistStPer/n_x_n/20
+Benchmarking MinEditDistStPer/n_x_n/20: Warming up for 100.00 ms
+Benchmarking MinEditDistStPer/n_x_n/20: Collecting 10 samples in estimated 300.81 ms (12k iterations)
+Benchmarking MinEditDistStPer/n_x_n/20: Analyzing
+MinEditDistStPer/n_x_n/20
+                        time:   [24.032 µs 24.791 µs 25.970 µs]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low mild
+  2 (20.00%) high mild
+Benchmarking MinEditDistStPer/n_x_n/40
+Benchmarking MinEditDistStPer/n_x_n/40: Warming up for 100.00 ms
+Benchmarking MinEditDistStPer/n_x_n/40: Collecting 10 samples in estimated 304.58 ms (3410 iterations)
+Benchmarking MinEditDistStPer/n_x_n/40: Analyzing
+MinEditDistStPer/n_x_n/40
+                        time:   [82.641 µs 85.022 µs 88.745 µs]
+Found 3 outliers among 10 measurements (30.00%)
+  2 (20.00%) low mild
+  1 (10.00%) high mild
+
+     Running benches/Chap50/BenchOptBinSearchTreeStEph.rs (target/release/deps/BenchOptBinSearchTreeStEph-d25202f70ce44c55)
+Benchmarking OBSTStEph/n_keys/6
+Benchmarking OBSTStEph/n_keys/6: Warming up for 100.00 ms
+Benchmarking OBSTStEph/n_keys/6: Collecting 10 samples in estimated 300.12 ms (99k iterations)
+Benchmarking OBSTStEph/n_keys/6: Analyzing
+OBSTStEph/n_keys/6      time:   [2.8264 µs 2.8706 µs 2.9172 µs]
+Benchmarking OBSTStEph/n_keys/10
+Benchmarking OBSTStEph/n_keys/10: Warming up for 100.00 ms
+Benchmarking OBSTStEph/n_keys/10: Collecting 10 samples in estimated 300.13 ms (26k iterations)
+Benchmarking OBSTStEph/n_keys/10: Analyzing
+OBSTStEph/n_keys/10     time:   [11.380 µs 11.516 µs 11.649 µs]
+
+     Running benches/Chap50/BenchOptBinSearchTreeStPer.rs (target/release/deps/BenchOptBinSearchTreeStPer-2eb5b4ce067c87fb)
+Benchmarking OBSTStPer/n_keys/6
+Benchmarking OBSTStPer/n_keys/6: Warming up for 100.00 ms
+Benchmarking OBSTStPer/n_keys/6: Collecting 10 samples in estimated 300.10 ms (102k iterations)
+Benchmarking OBSTStPer/n_keys/6: Analyzing
+OBSTStPer/n_keys/6      time:   [2.8982 µs 2.9430 µs 2.9652 µs]
+Benchmarking OBSTStPer/n_keys/10
+Benchmarking OBSTStPer/n_keys/10: Warming up for 100.00 ms
+Benchmarking OBSTStPer/n_keys/10: Collecting 10 samples in estimated 300.49 ms (28k iterations)
+Benchmarking OBSTStPer/n_keys/10: Analyzing
+OBSTStPer/n_keys/10     time:   [10.610 µs 10.746 µs 10.903 µs]
+
+     Running benches/Chap35/BenchOrderStatSelectStEph.rs (target/release/deps/BenchOrderStatSelectStEph-7fe1658dd532613e)
+Benchmarking OrderStatSelect/median/64
+Benchmarking OrderStatSelect/median/64: Warming up for 100.00 ms
+Benchmarking OrderStatSelect/median/64: Collecting 10 samples in estimated 300.06 ms (174k iterations)
+Benchmarking OrderStatSelect/median/64: Analyzing
+OrderStatSelect/median/64
+                        time:   [1.6686 µs 1.6794 µs 1.6981 µs]
+                        change: [+33.630% +35.198% +36.984%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking OrderStatSelect/median/256
+Benchmarking OrderStatSelect/median/256: Warming up for 100.00 ms
+Benchmarking OrderStatSelect/median/256: Collecting 10 samples in estimated 300.11 ms (63k iterations)
+Benchmarking OrderStatSelect/median/256: Analyzing
+OrderStatSelect/median/256
+                        time:   [4.2062 µs 4.4012 µs 4.5541 µs]
+                        change: [+17.495% +24.040% +29.851%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+     Running benches/Chap43/BenchOrderedSetMtEph.rs (target/release/deps/BenchOrderedSetMtEph-af8fb9a212cd208f)
+Benchmarking OrdSetMtEphInsert/n/32
+Benchmarking OrdSetMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking OrdSetMtEphInsert/n/32: Collecting 10 samples in estimated 400.12 ms (9680 iterations)
+Benchmarking OrdSetMtEphInsert/n/32: Analyzing
+OrdSetMtEphInsert/n/32  time:   [40.578 µs 40.794 µs 41.234 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking OrdSetMtEphInsert/n/64
+Benchmarking OrdSetMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking OrdSetMtEphInsert/n/64: Collecting 10 samples in estimated 401.82 ms (2310 iterations)
+Benchmarking OrdSetMtEphInsert/n/64: Analyzing
+OrdSetMtEphInsert/n/64  time:   [168.14 µs 169.79 µs 172.02 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap43/BenchOrderedSetStEph.rs (target/release/deps/BenchOrderedSetStEph-770e5fe365836c8c)
+Benchmarking OrdSetStEphInsert/n/32
+Benchmarking OrdSetStEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking OrdSetStEphInsert/n/32: Collecting 20 samples in estimated 305.03 ms (7560 iterations)
+Benchmarking OrdSetStEphInsert/n/32: Analyzing
+OrdSetStEphInsert/n/32  time:   [40.119 µs 40.586 µs 40.984 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking OrdSetStEphInsert/n/64
+Benchmarking OrdSetStEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking OrdSetStEphInsert/n/64: Collecting 20 samples in estimated 326.85 ms (1890 iterations)
+Benchmarking OrdSetStEphInsert/n/64: Analyzing
+OrdSetStEphInsert/n/64  time:   [170.99 µs 173.28 µs 176.29 µs]
+
+Benchmarking OrdSetStEphFirstLast/n/32
+Benchmarking OrdSetStEphFirstLast/n/32: Warming up for 100.00 ms
+Benchmarking OrdSetStEphFirstLast/n/32: Collecting 20 samples in estimated 209.21 ms (4410 iterations)
+Benchmarking OrdSetStEphFirstLast/n/32: Analyzing
+OrdSetStEphFirstLast/n/32
+                        time:   [45.397 µs 45.760 µs 46.145 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  1 (5.00%) low mild
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+Benchmarking OrdSetStEphFirstLast/n/64
+Benchmarking OrdSetStEphFirstLast/n/64: Warming up for 100.00 ms
+Benchmarking OrdSetStEphFirstLast/n/64: Collecting 20 samples in estimated 207.90 ms (1260 iterations)
+Benchmarking OrdSetStEphFirstLast/n/64: Analyzing
+OrdSetStEphFirstLast/n/64
+                        time:   [166.36 µs 168.48 µs 170.57 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap43/BenchOrderedSetStPer.rs (target/release/deps/BenchOrderedSetStPer-c97bad7c73639ee9)
+Benchmarking OrdSetStPerInsert/n/32
+Benchmarking OrdSetStPerInsert/n/32: Warming up for 100.00 ms
+Benchmarking OrdSetStPerInsert/n/32: Collecting 20 samples in estimated 312.30 ms (4200 iterations)
+Benchmarking OrdSetStPerInsert/n/32: Analyzing
+OrdSetStPerInsert/n/32  time:   [74.385 µs 74.804 µs 75.268 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking OrdSetStPerInsert/n/64
+Benchmarking OrdSetStPerInsert/n/64: Warming up for 100.00 ms
+Benchmarking OrdSetStPerInsert/n/64: Collecting 20 samples in estimated 350.99 ms (1050 iterations)
+Benchmarking OrdSetStPerInsert/n/64: Analyzing
+OrdSetStPerInsert/n/64  time:   [324.55 µs 326.85 µs 328.67 µs]
+Found 4 outliers among 20 measurements (20.00%)
+  1 (5.00%) low mild
+  2 (10.00%) high mild
+  1 (5.00%) high severe
+
+     Running benches/Chap43/BenchOrderedTableMtEph.rs (target/release/deps/BenchOrderedTableMtEph-4b2fb76857882ef5)
+Benchmarking OrdTableMtEphInsert/n/32
+Benchmarking OrdTableMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking OrdTableMtEphInsert/n/32: Collecting 10 samples in estimated 402.06 ms (3520 iterations)
+Benchmarking OrdTableMtEphInsert/n/32: Analyzing
+OrdTableMtEphInsert/n/32
+                        time:   [102.41 µs 104.88 µs 107.99 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking OrdTableMtEphInsert/n/64
+Benchmarking OrdTableMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking OrdTableMtEphInsert/n/64: Collecting 10 samples in estimated 424.35 ms (825 iterations)
+Benchmarking OrdTableMtEphInsert/n/64: Analyzing
+OrdTableMtEphInsert/n/64
+                        time:   [503.31 µs 506.26 µs 511.33 µs]
+
+Benchmarking OrdTableMtEphLookup/n/32
+Benchmarking OrdTableMtEphLookup/n/32: Warming up for 100.00 ms
+Benchmarking OrdTableMtEphLookup/n/32: Collecting 10 samples in estimated 200.88 ms (6050 iterations)
+Benchmarking OrdTableMtEphLookup/n/32: Analyzing
+OrdTableMtEphLookup/n/32
+                        time:   [29.566 µs 29.962 µs 30.287 µs]
+Benchmarking OrdTableMtEphLookup/n/64
+Benchmarking OrdTableMtEphLookup/n/64: Warming up for 100.00 ms
+Benchmarking OrdTableMtEphLookup/n/64: Collecting 10 samples in estimated 205.01 ms (1650 iterations)
+Benchmarking OrdTableMtEphLookup/n/64: Analyzing
+OrdTableMtEphLookup/n/64
+                        time:   [125.26 µs 126.01 µs 127.29 µs]
+
+     Running benches/Chap43/BenchOrderedTableMtPer.rs (target/release/deps/BenchOrderedTableMtPer-68e7df22022abb27)
+Benchmarking OrdTableMtPerInsert/n/32
+Benchmarking OrdTableMtPerInsert/n/32: Warming up for 100.00 ms
+Benchmarking OrdTableMtPerInsert/n/32: Collecting 10 samples in estimated 402.20 ms (3795 iterations)
+Benchmarking OrdTableMtPerInsert/n/32: Analyzing
+OrdTableMtPerInsert/n/32
+                        time:   [109.84 µs 110.69 µs 111.99 µs]
+Benchmarking OrdTableMtPerInsert/n/64
+Benchmarking OrdTableMtPerInsert/n/64: Warming up for 100.00 ms
+Benchmarking OrdTableMtPerInsert/n/64: Collecting 10 samples in estimated 401.00 ms (825 iterations)
+Benchmarking OrdTableMtPerInsert/n/64: Analyzing
+OrdTableMtPerInsert/n/64
+                        time:   [494.13 µs 495.95 µs 498.98 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap43/BenchOrderedTableStEph.rs (target/release/deps/BenchOrderedTableStEph-f5a78c71c4d3d8fe)
+Benchmarking OrdTableInsert/n/32
+Benchmarking OrdTableInsert/n/32: Warming up for 100.00 ms
+Benchmarking OrdTableInsert/n/32: Collecting 20 samples in estimated 303.76 ms (2940 iterations)
+Benchmarking OrdTableInsert/n/32: Analyzing
+OrdTableInsert/n/32     time:   [107.72 µs 108.88 µs 109.91 µs]
+Benchmarking OrdTableInsert/n/64
+Benchmarking OrdTableInsert/n/64: Warming up for 100.00 ms
+Benchmarking OrdTableInsert/n/64: Collecting 20 samples in estimated 329.64 ms (630 iterations)
+Benchmarking OrdTableInsert/n/64: Analyzing
+OrdTableInsert/n/64     time:   [563.18 µs 576.34 µs 587.76 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+Benchmarking OrdTableLookup/n/32
+Benchmarking OrdTableLookup/n/32: Warming up for 100.00 ms
+Benchmarking OrdTableLookup/n/32: Collecting 20 samples in estimated 201.13 ms (6090 iterations)
+Benchmarking OrdTableLookup/n/32: Analyzing
+OrdTableLookup/n/32     time:   [33.862 µs 34.340 µs 34.910 µs]
+Benchmarking OrdTableLookup/n/64
+Benchmarking OrdTableLookup/n/64: Warming up for 100.00 ms
+Benchmarking OrdTableLookup/n/64: Collecting 20 samples in estimated 208.18 ms (1470 iterations)
+Benchmarking OrdTableLookup/n/64: Analyzing
+OrdTableLookup/n/64     time:   [130.85 µs 131.89 µs 133.27 µs]
+
+     Running benches/Chap43/BenchOrderedTableStPer.rs (target/release/deps/BenchOrderedTableStPer-6b1c6fa7de2b8513)
+Benchmarking OrdTableStPerInsert/n/32
+Benchmarking OrdTableStPerInsert/n/32: Warming up for 100.00 ms
+Benchmarking OrdTableStPerInsert/n/32: Collecting 20 samples in estimated 319.68 ms (2940 iterations)
+Benchmarking OrdTableStPerInsert/n/32: Analyzing
+OrdTableStPerInsert/n/32
+                        time:   [111.87 µs 112.59 µs 113.55 µs]
+Benchmarking OrdTableStPerInsert/n/64
+Benchmarking OrdTableStPerInsert/n/64: Warming up for 100.00 ms
+Benchmarking OrdTableStPerInsert/n/64: Collecting 20 samples in estimated 335.42 ms (630 iterations)
+Benchmarking OrdTableStPerInsert/n/64: Analyzing
+OrdTableStPerInsert/n/64
+                        time:   [485.44 µs 499.68 µs 514.08 µs]
+
+     Running benches/Chap65/BenchPrimStEph.rs (target/release/deps/BenchPrimStEph-105c9224974e440f)
+Benchmarking PrimStEph/chain_n/16
+Benchmarking PrimStEph/chain_n/16: Warming up for 100.00 ms
+Benchmarking PrimStEph/chain_n/16: Collecting 10 samples in estimated 300.20 ms (75k iterations)
+Benchmarking PrimStEph/chain_n/16: Analyzing
+PrimStEph/chain_n/16    time:   [4.4731 µs 4.6418 µs 4.8174 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+Benchmarking PrimStEph/chain_n/32
+Benchmarking PrimStEph/chain_n/32: Warming up for 100.00 ms
+Benchmarking PrimStEph/chain_n/32: Collecting 10 samples in estimated 300.25 ms (31k iterations)
+Benchmarking PrimStEph/chain_n/32: Analyzing
+PrimStEph/chain_n/32    time:   [9.6064 µs 9.7760 µs 9.9844 µs]
+
+     Running benches/Chap23/BenchPrimTreeSeqStPer.rs (target/release/deps/BenchPrimTreeSeqStPer-96ae623863adb6dd)
+Benchmarking PrimTreeSeqAppend/n/64
+Benchmarking PrimTreeSeqAppend/n/64: Warming up for 100.00 ms
+Benchmarking PrimTreeSeqAppend/n/64: Collecting 20 samples in estimated 200.00 ms (2.6M iterations)
+Benchmarking PrimTreeSeqAppend/n/64: Analyzing
+PrimTreeSeqAppend/n/64  time:   [77.442 ns 77.814 ns 78.353 ns]
+Benchmarking PrimTreeSeqAppend/n/256
+Benchmarking PrimTreeSeqAppend/n/256: Warming up for 100.00 ms
+Benchmarking PrimTreeSeqAppend/n/256: Collecting 20 samples in estimated 200.04 ms (627k iterations)
+Benchmarking PrimTreeSeqAppend/n/256: Analyzing
+PrimTreeSeqAppend/n/256 time:   [319.38 ns 320.81 ns 322.56 ns]
+Found 6 outliers among 20 measurements (30.00%)
+  1 (5.00%) low severe
+  2 (10.00%) low mild
+  3 (15.00%) high severe
+
+Benchmarking PrimTreeSeqSubseq/half/64
+Benchmarking PrimTreeSeqSubseq/half/64: Warming up for 100.00 ms
+Benchmarking PrimTreeSeqSubseq/half/64: Collecting 20 samples in estimated 200.00 ms (5.9M iterations)
+Benchmarking PrimTreeSeqSubseq/half/64: Analyzing
+PrimTreeSeqSubseq/half/64
+                        time:   [28.696 ns 29.600 ns 31.192 ns]
+Benchmarking PrimTreeSeqSubseq/half/256
+Benchmarking PrimTreeSeqSubseq/half/256: Warming up for 100.00 ms
+Benchmarking PrimTreeSeqSubseq/half/256: Collecting 20 samples in estimated 200.02 ms (2.3M iterations)
+Benchmarking PrimTreeSeqSubseq/half/256: Analyzing
+PrimTreeSeqSubseq/half/256
+                        time:   [83.523 ns 85.233 ns 86.767 ns]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high severe
+
+     Running benches/Chap47/BenchQuadProbFlatHashTable.rs (target/release/deps/BenchQuadProbFlatHashTable-127f182f4b3fe9e7)
+Benchmarking QuadProbHashInsert/n/16
+Benchmarking QuadProbHashInsert/n/16: Warming up for 100.00 ms
+Benchmarking QuadProbHashInsert/n/16: Collecting 20 samples in estimated 300.03 ms (1.8M iterations)
+Benchmarking QuadProbHashInsert/n/16: Analyzing
+QuadProbHashInsert/n/16 time:   [165.49 ns 166.37 ns 167.21 ns]
+Benchmarking QuadProbHashInsert/n/32
+Benchmarking QuadProbHashInsert/n/32: Warming up for 100.00 ms
+Benchmarking QuadProbHashInsert/n/32: Collecting 20 samples in estimated 300.05 ms (1.1M iterations)
+Benchmarking QuadProbHashInsert/n/32: Analyzing
+QuadProbHashInsert/n/32 time:   [272.43 ns 275.33 ns 277.85 ns]
+
+Benchmarking QuadProbHashLookup/n/16
+Benchmarking QuadProbHashLookup/n/16: Warming up for 100.00 ms
+Benchmarking QuadProbHashLookup/n/16: Collecting 20 samples in estimated 200.00 ms (69M iterations)
+Benchmarking QuadProbHashLookup/n/16: Analyzing
+QuadProbHashLookup/n/16 time:   [2.7235 ns 2.7511 ns 2.7891 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking QuadProbHashLookup/n/32
+Benchmarking QuadProbHashLookup/n/32: Warming up for 100.00 ms
+Benchmarking QuadProbHashLookup/n/32: Collecting 20 samples in estimated 200.00 ms (68M iterations)
+Benchmarking QuadProbHashLookup/n/32: Analyzing
+QuadProbHashLookup/n/32 time:   [2.8261 ns 2.8812 ns 2.9371 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap36/BenchQuickSortMtEph.rs (target/release/deps/BenchQuickSortMtEph-cd77818066d17cfb)
+Benchmarking QuickSortFirstMt/n/64
+Benchmarking QuickSortFirstMt/n/64: Warming up for 100.00 ms
+Benchmarking QuickSortFirstMt/n/64: Collecting 10 samples in estimated 400.80 ms (2860 iterations)
+Benchmarking QuickSortFirstMt/n/64: Analyzing
+QuickSortFirstMt/n/64   time:   [139.05 µs 140.86 µs 142.68 µs]
+Benchmarking QuickSortFirstMt/n/256
+Benchmarking QuickSortFirstMt/n/256: Warming up for 100.00 ms
+Benchmarking QuickSortFirstMt/n/256: Collecting 10 samples in estimated 417.79 ms (1100 iterations)
+Benchmarking QuickSortFirstMt/n/256: Analyzing
+QuickSortFirstMt/n/256  time:   [379.68 µs 387.95 µs 393.75 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+
+     Running benches/Chap36/BenchQuickSortStEph.rs (target/release/deps/BenchQuickSortStEph-dfaad387e44b1aa9)
+Benchmarking QuickSortFirst/reverse/32
+Benchmarking QuickSortFirst/reverse/32: Warming up for 100.00 ms
+Benchmarking QuickSortFirst/reverse/32: Collecting 10 samples in estimated 250.11 ms (34k iterations)
+Benchmarking QuickSortFirst/reverse/32: Analyzing
+QuickSortFirst/reverse/32
+                        time:   [7.3884 µs 7.4477 µs 7.5501 µs]
+                        change: [+20.375% +28.854% +37.432%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking QuickSortFirst/reverse/128
+Benchmarking QuickSortFirst/reverse/128: Warming up for 100.00 ms
+Benchmarking QuickSortFirst/reverse/128: Collecting 10 samples in estimated 251.93 ms (2970 iterations)
+Benchmarking QuickSortFirst/reverse/128: Analyzing
+QuickSortFirst/reverse/128
+                        time:   [80.522 µs 81.908 µs 85.104 µs]
+                        change: [+20.644% +27.556% +36.026%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+
+Benchmarking QuickSortMedian3/reverse/32
+Benchmarking QuickSortMedian3/reverse/32: Warming up for 100.00 ms
+Benchmarking QuickSortMedian3/reverse/32: Collecting 10 samples in estimated 250.11 ms (89k iterations)
+Benchmarking QuickSortMedian3/reverse/32: Analyzing
+QuickSortMedian3/reverse/32
+                        time:   [2.6194 µs 2.6761 µs 2.7417 µs]
+                        change: [+25.634% +28.270% +30.749%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking QuickSortMedian3/reverse/128
+Benchmarking QuickSortMedian3/reverse/128: Warming up for 100.00 ms
+Benchmarking QuickSortMedian3/reverse/128: Collecting 10 samples in estimated 250.50 ms (20k iterations)
+Benchmarking QuickSortMedian3/reverse/128: Analyzing
+QuickSortMedian3/reverse/128
+                        time:   [12.318 µs 12.545 µs 12.853 µs]
+                        change: [+30.541% +32.984% +35.792%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+
+     Running benches/Chap27/BenchReduceContractMtEph.rs (target/release/deps/BenchReduceContractMtEph-9ae82651987a62c5)
+Benchmarking ReduceContractParallel/n/64
+Benchmarking ReduceContractParallel/n/64: Warming up for 100.00 ms
+Benchmarking ReduceContractParallel/n/64: Collecting 10 samples in estimated 405.59 ms (2640 iterations)
+Benchmarking ReduceContractParallel/n/64: Analyzing
+ReduceContractParallel/n/64
+                        time:   [151.12 µs 157.03 µs 163.72 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking ReduceContractParallel/n/256
+Benchmarking ReduceContractParallel/n/256: Warming up for 100.00 ms
+Benchmarking ReduceContractParallel/n/256: Collecting 10 samples in estimated 406.12 ms (1705 iterations)
+Benchmarking ReduceContractParallel/n/256: Analyzing
+ReduceContractParallel/n/256
+                        time:   [238.60 µs 244.55 µs 253.13 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap27/BenchReduceContractStEph.rs (target/release/deps/BenchReduceContractStEph-cc7638fe1fa2e914)
+Benchmarking ReduceContractSum/n/64
+Benchmarking ReduceContractSum/n/64: Warming up for 100.00 ms
+Benchmarking ReduceContractSum/n/64: Collecting 20 samples in estimated 200.02 ms (1.5M iterations)
+Benchmarking ReduceContractSum/n/64: Analyzing
+ReduceContractSum/n/64  time:   [127.80 ns 129.17 ns 131.16 ns]
+Benchmarking ReduceContractSum/n/256
+Benchmarking ReduceContractSum/n/256: Warming up for 100.00 ms
+Benchmarking ReduceContractSum/n/256: Collecting 20 samples in estimated 200.01 ms (629k iterations)
+Benchmarking ReduceContractSum/n/256: Analyzing
+ReduceContractSum/n/256 time:   [267.93 ns 278.57 ns 288.68 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap05/BenchRelationStEph.rs (target/release/deps/BenchRelationStEph-0b195ef5cfcb4557)
+Benchmarking RelationFromVec/n/64
+Benchmarking RelationFromVec/n/64: Warming up for 100.00 ms
+Benchmarking RelationFromVec/n/64: Collecting 20 samples in estimated 200.56 ms (65k iterations)
+Benchmarking RelationFromVec/n/64: Analyzing
+RelationFromVec/n/64    time:   [3.1286 µs 3.1486 µs 3.1672 µs]
+Benchmarking RelationFromVec/n/256
+Benchmarking RelationFromVec/n/256: Warming up for 100.00 ms
+Benchmarking RelationFromVec/n/256: Collecting 20 samples in estimated 200.25 ms (17k iterations)
+Benchmarking RelationFromVec/n/256: Analyzing
+RelationFromVec/n/256   time:   [11.147 µs 11.668 µs 12.218 µs]
+Found 4 outliers among 20 measurements (20.00%)
+  2 (10.00%) low severe
+  1 (5.00%) low mild
+  1 (5.00%) high severe
+
+Benchmarking RelationMem/n/64
+Benchmarking RelationMem/n/64: Warming up for 100.00 ms
+Benchmarking RelationMem/n/64: Collecting 20 samples in estimated 200.00 ms (13M iterations)
+Benchmarking RelationMem/n/64: Analyzing
+RelationMem/n/64        time:   [14.521 ns 14.631 ns 14.729 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+Benchmarking RelationMem/n/256
+Benchmarking RelationMem/n/256: Warming up for 100.00 ms
+Benchmarking RelationMem/n/256: Collecting 20 samples in estimated 200.00 ms (14M iterations)
+Benchmarking RelationMem/n/256: Analyzing
+RelationMem/n/256       time:   [13.536 ns 13.726 ns 13.909 ns]
+
+     Running benches/Chap55/BenchSCCStEph.rs (target/release/deps/BenchSCCStEph-a8c49d1fae1c211c)
+Benchmarking SCCStEph/n/32
+Benchmarking SCCStEph/n/32: Warming up for 100.00 ms
+Benchmarking SCCStEph/n/32: Collecting 10 samples in estimated 300.31 ms (18k iterations)
+Benchmarking SCCStEph/n/32: Analyzing
+SCCStEph/n/32           time:   [16.951 µs 17.415 µs 17.761 µs]
+Benchmarking SCCStEph/n/64
+Benchmarking SCCStEph/n/64: Warming up for 100.00 ms
+Benchmarking SCCStEph/n/64: Collecting 10 samples in estimated 300.65 ms (7260 iterations)
+Benchmarking SCCStEph/n/64: Analyzing
+SCCStEph/n/64           time:   [39.195 µs 40.295 µs 41.418 µs]
+
+     Running benches/Chap55/BenchSCCStPer.rs (target/release/deps/BenchSCCStPer-df4362f3f0c6f0b8)
+Benchmarking SCCStPer/n/32
+Benchmarking SCCStPer/n/32: Warming up for 100.00 ms
+Benchmarking SCCStPer/n/32: Collecting 10 samples in estimated 300.95 ms (14k iterations)
+Benchmarking SCCStPer/n/32: Analyzing
+SCCStPer/n/32           time:   [22.645 µs 23.468 µs 24.877 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking SCCStPer/n/64
+Benchmarking SCCStPer/n/64: Warming up for 100.00 ms
+Benchmarking SCCStPer/n/64: Collecting 10 samples in estimated 301.37 ms (6105 iterations)
+Benchmarking SCCStPer/n/64: Analyzing
+SCCStPer/n/64           time:   [47.094 µs 47.447 µs 47.852 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap27/BenchScanContractMtEph.rs (target/release/deps/BenchScanContractMtEph-3f2724800dae76f6)
+Benchmarking ScanContractParallel/n/64
+Benchmarking ScanContractParallel/n/64: Warming up for 100.00 ms
+Benchmarking ScanContractParallel/n/64: Collecting 10 samples in estimated 404.93 ms (2530 iterations)
+Benchmarking ScanContractParallel/n/64: Analyzing
+ScanContractParallel/n/64
+                        time:   [160.19 µs 170.55 µs 179.05 µs]
+Benchmarking ScanContractParallel/n/256
+Benchmarking ScanContractParallel/n/256: Warming up for 100.00 ms
+Benchmarking ScanContractParallel/n/256: Collecting 10 samples in estimated 408.14 ms (1815 iterations)
+Benchmarking ScanContractParallel/n/256: Analyzing
+ScanContractParallel/n/256
+                        time:   [207.58 µs 214.79 µs 218.80 µs]
+
+     Running benches/Chap27/BenchScanContractStEph.rs (target/release/deps/BenchScanContractStEph-54f66e0fc216ce6d)
+Benchmarking ScanContractSum/n/64
+Benchmarking ScanContractSum/n/64: Warming up for 100.00 ms
+Benchmarking ScanContractSum/n/64: Collecting 20 samples in estimated 200.01 ms (688k iterations)
+Benchmarking ScanContractSum/n/64: Analyzing
+ScanContractSum/n/64    time:   [286.36 ns 288.65 ns 290.74 ns]
+Benchmarking ScanContractSum/n/256
+Benchmarking ScanContractSum/n/256: Warming up for 100.00 ms
+Benchmarking ScanContractSum/n/256: Collecting 20 samples in estimated 200.09 ms (258k iterations)
+Benchmarking ScanContractSum/n/256: Analyzing
+ScanContractSum/n/256   time:   [748.81 ns 757.93 ns 767.65 ns]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low mild
+  1 (5.00%) high mild
+
+     Running benches/Chap26/BenchScanDCStPer.rs (target/release/deps/BenchScanDCStPer-a520c9051b430a2d)
+Benchmarking ScanDCPrefixSums/n/64
+Benchmarking ScanDCPrefixSums/n/64: Warming up for 100.00 ms
+Benchmarking ScanDCPrefixSums/n/64: Collecting 20 samples in estimated 301.17 ms (49k iterations)
+Benchmarking ScanDCPrefixSums/n/64: Analyzing
+ScanDCPrefixSums/n/64   time:   [5.8782 µs 5.9128 µs 5.9472 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking ScanDCPrefixSums/n/256
+Benchmarking ScanDCPrefixSums/n/256: Warming up for 100.00 ms
+Benchmarking ScanDCPrefixSums/n/256: Collecting 20 samples in estimated 304.31 ms (14k iterations)
+Benchmarking ScanDCPrefixSums/n/256: Analyzing
+ScanDCPrefixSums/n/256  time:   [20.860 µs 21.033 µs 21.257 µs]
+
+     Running benches/Chap05/BenchSetStEph.rs (target/release/deps/BenchSetStEph-fa964fd22061a507)
+Benchmarking SetInsert/n/64
+Benchmarking SetInsert/n/64: Warming up for 100.00 ms
+Benchmarking SetInsert/n/64: Collecting 20 samples in estimated 200.11 ms (92k iterations)
+Benchmarking SetInsert/n/64: Analyzing
+SetInsert/n/64          time:   [2.2022 µs 2.2167 µs 2.2376 µs]
+Benchmarking SetInsert/n/256
+Benchmarking SetInsert/n/256: Warming up for 100.00 ms
+Benchmarking SetInsert/n/256: Collecting 20 samples in estimated 201.56 ms (21k iterations)
+Benchmarking SetInsert/n/256: Analyzing
+SetInsert/n/256         time:   [8.9132 µs 9.4864 µs 9.9348 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low severe
+  1 (5.00%) high severe
+
+Benchmarking SetUnion/n/64
+Benchmarking SetUnion/n/64: Warming up for 100.00 ms
+Benchmarking SetUnion/n/64: Collecting 20 samples in estimated 200.42 ms (81k iterations)
+Benchmarking SetUnion/n/64: Analyzing
+SetUnion/n/64           time:   [2.2872 µs 2.3170 µs 2.3500 µs]
+Benchmarking SetUnion/n/256
+Benchmarking SetUnion/n/256: Warming up for 100.00 ms
+Benchmarking SetUnion/n/256: Collecting 20 samples in estimated 200.74 ms (24k iterations)
+Benchmarking SetUnion/n/256: Analyzing
+SetUnion/n/256          time:   [8.7682 µs 8.9001 µs 9.0249 µs]
+
+     Running benches/Chap45/BenchSortedListPQ.rs (target/release/deps/BenchSortedListPQ-91163badd14c9385)
+Benchmarking SortedListPQInsert/n/32
+Benchmarking SortedListPQInsert/n/32: Warming up for 100.00 ms
+Benchmarking SortedListPQInsert/n/32: Collecting 20 samples in estimated 300.13 ms (108k iterations)
+Benchmarking SortedListPQInsert/n/32: Analyzing
+SortedListPQInsert/n/32 time:   [2.6255 µs 2.6621 µs 2.7003 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking SortedListPQInsert/n/64
+Benchmarking SortedListPQInsert/n/64: Warming up for 100.00 ms
+Benchmarking SortedListPQInsert/n/64: Collecting 20 samples in estimated 300.98 ms (41k iterations)
+Benchmarking SortedListPQInsert/n/64: Analyzing
+SortedListPQInsert/n/64 time:   [6.9483 µs 7.0208 µs 7.0877 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+
+Benchmarking SortedListPQDeleteMin/n/32
+Benchmarking SortedListPQDeleteMin/n/32: Warming up for 100.00 ms
+Benchmarking SortedListPQDeleteMin/n/32: Collecting 20 samples in estimated 200.41 ms (49k iterations)
+Benchmarking SortedListPQDeleteMin/n/32: Analyzing
+SortedListPQDeleteMin/n/32
+                        time:   [71.683 ns 72.401 ns 73.275 ns]
+Benchmarking SortedListPQDeleteMin/n/64
+Benchmarking SortedListPQDeleteMin/n/64: Warming up for 100.00 ms
+Benchmarking SortedListPQDeleteMin/n/64: Collecting 20 samples in estimated 200.46 ms (18k iterations)
+Benchmarking SortedListPQDeleteMin/n/64: Analyzing
+SortedListPQDeleteMin/n/64
+                        time:   [81.351 ns 81.934 ns 82.461 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low severe
+
+     Running benches/Chap64/BenchSpanTreeMtEph.rs (target/release/deps/BenchSpanTreeMtEph-402780d8ed7ab01f)
+Benchmarking SpanTreeMtEph/n/16
+Benchmarking SpanTreeMtEph/n/16: Warming up for 100.00 ms
+Benchmarking SpanTreeMtEph/n/16: Collecting 10 samples in estimated 592.84 ms (165 iterations)
+Benchmarking SpanTreeMtEph/n/16: Analyzing
+SpanTreeMtEph/n/16      time:   [3.1449 ms 3.1937 ms 3.2451 ms]
+Benchmarking SpanTreeMtEph/n/32
+Benchmarking SpanTreeMtEph/n/32: Warming up for 100.00 ms
+Benchmarking SpanTreeMtEph/n/32: Collecting 10 samples in estimated 518.24 ms (110 iterations)
+Benchmarking SpanTreeMtEph/n/32: Analyzing
+SpanTreeMtEph/n/32      time:   [4.4998 ms 4.6254 ms 4.7811 ms]
+
+     Running benches/Chap64/BenchSpanTreeStEph.rs (target/release/deps/BenchSpanTreeStEph-60ba69bf14a9e44e)
+Benchmarking SpanTreeStEph/ring_n/16
+Benchmarking SpanTreeStEph/ring_n/16: Warming up for 100.00 ms
+Benchmarking SpanTreeStEph/ring_n/16: Collecting 10 samples in estimated 300.02 ms (41k iterations)
+Benchmarking SpanTreeStEph/ring_n/16: Analyzing
+SpanTreeStEph/ring_n/16 time:   [7.2932 µs 7.3835 µs 7.5721 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking SpanTreeStEph/ring_n/32
+Benchmarking SpanTreeStEph/ring_n/32: Warming up for 100.00 ms
+Benchmarking SpanTreeStEph/ring_n/32: Collecting 10 samples in estimated 300.92 ms (14k iterations)
+Benchmarking SpanTreeStEph/ring_n/32: Analyzing
+SpanTreeStEph/ring_n/32 time:   [19.606 µs 20.220 µs 21.036 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap62/BenchStarContractionMtEph.rs (target/release/deps/BenchStarContractionMtEph-16b9c8cf582417fa)
+Benchmarking StarContractionMtEph/n/16
+Benchmarking StarContractionMtEph/n/16: Warming up for 100.00 ms
+Benchmarking StarContractionMtEph/n/16: Collecting 10 samples in estimated 577.36 ms (165 iterations)
+Benchmarking StarContractionMtEph/n/16: Analyzing
+StarContractionMtEph/n/16
+                        time:   [3.1343 ms 3.2120 ms 3.3358 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low severe
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking StarContractionMtEph/n/32
+Benchmarking StarContractionMtEph/n/32: Warming up for 100.00 ms
+Benchmarking StarContractionMtEph/n/32: Collecting 10 samples in estimated 644.76 ms (110 iterations)
+Benchmarking StarContractionMtEph/n/32: Analyzing
+StarContractionMtEph/n/32
+                        time:   [5.4332 ms 5.4844 ms 5.5618 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+
+     Running benches/Chap62/BenchStarContractionStEph.rs (target/release/deps/BenchStarContractionStEph-acfed5b5a37fc6d4)
+Benchmarking StarContractionStEph/n/16
+Benchmarking StarContractionStEph/n/16: Warming up for 100.00 ms
+Benchmarking StarContractionStEph/n/16: Collecting 10 samples in estimated 400.08 ms (92k iterations)
+Benchmarking StarContractionStEph/n/16: Analyzing
+StarContractionStEph/n/16
+                        time:   [3.9086 µs 4.1035 µs 4.3190 µs]
+Found 3 outliers among 10 measurements (30.00%)
+  2 (20.00%) low severe
+  1 (10.00%) high mild
+Benchmarking StarContractionStEph/n/32
+Benchmarking StarContractionStEph/n/32: Warming up for 100.00 ms
+Benchmarking StarContractionStEph/n/32: Collecting 10 samples in estimated 400.50 ms (41k iterations)
+Benchmarking StarContractionStEph/n/32: Analyzing
+StarContractionStEph/n/32
+                        time:   [9.8972 µs 9.9723 µs 10.090 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap62/BenchStarPartitionMtEph.rs (target/release/deps/BenchStarPartitionMtEph-5489faa615cef385)
+Benchmarking StarPartitionMtEph/n/16
+Benchmarking StarPartitionMtEph/n/16: Warming up for 100.00 ms
+Benchmarking StarPartitionMtEph/n/16: Collecting 10 samples in estimated 449.75 ms (440 iterations)
+Benchmarking StarPartitionMtEph/n/16: Analyzing
+StarPartitionMtEph/n/16 time:   [992.56 µs 1.0038 ms 1.0189 ms]
+Benchmarking StarPartitionMtEph/n/32
+Benchmarking StarPartitionMtEph/n/32: Warming up for 100.00 ms
+Benchmarking StarPartitionMtEph/n/32: Collecting 10 samples in estimated 449.43 ms (385 iterations)
+Benchmarking StarPartitionMtEph/n/32: Analyzing
+StarPartitionMtEph/n/32 time:   [1.0966 ms 1.1053 ms 1.1125 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+
+     Running benches/Chap62/BenchStarPartitionStEph.rs (target/release/deps/BenchStarPartitionStEph-feb7c062a2d93070)
+Benchmarking StarPartitionStEph/n/16
+Benchmarking StarPartitionStEph/n/16: Warming up for 100.00 ms
+Benchmarking StarPartitionStEph/n/16: Collecting 10 samples in estimated 400.00 ms (200k iterations)
+Benchmarking StarPartitionStEph/n/16: Analyzing
+StarPartitionStEph/n/16 time:   [2.0240 µs 2.0386 µs 2.0605 µs]
+Benchmarking StarPartitionStEph/n/32
+Benchmarking StarPartitionStEph/n/32: Warming up for 100.00 ms
+Benchmarking StarPartitionStEph/n/32: Collecting 10 samples in estimated 400.02 ms (96k iterations)
+Benchmarking StarPartitionStEph/n/32: Analyzing
+StarPartitionStEph/n/32 time:   [4.0253 µs 4.0954 µs 4.2578 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+
+     Running benches/Chap49/BenchSubsetSumStEph.rs (target/release/deps/BenchSubsetSumStEph-ce23aca6d3b0488c)
+Benchmarking SubsetSum/n10_t40/10
+Benchmarking SubsetSum/n10_t40/10: Warming up for 100.00 ms
+Benchmarking SubsetSum/n10_t40/10: Collecting 10 samples in estimated 300.00 ms (1.4M iterations)
+Benchmarking SubsetSum/n10_t40/10: Analyzing
+SubsetSum/n10_t40/10    time:   [184.23 ns 194.69 ns 209.10 ns]
+                        change: [+20.271% +28.749% +35.754%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking SubsetSum/n15_t80/15
+Benchmarking SubsetSum/n15_t80/15: Warming up for 100.00 ms
+Benchmarking SubsetSum/n15_t80/15: Collecting 10 samples in estimated 300.00 ms (691k iterations)
+Benchmarking SubsetSum/n15_t80/15: Analyzing
+SubsetSum/n15_t80/15    time:   [391.75 ns 393.21 ns 395.70 ns]
+                        change: [+17.533% +18.619% +19.824%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap49/BenchSubsetSumStPer.rs (target/release/deps/BenchSubsetSumStPer-8866dc8b05eaf9b8)
+Benchmarking SubsetSumStPer/n10_t40/10
+Benchmarking SubsetSumStPer/n10_t40/10: Warming up for 100.00 ms
+Benchmarking SubsetSumStPer/n10_t40/10: Collecting 10 samples in estimated 300.00 ms (1.5M iterations)
+Benchmarking SubsetSumStPer/n10_t40/10: Analyzing
+SubsetSumStPer/n10_t40/10
+                        time:   [198.84 ns 200.32 ns 202.16 ns]
+Benchmarking SubsetSumStPer/n15_t80/15
+Benchmarking SubsetSumStPer/n15_t80/15: Warming up for 100.00 ms
+Benchmarking SubsetSumStPer/n15_t80/15: Collecting 10 samples in estimated 300.01 ms (735k iterations)
+Benchmarking SubsetSumStPer/n15_t80/15: Analyzing
+SubsetSumStPer/n15_t80/15
+                        time:   [394.84 ns 396.76 ns 400.25 ns]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap42/BenchTableMtEph.rs (target/release/deps/BenchTableMtEph-2314f54d693b6a54)
+Benchmarking TableMtEphInsert/n/32
+Benchmarking TableMtEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking TableMtEphInsert/n/32: Collecting 10 samples in estimated 400.09 ms (106k iterations)
+Benchmarking TableMtEphInsert/n/32: Analyzing
+TableMtEphInsert/n/32   time:   [3.6772 µs 3.7199 µs 3.8137 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking TableMtEphInsert/n/64
+Benchmarking TableMtEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking TableMtEphInsert/n/64: Collecting 10 samples in estimated 400.49 ms (32k iterations)
+Benchmarking TableMtEphInsert/n/64: Analyzing
+TableMtEphInsert/n/64   time:   [12.354 µs 12.442 µs 12.563 µs]
+
+     Running benches/Chap42/BenchTableStEph.rs (target/release/deps/BenchTableStEph-d3a6ea805b67f372)
+Benchmarking TableStEphInsert/n/32
+Benchmarking TableStEphInsert/n/32: Warming up for 100.00 ms
+Benchmarking TableStEphInsert/n/32: Collecting 20 samples in estimated 300.60 ms (82k iterations)
+Benchmarking TableStEphInsert/n/32: Analyzing
+TableStEphInsert/n/32   time:   [3.5401 µs 3.5662 µs 3.5975 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+Benchmarking TableStEphInsert/n/64
+Benchmarking TableStEphInsert/n/64: Warming up for 100.00 ms
+Benchmarking TableStEphInsert/n/64: Collecting 20 samples in estimated 300.38 ms (28k iterations)
+Benchmarking TableStEphInsert/n/64: Analyzing
+TableStEphInsert/n/64   time:   [10.673 µs 10.795 µs 10.902 µs]
+
+     Running benches/Chap42/BenchTableStPer.rs (target/release/deps/BenchTableStPer-7e92dfe2e86df2ef)
+Benchmarking TableStPerInsert/n/32
+Benchmarking TableStPerInsert/n/32: Warming up for 100.00 ms
+Benchmarking TableStPerInsert/n/32: Collecting 20 samples in estimated 300.71 ms (88k iterations)
+Benchmarking TableStPerInsert/n/32: Analyzing
+TableStPerInsert/n/32   time:   [3.3767 µs 3.3973 µs 3.4183 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) high mild
+  1 (5.00%) high severe
+Benchmarking TableStPerInsert/n/64
+Benchmarking TableStPerInsert/n/64: Warming up for 100.00 ms
+Benchmarking TableStPerInsert/n/64: Collecting 20 samples in estimated 301.32 ms (25k iterations)
+Benchmarking TableStPerInsert/n/64: Analyzing
+TableStPerInsert/n/64   time:   [10.590 µs 11.118 µs 11.614 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+     Running benches/Chap51/BenchTopDownDPMtEph.rs (target/release/deps/BenchTopDownDPMtEph-9481912363370d79)
+Benchmarking TopDownDPMtEph/n_x_n/20
+Benchmarking TopDownDPMtEph/n_x_n/20: Warming up for 100.00 ms
+
+Warning: Unable to complete 10 samples in 400.0ms. You may wish to increase target time to 4.8s.
+Benchmarking TopDownDPMtEph/n_x_n/20: Collecting 10 samples in estimated 4.8181 s (10 iterations)
+Benchmarking TopDownDPMtEph/n_x_n/20: Analyzing
+TopDownDPMtEph/n_x_n/20 time:   [8.3363 ms 121.13 ms 343.21 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking TopDownDPMtEph/n_x_n/40
+Benchmarking TopDownDPMtEph/n_x_n/40: Warming up for 100.00 ms
+
+Warning: Unable to complete 10 samples in 400.0ms. You may wish to increase target time to 664.9ms.
+Benchmarking TopDownDPMtEph/n_x_n/40: Collecting 10 samples in estimated 664.94 ms (10 iterations)
+Benchmarking TopDownDPMtEph/n_x_n/40: Analyzing
+TopDownDPMtEph/n_x_n/40 time:   [34.166 ms 45.470 ms 59.932 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap51/BenchTopDownDPMtPer.rs (target/release/deps/BenchTopDownDPMtPer-96f20baa97e5ddec)
+Benchmarking TopDownDPMtPer/n_x_n/20
+Benchmarking TopDownDPMtPer/n_x_n/20: Warming up for 100.00 ms
+
+Warning: Unable to complete 10 samples in 400.0ms. You may wish to increase target time to 675.5ms.
+Benchmarking TopDownDPMtPer/n_x_n/20: Collecting 10 samples in estimated 675.54 ms (10 iterations)
+Benchmarking TopDownDPMtPer/n_x_n/20: Analyzing
+TopDownDPMtPer/n_x_n/20 time:   [6.1512 ms 120.82 ms 289.33 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high severe
+Benchmarking TopDownDPMtPer/n_x_n/40
+Benchmarking TopDownDPMtPer/n_x_n/40: Warming up for 100.00 ms
+
+Warning: Unable to complete 10 samples in 400.0ms. You may wish to increase target time to 454.1ms.
+Benchmarking TopDownDPMtPer/n_x_n/40: Collecting 10 samples in estimated 454.08 ms (10 iterations)
+Benchmarking TopDownDPMtPer/n_x_n/40: Analyzing
+TopDownDPMtPer/n_x_n/40 time:   [55.535 ms 65.298 ms 73.533 ms]
+
+     Running benches/Chap51/BenchTopDownDPStEph.rs (target/release/deps/BenchTopDownDPStEph-79ab31f40c260c11)
+Benchmarking TopDownDPStEph/n_x_n/20
+Benchmarking TopDownDPStEph/n_x_n/20: Warming up for 100.00 ms
+Benchmarking TopDownDPStEph/n_x_n/20: Collecting 10 samples in estimated 300.65 ms (14k iterations)
+Benchmarking TopDownDPStEph/n_x_n/20: Analyzing
+TopDownDPStEph/n_x_n/20 time:   [20.750 µs 21.018 µs 21.342 µs]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking TopDownDPStEph/n_x_n/40
+Benchmarking TopDownDPStEph/n_x_n/40: Warming up for 100.00 ms
+Benchmarking TopDownDPStEph/n_x_n/40: Collecting 10 samples in estimated 301.03 ms (3190 iterations)
+Benchmarking TopDownDPStEph/n_x_n/40: Analyzing
+TopDownDPStEph/n_x_n/40 time:   [94.347 µs 95.253 µs 96.092 µs]
+
+     Running benches/Chap51/BenchTopDownDPStPer.rs (target/release/deps/BenchTopDownDPStPer-864278129c2010ed)
+Benchmarking TopDownDPStPer/n_x_n/20
+Benchmarking TopDownDPStPer/n_x_n/20: Warming up for 100.00 ms
+Benchmarking TopDownDPStPer/n_x_n/20: Collecting 10 samples in estimated 300.71 ms (16k iterations)
+Benchmarking TopDownDPStPer/n_x_n/20: Analyzing
+TopDownDPStPer/n_x_n/20 time:   [19.287 µs 19.619 µs 19.846 µs]
+Benchmarking TopDownDPStPer/n_x_n/40
+Benchmarking TopDownDPStPer/n_x_n/40: Warming up for 100.00 ms
+Benchmarking TopDownDPStPer/n_x_n/40: Collecting 10 samples in estimated 302.49 ms (3410 iterations)
+Benchmarking TopDownDPStPer/n_x_n/40: Analyzing
+TopDownDPStPer/n_x_n/40 time:   [85.361 µs 85.846 µs 86.741 µs]
+
+     Running benches/Chap55/BenchTopoSortStEph.rs (target/release/deps/BenchTopoSortStEph-c21022b2a25ea426)
+Benchmarking TopoSortStEph/dag_n/32
+Benchmarking TopoSortStEph/dag_n/32: Warming up for 100.00 ms
+Benchmarking TopoSortStEph/dag_n/32: Collecting 10 samples in estimated 300.03 ms (165k iterations)
+Benchmarking TopoSortStEph/dag_n/32: Analyzing
+TopoSortStEph/dag_n/32  time:   [1.8283 µs 1.8453 µs 1.8708 µs]
+Benchmarking TopoSortStEph/dag_n/64
+Benchmarking TopoSortStEph/dag_n/64: Warming up for 100.00 ms
+Benchmarking TopoSortStEph/dag_n/64: Collecting 10 samples in estimated 300.17 ms (63k iterations)
+Benchmarking TopoSortStEph/dag_n/64: Analyzing
+TopoSortStEph/dag_n/64  time:   [4.6800 µs 4.8469 µs 5.0576 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+
+     Running benches/Chap55/BenchTopoSortStPer.rs (target/release/deps/BenchTopoSortStPer-eee0c26d2e2f6d46)
+Benchmarking TopoSortStPer/dag_n/32
+Benchmarking TopoSortStPer/dag_n/32: Warming up for 100.00 ms
+Benchmarking TopoSortStPer/dag_n/32: Collecting 10 samples in estimated 300.08 ms (197k iterations)
+Benchmarking TopoSortStPer/dag_n/32: Analyzing
+TopoSortStPer/dag_n/32  time:   [1.5258 µs 1.5337 µs 1.5437 µs]
+Benchmarking TopoSortStPer/dag_n/64
+Benchmarking TopoSortStPer/dag_n/64: Warming up for 100.00 ms
+Benchmarking TopoSortStPer/dag_n/64: Collecting 10 samples in estimated 300.15 ms (67k iterations)
+Benchmarking TopoSortStPer/dag_n/64: Analyzing
+TopoSortStPer/dag_n/64  time:   [4.4590 µs 4.4806 µs 4.5045 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+
+     Running benches/Chap65/BenchUnionFindArrayStEph.rs (target/release/deps/BenchUnionFindArrayStEph-3129b9cfab884481)
+Benchmarking UnionFindArrayStEphUnion/n/32
+Benchmarking UnionFindArrayStEphUnion/n/32: Warming up for 100.00 ms
+Benchmarking UnionFindArrayStEphUnion/n/32: Collecting 10 samples in estimated 400.02 ms (691k iterations)
+Benchmarking UnionFindArrayStEphUnion/n/32: Analyzing
+UnionFindArrayStEphUnion/n/32
+                        time:   [127.49 ns 128.59 ns 130.18 ns]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking UnionFindArrayStEphUnion/n/64
+Benchmarking UnionFindArrayStEphUnion/n/64: Warming up for 100.00 ms
+Benchmarking UnionFindArrayStEphUnion/n/64: Collecting 10 samples in estimated 400.04 ms (396k iterations)
+Benchmarking UnionFindArrayStEphUnion/n/64: Analyzing
+UnionFindArrayStEphUnion/n/64
+                        time:   [238.89 ns 240.21 ns 242.80 ns]
+
+Benchmarking UnionFindArrayStEphFind/n/32
+Benchmarking UnionFindArrayStEphFind/n/32: Warming up for 100.00 ms
+Benchmarking UnionFindArrayStEphFind/n/32: Collecting 10 samples in estimated 200.00 ms (74M iterations)
+Benchmarking UnionFindArrayStEphFind/n/32: Analyzing
+UnionFindArrayStEphFind/n/32
+                        time:   [2.6676 ns 2.6823 ns 2.7000 ns]
+Benchmarking UnionFindArrayStEphFind/n/64
+Benchmarking UnionFindArrayStEphFind/n/64: Warming up for 100.00 ms
+Benchmarking UnionFindArrayStEphFind/n/64: Collecting 10 samples in estimated 200.00 ms (75M iterations)
+Benchmarking UnionFindArrayStEphFind/n/64: Analyzing
+UnionFindArrayStEphFind/n/64
+                        time:   [2.6504 ns 2.6793 ns 2.7195 ns]
+
+     Running benches/Chap65/BenchUnionFindNoPCStEph.rs (target/release/deps/BenchUnionFindNoPCStEph-0ae957ba3199522f)
+Benchmarking UnionFindNoPCStEphUnion/n/16
+Benchmarking UnionFindNoPCStEphUnion/n/16: Warming up for 100.00 ms
+Benchmarking UnionFindNoPCStEphUnion/n/16: Collecting 10 samples in estimated 400.00 ms (252k iterations)
+Benchmarking UnionFindNoPCStEphUnion/n/16: Analyzing
+UnionFindNoPCStEphUnion/n/16
+                        time:   [1.5149 µs 1.5877 µs 1.6228 µs]
+Benchmarking UnionFindNoPCStEphUnion/n/32
+Benchmarking UnionFindNoPCStEphUnion/n/32: Warming up for 100.00 ms
+Benchmarking UnionFindNoPCStEphUnion/n/32: Collecting 10 samples in estimated 400.10 ms (131k iterations)
+Benchmarking UnionFindNoPCStEphUnion/n/32: Analyzing
+UnionFindNoPCStEphUnion/n/32
+                        time:   [2.8994 µs 3.0135 µs 3.0861 µs]
+
+Benchmarking UnionFindNoPCStEphFind/n/16
+Benchmarking UnionFindNoPCStEphFind/n/16: Warming up for 100.00 ms
+Benchmarking UnionFindNoPCStEphFind/n/16: Collecting 10 samples in estimated 200.00 ms (22M iterations)
+Benchmarking UnionFindNoPCStEphFind/n/16: Analyzing
+UnionFindNoPCStEphFind/n/16
+                        time:   [8.8947 ns 8.9662 ns 9.0715 ns]
+Benchmarking UnionFindNoPCStEphFind/n/32
+Benchmarking UnionFindNoPCStEphFind/n/32: Warming up for 100.00 ms
+Benchmarking UnionFindNoPCStEphFind/n/32: Collecting 10 samples in estimated 200.00 ms (21M iterations)
+Benchmarking UnionFindNoPCStEphFind/n/32: Analyzing
+UnionFindNoPCStEphFind/n/32
+                        time:   [9.8091 ns 9.8521 ns 9.8955 ns]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+
+     Running benches/Chap65/BenchUnionFindPCStEph.rs (target/release/deps/BenchUnionFindPCStEph-a9d3c8f4724ebbf6)
+Benchmarking UnionFindInsert/n/64
+Benchmarking UnionFindInsert/n/64: Warming up for 100.00 ms
+Benchmarking UnionFindInsert/n/64: Collecting 10 samples in estimated 250.27 ms (46k iterations)
+Benchmarking UnionFindInsert/n/64: Analyzing
+UnionFindInsert/n/64    time:   [4.9468 µs 5.2145 µs 5.3226 µs]
+                        change: [+6.2099% +15.138% +25.032%] (p = 0.01 < 0.05)
+                        Performance has regressed.
+Benchmarking UnionFindInsert/n/256
+Benchmarking UnionFindInsert/n/256: Warming up for 100.00 ms
+Benchmarking UnionFindInsert/n/256: Collecting 10 samples in estimated 250.76 ms (12k iterations)
+Benchmarking UnionFindInsert/n/256: Analyzing
+UnionFindInsert/n/256   time:   [17.838 µs 19.552 µs 20.297 µs]
+                        change: [+0.6785% +7.4994% +15.689%] (p = 0.07 > 0.05)
+                        No change in performance detected.
+
+Benchmarking UnionFindUnion/chain_n/64
+Benchmarking UnionFindUnion/chain_n/64: Warming up for 100.00 ms
+Benchmarking UnionFindUnion/chain_n/64: Collecting 10 samples in estimated 250.10 ms (21k iterations)
+Benchmarking UnionFindUnion/chain_n/64: Analyzing
+UnionFindUnion/chain_n/64
+                        time:   [6.4369 µs 6.7541 µs 7.0103 µs]
+                        change: [+20.116% +23.269% +25.475%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+Benchmarking UnionFindUnion/chain_n/256
+Benchmarking UnionFindUnion/chain_n/256: Warming up for 100.00 ms
+Benchmarking UnionFindUnion/chain_n/256: Collecting 10 samples in estimated 251.82 ms (5335 iterations)
+Benchmarking UnionFindUnion/chain_n/256: Analyzing
+UnionFindUnion/chain_n/256
+                        time:   [28.187 µs 28.484 µs 28.759 µs]
+                        change: [+21.672% +23.167% +24.622%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+
+     Running benches/Chap45/BenchUnsortedListPQ.rs (target/release/deps/BenchUnsortedListPQ-ffe9d80678c45782)
+Benchmarking UnsortedListPQInsert/n/32
+Benchmarking UnsortedListPQInsert/n/32: Warming up for 100.00 ms
+Benchmarking UnsortedListPQInsert/n/32: Collecting 20 samples in estimated 300.19 ms (230k iterations)
+Benchmarking UnsortedListPQInsert/n/32: Analyzing
+UnsortedListPQInsert/n/32
+                        time:   [1.2582 µs 1.2999 µs 1.3238 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low severe
+Benchmarking UnsortedListPQInsert/n/64
+Benchmarking UnsortedListPQInsert/n/64: Warming up for 100.00 ms
+Benchmarking UnsortedListPQInsert/n/64: Collecting 20 samples in estimated 300.31 ms (85k iterations)
+Benchmarking UnsortedListPQInsert/n/64: Analyzing
+UnsortedListPQInsert/n/64
+                        time:   [3.4526 µs 3.4723 µs 3.4955 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+Benchmarking UnsortedListPQDeleteMin/n/32
+Benchmarking UnsortedListPQDeleteMin/n/32: Warming up for 100.00 ms
+Benchmarking UnsortedListPQDeleteMin/n/32: Collecting 20 samples in estimated 200.41 ms (81k iterations)
+Benchmarking UnsortedListPQDeleteMin/n/32: Analyzing
+UnsortedListPQDeleteMin/n/32
+                        time:   [1.1876 µs 1.1981 µs 1.2099 µs]
+Benchmarking UnsortedListPQDeleteMin/n/64
+Benchmarking UnsortedListPQDeleteMin/n/64: Warming up for 100.00 ms
+Benchmarking UnsortedListPQDeleteMin/n/64: Collecting 20 samples in estimated 200.87 ms (28k iterations)
+Benchmarking UnsortedListPQDeleteMin/n/64: Analyzing
+UnsortedListPQDeleteMin/n/64
+                        time:   [3.4877 µs 3.5100 µs 3.5330 µs]
+
+     Running benches/Chap47/BenchVecChainedHashTable.rs (target/release/deps/BenchVecChainedHashTable-28f8885b4abbf319)
+Benchmarking VecChainHashInsert/n/32
+Benchmarking VecChainHashInsert/n/32: Warming up for 100.00 ms
+Benchmarking VecChainHashInsert/n/32: Collecting 20 samples in estimated 300.02 ms (393k iterations)
+Benchmarking VecChainHashInsert/n/32: Analyzing
+VecChainHashInsert/n/32 time:   [791.62 ns 796.06 ns 800.04 ns]
+Benchmarking VecChainHashInsert/n/64
+Benchmarking VecChainHashInsert/n/64: Warming up for 100.00 ms
+Benchmarking VecChainHashInsert/n/64: Collecting 20 samples in estimated 300.10 ms (131k iterations)
+Benchmarking VecChainHashInsert/n/64: Analyzing
+VecChainHashInsert/n/64 time:   [2.2944 µs 2.3111 µs 2.3312 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+Benchmarking VecChainHashLookup/n/32
+Benchmarking VecChainHashLookup/n/32: Warming up for 100.00 ms
+Benchmarking VecChainHashLookup/n/32: Collecting 20 samples in estimated 200.00 ms (96M iterations)
+Benchmarking VecChainHashLookup/n/32: Analyzing
+VecChainHashLookup/n/32 time:   [2.0940 ns 2.1304 ns 2.1612 ns]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+Benchmarking VecChainHashLookup/n/64
+Benchmarking VecChainHashLookup/n/64: Warming up for 100.00 ms
+Benchmarking VecChainHashLookup/n/64: Collecting 20 samples in estimated 200.00 ms (84M iterations)
+Benchmarking VecChainHashLookup/n/64: Analyzing
+VecChainHashLookup/n/64 time:   [2.2342 ns 2.2501 ns 2.2707 ns]
+
+     Running benches/Chap61/BenchVertexMatchingMtEph.rs (target/release/deps/BenchVertexMatchingMtEph-ae564d79258afdec)
+Benchmarking VertexMatchingMtEph/n/16
+Benchmarking VertexMatchingMtEph/n/16: Warming up for 100.00 ms
+Benchmarking VertexMatchingMtEph/n/16: Collecting 10 samples in estimated 406.05 ms (2475 iterations)
+Benchmarking VertexMatchingMtEph/n/16: Analyzing
+VertexMatchingMtEph/n/16
+                        time:   [159.02 µs 160.65 µs 162.88 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking VertexMatchingMtEph/n/32
+Benchmarking VertexMatchingMtEph/n/32: Warming up for 100.00 ms
+Benchmarking VertexMatchingMtEph/n/32: Collecting 10 samples in estimated 406.08 ms (2145 iterations)
+Benchmarking VertexMatchingMtEph/n/32: Analyzing
+VertexMatchingMtEph/n/32
+                        time:   [184.16 µs 186.32 µs 189.53 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap61/BenchVertexMatchingStEph.rs (target/release/deps/BenchVertexMatchingStEph-c0ee3f631ddff572)
+Benchmarking VertexMatchingStEphGreedy/n/16
+Benchmarking VertexMatchingStEphGreedy/n/16: Warming up for 100.00 ms
+Benchmarking VertexMatchingStEphGreedy/n/16: Collecting 10 samples in estimated 400.04 ms (496k iterations)
+Benchmarking VertexMatchingStEphGreedy/n/16: Analyzing
+VertexMatchingStEphGreedy/n/16
+                        time:   [773.65 ns 779.89 ns 788.85 ns]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking VertexMatchingStEphGreedy/n/32
+Benchmarking VertexMatchingStEphGreedy/n/32: Warming up for 100.00 ms
+Benchmarking VertexMatchingStEphGreedy/n/32: Collecting 10 samples in estimated 400.00 ms (238k iterations)
+Benchmarking VertexMatchingStEphGreedy/n/32: Analyzing
+VertexMatchingStEphGreedy/n/32
+                        time:   [1.6478 µs 1.6636 µs 1.6861 µs]
+
+Benchmarking VertexMatchingStEphParallel/n/16
+Benchmarking VertexMatchingStEphParallel/n/16: Warming up for 100.00 ms
+Benchmarking VertexMatchingStEphParallel/n/16: Collecting 10 samples in estimated 400.06 ms (265k iterations)
+Benchmarking VertexMatchingStEphParallel/n/16: Analyzing
+VertexMatchingStEphParallel/n/16
+                        time:   [1.4750 µs 1.4856 µs 1.4992 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking VertexMatchingStEphParallel/n/32
+Benchmarking VertexMatchingStEphParallel/n/32: Warming up for 100.00 ms
+Benchmarking VertexMatchingStEphParallel/n/32: Collecting 10 samples in estimated 400.04 ms (115k iterations)
+Benchmarking VertexMatchingStEphParallel/n/32: Analyzing
+VertexMatchingStEphParallel/n/32
+                        time:   [3.5486 µs 3.5734 µs 3.6174 µs]
+
+     Running benches/Chap06/BenchWeightedDirGraphStEph.rs (target/release/deps/BenchWeightedDirGraphStEph-13e131ad3909531f)
+Benchmarking WeightedDirGraphBuild/path_n/32
+Benchmarking WeightedDirGraphBuild/path_n/32: Warming up for 100.00 ms
+Benchmarking WeightedDirGraphBuild/path_n/32: Collecting 20 samples in estimated 200.62 ms (43k iterations)
+Benchmarking WeightedDirGraphBuild/path_n/32: Analyzing
+WeightedDirGraphBuild/path_n/32
+                        time:   [4.7053 µs 4.8720 µs 5.0113 µs]
+Found 4 outliers among 20 measurements (20.00%)
+  1 (5.00%) low severe
+  1 (5.00%) low mild
+  2 (10.00%) high mild
+Benchmarking WeightedDirGraphBuild/path_n/128
+Benchmarking WeightedDirGraphBuild/path_n/128: Warming up for 100.00 ms
+Benchmarking WeightedDirGraphBuild/path_n/128: Collecting 20 samples in estimated 201.60 ms (10k iterations)
+Benchmarking WeightedDirGraphBuild/path_n/128: Analyzing
+WeightedDirGraphBuild/path_n/128
+                        time:   [19.503 µs 19.853 µs 20.289 µs]
+
+Benchmarking WeightedDirGraphNeighbors/out_n/32
+Benchmarking WeightedDirGraphNeighbors/out_n/32: Warming up for 100.00 ms
+Benchmarking WeightedDirGraphNeighbors/out_n/32: Collecting 20 samples in estimated 200.01 ms (3.6M iterations)
+Benchmarking WeightedDirGraphNeighbors/out_n/32: Analyzing
+WeightedDirGraphNeighbors/out_n/32
+                        time:   [54.336 ns 55.250 ns 55.829 ns]
+Benchmarking WeightedDirGraphNeighbors/out_n/128
+Benchmarking WeightedDirGraphNeighbors/out_n/128: Warming up for 100.00 ms
+Benchmarking WeightedDirGraphNeighbors/out_n/128: Collecting 20 samples in estimated 200.01 ms (1.4M iterations)
+Benchmarking WeightedDirGraphNeighbors/out_n/128: Analyzing
+WeightedDirGraphNeighbors/out_n/128
+                        time:   [130.21 ns 135.66 ns 143.04 ns]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high severe
+
+Elapsed: 398s

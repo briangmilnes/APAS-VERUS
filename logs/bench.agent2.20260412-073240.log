@@ -1,0 +1,77 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+    Finished `bench` profile [optimized] target(s) in 1.38s
+     Running benches/Chap64/BenchSpanTreeMtEph.rs (target/release/deps/BenchSpanTreeMtEph-402780d8ed7ab01f)
+Benchmarking SpanTreeMtEph/n/16
+Benchmarking SpanTreeMtEph/n/16: Warming up for 100.00 ms
+Benchmarking SpanTreeMtEph/n/16: Collecting 10 samples in estimated 479.44 ms (110 iterations)
+Benchmarking SpanTreeMtEph/n/16: Analyzing
+SpanTreeMtEph/n/16      time:   [4.0273 ms 4.2905 ms 4.4507 ms]
+                        change: [+23.096% +30.779% +37.194%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking SpanTreeMtEph/n/32
+Benchmarking SpanTreeMtEph/n/32: Warming up for 100.00 ms
+
+Warning: Unable to complete 10 samples in 400.0ms. You may wish to increase target time to 437.9ms or enable flat sampling.
+Benchmarking SpanTreeMtEph/n/32: Collecting 10 samples in estimated 437.95 ms (55 iterations)
+Benchmarking SpanTreeMtEph/n/32: Analyzing
+SpanTreeMtEph/n/32      time:   [7.1237 ms 7.3083 ms 7.4809 ms]
+                        change: [+49.547% +56.931% +65.027%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+     Running benches/Chap64/BenchSpanTreeStEph.rs (target/release/deps/BenchSpanTreeStEph-60ba69bf14a9e44e)
+Benchmarking SpanTreeStEph/ring_n/16
+Benchmarking SpanTreeStEph/ring_n/16: Warming up for 100.00 ms
+Benchmarking SpanTreeStEph/ring_n/16: Collecting 10 samples in estimated 300.45 ms (30k iterations)
+Benchmarking SpanTreeStEph/ring_n/16: Analyzing
+SpanTreeStEph/ring_n/16 time:   [13.417 µs 14.008 µs 14.546 µs]
+                        change: [+70.058% +81.778% +92.690%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Benchmarking SpanTreeStEph/ring_n/32
+Benchmarking SpanTreeStEph/ring_n/32: Warming up for 100.00 ms
+Benchmarking SpanTreeStEph/ring_n/32: Collecting 10 samples in estimated 301.21 ms (12k iterations)
+Benchmarking SpanTreeStEph/ring_n/32: Analyzing
+SpanTreeStEph/ring_n/32 time:   [23.419 µs 24.660 µs 25.827 µs]
+                        change: [+10.745% +17.154% +24.709%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+     Running benches/Chap64/BenchTSPApproxStEph.rs (target/release/deps/BenchTSPApproxStEph-3b54bdf6c7aaa648)
+Benchmarking TSPApproxStEph/n/5
+Benchmarking TSPApproxStEph/n/5: Warming up for 100.00 ms
+Benchmarking TSPApproxStEph/n/5: Collecting 10 samples in estimated 300.04 ms (132k iterations)
+Benchmarking TSPApproxStEph/n/5: Analyzing
+TSPApproxStEph/n/5      time:   [1.7879 µs 1.8361 µs 1.9429 µs]
+Benchmarking TSPApproxStEph/n/8
+Benchmarking TSPApproxStEph/n/8: Warming up for 100.00 ms
+Benchmarking TSPApproxStEph/n/8: Collecting 10 samples in estimated 300.00 ms (58k iterations)
+Benchmarking TSPApproxStEph/n/8: Analyzing
+TSPApproxStEph/n/8      time:   [4.9192 µs 4.9570 µs 5.0125 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+Elapsed: 10s

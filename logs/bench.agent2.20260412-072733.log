@@ -1,0 +1,199 @@
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:792:15
+    |
+792 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 31 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1337:17
+     |
+1337 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `apas-verus` (lib) generated 2 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+    Finished `bench` profile [optimized] target(s) in 1.49s
+     Running benches/Chap26/BenchDivConReduceMtPer.rs (target/release/deps/BenchDivConReduceMtPer-e9e3562770033d99)
+Benchmarking DivConMaxElementMt/n/64
+Benchmarking DivConMaxElementMt/n/64: Warming up for 100.00 ms
+Benchmarking DivConMaxElementMt/n/64: Collecting 10 samples in estimated 400.00 ms (9.2M iterations)
+Benchmarking DivConMaxElementMt/n/64: Analyzing
+DivConMaxElementMt/n/64 time:   [42.572 ns 44.330 ns 46.170 ns]
+Benchmarking DivConMaxElementMt/n/256
+Benchmarking DivConMaxElementMt/n/256: Warming up for 100.00 ms
+Benchmarking DivConMaxElementMt/n/256: Collecting 10 samples in estimated 400.00 ms (2.2M iterations)
+Benchmarking DivConMaxElementMt/n/256: Analyzing
+DivConMaxElementMt/n/256
+                        time:   [175.72 ns 177.46 ns 179.85 ns]
+
+Benchmarking DivConSumMt/n/64
+Benchmarking DivConSumMt/n/64: Warming up for 100.00 ms
+Benchmarking DivConSumMt/n/64: Collecting 10 samples in estimated 400.00 ms (57M iterations)
+Benchmarking DivConSumMt/n/64: Analyzing
+DivConSumMt/n/64        time:   [6.8122 ns 7.0115 ns 7.1588 ns]
+Benchmarking DivConSumMt/n/256
+Benchmarking DivConSumMt/n/256: Warming up for 100.00 ms
+Benchmarking DivConSumMt/n/256: Collecting 10 samples in estimated 400.00 ms (21M iterations)
+Benchmarking DivConSumMt/n/256: Analyzing
+DivConSumMt/n/256       time:   [19.999 ns 20.966 ns 21.988 ns]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+     Running benches/Chap26/BenchDivConReduceStPer.rs (target/release/deps/BenchDivConReduceStPer-91278585cf053f6e)
+Benchmarking DivConMaxElement/n/64
+Benchmarking DivConMaxElement/n/64: Warming up for 100.00 ms
+Benchmarking DivConMaxElement/n/64: Collecting 20 samples in estimated 200.01 ms (4.9M iterations)
+Benchmarking DivConMaxElement/n/64: Analyzing
+DivConMaxElement/n/64   time:   [40.903 ns 41.637 ns 42.735 ns]
+                        change: [+3.0266% +5.4147% +8.1464%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking DivConMaxElement/n/256
+Benchmarking DivConMaxElement/n/256: Warming up for 100.00 ms
+Benchmarking DivConMaxElement/n/256: Collecting 20 samples in estimated 200.03 ms (1.2M iterations)
+Benchmarking DivConMaxElement/n/256: Analyzing
+DivConMaxElement/n/256  time:   [166.82 ns 169.85 ns 172.84 ns]
+                        change: [-1.7471% +1.3775% +4.2240%] (p = 0.39 > 0.05)
+                        No change in performance detected.
+
+Benchmarking DivConSum/n/64
+Benchmarking DivConSum/n/64: Warming up for 100.00 ms
+Benchmarking DivConSum/n/64: Collecting 20 samples in estimated 200.00 ms (28M iterations)
+Benchmarking DivConSum/n/64: Analyzing
+DivConSum/n/64          time:   [6.5783 ns 6.6811 ns 6.7702 ns]
+                        change: [-3.5625% -1.3476% +1.3869%] (p = 0.31 > 0.05)
+                        No change in performance detected.
+Benchmarking DivConSum/n/256
+Benchmarking DivConSum/n/256: Warming up for 100.00 ms
+Benchmarking DivConSum/n/256: Collecting 20 samples in estimated 200.00 ms (9.7M iterations)
+Benchmarking DivConSum/n/256: Analyzing
+DivConSum/n/256         time:   [19.405 ns 19.556 ns 19.763 ns]
+                        change: [-21.432% -18.638% -15.635%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) high mild
+  1 (5.00%) high severe
+
+     Running benches/Chap26/BenchETSPMtEph.rs (target/release/deps/BenchETSPMtEph-aa232e0290622471)
+Benchmarking ETSPMtEph/n/8
+Benchmarking ETSPMtEph/n/8: Warming up for 100.00 ms
+Benchmarking ETSPMtEph/n/8: Collecting 10 samples in estimated 401.52 ms (6050 iterations)
+Benchmarking ETSPMtEph/n/8: Analyzing
+ETSPMtEph/n/8           time:   [64.941 µs 66.813 µs 68.388 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking ETSPMtEph/n/16
+Benchmarking ETSPMtEph/n/16: Warming up for 100.00 ms
+Benchmarking ETSPMtEph/n/16: Collecting 10 samples in estimated 401.15 ms (3135 iterations)
+Benchmarking ETSPMtEph/n/16: Analyzing
+ETSPMtEph/n/16          time:   [122.60 µs 124.89 µs 127.06 µs]
+
+     Running benches/Chap26/BenchETSPStEph.rs (target/release/deps/BenchETSPStEph-063045355096a1e3)
+Benchmarking ETSPStEph/n/8
+Benchmarking ETSPStEph/n/8: Warming up for 100.00 ms
+Benchmarking ETSPStEph/n/8: Collecting 10 samples in estimated 400.00 ms (1.9M iterations)
+Benchmarking ETSPStEph/n/8: Analyzing
+ETSPStEph/n/8           time:   [208.09 ns 213.23 ns 218.52 ns]
+                        change: [-11.175% -6.5668% -1.6161%] (p = 0.02 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking ETSPStEph/n/16
+Benchmarking ETSPStEph/n/16: Warming up for 100.00 ms
+Benchmarking ETSPStEph/n/16: Collecting 10 samples in estimated 400.03 ms (627k iterations)
+Benchmarking ETSPStEph/n/16: Analyzing
+ETSPStEph/n/16          time:   [574.79 ns 589.52 ns 607.41 ns]
+                        change: [-9.8445% -4.5323% +1.9206%] (p = 0.19 > 0.05)
+                        No change in performance detected.
+
+     Running benches/Chap26/BenchMergeSortMtPer.rs (target/release/deps/BenchMergeSortMtPer-a35f7092bd2d3c5f)
+Benchmarking MergeSortMtPer/reverse/64
+Benchmarking MergeSortMtPer/reverse/64: Warming up for 100.00 ms
+Benchmarking MergeSortMtPer/reverse/64: Collecting 10 samples in estimated 416.63 ms (660 iterations)
+Benchmarking MergeSortMtPer/reverse/64: Analyzing
+MergeSortMtPer/reverse/64
+                        time:   [564.51 µs 587.88 µs 622.78 µs]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking MergeSortMtPer/reverse/256
+Benchmarking MergeSortMtPer/reverse/256: Warming up for 100.00 ms
+Benchmarking MergeSortMtPer/reverse/256: Collecting 10 samples in estimated 440.43 ms (385 iterations)
+Benchmarking MergeSortMtPer/reverse/256: Analyzing
+MergeSortMtPer/reverse/256
+                        time:   [1.0968 ms 1.1853 ms 1.2350 ms]
+
+     Running benches/Chap26/BenchMergeSortStPer.rs (target/release/deps/BenchMergeSortStPer-ccd6c5f788809bed)
+Benchmarking MergeSortStPer/reverse/64
+Benchmarking MergeSortStPer/reverse/64: Warming up for 100.00 ms
+Benchmarking MergeSortStPer/reverse/64: Collecting 10 samples in estimated 300.04 ms (73k iterations)
+Benchmarking MergeSortStPer/reverse/64: Analyzing
+MergeSortStPer/reverse/64
+                        time:   [4.0921 µs 4.1658 µs 4.2539 µs]
+                        change: [-19.935% -17.281% -14.191%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking MergeSortStPer/reverse/256
+Benchmarking MergeSortStPer/reverse/256: Warming up for 100.00 ms
+Benchmarking MergeSortStPer/reverse/256: Collecting 10 samples in estimated 300.42 ms (13k iterations)
+Benchmarking MergeSortStPer/reverse/256: Analyzing
+MergeSortStPer/reverse/256
+                        time:   [21.646 µs 22.336 µs 23.359 µs]
+                        change: [-12.417% -10.434% -8.2029%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+
+     Running benches/Chap26/BenchScanDCMtPer.rs (target/release/deps/BenchScanDCMtPer-9afeb054e35962fe)
+Benchmarking ScanDCPrefixSumsMt/n/64
+Benchmarking ScanDCPrefixSumsMt/n/64: Warming up for 100.00 ms
+Benchmarking ScanDCPrefixSumsMt/n/64: Collecting 10 samples in estimated 416.28 ms (1155 iterations)
+Benchmarking ScanDCPrefixSumsMt/n/64: Analyzing
+ScanDCPrefixSumsMt/n/64 time:   [347.76 µs 353.24 µs 362.13 µs]
+Benchmarking ScanDCPrefixSumsMt/n/256
+Benchmarking ScanDCPrefixSumsMt/n/256: Warming up for 100.00 ms
+Benchmarking ScanDCPrefixSumsMt/n/256: Collecting 10 samples in estimated 415.11 ms (660 iterations)
+Benchmarking ScanDCPrefixSumsMt/n/256: Analyzing
+ScanDCPrefixSumsMt/n/256
+                        time:   [610.44 µs 635.39 µs 658.19 µs]
+
+     Running benches/Chap26/BenchScanDCStPer.rs (target/release/deps/BenchScanDCStPer-a520c9051b430a2d)
+Benchmarking ScanDCPrefixSums/n/64
+Benchmarking ScanDCPrefixSums/n/64: Warming up for 100.00 ms
+Benchmarking ScanDCPrefixSums/n/64: Collecting 20 samples in estimated 300.88 ms (64k iterations)
+Benchmarking ScanDCPrefixSums/n/64: Analyzing
+ScanDCPrefixSums/n/64   time:   [4.6265 µs 4.6777 µs 4.7295 µs]
+                        change: [-22.596% -21.578% -20.499%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking ScanDCPrefixSums/n/256
+Benchmarking ScanDCPrefixSums/n/256: Warming up for 100.00 ms
+Benchmarking ScanDCPrefixSums/n/256: Collecting 20 samples in estimated 303.18 ms (15k iterations)
+Benchmarking ScanDCPrefixSums/n/256: Analyzing
+ScanDCPrefixSums/n/256  time:   [19.047 µs 19.622 µs 20.315 µs]
+                        change: [-9.2045% -7.2217% -5.0816%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+Elapsed: 22s
