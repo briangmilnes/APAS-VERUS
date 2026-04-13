@@ -608,7 +608,8 @@ pub mod BSTParaTreapMtEph {
                     assert forall|l: T| #[trigger] left@.contains(l@) implies l@ != rkv by {
                         reveal(vstd::laws_cmp::obeys_cmp_ord);
                         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                        // requires: left@.contains(l@) && right@.contains(r_key@) ==> l.cmp(&r_key) == Less
+                        assert(right@.contains(rkv));
+                        assert(l.cmp_spec(&r_key) == Less);
                     };
                     // Size bounds.
                     vstd::set_lib::lemma_len_subset(rlv, right@);
@@ -643,7 +644,10 @@ pub mod BSTParaTreapMtEph {
                     // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
                     assert forall|s: T, o: T| #![trigger srv.contains(s@), rrv.contains(o@)]
-                        srv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {};
+                        srv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {
+                        assert(left@.contains(s@));
+                        assert(right@.contains(o@));
+                    };
                     // Ordering facts for rlv/rrv from expose_internal ensures (while r_left/r_right are live).
                     // Veracity: NEEDED proof block (speed hint)
                     // Ordering facts for slv/srv from split_inner ensures (while split_left/split_right are live).

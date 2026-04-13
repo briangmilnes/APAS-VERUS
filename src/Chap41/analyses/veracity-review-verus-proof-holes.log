@@ -20,56 +20,41 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ AVLTreeSetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:681: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Send for AVLTreeSetMtEp...
-       682 |     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtEph<T> {}
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:682: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtEp...
-       683 | 
-       684 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtEphIter<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:586: info: accept()
-   Holes: 2 total
-      2 × unsafe impl
+ℹ AVLTreeSetMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:586: info: accept()
    Info: 1 total
-❌ AVLTreeSetMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:739: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Send for AVLTreeSetMtPe...
-       740 |     unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtPer<T> {}
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:740: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtPe...
-       741 | 
-       742 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtPerIter<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:706: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:513: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:520: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
-   Holes: 2 total
-      2 × unsafe impl
+ℹ AVLTreeSetMtPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:706: info: accept()
+   Info: 1 total
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:513: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:520: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
-      2 × STD_TRAIT_IMPL
-   Info: 1 total
 ℹ AVLTreeSetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:953: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:954: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:955: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:956: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:960: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:953: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:954: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:955: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:956: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:960: info: accept()
    Info: 5 total
    5 clean proof functions
 ℹ AVLTreeSetStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:832: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:833: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:834: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:835: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:839: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:832: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:833: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:834: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:835: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:839: info: accept()
    Info: 5 total
    4 clean proof functions
 ℹ ArraySetEnumMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:979: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:993: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:979: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:993: info: accept()
    Info: 2 total
    7 clean proof functions
 ℹ ArraySetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1191: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1192: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1215: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1229: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1191: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1192: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1215: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1229: info: accept()
    Info: 4 total
    7 clean proof functions
 ✓ OrdKeyMap.rs
@@ -108,8 +93,8 @@ OrdKeyMap.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   5 clean (no holes, no errors; 71%)
-   2 holed (holes or errors, 28%)
+   7 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    7 total
 
 Proof Functions:
@@ -125,9 +110,8 @@ Function Specs:
    460 total fns
 
 
-Holes Found: 4 (actionable)
-   4 × unsafe impl (100%)
-Real Proof Targets: 4 (all actionable)
+Holes Found: 0 (actionable)
+Real Proof Targets: 0 (all actionable)
 
 Accepted (reviewed): 18 total
    18 × accept()
@@ -135,17 +119,15 @@ Accepted (reviewed): 18 total
 Structural (info only): 2
    2 × STD_TRAIT_IMPL
 
+No proof holes or warnings found! All proofs are complete.
+
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 15:12:42 -07:00
-Ended:     2026-04-12 15:12:42 -07:00
-Duration:  102ms
+Started:   2026-04-12 19:56:03 -07:00
+Ended:     2026-04-12 19:56:03 -07:00
+Duration:  100ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
-Started:   2026-04-12 15:12:42 -07:00
-Ended:     2026-04-12 15:12:42 -07:00
-Duration:  102ms
-
-Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
+-review-verus-proof-holes.log

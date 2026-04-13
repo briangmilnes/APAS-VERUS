@@ -23,11 +23,11 @@ Table of Contents:
 ✓ ChainedHashTable.rs
    5 clean proof functions
 ℹ DoubleHashFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:104: info: structural_false_positive OPAQUE_EXTERNAL second_hash — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:104: info: structural_false_positive OPAQUE_EXTERNAL second_hash — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
    1 clean proof function
 ℹ FlatHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:268: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:268: info: accept()
    Info: 1 total
    4 clean proof functions
 ✓ LinProbFlatHashTableStEph.rs
@@ -38,10 +38,10 @@ Table of Contents:
 ✓ QuadProbFlatHashTableStEph.rs
    6 clean proof functions
 ℹ StructChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:880: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:898: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:931: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:946: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:880: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:898: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:931: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:946: info: accept()
    Info: 4 total
    1 clean proof function
 ✓ VecChainedHashTableStEph.rs
@@ -116,9 +116,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 15:12:42 -07:00
-Ended:     2026-04-12 15:12:42 -07:00
+Started:   2026-04-12 19:56:04 -07:00
+Ended:     2026-04-12 19:56:04 -07:00
 Duration:  45ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
-47/analyses/veracity-review-verus-proof-holes.log
+t: src/Chap47/analyses/veracity-review-verus-proof-holes.log

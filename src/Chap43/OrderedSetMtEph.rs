@@ -36,6 +36,7 @@ pub mod OrderedSetMtEph {
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::vstdplus::clone_plus::clone_plus::*;
+    use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
     #[cfg(verus_keep_ghost)]

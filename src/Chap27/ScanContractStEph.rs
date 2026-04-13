@@ -40,6 +40,22 @@ pub mod ScanContractStEph {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
+    /// Opaque wrapper around `s.take(k).fold_left(b, f)` that prevents
+    /// `lemma_fold_left_split` (auto-broadcast via `group_vstd_default`) from
+    /// matching its trigger inside this module's loop invariants, which otherwise
+    /// causes a quantifier matching loop after Verus 0.2026.04.10.
+    #[verifier::opaque]
+    pub open spec fn scan_prefix<T>(s: Seq<T>, b: T, f: spec_fn(T, T) -> T, k: int) -> T {
+        s.take(k).fold_left(b, f)
+    }
+
+    /// Bridge lemma: scan_prefix is equal to s.take(k).fold_left(b, f) by definition.
+    pub proof fn lemma_scan_prefix_unfold<T>(s: Seq<T>, b: T, f: spec_fn(T, T) -> T, k: int)
+        ensures scan_prefix(s, b, f, k) == s.take(k).fold_left(b, f),
+    {
+        reveal(scan_prefix);
+    }
+
     //		Section 8. traits
 
 
@@ -232,6 +248,20 @@ pub mod ScanContractStEph {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));
 
+            // Convert the caller's fold_left fact to the opaque scan_prefix form.
+            // This shields the loop invariant below from the auto-broadcast
+            // lemma_fold_left_split that otherwise matching-loops on the fold_left
+            // terms (Verus 0.2026.04.10 regression).
+            proof {
+                assert forall|k: int| #![trigger scan_prefix(b_seq, *id, spec_f, k)]
+                    0 <= k < half as int implies
+                    c.spec_index(k) == scan_prefix(b_seq, *id, spec_f, k)
+                by {
+                    lemma_scan_prefix_unfold(b_seq, *id, spec_f, k);
+                    assert(b_seq == Seq::new(b.spec_len(), |j: int| b.spec_index(j)));
+                }
+            }
+
             let mut result_vec: Vec<T> = Vec::with_capacity(n);
             let mut j: usize = 0;
             while j < half
@@ -248,11 +278,13 @@ pub mod ScanContractStEph {
                     c.spec_len() == half as nat,
                     forall|k: int| #![trigger b_seq[k]] 0 <= k < b_seq.len() ==>
                         b_seq[k] == spec_f(s[2 * k], s[2 * k + 1]),
-                    forall|k: int| #![trigger c.spec_index(k)] 0 <= k < half as int ==>
-                        c.spec_index(k) == b_seq.take(k).fold_left(*id, spec_f),
+                    forall|k: int| #![trigger scan_prefix(b_seq, *id, spec_f, k)]
+                        0 <= k < half as int ==>
+                        c.spec_index(k) == scan_prefix(b_seq, *id, spec_f, k),
                     result_vec@.len() == 2 * j as int,
-                    forall|k: int| #![trigger result_vec@[k]] 0 <= k < 2 * j as int ==>
-                        result_vec@[k] == s.take(k).fold_left(*id, spec_f),
+                    forall|k: int| #![trigger scan_prefix(s, *id, spec_f, k)]
+                        0 <= k < 2 * j as int ==>
+                        result_vec@[k] == scan_prefix(s, *id, spec_f, k),
                     spec_monoid(spec_f, *id),
                     forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                     forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
@@ -260,31 +292,45 @@ pub mod ScanContractStEph {
                 decreases half - j,
             {
                 let even_val = f(id, c.nth(j));
-                // Veracity: NEEDED proof block
                 proof {
                     lemma_expand_even::<T>(s, b_seq, spec_f, *id, j as int);
-                // Veracity: NEEDED proof block
+                    lemma_scan_prefix_unfold(b_seq, *id, spec_f, j as int);
+                    lemma_scan_prefix_unfold(s, *id, spec_f, 2 * j as int);
                 }
                 result_vec.push(even_val);
 
                 let odd_val = f(c.nth(j), a.nth(2 * j));
-                // Veracity: NEEDED proof block
                 proof {
                     lemma_expand_odd::<T>(s, spec_f, *id, j as int);
+                    lemma_scan_prefix_unfold(s, *id, spec_f, 2 * j as int);
+                    lemma_scan_prefix_unfold(s, *id, spec_f, 2 * j as int + 1);
                 }
                 result_vec.push(odd_val);
 
-                // Veracity: NEEDED proof block
                 j += 1;
             }
 
             if n % 2 == 1 {
                 let last_val = f(c.nth(half - 1), b.nth(half - 1));
-                // Veracity: NEEDED proof block
                 proof {
                     lemma_expand_odd_tail::<T>(s, b_seq, spec_f, *id, half as int);
+                    lemma_scan_prefix_unfold(b_seq, *id, spec_f, half as int - 1);
+                    lemma_scan_prefix_unfold(s, *id, spec_f, 2 * half as int);
                 }
                 result_vec.push(last_val);
+            }
+
+            // Convert invariant back to fold_left for the ensures clause.
+            proof {
+                assert forall|k: int| #![trigger s.take(k).fold_left(*id, spec_f)]
+                    0 <= k < 2 * half as int implies
+                    result_vec@[k] == s.take(k).fold_left(*id, spec_f)
+                by {
+                    lemma_scan_prefix_unfold(s, *id, spec_f, k);
+                }
+                if n % 2 == 1 {
+                    lemma_scan_prefix_unfold(s, *id, spec_f, 2 * half as int);
+                }
             }
 
             result_vec
