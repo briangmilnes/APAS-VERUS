@@ -519,7 +519,7 @@ Consistent w/ ==  |            |            |            |
   ** One orchestrator, writing plan prompts and controlling merges.
   ** 1-8 on branches each working on different independent plans.
 
-% Software Engineering in AI Paired Proving
+% Software Engineering in AI Paired Proving - Models
   * The agents I used are: various Google, OpenAI and Anthropic.
   * A google agent once took 12 minutes to 'echo HI' to test it's terminal.
   * Anthropics models are signficantly better than OpenAI.
@@ -529,8 +529,16 @@ Consistent w/ ==  |            |            |            |
   * And they are buying coding interactions.
   * But they are playing leap frog.
 
-% Software Engineering in AI Paired Proving
-
+% Software Engineering in AI Paired Proving - Problems
+  * They are inconsistent.
+  * They lie.
+  * They cheat.
+  * They err.
+  * They are getting better.
+  * If you tell them you are Dr. FunkenProof and they are Igor,
+   they hallucinate whole modules.
+  * Just a few months ago only Claude would sweep a codebase decently.
+  -- And now they can prove like heck. 10x what I can do. 
 
 % The AI Paired Programming Interfaces
  ** I have used web browers, yuck.
@@ -550,7 +558,7 @@ Consistent w/ ==  |            |            |            |
    *** It clears your text in a variety of ways.
 
 % The AI Paired Programming Interfaces
- ** What you want is pretty obvious:
+ ** What you want is pretty obvious with experience.
    *** This is text. You want simple fast search and processing
      of your text interaction with the agents.
    *** You want one window with your core interaction. The agent
@@ -558,9 +566,11 @@ Consistent w/ ==  |            |            |            |
    *** You want one to watch your proofs, compile, tests and scripts.
    *** You want one window to have the LLM show you it's thinking.
    *** I learned a ton from watching agents think.
+   *** I suspect they are hiding most of their thinking now to
+    prevent them from being used to train new AIs.
 
 % The Internet Apocalypse
- -- I asked Claude Code to check its switches on startup for me, at the End of Jan 2026.
+ ** I asked Claude Code to check its switches on startup for me, at the End of Jan 2026.
  -- It immediately started disassembling itself.
  -- Scared the heck out of me.
  -- I told it to read it's docs.
