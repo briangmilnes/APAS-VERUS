@@ -676,6 +676,10 @@ See [docs/scripts.md](docs/scripts.md) for a reference of all scripts in `script
 
 Copyright (C) 2025 Acar, Blelloch and Milnes
 
+## Acknowledgments
+
+Thanks to Nikhil Swamy and the F* team for their Union Find proof. The APAS textbook is thin on the formal details of Union Find's correctness argument; their F* development provided the mathematical scaffolding that made Chap65 possible.
+
 ## References
 
 - [Algorithms Parallel and Sequential](http://www.parallel-algorithms-book.com/)
