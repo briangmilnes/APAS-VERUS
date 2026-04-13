@@ -339,6 +339,26 @@ Consistent w/ ==  |            |            |            |
      Hance, Howell, Padon, Parno. "Leaf" — OOPSLA 2023 (storage protocols)
      Hance. PhD Thesis, CMU-CS-CS-24-146, 2024 (full formal treatment)
 
+% Verus: How Fast Verus Is Moving
+  ** Verus Velocity
+  ** 4,225 commits since March 2021 — 5 years, still accelerating
+  ** Commits per year:
+     *** 2021: 474   2022: 906   2023: 992
+     *** 2024: 745   2025: 761   2026: 347 (thru April)
+  ** Rolling releases: 396 tagged — roughly one every 4 days
+  ** 59 stable releases
+
+  ** Major features shipped (2025–2026):
+     *** IEEE float SMT (real solver support for f32/f64)
+     *** new-mut-ref: prophetic mutable references with final(x) syntax
+     *** Fn/FnMut/FnOnce/Copy as first-class verified traits
+     *** Ghost functions can be used to prove these non-pure Fn types.
+     *** Complex return value patterns
+     *** Ghost Send + Sync (ghost fields no longer block threading)
+     *** Async function support (in progress)
+     *** ExDestruct, proof_note_custom_err, verusdoc support
+     *** PartialEq/Ord specs for shared references
+
 % APAS-VERUS - AI Paired Proving APAS in Verus
   ** Goal: formally verify all algorithms in Acar and Blelloch
      "A Practical Approach to Data Structures" using Verus.
@@ -382,7 +402,30 @@ Consistent w/ ==  |            |            |            |
 
   ** So roughly half the non-exec code is proof (27%), a fifth is spec (21%), and the exec
    implementation is 44%.
-  ** The "rust" 8% is code outside verus! — Debug impls, macros, cfg, etc. 
+  ** The "rust" 8% is code outside verus! — Debug impls, macros, cfg, etc.
+
+% APAS-VERUS: Clone and Generics in Verus
+  ** Rust Clone vs Copy (recap)
+     *** Copy: implicit bitwise copy, compiler-inserted, no user code
+     *** Clone: explicit .clone() call, can allocate, user-defined
+  ** Verus recognizes Copy as a first-class trait (since 2026-03)
+     *** Copy bounds propagate through generics correctly
+     *** Fn/FnMut/FnOnce also first-class since the same release
+  ** Verus does NOT recognize Clone on closures or named fn items
+     *** Cannot write: requires F: Clone  (Verus ignores Clone bound)
+     *** Cannot Clone a closure variable inside a proof
+     *** Workaround: vstdplus helpers clone_fn / clone_fn2 / clone_pred
+  ** Generic spec functions require explicit type bounds
+     *** Bounds must appear in requires, not just in the Rust signature
+     *** Well-formedness predicates must be stated per type parameter
+  ** Clone in exec code: full bodies verified
+     *** APAS-VERUS pattern: Clone::clone body uses assume(r == old(self)@)
+     *** The assume bridges the ghost/exec gap at the one correct site
+     *** Callers obtain the equality through clone()'s ensures clause,
+         not by assuming it themselves
+  ** Generics + RwLock: type bounds must include StTInMtT, 'static
+     *** Ghost fields in generic structs block Send/Sync auto-derive
+     *** Fixed in Verus #2287 (April 2026): Ghost<A>: Send + Sync
 
 % Veracity - Software Engineering AI Paired Proving
   ** Veracity is a suite of 22+ tools for analyzing, reviewing, and
@@ -397,11 +440,68 @@ Consistent w/ ==  |            |            |            |
      APAS-VERUS by type signature, finding lemmas before writing new ones.
      "Specifications as Search Keys for Software Libraries"
      Eugene J. Rollins and Jeannette M. Wing
+  ** This allows me to download ALL known Verus (git VerusCodebases)
+    and search them in 1.2 seconds!
   ** Metrics: veracity-count-loc (spec/proof/exec breakdown),
      chapter-cleanliness-status (clean vs. holed chapter summary).
   ** All tools are AST-aware (ra_ap_syntax / verus_syn).
      A built-in string-hacking detector flags and rejects any tool
      that attempts regex or find-and-replace on Verus source.
+
+% APAS-VERUS: Verified Iteration
+  ** 10 components required per collection (all inside verus!):
+  ** 6 verified loop patterns per collection:
+     *** loop  + borrow iter,  loop  + borrow into
+     *** for   + borrow iter,  for   + borrow into
+     *** loop  + consume,      for   + consume
+  ** Iterator assumes (one necessary workaround):
+     *** Verus forbids requires on external trait impls (std::iter::Iterator)
+     *** Hand-rolled iterators need assume(iter_invariant(self)) in next()
+     *** Everything after the assume is fully proved
+     *** APAS-VERUS policy: report assumes in a table; user reviews
+  ** 44 collections implemented; all carry verified iterators
+  ** Verus has proof time tests inside, I freed them to run in APAS-VERUS.
+  ** This was critical to get iterative loops to prove.
+
+% APAS-VERUS: Experiments
+  ** Agents often say "Verus Can't Do That"
+  ** I said "Make an experiment!"
+  ** Quantitatives:
+     *** 168 experiment files
+     *** 21,476 lines of code
+     *** Topics span: Clone, Arc, RwLock, TSM, closures, iterators,
+         generics, float, bitvector, PartialEq, Copy, async, hash tables,
+         parallel algorithms, ghost types, Send/Sync, collect, sorting
+  ** Results:
+     *** ~100 files: SUCCEEDS / VERIFIES — pattern adopted into codebase
+     *** ~50 files: FAILS — Verus limitation documented, workaround noted
+
+  ** Notable successes that unlocked chapters:
+     *** TSM/RwLock layer pattern — unlocked all Mt chapters
+     *** Named closure ensures through ParaPair — unlocked fork-join
+     *** Ghost struct Send/Sync — unlocked Chap41 (now in Verus upstream)
+     *** Tree module style with recursive trait impls — unlocked Chap65
+
+% APAS-VERUS Standards
+  ** Purpose: encode hard-won proof patterns so agents don't repeat mistakes
+     *** Agents read all standards before every task (~6,200 lines, ~54K tokens)
+     *** Violations require full reverts — standards exist because agents
+         have broken each patterns many times.
+  ** Quantitatives:
+     *** 29 standard files
+     *** 6,911 lines total
+     *** Largest: table_of_contents (583), wrapping_iterators (468),
+         multi_struct (347), view (345), mut (327), iterators (323)
+  ** Coverage by area:
+     *** Module structure: mod, table_of_contents, spec_naming, spec_wf
+     *** Type system: view, deep_view, partial_eq_eq_clone, multi_struct
+     *** Proof patterns: total_order, finite_sets, capacity_bounds, no_unsafe
+     *** Concurrency: arc_usage, hfscheduler, mt_type_bounds,
+         toplevel_coarse_rwlocks, tsm, rwlock_tsm
+     *** Iteration: iterators, wrapping_iterators, iterator_ptt
+     *** Execution: mut, using_closures, using_hashmap, using_rand
+     *** Meta: helper_function_placement, alg_analysis_notation,
+         iterative_vs_recursive, constructor_feq
 
 % Veracity: veracity-minimize-proofs: AIs Write Redundant Proofs
   ** AI proof agents produce correct but bloated proofs —
@@ -538,7 +638,7 @@ Consistent w/ ==  |            |            |            |
   * If you tell them you are Dr. FunkenProof and they are Igor,
    they hallucinate whole modules.
   * Just a few months ago only Claude would sweep a codebase decently.
-  -- And now they can prove like heck. 10x what I can do. 
+  -- And now they can prove like heck. 10x what I can do.
 
 % The AI Paired Programming Interfaces
  ** I have used web browers, yuck.
