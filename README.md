@@ -1,9 +1,9 @@
 # APAS-VERUS
 
 Formally verified implementations of algorithms from "Algorithms Parallel and Sequential" (APAS) by Acar and Blelloch.
-Rust code with machine-checked proofs in the [Verus](https://github.com/verus-lang/verus) verification framework, by Brian Milnes.
+Rust code with machine-checked proofs in the [Verus](https://github.com/verus-lang/verus) verification framework by Brian Milnes.
 
-Claude used for the code generation and proving in Verus. Although the AIs are improving,
+Mostly Claude used for the code generation and proving in Verus. Although the AIs are improving,
 even with 50+ Cursor rules (in .cursor), they made so many bad judgements that I had to
 develop two software engineering tools to clean things up:
 
@@ -12,35 +12,35 @@ develop two software engineering tools to clean things up:
 
 **All 46 algorithm chapters verified, 45 with zero proof holes**
 
-**5424 verified, 0 errors | 3083 runtime tests | 157 proof time tests | 4 proof holes (all in Chap65 UnionFind) | 101 PartialEq/Clone workarounds**
+**5,728+ verified, 0 errors | 4,209 runtime tests | ~170 proof time tests | 4 proof holes (all in Chap41) | 101 PartialEq/Clone workarounds**
 
-The 4 remaining holes are in UnionFind (Chap65), blocked by a Z3 matching loop between `obeys_feq_view_injective` and `spec_elements_distinct` (7.4M quantifier instantiations). All other chapters are fully clean.
+The 4 remaining holes are `unsafe impl Send` and `unsafe impl Sync` in `AVLTreeSetMtEph` and `AVLTreeSetMtPer` (Chap41). These exist because `Ghost<T>` did not implement Send/Sync in Verus. Verus PR #2287 (April 2026) adds safe impls for Ghost; the R202 upgrade will close all 4 holes.
 
 The 101 PartialEq/Clone workarounds are accepted `assume` calls inside `eq()` and `clone()` bodies — Verus cannot yet verify that Rust's generic PartialEq and Clone match spec-level View equality. These are standard across all Verus projects and will be eliminated when Verus adds derived spec support for these traits.
 
 ## Project Structure
 
 - `src/` - Verified algorithm implementations organized by chapter
-- `src/vstdplus/` - Extensions to the Verus standard library (24 modules)
-- `src/standards/` - Verus coding standards and patterns (24 files)
+- `src/vstdplus/` - Extensions to the Verus standard library (25 modules)
+- `src/standards/` - Verus coding standards and patterns (29 files)
 - `tests/` - Rust unit tests for algorithm correctness
 - `benches/` - Performance benchmarks using Criterion
 
 ## Proof State
 
-Full verification: **5424 verified, 0 errors**
+Full verification: **5,728+ verified, 0 errors**
 
 | # | Metric | Count |
 |---|--------|-------|
 | 1 | Chapters verified | 46 |
 | 2 | Chapters with zero proof holes | 45 |
-| 3 | Verified functions | 5424 |
-| 4 | Runtime tests (RTT) | 3083 |
-| 5 | Proof time tests (PTT) | 157 |
-| 6 | Proof holes remaining | 4 (UnionFind, Z3 matching loop) |
-| 7 | Modules | 258 |
+| 3 | Verified functions | 5,728+ |
+| 4 | Runtime tests (RTT) | 4,209 |
+| 5 | Proof time tests (PTT) | ~170 |
+| 6 | Proof holes remaining | 4 (Chap41 unsafe impl Send/Sync) |
+| 7 | Modules | 245 |
 
-Holes tracked by [veracity](https://github.com/briangmilnes/veracity). 1 chapter (Chap65 UnionFind) has 4 holes blocked by a Z3 matching loop; 45 are fully clean.
+Holes tracked by [veracity](https://github.com/briangmilnes/veracity). 1 chapter (Chap41) has 4 holes — `unsafe impl Send/Sync` for `AVLTreeSetMtEph` and `AVLTreeSetMtPer`, closing in R202 after Verus upgrade to April 2026 release.
 
 ## Algorithm Status
 
@@ -252,7 +252,7 @@ All with custom iterators and ForLoopGhostIterator.
 | 2 | BSTSizeStEph | St | Size-augmented BST |
 | 3 | BSTReducedStEph | St | Reduced (augmented) BST |
 
-### Chapter 41: Sets via BST - ✅ VERIFIED (ZERO HOLES)
+### Chapter 41: Sets via BST - ✅ VERIFIED (4 HOLES — closing in R202)
 
 6 unconditional + 1 behind `all_chapters` feature gate.
 
@@ -262,8 +262,8 @@ All with custom iterators and ForLoopGhostIterator.
 | 2 | ArraySetEnumMtEph | Mt | Parallel array set (enum-based) |
 | 3 | AVLTreeSetStEph | St | AVL tree set |
 | 4 | AVLTreeSetStPer | St | Persistent AVL tree set |
-| 5 | AVLTreeSetMtEph | Mt | Parallel AVL tree set |
-| 6 | AVLTreeSetMtPer | Mt | Parallel persistent AVL tree set (gated) |
+| 5 | AVLTreeSetMtEph | Mt | Parallel AVL tree set (2 holes: unsafe impl Send/Sync) |
+| 6 | AVLTreeSetMtPer | Mt | Parallel persistent AVL tree set (2 holes: unsafe impl Send/Sync) |
 | 7 | Example41_3 | St | Textbook example |
 
 ### Chapter 42: Hash Tables - ✅ VERIFIED (ZERO HOLES)
@@ -486,13 +486,13 @@ Behind `all_chapters` feature gate.
 | 2 | SpanTreeMtEph | Mt | Parallel spanning tree |
 | 3 | TSPApproxStEph | St | TSP approximation |
 
-### Chapter 65: MST (Kruskal, Prim) - ✅ VERIFIED (4 HOLES) (`all_chapters`)
+### Chapter 65: MST (Kruskal, Prim) - ✅ VERIFIED (ZERO HOLES) (`all_chapters`)
 
 Behind `all_chapters` feature gate.
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
-| 1 | UnionFindStEph | St | Union-find (4 holes: Z3 matching loop on feq/spec_elements_distinct) |
+| 1 | UnionFindStEph | St | Union-find |
 | 2 | KruskalStEph | St | Kruskal's MST algorithm |
 | 3 | PrimStEph | St | Prim's MST algorithm |
 
@@ -544,7 +544,7 @@ Behind `all_chapters` feature gate.
 
 ### Standards Library
 
-24 Verus coding standards demonstrating project patterns. Each is a compilable, verified example.
+29 Verus coding standards demonstrating project patterns. Each is a compilable, verified example.
 
 | # | Standard | Covers |
 |---|----------|--------|
