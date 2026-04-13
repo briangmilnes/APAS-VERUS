@@ -42,7 +42,10 @@
       "WebFetch(domain:smt-lib.github.io)",
       "WebFetch(domain:smt-lib.org)",
       "WebFetch(domain:microsoft.github.io)",
-      "Bash(grep --line-buffered -E \"ProveChap18ArraySeqMtEphSlice|FAILED|test result|error|ok$\")"
+      "Bash(grep --line-buffered -E \"ProveChap18ArraySeqMtEphSlice|FAILED|test result|error|ok$\")",
+      "WebFetch(domain:dl.acm.org)",
+      "WebFetch(domain:dblp.org)",
+      "WebFetch(domain:www.andrew.cmu.edu)"
     ]
   }
 }

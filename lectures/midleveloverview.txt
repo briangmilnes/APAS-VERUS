@@ -10,14 +10,15 @@ And for code formatting: ``code``
 % Poll: Get a feel for my audience
 % Background
 % Algorithms Parallel and Sequential (APAS)
-% APAS-AI    - AI Paired Programming APAS in Rust
-% APAS-VERUS - AI Paired Proving APAS in Verus
 % Rust       
-% Rusticate - sending Python back to the family estate
 % Verus     - Proving Rust
+% APAS-AI    - AI Paired Programming APAS in Rust
+% Rusticate - sending Python back to the family estate
+% APAS-VERUS - AI Paired Proving APAS in Verus
 % Veracity - Software Engineering AI Paired Proving
 % Software Engineering in AI Paired Proving
+% The AI Paired Programming Interfaces
 % The Internet Apocalypse
 % Review of the Talk
 % Questions
-% An Encylopedia of Cautionary Tales
+
