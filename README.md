@@ -678,7 +678,15 @@ Copyright (C) 2025 Acar, Blelloch and Milnes
 
 ## Acknowledgments
 
-Thanks to Nikhil Swamy and the F* team for their Union Find proof. The APAS textbook is thin on the formal details of Union Find's correctness argument; their F* development provided the mathematical scaffolding that made Chap65 possible.
+Thanks to the Verus team — Chris Hawblitzel, Andrea Lattuada, Jay Bosamiya, Matthias Brun,
+Lior Dickstein, Jay Lorch, Elinor Tang, and the broader Verus contributors — for building
+a verification framework expressive enough to carry this project all the way to zero holes.
+The quality of vstd, the responsiveness on GitHub, and the steady cadence of rolling
+releases made the difference.
+
+Thanks to Nikhil Swamy and the F* team for their Union Find proof. The APAS textbook is
+thin on the formal details of Union Find's correctness argument; their F* development
+provided the mathematical scaffolding that made Chap65 possible.
 
 ## References
 
