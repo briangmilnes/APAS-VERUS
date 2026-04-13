@@ -21,47 +21,47 @@ Table of Contents:
 =================================================================
 
 ℹ BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:78: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:88: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1806: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1807: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1808: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1817: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:78: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:88: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1810: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1811: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1812: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1821: info: accept()
    Info: 6 total
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:219: info: structural_false_positive OPAQUE_EXTERNAL priority_for — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1893: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Send for ParamTreap<T> {} [high]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1894: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Sync for ParamTreap<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:219: info: structural_false_positive OPAQUE_EXTERNAL priority_for — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1897: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Send for ParamTreap<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1898: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Sync for ParamTreap<T> {} [high]
    Info: 3 × structural_false_positive
 ℹ BSTSetTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:553: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:553: info: accept()
    Info: 1 total
 ℹ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1246: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1467: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1482: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1619: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1620: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1630: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1651: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1652: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1659: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1246: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1467: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1482: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1619: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1620: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1630: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1651: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1652: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1659: info: accept()
    Info: 9 total
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1245: info: structural_false_positive RWLOCK_GHOST find — assume(result.is_some() <==> self@.contains(target@)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1267: info: structural_false_positive RWLOCK_GHOST size — proof { assume(result as nat == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1298: info: structural_false_positive RWLOCK_GHOST minimum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1311: info: structural_false_positive RWLOCK_GHOST maximum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1325: info: structural_false_positive RWLOCK_GHOST in_order — proof { assume(ordered@.len() == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1339: info: structural_false_positive RWLOCK_GHOST pre_order — proof { assume(preordered@.len() == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1245: info: structural_false_positive RWLOCK_GHOST find — assume(result.is_some() <==> self@.contains(target@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1267: info: structural_false_positive RWLOCK_GHOST size — proof { assume(result as nat == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1298: info: structural_false_positive RWLOCK_GHOST minimum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1311: info: structural_false_positive RWLOCK_GHOST maximum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1325: info: structural_false_positive RWLOCK_GHOST in_order — proof { assume(ordered@.len() == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1339: info: structural_false_positive RWLOCK_GHOST pre_order — proof { assume(preordered@.len() == self@.len()); } [medium]
    Info: 6 × structural_false_positive
    25 clean proof functions
 ✓ BSTTreapSpecsAndLemmas.rs
    11 clean proof functions
 ℹ BSTTreapStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1935: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1940: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1955: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1935: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1940: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1955: info: accept()
    Info: 3 total
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1962: info: structural_false_positive OPAQUE_EXTERNAL priority_for_st — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1962: info: structural_false_positive OPAQUE_EXTERNAL priority_for_st — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
    21 clean proof functions
 
@@ -129,9 +129,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 15:12:42 -07:00
-Ended:     2026-04-12 15:12:42 -07:00
-Duration:  80ms
+Started:   2026-04-12 19:56:03 -07:00
+Ended:     2026-04-12 19:56:03 -07:00
+Duration:  69ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
+Chap39/analyses/veracity-review-verus-proof-holes.log

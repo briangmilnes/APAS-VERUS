@@ -21,17 +21,17 @@ Table of Contents:
 =================================================================
 
 ℹ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:118: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1717: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1736: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:118: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:1717: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:1736: info: accept()
    Info: 3 total
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1822: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1823: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:1822: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:1823: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
    Info: 2 × structural_false_positive
 ✓ BSTParaSpecsAndLemmas.rs
    6 clean proof functions
 ℹ BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:107: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:107: info: fn_missing_requires
    Info: 1 total
 
 =================================================================
@@ -80,8 +80,8 @@ Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
 Accepted (reviewed): 4 total
-   2 × fn_missing_requires
    2 × accept()
+   2 × fn_missing_requires
 
 Structural (info only): 2
    2 × UNSAFE_SEND_SYNC
@@ -92,9 +92,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 15:12:41 -07:00
-Ended:     2026-04-12 15:12:42 -07:00
-Duration:  33ms
+Started:   2026-04-12 19:56:03 -07:00
+Ended:     2026-04-12 19:56:03 -07:00
+Duration:  34ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
-/Chap38/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap38/analyses/veracity-review-verus-proof-holes.log

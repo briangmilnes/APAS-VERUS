@@ -21,24 +21,24 @@ Table of Contents:
 =================================================================
 
 ℹ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:433: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1728: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:433: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1728: info: accept()
    Info: 2 total
    4 clean proof functions
 ℹ ArraySeqMtEphSlice.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEphSlice.rs:1722: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEphSlice.rs:1722: info: accept()
    Info: 1 total
    5 clean proof functions
 ✓ ArraySeqSpecsAndLemmas.rs
    2 clean proof functions
 ℹ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:413: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1177: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:413: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:1177: info: accept()
    Info: 2 total
    4 clean proof functions
 ℹ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:401: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:1178: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs:401: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs:1178: info: accept()
    Info: 2 total
    4 clean proof functions
 
@@ -101,9 +101,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 15:12:41 -07:00
-Ended:     2026-04-12 15:12:41 -07:00
-Duration:  54ms
+Started:   2026-04-12 19:56:03 -07:00
+Ended:     2026-04-12 19:56:03 -07:00
+Duration:  53ms
 
 Full output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
+/veracity-review-verus-proof-holes.log

@@ -23,23 +23,19 @@ Table of Contents:
 ✓ KruskalStEph.rs
    1 clean proof function
 ℹ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:506: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:506: info: accept()
    Info: 1 total
    4 clean proof functions
 ✓ UnionFindArrayStEph.rs
    11 clean proof functions
 ✓ UnionFindNoPCStEph.rs
    5 clean proof functions
-❌ UnionFindPCStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:106: error: opaque - #[verifier::opaque] // accept hole
-       107 |     pub open spec fn spec_light_wf<V: View>(
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:122: error: opaque - #[verifier::opaque] // accept hole
-       123 |     pub open spec fn spec_find_preserved<V: View>(
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:132: error: opaque - #[verifier::opaque] // accept hole
-       133 |     pub open spec fn spec_same_domain<V: View>(
-   Holes: 3 total
-      3 × opaque
-   Proof functions: 18 total (18 clean, 0 holed)
+ℹ UnionFindPCStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindPCStEph.rs:106: info: opaque
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindPCStEph.rs:122: info: opaque
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindPCStEph.rs:132: info: opaque
+   Info: 3 total
+   18 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -70,8 +66,8 @@ UnionFindPCStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 80%)
-   1 holed (holes or errors, 20%)
+   5 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    5 total
 
 Proof Functions:
@@ -87,20 +83,22 @@ Function Specs:
    147 total fns
 
 
-Holes Found: 3 (actionable)
-   3 × opaque (100%)
-Real Proof Targets: 3 (all actionable)
+Holes Found: 0 (actionable)
+Real Proof Targets: 0 (all actionable)
 
-Accepted (reviewed): 1 total
+Accepted (reviewed): 4 total
+   3 × opaque
    1 × accept()
+
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 15:12:42 -07:00
-Ended:     2026-04-12 15:12:42 -07:00
-Duration:  40ms
+Started:   2026-04-12 19:56:04 -07:00
+Ended:     2026-04-12 19:56:04 -07:00
+Duration:  42ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-nalyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

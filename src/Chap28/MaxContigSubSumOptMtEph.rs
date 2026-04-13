@@ -137,12 +137,12 @@ pub mod MaxContigSubSumOptMtEph {
                     idx > 1 ==> max_sum.is_some(),
                     idx > 1 ==> (
                         (exists|hi: int|
-                            #![trigger spec_prefix_sum(a.seq@, hi)]
+                            #![trigger spec_prefix_sum(a.seq@, hi), spec_min_prefix_sum(a.seq@, hi - 1)]
                             1 <= hi < idx &&
                             max_sum.unwrap() as int == spec_prefix_sum(a.seq@, hi) - spec_min_prefix_sum(a.seq@, hi - 1)
                         ) &&
                         (forall|hi: int|
-                            #![trigger spec_prefix_sum(a.seq@, hi)]
+                            #![trigger spec_prefix_sum(a.seq@, hi), spec_min_prefix_sum(a.seq@, hi - 1)]
                             1 <= hi < idx ==>
                             max_sum.unwrap() as int >= spec_prefix_sum(a.seq@, hi) - spec_min_prefix_sum(a.seq@, hi - 1)
                         )

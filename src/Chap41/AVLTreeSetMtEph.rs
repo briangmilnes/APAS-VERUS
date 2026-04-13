@@ -677,10 +677,6 @@ broadcast use {
 
     //		Section 14. derive impls outside verus!
 
-    // Ghost fields are zero-sized; ParamBST is Send/Sync via BSTParaMtEph.
-    unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Send for AVLTreeSetMtEph<T> {}
-    unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtEph<T> {}
-
     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtEphIter<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "AVLTreeSetMtEphIter(pos={})", self.pos)

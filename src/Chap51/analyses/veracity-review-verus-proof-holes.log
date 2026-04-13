@@ -21,43 +21,43 @@ Table of Contents:
 =================================================================
 
 ℹ BottomUpDPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:180: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:486: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPMtEph.rs:180: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPMtEph.rs:486: info: accept()
    Info: 2 total
    2 clean proof functions
 ℹ BottomUpDPMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:160: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:457: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPMtPer.rs:160: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPMtPer.rs:457: info: accept()
    Info: 2 total
    2 clean proof functions
 ℹ BottomUpDPStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:181: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:505: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPStEph.rs:181: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPStEph.rs:505: info: accept()
    Info: 2 total
    2 clean proof functions
 ℹ BottomUpDPStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:161: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:469: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPStPer.rs:161: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPStPer.rs:469: info: accept()
    Info: 2 total
    2 clean proof functions
 ✓ SeqSpecsAndLemmas.rs
    1 clean proof function
 ℹ TopDownDPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:81: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:509: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtEph.rs:81: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtEph.rs:509: info: accept()
    Info: 2 total
    2 clean proof functions
 ℹ TopDownDPMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:81: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:469: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtPer.rs:81: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtPer.rs:469: info: accept()
    Info: 2 total
    2 clean proof functions
 ℹ TopDownDPStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:395: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPStEph.rs:395: info: accept()
    Info: 1 total
    2 clean proof functions
 ℹ TopDownDPStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:359: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPStPer.rs:359: info: accept()
    Info: 1 total
    2 clean proof functions
 
@@ -128,11 +128,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 15:12:42 -07:00
-Ended:     2026-04-12 15:12:42 -07:00
-Duration:  30ms
+Started:   2026-04-12 19:56:04 -07:00
+Ended:     2026-04-12 19:56:04 -07:00
+Duration:  29ms
 
 Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
-Duration:  30ms
-
-Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
+c/Chap51/analyses/veracity-review-verus-proof-holes.log

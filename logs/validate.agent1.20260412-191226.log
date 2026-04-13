@@ -1,0 +1,44 @@
+Mode: full
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:123:13
+    |
+123 |             while idx <= n
+    |             ^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:608:79
+    |
+608 |                     assert forall|l: T| #[trigger] left@.contains(l@) implies l@ != rkv by {
+    |                                                                               ^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:646:70
+    |
+646 |                         srv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {};
+    |                                                                      ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap39/BSTParaTreapMtEph.rs:646:88
+    |
+646 |                         srv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {};
+    |                                                                                        ^^^^
+
+note: 
+
+s.cmp_spec(o) == Less
+|   !(s.cmp_spec(o) is Equal) ✘
+|   !(s.cmp_spec(o) is Greater) ✘
++---
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap27/ScanContractStEph.rs:237:13
+    |
+237 |             while j < half
+    |             ^^^^^^^^^^^^^^
+
+verification results:: 5761 verified, 3 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 220s
+Sampled Memory Usage: peak rust_verify RSS: 10296MB, peak z3 RSS: 8261MB, min free: 9157MB
+Sampled CPU Usage: rust_verify: 214s, z3 children: 413s

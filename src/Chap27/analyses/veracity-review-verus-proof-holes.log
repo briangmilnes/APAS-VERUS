@@ -25,7 +25,10 @@ Table of Contents:
 ✓ ReduceContractMtEph.rs
 ✓ ReduceContractStEph.rs
 ✓ ScanContractMtEph.rs
-✓ ScanContractStEph.rs
+ℹ ScanContractStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap27/ScanContractStEph.rs:47: info: opaque
+   Info: 1 total
+   1 clean proof function
 
 =================================================================
 2. Depends Upon
@@ -61,20 +64,23 @@ Modules:
    5 total
 
 Proof Functions:
-   8 clean (100%)
+   9 clean (100%)
    0 holed (0%)
-   8 total
+   9 total
 
 Function Specs:
-   13 exec fns with complete spec (requires+ensures) (61%)
+   13 exec fns with complete spec (requires+ensures) (56%)
    0 exec fns missing spec (0%)
-   8 proof/spec fns clean (38%)
+   10 proof/spec fns clean (43%)
    0 proof/spec fns with holes (0%)
-   21 total fns
+   23 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
+
+Accepted (reviewed): 1 total
+   1 × opaque
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -82,9 +88,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 15:12:41 -07:00
-Ended:     2026-04-12 15:12:41 -07:00
+Started:   2026-04-12 19:56:03 -07:00
+Ended:     2026-04-12 19:56:03 -07:00
 Duration:  10ms
 
 Full output: src/Chap27/analyses/veracity-review-verus-proof-holes.log
-alyses/veracity-review-verus-proof-holes.log
+output: src/Chap27/analyses/veracity-review-verus-proof-holes.log

@@ -1,0 +1,252 @@
+Mode: isolate
+Isolate: including Chap19 Chap28 Chap02
+error: while loop: Resource limit (rlimit) exceeded
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:123:13
+    |
+123 |             while idx <= n
+    |             ^^^^^^^^^^^^^^
+
+note: Analyzing prover log for (profile rerun) lib::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::max_contig_sub_sum_opt_mt ...
+
+Z3 4.12.5
+note: Log analysis complete for (profile rerun) lib::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::max_contig_sub_sum_opt_mt
+
+note: Profile statistics for lib::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::max_contig_sub_sum_opt_mt
+
+note: Observed 29 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 256 (Instantiated 16 times - 55% of the total, cost 16) top 1 of 5 user-level quantifiers.
+      
+  --> src/Chap28/MCSSSpec.rs:88:24
+   |
+87 | /         forall|lo: int, hi: int|
+88 | |             #![trigger spec_range_sum(s, lo, hi)]
+   | |                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+89 | |             0 <= lo <= hi <= s.len() ==>
+90 | |                 i32::MIN as int <= spec_range_sum(s, lo, hi) <= i32::MAX as int
+   | |_______________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 66 (Instantiated 6 times - 20% of the total, cost 11) top 2 of 5 user-level quantifiers.
+      
+ --> vstd/seq.rs:301:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 9 (Instantiated 3 times - 10% of the total, cost 3) top 3 of 5 user-level quantifiers.
+      
+  --> src/Chap28/MaxContigSubSumOptMtEph.rs:70:47
+   |
+70 |                       forall|k: int| #![trigger pv@[k]]
+   |  _____________________-                         ^^^^^^
+71 | |                         0 <= k <= i ==> pv@[k] as int == spec_prefix_sum(a.seq@, k),
+   | |___________________________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 8 (Instantiated 2 times - 6% of the total, cost 4) top 4 of 5 user-level quantifiers.
+      
+ --> vstd/seq.rs:313:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 4 (Instantiated 2 times - 6% of the total, cost 2) top 5 of 5 user-level quantifiers.
+      
+ --> vstd/seq.rs:306:0
+  |
+  = note: Triggers selected for this quantifier
+
+Z3 4.12.5
+note: Observed 33 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 159 (Instantiated 3 times - 9% of the total, cost 53) top 1 of 6 user-level quantifiers.
+      
+  --> src/Chap28/MaxContigSubSumOptMtEph.rs:97:47
+   |
+97 |                       forall|k: int| #![trigger ap.spec_index(k)]
+   |  _____________________-                         ^^^^^^^^^^^^^^^^
+98 | |                         0 <= k <= n ==> ap.spec_index(k) as int == spec_prefix_sum(a.seq@, k),
+   | |_____________________________________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 153 (Instantiated 9 times - 27% of the total, cost 17) top 2 of 6 user-level quantifiers.
+      
+ --> vstd/seq.rs:301:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 121 (Instantiated 11 times - 33% of the total, cost 11) top 3 of 6 user-level quantifiers.
+      
+  --> src/Chap28/MCSSSpec.rs:88:24
+   |
+87 | /         forall|lo: int, hi: int|
+88 | |             #![trigger spec_range_sum(s, lo, hi)]
+   | |                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+89 | |             0 <= lo <= hi <= s.len() ==>
+90 | |                 i32::MIN as int <= spec_range_sum(s, lo, hi) <= i32::MAX as int
+   | |_______________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 20 (Instantiated 4 times - 12% of the total, cost 5) top 4 of 6 user-level quantifiers.
+      
+ --> vstd/seq.rs:313:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 16 (Instantiated 4 times - 12% of the total, cost 4) top 5 of 6 user-level quantifiers.
+      
+ --> vstd/seq.rs:306:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 4 (Instantiated 2 times - 6% of the total, cost 2) top 6 of 6 user-level quantifiers.
+      
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:101:47
+    |
+101 |                       forall|k: int| #![trigger mv@[k]]
+    |  _____________________-                         ^^^^^^
+102 | |                         0 <= k < j ==> mv@[k] as int == spec_min_prefix_sum(a.seq@, k),
+    | |______________________________________________________________________________________- Triggers selected for this quantifier
+
+Z3 4.12.5
+note: Observed 16,258 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 959434522 (Instantiated 8,077 times - 49% of the total, cost 118786) top 1 of 5 user-level quantifiers.
+      
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:145:40
+    |
+144 | /                         (forall|hi: int|
+145 | |                             #![trigger spec_prefix_sum(a.seq@, hi)]
+    | |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+146 | |                             1 <= hi < idx ==>
+147 | |                             max_sum.unwrap() as int >= spec_prefix_sum(a.seq@, hi) - spec_min_prefix_sum(a.seq@, hi - 1)
+148 | |                         )
+    | |_________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 64032004 (Instantiated 8,002 times - 49% of the total, cost 8002) top 2 of 5 user-level quantifiers.
+      
+  --> src/Chap28/MCSSSpec.rs:88:24
+   |
+87 | /         forall|lo: int, hi: int|
+88 | |             #![trigger spec_range_sum(s, lo, hi)]
+   | |                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+89 | |             0 <= lo <= hi <= s.len() ==>
+90 | |                 i32::MIN as int <= spec_range_sum(s, lo, hi) <= i32::MAX as int
+   | |_______________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 8281 (Instantiated 91 times - 0% of the total, cost 91) top 3 of 5 user-level quantifiers.
+      
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:159:36
+    |
+158 |                       let lo_j: int = choose|jj: int|
+    |  _____________________________________-
+159 | |                         #![trigger spec_prefix_sum(a.seq@, jj)]
+    | |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+160 | |                         0 <= jj <= idx - 1 && spec_prefix_sum(a.seq@, jj) == spec_min_prefix_sum(a.seq@, (idx - 1) as int);
+    | |__________________________________________________________________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 3036 (Instantiated 46 times - 0% of the total, cost 66) top 4 of 5 user-level quantifiers.
+      
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:132:47
+    |
+132 |                       forall|k: int| #![trigger ap.spec_index(k)]
+    |  _____________________-                         ^^^^^^^^^^^^^^^^
+133 | |                         0 <= k <= n ==> ap.spec_index(k) as int == spec_prefix_sum(a.seq@, k),
+    | |_____________________________________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1806 (Instantiated 42 times - 0% of the total, cost 43) top 5 of 5 user-level quantifiers.
+      
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:134:47
+    |
+134 |                       forall|k: int| #![trigger mp.spec_index(k)]
+    |  _____________________-                         ^^^^^^^^^^^^^^^^
+135 | |                         0 <= k <= n ==> mp.spec_index(k) as int == spec_min_prefix_sum(a.seq@, k),
+    | |_________________________________________________________________________________________________- Triggers selected for this quantifier
+
+Z3 4.12.5
+note: Observed 90 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 1275 (Instantiated 17 times - 18% of the total, cost 75) top 1 of 11 user-level quantifiers.
+      
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:145:40
+    |
+144 | /                         (forall|hi: int|
+145 | |                             #![trigger spec_prefix_sum(a.seq@, hi)]
+    | |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+146 | |                             1 <= hi < idx ==>
+147 | |                             max_sum.unwrap() as int >= spec_prefix_sum(a.seq@, hi) - spec_min_prefix_sum(a.seq@, hi - 1)
+148 | |                         )
+    | |_________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 676 (Instantiated 26 times - 28% of the total, cost 26) top 2 of 11 user-level quantifiers.
+      
+  --> src/Chap28/MCSSSpec.rs:88:24
+   |
+87 | /         forall|lo: int, hi: int|
+88 | |             #![trigger spec_range_sum(s, lo, hi)]
+   | |                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+89 | |             0 <= lo <= hi <= s.len() ==>
+90 | |                 i32::MIN as int <= spec_range_sum(s, lo, hi) <= i32::MAX as int
+   | |_______________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 361 (Instantiated 19 times - 21% of the total, cost 19) top 3 of 11 user-level quantifiers.
+      
+  --> src/Chap28/MaxContigSubSumOptStEph.rs:58:28
+   |
+57 | /             exists|hi: int|
+58 | |                 #![trigger spec_prefix_sum(s, hi)]
+   | |                            ^^^^^^^^^^^^^^^^^^^^^^
+59 | |                 1 <= hi <= n &&
+60 | |                 m == spec_prefix_sum(s, hi) - spec_min_prefix_sum(s, hi - 1),
+   | |____________________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 104 (Instantiated 8 times - 8% of the total, cost 13) top 4 of 11 user-level quantifiers.
+      
+   --> src/Chap19/ArraySeqMtEph.rs:208:43
+    |
+208 |                 forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
+    |                 --------------------------^^^^^^^^^^^^^^^^^-------------------------------------------------------- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 44 (Instantiated 4 times - 4% of the total, cost 11) top 5 of 11 user-level quantifiers.
+      
+ --> vstd/seq.rs:301:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 25 (Instantiated 5 times - 5% of the total, cost 5) top 6 of 11 user-level quantifiers.
+      
+  --> src/Chap28/MaxContigSubSumOptMtEph.rs:70:47
+   |
+70 |                       forall|k: int| #![trigger pv@[k]]
+   |  _____________________-                         ^^^^^^
+71 | |                         0 <= k <= i ==> pv@[k] as int == spec_prefix_sum(a.seq@, k),
+   | |___________________________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 25 (Instantiated 5 times - 5% of the total, cost 5) top 7 of 11 user-level quantifiers.
+      
+ --> vstd/seq.rs:284:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 4 (Instantiated 2 times - 2% of the total, cost 2) top 8 of 11 user-level quantifiers.
+      
+ --> vstd/seq.rs:306:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 4 (Instantiated 2 times - 2% of the total, cost 2) top 9 of 11 user-level quantifiers.
+      
+ --> vstd/seq.rs:313:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1 (Instantiated 1 times - 1% of the total, cost 1) top 10 of 11 user-level quantifiers.
+      
+   --> src/Chap28/MaxContigSubSumOptMtEph.rs:101:47
+    |
+101 |                       forall|k: int| #![trigger mv@[k]]
+    |  _____________________-                         ^^^^^^
+102 | |                         0 <= k < j ==> mv@[k] as int == spec_min_prefix_sum(a.seq@, k),
+    | |______________________________________________________________________________________- Triggers selected for this quantifier
+
+verification results:: 961 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 719MB, peak z3 RSS: 135MB, min free: 26395MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 6s

@@ -1,0 +1,166 @@
+Mode: isolate
+Isolate: including Chap19 Chap27 Chap02
+error: while loop: Resource limit (rlimit) exceeded
+   --> src/Chap27/ScanContractStEph.rs:237:13
+    |
+237 |             while j < half
+    |             ^^^^^^^^^^^^^^
+
+Z3 4.12.5
+note: Analyzing prover log for (profile rerun) lib::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS::expand_scan ...
+
+Error parsing line 67925 (SubpatNoBlame([t10389])): "[new-match] 0x592001a870f8 #5746 #5739 #5163 #5163 #4026 ; #6773 (#2397 #5675) (#4026 #6773) (#2397 #5675) #6773 (#2397 #2397) (#4026 #5233) (#5163 #5233) #6773 (#2397 #2397) (#4026 #5233) (#5163 #5233)"
+Error parsing line 68480 (SubpatNoBlame([t10387])): "[new-match] 0x592001b67b48 #5746 #5739 #5165 #5163 #5163 ; #6919 (#2397 #5675) (#5165 #6919) (#2397 #5675) #6773 (#2397 #2397) (#4026 #5233) (#5163 #5233) #6919 (#2397 #2397) (#5163 #5233) (#5165 #382)"
+note: Log analysis complete for (profile rerun) lib::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS::expand_scan
+
+note: Profile statistics for lib::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS::expand_scan
+
+note: Observed 183,909 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 198163768624 (Instantiated 183,158 times - 99% of the total, cost 1081928) top 1 of 20 user-level quantifiers.
+      
+ --> vstd/seq_lib.rs:666:4
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 26236386 (Instantiated 81 times - 0% of the total, cost 323906) top 2 of 20 user-level quantifiers.
+      
+ --> vstd/seq_lib.rs:3206:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 20903805 (Instantiated 135 times - 0% of the total, cost 154843) top 3 of 20 user-level quantifiers.
+      
+ --> vstd/seq_lib.rs:3524:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 20502 (Instantiated 134 times - 0% of the total, cost 153) top 4 of 20 user-level quantifiers.
+      
+ --> vstd/seq.rs:423:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 11300 (Instantiated 100 times - 0% of the total, cost 113) top 5 of 20 user-level quantifiers.
+      
+ --> vstd/seq.rs:402:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 8424 (Instantiated 81 times - 0% of the total, cost 104) top 6 of 20 user-level quantifiers.
+      
+ --> vstd/seq.rs:294:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 3000 (Instantiated 50 times - 0% of the total, cost 60) top 7 of 20 user-level quantifiers.
+      
+ --> vstd/seq_lib.rs:3380:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 2772 (Instantiated 44 times - 0% of the total, cost 63) top 8 of 20 user-level quantifiers.
+      
+ --> vstd/seq.rs:395:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 2178 (Instantiated 22 times - 0% of the total, cost 99) top 9 of 20 user-level quantifiers.
+      
+   --> src/Chap27/ScanContractStEph.rs:249:47
+    |
+249 |                       forall|k: int| #![trigger b_seq[k]] 0 <= k < b_seq.len() ==>
+    |  _____________________-                         ^^^^^^^^
+250 | |                         b_seq[k] == spec_f(s[2 * k], s[2 * k + 1]),
+    | |__________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1107 (Instantiated 3 times - 0% of the total, cost 369) top 10 of 20 user-level quantifiers.
+      
+   --> src/Chap27/ScanContractStEph.rs:251:47
+    |
+251 |                       forall|k: int| #![trigger c.spec_index(k)] 0 <= k < half as int ==>
+    |  _____________________-                         ^^^^^^^^^^^^^^^
+252 | |                         c.spec_index(k) == b_seq.take(k).fold_left(*id, spec_f),
+    | |_______________________________________________________________________________- Triggers selected for this quantifier
+
+Z3 4.12.5
+note: Observed 290 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 5486 (Instantiated 26 times - 8% of the total, cost 211) top 1 of 24 user-level quantifiers.
+      
+ --> vstd/seq_lib.rs:666:4
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 2652 (Instantiated 51 times - 17% of the total, cost 52) top 2 of 24 user-level quantifiers.
+      
+ --> vstd/seq_lib.rs:3206:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 961 (Instantiated 31 times - 10% of the total, cost 31) top 3 of 24 user-level quantifiers.
+      
+ --> vstd/seq_lib.rs:3524:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 868 (Instantiated 28 times - 9% of the total, cost 31) top 4 of 24 user-level quantifiers.
+      
+ --> vstd/seq.rs:294:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 670 (Instantiated 10 times - 3% of the total, cost 67) top 5 of 24 user-level quantifiers.
+      
+  --> src/Chap27/ScanContractStEph.rs:95:43
+   |
+95 |                   forall|k: int| #![trigger c.spec_index(k)] 0 <= k < half as int ==>
+   |  _________________-                         ^^^^^^^^^^^^^^^
+96 | |                     c.spec_index(k) == Seq::new(b.spec_len(), |j: int| b.spec_index(j)).take(k).fold_left(*id, spec_f),
+   | |______________________________________________________________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 551 (Instantiated 19 times - 6% of the total, cost 29) top 6 of 24 user-level quantifiers.
+      
+ --> vstd/seq.rs:395:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 530 (Instantiated 10 times - 3% of the total, cost 53) top 7 of 24 user-level quantifiers.
+      
+  --> src/Chap27/ScanContractStEph.rs:91:43
+   |
+91 |                   forall|k: int| #![trigger b.spec_index(k)] 0 <= k < half as int ==> {
+   |  _________________-                         ^^^^^^^^^^^^^^^
+92 | |                     &&& 2 * k + 1 < a.spec_len()
+93 | |                     &&& b.spec_index(k) == spec_f(a.spec_index(2 * k), a.spec_index(2 * k + 1))
+94 | |                 },
+   | |_________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 184 (Instantiated 8 times - 2% of the total, cost 23) top 8 of 24 user-level quantifiers.
+      
+  --> src/Chap27/ScanContractStEph.rs:90:44
+   |
+90 |                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+   |                 ---------------------------^^^^^^^^^^^^^^^^^^^^^^^^------------------------ Triggers selected for this quantifier
+
+note: Cost * Instantiations: 182 (Instantiated 7 times - 2% of the total, cost 26) top 9 of 24 user-level quantifiers.
+      
+   --> src/Chap27/ScanContractStEph.rs:249:47
+    |
+249 |                       forall|k: int| #![trigger b_seq[k]] 0 <= k < b_seq.len() ==>
+    |  _____________________-                         ^^^^^^^^
+250 | |                         b_seq[k] == spec_f(s[2 * k], s[2 * k + 1]),
+    | |__________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 144 (Instantiated 12 times - 4% of the total, cost 12) top 10 of 24 user-level quantifiers.
+      
+ --> vstd/seq_lib.rs:3352:0
+  |
+  = note: Triggers selected for this quantifier
+
+verification results:: 923 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 246s
+Sampled Memory Usage: peak rust_verify RSS: 2020MB, peak z3 RSS: 2925MB, min free: 22730MB
+Sampled CPU Usage: rust_verify: 12s, z3 children: 4s
