@@ -510,6 +510,28 @@ Consistent w/ ==  |            |            |            |
    *** I had to start with Nikhil Swammy et. al's AlgoStar's implemention
        and proofs.
 
+% Software Engineering in AI Paired Proving
+  ** I use git work trees.
+  ** The good news is git is powerful and the agents understand it.
+  ** The bad news is the agents can indeed start using advanced features and get things wrong.
+  ** I work with between 1 and 9 agents up.
+  ** One on veracity.
+  ** One orchestrator, writing plan prompts and controlling merges.
+  ** 1-8 on branches each working on different independent plans.
+
+% Software Engineering in AI Paired Proving
+  * The agents I used are: various Google, OpenAI and Anthropic.
+  * A google agent once took 12 minutes to 'echo HI' to test it's terminal.
+  * Anthropics models are signficantly better than OpenAI.
+  * And Claude Code's cost is the least so far.
+  * They are said in the press to be spending $5000/m per user.
+  * They are buying market share (what happened to Amazon's buying market share phase?).
+  * And they are buying coding interactions.
+  * But they are playing leap frog.
+
+% Software Engineering in AI Paired Proving
+
+
 % The AI Paired Programming Interfaces
  ** I have used web browers, yuck.
   *** Cut/Paste is horrible.
