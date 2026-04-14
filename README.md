@@ -12,9 +12,7 @@ develop two software engineering tools to clean things up:
 
 **All 46 algorithm chapters verified, 45 with zero proof holes**
 
-**5,728+ verified, 0 errors | 4,209 runtime tests | ~170 proof time tests | 4 proof holes (all in Chap41) | 101 PartialEq/Clone workarounds**
-
-The 4 remaining holes are `unsafe impl Send` and `unsafe impl Sync` in `AVLTreeSetMtEph` and `AVLTreeSetMtPer` (Chap41). These exist because `Ghost<T>` did not implement Send/Sync in Verus. Verus PR #2287 (April 2026) adds safe impls for Ghost; the R202 upgrade will close all 4 holes.
+**5,765 verified, 0 errors | 4,209 runtime tests | 289 proof time tests | 0 proof holes | 46/46 chapters clean**
 
 The 101 PartialEq/Clone workarounds are accepted `assume` calls inside `eq()` and `clone()` bodies — Verus cannot yet verify that Rust's generic PartialEq and Clone match spec-level View equality. These are standard across all Verus projects and will be eliminated when Verus adds derived spec support for these traits.
 
@@ -33,14 +31,14 @@ Full verification: **5,728+ verified, 0 errors**
 | # | Metric | Count |
 |---|--------|-------|
 | 1 | Chapters verified | 46 |
-| 2 | Chapters with zero proof holes | 45 |
-| 3 | Verified functions | 5,728+ |
+| 2 | Chapters with zero proof holes | 46 |
+| 3 | Verified functions | 5,765 |
 | 4 | Runtime tests (RTT) | 4,209 |
-| 5 | Proof time tests (PTT) | ~170 |
-| 6 | Proof holes remaining | 4 (Chap41 unsafe impl Send/Sync) |
+| 5 | Proof time tests (PTT) | 289 |
+| 6 | Proof holes remaining | 0 |
 | 7 | Modules | 245 |
 
-Holes tracked by [veracity](https://github.com/briangmilnes/veracity). 1 chapter (Chap41) has 4 holes — `unsafe impl Send/Sync` for `AVLTreeSetMtEph` and `AVLTreeSetMtPer`, closing in R202 after Verus upgrade to April 2026 release.
+Holes tracked by [veracity](https://github.com/briangmilnes/veracity). All 46 chapters are clean — 0 proof holes.
 
 ## Algorithm Status
 
@@ -252,7 +250,7 @@ All with custom iterators and ForLoopGhostIterator.
 | 2 | BSTSizeStEph | St | Size-augmented BST |
 | 3 | BSTReducedStEph | St | Reduced (augmented) BST |
 
-### Chapter 41: Sets via BST - ✅ VERIFIED (4 HOLES — closing in R202)
+### Chapter 41: Sets via BST - ✅ VERIFIED (ZERO HOLES)
 
 6 unconditional + 1 behind `all_chapters` feature gate.
 
@@ -262,8 +260,8 @@ All with custom iterators and ForLoopGhostIterator.
 | 2 | ArraySetEnumMtEph | Mt | Parallel array set (enum-based) |
 | 3 | AVLTreeSetStEph | St | AVL tree set |
 | 4 | AVLTreeSetStPer | St | Persistent AVL tree set |
-| 5 | AVLTreeSetMtEph | Mt | Parallel AVL tree set (2 holes: unsafe impl Send/Sync) |
-| 6 | AVLTreeSetMtPer | Mt | Parallel persistent AVL tree set (2 holes: unsafe impl Send/Sync) |
+| 5 | AVLTreeSetMtEph | Mt | Parallel AVL tree set |
+| 6 | AVLTreeSetMtPer | Mt | Parallel persistent AVL tree set |
 | 7 | Example41_3 | St | Textbook example |
 
 ### Chapter 42: Hash Tables - ✅ VERIFIED (ZERO HOLES)
