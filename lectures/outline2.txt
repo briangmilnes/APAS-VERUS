@@ -1,0 +1,261 @@
+I'm using + for slide titles and indented ** for slide lines, *** for a second indented
+slide line and a -- for revealing the slide lines one at a time. 
+And for code formatting: ``code`` 
+
++ APAS-VERUS: AI Paired Proof Engineering Techniques and Experience
+
+    ** Brian G. Milnes <briangmilnes@gmail.com>
+
++ Outline of the talk
+    ** Poll
+    ** Background 
+    ** APAS
+    ** APAS-AI
+    ** APAS-VERUS
+    ** Rust
+    ** Paired Programming and Proving with AI LLM Agents
+    ** The AI LLM interfaces
+    ** Verus
+    ** Novel Techniques in APAS-VERUS
+    ** A new age of Software Engineering
+    ** An opportunity for new techniques
+    ** An encylopedia of cautionary tales
+
++ Poll: Get a feel for my audience 
+ ** How many of you have used Rust?
+ ** How many of you have created formally verified software?
+ ** How many of you have used AI LLMs to generate programs?
+ ** How many of you have used AI LLMs to generate verfied software?
+ ** Which verifiers:
+   ** Rocq?
+   ** Isabelle/HOL
+   ** F* (or it's DSL)
+   ** Verus
+   ** Twelfth
+   ** DCalf
+
++ Background
+    ** B.Sc. Applied Math (Computer Science)
+    ** 2 years of Artificial Intelligence PL development (Carnegie Group)
+    ** 7 years of (symbolic) Artificial Intelligence Research (Soar Group, CMU C)
+    ** 2 years of Programming Languages research (Fox Group, CMU CS)
+    ** Founding member of Lycos - systems, performance, ran operations
+    ** Early Amazon - systems, performance, operations
+    ** M.Sc. Computer Science, University of Washington
+    ** Early Zillow - 6th engineer, ran operations, systems, performance
+    ** A general love of proving programs with Rocq, F* and now Verus
+
++ Algorithms Parallel and Sequential
+    ** I needed a practical, fairly large, very difficult task to learn Verus.
+    ** Rocq is good but complicated slow and I had used it manually and not
+       close the the PL. You have to generate the code from it.
+    ** F* is good, but complicated slow and I had used it manually, close to
+      the PL but far from a practical PL and generates code.
+    ** I chose to implement:
+      *** 'Algorithms Parallel and Sequential' (APAS)
+      *** Umut Acar and Guy Blelloch 2022
+      *** N algorithms
+      *** P parallel algorithms
+
++ Formally Proven Algorithms Textbooks
+    ** Verified Functional Algorithms by Andrew W. Appel
+    ** ? Size Coverage
+    ** Functional Algorithms, Verified! by Tobias Nipkow, et al.
+    ** ? Size Coverage
+    ** Algorithm Design with Haskell by Richard Bird and Jeremy Gibbons
+    ** ? Size Coverage
+
++ APAS-AI
+    ** First, in about three months I implemented all of the algorithms in APAS using
+     AI.
+    ** I did not know Rust in detail when I started.
+    ** I used a variety of agents
+    ** I ended up mostly using Cursor to start.
+    ** Using Opus through four releases.
+    ** And now Claude CLI.
+
++ APAS-VERUS
+   ** Then, I proved it in about four months APAS-VERUS
+   ** Using Open AI at first then settled on Anthropic's Opus and finally Claude CLI.
+   ** Quantitatives 
+
++ Rust
+  ** 20 year old PL 
+  ** Mozilla project named for a fungi! 
+  -- Not quite as gross as naming your company for spiders.
+  ** Industrial acceptance: AWS, Google, Huawei, Microsoft, and Mozilla.
+  ** Linux Kernel now uses it. 
+  ** Rust is rather popular for good reasons: linear typing plus borrow
+  ** Rust is rather bad for many many reasons: 
+  
++ Rust: Pros
+  ** Algebraic Data Types
+  ** Mutability
+  ** Linear Typing with Borrowing
+  ** No GC
+  ** Fast code
+  ** Typeclasses 
+
++ Rust: Pros: Algebraic Data Types
++ Rust: Pros: Mutability
++ Rust: Pros: Linear Typing with Borrowing
++ Rust: Pros: No GC
++ Rust: Pros: Fast code
++ Rust: Pros: Typeclasses (traits)
+
++ Rust: Cons 
+   ** The 94 technical terms in Rust, 4 of which are from the PL literature.
+   ** Typeclasses are weak and now only lightly used
+   ** The user has to import piecewise
+   ** No GC
+   ** Translating C to Rust is hard.
+   ** Clone < Copy
+   ** IEEE FP The Exception Driving the Rule into a Ditch
+
++ Rust: Cons: Terminology
+   ** I had an agent table all of the technical terms in Rust
+   ** How many were in 
+
++ Rust: Cons: Typeclasses are weak
++ Rust: Cons: Importing Piecewise
++ Rust: Cons: No GC
+
++ APAS-AI: Quantitatives 
+
++ Rusticate - sending Python back to the family estate
+  **
+  **
+  **
+  **
+
++ Paired Programming and Proving with AI LLM Agents
+
++ Verus: Overview
+
++ Verus: Pros
+
++ Verus: Pros: Change
+
++ Verus: Pros: The Logic EPR
+
++ Verus: Pros: Speed
+
++ Verus: Cons
+  ** What is the TCB?
+  ** How do you wrap?
+  ** How much wrapping does it have?
+  ** 
+
++ Verus: Quantitatives
+
++ Verus: Problems
+
++ Verus: RAM and Speed
+
++ Veracity  - driving AI proof with programmatic tools
+  ** 
+  **
+  **
+  **
+  ** How many holes do I have really?
+
++ A new age of Software Engineering: AI
+
++ The Agents
+
++ The Agents: The costs.
+
++ The Agents: Memory and Throughput
+
++ The Agents: The Economic Model.
+
++ The Agents: Babysitting
+    ** Claude-Code is coming to your cell phone to ruin
+
++ The Agents: Problems
+ ** Every silly thing in the world's codebase has been learned.
+ ** They love Python and will mess up your codebase with it (and your security).
+
++ The Agents: Brute Force
+
++ The Agents: Teaching your AI
+ ** You're programming in English!
+
++ The Agents: AI Brain Fry!
+
++ The Agents: Questions
+ ** How the heck are these things planning?
+ ** What is context clearing and compaction?
+
++ A new age of Software Engineering: Provers
+
++ A new age of Software Engineering: Prove or Die
+
++ A new age of Software Engineering: Quantitative Drive
+
++ The Scariest Cautionary Tales: Disassembly
+  ** I asked Claude CLI how to run it in a few ways
+  -- It immediately started disassembling the binary
+  -- It did not find the answer but it came close!
+  -- I then pointed out it could simply read the manuals!
+  -- If these agents get better even compiled code is at huge risk.
+  
++ The Scariest Cautionary Tales: Open Source = Open Holes
+  ** Popular package LiteLLM was hacked
+  ** Node.js
+  ** 40,000 users
+  -- At this point you simply can't rely upon the security of
+   open source packages.
+  -- Not only are they heavily targeted but one can inject hidden
+   code or functionality.
+  -- Current AIs can simply reimplement them for you in a few hours, so
+    you should to seal your security.
+
++ Questions?
+
++ Some of my Questions:
+ -- How fast is this moving?
+ -- How much context do we need?
+ -- How much speed do we need?
+ -- How much speed will we get?
+ -- When it's 10 times faster how will we use it?
+ -- When will this really cost the user what it costs the provider?
+ -- Will we be able to regulate AI meaningfully? 
+ -- Will this crash the economy?
+ -- Will this crash internet services left and right?
+ -- Will this crash the entire internet of services?
+ -- Will autonomous agents start stealing peoples money?
+ -- Are autonomous weapons already in use?
+ -- Will 1984 style control of people in their homes occur?
+ -- Will it manipulate political systems?
+ -- Will open source die?
+
++ The Internet Apocalypse
+ -- I have 100% belief that these LLMs are moving faster than computer security
+ -- One is going to be unleashed that will take down, over the net, all operating systems.
+ -- Except SeL4 and perhaps other proven OSes.
+
++ An Encylopedia of Cautionary Tales
+
++ TODOS
+  ** String hacking instead of AST parsing continually.
+  ** Veracity Search
+  ** Veracity Library Minmization
+  ** Veracity Hole Detection
+  ** Veracity Style
+  ** Locking
+  + Prompts
+    .. Don't over think.
+    .. Discuss
+    .. Plan
+    .. Roles
+    .. What's next?
+    .. And my favorite: Prove Big or Go Home!
+    .. Experiments vs Standards    
+ * How do you teach and agent to prove?
+  ** Swamy paper
+  ** Lean Dojo paper
+ * How many agents can you run?
+   -- I run 4 to 6.
+   -- One is an orchestrator
+   -- One is on veracity.
