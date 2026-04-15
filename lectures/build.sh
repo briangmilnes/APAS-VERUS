@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
 cd "$(dirname "$0")"
-pandoc --slide-level=1 slides.md -o /tmp/slides_raw.pptx
+pandoc --slide-level=1 slidesMSR.md -o /tmp/slides_raw.pptx
 python3 - <<'EOF'
 import zipfile, re
 
 src = "/tmp/slides_raw.pptx"
-dst = "/home/milnes/projects/APAS-VERUS/lectures/APAS-VERUS.pptx"
+dst = "/home/milnes/projects/APAS-VERUS/lectures/slidesMSR.pptx"
 TITLE_SZ = "3200"
-BODY_SZ  = "2000"
+BODY_SZ  = "1800"
 
 def extract_element(tag, text):
     """Return the first complete <tag .../> or <tag ...>...</tag> element."""

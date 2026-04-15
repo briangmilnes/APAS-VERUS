@@ -1,0 +1,31 @@
+
+APAS-VERUS: AI Paired Proof Engineering Techniques and Experience
+
+ Brian G. Milnes briangmilnes@gmail.com
+
+ This talk will focus on my experience using LLM AIs to generate the Rust code for its
+parallel algorithms and then verifying it in Verus. I overview on the time, the costs, and
+the software engineering practice of using programmatic techniques to drive the LLMs
+which increase the quality of the code and reduce the costs of validation.
+
+ Then I'll compare and contrast my experience hand-proving in F* with Verus's currently
+fast moving targets. And discuss the practicality of targeting the trusted code bases
+given the rapidly expanding of ability of LLMs in penetrating code.
+
+
+ BIO:
+
+  M.S.  Computer Science, University of Washington
+  B.Sc. Mathematics (Computer Science), Carnegie Mellon 
+
+   I have done two years of industrial AI programming languages development, followed
+ by seven years of AI research at Carnegie Mellon School of Computer Science. And
+ two years of programming reasearch in programming languages there focusing on
+ their use in systems programming and networking.
+
+  Then I got drafted into the Internet boom and directed operations groups work in systems,
+performance, operations and architecture for Lycos, Amazon and Zillow.
+
+  More recently I've tried proving programs in Rocq, F* and now Verus.
+  
+

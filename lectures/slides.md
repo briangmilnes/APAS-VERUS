@@ -37,11 +37,12 @@
 # Poll: Get a feel for my audience
 
 - Which verifiers:
+  - Lean
   - Rocq?
   - Isabelle/HOL
   - F* (or it's DSLs: Steel and Pulse)
   - Verus
-  - Twelfth - good or PL semantics
+  - Twelfth - good for PL semantics
   - DCalf   - particularly cool for algorithmic cost proofs and cubical.
 
 # Background
@@ -118,10 +119,10 @@
 
 # Rust- The Bad
 
--  No GC!
+-  No GC! Circular = GC. 
 -  No regions, just lifetime with end of scope deallocation.
 -  Translating C to Rust is hard to get it into linear logic + borrowing.
--  However, you can (and I have) rewrite algorithms with a free list (that's right).
+-  However, you can (and I have) rewritten algorithms with a free list (that are right).
 -  Macros, with typing checked at use, which is not so good.
 
 # Rust- The Bad
@@ -196,7 +197,7 @@ no method call.
 # APAS-AI   - AI Paired Programming APAS in Rust
 
 - APAS-AI is a nearly complete, idiomatic Rust implementation of
-     algorithms in Acar and Blelloch.
+     algorithms from Acar and Blelloch.
 - Sequential and parallel variants throughout.
 - Timeline: 347 commits over 88 calendar days (Aug–Oct 2025).
      59 days of active development; 8 residual commits in November.
@@ -248,7 +249,7 @@ no method call.
      developed at MSFT Research, VMware Research and Carnegie Mellon University.
 - Team: Andrea Lattuada, Travis Hance, Chris Hawblitzel,
      Matthias Brun, Chanhee Park, Yi Zhou, Jon Howell, Bryan Parno.
-- Goal: bring machine-checked proof to systems software written
+- Goal: bring machine-checked proof to systems software written in Rust.
 
 # Verus: Verified Rust
 
