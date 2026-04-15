@@ -79,7 +79,7 @@
 - Macros, with typing checked at use, which is not so good.
 - No objects: it's great for what it was invented for: modeling the real world and interfaces.
  by Ivan Sutherland 1962!
-- Terminology 
+- Terminology
 
 # Rust - Typeclasses are a weak module
 
@@ -103,18 +103,22 @@
 
 # Rust - The Really Really Bad
 
-- Copy is implicit, Clone is explicit
-- clone() is a bitwise memory copy by default, but can be overridden.
-- Copy requires the type to be trivially bitwise-copyable 
-    - No heap allocations owned by the type
-    - No Box<T>, Vec<T>, String, file handles, etc.
-    - All fields must also be Copy  
-- Copy requires the type to be entirely stack-resident.
-- Clone has no such restriction — it can deep-copy heap data, open files,
-     allocate new memory.
-- Copy requires Clone — any type that implements Copy must also implement Clone,
-      but not vice versa.
-- So you have the optimized bit copy messing with the general copy you want.
+- Clone
+  - fn clone(&self) -> Self
+  - Informal contract: returns a value equal to *self
+  - No hard language enforcement — you can implement a "clone" that returns something different   , but it violates the convention.
+-  Copy: Clone 
+  - Copy is a subtrait of Clone — every Copy type must implement Clone
+  - Hard contract: clone() must be equivalent to a bitwise copy, i.e., clone() == *self
+  - This is documented in std: "if T: Copy, T::clone(&x) must be equivalent to copying x"
+- Roughly:
+  -- Clone::clone(&self) -> Self
+  --   ensures result == *self          // convention for all Clone
+  -- Copy (marker, no methods)
+  --   requires T: Clone
+  --      ensures  self.clone() == self    // bitwise copy semantics
+- What you really want is Rust to generate an == agreeing Copy and
+- tell you if it can implement a clone for you that respects ==.
 
 # APAS-AI   - AI Paired Programming APAS in Rust
 
@@ -139,7 +143,7 @@
     - 55,223 LOC
     - 3,923 test functions
     - 1.2× the source code size which is heavy.
-    - But tests are cheap now. 
+    - But tests are cheap now.
 - Benchmarks: 171 files, 13,890 LOC, 360 benchmark functions
 
 # Rusticate - sending Python back to the family estate
@@ -253,7 +257,7 @@
 # APAS-VERUS - AI Paired Proving APAS in Verus
 
 - Goal: formally verify all algorithms in Acar and Blelloch
-    - Every algorithm gets a machine-checked proof 
+    - Every algorithm gets a machine-checked proof
     - no admitted lemmas,
     - no hand-waving in production code.
 - 44 chapters, 262 algorithm files, upto 4 variants per algorithm:
@@ -287,7 +291,7 @@
 # APAS-VERUS — Quantitatives
 
 - Runtime tests: 3,776 passed in 21 s.
-- Verus has a nice proof-time test harness, so I pulled it out: 
+- Verus has a nice proof-time test harness, so I pulled it out:
     - 221 pass in 259 s.
     - I used it mostly to continuously track that my iterators prove and continue to
  prove with changes, mostly to the specification of operations once the iterators
@@ -332,9 +336,9 @@
 # AutoCLRS
 
 - AutoCLRS is Swamy et al. and AIs implementation: "Introduction to Algorithms, 4th ed" 2022
-- by Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein. 
-- in Pulse. 
-- RISE MSR blog (2026-03-06) says the initial 10K lines came "very quickly" and then 
+- by Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein.
+- in Pulse.
+- RISE MSR blog (2026-03-06) says the initial 10K lines came "very quickly" and then
 "about a month of nudging" to reach 100K LOC.
 - Nikhil Swamy with thanks to Gabriel Ebner, Lef Ioannidis, Guido Martinez, Matthai Philipose and Tahina Ramananandro.
 - And now seems to be about 130K LOC.
@@ -349,7 +353,7 @@
 - Review tools: proof holes (assume, external_body, admit),
      style enforcement (21 rules, auto-reorder), function inventory
      with spec strength classification, string-hacking detector.
-- Minimization tools: veracity-minimize-proofs 
+- Minimization tools: veracity-minimize-proofs
 - Metrics: veracity-count-loc (spec/proof/exec breakdown),
 -        chapter-cleanliness-status (clean vs. holed chapter summary).
 
@@ -381,12 +385,12 @@
 - My single threaded implementations often don't match the textbook.
 - Then I wrote a programmatic tool to find and list mismatches.
 - Then I had Claude Opus do it's analysis and compare every function
-  with the textbooks. 
+  with the textbooks.
 - This found about 16 faults in parallel algorithms.
 
 # APAS-VERUS: Verified Iteration - Pain Point
 
-- Iteration in Rust is rather complex. 
+- Iteration in Rust is rather complex.
 - 70 functions on iterator but only 7 functions cover the 90% case.
 - And in Verus it's a bit more complex and takes some time to learn.
 - 10 components required per collection (all inside Verus!)
@@ -427,12 +431,16 @@
 
 # APAS-VERUS Standards
 
-- Purpose: encode hard-won proof patterns so agents don't repeat mistakes
+- I finally built a set of coding standards in Verus Rust and in comments.
 - Agents read all standards before every task (~6,200 lines, ~54K tokens)
 - Violations are mostly AI checked except for many code style issues.
 - Quantitatives:
     - 29 standard files
     - 6,911 lines total
+- Doing this earlier would have really sped things up.
+- My CLAUDE.md would just not do enough even with 50KB and 13K tokens.
+- Question what are your favorite AI rules? 
+- Mine are Don't Over Think, DISCUSS and PBOGH.
 
 # APAS-VERUS Standards
 
@@ -443,27 +451,27 @@
          toplevel_coarse_rwlocks, tsm, rwlock_tsm
 - Iteration: iterators, wrapping_iterators, iterator_ptt
 - Execution: mut, using_closures, using_hashmap, using_rand
-- Style: TOC and ordering
+- And for readability table of contents with an ordering.
 
-# Veracity: veracity-minimize-proofs: AIs Write Redundant Proofs
+# Veracity: AIs Write Redundant Proofs
 
-- AI proof agents produce correct but bloated proofs —
-     redundant asserts, unnecessary proof blocks, duplicate
-     intermediate steps that Z3 already knew.
+- AI proof agents produce many correct but bloated proofs
+    - redundant asserts, unnecessary proof blocks
+- So I wrote a proof minimizer: veracity-minimize-proofs.
 - They verify, but they waste solver budget on every subsequent run.
-- veracity-minimize-proofs tests each assert and proof block
+- It tests each assert and proof block
      individually: remove it, re-verify, comment it out if it is
      not needed and it does not increase time or memory.
 - Result across APAS-VERUS: 22 asserts and 33 proof blocks removed
  in 105 minutes of wall time. 55 redundant proof statements
  eliminated, ~2 minutes of minimizer time per removal.
 
-# Veracity: veracity-minimize-proofs: AIs Write Redundant Proofs
+# Veracity: AIs Write Redundant Proofs
 
 - One assert in Chap43 OrderedTableMtEph saved:
-    - 43–104 s of Z3 CPU
+    - 104 s of Z3 CPU
     - up to 89 MB of Z3 RSS per verify run.
-- Eight removals in that one file: Z3 RSS −57%.
+- Eight removals in that one file: Z3 RSS dropped by 57%.
 - 105 minutes of running the minimizer bought many hours
  of validation drop.
 - This might be novel. Anyone know of anything except Isabelle's sledgehammer?
@@ -471,20 +479,20 @@
 # Veracity Annotations
 
 - I ended up having to have my tools work mostly in comments.
-- I added accept to mark assumes I allowed, almost all eq/partialeq/clone.
+- I added accept(P) to mark assumes I allowed, almost all eq/partialeq/clone.
 - This can be simplified with some Verus language syntax,
    but then the AIs are not trained on the symbols.
-- // Veracity: NEEDED assert             — 6,081
-- // Veracity: NEEDED proof block        — 4,681
-- // Veracity: NEEDED assert (speed)     — 1,502
-- // Veracity: NEEDED proof block (speed)—   245
+-  6,081 // Veracity: NEEDED assert             
+-  4,681 // Veracity: NEEDED proof block       
+-  1,502 // Veracity: NEEDED assert (speed)
+-  245   // Veracity: NEEDED proof block (speed)—   
 
 # Veracity Annotations
 
 - Total NEEDED: 12,509
-- // Veracity: UNNEEDED                  — 1,452
-- // Veracity: no_requires               —    71
-- accept                                 —   108
+- 1,452 // Veracity: UNNEEDED and commented out!
+- 71    // Veracity: no_requires marked when looking for missing specs.
+- 108 accept(P)
 - Total annotations: 14,140
 
 # Rusticate + Veracity allow quantitative software engineering
@@ -517,6 +525,8 @@ the output and have the AI write a lot of tests.
     -4,911 with proofs
 - But APAS-VERUS has {Mt,St}x{Per,Eph}
 - So it is much more like 2000 distinct functions.
+- And I wrote this in 160 days while learning Verus.
+- At least 30 of those days were understanding and working around pain point.
 
 # Rusticate + Veracity: What Verus Wraps
 
@@ -556,7 +566,7 @@ the output and have the AI write a lot of tests.
 - So you have:
 - linters both programmatic and AI
 - stylers both programmatic and AI
-- AI reviews directed by programmatic.
+- AI reviews directed by programmatic tools.
 
 # Software Engineering in AI Paired Proving
 
@@ -599,6 +609,7 @@ the output and have the AI write a lot of tests.
 - They are inconsistent.
 - They lie.
 - They cheat.
+- They say I can't prove that!
 - They err.
 - But mostly they are just forgetful.
 - My attempts to give them coding standard checklists, ala Watts Humphrey and
@@ -659,7 +670,7 @@ the PSP failed.
 - You want one window with your core interaction. The agent
     tells you what it is doing in it.
 - You want one to watch your compile, tests and scripts.
-- You want one window to have the LLM show you it's thinking and allow you to 
+- You want one window to have the LLM show you it's thinking and allow you to
 question and change it.
 - I learned a ton from watching agents think.
 - I suspect they are hiding most of their thinking now to
