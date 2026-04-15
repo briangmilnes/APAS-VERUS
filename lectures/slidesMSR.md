@@ -5,9 +5,11 @@
 - Algorithms Parallel and Sequential by Acar and Blelloch
 - in Rust
 - and then proving it in Verus.
+- https://github.com/briangmilnes/{APAS-VERUS,APAS-AI,rusticate,veracity}
 
 # Outline of the talk
 
+- Its a pleasure to speak here at Micrsoft Research RISE Group.
 - Background
 - Algorithms Parallel and Sequential (APAS)
 - Rust      - The Good, The Bad and the Ugly
@@ -42,10 +44,7 @@
 # Algorithms Parallel and Sequential (APAS)
 
 - I needed a practical, fairly large, very difficult task to learn Verus.
-- Rocq is good but complicated and slow and I had used it manually and it's
-    not close the the PL.
-- F* is good, but complicated slow and I had used it manually, close to
-      the PL but far from a practical PL and generates code.
+- Rocq and F* are good but complicated and I've only manually proven in them.
 - In fact some of the F* group went to work on Verus due to the
     requirement of 'heroic proof'.
 - But I just missed the Pulse, so I suspect things are quite different now,
@@ -58,9 +57,6 @@
     - 121 algorithms!
     - 81 of which can be parallel.
     - 740 concepts.
-- Similar to Swamy et al. and AIs implemented: "Introduction to Algorithms"
-- by Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest
-- in Pulse, but bigger.
 
 # Rust - The Good
 
@@ -81,15 +77,16 @@
 - Translating C to Rust is hard to get it into linear logic + borrowing.
 - However, you can (and I have) rewritten algorithms with a free list (that are right).
 - Macros, with typing checked at use, which is not so good.
-- Of the 94 technical terms in Rust, 4 or so are actual PL terms.
-- No objects: object oriented was invented by Ivan Sutherland 1962!
-- And it's great for what it was invented for: modeling the real world and interfaces.
+- No objects: it's great for what it was invented for: modeling the real world and interfaces.
+ by Ivan Sutherland 1962!
+- Terminology 
 
 # Rust - Typeclasses are a weak module
 
 - You will pine for ML modules!
 - The Rustaceans have decided that unless their module implements a typeclass at
   multiple types, they won't use it.
+- So reading Rust is every bit as scattered as reading C.
 - Verus is now doing this also, but I abuse the notation to put all the specs
  together in APAS-VERUS for readability.
 
@@ -97,7 +94,7 @@
 
 | Property         | PartialEq | Eq  | PartialOrd | Ord |
 |------------------|-----------|-----|------------|-----|
-| Reflexive        |  NO!      | req |            | yes |
+| Reflexive        |  NO!      | req | NO! on leq | yes |
 | Symmetric        | req       | req |            |     |
 | Transitive       | req       | req | req        | req |
 | Antisymmetric    |           |     | req        | req |
@@ -108,6 +105,10 @@
 
 - Copy is implicit, Clone is explicit
 - clone() is a bitwise memory copy by default, but can be overridden.
+- Copy requires the type to be trivially bitwise-copyable 
+    - No heap allocations owned by the type
+    - No Box<T>, Vec<T>, String, file handles, etc.
+    - All fields must also be Copy  
 - Copy requires the type to be entirely stack-resident.
 - Clone has no such restriction — it can deep-copy heap data, open files,
      allocate new memory.
@@ -137,18 +138,19 @@
     - 246 files
     - 55,223 LOC
     - 3,923 test functions
--  1.2× the source code size
+    - 1.2× the source code size which is heavy.
+    - But tests are cheap now. 
 - Benchmarks: 171 files, 13,890 LOC, 360 benchmark functions
 
 # Rusticate - sending Python back to the family estate
 
+- Built because Python + regex cannot reliably parse Rust.
 - Webster's definition of rusticate:
     - 1. To go to or live in the country.
     - 2. (British) To suspend a student from a university, especially Oxford or Cambridge, as a
     disciplinary punishment.
 - Rusticate is a suite of 89 tools, most obviated, for analyzing and transforming rust codebases.
 - review tools, fix tools, metrics, and migration aids.
-- Built because Python + regex cannot reliably parse Rust.
 - The string hacking detector is the foremost valuable tool to fix
    any and all transformation of Rust.
 
@@ -174,14 +176,14 @@
 
 # Verus
 
-- Specifications are written in a pure mathematical sublanguage —
-     spec functions, forall/exists, arithmetic, sets, sequences.
+- Specifications are written in a pure mathematical sublanguage
+- spec functions, forall/exists, arithmetic, sets, sequences.
+- Decidability is not guaranteed.
 - Z3 handles linear arithmetic, arrays, and quantified formulas,
      but quantifier instantiation requires explicit trigger annotations.
-- But there is also a faster linear arithmetic solver.
-- Decidability is not guaranteed.
+- But there is also a faster linear arithmetic solver, Singular.
 - Annotates existing Rust code                                                                         - spec / proof / exec mode split
-- Ships the Rust binary directly
+- Ships the Rust binary directly.
 - Linear Logic + Borrowing from the Rust type system, which rustc checks.
 
 # F* - Comparison
@@ -220,7 +222,7 @@
      but cannot express distributed protocol state across threads.
 - Answer: A Tokenized State Machine defines protocol state as fields
      with sharding strategies (variable, map, count, storage_option…).
-     Transitions and an inductive invariant are proved once, globally.
+- Transitions and an inductive invariant are proved once, globally.
      Verus auto-generates ghost token types and exchange functions
 
 # Tokenized State Machines — Hance, CMU 2024
@@ -239,7 +241,6 @@
 
 # Verus: How Fast Verus Is Moving
 
-- Verus Velocity
 - 4,225 commits since March 2021 — 5 years, still accelerating
 - Commits per year:
 - 2021: 474   2022: 906   2023: 992
@@ -252,18 +253,20 @@
 # APAS-VERUS - AI Paired Proving APAS in Verus
 
 - Goal: formally verify all algorithms in Acar and Blelloch
-     "A Practical Approach to Data Structures" using Verus.
-     Every algorithm gets a machine-checked proof — no admitted lemmas,
-     no hand-waving in production code.
+    - Every algorithm gets a machine-checked proof 
+    - no admitted lemmas,
+    - no hand-waving in production code.
 - 44 chapters, 262 algorithm files, upto 4 variants per algorithm:
      StEph (sequential mutable), StPer (sequential persistent),
      MtEph (parallel mutable), MtPer (parallel persistent).
-- Minimal use of std.
+- Minimal use of Rust std.
+- But as you'll see I had to write some axioms and admit a class of
+ functions.
 
 # APAS-VERUS - AI Paired Proving APAS in Verus
 
-- Proof infrastructure: 26 vstdplus library modules,
-     29 standards documents encoding project proof conventions,
+- 26 vstdplus library modules, mostly making Views.
+- 29 standards documents encoding project proof conventions,
 - Verification is the primary goal.
 - Runtime tests (RTT) and proof-time tests (PTT) are secondary,
    but still terribly useful.
@@ -274,7 +277,7 @@
 - Scale: 44 chapters, 262 files, 186,223 src LOC (not counting comments).
 - With vstdplus, standards, RTT, PTT: 275,014 total LOC.
 - Built in 160 days, 2,596 commits, 8 agents, 281 agent-round reports.
-- Verification: 5,674 verified items, 0 errors.
+- Verification: 5,674 verified proof obligations, 0 errors.
 - Full validate
     - runs in 210 s
     - peak RSS 8 GB
@@ -284,8 +287,9 @@
 # APAS-VERUS — Quantitatives
 
 - Runtime tests: 3,776 passed in 21 s.
-- Verus has a nice proof-time test harness, so I pulled it out: 221 passed in 259 s.
-- I used it mostly to continuously track that my iterators prove and continue to
+- Verus has a nice proof-time test harness, so I pulled it out: 
+    - 221 pass in 259 s.
+    - I used it mostly to continuously track that my iterators prove and continue to
  prove with changes, mostly to the specification of operations once the iterators
  were more stable.
 - Benchmarks in 42s.
@@ -294,7 +298,7 @@
 
 - Holes: started at 238 (R20), now 0!
 - Largest chapter: Chap37 (AVL trees, BST variants) — 20,319 src LOC.
-     4.1× more source code to verify than APAS-AI needed to implement.
+- 4.1× more source code to verify than APAS-AI needed to implement.
 - Start: 2025-11-03
 - End  : 2026-04-12
 - Duration: 150 person days
@@ -305,25 +309,38 @@
 - Proof   42,251  (27%)
 - Exec    67,883  (44%)
 - Rust    12,206   (8%)   plain Rust (outside Verus!)
-- So roughly half the non-exec code is proof (27%), a fifth is spec (21%), and the exec
-   implementation is 44%.
 - The "rust" 8% is code outside Verus! — Debug impls, macros, cfg, etc.
 - All proof to exec: 75,119 / 67,883 = 110%.
 
 # APAS-VERUS: The Pain Points
 
 - When I started Verus, iterators for collections took quite some time.
-- All fixed now! (Thanks Chris)
 - Generics and Equality was the second big pain point.
 - I still have full equality axioms for generic types.
 - Ordering was and is still difficult, it made my UnionFind consume up to 28GB in Z3.
+- Verus is so fast, even with bloated AI proofs, I didn't profile much until
+ I was in the last few chapters.
+- I simply made validate isolate by chapters.
+
+# APAS-VERUS: The Pain Points
+
 - Closures took a good bit of work.
 - Applying them in map/reduce and so on took a while.
 - Rust has FnOnce < FnMut < Fn, but no FPure.
 - Verus Ghost functions allows good validation but purity would be simpler.
-- Verus is so fast, even with bloated AI proofs, I didn't profile much until
- I was in the last few chapters.
-- I simply made validate isolate by chapters.
+
+# AutoCLRS
+
+- AutoCLRS is Swamy et al. and AIs implementation: "Introduction to Algorithms, 4th ed" 2022
+- by Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein. 
+- in Pulse. 
+- RISE MSR blog (2026-03-06) says the initial 10K lines came "very quickly" and then 
+"about a month of nudging" to reach 100K LOC.
+- Nikhil Swamy with thanks to Gabriel Ebner, Lef Ioannidis, Guido Martinez, Matthai Philipose and Tahina Ramananandro.
+- And now seems to be about 130K LOC.
+- They definitely had some tool advantages in terms of incremental proofs through a server.
+- Plus, they knew F* and Pulse to start!
+- And they did a formal specification of algorithmic complexity.
 
 # Veracity- Software Engineering AI Paired Proving
 
@@ -332,41 +349,59 @@
 - Review tools: proof holes (assume, external_body, admit),
      style enforcement (21 rules, auto-reorder), function inventory
      with spec strength classification, string-hacking detector.
-- Minimization tools: veracity-minimize-proofs (removes redundant
-     asserts and proof blocks, re-verifying after each removal).
-- Search: veracity-search — semantic search over vstd
+- Minimization tools: veracity-minimize-proofs 
+- Metrics: veracity-count-loc (spec/proof/exec breakdown),
+-        chapter-cleanliness-status (clean vs. holed chapter summary).
 
 # Veracity- Software Engineering AI Paired Proving
 
+- All tools are AST-aware (ra_ap_syntax / Verus_syn).
+- A built-in string-hacking detector flags usage of string manipulation
+  instead of AST work.
+- And when bugs appeared they were mostly string hacking.
+
+# Veracity- Software Engineering AI Paired Proving
+
+- Search: veracity-search — type directed search over vstd
 - APAS-VERUS by type signature, finding lemmas before writing new ones.
      "Specifications as Search Keys for Software Libraries"
      Eugene J. Rollins and Jeannette M. Wing
-- This allows me to download ALL known Verus (git VerusCodebases)
-    and search them in 1.2 seconds!
-- Metrics: veracity-count-loc (spec/proof/exec breakdown),
-     chapter-cleanliness-status (clean vs. holed chapter summary).
-- All tools are AST-aware (ra_ap_syntax / Verus_syn).
-     A built-in string-hacking detector flags and rejects any tool
-     that attempts regex or find-and-replace on Verus source.
+- Written for my sins of asking why does's vstd not have X, when it did!
+- Even more useful for my AI's sins.
+- This allowed me to download ALL known Verus (git VerusCodebases)
+    and have my AI search them in 1.2 seconds!
+- Does F*/Pulse have one yet?
+- It only took about a day.
 
-# APAS-VERUS: Verified Iteration
+# APAS-VERUS - Complexity
 
-- 10 components required per collection (all inside Verus!):
-- 6 verified loop patterns per collection:
-- loop  + borrow iter,  loop  + borrow into
-- for   + borrow iter,  for   + borrow into
-- loop  + consume,      for   + consume
-- Iterator assumes (one necessary workaround):
+- APAS states complexity and informally proves many of them for some algorithms.
+- I had to build a tool to get the right ones in the code at the right
+ place.
+- My single threaded implementations often don't match the textbook.
+- Then I wrote a programmatic tool to find and list mismatches.
+- Then I had Claude Opus do it's analysis and compare every function
+  with the textbooks. 
+- This found about 16 faults in parallel algorithms.
+
+# APAS-VERUS: Verified Iteration - Pain Point
+
+- Iteration in Rust is rather complex. 
+- 70 functions on iterator but only 7 functions cover the 90% case.
+- And in Verus it's a bit more complex and takes some time to learn.
+- 10 components required per collection (all inside Verus!)
+- 6 verified loop patterns per collection
+- {loop, for} X {borrow iter,  borrow into, consume}
+- Iterators requiers one assume!
 
 # APAS-VERUS: Verified Iteration
 
 - Verus forbids requires on external trait impls (std::iter::Iterator)
 - Hand-rolled iterators need assume(iter_invariant(self)) in next()
 - Everything after the assume is fully proved
-- APAS-VERUS policy: report assumes in a table; user reviews
 - 44 collections implemented; all carry verified iterators
 - Verus has proof time tests inside, I freed them to run in APAS-VERUS.
-- This was critical to get iterative loops to prove.
+- This was critical to get iterative loops to prove over my collections ADTs.
 
 # APAS-VERUS: Experiments
 
@@ -374,7 +409,7 @@
 - I said "Make an experiment!"
 - Quantitatives:
 - 168 experiment files
-- 21,476 lines of code
+- 21,476 lines of code (not counted in the totals)
 - Topics span: Clone, Arc, RwLock, TSM, closures, iterators,
  generics, float, bitvector, PartialEq, Copy, async, hash tables,
  parallel algorithms, ghost types, Send/Sync, collect, and sorting.
@@ -382,23 +417,22 @@
 # APAS-VERUS: Experiments
 
 - Results:
-- ~100 files: SUCCEEDS / VERIFIES — pattern adopted into codebase
-- ~50 files: FAILS — Verus limitation documented, workaround noted
+- 107 files: SUCCEEDS / VERIFIES — pattern adopted into codebase
+- 61 files: FAILS — Verus limitation documented, workaround noted
 - Notable successes that unlocked chapters:
 - TSM/RwLock layer pattern — unlocked all Mt chapters
 - Named closure ensures through ParaPair — unlocked fork-join
-- Ghost struct Send/Sync — unlocked Chap41 (now in Verus upstream)
+- Ghost struct Send/Sync — unlocked Chap41
 - Tree module style with recursive trait impls — unlocked Chap65
 
 # APAS-VERUS Standards
 
 - Purpose: encode hard-won proof patterns so agents don't repeat mistakes
 - Agents read all standards before every task (~6,200 lines, ~54K tokens)
-- Violations require full reverts — standards exist because agents
-         have broken each patterns many times.
+- Violations are mostly AI checked except for many code style issues.
 - Quantitatives:
-- 29 standard files
-- 6,911 lines total
+    - 29 standard files
+    - 6,911 lines total
 
 # APAS-VERUS Standards
 
@@ -418,14 +452,14 @@
      intermediate steps that Z3 already knew.
 - They verify, but they waste solver budget on every subsequent run.
 - veracity-minimize-proofs tests each assert and proof block
-     individually: remove it, re-verify, keep it out if still clean.
+     individually: remove it, re-verify, comment it out if it is
+     not needed and it does not increase time or memory.
 - Result across APAS-VERUS: 22 asserts and 33 proof blocks removed
  in 105 minutes of wall time. 55 redundant proof statements
  eliminated, ~2 minutes of minimizer time per removal.
 
 # Veracity: veracity-minimize-proofs: AIs Write Redundant Proofs
 
-- It only takes out unnecessary asserts/proofs that decrease run time and memory.
 - One assert in Chap43 OrderedTableMtEph saved:
     - 43–104 s of Z3 CPU
     - up to 89 MB of Z3 RSS per verify run.
@@ -444,6 +478,9 @@
 - // Veracity: NEEDED proof block        — 4,681
 - // Veracity: NEEDED assert (speed)     — 1,502
 - // Veracity: NEEDED proof block (speed)—   245
+
+# Veracity Annotations
+
 - Total NEEDED: 12,509
 - // Veracity: UNNEEDED                  — 1,452
 - // Veracity: no_requires               —    71
@@ -470,22 +507,25 @@ the output and have the AI write a lot of tests.
 - 79 modules fully support 99%.
 - 1121 methods fully support 95%.
 - 1733 methods fully support 99%.
+- 14,317 total fn definitions in std/core/alloc in Rust
+- 4,965  pub fn definitions   in std/core/alloc in Rust
+- But how many of those private functions do we need? I don't know.
 
 # Compare Rust STD to APAS-VERUS?
 - APAS-VERUS:
     -6,401 exec functions total,
     -4,911 with proofs
 - But APAS-VERUS has {Mt,St}x{Per,Eph}
-- So it much more like 2000 distinct functions.
+- So it is much more like 2000 distinct functions.
 
 # Rusticate + Veracity: What Verus Wraps
 
--As of 2026 14 April:
--How many Rust Data Types does Verus wrap?
+- As of 2026 14 April
+- How many Rust Data Types does Verus wrap?
     - 29 types currently wrapped.
--How many Rust Traits does Verus wrap?
+- How many Rust Traits does Verus wrap?
     - 147 traits in vstd.
--How many total Rust Methods does Verus wrap?
+- How many total Rust Methods does Verus wrap?
     - 154 methods currently wrapped.
 
 # Proof Holes Over Time — R20 to R201
@@ -496,9 +536,17 @@ the output and have the AI write a lot of tests.
 
 ![](proof_time.png)
 
-- Three levers: minimize-proofs, profiling (find matching loops), opaque (hide definitions).
+# Proof Time and Memory — Key Reductions
+
+- Five techiniques were used to optimize
+    - minimize-proofs
+    - profiling
+    - splitting specs and applying them just where they are needed
+    - opaque       - to hide a definition within the module
+    - private spec - to hide a definition across modules
 - OrderedTableMtEph: −57% proof time after minimize-proofs (R176).
-- UnionFindPCStEph: 139K Z3 instantiations → 0 after opaque pattern (R195).
+- UnionFindPCStEph: 139K Z3 instantiations → 0 after opaque pattern used in
+ a required module.
 - Johnson Chap59: 756 MB → 520 MB (−31%) memory reduction.
 
 # Software Engineering in AI Paired Proving
@@ -517,12 +565,8 @@ the output and have the AI write a lot of tests.
 - It needs more on Scheduling. I only built Help-First scheduling.
 - It used (K,V) in tree sets as mappings, but I had to make this
   explicit. Particularly with an Ordered Key Mapping.
-
-# Software Engineering in AI Paired Proving
-
-- APAS's discussion of Union Find was too thin.
-- Path compression was very difficult.
-- I had to start with Nikhil Swammy et. al's AlgoStar's implemention
+- APAS's discussion of Union Find was too thin. Path compression was very difficult.
+- I had to start with Nikhil Swammy et. al's AlgoCLRS's implemention
        and proofs.
 
 # Software Engineering in AI Paired Proving
@@ -570,18 +614,21 @@ the PSP failed.
 - Now both Claude and OpenAI can.
 - And now they can prove like heck.
 - 10x what I can do.
-- Claude wants $25 per code review now.
+- Claude wants $25 per code review now, probably because they can
+ and it's expensive if they're using pure LLMs.
 
 # Software Engineering in AI Paired Proving- Problems
 
-- What is the limiting factor now?
-- Code Review!
+- What is the limiting factor now? Code Review! But really Spec review.
 - What can we do to simplify code review?
 - 1. Modularity - traits/impls in Verus.
 - 2. TOC     - This organizes the boilerplate to make reading easier.
 - 3. Proof   - I really just read the specs. If they're right the code
  is right!
 - 4. Tests   - are hugely useful when you don't trust your coding team.
+- 5. Formatting - rust formatting has been adopted in Verus. It is very
+  low density. I built a minimizing formatter to cut down on my working
+  memory load while reviewing. F* is much tighter.
 - Will Nik et al. find spec problems when he Pulses APAS-VERUS? Almost certainly.
 - Will Nik et al. find proof problems? That's a really good question.
 
@@ -599,28 +646,24 @@ the PSP failed.
 
 # The AI Paired Programming Interfaces
 
-- I have used Claude CLI
+- I have used Claude CLI the most.
 - It has decided that a single window is all you need.
 - You can pop open and close some detail.
 - You can't see thinking.
 - It is somewhat better inside emacs.
 - It clears your text in a variety of ways.
-- I have been told that VSCode's DOM model is one of the reasont
 
 # The AI Paired Programming Interfaces
 
-- What you want is pretty obvious with experience.
-- TEXT still rules.
+- What you want is pretty obvious with experience: TEXT still rules.
 - You want one window with your core interaction. The agent
     tells you what it is doing in it.
 - You want one to watch your compile, tests and scripts.
-- You want one window to have the LLM show you it's thinking.
+- You want one window to have the LLM show you it's thinking and allow you to 
+question and change it.
 - I learned a ton from watching agents think.
-- You want on window to interact with it's summaries.
 - I suspect they are hiding most of their thinking now to
     prevent them from being used to train new AIs.
-- Specifying and proving are harder, you want to be able to
- read its prompts, interrupt the thinking. Ask it questions. Give it directions.
 - And you want it not to delete your previous conversation on token compression.
 
 # The Internet Apocalypse
@@ -660,6 +703,8 @@ the PSP failed.
 - Does F* have a typed library search yet?
 - Are typeclasses being heavily used?
 - How fast is validation now?
+- Nik you have any more statistics on AutoCLRS?
+
 
 # Questions
 - Did the PL community overly complicate things with higher-order types?

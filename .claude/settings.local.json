@@ -46,7 +46,8 @@
       "WebFetch(domain:dl.acm.org)",
       "WebFetch(domain:dblp.org)",
       "WebFetch(domain:www.andrew.cmu.edu)",
-      "WebFetch(domain:risemsr.github.io)"
+      "WebFetch(domain:risemsr.github.io)",
+      "WebFetch(domain:www.microsoft.com)"
     ]
   }
 }
