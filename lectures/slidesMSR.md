@@ -90,7 +90,7 @@
 - Verus is now doing this also, but I abuse the notation to put all the specs
  together in APAS-VERUS for readability.
 
-# Rust - The Really Bad — Ordering
+# Rust - The Ugly — Ordering
 
 | Property         | PartialEq | Eq  | PartialOrd | Ord |
 |------------------|-----------|-----|------------|-----|
@@ -101,16 +101,19 @@
 | Total            |           |     |            | req |
 | Consistent w/ == |           |     |            |     |
 
-# Rust - The Really Really Bad
+# Rust - The Ugly
 
 - Clone
   - fn clone(&self) -> Self
   - Informal contract: returns a value equal to *self
   - No hard language enforcement — you can implement a "clone" that returns something different   , but it violates the convention.
--  Copy: Clone 
+-  Copy: Clone
   - Copy is a subtrait of Clone — every Copy type must implement Clone
   - Hard contract: clone() must be equivalent to a bitwise copy, i.e., clone() == *self
   - This is documented in std: "if T: Copy, T::clone(&x) must be equivalent to copying x"
+
+# Rust - The Ugly
+
 - Roughly:
   -- Clone::clone(&self) -> Self
   --   ensures result == *self          // convention for all Clone
@@ -127,6 +130,7 @@
 - Sequential and parallel variants throughout.
 - Timeline: 347 commits over 88 calendar days (Aug–Oct 2025).
 - 59 days of active development; 8 residual commits in November.
+- I knew no AI paired programming when I started.
 - I knew no Rust when I started.
 - My AI had to teach it to me, which was harder than I thought as
   of the 94 terms used in the Rust language and docs, only 4 are
@@ -186,7 +190,7 @@
 - Z3 handles linear arithmetic, arrays, and quantified formulas,
      but quantifier instantiation requires explicit trigger annotations.
 - But there is also a faster linear arithmetic solver, Singular.
-- Annotates existing Rust code                                                                         - spec / proof / exec mode split
+- Annotates existing Rust code                                                                         - spec / proof / requires / ensures on fns
 - Ships the Rust binary directly.
 - Linear Logic + Borrowing from the Rust type system, which rustc checks.
 
@@ -195,30 +199,53 @@
 - Stand-alone dependently-typed language
 - Effect system (Pure, ST, Steel/Pulse)
 - SMT + tactics (meta-programming)
-- Extracts to OCaml, F#, C, Wasm                                                                       - Separation logic via Steel Pulse for low-level code.
+- Generates OCaml, F#, C, Wasm
+- Separation logic via Steel Pulse for low-level code.
 - Refinement types.
 - A much richer language set.
 
 # Views and the Libraries
 
 - A View maps an executable Rust type to a mathematical ghost type:
-     Vec<T> views as Seq<T>,  HashSet<K> views as Set<K::V>.
-     Specs are written over the view; exec code manipulates the real type.
+     "Vec<T> views as Seq<T>",  "HashSet<K> views as Set<K::V>".
+- Specs are written over the view; exec code manipulates the real type.
 - vstd is Verus's standard library — specs for Vec, Seq, Set,
-     Map, Multiset, arithmetic, and common lemmas.
-- vstdplus is APAS-VERUS's extension library.
-- Ghost types (Seq, Set, Map, Fn) live only in the verifier —
+     Map, Multiset, arithmetic, common lemmas, Fns ...
+- Ghost types live only in the verifier —
      they have no runtime cost and no runtime representation.
 
-# Wrapping Rust — Giving Specs to Unverified Code
 
-- Rust's standard library is unverified — HashMap, HashSet,
-     threads, and I/O have no Verus specs out of the box.
-- external_type_specification adds a spec to an existing Rust type
-     without wrapping it — used for types you cannot change.
-- The wrapper pattern: define a new struct holding the unverified type,
-     implement View to give it a mathematical model.
-- So the TCB is std/core/alloc and the compiler.
+# Wrapping Rust — Declaring an external type
+
+- Three specification constructs are used to give specs to Rust stdlib.
+- A proxy struct that introduces a spec for a foreign type.
+- The proxy struct name is conventionally ExTypeName.
+```rust
+  #[verifier::external_type_specification]
+  pub struct ExVec<T>(Vec<T>);
+```
+
+# Wrapping Rust — Declaring an external function/method
+
+-  A proxy function with the same signature as the foreign function, carrying the
+   requires/ensures.
+```rust
+  #[verifier::external_fn_specification]
+  pub fn ex_vec_push<T>(v: &mut Vec<T>, value: T)
+      requires v@.len() < usize::MAX,
+      ensures  v@ == old(v)@.push(value),
+  { v.push(value) }
+```
+
+# Wrapping Rust — Declaring an external function/method
+  - Add a View and specs to a foreign type.
+```rust
+  #[verifier::external_type_specification]
+  pub struct ExHashMap<K, V>(HashMap<K, V>);
+  impl<K,V> View for ExHashMap<K,V> {
+       type V = Map<K::V, V::V>;
+       spec fn view(&self) -> Map<K::V, V::V>;}
+```
 
 # Tokenized State Machines — Hance, CMU 2024
 
@@ -227,7 +254,7 @@
 - Answer: A Tokenized State Machine defines protocol state as fields
      with sharding strategies (variable, map, count, storage_option…).
 - Transitions and an inductive invariant are proved once, globally.
-     Verus auto-generates ghost token types and exchange functions
+- Verus auto-generates ghost token types and exchange functions
 
 # Tokenized State Machines — Hance, CMU 2024
 
@@ -282,11 +309,16 @@
 - With vstdplus, standards, RTT, PTT: 275,014 total LOC.
 - Built in 160 days, 2,596 commits, 8 agents, 281 agent-round reports.
 - Verification: 5,674 verified proof obligations, 0 errors.
-- Full validate
-    - runs in 210 s
-    - peak RSS 8 GB
-    - rust_verify 10 GB, Z3 up to 8 GB to 28 GB during some runs fixing UnionFind.
-- Somewhere in I suspect there is a novel formal verification of some algorithm.
+
+# APAS-VERUS: Full Validation Cost (2026-04-12)
+
+  - Elapsed:          210s
+  - rust_verify RSS: 10,278 MB  (~10 GB)
+  - Z3 RSS:           6,874 MB   (~6.7 GB)
+  - rust_verify CPU: 216s
+  - Z3 CPU:           265s
+- But I have had Z3 jump up to as much as 28 GB when I write bad proofs.
+- Somewhere in it I suspect there is a novel formal verification of some algorithm.
 
 # APAS-VERUS — Quantitatives
 
@@ -302,7 +334,7 @@
 
 - Holes: started at 238 (R20), now 0!
 - Largest chapter: Chap37 (AVL trees, BST variants) — 20,319 src LOC.
-- 4.1× more source code to verify than APAS-AI needed to implement.
+- 2 × more source code to verify than APAS-AI needed to implement.
 - Start: 2025-11-03
 - End  : 2026-04-12
 - Duration: 150 person days
@@ -340,11 +372,15 @@
 - in Pulse.
 - RISE MSR blog (2026-03-06) says the initial 10K lines came "very quickly" and then
 "about a month of nudging" to reach 100K LOC.
-- Nikhil Swamy with thanks to Gabriel Ebner, Lef Ioannidis, Guido Martinez, Matthai Philipose and Tahina Ramananandro.
 - And now seems to be about 130K LOC.
+- Nikhil Swamy with thanks to Gabriel Ebner, Lef Ioannidis, Guido Martinez, Matthai Philipose and Tahina Ramananandro.
+
+# AutoCLRS
+
 - They definitely had some tool advantages in terms of incremental proofs through a server.
+- That's another verus pain point but not too bad.
 - Plus, they knew F* and Pulse to start!
-- And they did a formal specification of algorithmic complexity.
+- And they did a formal specification of algorithmic complexity!
 
 # Veracity- Software Engineering AI Paired Proving
 
@@ -360,17 +396,19 @@
 # Veracity- Software Engineering AI Paired Proving
 
 - All tools are AST-aware (ra_ap_syntax / Verus_syn).
-- A built-in string-hacking detector flags usage of string manipulation
+- A string-hacking detector flags usage of string manipulation
   instead of AST work.
 - And when bugs appeared they were mostly string hacking.
+- Because no matter what I said to my AIs they LOVE string hacking shortcuts.
+- Heck, I had to run the string hacking detector on the string hacking detector.
 
 # Veracity- Software Engineering AI Paired Proving
 
 - Search: veracity-search — type directed search over vstd
 - APAS-VERUS by type signature, finding lemmas before writing new ones.
-     "Specifications as Search Keys for Software Libraries"
+- "Specifications as Search Keys for Software Libraries"
      Eugene J. Rollins and Jeannette M. Wing
-- Written for my sins of asking why does's vstd not have X, when it did!
+- Written for my sins of asking why does vstd not have X, when it did!
 - Even more useful for my AI's sins.
 - This allowed me to download ALL known Verus (git VerusCodebases)
     and have my AI search them in 1.2 seconds!
@@ -382,10 +420,10 @@
 - APAS states complexity and informally proves many of them for some algorithms.
 - I had to build a tool to get the right ones in the code at the right
  place.
-- My single threaded implementations often don't match the textbook.
+- My single threaded implementations often don't match the textbook intentionally.
 - Then I wrote a programmatic tool to find and list mismatches.
 - Then I had Claude Opus do it's analysis and compare every function
-  with the textbooks.
+  with the textbook's.
 - This found about 16 faults in parallel algorithms.
 
 # APAS-VERUS: Verified Iteration - Pain Point
@@ -396,13 +434,13 @@
 - 10 components required per collection (all inside Verus!)
 - 6 verified loop patterns per collection
 - {loop, for} X {borrow iter,  borrow into, consume}
-- Iterators requiers one assume!
+- Iterators requires one assume!
 
 # APAS-VERUS: Verified Iteration
 
-- Verus forbids requires on external trait impls (std::iter::Iterator)
+- Verus forbids adding requires on external trait impls (std::iter::Iterator)
 - Hand-rolled iterators need assume(iter_invariant(self)) in next()
-- Everything after the assume is fully proved
+- Everything but that one assume is fully proved
 - 44 collections implemented; all carry verified iterators
 - Verus has proof time tests inside, I freed them to run in APAS-VERUS.
 - This was critical to get iterative loops to prove over my collections ADTs.
@@ -433,14 +471,13 @@
 
 - I finally built a set of coding standards in Verus Rust and in comments.
 - Agents read all standards before every task (~6,200 lines, ~54K tokens)
-- Violations are mostly AI checked except for many code style issues.
+- Violations are mostly AI checked except an extensive code styling 
+  checker in Veracity.
 - Quantitatives:
     - 29 standard files
     - 6,911 lines total
 - Doing this earlier would have really sped things up.
 - My CLAUDE.md would just not do enough even with 50KB and 13K tokens.
-- Question what are your favorite AI rules? 
-- Mine are Don't Over Think, DISCUSS and PBOGH.
 
 # APAS-VERUS Standards
 
@@ -453,14 +490,23 @@
 - Execution: mut, using_closures, using_hashmap, using_rand
 - And for readability table of contents with an ordering.
 
+# APAS-VERUS RULEs
+
+- Question what are your favorite AI rules?
+- Mine are Don't Over Think, DISCUSS and 
+- PBOGH: Prove Big or Go HOME!
+- You just have to tell the agents keep on proving!
+- Are you building big CLAUDE.md?
+- Or Cursor Rules?
+
 # Veracity: AIs Write Redundant Proofs
 
 - AI proof agents produce many correct but bloated proofs
     - redundant asserts, unnecessary proof blocks
-- So I wrote a proof minimizer: veracity-minimize-proofs.
 - They verify, but they waste solver budget on every subsequent run.
+- So I wrote a proof minimizer: veracity-minimize-proofs.
 - It tests each assert and proof block
-     individually: remove it, re-verify, comment it out if it is
+     individually: removes it, re-verify, comment it out if it is
      not needed and it does not increase time or memory.
 - Result across APAS-VERUS: 22 asserts and 33 proof blocks removed
  in 105 minutes of wall time. 55 redundant proof statements
@@ -482,10 +528,10 @@
 - I added accept(P) to mark assumes I allowed, almost all eq/partialeq/clone.
 - This can be simplified with some Verus language syntax,
    but then the AIs are not trained on the symbols.
--  6,081 // Veracity: NEEDED assert             
--  4,681 // Veracity: NEEDED proof block       
+-  6,081 // Veracity: NEEDED assert
+-  4,681 // Veracity: NEEDED proof block
 -  1,502 // Veracity: NEEDED assert (speed)
--  245   // Veracity: NEEDED proof block (speed)—   
+-  245   // Veracity: NEEDED proof block (speed)—
 
 # Veracity Annotations
 
@@ -526,7 +572,7 @@ the output and have the AI write a lot of tests.
 - But APAS-VERUS has {Mt,St}x{Per,Eph}
 - So it is much more like 2000 distinct functions.
 - And I wrote this in 160 days while learning Verus.
-- At least 30 of those days were understanding and working around pain point.
+- At least 30 of those days were understanding and working around pain points.
 
 # Rusticate + Veracity: What Verus Wraps
 
@@ -575,7 +621,7 @@ the output and have the AI write a lot of tests.
 - It needs more on Scheduling. I only built Help-First scheduling.
 - It used (K,V) in tree sets as mappings, but I had to make this
   explicit. Particularly with an Ordered Key Mapping.
-- Without this Ordered Tables, which are not too complex, much easier to prove.
+- With this Ordered Tables, which are not too complex, were much easier to prove.
 - APAS's discussion of Union Find was too thin. Path compression was very difficult.
 - I had to start with Nikhil Swammy et. al's AlgoCLRS's implemention
        and proofs.
