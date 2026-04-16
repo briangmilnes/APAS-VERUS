@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Table of Contents Standard: the complete APAS-VERUS module template.
 //!
 //! Every APAS-VERUS source file follows this bottom-up, per-type ordering.

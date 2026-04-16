@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! REVIEWED: NO
 //! Topological Sort - Sequential Ephemeral (Chapter 55, Algorithm 55.13).
 //! Sorts DAG vertices in topological order using ephemeral structures.

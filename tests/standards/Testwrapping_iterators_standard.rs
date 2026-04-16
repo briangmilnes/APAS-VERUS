@@ -1,4 +1,5 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Runtime tests for standards::wrapping_iterators_standard.
 
 use apas_verus::standards::wrapping_iterators_standard::wrapping_iterators_standard::*;

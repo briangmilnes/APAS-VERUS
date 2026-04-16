@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Tests for Example 43.1.
 
 use apas_verus::Chap43::Example43_1::Example43_1::*;

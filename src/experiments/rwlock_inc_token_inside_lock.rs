@@ -1,4 +1,5 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 
 //! Experiment: token inside lock — predicate ties real to abstract.
 //! Same operations as rwlock_tsm_increment. Token travels with the data

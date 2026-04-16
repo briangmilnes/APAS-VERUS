@@ -1,4 +1,5 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 
 //! RESULT: FAILS — antisymmetric, add_zero, add_monotone fail; reflexive/total work.
 //! Testing what f32 by(bit_vector) can actually prove for algorithm use.

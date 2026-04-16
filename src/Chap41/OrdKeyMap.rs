@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Ordered key-value map backed by ParamBST<Pair<K,V>> with View = Map<K::V, V::V>.
 //! Bridge layer between ParamBST's Set<(K::V,V::V)> view and Map<K::V,V::V>.
 

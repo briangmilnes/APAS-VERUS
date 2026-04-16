@@ -1,5 +1,6 @@
 #![cfg(feature = "all_chapters")]
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Tests for Example56_3 - Negative Weight Cycles.
 
 use apas_verus::Chap56::Example56_3::Example56_3::*;

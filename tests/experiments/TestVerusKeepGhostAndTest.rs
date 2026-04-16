@@ -1,4 +1,5 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Run Time Test: verify that exec code from verus! compiles and runs under cargo test,
 //! with ghost imports erased by #[cfg(verus_keep_ghost)].
 

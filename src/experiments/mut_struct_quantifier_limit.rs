@@ -1,4 +1,5 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 
 //! Hypothesis: Z3 can't verify an exec function that modifies a 4-field struct
 //! with quantified Map predicates in both requires and ensures, even when the

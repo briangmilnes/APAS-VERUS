@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Multi-Struct Standard: how to structure modules with multiple data types.
 //!
 //! Tree-like types with multiple node kinds use separate structs composed into

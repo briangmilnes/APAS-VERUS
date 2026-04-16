@@ -1,4 +1,5 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 
 //! RESULT: FAILS — f64 by(bit_vector) crashes Verus at bitvector_to_air.rs:424.
 //! Hypothesis: Using the patterns from Verus test suite float.rs, can we prove

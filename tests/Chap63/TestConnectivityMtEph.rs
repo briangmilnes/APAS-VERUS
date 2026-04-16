@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Chapter 63: Graph Connectivity - Multi-threaded Ephemeral Tests
 
 use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;

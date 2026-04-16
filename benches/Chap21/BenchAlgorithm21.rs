@@ -1,4 +1,5 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Chapter 21: Algorithm 21.1 (2D tabulate), 21.2 (3D tabulate),
 //!             21.5 (brute-force primes), 21.6 (prime sieve) benchmarks.
 

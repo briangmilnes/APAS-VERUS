@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! REVIEWED: NO
 //! Parametric Nested Hash Table - Sequential Ephemeral (Chapter 47, Section 1.1).
 //! A parametric implementation of hash tables using nested tables.

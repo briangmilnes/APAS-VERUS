@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! REVIEWED: NO
 //! Chapter 6 Weighted Directed Graph (ephemeral) with isize weights - Single-threaded version.
 //! Uses CheckedIsize for overflow-safe weight summation.

@@ -672,7 +672,10 @@ See [docs/scripts.md](docs/scripts.md) for a reference of all scripts in `script
 
 ## License
 
-Copyright (C) 2025 Acar, Blelloch and Milnes
+SPDX-License-Identifier: MIT
+Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
+
+Licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ## Acknowledgments
 

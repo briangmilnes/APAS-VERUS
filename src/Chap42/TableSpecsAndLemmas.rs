@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 
 //! Shared spec functions and proof lemmas for the Table modules (StEph, StPer, MtEph).
 //! All definitions are generic over `(KV, VV)` and operate on `Seq<(KV, VV)>` / `Map<KV, VV>`.

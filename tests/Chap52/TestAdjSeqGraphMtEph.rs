@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Tests for Chapter 52: Adjacency Sequence Graph (ephemeral, multi-threaded).
 
 use apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;

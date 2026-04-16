@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! REVIEWED: NO
 //! Parallel scan using contraction technique (Chapter 27, Algorithm 27.3).
 //! Uses the help-first scheduler for fork-join parallelism.

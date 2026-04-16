@@ -1,5 +1,6 @@
 #![cfg(feature = "all_chapters")]
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap37::BSTAVLMtEph::BSTAVLMtEph::*;
 use apas_verus::Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::*;

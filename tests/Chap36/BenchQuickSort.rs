@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Benchmarks for Chapter 36 quicksort: St vs Mt, all three pivot strategies.
 //! Uses shuffled data to avoid O(n) recursion depth on first-element pivot.
 

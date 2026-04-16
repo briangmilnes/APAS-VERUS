@@ -1,4 +1,5 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Runtime tests for Chap19 ArraySeqStEph (sequential ephemeral parametric array sequence).
 
 use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::*;

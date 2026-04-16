@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Iterator Standard: how to implement verified iterators in APAS-VERUS.
 //!
 //! Every APAS-VERUS collection implements the iterator standard, which enables

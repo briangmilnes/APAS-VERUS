@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! REVIEWED: NO
 //! Breadth-First Search - Parallel Persistent (Chapter 54, Algorithms 54.5 and 54.6).
 //! Layer-by-layer parallel BFS using HF Scheduler join() for fork-join frontier processing.

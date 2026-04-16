@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Hypothesis: Which Fn types can Verus verify when boxed or stored?
 //!
 //! Supported: impl Fn, impl FnOnce, impl FnMut, spec_fn (ghost lambda).

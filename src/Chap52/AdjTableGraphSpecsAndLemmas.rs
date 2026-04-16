@@ -1,4 +1,5 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 
 //! Shared spec functions and proof lemmas for the graph modules in Chap52.
 //! Contains spec_count_true, spec_sum_of, spec_sum_adj_sizes, spec_sum_entry_sizes,

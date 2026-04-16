@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! REVIEWED: NO
 //! Depth-First Search - Sequential Persistent (Chapter 55, Algorithm 55.2).
 //! Recursive DFS for finding reachable vertices from a source vertex.

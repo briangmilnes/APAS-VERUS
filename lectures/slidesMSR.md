@@ -30,7 +30,7 @@
 
 # Background
 
-- B.Sc. Applied Math (Computer Science)
+- B.Sc. Applied Math (Computer Science), Carnegie Mellon
 - 2 years of AI PL development (Carnegie Group)
 - 7 years of (symbolic) AI Research (Soar Group, CMU CS)
 - 2 years of PL research (Fox Group, CMU CS) aimed at
@@ -190,7 +190,8 @@
 - Z3 handles linear arithmetic, arrays, and quantified formulas,
      but quantifier instantiation requires explicit trigger annotations.
 - But there is also a faster linear arithmetic solver, Singular.
-- Annotates existing Rust code                                                                         - spec / proof / requires / ensures on fns
+- Annotates existing Rust code:
+    - spec / proof / requires / ensures on fns
 - Ships the Rust binary directly.
 - Linear Logic + Borrowing from the Rust type system, which rustc checks.
 
@@ -274,8 +275,8 @@
 
 - 4,225 commits since March 2021 — 5 years, still accelerating
 - Commits per year:
-- 2021: 474   2022: 906   2023: 992
-- 2024: 745   2025: 761   2026: 347 (thru April)
+- 2021: 474      2022: 906     2023: 992
+- 2024: 745      2025: 761     2026: 347 (thru April)
 - Rolling releases: 396 tagged — roughly one every 4 days
 - 59 stable releases!
 - Excellent team and work. I have had only a few crashes, which I
@@ -450,8 +451,8 @@
 - Agents often say "Verus Can't Do That"
 - I said "Make an experiment!"
 - Quantitatives:
-- 168 experiment files
-- 21,476 lines of code (not counted in the totals)
+    - 168 experiment files
+    - 21,476 lines of code (not counted in the totals)
 - Topics span: Clone, Arc, RwLock, TSM, closures, iterators,
  generics, float, bitvector, PartialEq, Copy, async, hash tables,
  parallel algorithms, ghost types, Send/Sync, collect, and sorting.
@@ -745,7 +746,7 @@ question and change it.
  the desktops, the browser use.
 - I think you should at this point, and NOT TELL ANYONE!
 - And use this cost risk model to evangelize for rapid change in MSFT products
- in a priority order.
+ in a priority order, quantitative software engineering at the enterprise scale.
 
 # Review of the Talk
 

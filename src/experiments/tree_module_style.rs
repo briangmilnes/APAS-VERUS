@@ -1,4 +1,5 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 
 //! Experiment: Separate structs per node kind with per-type traits, mutable
 //! keys via set_key, Tree as a wrapper (not in the enum), no inherent impl

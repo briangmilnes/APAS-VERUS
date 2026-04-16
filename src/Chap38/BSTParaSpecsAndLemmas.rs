@@ -1,4 +1,5 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 
 //! Shared spec functions and proof lemmas for the parametric BST modules in Chap38.
 //! Both BSTParaStEph and BSTParaMtEph import from here to avoid duplicating

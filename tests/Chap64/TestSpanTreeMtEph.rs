@@ -1,5 +1,6 @@
 #![cfg(feature = "all_chapters")]
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Chapter 64: Spanning Tree via Star Contraction Tests (Parallel)
 
 use apas_verus::Chap05::SetStEph::SetStEph::*;

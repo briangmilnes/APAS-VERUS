@@ -1,4 +1,5 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 
 //! Experiment: TSM tracking abstract value + vstd RwLock for real synchronization.
 //! Three operations (add_one, sub_one, zero_out) with provable specs.

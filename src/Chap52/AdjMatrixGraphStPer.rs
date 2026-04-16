@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! REVIEWED: NO
 //! Chapter 52: Adjacency Matrix Graph (persistent, single-threaded).
 //! G = (bool seq) seq - for enumerable vertex sets V = {0, 1, ..., n-1}.

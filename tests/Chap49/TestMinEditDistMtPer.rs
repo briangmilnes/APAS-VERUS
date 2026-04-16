@@ -1,4 +1,5 @@
-//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Tests for MinEditDistMtPer.
 
 use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
