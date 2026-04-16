@@ -28,3 +28,4 @@ logs/profile/*/*.profile
 logs/profile/*/*.profile.gz
 logs/profile/*/*.graph
 logs/profile/*/*.graph.gz
+.~lock.*#
