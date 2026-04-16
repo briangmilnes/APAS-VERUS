@@ -575,6 +575,7 @@ the output and have the AI write a lot of tests.
 - It needs more on Scheduling. I only built Help-First scheduling.
 - It used (K,V) in tree sets as mappings, but I had to make this
   explicit. Particularly with an Ordered Key Mapping.
+- Without this Ordered Tables, which are not too complex, much easier to prove.
 - APAS's discussion of Union Find was too thin. Path compression was very difficult.
 - I had to start with Nikhil Swammy et. al's AlgoCLRS's implemention
        and proofs.
@@ -586,7 +587,7 @@ the output and have the AI write a lot of tests.
 - The bad news is the agents can indeed start using advanced features and get things wrong.
 - I work with between 1 and 9 agents.
 - One on veracity.
-- One orchestrator, writing plan prompts and controlling merges.
+- One orchestrator, writing plans, prompts and controlling merges.
 - 1-8 on branches each working on different independent plans.
 - I am not nearly comfortable enough with agent proof to let them
  do subagents without observing.
@@ -706,37 +707,6 @@ question and change it.
 - Let's get to the questions!
 - I have a ton of them for you! and I hope you have many for me.
 
-# Questions - F* and Pulse
-
-- Are F* modules really in use? If not, why?
-- Got Functors?
-- Are F* modules working with proof smoothly? Took me quite sometime.
-- Does F* have a typed library search yet?
-- Are typeclasses being heavily used?
-- How fast is validation now?
-- Nik you have any more statistics on AutoCLRS?
-
-
-# Questions
-- Did the PL community overly complicate things with higher-order types?
-- What can you folks say about MSFT adoption of proven code?
-- What are the biggest F* verified systems?
-- What are the biggest Pulse verified sytems?
-- Any quantitatives? Person days? AI days?
-- Should I quit Verus and go learn Pulse?
-
-# Questions
-
-- Are you folks still using Make? That's how I got started on this.
-- Many programmers and worse, managers, complain about the programmer time
- to switch languages. Are you finding that you can switch languages with
- your AIs explaining things to you?
-- Can we prove Rust's (awful) std with Verus?
-- Can we prove a compiler with Verus and EPR?
-- Can we prove a TIL (Tarditi, Morrisett, Harper) like compiler?
-- Can we verify a comp cert like compiler?
-- Can we prove an OS in Verus?
-
 # Blood on the Road - Open Source =
 
 - Open Source is now Open Copy.
@@ -768,7 +738,39 @@ question and change it.
 - Key solutions to this are:
  - Binary packages from all repositories.
  - Cryptographically signed.
+ - Installation protected in the OS.
  - And protected from reading by the OS.
+
+# Questions - F* and Pulse
+
+- Are F* modules really in use? If not, why?
+- Got Functors?
+- Are F* modules working with proof smoothly? Took me about three days to get a proving
+ model (Treap) with modules.
+- Does F* have a typed library search yet?
+- Are typeclasses being heavily used?
+- How fast is validation now?
+- Nik you have any more statistics on AutoCLRS?
+
+# Questions
+- Did the PL community overly complicate things with higher-order types?
+- What can you folks say about MSFT adoption of proven code?
+- What are the biggest F* verified systems?
+- What are the biggest Pulse verified sytems?
+- Any quantitatives? Person days? AI days?
+- Should I quit Verus and go learn Pulse?
+
+# Questions
+
+- Are you folks still using Make? That's how I got started on this.
+- Many programmers and worse, managers, complain about the programmer time
+ to switch languages. Are you finding that you can switch languages with
+ your AIs explaining things to you?
+- Can we prove Rust's (awful) std with Verus?
+- Can we prove a compiler with Verus and EPR?
+- Can we prove a TIL (Tarditi, Morrisett, Harper) like compiler?
+- Can we verify a comp cert like compiler?
+- Can we prove an OS in Verus?
 
 # Questions - AI LLM Agents
 
