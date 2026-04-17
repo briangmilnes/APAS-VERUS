@@ -9,7 +9,7 @@
 
 # Outline of the talk
 
-- Its a pleasure to speak here at Micrsoft Research RISE Group.
+- Its a pleasure to speak here at Microsoft Research RISE Group.
 - Background
 - Algorithms Parallel and Sequential (APAS)
 - Rust      - The Good, The Bad and the Ugly
@@ -77,20 +77,23 @@
 - Translating C to Rust is hard to get it into linear logic + borrowing.
 - However, you can (and I have) rewritten algorithms with a free list (that are right).
 - Macros, with typing checked at use, which is not so good.
-- No objects: it's great for what it was invented for: modeling the real world and interfaces.
+- No objects: it's great for what it was invented for: modeling the real world and interfaces
  by Ivan Sutherland 1962!
 - Terminology
 
 # Rust - Typeclasses are a weak module
 
-- You will pine for ML modules!
+- You get basic module with pub/pub(crate) and no-pub.
+- You get typeclasses which MUST be implemented at type.
 - The Rustaceans have decided that unless their module implements a typeclass at
   multiple types, they won't use it.
 - So reading Rust is every bit as scattered as reading C.
 - Verus is now doing this also, but I abuse the notation to put all the specs
  together in APAS-VERUS for readability.
+- You will pine for ML modules!
 
-# Rust - The Ugly — Ordering
+
+# Rust - The Ugly — Equality and Ordering
 
 | Property         | PartialEq | Eq  | PartialOrd | Ord |
 |------------------|-----------|-----|------------|-----|
@@ -111,17 +114,8 @@
   - Copy is a subtrait of Clone — every Copy type must implement Clone
   - Hard contract: clone() must be equivalent to a bitwise copy, i.e., clone() == *self
   - This is documented in std: "if T: Copy, T::clone(&x) must be equivalent to copying x"
+- What you really want here is to detangle these. 
 
-# Rust - The Ugly
-
-- Roughly:
-  -- Clone::clone(&self) -> Self
-  --   ensures result == *self          // convention for all Clone
-  -- Copy (marker, no methods)
-  --   requires T: Clone
-  --      ensures  self.clone() == self    // bitwise copy semantics
-- What you really want is Rust to generate an == agreeing Copy and
-- tell you if it can implement a clone for you that respects ==.
 
 # APAS-AI   - AI Paired Programming APAS in Rust
 
@@ -192,7 +186,7 @@
 - But there is also a faster linear arithmetic solver, Singular.
 - Annotates existing Rust code:
     - spec / proof / requires / ensures on fns
-- Ships the Rust binary directly.
+- Ships the Rust binaries directly.
 - Linear Logic + Borrowing from the Rust type system, which rustc checks.
 
 # F* - Comparison
@@ -218,7 +212,7 @@
 
 # Wrapping Rust — Declaring an external type
 
-- Three specification constructs are used to give specs to Rust stdlib.
+- Four specification constructs are used to give specs to Rust stdlib.
 - A proxy struct that introduces a spec for a foreign type.
 - The proxy struct name is conventionally ExTypeName.
 ```rust
@@ -247,6 +241,20 @@
        type V = Map<K::V, V::V>;
        spec fn view(&self) -> Map<K::V, V::V>;}
 ```
+
+# Wrapping Rust — external\_trait\_specification
+
+  - Adds a spec to a foreign trait without modifying it:
+  ```rust
+  #[verifier::external_trait_specification]
+  pub trait ExClone: Sized {
+      type ExternalTraitSpecificationFor: core::clone::Clone;
+      fn clone(&self) -> Self;
+  }
+  ```
+  - The proxy trait name is `Ex<TraitName>` by convention.
+  - Add `requires`/`ensures` to the method to give it a full contract.
+  - Limitation: no generics.
 
 # Tokenized State Machines — Hance, CMU 2024
 
@@ -323,18 +331,19 @@
 
 # APAS-VERUS — Quantitatives
 
-- Runtime tests: 3,776 passed in 21 s.
+- Runtime tests: 3,776 pass in 21 s.
 - Verus has a nice proof-time test harness, so I pulled it out:
     - 221 pass in 259 s.
     - I used it mostly to continuously track that my iterators prove and continue to
- prove with changes, mostly to the specification of operations once the iterators
- were more stable.
+       prove with verus changes and my specifications.
+    - These caught dozens of problems that would have been conflated with algorithms
+     loops.
 - Benchmarks in 42s.
 
 # APAS-VERUS — Quantitatives
 
 - Holes: started at 238 (R20), now 0!
-- Largest chapter: Chap37 (AVL trees, BST variants) — 20,319 src LOC.
+- Largest chapter is the forest: Chap37 - AVL trees, BST variants - 20,319 src LOC.
 - 2 × more source code to verify than APAS-AI needed to implement.
 - Start: 2025-11-03
 - End  : 2026-04-12
@@ -387,12 +396,14 @@
 
 - Veracity is a suite of 22+ tools for analyzing, reviewing, and
      fixing Verus codebases.
-- Review tools: proof holes (assume, external_body, admit),
-     style enforcement (21 rules, auto-reorder), function inventory
-     with spec strength classification, string-hacking detector.
-- Minimization tools: veracity-minimize-proofs
-- Metrics: veracity-count-loc (spec/proof/exec breakdown),
--        chapter-cleanliness-status (clean vs. holed chapter summary).
+- Review tools:
+    - proof holes (assume, external_body, admit),
+    - style enforcement (21 rules, auto-reorder), 
+    - with spec strength classification fed to AI,
+    - veracity-count-loc (spec/proof/exec breakdown),
+    - chapter-cleanliness-status (clean vs. holed chapter summary vs blocked by),
+    - string-hacking detector, function inventory, etc. 
+- One of the best is veracity-minimize-proofs
 
 # Veracity- Software Engineering AI Paired Proving
 
@@ -406,11 +417,11 @@
 # Veracity- Software Engineering AI Paired Proving
 
 - Search: veracity-search — type directed search over vstd
-- APAS-VERUS by type signature, finding lemmas before writing new ones.
+- VERUS by type signature, finding lemmas before writing new ones.
 - "Specifications as Search Keys for Software Libraries"
      Eugene J. Rollins and Jeannette M. Wing
 - Written for my sins of asking why does vstd not have X, when it did!
-- Even more useful for my AI's sins.
+- Even more useful for my AIs's seriously disturbing sinning. 
 - This allowed me to download ALL known Verus (git VerusCodebases)
     and have my AI search them in 1.2 seconds!
 - Does F*/Pulse have one yet?
@@ -445,6 +456,8 @@
 - 44 collections implemented; all carry verified iterators
 - Verus has proof time tests inside, I freed them to run in APAS-VERUS.
 - This was critical to get iterative loops to prove over my collections ADTs.
+- You can prove full iterators in your own copy of the traits with no
+ assume and I have.
 
 # APAS-VERUS: Experiments
 
@@ -463,17 +476,17 @@
 - 107 files: SUCCEEDS / VERIFIES — pattern adopted into codebase
 - 61 files: FAILS — Verus limitation documented, workaround noted
 - Notable successes that unlocked chapters:
-- TSM/RwLock layer pattern — unlocked all Mt chapters
-- Named closure ensures through ParaPair — unlocked fork-join
-- Ghost struct Send/Sync — unlocked Chap41
-- Tree module style with recursive trait impls — unlocked Chap65
+    - TSM/RwLock layer pattern — unlocked all Mt modules,
+    - Named closure ensures through ParaPair — unlocked fork-join,
+    - Ghost struct Send/Sync — unlocked AVLTreeSetsMtEph,
+    - Tree module style  — unlocked Kruskal, Prim, UnionFind.
 
 # APAS-VERUS Standards
 
-- I finally built a set of coding standards in Verus Rust and in comments.
+- I finally built a set of coding standards in Verus rust files and in comments.
 - Agents read all standards before every task (~6,200 lines, ~54K tokens)
-- Violations are mostly AI checked except an extensive code styling 
-  checker in Veracity.
+- Violations are mostly AI checked except where an extensive code styling
+  can get things. 
 - Quantitatives:
     - 29 standard files
     - 6,911 lines total
@@ -494,8 +507,12 @@
 # APAS-VERUS RULEs
 
 - Question what are your favorite AI rules?
-- Mine are Don't Over Think, DISCUSS and 
-- PBOGH: Prove Big or Go HOME!
+- Mine are:
+    - Don't Over Think, 
+    - DISCUSS, 
+    - Don't jump ahead,
+    - go step by step,
+    - PBOGH: Prove Big or Go HOME!
 - You just have to tell the agents keep on proving!
 - Are you building big CLAUDE.md?
 - Or Cursor Rules?
@@ -829,3 +846,12 @@ question and change it.
 - When it's 10 times faster how will we use it?
 - When will this really cost the user what it costs the provider?
 - When will it get even better intermediate term memory?
+
+# Cloud Security Alliance 
+
+- The cloud security alliance has some sober recommendations:
+- The “AI Vulnerability Storm”: Building a “Mythosready” Security Program
+- https://labs.cloudsecurityalliance.org/wp-content/uploads/2026/04/mythosreadyv91.pdf
+- Use LLM-based vulnerability discovery and remediation capabilities.
+- Update risk metrics.
+- We cannot outwork machine-speed threats. Re-prioritize, automate, and prepare for burnout.
