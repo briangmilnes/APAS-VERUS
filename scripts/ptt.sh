@@ -6,7 +6,10 @@
 set -uo pipefail
 
 # Acquire one of N exclusive slots (default 2) so concurrent agents don't OOM.
-source "$(dirname "${BASH_SOURCE[0]}")/verus-lock.sh"
+# Skip locking entirely when VERUS_NO_LOCK=1 (e.g. verita, CI, single-machine runs).
+if [ "${VERUS_NO_LOCK:-0}" = "0" ]; then
+    source "$(dirname "${BASH_SOURCE[0]}")/verus-lock.sh"
+fi
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VERUS=~/projects/verus/source/target-verus/release/verus

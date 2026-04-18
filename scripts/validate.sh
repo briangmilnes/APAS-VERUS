@@ -65,12 +65,15 @@ case "$MODE" in
 esac
 
 # Acquire lock slots: full=2 (heavy), isolate/other=1 (light).
-if [ "$MODE" = "full" ]; then
-    export VERUS_LOCK_WEIGHT=2
-else
-    export VERUS_LOCK_WEIGHT=1
+# Skip locking entirely when VERUS_NO_LOCK=1 (e.g. verita, CI, single-machine runs).
+if [ "${VERUS_NO_LOCK:-0}" = "0" ]; then
+    if [ "$MODE" = "full" ]; then
+        export VERUS_LOCK_WEIGHT=2
+    else
+        export VERUS_LOCK_WEIGHT=1
+    fi
+    source "$(dirname "${BASH_SOURCE[0]}")/verus-lock.sh"
 fi
-source "$(dirname "${BASH_SOURCE[0]}")/verus-lock.sh"
 
 TIME_FLAG=()
 if $USE_TIME; then
