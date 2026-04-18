@@ -401,6 +401,7 @@ pub fn run_verus(
     );
     let child = child
         .args(&verus_args[..])
+        .current_dir(test_dir)
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped())
         .spawn()
