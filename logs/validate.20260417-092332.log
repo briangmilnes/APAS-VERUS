@@ -1,0 +1,19 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: internal error: unsupported type for decreases &mut core::option::Option<Box<lib::Chap37::BSTSplayMtEph::BSTSplayMtEph::Node<T>, alloc::alloc::Global>>
+    --> src/Chap37/BSTSplayMtEph.rs:1219:25
+     |
+1219 |                         Self::bst_insert(&mut node.left, value);
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap37/AVLTreeSeqStPer.rs:473:5
+    |
+473 |     fn rotate_left(self) -> (rotated: Self)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 2 previous errors
+
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 1462MB, peak z3 RSS: 319MB, min free: 16355MB
+Sampled CPU Usage: rust_verify: 23s, z3 children: 26s

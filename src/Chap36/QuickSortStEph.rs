@@ -110,9 +110,9 @@ pub mod QuickSortStEph {
             sorted_left =~= left_view.sort_by(spec_leq::<T>()),
             sorted_right =~= right_view.sort_by(spec_leq::<T>()),
             forall|j: int| 0 <= j < left_view.len() ==>
-                (#[trigger] T::le(left_view[j], pivot)) && left_view[j] != pivot,
+                T::le(#[trigger] left_view[j], pivot) && left_view[j] != pivot,
             forall|j: int| 0 <= j < right_view.len() ==>
-                (#[trigger] T::le(pivot, right_view[j])) && right_view[j] != pivot,
+                T::le(pivot, #[trigger] right_view[j]) && right_view[j] != pivot,
             forall|j: int| 0 <= j < eq_view.len() ==>
                 (#[trigger] eq_view[j]) == pivot,
             eq_view.len() >= 1,
@@ -447,9 +447,9 @@ pub mod QuickSortStEph {
                     pivot_idx < n, pivot == s[pivot_idx as int], s == a.seq@,
                     leq == spec_leq::<T>(),
                     forall|j: int| 0 <= j < left@.len() ==>
-                        (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
+                        T::le(#[trigger] left@[j], pivot) && left@[j] != pivot,
                     forall|j: int| 0 <= j < right@.len() ==>
-                        (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+                        T::le(pivot, #[trigger] right@[j]) && right@[j] != pivot,
                     forall|j: int| 0 <= j < equals@.len() ==>
                         (#[trigger] equals@[j]) == pivot,
                     left@.len() + right@.len() + equals@.len() == i,
@@ -550,9 +550,9 @@ pub mod QuickSortStEph {
                     pivot_idx < n, pivot == s[pivot_idx as int], s == a.seq@,
                     leq == spec_leq::<T>(),
                     forall|j: int| 0 <= j < left@.len() ==>
-                        (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
+                        T::le(#[trigger] left@[j], pivot) && left@[j] != pivot,
                     forall|j: int| 0 <= j < right@.len() ==>
-                        (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+                        T::le(pivot, #[trigger] right@[j]) && right@[j] != pivot,
                     forall|j: int| 0 <= j < equals@.len() ==>
                         (#[trigger] equals@[j]) == pivot,
                     left@.len() + right@.len() + equals@.len() == i,
@@ -570,6 +570,8 @@ pub mod QuickSortStEph {
                 }
                 match TotalOrder::cmp(&elem, &pivot) {
                     core::cmp::Ordering::Less => {
+                        // Veracity: NEEDED proof block
+                        proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
                         left.push(elem);
                     },
                     core::cmp::Ordering::Greater => {
@@ -656,9 +658,9 @@ pub mod QuickSortStEph {
                     pivot_idx < n, pivot == s[pivot_idx as int], s == a.seq@,
                     leq == spec_leq::<T>(),
                     forall|j: int| 0 <= j < left@.len() ==>
-                        (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
+                        T::le(#[trigger] left@[j], pivot) && left@[j] != pivot,
                     forall|j: int| 0 <= j < right@.len() ==>
-                        (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+                        T::le(pivot, #[trigger] right@[j]) && right@[j] != pivot,
                     forall|j: int| 0 <= j < equals@.len() ==>
                         (#[trigger] equals@[j]) == pivot,
                     left@.len() + right@.len() + equals@.len() == i,
@@ -676,6 +678,8 @@ pub mod QuickSortStEph {
                 }
                 match TotalOrder::cmp(&elem, &pivot) {
                     core::cmp::Ordering::Less => {
+                        // Veracity: NEEDED proof block
+                        proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
                         left.push(elem);
                     },
                     core::cmp::Ordering::Greater => {

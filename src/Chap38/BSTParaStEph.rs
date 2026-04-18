@@ -1255,16 +1255,34 @@ pub mod BSTParaStEph {
                             // !found ⟹ akv ∉ other@.
                             use_type_invariant(&al);
                             use_type_invariant(&ar);
+                            // Prove lrv.union(rrv) =~= sv.intersect(other@) without result@
+                            // to avoid result.view() being uninterpreted inside by-blocks
+                            // under new-mut-ref.
                             // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
-                            assert forall|x| #[trigger] sv.intersect(other@).contains(x) <==>
-                                result@.contains(x) by {
+                            assert forall|x| lrv.union(rrv).contains(x) <==>
+                                #[trigger] sv.intersect(other@).contains(x) by {
                                 if lrv.contains(x) {
+                                    // lrv = al@ ∩ bl@ ⊆ sv ∩ other@.
                                     // Veracity: NEEDED assert
                                     // Veracity: NEEDED assert
+                                    assert(alv.contains(x));
+                                    assert(blv.contains(x));
+                                    assert(sv.contains(x));
+                                    assert(blv.union(brv).contains(x));
                                     assert(other@.remove(akv).contains(x));
+                                    assert(other@.contains(x));
                                 }
                                 if rrv.contains(x) {
+                                    // rrv = ar@ ∩ br@ ⊆ sv ∩ other@.
+                                    // Veracity: NEEDED assert
+                                    // Veracity: NEEDED assert
+                                    assert(arv.contains(x));
+                                    assert(brv.contains(x));
+                                    assert(sv.contains(x));
+                                    assert(blv.union(brv).contains(x));
+                                    assert(other@.remove(akv).contains(x));
+                                    assert(other@.contains(x));
                                 }
                                 if sv.contains(x) && other@.contains(x) {
                                     // Veracity: NEEDED assert
@@ -1288,6 +1306,8 @@ pub mod BSTParaStEph {
                                     }
                                 }
                             };
+                            // join_pair ensures result@ =~= lrv.union(rrv); close the ensures.
+                            assert(result@ =~= lrv.union(rrv));
                         }
                         // Veracity: NEEDED proof block
                         result

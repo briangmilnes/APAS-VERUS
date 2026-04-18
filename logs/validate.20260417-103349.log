@@ -1,0 +1,54 @@
+Mode: isolate
+Isolate: including Chap36 Chap19 Chap02
+error: assertion failed
+   --> src/Chap36/QuickSortStEph.rs:586:44
+    |
+586 | ...                   assert(T::le(old_left[j], pivot) && old_left[j] != pivot);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortStEph.rs:605:44
+    |
+605 | ...                   assert(T::le(pivot, old_right[j]) && old_right[j] != pivot);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+pivot.le(old_right.index(j)) ✔
+!(old_right.index(j) == pivot) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: assertion failed
+   --> src/Chap36/QuickSortStEph.rs:724:44
+    |
+724 | ...                   assert(T::le(old_left[j], pivot) && old_left[j] != pivot);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortStEph.rs:743:44
+    |
+743 | ...                   assert(T::le(pivot, old_right[j]) && old_right[j] != pivot);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+pivot.le(old_right.index(j)) ✔
+!(old_right.index(j) == pivot) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+verification results:: 944 verified, 2 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 789MB, peak z3 RSS: 80MB, min free: 16318MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 7s

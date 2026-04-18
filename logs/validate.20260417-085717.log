@@ -1,0 +1,238 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:44:13
+   |
+44 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:56:13
+   |
+56 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:69:13
+   |
+69 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:83:13
+   |
+83 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:96:13
+   |
+96 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaSpecsAndLemmas.rs:109:13
+    |
+109 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaSpecsAndLemmas.rs:112:13
+    |
+112 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaStEph.rs:143:13
+    |
+143 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaStEph.rs:367:17
+    |
+367 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaStEph.rs:378:17
+    |
+378 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaStEph.rs:387:17
+    |
+387 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaStEph.rs:394:17
+    |
+394 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaStEph.rs:410:17
+    |
+410 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaStEph.rs:421:17
+    |
+421 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaStEph.rs:432:17
+    |
+432 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaStEph.rs:443:17
+    |
+443 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaStEph.rs:451:17
+    |
+451 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaStEph.rs:458:17
+    |
+458 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaStEph.rs:473:17
+    |
+473 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaMtEph.rs:255:17
+    |
+255 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaMtEph.rs:265:17
+    |
+265 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaMtEph.rs:273:22
+    |
+273 |             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaMtEph.rs:278:22
+    |
+278 |             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaMtEph.rs:296:17
+    |
+296 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaMtEph.rs:309:17
+    |
+309 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaMtEph.rs:319:17
+    |
+319 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaMtEph.rs:325:22
+    |
+325 |             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaMtEph.rs:330:22
+    |
+330 |             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaMtEph.rs:340:17
+    |
+340 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaMtEph.rs:362:17
+    |
+362 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+   --> src/Chap38/BSTParaMtEph.rs:878:13
+    |
+878 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+    --> src/Chap38/BSTParaMtEph.rs:1032:13
+     |
+1032 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+    --> src/Chap38/BSTParaMtEph.rs:1065:13
+     |
+1065 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+    --> src/Chap38/BSTParaMtEph.rs:1125:13
+     |
+1125 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+    --> src/Chap38/BSTParaMtEph.rs:1204:13
+     |
+1204 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+    --> src/Chap38/BSTParaMtEph.rs:1328:13
+     |
+1328 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+    --> src/Chap38/BSTParaMtEph.rs:1457:13
+     |
+1457 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated function `vstd::laws_cmp::obeys_cmp_spec`: `laws_cmp::obeys_cmp_spec` has been renamed to `laws_cmp::obeys_cmp`
+    --> src/Chap38/BSTParaMtEph.rs:1543:13
+     |
+1543 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1161 verified, 0 errors
+warning: 38 warnings emitted
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 993MB, peak z3 RSS: 182MB, min free: 16095MB
+Sampled CPU Usage: rust_verify: 15s, z3 children: 12s

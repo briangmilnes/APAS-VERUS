@@ -1,0 +1,54 @@
+Mode: isolate
+Isolate: including Chap36 Chap19 Chap02
+error: assertion failed
+   --> src/Chap36/QuickSortStEph.rs:581:33
+    |
+581 | ...                   (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortStEph.rs:599:33
+    |
+599 | ...                   (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+pivot.le(right.view().index(j)) ✔
+!(right.view().index(j) == pivot) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: assertion failed
+   --> src/Chap36/QuickSortStEph.rs:717:33
+    |
+717 | ...                   (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortStEph.rs:735:33
+    |
+735 | ...                   (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+pivot.le(right.view().index(j)) ✔
+!(right.view().index(j) == pivot) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+verification results:: 944 verified, 2 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 453s
+Sampled Memory Usage: peak rust_verify RSS: 10651MB, peak z3 RSS: 6606MB, min free: 279MB
+Sampled CPU Usage: rust_verify: 305s, z3 children: 182s

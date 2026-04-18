@@ -527,8 +527,12 @@ broadcast use {
         fn insert<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: G)
             ensures self@.dom().finite()
         {
+            // Capture reducer/identity before mutation: new-mut-ref loses ClosureReq through
+            // mut_ref_current field access, but pre-mutation shared refs preserve it.
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             self.base_table.insert(k, v, combine);
-            self.cached_reduction = recalculate_reduction(self);
+            self.cached_reduction = calculate_reduction(&self.base_table, reducer, identity);
             // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
@@ -537,8 +541,10 @@ broadcast use {
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             ensures self@.dom().finite()
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             let updated = self.base_table.delete(k);
-            self.cached_reduction = recalculate_reduction(self);
+            self.cached_reduction = calculate_reduction(&self.base_table, reducer, identity);
 // Veracity: UNNEEDED proof block             proof { lemma_aug_view(self); }
             updated
         }
@@ -614,8 +620,10 @@ broadcast use {
         fn intersection<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: G)
             ensures self@.dom().finite()
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             self.base_table.intersection(&other.base_table, f);
-            self.cached_reduction = recalculate_reduction(self);
+            self.cached_reduction = calculate_reduction(&self.base_table, reducer, identity);
             // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
@@ -624,8 +632,10 @@ broadcast use {
         fn union<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: G)
             ensures self@.dom().finite()
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             self.base_table.union(&other.base_table, f);
-            self.cached_reduction = recalculate_reduction(self);
+            self.cached_reduction = calculate_reduction(&self.base_table, reducer, identity);
 // Veracity: UNNEEDED proof block             proof { lemma_aug_view(self); }
         }
 
@@ -633,8 +643,10 @@ broadcast use {
         fn difference(&mut self, other: &Self)
             ensures self@.dom().finite()
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             self.base_table.difference(&other.base_table);
-            self.cached_reduction = recalculate_reduction(self);
+            self.cached_reduction = calculate_reduction(&self.base_table, reducer, identity);
             // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
@@ -643,8 +655,10 @@ broadcast use {
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
             ensures self@.dom().finite()
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             self.base_table.restrict(keys);
-            self.cached_reduction = recalculate_reduction(self);
+            self.cached_reduction = calculate_reduction(&self.base_table, reducer, identity);
             // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
@@ -653,8 +667,10 @@ broadcast use {
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             ensures self@.dom().finite()
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             self.base_table.subtract(keys);
-            self.cached_reduction = recalculate_reduction(self);
+            self.cached_reduction = calculate_reduction(&self.base_table, reducer, identity);
             // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
@@ -717,10 +733,12 @@ broadcast use {
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             ensures self@.dom().finite()
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             let (left_base, found_value, right_base) = self.base_table.split_key(k);
 
-            let left_reduction = calculate_reduction(&left_base, &self.reducer, &self.identity);
-            let right_reduction = calculate_reduction(&right_base, &self.reducer, &self.identity);
+            let left_reduction = calculate_reduction(&left_base, reducer, identity);
+            let right_reduction = calculate_reduction(&right_base, reducer, identity);
 
             let left = Self {
                 base_table: left_base,
@@ -745,8 +763,10 @@ broadcast use {
         fn join_key(&mut self, other: Self)
             ensures self@.dom().finite()
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             self.base_table.join_key(other.base_table);
-            self.cached_reduction = recalculate_reduction(self);
+            self.cached_reduction = calculate_reduction(&self.base_table, reducer, identity);
             // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
@@ -791,10 +811,12 @@ broadcast use {
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             ensures self@.dom().finite()
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             let (left_base, right_base) = self.base_table.split_rank_key(i);
 
-            let left_reduction = calculate_reduction(&left_base, &self.reducer, &self.identity);
-            let right_reduction = calculate_reduction(&right_base, &self.reducer, &self.identity);
+            let left_reduction = calculate_reduction(&left_base, reducer, identity);
+            let right_reduction = calculate_reduction(&right_base, reducer, identity);
 
             let left = Self {
                 base_table: left_base,

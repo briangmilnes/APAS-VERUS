@@ -1198,7 +1198,7 @@ pub mod BSTSplayMtEph {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn bst_insert(link: &mut Link<T>, value: T) -> (inserted: bool)
-        decreases old(link),
+        decreases *old(link),
     {
         let cur = link.take();
         match cur {
@@ -1231,13 +1231,13 @@ pub mod BSTSplayMtEph {
                                 }
                             };
                             // Veracity: NEEDED assert
-                            assert forall|x: T| link_contains(*old(link), x) implies
+                            assert forall|x: T| #[trigger] link_contains(*old(link), x) implies
                                 (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
                             by {
                                 reveal_with_fuel(link_contains, 2);
                             };
                             // Veracity: NEEDED assert
-                            assert forall|x: T| (node_key == x || link_contains(old_left, x) || link_contains(old_right, x)) implies
+                            assert forall|x: T| (node_key == x || #[trigger] link_contains(old_left, x) || link_contains(old_right, x)) implies
                                 // Veracity: NEEDED proof block
                                 link_contains(*old(link), x)
                             by {
@@ -1282,14 +1282,14 @@ pub mod BSTSplayMtEph {
                                 }
                             };
                             // Veracity: NEEDED assert
-                            assert forall|x: T| link_contains(*old(link), x) implies
+                            assert forall|x: T| #[trigger] link_contains(*old(link), x) implies
                                 (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
                             by {
                                 reveal_with_fuel(link_contains, 2);
                             // Veracity: NEEDED proof block
                             };
                             // Veracity: NEEDED assert
-                            assert forall|x: T| (node_key == x || link_contains(old_left, x) || link_contains(old_right, x)) implies
+                            assert forall|x: T| (node_key == x || #[trigger] link_contains(old_left, x) || link_contains(old_right, x)) implies
                                 link_contains(*old(link), x)
                             by {
                                 reveal_with_fuel(link_contains, 2);

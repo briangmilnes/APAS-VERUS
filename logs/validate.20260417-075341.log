@@ -1,0 +1,116 @@
+Mode: isolate
+Isolate: including Chap40 Chap18 Chap02
+error[E0308]: mismatched types
+   --> src/Chap40/BSTKeyValueStEph.rs:317:27
+    |
+317 |             decreases old(*link);
+    |                       --- ^^^^^ expected `&mut _`, found `Option<Box<Node<K, V>>>`
+    |                       |
+    |                       arguments to this function are incorrect
+    |
+    = note: expected mutable reference `&mut _`
+                            found enum `std::option::Option<std::boxed::Box<Chap40::BSTKeyValueStEph::BSTKeyValueStEph::Node<K, V>>>`
+note: function defined here
+   --> builtin/src/lib.rs:292:7
+help: consider removing deref here
+    |
+317 -             decreases old(*link);
+317 +             decreases old(link);
+    |
+
+error[E0308]: mismatched types
+   --> src/Chap40/BSTKeyValueStEph.rs:652:27
+    |
+652 |             decreases old(*link),
+    |                       --- ^^^^^ expected `&mut _`, found `Option<Box<Node<K, V>>>`
+    |                       |
+    |                       arguments to this function are incorrect
+    |
+    = note: expected mutable reference `&mut _`
+                            found enum `std::option::Option<std::boxed::Box<Chap40::BSTKeyValueStEph::BSTKeyValueStEph::Node<K, V>>>`
+note: function defined here
+   --> builtin/src/lib.rs:292:7
+help: consider removing deref here
+    |
+652 -             decreases old(*link),
+652 +             decreases old(link),
+    |
+
+error[E0308]: mismatched types
+   --> src/Chap40/BSTSizeStEph.rs:347:27
+    |
+347 |             decreases old(*link);
+    |                       --- ^^^^^ expected `&mut _`, found `Option<Box<Node<T>>>`
+    |                       |
+    |                       arguments to this function are incorrect
+    |
+    = note: expected mutable reference `&mut _`
+                            found enum `std::option::Option<std::boxed::Box<Chap40::BSTSizeStEph::BSTSizeStEph::Node<T>>>`
+note: function defined here
+   --> builtin/src/lib.rs:292:7
+help: consider removing deref here
+    |
+347 -             decreases old(*link);
+347 +             decreases old(link);
+    |
+
+error[E0308]: mismatched types
+   --> src/Chap40/BSTSizeStEph.rs:718:27
+    |
+718 |             decreases old(*link),
+    |                       --- ^^^^^ expected `&mut _`, found `Option<Box<Node<T>>>`
+    |                       |
+    |                       arguments to this function are incorrect
+    |
+    = note: expected mutable reference `&mut _`
+                            found enum `std::option::Option<std::boxed::Box<Chap40::BSTSizeStEph::BSTSizeStEph::Node<T>>>`
+note: function defined here
+   --> builtin/src/lib.rs:292:7
+help: consider removing deref here
+    |
+718 -             decreases old(*link),
+718 +             decreases old(link),
+    |
+
+error[E0308]: mismatched types
+   --> src/Chap40/BSTReducedStEph.rs:433:27
+    |
+433 |             decreases old(*link);
+    |                       --- ^^^^^ expected `&mut _`, found `Option<Box<Node<K, V, R>>>`
+    |                       |
+    |                       arguments to this function are incorrect
+    |
+    = note: expected mutable reference `&mut _`
+                            found enum `std::option::Option<std::boxed::Box<Chap40::BSTReducedStEph::BSTReducedStEph::Node<K, V, R>>>`
+note: function defined here
+   --> builtin/src/lib.rs:292:7
+help: consider removing deref here
+    |
+433 -             decreases old(*link);
+433 +             decreases old(link);
+    |
+
+error[E0308]: mismatched types
+   --> src/Chap40/BSTReducedStEph.rs:866:27
+    |
+866 |             decreases old(*link),
+    |                       --- ^^^^^ expected `&mut _`, found `Option<Box<Node<K, V, R>>>`
+    |                       |
+    |                       arguments to this function are incorrect
+    |
+    = note: expected mutable reference `&mut _`
+                            found enum `std::option::Option<std::boxed::Box<Chap40::BSTReducedStEph::BSTReducedStEph::Node<K, V, R>>>`
+note: function defined here
+   --> builtin/src/lib.rs:292:7
+help: consider removing deref here
+    |
+866 -             decreases old(*link),
+866 +             decreases old(link),
+    |
+
+error: aborting due to 6 previous errors
+
+For more information about this error, try `rustc --explain E0308`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 203MB, peak z3 RSS: 0MB, min free: 18994MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

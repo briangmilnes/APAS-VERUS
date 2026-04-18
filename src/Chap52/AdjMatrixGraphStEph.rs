@@ -418,6 +418,9 @@ broadcast use {
             let old_val = *self.matrix.nth(u).nth(v);
             let ghost old_num_edges = self.num_edges;
             let ghost old_row_count = |r: int| spec_count_true(|c: int| self.spec_edge(r, c), self.spec_n() as int);
+            // Pre-capture matrix ref before closures: new-mut-ref loses spec_index access
+            // through mut_ref_current, but pre-mutation shared refs preserve it.
+            let orig_matrix = &self.matrix;
             let new_row = ArraySeqStEphS::tabulate(
                 &|j: usize| -> (r: bool)
                     requires j < n
@@ -425,13 +428,13 @@ broadcast use {
                         r == (if j == v {
                             exists
                         } else {
-                            self.matrix.spec_index(u as int).spec_index(j as int)
+                            orig_matrix.spec_index(u as int).spec_index(j as int)
                         })
                 {
                     if j == v {
                         exists
                     } else {
-                        *self.matrix.nth(u).nth(j)
+                        *orig_matrix.nth(u).nth(j)
                     }
                 },
                 n,
@@ -445,15 +448,15 @@ broadcast use {
                             #[trigger] r.spec_index(j) == (if j == v as int {
                                 exists
                             } else {
-                                self.matrix.spec_index(u as int).spec_index(j)
+                                orig_matrix.spec_index(u as int).spec_index(j)
                             }),
                         (i as int != u as int) ==> forall|j: int| 0 <= j < n ==>
-                            #[trigger] r.spec_index(j) == self.matrix.spec_index(i as int).spec_index(j)
+                            #[trigger] r.spec_index(j) == orig_matrix.spec_index(i as int).spec_index(j)
                 {
                     if i == u {
                         new_row.clone()
                     } else {
-                        let row = self.matrix.nth(i);
+                        let row = orig_matrix.nth(i);
                         ArraySeqStEphS::tabulate(
                             &|j: usize| -> (r: bool)
                                 requires j < n

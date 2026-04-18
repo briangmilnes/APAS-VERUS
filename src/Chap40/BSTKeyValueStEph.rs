@@ -314,7 +314,7 @@ pub mod BSTKeyValueStEph {
                 spec_content_link(link) == spec_content_link(old(link)).insert(key, value),
                 spec_ordered_link(link),
                 spec_node_count_link(link) == spec_node_count_link(old(link)) + if inserted { 1nat } else { 0nat },
-            decreases old(link);
+            decreases *old(link);
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn delete_link(link: &mut Link<K, V>, key: &K) -> (deleted: bool)
             requires spec_ordered_link(old(link)),
@@ -649,7 +649,7 @@ pub mod BSTKeyValueStEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn insert_link(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> (inserted: bool)
-            decreases old(link),
+            decreases *old(link),
         {
             // Veracity: NEEDED proof block
             proof { reveal_with_fuel(spec_ordered_link, 2); }

@@ -927,6 +927,10 @@ pub mod BSTParaMtEph {
                             // Size bound: lr ⊂ left, so lr@.len() <= left@.len(), and
                             // left@.len() + right@.len() + 1 == tree@.len() <= usize::MAX.
                             // Ordering for join_mid: lr ⊂ left, left < root_key.
+                            // Under new-mut-ref, Z3 needs explicit instantiation of the
+                            // expose_internal ensures for the right subtree ordering.
+                            assert(forall|t: T| #[trigger] right@.contains(t@)
+                                ==> t.cmp_spec(&root_key) == Greater);
                         }
                         let rebuilt = ParamBST::<T>::join_mid(Exposed::Node(lr, root_key, right));
                         let ghost llv = ll@;
@@ -961,6 +965,10 @@ pub mod BSTParaMtEph {
                             vstd::set_lib::lemma_len_subset(rl@, rv);
                             // Size bound for join_mid.
                             // Ordering for join_mid: rl ⊂ right, right > root_key.
+                            // Under new-mut-ref, Z3 needs explicit instantiation of the
+                            // expose_internal ensures for the left subtree ordering.
+                            assert(forall|t: T| #[trigger] left@.contains(t@)
+                                ==> t.cmp_spec(&root_key) == Less);
                         }
                         let rebuilt = ParamBST::<T>::join_mid(Exposed::Node(left, root_key, rl));
                         let ghost rlv = rl@;

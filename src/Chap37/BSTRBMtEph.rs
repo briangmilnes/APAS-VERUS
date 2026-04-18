@@ -710,7 +710,7 @@ pub mod BSTRBMtEph {
     // Veracity: NEEDED proof block
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn insert_link(&mut self, value: T)
-        decreases old(self),
+        decreases *old(self),
     {
         let cur = self.take();
         match cur {
@@ -747,7 +747,7 @@ pub mod BSTRBMtEph {
                                 }
                             };
                             // Veracity: NEEDED assert
-                            assert forall|x: T| link_contains(*old(self), x) implies
+                            assert forall|x: T| #[trigger] link_contains(*old(self), x) implies
                                 (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
                             by {
                                 reveal_with_fuel(link_contains, 2);
@@ -804,7 +804,7 @@ pub mod BSTRBMtEph {
                             };
                             // Veracity: NEEDED proof block
                             // Veracity: NEEDED assert
-                            assert forall|x: T| link_contains(*old(self), x) implies
+                            assert forall|x: T| #[trigger] link_contains(*old(self), x) implies
                                 (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
                             by {
                                 reveal_with_fuel(link_contains, 2);

@@ -1,0 +1,203 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+error: function body check: Resource limit (rlimit) exceeded
+   --> src/Chap65/UnionFindArrayStEph.rs:402:9
+    |
+402 |         fn union(&mut self, x: usize, y: usize) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Analyzing prover log for (profile rerun) lib::Chap65::UnionFindArrayStEph::UnionFindArrayStEph::UnionFindArray::union ...
+
+Z3 4.12.5
+note: Log analysis complete for (profile rerun) lib::Chap65::UnionFindArrayStEph::UnionFindArrayStEph::UnionFindArray::union
+
+note: Profile statistics for lib::Chap65::UnionFindArrayStEph::UnionFindArrayStEph::UnionFindArray::union
+
+note: Observed 400,116 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 239821859275 (Instantiated 43,103 times - 10% of the total, cost 5563925) top 1 of 29 user-level quantifiers.
+      
+  --> src/Chap65/UnionFindArrayStEph.rs:76:13
+   |
+75 | /         forall|i: int| 0 <= i < uf.n as int && uf.parent[i] != i ==>
+76 | |             #[trigger] uf.rank[i] < uf.rank[uf.parent[i] as int]
+   | |_____________^^^^^^^^^^^^^^^^^^^^^______________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 19302801232 (Instantiated 6,682 times - 1% of the total, cost 2888776) top 2 of 29 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindArrayStEph.rs:483:83
+    |
+483 |                     assert forall|i: int| 0 <= i < n as int && pn[i] != i implies #[trigger] rn[i] < rn[pn[i] as int]
+    |                     ------ Triggers selected for this quantifier                  ^^^^^^^^^^^^^^^^
+
+note: Cost * Instantiations: 14546336500 (Instantiated 119,950 times - 29% of the total, cost 121270) top 3 of 29 user-level quantifiers.
+      
+ --> vstd/seq.rs:294:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 13671880008 (Instantiated 5,358 times - 1% of the total, cost 2551676) top 4 of 29 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindArrayStEph.rs:444:83
+    |
+444 |                     assert forall|i: int| 0 <= i < n as int && pn[i] != i implies #[trigger] rn[i] < rn[pn[i] as int]
+    |                     ------ Triggers selected for this quantifier                  ^^^^^^^^^^^^^^^^
+
+note: Cost * Instantiations: 1198469536 (Instantiated 34,544 times - 8% of the total, cost 34694) top 5 of 29 user-level quantifiers.
+      
+  --> src/Chap65/UnionFindArrayStEph.rs:71:53
+   |
+71 |         &&& forall|i: int| 0 <= i < uf.n as int ==> #[trigger] uf.rank[i] >= 0
+   |             ----------------------------------------^^^^^^^^^^^^^^^^^^^^^----- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1187284849 (Instantiated 34,457 times - 8% of the total, cost 34457) top 6 of 29 user-level quantifiers.
+      
+  --> src/Chap65/UnionFindArrayStEph.rs:80:49
+   |
+80 |         forall|i: int| 0 <= i < uf.n as int ==> #[trigger] uf.rank[i] < uf.n as int
+   |         ----------------------------------------^^^^^^^^^^^^^^^^^^^^^-------------- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1005675780 (Instantiated 30,405 times - 7% of the total, cost 33076) top 7 of 29 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindArrayStEph.rs:101:69
+    |
+100 | /         forall|r: int| 0 <= r < uf.n as int && uf.parent[r] == r ==>
+101 | |             spec_count_with_root(uf.parent, uf.rank, uf.n, r, 0) >= #[trigger] uf.rank[r] + 1
+    | |_____________________________________________________________________^^^^^^^^^^^^^^^^^^^^^___- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1002658536 (Instantiated 31,548 times - 7% of the total, cost 31782) top 8 of 29 user-level quantifiers.
+      
+ --> vstd/seq.rs:357:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 588967344 (Instantiated 13,368 times - 3% of the total, cost 44058) top 9 of 29 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindArrayStEph.rs:417:83
+    |
+417 |                     assert forall|i: int| 0 <= i < n as int && pn[i] != i implies #[trigger] rn[i] < rn[pn[i] as int]
+    |                     ------ Triggers selected for this quantifier                  ^^^^^^^^^^^^^^^^
+
+note: Cost * Instantiations: 353667991 (Instantiated 13,201 times - 3% of the total, cost 26791) top 10 of 29 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindArrayStEph.rs:421:66
+    |
+420 |                     assert forall|r: int| 0 <= r < n as int && pn[r] == r implies
+    |                     ------ Triggers selected for this quantifier
+421 |                         spec_count_with_root(pn, rn, n, r, 0) >= #[trigger] rn[r] + 1
+    |                                                                  ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:750:29
+    |
+750 | ...                   assert forall|x: T| link_contains(*old(self), x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap37/BSTRBMtEph.rs:751:51
+    |
+751 | ...                   (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap37/BSTRBMtEph.rs:751:81
+    |
+751 | ...                   (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
+    |                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:807:29
+    |
+807 | ...                   assert forall|x: T| link_contains(*old(self), x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap37/BSTRBMtEph.rs:808:51
+    |
+808 | ...                   (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap37/BSTRBMtEph.rs:808:81
+    |
+808 | ...                   (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
+    |                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap37/BSTSplayMtEph.rs:1234:29
+     |
+1234 | ...                   assert forall|x: T| link_contains(*old(link), x) implies
+     |                       ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap37/BSTSplayMtEph.rs:1235:51
+     |
+1235 | ...                   (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
+     |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap37/BSTSplayMtEph.rs:1235:81
+     |
+1235 | ...                   (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
+     |                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap37/BSTSplayMtEph.rs:1240:29
+     |
+1240 | ...                   assert forall|x: T| (node_key == x || link_contains(old_left, x) || link_contains(old_right, x)) implies
+     |                       ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap37/BSTSplayMtEph.rs:1240:67
+     |
+1240 | ...                   assert forall|x: T| (node_key == x || link_contains(old_left, x) || link_contains(old_right, x)) implies
+     |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap37/BSTSplayMtEph.rs:1240:97
+     |
+1240 | ...                   assert forall|x: T| (node_key == x || link_contains(old_left, x) || link_contains(old_right, x)) implies
+     |                                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap37/BSTSplayMtEph.rs:1285:29
+     |
+1285 | ...                   assert forall|x: T| link_contains(*old(link), x) implies
+     |                       ^^^^^^
+
+note:   trigger 1 of 2:
+    --> src/Chap37/BSTSplayMtEph.rs:1286:51
+     |
+1286 | ...                   (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
+     |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+    --> src/Chap37/BSTSplayMtEph.rs:1286:81
+     |
+1286 | ...                   (node_key == x || link_contains(old_left, x) || link_contains(old_right, x))
+     |                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+    --> src/Chap37/BSTSplayMtEph.rs:1285:29
+     |
+1285 | ...                   assert forall|x: T| link_contains(*old(link), x) implies
+     |                       ^^^^^^
+
+verification results:: 2643 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 231s
+Sampled Memory Usage: peak rust_verify RSS: 5626MB, peak z3 RSS: 6904MB, min free: 5868MB
+Sampled CPU Usage: rust_verify: 72s, z3 children: 306s

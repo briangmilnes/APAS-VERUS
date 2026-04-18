@@ -453,11 +453,22 @@ pub mod VecChainedHashTableStEph {
 
                     // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
+                    // Under new-mut-ref: assert new bucket's map explicitly so
+                    // Z3 can use it for both j == index and j != index cases.
+                    assert(table.table@[index as int].spec_entry_to_map()
+                        =~= spec_seq_pairs_to_map(original).remove(*key));
                     assert forall |j: int, k: Key| 0 <= j < table.table@.len()
                         && j != (table.spec_hash@)(k) as int % table.current_size as int
                         implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
                         if j == index as int {
+                            // table.table@[index] == new_bucket.
+                            // index != hash(k) % size (from hypothesis), so old WF gives
+                            // k ∉ old_table[index].spec_entry_to_map().dom().
+                            // new_bucket's map ⊆ old_table[index]'s map, so k still absent.
+                            assert(!old_table[index as int].spec_entry_to_map().dom().contains(k));
                         } else {
+                            // table.table@[j] == old_table[j] for j != index.
+                            assert(table.table@[j] == old_table[j]);
                         }
                     }
 

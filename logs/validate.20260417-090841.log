@@ -1,0 +1,15 @@
+Mode: isolate
+Isolate: including Chap36 Chap19 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap36/QuickSortStEph.rs:662:21
+    |
+662 | /                     forall|j: int| 0 <= j < right@.len() ==>
+663 | |                         (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+    | |__________________________________________________________________________________^
+
+verification results:: 945 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 793MB, peak z3 RSS: 294MB, min free: 16443MB
+Sampled CPU Usage: rust_verify: 9s, z3 children: 7s

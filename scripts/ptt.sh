@@ -37,6 +37,7 @@ echo "Starting PTT at $(date '+%H:%M:%S')"
     --compile --crate-type=lib --crate-name apas_verus src/lib.rs \
     -o "$RLIB_PATH" \
     --export "$VIR_PATH" \
+    --num-threads 8 \
     2>&1 | sed 's/\x1b\[[0-9;]*[mGKHABCDEFJST]//g'
 
 cd "$PROJECT_ROOT/rust_verify_test"

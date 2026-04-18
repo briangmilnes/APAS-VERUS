@@ -1224,7 +1224,7 @@ pub mod BSTSplayStEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — standard BST insert path.
     fn bst_insert(link: &mut Link<T>, value: T) -> (inserted: bool)
         // Veracity: NEEDED proof block
-        decreases old(link),
+        decreases *old(link),
     {
         let cur = link.take();
         match cur {

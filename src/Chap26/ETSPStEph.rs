@@ -337,7 +337,17 @@ pub mod ETSPStEph {
             tour.push(Edge { from: points[2], to: points[0] });
             // Veracity: NEEDED proof block (speed hint)
             proof {
-                reveal(spec_next_edge_from);
+                // Under new-mut-ref, reconstruct tour@ after 3 pushes.
+                assert(tour@[0] == (Edge { from: points[0], to: points[1] }));
+                assert(tour@[1] == (Edge { from: points[1], to: points[2] }));
+                assert(tour@[2] == (Edge { from: points[2], to: points[0] }));
+                // Use targeted lemma rather than reveal to avoid matching loop.
+                lemma_next_edge_from_eq(tour@, 0);
+                lemma_next_edge_from_eq(tour@, 1);
+                lemma_next_edge_from_eq(tour@, 2);
+                assert(spec_point_eq(tour@[0].to, spec_next_edge_from(tour@, 0)));
+                assert(spec_point_eq(tour@[1].to, spec_next_edge_from(tour@, 1)));
+                assert(spec_point_eq(tour@[2].to, spec_next_edge_from(tour@, 2)));
                 // Conjunction flakiness fix: assert each conjunct then the whole.
                 let c1 = tour@.len() == points@.len();
                 let c2 = spec_sources_valid(tour@, points@);

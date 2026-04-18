@@ -575,8 +575,10 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- base insert O(n) + recalculate O(n)
         fn insert<G: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: G)
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             self.base_table.insert(k, v, combine);
-            self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
+            self.cached_reduction = calculate_reduction(&self.base_table, reducer, identity);
             // Veracity: NEEDED proof block
             proof { lemma_aug_view(self); }
         }
@@ -585,8 +587,10 @@ broadcast use {
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             ensures self@.dom().finite()
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             let updated = self.base_table.delete(k);
-            self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
+            self.cached_reduction = calculate_reduction(&self.base_table, reducer, identity);
             // Veracity: NEEDED proof block
             proof { lemma_aug_view(self); }
             updated
@@ -662,8 +666,10 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base intersection + recalculate O(n)
         fn intersection<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             self.base_table.intersection(&other.base_table, f);
-            self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
+            self.cached_reduction = calculate_reduction(&self.base_table, reducer, identity);
             // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
@@ -671,8 +677,10 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base union + recalculate O(n)
         fn union<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             self.base_table.union(&other.base_table, f);
-            self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
+            self.cached_reduction = calculate_reduction(&self.base_table, reducer, identity);
             // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
@@ -680,8 +688,10 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base difference + recalculate O(n)
         fn difference(&mut self, other: &Self)
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             self.base_table.difference(&other.base_table);
-            self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
+            self.cached_reduction = calculate_reduction(&self.base_table, reducer, identity);
             // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
@@ -689,8 +699,10 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base restrict + recalculate O(n)
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             self.base_table.restrict(keys);
-            self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
+            self.cached_reduction = calculate_reduction(&self.base_table, reducer, identity);
             // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
@@ -698,8 +710,10 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base subtract + recalculate O(n)
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             self.base_table.subtract(keys);
-            self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
+            self.cached_reduction = calculate_reduction(&self.base_table, reducer, identity);
             // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
         }
@@ -779,10 +793,12 @@ broadcast use {
                 split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],
                 split.1 matches None ==> !old(self)@.contains_key(k@),
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             let (left_base, found_value, right_base) = self.base_table.split_key(k);
 
-            let left_reduction = calculate_reduction(&left_base, &self.reducer, &self.identity);
-            let right_reduction = calculate_reduction(&right_base, &self.reducer, &self.identity);
+            let left_reduction = calculate_reduction(&left_base, reducer, identity);
+            let right_reduction = calculate_reduction(&right_base, reducer, identity);
 
             let left = Self {
                 base_table: left_base,
@@ -810,6 +826,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to base join_key (union)
         fn join_key(&mut self, other: Self)
         {
+            let reducer = &self.reducer;
             let self_size = self.base_table.size();
             let other_size = other.base_table.size();
             let old_reduction = self.cached_reduction.clone();
@@ -822,7 +839,7 @@ broadcast use {
             } else if other_size == 0 {
                 self.cached_reduction = old_reduction;
             } else {
-                self.cached_reduction = (self.reducer)(&old_reduction, &other_reduction);
+                self.cached_reduction = (reducer)(&old_reduction, &other_reduction);
             }
             // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
@@ -888,10 +905,12 @@ broadcast use {
                 split.0@.dom().subset_of(old(self)@.dom()),
                 split.1@.dom().subset_of(old(self)@.dom()),
         {
+            let reducer = &self.reducer;
+            let identity = &self.identity;
             let (left_base, right_base) = self.base_table.split_rank_key(i);
 
-            let left_reduction = calculate_reduction(&left_base, &self.reducer, &self.identity);
-            let right_reduction = calculate_reduction(&right_base, &self.reducer, &self.identity);
+            let left_reduction = calculate_reduction(&left_base, reducer, identity);
+            let right_reduction = calculate_reduction(&right_base, reducer, identity);
 
             let left = Self {
                 base_table: left_base,

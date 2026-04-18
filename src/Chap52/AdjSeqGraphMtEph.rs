@@ -383,6 +383,20 @@ broadcast use {
 // Veracity: UNNEEDED assert                 assert(new_degree_fn(v as int) == new_deg as nat);
                 lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, v as int);
             }
+            // Force WF conjunction under new-mut-ref: the adj forall is forgotten after the
+            // num_edges mutation, so re-establish it before asserting the WF predicate.
+            proof {
+                assert forall|u: int, j: int|
+                    0 <= u < self.adj.spec_len()
+                    && 0 <= j < self.adj.spec_index(u).spec_len()
+                implies #[trigger] self.adj.spec_index(u).spec_index(j) < self.adj.spec_len()
+                by {
+                    if u != v as int {
+                        assert(self.adj.spec_index(u) == old(self).adj.spec_index(u));
+                    }
+                };
+                assert(self.spec_adjseqgraphmteph_wf());
+            }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d_g(u)), Span O(d_g(u)) ephemeral improvement
@@ -534,6 +548,20 @@ broadcast use {
                     assert(new_degree_fn(u as int) == new_len as nat);
                     lemma_sum_of_change_one(n as int, old_degree_fn, new_degree_fn, u as int);
                 }
+            }
+            // Force WF conjunction under new-mut-ref: the adj forall is forgotten after
+            // the num_edges mutation, so re-establish it before asserting the WF predicate.
+            proof {
+                assert forall|u2: int, j2: int|
+                    0 <= u2 < self.adj.spec_len()
+                    && 0 <= j2 < self.adj.spec_index(u2).spec_len()
+                implies #[trigger] self.adj.spec_index(u2).spec_index(j2) < self.adj.spec_len()
+                by {
+                    if u2 != u as int {
+                        assert(self.adj.spec_index(u2) == old(self).adj.spec_index(u2));
+                    }
+                };
+                assert(self.spec_adjseqgraphmteph_wf());
             }
         }
     }

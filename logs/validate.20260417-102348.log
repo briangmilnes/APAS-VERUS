@@ -1,0 +1,42 @@
+Mode: isolate
+Isolate: including Chap36 Chap19 Chap02
+error: assertion failed
+   --> src/Chap36/QuickSortStEph.rs:592:33
+    |
+592 | ...                   (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+pivot.le(right.view().index(j)) ✔
+!(right.view().index(j) == pivot) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: assertion failed
+   --> src/Chap36/QuickSortStEph.rs:716:33
+    |
+716 | ...                   (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+pivot.le(right.view().index(j)) ✔
+!(right.view().index(j) == pivot) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+verification results:: 944 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 11521MB, peak z3 RSS: 4812MB, min free: 1154MB
+Sampled CPU Usage: rust_verify: 306s, z3 children: 189s

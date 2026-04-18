@@ -344,7 +344,7 @@ pub mod BSTSizeStEph {
                 Lnk::spec_size_link(link) >= Lnk::spec_size_link(old(link)),
                 Lnk::spec_content_link(link) == Lnk::spec_content_link(old(link)).insert(value),
                 Lnk::spec_ordered_link(link),
-            decreases old(link);
+            decreases *old(link);
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn delete_link(link: &mut Link<T>, key: &T) -> (deleted: bool)
             requires
@@ -715,7 +715,7 @@ pub mod BSTSizeStEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn insert_link(link: &mut Link<T>, value: T, priority: u64)
-            decreases old(link),
+            decreases *old(link),
         {
             // Veracity: NEEDED proof block
             proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }

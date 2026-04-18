@@ -72,8 +72,9 @@ pub mod UnionFindArrayStEph {
     }
 
     pub open spec fn spec_rank_invariant(uf: UnionFindArrayView) -> bool {
-        forall|i: int| 0 <= i < uf.n as int && uf.parent[i] != i ==>
-            #[trigger] uf.rank[i] < uf.rank[uf.parent[i] as int]
+        forall|i: int| #![trigger uf.parent[i], uf.rank[i]]
+            0 <= i < uf.n as int && uf.parent[i] != i ==>
+            uf.rank[i] < uf.rank[uf.parent[i] as int]
     }
 
     pub open spec fn spec_rank_bounded(uf: UnionFindArrayView) -> bool {

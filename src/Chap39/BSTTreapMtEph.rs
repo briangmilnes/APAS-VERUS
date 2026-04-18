@@ -294,7 +294,7 @@ pub mod BSTTreapMtEph {
 // Veracity: UNNEEDED proof block             forall|k: T| spec_contains_link(old(link), k) ==> spec_contains_link(link, k),
             forall|k: T| spec_contains_link(link, k) ==> (spec_contains_link(old(link), k) || k == value),
             Lnk::spec_bst_link(old(link)) ==> Lnk::spec_bst_link(link),
-        decreases old(link),
+        decreases *old(link),
     {
         // Veracity: NEEDED proof block
         // Veracity: NEEDED proof block

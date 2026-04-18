@@ -138,10 +138,11 @@ CLK_TCK=$(getconf CLK_TCK)
 MONITOR_PID=$!
 
 # Limit parallelism to 8 threads (default is num_cpus-1, can lock machine)
-# Extra Verus flags via VERUS_EXTRA_ARGS env var (e.g. VERUS_EXTRA_ARGS="-V new-mut-ref")
+# Extra Verus flags via VERUS_EXTRA_ARGS env var
 VERUS_EXTRA_ARGS="${VERUS_EXTRA_ARGS:-}"
-timeout 300 "$VERUS" --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors \
+timeout 600 "$VERUS" --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors \
     --num-threads 8 \
+    -V new-mut-ref \
     "${CFG_FLAG[@]}" "${TIME_FLAG[@]}" "${PROFILE_FLAG[@]}" $VERUS_EXTRA_ARGS 2>&1 | sed 's/\x1b\[[0-9;]*m//g' | tee -a "$LOGFILE"
 RC=${PIPESTATUS[0]}
 
