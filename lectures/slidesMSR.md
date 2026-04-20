@@ -372,7 +372,9 @@
 
 - Closures took a good bit of work.
 - Applying them in map/reduce and so on took a while.
-- Rust has FnOnce < FnMut < Fn, but no FPure.
+- Rust has FnOnce < FnMut < Fn, but no real FPure.
+- You can const fn and the compiler will check it but then you can't say:
+```fn map(const fn F)```
 - Verus Ghost functions allows good validation but purity would be simpler.
 
 # AutoCLRS

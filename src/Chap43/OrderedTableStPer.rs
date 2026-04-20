@@ -98,10 +98,10 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (table: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                 view_ord_consistent::<Pair<K, V>>(),
                 spec_pair_key_determines_order::<K, V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 view_ord_consistent::<K>(),
             ensures table@ == Map::<K::V, V::V>::empty(), table.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
@@ -109,10 +109,10 @@ broadcast use {
         fn singleton(k: K, v: V) -> (table: Self)
             requires
                 obeys_feq_clone::<Pair<K, V>>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                 view_ord_consistent::<Pair<K, V>>(),
                 spec_pair_key_determines_order::<K, V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 view_ord_consistent::<K>(),
             ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table.spec_orderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
@@ -180,10 +180,10 @@ broadcast use {
                 forall|k: &K| f.requires((k,)),
                 obeys_feq_full::<K>(),
                 keys@.len() < usize::MAX,
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                 view_ord_consistent::<Pair<K, V>>(),
                 spec_pair_key_determines_order::<K, V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 view_ord_consistent::<K>(),
             ensures
                 table@.dom() =~= keys@,
@@ -644,7 +644,7 @@ broadcast use {
                     forall|v: &V| f.requires((v,)),
                     obeys_feq_clone::<Pair<K, V>>(),
                     new_tree.spec_bstparasteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                     view_ord_consistent::<Pair<K, V>>(),
                     sorted@.len() == self.tree.inner@.len(),
                     forall|v: (K::V, V::V)| self.tree.inner@.contains(v) <==> #[trigger] sorted@.contains(v),
@@ -874,7 +874,7 @@ broadcast use {
                     forall|j: int| #![trigger sorted@[j]] 0 <= j < i as int && keys@.contains(sorted@[j].0) ==> new_tree@.contains(sorted@[j]),
                     0 <= i <= len,
                     new_tree.spec_bstparasteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                     // Veracity: NEEDED proof block
                     view_ord_consistent::<Pair<K, V>>(),
                     new_tree@.len() <= i as nat,
@@ -991,7 +991,7 @@ broadcast use {
                     // Veracity: NEEDED proof block
                     0 <= i <= len,
                     new_tree.spec_bstparasteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                     view_ord_consistent::<Pair<K, V>>(),
                     new_tree@.len() <= i as nat,
                     new_tree@.len() < usize::MAX as nat,
@@ -1255,10 +1255,10 @@ broadcast use {
             entries.spec_avltreeseqstper_wf(),
             obeys_feq_clone::<Pair<K, V>>(),
             obeys_feq_full::<Pair<K, V>>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
             view_ord_consistent::<Pair<K, V>>(),
             spec_pair_key_determines_order::<K, V>(),
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            vstd::laws_cmp::obeys_cmp::<K>(),
             view_ord_consistent::<K>(),
             obeys_feq_fulls::<K, V>(),
             entries@.len() < usize::MAX as nat,
@@ -1290,7 +1290,7 @@ broadcast use {
                 entries@.len() < usize::MAX as nat,
                 entries.spec_avltreeseqstper_wf(),
                 tree.spec_bstparasteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                 view_ord_consistent::<Pair<K, V>>(),
                 tree@.len() <= i as nat,
                 tree@.len() < usize::MAX as nat,

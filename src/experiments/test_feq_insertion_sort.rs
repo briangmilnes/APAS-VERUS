@@ -8,7 +8,7 @@
 pub mod test_feq_insertion_sort {
     use vstd::prelude::*;
     use vstd::std_specs::cmp::OrdSpec;
-    use vstd::laws_cmp::obeys_cmp_spec;
+    use vstd::laws_cmp::obeys_cmp;
     use core::cmp::Ordering;
 
     verus! {
@@ -19,7 +19,7 @@ pub mod test_feq_insertion_sort {
     }
 
     pub fn is_sorted<T: Ord + Clone + Sized>(v: &Vec<T>) -> (sorted: bool)
-        requires obeys_cmp_spec::<T>()
+        requires obeys_cmp::<T>()
         ensures sorted <==> sorted_spec(v@)
     {
         if v.len() <= 1 {
@@ -30,7 +30,7 @@ pub mod test_feq_insertion_sort {
         loop
             invariant
                 0 <= i < v.len(),
-                obeys_cmp_spec::<T>(),
+                obeys_cmp::<T>(),
                 forall|a: int, b: int| 0 <= a < b <= i as int ==> v@[a].cmp_spec(&v@[b]) != Ordering::Greater,
             decreases v.len() - i,
         {
@@ -54,7 +54,7 @@ pub mod test_feq_insertion_sort {
     // While-loop form - natural but struggles in Verus
     pub fn insertion_sort_while<T: Ord + Copy + Sized>(a: &mut Vec<T>)
         requires
-            obeys_cmp_spec::<T>(),
+            obeys_cmp::<T>(),
             old(a).len() < usize::MAX,
         ensures
             a.len() == old(a).len(),
@@ -68,7 +68,7 @@ pub mod test_feq_insertion_sort {
             invariant
                 a.len() == old(a).len(),
                 0 < up <= a.len(),
-                obeys_cmp_spec::<T>(),
+                obeys_cmp::<T>(),
                 forall|i: int, j: int| 0 <= i < j < up as int ==> a@[i].cmp_spec(&a@[j]) != Ordering::Greater,
             decreases a.len() - up,
         {
@@ -78,7 +78,7 @@ pub mod test_feq_insertion_sort {
                     a.len() == old(a).len(),
                     0 <= down <= up,
                     up < a.len(),
-                    obeys_cmp_spec::<T>(),
+                    obeys_cmp::<T>(),
                 decreases down,
             {
                 if down == 0 {
@@ -113,7 +113,7 @@ pub mod test_feq_insertion_sort {
     // Loop-loop form - our workaround pattern
     pub fn insertion_sort_loop<T: Ord + Copy + Sized>(a: &mut Vec<T>)
         requires
-            obeys_cmp_spec::<T>(),
+            obeys_cmp::<T>(),
             old(a).len() < usize::MAX,
         ensures
             a.len() == old(a).len(),
@@ -130,7 +130,7 @@ pub mod test_feq_insertion_sort {
             invariant
                 a.len() == old_len,
                 0 < up <= a.len(),
-                obeys_cmp_spec::<T>(),
+                obeys_cmp::<T>(),
                 forall|i: int, j: int| 0 <= i < j < up as int ==> a@[i].cmp_spec(&a@[j]) != Ordering::Greater,
             decreases a.len() - up,
         {
@@ -146,7 +146,7 @@ pub mod test_feq_insertion_sort {
                     a.len() == old_len,
                     0 <= down <= up,
                     up < a.len(),
-                    obeys_cmp_spec::<T>(),
+                    obeys_cmp::<T>(),
                 decreases down,
             {
                 if down == 0 {
@@ -181,7 +181,7 @@ pub mod test_feq_insertion_sort {
 
     pub fn test_insertion_sort_while<T: Ord + Copy + Sized>(v: Vec<T>) -> (sorted_v: Vec<T>)
         requires
-            obeys_cmp_spec::<T>(),
+            obeys_cmp::<T>(),
             v.len() < usize::MAX,
         ensures
             sorted_v.len() == v.len(),
@@ -194,7 +194,7 @@ pub mod test_feq_insertion_sort {
 
     pub fn test_insertion_sort_loop<T: Ord + Copy + Sized>(v: Vec<T>) -> (sorted_v: Vec<T>)
         requires
-            obeys_cmp_spec::<T>(),
+            obeys_cmp::<T>(),
             v.len() < usize::MAX,
         ensures
             sorted_v.len() == v.len(),

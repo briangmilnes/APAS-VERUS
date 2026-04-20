@@ -89,11 +89,11 @@ pub mod PQMinStPer {
                 vertex_universe.contains(source@),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
                 forall|v: &V, p: P| #[trigger] priority_fn.ensures((v,), p) ==> p@ == spec_priority(v@),
-                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                vstd::laws_cmp::obeys_cmp::<V>(),
                 view_ord_consistent::<V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<Pair<P, V>, V>>(),
                 view_ord_consistent::<Pair<Pair<P, V>, V>>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, P>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<V, P>>(),
                 view_ord_consistent::<Pair<V, P>>(),
             ensures
                 spec_pqminstper_wf_generic(&search),
@@ -115,11 +115,11 @@ pub mod PQMinStPer {
                 sources@.subset_of(vertex_universe),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
                 forall|v: &V, p: P| #[trigger] priority_fn.ensures((v,), p) ==> p@ == spec_priority(v@),
-                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                vstd::laws_cmp::obeys_cmp::<V>(),
                 view_ord_consistent::<V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<Pair<P, V>, V>>(),
                 view_ord_consistent::<Pair<Pair<P, V>, V>>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, P>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<V, P>>(),
                 view_ord_consistent::<Pair<V, P>>(),
             ensures
                 spec_pqminstper_wf_generic(&search),
@@ -163,11 +163,11 @@ pub mod PQMinStPer {
             vertex_universe.contains(source@),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
             forall|v: &V, p: P| #[trigger] priority_fn.ensures((v,), p) ==> p@ == spec_priority(v@),
-            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            vstd::laws_cmp::obeys_cmp::<V>(),
             view_ord_consistent::<V>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+            vstd::laws_cmp::obeys_cmp::<Pair<Pair<P, V>, V>>(),
             view_ord_consistent::<Pair<Pair<P, V>, V>>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<V, P>>(),
+            vstd::laws_cmp::obeys_cmp::<Pair<V, P>>(),
             view_ord_consistent::<Pair<V, P>>(),
         ensures
             spec_pqminstper_wf_generic(&search),
@@ -236,11 +236,11 @@ pub mod PQMinStPer {
             forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                 #[trigger] frontier_init@.contains(e) ==> e.0 == (spec_priority(e.1), e.1),
             // Comparison axioms for AVLTreeSetStPer operations.
-            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            vstd::laws_cmp::obeys_cmp::<V>(),
             view_ord_consistent::<V>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+            vstd::laws_cmp::obeys_cmp::<Pair<Pair<P, V>, V>>(),
             view_ord_consistent::<Pair<Pair<P, V>, V>>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<V, P>>(),
+            vstd::laws_cmp::obeys_cmp::<Pair<V, P>>(),
             view_ord_consistent::<Pair<V, P>>(),
         ensures
             explored.0.spec_avltreesetstper_wf(),
@@ -270,11 +270,11 @@ pub mod PQMinStPer {
                 forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                     #[trigger] frontier@.contains(e) ==> e.0 == (spec_priority(e.1), e.1),
                 // Comparison axioms.
-                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                vstd::laws_cmp::obeys_cmp::<V>(),
                 view_ord_consistent::<V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<Pair<P, V>, V>>(),
                 view_ord_consistent::<Pair<Pair<P, V>, V>>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, P>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<V, P>>(),
                 view_ord_consistent::<Pair<V, P>>(),
         {
             // Veracity: NEEDED proof block
@@ -337,9 +337,9 @@ pub mod PQMinStPer {
                     forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                         #[trigger] frontier_updated@.contains(e) ==> e.0 == (spec_priority(e.1), e.1),
                     // Comparison axioms.
-                    vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                    vstd::laws_cmp::obeys_cmp::<V>(),
                     view_ord_consistent::<V>(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<Pair<P, V>, V>>(),
                     view_ord_consistent::<Pair<Pair<P, V>, V>>(),
                 decreases nlen - i,
             {
@@ -409,7 +409,7 @@ pub mod PQMinStPer {
                 priorities.spec_avltreesetstper_wf(),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 priorities@.len() <= j as nat,
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, P>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<V, P>>(),
                 // Veracity: NEEDED proof block
                 view_ord_consistent::<Pair<V, P>>(),
             decreases vlen - j,
@@ -453,11 +453,11 @@ pub mod PQMinStPer {
             sources@.subset_of(vertex_universe),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
             forall|v: &V, p: P| #[trigger] priority_fn.ensures((v,), p) ==> p@ == spec_priority(v@),
-            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            vstd::laws_cmp::obeys_cmp::<V>(),
             view_ord_consistent::<V>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+            vstd::laws_cmp::obeys_cmp::<Pair<Pair<P, V>, V>>(),
             view_ord_consistent::<Pair<Pair<P, V>, V>>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<V, P>>(),
+            vstd::laws_cmp::obeys_cmp::<Pair<V, P>>(),
             view_ord_consistent::<Pair<V, P>>(),
         ensures
             spec_pqminstper_wf_generic(&search),
@@ -497,7 +497,7 @@ pub mod PQMinStPer {
                 forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                     #[trigger] initial_frontier@.contains(e) ==> e.0 == (spec_priority(e.1), e.1),
                 // Comparison axioms.
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<Pair<P, V>, V>>(),
                 view_ord_consistent::<Pair<Pair<P, V>, V>>(),
             decreases slen - i,
         // Veracity: NEEDED proof block

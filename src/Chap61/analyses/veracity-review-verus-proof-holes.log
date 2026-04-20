@@ -21,12 +21,12 @@ Table of Contents:
 =================================================================
 
 ℹ EdgeContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap61/EdgeContractionMtEph.rs:99: info: structural_false_positive OPAQUE_EXTERNAL edge_contract_mt — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:100: info: structural_false_positive OPAQUE_EXTERNAL edge_contract_mt — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
 ✓ EdgeContractionStEph.rs
 ℹ VertexMatchingMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap61/VertexMatchingMtEph.rs:147: info: structural_false_positive OPAQUE_EXTERNAL select_edges_parallel — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap61/VertexMatchingMtEph.rs:180: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:148: info: structural_false_positive OPAQUE_EXTERNAL select_edges_parallel — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:181: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
    Info: 2 × structural_false_positive
 ✓ VertexMatchingStEph.rs
 
@@ -86,8 +86,8 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 19:56:04 -07:00
-Ended:     2026-04-12 19:56:04 -07:00
+Started:   2026-04-18 04:58:01 -07:00
+Ended:     2026-04-18 04:58:01 -07:00
 Duration:  7ms
 
 Full output: src/Chap61/analyses/veracity-review-verus-proof-holes.log

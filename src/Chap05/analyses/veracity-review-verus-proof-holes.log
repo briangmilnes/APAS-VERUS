@@ -23,20 +23,20 @@ Table of Contents:
 ✓ KleeneStPer.rs
    9 clean proof functions
 ℹ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:659: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:660: info: accept()
    Info: 1 total
 ✓ RelationStEph.rs
 ℹ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1145: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1156: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1179: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1223: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1146: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1157: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1180: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1224: info: accept()
    Info: 4 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1166: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1167: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
    Info: 1 × structural_false_positive
    1 clean proof function
 ℹ SetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:950: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:951: info: accept()
    Info: 1 total
    1 clean proof function
 
@@ -101,11 +101,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 19:56:03 -07:00
-Ended:     2026-04-12 19:56:03 -07:00
-Duration:  33ms
+Started:   2026-04-18 04:57:59 -07:00
+Ended:     2026-04-18 04:57:59 -07:00
+Duration:  35ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
-tion:  33ms
-
-Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap05/analyses/veracity-review-verus-proof-holes.log

@@ -262,7 +262,7 @@ pub mod OrdKeyMap {
     /// Equal-substitution for cmp_spec: Equal(a,b) implies a compares the same way as b to c.
     proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             a.cmp_spec(&b) == Equal,
         ensures
@@ -594,7 +594,7 @@ pub mod OrdKeyMap {
     /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
     proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             a.cmp_spec(&b) == Less,
         ensures
@@ -637,11 +637,11 @@ pub mod OrdKeyMap {
         requires m.spec_ordkeymap_wf()
         ensures
             spec_pair_key_determines_order::<K, V>(),
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            vstd::laws_cmp::obeys_cmp::<K>(),
             view_ord_consistent::<K>(),
             obeys_feq_fulls::<K, V>(),
             obeys_feq_full::<Pair<K, V>>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
             view_ord_consistent::<Pair<K, V>>(),
     {
     }
@@ -706,10 +706,10 @@ pub mod OrdKeyMap {
             requires
                 obeys_feq_fulls::<K, V>(),
                 obeys_feq_full::<Pair<K, V>>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                 view_ord_consistent::<Pair<K, V>>(),
                 spec_pair_key_determines_order::<K, V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 view_ord_consistent::<K>(),
             ensures
                 empty.spec_ordkeymap_wf(),
@@ -1004,10 +1004,10 @@ pub mod OrdKeyMap {
                 obeys_feq_fulls::<K, V>(),
                 obeys_feq_full::<Pair<K, V>>(),
                 keys@.len() < usize::MAX as nat,
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                 view_ord_consistent::<Pair<K, V>>(),
                 spec_pair_key_determines_order::<K, V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 view_ord_consistent::<K>(),
             ensures
                 table.spec_ordkeymap_wf(),
@@ -1055,10 +1055,10 @@ pub mod OrdKeyMap {
             spec_set_pair_view_generated::<K, V>(tree@),
             view_ord_consistent::<K>(),
             obeys_feq_fulls::<K, V>(),
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            vstd::laws_cmp::obeys_cmp::<K>(),
             spec_pair_key_determines_order::<K, V>(),
             view_ord_consistent::<Pair<K, V>>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
         ensures
             match found {
                 Some(v) => spec_pair_set_to_map(tree@).contains_key(k@)
@@ -1154,10 +1154,10 @@ pub mod OrdKeyMap {
             spec_set_pair_view_generated::<K, V>(tree@),
             view_ord_consistent::<K>(),
             obeys_feq_fulls::<K, V>(),
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            vstd::laws_cmp::obeys_cmp::<K>(),
             spec_pair_key_determines_order::<K, V>(),
             view_ord_consistent::<Pair<K, V>>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
             obeys_feq_full::<Pair<K, V>>(),
         ensures
             parts.1 matches Some(v) ==> spec_pair_set_to_map(tree@).contains_key(k@) && v@ == spec_pair_set_to_map(tree@)[k@],
@@ -1313,10 +1313,10 @@ pub mod OrdKeyMap {
             spec_set_pair_view_generated::<K, V>(tree@),
             view_ord_consistent::<K>(),
             obeys_feq_fulls::<K, V>(),
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            vstd::laws_cmp::obeys_cmp::<K>(),
             spec_pair_key_determines_order::<K, V>(),
             view_ord_consistent::<Pair<K, V>>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
         ensures
             spec_pair_set_to_map(tree@).dom().finite(),
             successor matches Some(nk) ==> spec_pair_set_to_map(tree@).dom().contains(nk@),
@@ -1568,10 +1568,10 @@ pub mod OrdKeyMap {
             spec_set_pair_view_generated::<K, V>(tree@),
             view_ord_consistent::<K>(),
             obeys_feq_fulls::<K, V>(),
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            vstd::laws_cmp::obeys_cmp::<K>(),
             spec_pair_key_determines_order::<K, V>(),
             view_ord_consistent::<Pair<K, V>>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
         ensures
             spec_pair_set_to_map(tree@).dom().finite(),
             predecessor matches Some(pk) ==> spec_pair_set_to_map(tree@).dom().contains(pk@),
@@ -1828,10 +1828,10 @@ pub mod OrdKeyMap {
             view_ord_consistent::<K>(),
             obeys_feq_fulls::<K, V>(),
             obeys_view_eq::<K>(),
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            vstd::laws_cmp::obeys_cmp::<K>(),
             spec_pair_key_determines_order::<K, V>(),
             view_ord_consistent::<Pair<K, V>>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
         ensures
             spec_pair_set_to_map(tree@).dom().finite(),
             rank <= spec_pair_set_to_map(tree@).dom().len(),
@@ -2063,10 +2063,10 @@ pub mod OrdKeyMap {
             view_ord_consistent::<K>(),
             obeys_feq_fulls::<K, V>(),
             obeys_view_eq::<K>(),
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            vstd::laws_cmp::obeys_cmp::<K>(),
             spec_pair_key_determines_order::<K, V>(),
             view_ord_consistent::<Pair<K, V>>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
         ensures
             spec_pair_set_to_map(tree@).dom().finite(),
             i >= spec_pair_set_to_map(tree@).dom().len() ==> selected matches None,
@@ -2364,10 +2364,10 @@ pub mod OrdKeyMap {
             && self.inner@.len() < usize::MAX as nat
             && obeys_feq_fulls::<K, V>()
             && obeys_feq_full::<Pair<K, V>>()
-            && vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>()
+            && vstd::laws_cmp::obeys_cmp::<Pair<K, V>>()
             && view_ord_consistent::<Pair<K, V>>()
             && spec_pair_key_determines_order::<K, V>()
-            && vstd::laws_cmp::obeys_cmp_spec::<K>()
+            && vstd::laws_cmp::obeys_cmp::<K>()
             && view_ord_consistent::<K>()
             && spec_set_pair_view_generated::<K, V>(self.inner@)
         }
@@ -2691,7 +2691,7 @@ pub mod OrdKeyMap {
                         exists|j: int| 0 <= j < i as int && p.0 == (#[trigger] self_sorted@[j]).0,
                     0 <= i <= self_len,
                     new_tree.spec_bstparasteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                     view_ord_consistent::<Pair<K, V>>(),
                     new_tree@.len() == i as nat,
                     new_tree@.len() < usize::MAX as nat,
@@ -2813,7 +2813,7 @@ pub mod OrdKeyMap {
                         (exists|j2: int| 0 <= j2 < j as int && p.0 == (#[trigger] other_sorted@[j2]).0),
                     0 <= j <= other_len,
                     new_tree.spec_bstparasteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                     view_ord_consistent::<Pair<K, V>>(),
                     new_tree@.len() <= self_sorted@.len() + j as nat,
                     self_sorted@.len() + other_sorted@.len() < usize::MAX as nat,
@@ -2959,7 +2959,7 @@ pub mod OrdKeyMap {
                     sorted@.len() == self_tree.len(),
                     0 <= i <= len,
                     new_tree.spec_bstparasteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                     view_ord_consistent::<Pair<K, V>>(),
                     new_tree@.len() <= i as nat,
                     new_tree@.len() < usize::MAX as nat,
@@ -3103,7 +3103,7 @@ pub mod OrdKeyMap {
                         exists|j: int| 0 <= j < i as int && p.0 == (#[trigger] self_sorted@[j]).0,
                     0 <= i <= self_len,
                     new_tree.spec_bstparasteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                     view_ord_consistent::<Pair<K, V>>(),
                     new_tree@.len() == i as nat,
                     new_tree@.len() < usize::MAX as nat,
@@ -3235,7 +3235,7 @@ pub mod OrdKeyMap {
                         (exists|j2: int| 0 <= j2 < j as int && p.0 == (#[trigger] other_sorted@[j2]).0),
                     0 <= j <= other_len,
                     new_tree.spec_bstparasteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                     view_ord_consistent::<Pair<K, V>>(),
                     new_tree@.len() <= self_sorted@.len() + j as nat,
                     self_sorted@.len() + other_sorted@.len() < usize::MAX as nat,
@@ -3429,7 +3429,7 @@ pub mod OrdKeyMap {
                     sorted@.len() == self_tree.len(),
                     0 <= i <= len,
                     new_tree.spec_bstparasteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                     view_ord_consistent::<Pair<K, V>>(),
                     new_tree@.len() <= i as nat,
                     new_tree@.len() < usize::MAX as nat,
@@ -3631,7 +3631,7 @@ pub mod OrdKeyMap {
                         ==> #[trigger] new_tree@.contains(sorted@[j]),
                     0 <= i <= len,
                     new_tree.spec_bstparasteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                     view_ord_consistent::<Pair<K, V>>(),
                     new_tree@.len() <= i as nat,
                     new_tree@.len() < usize::MAX as nat,
@@ -4246,7 +4246,7 @@ pub mod OrdKeyMap {
                     forall|k: &K, v: &V| #[trigger] f.requires((k, v)),
                     obeys_feq_clone::<Pair<K, V>>(),
                     new_tree.spec_bstparasteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                     view_ord_consistent::<Pair<K, V>>(),
                     sorted@.len() == self.inner@.len(),
                     forall|v: (K::V, V::V)| self.inner@.contains(v) <==> #[trigger] sorted@.contains(v),
@@ -4455,7 +4455,7 @@ pub mod OrdKeyMap {
                     obeys_feq_full::<K>(),
                     obeys_feq_full::<Pair<K, V>>(),
                     tree.spec_bstparasteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                     view_ord_consistent::<Pair<K, V>>(),
                     tree@.len() == i as nat,
                     seq_view.len() == keys@.len(),
@@ -4617,7 +4617,7 @@ pub mod OrdKeyMap {
                         ==> #[trigger] new_tree@.contains(sorted@[j]),
                     0 <= i <= len,
                     new_tree.spec_bstparasteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                     view_ord_consistent::<Pair<K, V>>(),
                     new_tree@.len() <= i as nat,
                     new_tree@.len() < usize::MAX as nat,
@@ -4731,7 +4731,7 @@ pub mod OrdKeyMap {
                         ==> #[trigger] new_tree@.contains(sorted@[j]),
                     0 <= i <= len,
                     new_tree.spec_bstparasteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                     view_ord_consistent::<Pair<K, V>>(),
                     new_tree@.len() <= i as nat,
                     new_tree@.len() < usize::MAX as nat,

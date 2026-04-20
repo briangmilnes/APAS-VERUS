@@ -119,7 +119,7 @@ pub mod OrderedSetMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- constructs empty StEph + RwLock
         fn empty() -> (empty: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_orderedsetmteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
@@ -127,7 +127,7 @@ pub mod OrderedSetMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- wraps StEph.singleton + RwLock
         fn singleton(x: T) -> (tree: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_orderedsetmteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
@@ -197,7 +197,7 @@ pub mod OrderedSetMtEph {
         fn from_seq(seq: ArraySeqStPerS<T>) -> (constructed: Self)
             requires
                 seq.spec_len() < usize::MAX as int,
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures constructed@.finite();
 

@@ -1,6 +1,6 @@
-Chapter Status — 46 chapters, 45 clean, 1 holed, 4 holes (global), 245 modules
+Chapter Status — 46 chapters, 46 clean, 0 holed, 0 holes (global), 261 modules
 
-CLEAN CHAPTERS (45)
+CLEAN CHAPTERS (46)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -10,32 +10,33 @@ CLEAN CHAPTERS (45)
   Chap11             5
   Chap12             3
   Chap17             1
-  Chap18             8
-  Chap19             4
+  Chap18             9
+  Chap19             5
   Chap21             5
   Chap23             2
   Chap26             8
-  Chap27             4
+  Chap27             5
   Chap28            11
   Chap30             1
   Chap35             4
   Chap36             3
-  Chap37            19
-  Chap38             2
-  Chap39             4
+  Chap37            20
+  Chap38             3
+  Chap39             5
   Chap40             3
-  Chap42             3
-  Chap43            10
+  Chap41             7
+  Chap42             4
+  Chap43            11
   Chap44             1
   Chap45             6
   Chap47             9
   Chap49             8
   Chap50             8
-  Chap51             8
-  Chap52            14
+  Chap51             9
+  Chap52            16
   Chap53             5
-  Chap54             4
-  Chap55             8
+  Chap54             5
+  Chap55             9
   Chap56            10
   Chap57             3
   Chap58             2
@@ -44,18 +45,15 @@ CLEAN CHAPTERS (45)
   Chap62             4
   Chap63             2
   Chap64             3
-  Chap65             3
+  Chap65             5
   Chap66             2
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (1) — 4 holes
+HOLED CHAPTERS (0) — 0 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap41             4     6  YES       
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
   --------------  -------------------
-  Chap52          Chap41
-  Chap53          Chap41

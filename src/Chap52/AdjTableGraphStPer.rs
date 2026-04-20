@@ -122,7 +122,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (out: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                vstd::laws_cmp::obeys_cmp::<V>(),
                 view_ord_consistent::<V>(),
             ensures out.spec_adjtablegraphstper_wf();
         /// Work Theta(1), Span Theta(1)
@@ -130,7 +130,7 @@ broadcast use {
         fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self)
             requires
                 table.spec_tablestper_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                vstd::laws_cmp::obeys_cmp::<V>(),
                 view_ord_consistent::<V>(),
                 forall|k: <V as View>::V| #[trigger] table@.dom().contains(k) ==>
                     table.spec_stored_value(k).spec_avltreesetstper_wf(),
@@ -214,7 +214,7 @@ broadcast use {
         open spec fn spec_adjtablegraphstper_wf(&self) -> bool {
             // Type-level predicates needed by table and set operations.
             obeys_view_eq::<V>()
-            && vstd::laws_cmp::obeys_cmp_spec::<V>()
+            && vstd::laws_cmp::obeys_cmp::<V>()
             && view_ord_consistent::<V>()
             // Table internal invariant (keys are unique).
             && spec_keys_no_dups::<V::V, Set<V::V>>(self.adj.entries@)
@@ -565,7 +565,7 @@ broadcast use {
                     seq@.no_duplicates(),
                     result_adj.spec_tablestper_wf(),
                     obeys_view_eq::<V>(),
-                    vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                    vstd::laws_cmp::obeys_cmp::<V>(),
                     view_ord_consistent::<V>(),
                     obeys_feq_fulls::<V, AVLTreeSetStPer<V>>(),
                     obeys_feq_full::<Pair<V, AVLTreeSetStPer<V>>>(),

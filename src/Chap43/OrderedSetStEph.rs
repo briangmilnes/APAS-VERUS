@@ -82,7 +82,7 @@ broadcast use {
     /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
     proof fn lemma_cmp_antisymmetry<T: StT + Ord + TotalOrder>(a: T, b: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             a.cmp_spec(&b) == Greater,
         ensures b.cmp_spec(&a) == Less,
     {
@@ -93,7 +93,7 @@ broadcast use {
     /// cmp_spec transitivity: Less(a,b) and Less(b,c) implies Less(a,c).
     proof fn lemma_cmp_transitivity<T: StT + Ord + TotalOrder>(a: T, b: T, c: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             a.cmp_spec(&b) == Less,
             b.cmp_spec(&c) == Less,
         ensures a.cmp_spec(&c) == Less,
@@ -105,7 +105,7 @@ broadcast use {
     /// Equal congruence: Equal(a,b) implies cmp(a,c) == cmp(b,c).
     proof fn lemma_cmp_equal_congruent<T: StT + Ord + TotalOrder>(a: T, b: T, c: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             a.cmp_spec(&b) == Equal,
         ensures a.cmp_spec(&c) == b.cmp_spec(&c),
@@ -133,7 +133,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures
                 empty@ == Set::<<T as View>::V>::empty(),
@@ -142,7 +142,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(x: T) -> (tree: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(x@),
@@ -226,7 +226,7 @@ broadcast use {
             requires
                 seq.spec_avltreeseqstper_wf(),
                 seq@.len() < usize::MAX as nat,
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures
                 constructed.spec_orderedsetsteph_wf();
@@ -446,7 +446,7 @@ broadcast use {
     fn tree_max_key<T: StT + Ord + TotalOrder>(tree: &ParamBST<T>) -> (maximum: Option<T>)
         requires
             tree@.finite(),
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
         ensures
             tree@.len() == 0 <==> maximum.is_none(),
@@ -505,7 +505,7 @@ broadcast use {
     fn tree_select<T: StT + Ord + TotalOrder>(tree: &ParamBST<T>, i: usize) -> (selected: Option<T>)
         requires
             tree@.finite(),
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
         ensures
             i as nat >= tree@.len() ==> selected.is_none(),
@@ -553,7 +553,7 @@ broadcast use {
         open spec fn spec_orderedsetsteph_wf(&self) -> bool {
             self.base_set.spec_avltreesetsteph_wf()
             && obeys_feq_full::<T>()
-            && vstd::laws_cmp::obeys_cmp_spec::<T>()
+            && vstd::laws_cmp::obeys_cmp::<T>()
             && view_ord_consistent::<T>()
         }
 
@@ -992,7 +992,7 @@ broadcast use {
     pub fn from_sorted_elements<T: StT + Ord + TotalOrder>(elements: Vec<T>) -> (constructed: OrderedSetStEph<T>)
         requires
             elements@.len() < usize::MAX,
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
         ensures constructed.spec_orderedsetsteph_wf()
     {

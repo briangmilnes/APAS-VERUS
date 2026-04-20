@@ -140,7 +140,7 @@ pub mod BSTParaStEph {
             forall|t: &T| predicate.requires((t,)),
             forall|x: T, keep: bool|
                 predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
         ensures
             filtered@.subset_of(tree@),
@@ -364,7 +364,7 @@ pub mod BSTParaStEph {
             requires
                 old(self).spec_bstparasteph_wf(),
                 old(self)@.len() < usize::MAX as nat,
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures
                 self.spec_bstparasteph_wf(),
@@ -375,7 +375,7 @@ pub mod BSTParaStEph {
             requires
                 old(self).spec_bstparasteph_wf(),
                 old(self)@.len() < usize::MAX as nat,
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures
                 self.spec_bstparasteph_wf(),
@@ -384,14 +384,14 @@ pub mod BSTParaStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn find(&self, key: &T) -> (found: Option<T>)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures found.is_some() <==> self@.contains(key@);
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg |t|), Span O(lg |t|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn split(&self, key: &T) -> (parts: (Self, bool, Self))
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures
                 parts.1 == self@.contains(key@),
@@ -407,7 +407,7 @@ pub mod BSTParaStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — agrees with APAS.
         fn min_key(&self) -> (minimum: Option<T>)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures
                 self@.len() == 0 <==> minimum.is_none(),
@@ -418,7 +418,7 @@ pub mod BSTParaStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — agrees with APAS.
         fn max_key(&self) -> (maximum: Option<T>)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures
                 self@.len() == 0 <==> maximum.is_none(),
@@ -429,7 +429,7 @@ pub mod BSTParaStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
         fn join_pair(&self, other: Self) -> (joined: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 self@.disjoint(other@),
                 self@.finite(), other@.finite(),
@@ -440,7 +440,7 @@ pub mod BSTParaStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(m * lg(n/m)) — ACCEPTED DIFFERENCE: sequential recursion, no parallel split
         fn union(&self, other: &Self) -> (combined: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 self@.len() + other@.len() <= usize::MAX as nat,
             ensures combined@ == self@.union(other@), combined@.finite();
@@ -448,14 +448,14 @@ pub mod BSTParaStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(m * lg(n/m)) — ACCEPTED DIFFERENCE: sequential recursion, no parallel split
         fn intersect(&self, other: &Self) -> (common: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures common@ == self@.intersect(other@), common@.finite();
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(m * lg(n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(m * lg(n/m)) — ACCEPTED DIFFERENCE: sequential recursion, no parallel split
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures remaining@ == self@.difference(other@), remaining@.finite();
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(Σ W(f(x))), Span O(lg |t| + max S(f(x)))
@@ -470,7 +470,7 @@ pub mod BSTParaStEph {
                 forall|t: &T| predicate.requires((t,)),
                 forall|x: T, keep: bool|
                     predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures
                 filtered@.subset_of(self@),

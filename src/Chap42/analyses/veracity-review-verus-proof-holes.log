@@ -21,18 +21,18 @@ Table of Contents:
 =================================================================
 
 ℹ TableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:2549: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:2561: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2550: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2562: info: accept()
    Info: 2 total
 ✓ TableSpecsAndLemmas.rs
    15 clean proof functions
 ℹ TableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStEph.rs:2680: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2681: info: accept()
    Info: 1 total
    1 clean proof function
 ℹ TableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:2892: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:2903: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2893: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2904: info: accept()
    Info: 2 total
    5 clean proof functions
 
@@ -92,9 +92,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 19:56:03 -07:00
-Ended:     2026-04-12 19:56:04 -07:00
-Duration:  89ms
+Started:   2026-04-18 04:58:00 -07:00
+Ended:     2026-04-18 04:58:01 -07:00
+Duration:  101ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap42/analyses/veracity-review-verus-proof-holes.log

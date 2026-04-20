@@ -6,7 +6,7 @@
 //!
 //! BSTParaTreapMtEph exposes the ParamTreap<T> type with snapshot-based
 //! iteration (owned T values). Only IntoIterator is implemented.
-//! into_iter requires obeys_cmp_spec and view_ord_consistent for T.
+//! into_iter requires obeys_cmp and view_ord_consistent for T.
 
 #[macro_use]
 #[path = "../common/mod.rs"]
@@ -21,7 +21,7 @@ test_verify_one_file! {
 
         fn test_loop_borrow_into()
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<u64>(),
+                vstd::laws_cmp::obeys_cmp::<u64>(),
                 view_ord_consistent::<u64>(),
         {
             let a: ParamTreap<u64> = ParamTreap::new();
@@ -60,7 +60,7 @@ test_verify_one_file! {
 
         fn test_for_borrow_into()
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<u64>(),
+                vstd::laws_cmp::obeys_cmp::<u64>(),
                 view_ord_consistent::<u64>(),
         {
             let a: ParamTreap<u64> = ParamTreap::new();

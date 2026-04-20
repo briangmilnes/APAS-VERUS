@@ -1195,7 +1195,7 @@ broadcast use {
                 // Every old self key is in the output (Phase 1).
                 // Veracity: NEEDED assert
                 assert forall|k: K::V|
-                    spec_entries_to_map(old_self_view).dom().contains(k)
+                    #[trigger] spec_entries_to_map(old_self_view).dom().contains(k)
                     implies self@.dom().contains(k)
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_self_view, k);
@@ -1236,6 +1236,8 @@ broadcast use {
                 // Reverse: every output key is in old self or other.
                 // Veracity: NEEDED assert
                 assert forall|k: K::V|
+                    #![trigger spec_entries_to_map(old_self_view).dom().contains(k)]
+                    #![trigger other@.dom().contains(k)]
                     self@.dom().contains(k)
                     implies spec_entries_to_map(old_self_view).dom().contains(k)
                         || other@.dom().contains(k)

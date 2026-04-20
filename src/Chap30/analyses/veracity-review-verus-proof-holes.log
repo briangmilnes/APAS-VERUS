@@ -21,18 +21,18 @@ Table of Contents:
 =================================================================
 
 ℹ Probability.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:76: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:112: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:118: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:126: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:134: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:142: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:150: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:77: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:113: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:119: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:127: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:135: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:143: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:151: info: external_body_accept_hole
    Info: 7 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:84: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] // accept hole [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:91: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] // accept hole [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:180: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] // accept hole [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:191: info: structural_false_positive STD_TRAIT_IMPL hash — #[verifier::external_body]  // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:85: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:92: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:181: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:192: info: structural_false_positive STD_TRAIT_IMPL hash — #[verifier::external_body]  // accept hole [high]
    Info: 4 × structural_false_positive
 
 =================================================================
@@ -88,15 +88,15 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 19:56:03 -07:00
-Ended:     2026-04-12 19:56:03 -07:00
-Duration:  2ms
+Started:   2026-04-18 04:58:00 -07:00
+Ended:     2026-04-18 04:58:00 -07:00
+Duration:  3ms
 
 Full output: src/Chap30/analyses/veracity-review-verus-proof-holes.log
-=========
+=====
 
-Started:   2026-04-12 19:56:03 -07:00
-Ended:     2026-04-12 19:56:03 -07:00
-Duration:  2ms
+Started:   2026-04-18 04:58:00 -07:00
+Ended:     2026-04-18 04:58:00 -07:00
+Duration:  3ms
 
 Full output: src/Chap30/analyses/veracity-review-verus-proof-holes.log

@@ -24,13 +24,13 @@ Table of Contents:
 ✓ AdjMatrixGraphMtPer.rs
 ✓ AdjMatrixGraphStEph.rs
 ℹ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjMatrixGraphStPer.rs:665: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:666: info: accept()
    Info: 1 total
 ✓ AdjSeqGraphMtEph.rs
 ✓ AdjSeqGraphMtPer.rs
 ✓ AdjSeqGraphStEph.rs
 ℹ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjSeqGraphStPer.rs:647: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:648: info: accept()
    Info: 1 total
 ✓ AdjTableGraphMtPer.rs
 ✓ AdjTableGraphSpecsAndLemmas.rs
@@ -39,18 +39,18 @@ Table of Contents:
 ✓ AdjTableGraphStPer.rs
    3 clean proof functions
 ℹ EdgeSetGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphMtEph.rs:438: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtEph.rs:439: info: accept()
    Info: 1 total
    1 clean proof function
 ✓ EdgeSetGraphMtPer.rs
    1 clean proof function
 ℹ EdgeSetGraphStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStEph.rs:478: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:479: info: accept()
    Info: 1 total
    1 clean proof function
 ℹ EdgeSetGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStPer.rs:456: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStPer.rs:473: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:457: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:474: info: accept()
    Info: 2 total
    1 clean proof function
 
@@ -134,9 +134,11 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 19:56:04 -07:00
-Ended:     2026-04-12 19:56:04 -07:00
-Duration:  75ms
+Started:   2026-04-18 04:58:01 -07:00
+Ended:     2026-04-18 04:58:01 -07:00
+Duration:  91ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+Duration:  91ms
+
+Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log

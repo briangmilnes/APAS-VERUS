@@ -22,10 +22,10 @@ test_verify_one_file! {
 
         fn test_loop_borrow_iter()
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<u64, u64>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<u64, u64>>(),
                 view_ord_consistent::<Pair<u64, u64>>(),
                 spec_pair_key_determines_order::<u64, u64>(),
-                vstd::laws_cmp::obeys_cmp_spec::<u64>(),
+                vstd::laws_cmp::obeys_cmp::<u64>(),
                 view_ord_consistent::<u64>(),
         {
             let t = OrderedTableMtEph::singleton(1u64, 10u64);
@@ -67,10 +67,10 @@ test_verify_one_file! {
 
         fn test_loop_borrow_into()
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<u64, u64>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<u64, u64>>(),
                 view_ord_consistent::<Pair<u64, u64>>(),
                 spec_pair_key_determines_order::<u64, u64>(),
-                vstd::laws_cmp::obeys_cmp_spec::<u64>(),
+                vstd::laws_cmp::obeys_cmp::<u64>(),
                 view_ord_consistent::<u64>(),
         {
             let t = OrderedTableMtEph::singleton(1u64, 10u64);
@@ -112,10 +112,10 @@ test_verify_one_file! {
 
         fn test_for_borrow_iter()
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<u64, u64>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<u64, u64>>(),
                 view_ord_consistent::<Pair<u64, u64>>(),
                 spec_pair_key_determines_order::<u64, u64>(),
-                vstd::laws_cmp::obeys_cmp_spec::<u64>(),
+                vstd::laws_cmp::obeys_cmp::<u64>(),
                 view_ord_consistent::<u64>(),
         {
             let t = OrderedTableMtEph::singleton(1u64, 10u64);
@@ -149,10 +149,10 @@ test_verify_one_file! {
 
         fn test_for_borrow_into()
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<u64, u64>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<u64, u64>>(),
                 view_ord_consistent::<Pair<u64, u64>>(),
                 spec_pair_key_determines_order::<u64, u64>(),
-                vstd::laws_cmp::obeys_cmp_spec::<u64>(),
+                vstd::laws_cmp::obeys_cmp::<u64>(),
                 view_ord_consistent::<u64>(),
         {
             let t = OrderedTableMtEph::singleton(1u64, 10u64);

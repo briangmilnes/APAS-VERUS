@@ -118,7 +118,7 @@ pub mod GraphSearchStEph {
                 vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
                 vertex_universe.contains(source@),
                 forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
-                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                vstd::laws_cmp::obeys_cmp::<V>(),
                 view_ord_consistent::<V>(),
             ensures search.visited@.contains(source@);
 
@@ -136,7 +136,7 @@ pub mod GraphSearchStEph {
                 vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
                 sources@.subset_of(vertex_universe),
                 forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
-                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                vstd::laws_cmp::obeys_cmp::<V>(),
                 view_ord_consistent::<V>(),
             ensures sources@.subset_of(search.visited@);
 
@@ -152,7 +152,7 @@ pub mod GraphSearchStEph {
                 vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
                 vertex_universe.contains(source@),
                 forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
-                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                vstd::laws_cmp::obeys_cmp::<V>(),
                 view_ord_consistent::<V>(),
             ensures reachable_set@.contains(source@);
     }
@@ -200,7 +200,7 @@ pub mod GraphSearchStEph {
             vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
             vertex_universe.contains(source@),
             forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
-            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            vstd::laws_cmp::obeys_cmp::<V>(),
             view_ord_consistent::<V>(),
         ensures search.visited@.contains(source@),
     {
@@ -231,7 +231,7 @@ pub mod GraphSearchStEph {
             visited_init@.subset_of(vertex_universe),
             frontier_init@.subset_of(vertex_universe),
             forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
-            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            vstd::laws_cmp::obeys_cmp::<V>(),
             view_ord_consistent::<V>(),
         ensures
             visited_init@.subset_of(visited_all@),
@@ -253,7 +253,7 @@ pub mod GraphSearchStEph {
                 visited@.subset_of(vertex_universe),
                 frontier@.subset_of(vertex_universe),
                 forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
-                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                vstd::laws_cmp::obeys_cmp::<V>(),
                 // Veracity: NEEDED proof block
                 view_ord_consistent::<V>(),
         {
@@ -279,7 +279,7 @@ pub mod GraphSearchStEph {
                     vertex_universe.finite(),
                     vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
                     forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
-                    vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                    vstd::laws_cmp::obeys_cmp::<V>(),
                     view_ord_consistent::<V>(),
                 decreases len - i,
             // Veracity: NEEDED proof block
@@ -326,7 +326,7 @@ pub mod GraphSearchStEph {
             vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
             sources@.subset_of(vertex_universe),
             forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
-            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            vstd::laws_cmp::obeys_cmp::<V>(),
             view_ord_consistent::<V>(),
         ensures sources@.subset_of(search.visited@),
     {
@@ -350,7 +350,7 @@ pub mod GraphSearchStEph {
             vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
             vertex_universe.contains(source@),
             forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
-            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            vstd::laws_cmp::obeys_cmp::<V>(),
             view_ord_consistent::<V>(),
         ensures reachable_set@.contains(source@),
     {

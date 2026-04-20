@@ -196,7 +196,7 @@ pub mod BSTSizeStEph {
             requires
                 old(self).spec_size() + 1 <= usize::MAX as nat,
                 old(self).spec_bstsizesteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 forall |a: T, b: T| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures
                 self@ == old(self)@.insert(value),
@@ -208,7 +208,7 @@ pub mod BSTSizeStEph {
         fn delete(&mut self, key: &T)
             requires
                 old(self).spec_bstsizesteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 forall |a: T, b: T| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures
                 self@ == old(self)@.remove(*key),
@@ -219,7 +219,7 @@ pub mod BSTSizeStEph {
         fn find(&self, target: &T) -> (found: Option<&T>)
             requires
                 self.spec_bstsizesteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 forall |a: T, b: T| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures
                 found is Some <==> self@.contains(*target),
@@ -229,7 +229,7 @@ pub mod BSTSizeStEph {
         fn contains(&self, target: &T) -> (contains: bool)
             requires
                 self.spec_bstsizesteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 forall |a: T, b: T| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures contains == self@.contains(*target);
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
@@ -300,7 +300,7 @@ pub mod BSTSizeStEph {
                 Lnk::spec_link_size_wf(old(link)),
                 Lnk::spec_size_link(old(link)) <= usize::MAX as nat,
                 Lnk::spec_ordered_link(old(link)),
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
             ensures
                 Lnk::spec_size_link(link) == Lnk::spec_size_link(old(link)),
                 Lnk::spec_link_size_wf(link),
@@ -318,7 +318,7 @@ pub mod BSTSizeStEph {
                 Lnk::spec_link_size_wf(old(link)),
                 Lnk::spec_size_link(old(link)) <= usize::MAX as nat,
                 Lnk::spec_ordered_link(old(link)),
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
             ensures
                 Lnk::spec_size_link(link) == Lnk::spec_size_link(old(link)),
                 Lnk::spec_link_size_wf(link),
@@ -336,7 +336,7 @@ pub mod BSTSizeStEph {
                 Lnk::spec_size_link(old(link)) + 1 <= usize::MAX as nat,
                 Lnk::spec_link_size_wf(old(link)),
                 Lnk::spec_ordered_link(old(link)),
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 forall |a: T, b: T| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures
                 Lnk::spec_link_size_wf(link),
@@ -351,7 +351,7 @@ pub mod BSTSizeStEph {
                 Lnk::spec_ordered_link(old(link)),
                 Lnk::spec_link_size_wf(old(link)),
                 Lnk::spec_size_link(old(link)) <= usize::MAX as nat,
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 forall |a: T, b: T| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures
                 Lnk::spec_content_link(link) == Lnk::spec_content_link(old(link)).remove(*key),
@@ -362,7 +362,7 @@ pub mod BSTSizeStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 forall |a: T, b: T| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
                 Lnk::spec_ordered_link(link),
             ensures
@@ -1276,7 +1276,7 @@ pub mod BSTSizeStEph {
     /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
     proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             a.cmp_spec(&b) == std::cmp::Ordering::Greater,
         ensures
             b.cmp_spec(&a) == std::cmp::Ordering::Less,
@@ -1288,7 +1288,7 @@ pub mod BSTSizeStEph {
     /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
     proof fn lemma_cmp_antisymmetry_lt<T: StT + Ord>(a: T, b: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             a.cmp_spec(&b) == std::cmp::Ordering::Less,
         ensures
             b.cmp_spec(&a) == std::cmp::Ordering::Greater,
@@ -1300,7 +1300,7 @@ pub mod BSTSizeStEph {
     /// cmp_spec transitivity for Less: Less(a,b) and Less(b,c) implies Less(a,c).
     proof fn lemma_cmp_transitivity_lt<T: StT + Ord>(a: T, b: T, c: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             a.cmp_spec(&b) == std::cmp::Ordering::Less,
             b.cmp_spec(&c) == std::cmp::Ordering::Less,
         ensures
@@ -1313,7 +1313,7 @@ pub mod BSTSizeStEph {
     /// cmp_spec transitivity for Greater: Greater(a,b) and Greater(b,c) implies Greater(a,c).
     proof fn lemma_cmp_transitivity_gt<T: StT + Ord>(a: T, b: T, c: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             a.cmp_spec(&b) == std::cmp::Ordering::Greater,
             b.cmp_spec(&c) == std::cmp::Ordering::Greater,
         ensures

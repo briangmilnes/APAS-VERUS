@@ -122,7 +122,7 @@ pub mod BSTParaTreapMtEph {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn expose_internal<T: MtKey + ClonePreservesView>(tree: &ParamTreap<T>) -> (exposed: Exposed<T>)
-        requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+        requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
         ensures
             tree@.len() == 0 ==> exposed is Leaf,
             exposed is Leaf ==> tree@ =~= Set::<<T as View>::V>::empty(),
@@ -181,7 +181,7 @@ pub mod BSTParaTreapMtEph {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn expose_with_priority_internal<T: MtKey + ClonePreservesView>(tree: &ParamTreap<T>) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>)
-        requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+        requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
         ensures
             tree@.len() == 0 ==> parts is None,
             parts is None ==> tree@ =~= Set::<<T as View>::V>::empty(),
@@ -244,7 +244,7 @@ pub mod BSTParaTreapMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn make_node<T: MtKey + ClonePreservesView>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (node: ParamTreap<T>)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             left@.finite(), right@.finite(),
             left@.disjoint(right@),
@@ -283,7 +283,7 @@ pub mod BSTParaTreapMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
     fn join_with_priority<T: MtKey + ClonePreservesView>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (joined: ParamTreap<T>)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             left@.finite(), right@.finite(),
             left@.disjoint(right@),
@@ -415,7 +415,7 @@ pub mod BSTParaTreapMtEph {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
     fn split_inner<T: MtKey + ClonePreservesView>(tree: &ParamTreap<T>, key: &T) -> (parts: (ParamTreap<T>, bool, ParamTreap<T>))
-        requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+        requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
         ensures
             parts.1 == tree@.contains(key@),
             parts.0@.finite(),
@@ -575,7 +575,7 @@ pub mod BSTParaTreapMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
     fn join_pair_inner<T: MtKey + ClonePreservesView>(left: ParamTreap<T>, right: ParamTreap<T>) -> (joined: ParamTreap<T>)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             left@.finite(), right@.finite(),
             forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
@@ -714,7 +714,7 @@ pub mod BSTParaTreapMtEph {
     // Veracity: NEEDED proof block
     fn union_inner<T: MtKey + ClonePreservesView>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (combined: ParamTreap<T>)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             a@.len() + b@.len() < usize::MAX as nat,
         ensures combined@.finite(), combined@ == a@.union(b@),
@@ -807,7 +807,7 @@ pub mod BSTParaTreapMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
     fn intersect_inner<T: MtKey + ClonePreservesView>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (common: ParamTreap<T>)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             // Veracity: NEEDED proof block
             a@.len() < usize::MAX as nat,
@@ -928,7 +928,7 @@ pub mod BSTParaTreapMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
     fn difference_inner<T: MtKey + ClonePreservesView>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (remaining: ParamTreap<T>)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             a@.len() < usize::MAX as nat,
         ensures remaining@.finite(), remaining@ == a@.difference(b@),
@@ -1047,7 +1047,7 @@ pub mod BSTParaTreapMtEph {
         // Veracity: NEEDED proof block
         requires
             // Veracity: NEEDED proof block
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             forall|t: &T| #[trigger] ((**predicate).requires((t,))),
             forall|x: T, keep: bool| #[trigger] (**predicate).ensures((&x,), keep)
@@ -1131,7 +1131,7 @@ pub mod BSTParaTreapMtEph {
     ) -> (filtered: ParamTreap<T>)
         // Veracity: NEEDED proof block
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             forall|t: &T| #[trigger] predicate.requires((t,)),
             forall|x: T, keep: bool|
@@ -1155,7 +1155,7 @@ pub mod BSTParaTreapMtEph {
         // Veracity: NEEDED proof block
         F: Fn(T, T) -> T + Send + Sync + 'static,
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             tree@.finite(),
             forall|a: T, b: T| #[trigger] op.requires((a, b)),
@@ -1188,7 +1188,7 @@ pub mod BSTParaTreapMtEph {
     where
         F: Fn(T, T) -> T + Send + Sync + 'static,
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             forall|a: T, b: T| #[trigger] op.requires((a, b)),
         ensures tree@.len() == 0 ==> reduced == base,
@@ -1202,7 +1202,7 @@ pub mod BSTParaTreapMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn collect_in_order<T: MtKey + ClonePreservesView>(tree: &ParamTreap<T>, out: &mut Vec<T>)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             tree@.finite(),
         ensures out@.len() == old(out)@.len() + tree@.len(),
@@ -1273,7 +1273,7 @@ pub mod BSTParaTreapMtEph {
         /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn expose(&self) -> (exposed: Exposed<T>)
-            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+            requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
             ensures
                 self@.len() == 0 ==> exposed is Leaf,
                 exposed is Leaf ==> self@ =~= Set::<T::V>::empty(),
@@ -1291,7 +1291,7 @@ pub mod BSTParaTreapMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
         fn join_mid(exposed: Exposed<T>) -> (tree: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 exposed matches Exposed::Node(l, k, r) ==> (
                     l@.finite() && r@.finite()
@@ -1318,28 +1318,28 @@ pub mod BSTParaTreapMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn insert(&mut self, key: T)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
                 old(self)@.len() < usize::MAX as nat,
             ensures self@.finite(), self@ =~= old(self)@.insert(key@);
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn delete(&mut self, key: &T)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 old(self)@.len() < usize::MAX as nat,
             ensures self@.finite(), self@ =~= old(self)@.remove(key@);
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn find(&self, key: &T) -> (found: Option<T>)
-            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+            requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
             ensures
                 found matches Some(v) ==> v@ == key@ && self@.contains(v@),
                 found is None ==> !self@.contains(key@);
         /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg |t|), Span O(lg |t|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn split(&self, key: &T) -> (parts: (Self, bool, Self))
-            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+            requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
             ensures
                 parts.0@.finite(), parts.2@.finite(),
                 parts.1 == self@.contains(key@),
@@ -1353,7 +1353,7 @@ pub mod BSTParaTreapMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
         fn join_pair(&self, other: Self) -> (joined: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 self@.disjoint(other@),
                 self@.finite(), other@.finite(),
@@ -1365,7 +1365,7 @@ pub mod BSTParaTreapMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)), Span O(lg n)
         fn union(&self, other: &Self) -> (combined: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 self@.len() + other@.len() < usize::MAX as nat,
             ensures combined@.finite(), combined@ == self@.union(other@);
@@ -1373,7 +1373,7 @@ pub mod BSTParaTreapMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)), Span O(lg n)
         fn intersect(&self, other: &Self) -> (common: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 self@.len() < usize::MAX as nat,
             ensures common@.finite(), common@ == self@.intersect(other@);
@@ -1381,7 +1381,7 @@ pub mod BSTParaTreapMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)), Span O(lg n)
         fn difference(&self, other: &Self) -> (diff: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 self@.len() < usize::MAX as nat,
             ensures diff@.finite(), diff@ == self@.difference(other@);
@@ -1393,7 +1393,7 @@ pub mod BSTParaTreapMtEph {
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         ) -> (filtered: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 forall|t: &T| #[trigger] predicate.requires((t,)),
                 forall|x: T, keep: bool|
@@ -1412,7 +1412,7 @@ pub mod BSTParaTreapMtEph {
         where
             F: Fn(T, T) -> T + Send + Sync + 'static
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 // Veracity: NEEDED proof block
                 view_ord_consistent::<T>(),
                 forall|a: T, b: T| #[trigger] op.requires((a, b)),
@@ -1420,7 +1420,7 @@ pub mod BSTParaTreapMtEph {
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(|t|), Span O(|t|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|), Span O(|t|)
         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
-            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+            requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
             ensures self@.finite(), ordered.spec_len() == self@.len();
     }
 
@@ -1731,7 +1731,7 @@ pub mod BSTParaTreapMtEph {
         type Item = T;
         type IntoIter = ParamTreapIter<T>;
         fn into_iter(self) -> (it: Self::IntoIter)
-            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+            requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
             ensures
                 it@.0 == 0,
                 it@.1.len() == self@.len(),

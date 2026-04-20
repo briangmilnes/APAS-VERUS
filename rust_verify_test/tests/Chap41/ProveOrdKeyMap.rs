@@ -25,10 +25,10 @@ test_verify_one_file! {
             requires
                 obeys_feq_fulls::<u64, u64>(),
                 obeys_feq_full::<Pair<u64, u64>>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<u64, u64>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<u64, u64>>(),
                 view_ord_consistent::<Pair<u64, u64>>(),
                 spec_pair_key_determines_order::<u64, u64>(),
-                vstd::laws_cmp::obeys_cmp_spec::<u64>(),
+                vstd::laws_cmp::obeys_cmp::<u64>(),
                 view_ord_consistent::<u64>(),
                 obeys_view_eq::<u64>(),
         {
@@ -77,10 +77,10 @@ test_verify_one_file! {
             requires
                 obeys_feq_fulls::<u64, u64>(),
                 obeys_feq_full::<Pair<u64, u64>>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<u64, u64>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<u64, u64>>(),
                 view_ord_consistent::<Pair<u64, u64>>(),
                 spec_pair_key_determines_order::<u64, u64>(),
-                vstd::laws_cmp::obeys_cmp_spec::<u64>(),
+                vstd::laws_cmp::obeys_cmp::<u64>(),
                 view_ord_consistent::<u64>(),
                 obeys_view_eq::<u64>(),
         {
@@ -129,10 +129,10 @@ test_verify_one_file! {
             requires
                 obeys_feq_fulls::<u64, u64>(),
                 obeys_feq_full::<Pair<u64, u64>>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<u64, u64>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<u64, u64>>(),
                 view_ord_consistent::<Pair<u64, u64>>(),
                 spec_pair_key_determines_order::<u64, u64>(),
-                vstd::laws_cmp::obeys_cmp_spec::<u64>(),
+                vstd::laws_cmp::obeys_cmp::<u64>(),
                 view_ord_consistent::<u64>(),
                 obeys_view_eq::<u64>(),
         {
@@ -173,10 +173,10 @@ test_verify_one_file! {
             requires
                 obeys_feq_fulls::<u64, u64>(),
                 obeys_feq_full::<Pair<u64, u64>>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<u64, u64>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<u64, u64>>(),
                 view_ord_consistent::<Pair<u64, u64>>(),
                 spec_pair_key_determines_order::<u64, u64>(),
-                vstd::laws_cmp::obeys_cmp_spec::<u64>(),
+                vstd::laws_cmp::obeys_cmp::<u64>(),
                 view_ord_consistent::<u64>(),
                 obeys_view_eq::<u64>(),
         {

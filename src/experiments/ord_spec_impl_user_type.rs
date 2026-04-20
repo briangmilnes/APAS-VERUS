@@ -34,7 +34,7 @@ pub mod ord_spec_impl_user_type {
     // This is what we WANT to write — but it crashes Verus.
     #[cfg(verus_keep_ghost)]
     impl OrdSpecImpl for MyPair {
-        open spec fn obeys_cmp_spec() -> bool { true }
+        open spec fn obeys_cmp() -> bool { true }
         open spec fn cmp_spec(&self, other: &Self) -> Ordering {
             if self.first < other.first { Ordering::Less }
             else if self.first > other.first { Ordering::Greater }

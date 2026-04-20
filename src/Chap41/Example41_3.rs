@@ -72,7 +72,7 @@ broadcast use vstd::laws_cmp::group_laws_cmp;
         // vstd::laws_cmp::group_laws_cmp does not include char; assume type axioms for char.
         // Veracity: NEEDED proof block
         proof {
-            assume(vstd::laws_cmp::obeys_cmp_spec::<char>());
+            assume(vstd::laws_cmp::obeys_cmp::<char>());
             assume(view_ord_consistent::<char>());
         }
 

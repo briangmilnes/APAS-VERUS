@@ -16,11 +16,11 @@ test_verify_one_file! {
     #[test] chap43_orderedsetsteph_loop_borrow_iter verus_code! {
         use vstd::prelude::*;
         use apas_verus::Chap43::OrderedSetStEph::OrderedSetStEph::*;
-        use vstd::laws_cmp::obeys_cmp_spec;
+        use vstd::laws_cmp::obeys_cmp;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
         fn test_loop_borrow_iter()
-            requires obeys_cmp_spec::<u64>(), view_ord_consistent::<u64>(),
+            requires obeys_cmp::<u64>(), view_ord_consistent::<u64>(),
         {
             let mut s = OrderedSetStEph::singleton(1u64);
             s.insert(2u64);
@@ -57,11 +57,11 @@ test_verify_one_file! {
     #[test] chap43_orderedsetsteph_loop_borrow_into verus_code! {
         use vstd::prelude::*;
         use apas_verus::Chap43::OrderedSetStEph::OrderedSetStEph::*;
-        use vstd::laws_cmp::obeys_cmp_spec;
+        use vstd::laws_cmp::obeys_cmp;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
         fn test_loop_borrow_into()
-            requires obeys_cmp_spec::<u64>(), view_ord_consistent::<u64>(),
+            requires obeys_cmp::<u64>(), view_ord_consistent::<u64>(),
         {
             let mut s = OrderedSetStEph::singleton(1u64);
             s.insert(2u64);
@@ -98,11 +98,11 @@ test_verify_one_file! {
     #[test] chap43_orderedsetsteph_for_borrow_iter verus_code! {
         use vstd::prelude::*;
         use apas_verus::Chap43::OrderedSetStEph::OrderedSetStEph::*;
-        use vstd::laws_cmp::obeys_cmp_spec;
+        use vstd::laws_cmp::obeys_cmp;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
         fn test_for_borrow_iter()
-            requires obeys_cmp_spec::<u64>(), view_ord_consistent::<u64>(),
+            requires obeys_cmp::<u64>(), view_ord_consistent::<u64>(),
         {
             let mut s = OrderedSetStEph::singleton(1u64);
             s.insert(2u64);
@@ -131,11 +131,11 @@ test_verify_one_file! {
     #[test] chap43_orderedsetsteph_for_borrow_into verus_code! {
         use vstd::prelude::*;
         use apas_verus::Chap43::OrderedSetStEph::OrderedSetStEph::*;
-        use vstd::laws_cmp::obeys_cmp_spec;
+        use vstd::laws_cmp::obeys_cmp;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
         fn test_for_borrow_into()
-            requires obeys_cmp_spec::<u64>(), view_ord_consistent::<u64>(),
+            requires obeys_cmp::<u64>(), view_ord_consistent::<u64>(),
         {
             let mut s = OrderedSetStEph::singleton(1u64);
             s.insert(2u64);

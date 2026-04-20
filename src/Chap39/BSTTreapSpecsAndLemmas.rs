@@ -46,7 +46,7 @@ pub mod BSTTreapSpecsAndLemmas {
     /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
     pub proof fn lemma_cmp_antisymmetry<T: View + Ord>(a: T, b: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             a.cmp_spec(&b) == Greater,
         ensures b.cmp_spec(&a) == Less,
     {
@@ -57,7 +57,7 @@ pub mod BSTTreapSpecsAndLemmas {
     /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
     pub proof fn lemma_cmp_antisymmetry_less<T: View + Ord>(a: T, b: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             a.cmp_spec(&b) == Less,
         ensures b.cmp_spec(&a) == Greater,
     {
@@ -68,7 +68,7 @@ pub mod BSTTreapSpecsAndLemmas {
     /// cmp_spec transitivity: Less(a,b) and Less(b,c) implies Less(a,c).
     pub proof fn lemma_cmp_transitivity<T: View + Ord>(a: T, b: T, c: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             a.cmp_spec(&b) == Less,
             b.cmp_spec(&c) == Less,
         ensures a.cmp_spec(&c) == Less,
@@ -80,7 +80,7 @@ pub mod BSTTreapSpecsAndLemmas {
     /// Equal-substitution: Less(a,b) and Equal(b,c) implies Less(a,c).
     pub proof fn lemma_cmp_eq_subst<T: View + Ord>(a: T, b: T, c: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             a.cmp_spec(&b) == Less,
             b.cmp_spec(&c) == Equal,
@@ -93,7 +93,7 @@ pub mod BSTTreapSpecsAndLemmas {
     /// Left congruence: Equal(a,b) implies a and b compare the same way to c.
     pub proof fn lemma_cmp_equal_congruent<T: View + Ord>(a: T, b: T, c: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             a.cmp_spec(&b) == Equal,
         ensures a.cmp_spec(&c) == b.cmp_spec(&c),
@@ -105,7 +105,7 @@ pub mod BSTTreapSpecsAndLemmas {
     /// Right congruence: Equal(b,c) implies any a compares the same way to b and c.
     pub proof fn lemma_cmp_equal_congruent_right<T: View + Ord>(a: T, b: T, c: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             b.cmp_spec(&c) == Equal,
         ensures a.cmp_spec(&b) == a.cmp_spec(&c),
@@ -125,7 +125,7 @@ pub mod BSTTreapSpecsAndLemmas {
         left_v: Set<T::V>,
     )
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             joined_v =~= lrv.union(right_v).insert(key@),
             forall|t: T| (#[trigger] lrv.contains(t@)) ==> t.cmp_spec(&lk) == Greater,
@@ -161,7 +161,7 @@ pub mod BSTTreapSpecsAndLemmas {
         right_v: Set<T::V>,
     )
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             joined_v =~= left_v.union(rlv).insert(key@),
             forall|t: T| (#[trigger] left_v.contains(t@)) ==> t.cmp_spec(&key) == Less,
@@ -226,7 +226,7 @@ pub mod BSTTreapSpecsAndLemmas {
         left: Set<T::V>, right: Set<T::V>, key: T,
     )
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             forall|t: T| (#[trigger] left.contains(t@)) ==> t.cmp_spec(&key) == Less,
             forall|t: T| (#[trigger] right.contains(t@)) ==> t.cmp_spec(&key) == Greater,

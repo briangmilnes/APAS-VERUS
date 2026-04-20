@@ -126,10 +126,10 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- constructs empty StEph + RwLock
         fn empty() -> (empty: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                 view_ord_consistent::<Pair<K, V>>(),
                 spec_pair_key_determines_order::<K, V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 view_ord_consistent::<K>(),
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_orderedtablemteph_wf();
 
@@ -138,10 +138,10 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- wraps StEph.singleton + RwLock
         fn singleton(k: K, v: V) -> (tree: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                 view_ord_consistent::<Pair<K, V>>(),
                 spec_pair_key_determines_order::<K, V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 view_ord_consistent::<K>(),
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablemteph_wf();
 
@@ -211,10 +211,10 @@ broadcast use {
                 obeys_feq_full::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
                 keys@.len() < usize::MAX as nat,
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                 view_ord_consistent::<Pair<K, V>>(),
                 spec_pair_key_determines_order::<K, V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 view_ord_consistent::<K>(),
                 obeys_feq_fulls::<K, V>(),
             ensures tabulated@.dom().finite();
@@ -868,10 +868,10 @@ broadcast use {
         requires
             entries.spec_avltreeseqstper_wf(),
             entries@.len() < usize::MAX as nat,
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
             view_ord_consistent::<Pair<K, V>>(),
             spec_pair_key_determines_order::<K, V>(),
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            vstd::laws_cmp::obeys_cmp::<K>(),
             view_ord_consistent::<K>(),
             forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
                 ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,

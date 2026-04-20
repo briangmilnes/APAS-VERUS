@@ -117,10 +117,10 @@ broadcast use {
                 forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
                 obeys_feq_fulls::<K, V>(),
                 obeys_feq_full::<Pair<K, V>>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                 view_ord_consistent::<Pair<K, V>>(),
                 spec_pair_key_determines_order::<K, V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 view_ord_consistent::<K>(),
             ensures empty@ == Map::<K::V, V::V>::empty();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
@@ -132,10 +132,10 @@ broadcast use {
                 forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
                 obeys_feq_fulls::<K, V>(),
                 obeys_feq_full::<Pair<K, V>>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                 view_ord_consistent::<Pair<K, V>>(),
                 spec_pair_key_determines_order::<K, V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 view_ord_consistent::<K>(),
             ensures tree@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
@@ -207,10 +207,10 @@ broadcast use {
                 obeys_feq_full::<Pair<K, V>>(),
                 forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
                 keys@.len() < usize::MAX as nat,
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
                 view_ord_consistent::<Pair<K, V>>(),
                 spec_pair_key_determines_order::<K, V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 view_ord_consistent::<K>(),
                 obeys_feq_fulls::<K, V>(),
             ensures

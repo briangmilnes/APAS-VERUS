@@ -59,7 +59,7 @@ broadcast use {
     /// Bridges PartialEq's eq_spec to View equality via the cmp chain.
     proof fn lemma_eq_spec_iff_view_eq<V: StT + Ord + TotalOrder>()
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            vstd::laws_cmp::obeys_cmp::<V>(),
             view_ord_consistent::<V>(),
         ensures
             forall|a: V, b: V| #[trigger] a.eq_spec(&b) <==> (a@ == b@),
@@ -98,9 +98,9 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (out: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                vstd::laws_cmp::obeys_cmp::<V>(),
                 view_ord_consistent::<V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<V, V>>(),
                 view_ord_consistent::<Pair<V, V>>(),
             ensures out.spec_edgesetgraphstper_wf();
         /// Work Theta(1), Span Theta(1)
@@ -109,9 +109,9 @@ broadcast use {
             requires
                 v.spec_avltreesetstper_wf(),
                 e.spec_avltreesetstper_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                vstd::laws_cmp::obeys_cmp::<V>(),
                 view_ord_consistent::<V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<V, V>>(),
                 view_ord_consistent::<Pair<V, V>>(),
                 forall|u: <V as View>::V, w: <V as View>::V|
                     #[trigger] e@.contains((u, w))
@@ -185,9 +185,9 @@ broadcast use {
         open spec fn spec_edgesetgraphstper_wf(&self) -> bool {
             self.vertices.spec_avltreesetstper_wf()
             && self.edges.spec_avltreesetstper_wf()
-            && vstd::laws_cmp::obeys_cmp_spec::<V>()
+            && vstd::laws_cmp::obeys_cmp::<V>()
             && view_ord_consistent::<V>()
-            && vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>()
+            && vstd::laws_cmp::obeys_cmp::<Pair<V, V>>()
             && view_ord_consistent::<Pair<V, V>>()
             && forall|u: <V as View>::V, v: <V as View>::V|
                 #[trigger] self.edges@.contains((u, v))

@@ -26,7 +26,7 @@ Table of Contents:
 ✓ ReduceContractStEph.rs
 ✓ ScanContractMtEph.rs
 ℹ ScanContractStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap27/ScanContractStEph.rs:47: info: opaque
+/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:48: info: opaque
    Info: 1 total
    1 clean proof function
 
@@ -88,9 +88,11 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 19:56:03 -07:00
-Ended:     2026-04-12 19:56:03 -07:00
-Duration:  10ms
+Started:   2026-04-18 04:58:00 -07:00
+Ended:     2026-04-18 04:58:00 -07:00
+Duration:  12ms
 
 Full output: src/Chap27/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap27/analyses/veracity-review-verus-proof-holes.log
+on:  12ms
+
+Full output: src/Chap27/analyses/veracity-review-verus-proof-holes.log

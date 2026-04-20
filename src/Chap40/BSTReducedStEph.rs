@@ -259,7 +259,7 @@ pub mod BSTReducedStEph {
             requires
                 old(self).spec_size() + 1 <= usize::MAX as nat,
                 old(self).spec_bstreducedsteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 forall |a: K, b: K| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures
                 self@ == old(self)@.insert(key, value),
@@ -271,7 +271,7 @@ pub mod BSTReducedStEph {
         fn delete(&mut self, key: &K)
             requires
                 old(self).spec_bstreducedsteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 forall |a: K, b: K| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures
                 self@ == old(self)@.remove(*key),
@@ -282,7 +282,7 @@ pub mod BSTReducedStEph {
         fn find(&self, key: &K) -> (found: Option<&V>)
             requires
                 self.spec_bstreducedsteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 forall |a: K, b: K| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures
                 found is Some <==> self@.contains_key(*key),
@@ -292,7 +292,7 @@ pub mod BSTReducedStEph {
         fn contains(&self, key: &K) -> (contains: bool)
             requires
                 self.spec_bstreducedsteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 forall |a: K, b: K| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures contains == self@.contains_key(*key);
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, O(n) worst
@@ -300,7 +300,7 @@ pub mod BSTReducedStEph {
         fn get(&self, key: &K) -> (value: Option<&V>)
             requires
                 self.spec_bstreducedsteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 forall |a: K, b: K| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures
                 value is Some <==> self@.contains_key(*key),
@@ -384,7 +384,7 @@ pub mod BSTReducedStEph {
                 Lnk::spec_size_link(old(link)) <= usize::MAX as nat,
                 Lnk::spec_link_size_wf(old(link)),
                 Lnk::spec_ordered_link(old(link)),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
             ensures
                 Lnk::spec_size_link(link) == Lnk::spec_size_link(old(link)),
                 Lnk::spec_link_size_wf(link),
@@ -403,7 +403,7 @@ pub mod BSTReducedStEph {
                 Lnk::spec_size_link(old(link)) <= usize::MAX as nat,
                 Lnk::spec_link_size_wf(old(link)),
                 Lnk::spec_ordered_link(old(link)),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
             ensures
                 Lnk::spec_size_link(link) == Lnk::spec_size_link(old(link)),
                 Lnk::spec_link_size_wf(link),
@@ -422,7 +422,7 @@ pub mod BSTReducedStEph {
                 Lnk::spec_size_link(old(link)) + 1 <= usize::MAX as nat,
                 Lnk::spec_link_size_wf(old(link)),
                 Lnk::spec_ordered_link(old(link)),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 forall |a: K, b: K| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures
                 Lnk::spec_link_size_wf(link),
@@ -437,7 +437,7 @@ pub mod BSTReducedStEph {
                 Lnk::spec_ordered_link(old(link)),
                 Lnk::spec_link_size_wf(old(link)),
                 Lnk::spec_size_link(old(link)) <= usize::MAX as nat,
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 forall |a: K, b: K| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures
                 Lnk::spec_content_link(link) == Lnk::spec_content_link(old(link)).remove(*key),
@@ -448,7 +448,7 @@ pub mod BSTReducedStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn find_link<'a>(link: &'a Link<K, V, R>, key: &K) -> (found: Option<&'a V>)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                vstd::laws_cmp::obeys_cmp::<K>(),
                 forall |a: K, b: K| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
                 Lnk::spec_ordered_link(link),
             ensures
@@ -1358,7 +1358,7 @@ pub mod BSTReducedStEph {
     /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
     proof fn lemma_cmp_antisymmetry_reduced<K: StT + Ord>(a: K, b: K)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            vstd::laws_cmp::obeys_cmp::<K>(),
             a.cmp_spec(&b) == std::cmp::Ordering::Greater,
         ensures
             b.cmp_spec(&a) == std::cmp::Ordering::Less,
@@ -1370,7 +1370,7 @@ pub mod BSTReducedStEph {
     /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
     proof fn lemma_cmp_antisymmetry_lt_reduced<K: StT + Ord>(a: K, b: K)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            vstd::laws_cmp::obeys_cmp::<K>(),
             a.cmp_spec(&b) == std::cmp::Ordering::Less,
         ensures
             b.cmp_spec(&a) == std::cmp::Ordering::Greater,
@@ -1394,7 +1394,7 @@ pub mod BSTReducedStEph {
     /// cmp_spec transitivity: Less(a,b) && Less(b,c) ==> Less(a,c).
     proof fn lemma_cmp_transitivity_lt_reduced<K: StT + Ord>(a: K, b: K, c: K)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            vstd::laws_cmp::obeys_cmp::<K>(),
             a.cmp_spec(&b) == std::cmp::Ordering::Less,
             b.cmp_spec(&c) == std::cmp::Ordering::Less,
         ensures
@@ -1407,7 +1407,7 @@ pub mod BSTReducedStEph {
     /// cmp_spec transitivity: Greater(a,b) && Greater(b,c) ==> Greater(a,c).
     proof fn lemma_cmp_transitivity_gt_reduced<K: StT + Ord>(a: K, b: K, c: K)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            vstd::laws_cmp::obeys_cmp::<K>(),
             a.cmp_spec(&b) == std::cmp::Ordering::Greater,
             b.cmp_spec(&c) == std::cmp::Ordering::Greater,
         ensures

@@ -21,18 +21,18 @@ Table of Contents:
 =================================================================
 
 ℹ BalBinTreeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:504: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:813: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:849: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:866: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:505: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:814: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:850: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:867: info: accept()
    Info: 4 total
    2 clean proof functions
 ℹ PrimTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:961: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:973: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1002: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1020: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1026: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:962: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:974: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1003: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1021: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1027: info: accept()
    Info: 5 total
 
 =================================================================
@@ -87,9 +87,11 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 19:56:03 -07:00
-Ended:     2026-04-12 19:56:03 -07:00
-Duration:  17ms
+Started:   2026-04-18 04:58:00 -07:00
+Ended:     2026-04-18 04:58:00 -07:00
+Duration:  25ms
 
 Full output: src/Chap23/analyses/veracity-review-verus-proof-holes.log
- src/Chap23/analyses/veracity-review-verus-proof-holes.log
+ion:  25ms
+
+Full output: src/Chap23/analyses/veracity-review-verus-proof-holes.log

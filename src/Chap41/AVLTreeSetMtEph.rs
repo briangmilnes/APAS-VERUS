@@ -132,7 +132,7 @@ broadcast use {
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
             requires
                 seq.spec_avltreeseqsteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures
                 constructed@ =~= seq@.to_set(),
@@ -148,7 +148,7 @@ broadcast use {
         ) -> (filtered: Self)
             requires
                 self.spec_avltreesetmteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 forall|t: &T| #[trigger] f.requires((t,)),
                 forall|x: T, keep: bool|
@@ -168,7 +168,7 @@ broadcast use {
             requires
                 self.spec_avltreesetmteph_wf(),
                 other.spec_avltreesetmteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures
                 common@ == self@.intersect(other@),
@@ -181,7 +181,7 @@ broadcast use {
             requires
                 self.spec_avltreesetmteph_wf(),
                 other.spec_avltreesetmteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures
                 remaining@ == self@.difference(other@),
@@ -194,7 +194,7 @@ broadcast use {
             requires
                 self.spec_avltreesetmteph_wf(),
                 other.spec_avltreesetmteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 self@.len() + other@.len() < usize::MAX as nat,
             ensures
@@ -207,7 +207,7 @@ broadcast use {
         fn find(&self, x: &T) -> (found: bool)
             requires
                 self.spec_avltreesetmteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures found == self@.contains(x@);
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
@@ -218,7 +218,7 @@ broadcast use {
             requires
                 old(self).spec_avltreesetmteph_wf(),
                 old(self)@.len() < usize::MAX as nat,
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
             ensures
                 self@ == old(self)@.remove(x@),
@@ -230,7 +230,7 @@ broadcast use {
         fn insert(&mut self, x: T)
             requires
                 old(self).spec_avltreesetmteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 old(self)@.len() + 1 < usize::MAX as nat,
             ensures
@@ -250,7 +250,7 @@ broadcast use {
         requires
             obeys_feq_full_trigger::<T>(),
             vals@.len() <= usize::MAX,
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
         ensures
             tree@.finite(),

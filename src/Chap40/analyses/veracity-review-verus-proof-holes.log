@@ -21,35 +21,35 @@ Table of Contents:
 =================================================================
 
 ℹ BSTKeyValueStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:1394: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:1590: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:1590: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:1618: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:1639: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:1639: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:1642: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1395: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1591: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1591: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1619: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1640: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1640: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1643: info: accept()
    Info: 7 total
    14 clean proof functions
 ℹ BSTReducedStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:169: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:172: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:195: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:1560: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:1715: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:1715: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:1774: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:1774: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:1777: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:170: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:173: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:196: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1561: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1716: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1716: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1775: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1775: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1778: info: accept()
    Info: 9 total
    8 clean proof functions
 ℹ BSTSizeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:1441: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:1572: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:1572: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:1600: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:1618: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:1618: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:1621: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1442: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1573: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1573: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1601: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1619: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1619: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1622: info: accept()
    Info: 7 total
    8 clean proof functions
 
@@ -108,9 +108,11 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 19:56:03 -07:00
-Ended:     2026-04-12 19:56:03 -07:00
-Duration:  47ms
+Started:   2026-04-18 04:58:00 -07:00
+Ended:     2026-04-18 04:58:00 -07:00
+Duration:  53ms
 
 Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log
-hap40/analyses/veracity-review-verus-proof-holes.log
+Duration:  53ms
+
+Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log

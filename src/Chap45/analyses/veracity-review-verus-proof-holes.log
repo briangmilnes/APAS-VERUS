@@ -21,34 +21,34 @@ Table of Contents:
 =================================================================
 
 ℹ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:859: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:860: info: accept()
    Info: 1 total
    1 clean proof function
 ℹ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1847: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1864: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1848: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1865: info: accept()
    Info: 2 total
    5 clean proof functions
 ℹ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:115: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:132: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:116: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:133: info: accept()
    Info: 2 total
    1 clean proof function
 ℹ LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:733: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1196: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1218: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1246: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1257: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:734: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1197: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1219: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1247: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1258: info: accept()
    Info: 5 total
    4 clean proof functions
 ℹ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1255: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1256: info: accept()
    Info: 1 total
    4 clean proof functions
 ℹ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:846: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:862: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:847: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:863: info: accept()
    Info: 2 total
    1 clean proof function
 
@@ -113,12 +113,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 19:56:04 -07:00
-Ended:     2026-04-12 19:56:04 -07:00
-Duration:  48ms
+Started:   2026-04-18 04:58:01 -07:00
+Ended:     2026-04-18 04:58:01 -07:00
+Duration:  60ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
-
-Duration:  48ms
-
-Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap45/analyses/veracity-review-verus-proof-holes.log

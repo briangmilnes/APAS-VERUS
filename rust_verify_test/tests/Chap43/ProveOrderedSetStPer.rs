@@ -17,11 +17,11 @@ test_verify_one_file! {
     #[test] chap43_orderedsetstper_loop_borrow_iter verus_code! {
         use vstd::prelude::*;
         use apas_verus::Chap43::OrderedSetStPer::OrderedSetStPer::*;
-        use vstd::laws_cmp::obeys_cmp_spec;
+        use vstd::laws_cmp::obeys_cmp;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
         fn test_loop_borrow_iter()
-            requires obeys_cmp_spec::<u64>(), view_ord_consistent::<u64>(),
+            requires obeys_cmp::<u64>(), view_ord_consistent::<u64>(),
         {
             let s = OrderedSetStPer::singleton(1u64);
             let s = s.insert(2u64);
@@ -58,11 +58,11 @@ test_verify_one_file! {
     #[test] chap43_orderedsetstper_for_borrow_iter verus_code! {
         use vstd::prelude::*;
         use apas_verus::Chap43::OrderedSetStPer::OrderedSetStPer::*;
-        use vstd::laws_cmp::obeys_cmp_spec;
+        use vstd::laws_cmp::obeys_cmp;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
         fn test_for_borrow_iter()
-            requires obeys_cmp_spec::<u64>(), view_ord_consistent::<u64>(),
+            requires obeys_cmp::<u64>(), view_ord_consistent::<u64>(),
         {
             let s = OrderedSetStPer::singleton(1u64);
             let s = s.insert(2u64);

@@ -94,7 +94,7 @@ pub mod DocumentIndex {
                 docs.spec_len() <= usize::MAX as nat / 2,
                 obeys_view_eq::<Word>(),
                 obeys_feq_full::<Pair<Word, DocumentSet>>(),
-                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                vstd::laws_cmp::obeys_cmp::<DocumentId>(),
                 view_ord_consistent::<DocumentId>(),
             ensures di.spec_documentindex_wf();
 
@@ -116,7 +116,7 @@ pub mod DocumentIndex {
             requires
                 docs_a.spec_avltreesetstper_wf(),
                 docs_b.spec_avltreesetstper_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                vstd::laws_cmp::obeys_cmp::<DocumentId>(),
                 view_ord_consistent::<DocumentId>(),
             ensures
                 combined@ == docs_a@.intersect(docs_b@),
@@ -129,7 +129,7 @@ pub mod DocumentIndex {
             requires
                 docs_a.spec_avltreesetstper_wf(),
                 docs_b.spec_avltreesetstper_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                vstd::laws_cmp::obeys_cmp::<DocumentId>(),
                 view_ord_consistent::<DocumentId>(),
                 docs_a@.len() + docs_b@.len() < usize::MAX as nat,
             ensures
@@ -143,7 +143,7 @@ pub mod DocumentIndex {
             requires
                 docs_a.spec_avltreesetstper_wf(),
                 docs_b.spec_avltreesetstper_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                vstd::laws_cmp::obeys_cmp::<DocumentId>(),
                 view_ord_consistent::<DocumentId>(),
             ensures
                 remaining@ == docs_a@.difference(docs_b@),
@@ -201,7 +201,7 @@ pub mod DocumentIndex {
                     table.spec_tablestper_wf(),
                     obeys_view_eq::<Word>(),
                     obeys_feq_full::<Pair<Word, DocumentSet>>(),
-                    vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                    vstd::laws_cmp::obeys_cmp::<DocumentId>(),
                     view_ord_consistent::<DocumentId>(),
                     gds.finite(),
                     gds.len() <= i as nat,
@@ -250,7 +250,7 @@ pub mod DocumentIndex {
                         table.spec_tablestper_wf(),
                         obeys_view_eq::<Word>(),
                         obeys_feq_full::<Pair<Word, DocumentSet>>(),
-                        vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                        vstd::laws_cmp::obeys_cmp::<DocumentId>(),
                         view_ord_consistent::<DocumentId>(),
                         gds == gds_snap,
                         gds.finite(),
@@ -498,7 +498,7 @@ pub mod DocumentIndex {
             requires
                 docs_a.spec_avltreesetstper_wf(),
                 docs_b.spec_avltreesetstper_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                vstd::laws_cmp::obeys_cmp::<DocumentId>(),
                 view_ord_consistent::<DocumentId>(),
             ensures
                 combined@ == docs_a@.intersect(docs_b@),
@@ -510,7 +510,7 @@ pub mod DocumentIndex {
             requires
                 docs_a.spec_avltreesetstper_wf(),
                 docs_b.spec_avltreesetstper_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                vstd::laws_cmp::obeys_cmp::<DocumentId>(),
                 view_ord_consistent::<DocumentId>(),
                 docs_a@.len() + docs_b@.len() < usize::MAX as nat,
             ensures
@@ -523,7 +523,7 @@ pub mod DocumentIndex {
             requires
                 docs_a.spec_avltreesetstper_wf(),
                 docs_b.spec_avltreesetstper_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                vstd::laws_cmp::obeys_cmp::<DocumentId>(),
                 view_ord_consistent::<DocumentId>(),
             ensures
                 remaining@ == docs_a@.difference(docs_b@),
@@ -536,7 +536,7 @@ pub mod DocumentIndex {
                 self.spec_index_wf(),
                 obeys_view_eq::<Word>(),
                 obeys_feq_full::<DocumentSet>(),
-                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                vstd::laws_cmp::obeys_cmp::<DocumentId>(),
                 view_ord_consistent::<DocumentId>(),
         ;
     }

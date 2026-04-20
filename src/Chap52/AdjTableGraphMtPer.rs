@@ -91,10 +91,10 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (out: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, AVLTreeSetMtPer<V>>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<V, AVLTreeSetMtPer<V>>>(),
                 view_ord_consistent::<Pair<V, AVLTreeSetMtPer<V>>>(),
                 spec_pair_key_determines_order::<V, AVLTreeSetMtPer<V>>(),
-                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                vstd::laws_cmp::obeys_cmp::<V>(),
                 view_ord_consistent::<V>(),
             ensures
                 out.spec_adjtablegraphmtper_wf(),
@@ -302,10 +302,10 @@ broadcast use {
     impl<V: StTInMtT + Ord + TotalOrder + 'static> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
         open spec fn spec_adjtablegraphmtper_wf(&self) -> bool {
             // Type-level predicates for table and set operations.
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<V, AVLTreeSetMtPer<V>>>()
+            vstd::laws_cmp::obeys_cmp::<Pair<V, AVLTreeSetMtPer<V>>>()
             && view_ord_consistent::<Pair<V, AVLTreeSetMtPer<V>>>()
             && spec_pair_key_determines_order::<V, AVLTreeSetMtPer<V>>()
-            && vstd::laws_cmp::obeys_cmp_spec::<V>()
+            && vstd::laws_cmp::obeys_cmp::<V>()
             && view_ord_consistent::<V>()
             // Adjacency domain is finite.
             && self.spec_adj().dom().finite()

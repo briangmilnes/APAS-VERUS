@@ -23,7 +23,7 @@ Table of Contents:
 ✓ KruskalStEph.rs
    1 clean proof function
 ℹ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:506: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:507: info: accept()
    Info: 1 total
    4 clean proof functions
 ✓ UnionFindArrayStEph.rs
@@ -31,9 +31,9 @@ Table of Contents:
 ✓ UnionFindNoPCStEph.rs
    5 clean proof functions
 ℹ UnionFindPCStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindPCStEph.rs:106: info: opaque
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindPCStEph.rs:122: info: opaque
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindPCStEph.rs:132: info: opaque
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:107: info: opaque
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:123: info: opaque
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:133: info: opaque
    Info: 3 total
    18 clean proof functions
 
@@ -96,9 +96,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 19:56:04 -07:00
-Ended:     2026-04-12 19:56:04 -07:00
-Duration:  42ms
+Started:   2026-04-18 04:58:01 -07:00
+Ended:     2026-04-18 04:58:01 -07:00
+Duration:  45ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

@@ -2,6 +2,7 @@
 /target
 rust_verify_test/target/
 Cargo.lock
+/liblib.rlib
 
 # Emacs
 *~

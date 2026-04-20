@@ -58,7 +58,7 @@ broadcast use {
     /// Bridges PartialEq's eq_spec to View equality via the cmp chain.
     proof fn lemma_eq_spec_iff_view_eq<V: StTInMtT + Ord + TotalOrder>()
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            vstd::laws_cmp::obeys_cmp::<V>(),
             view_ord_consistent::<V>(),
         ensures
             forall|a: V, b: V| #[trigger] a.eq_spec(&b) <==> (a@ == b@),
@@ -97,9 +97,9 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Sonnet 4.6): Work O(1), Span O(1) — creates empty sets.
         fn empty() -> (out: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                vstd::laws_cmp::obeys_cmp::<V>(),
                 view_ord_consistent::<V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<V, V>>(),
                 view_ord_consistent::<Pair<V, V>>(),
             ensures out.spec_edgesetgraphmteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(1), Span O(1)
@@ -108,9 +108,9 @@ broadcast use {
             requires
                 v.spec_avltreesetmteph_wf(),
                 e.spec_avltreesetmteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                vstd::laws_cmp::obeys_cmp::<V>(),
                 view_ord_consistent::<V>(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>(),
+                vstd::laws_cmp::obeys_cmp::<Pair<V, V>>(),
                 view_ord_consistent::<Pair<V, V>>(),
                 forall|u: <V as View>::V, w: <V as View>::V|
                     #[trigger] e@.contains((u, w))
@@ -190,9 +190,9 @@ broadcast use {
         open spec fn spec_edgesetgraphmteph_wf(&self) -> bool {
             self.vertices.spec_avltreesetmteph_wf()
             && self.edges.spec_avltreesetmteph_wf()
-            && vstd::laws_cmp::obeys_cmp_spec::<V>()
+            && vstd::laws_cmp::obeys_cmp::<V>()
             && view_ord_consistent::<V>()
-            && vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>()
+            && vstd::laws_cmp::obeys_cmp::<Pair<V, V>>()
             && view_ord_consistent::<Pair<V, V>>()
             && forall|u: <V as View>::V, v: <V as View>::V|
                 #[trigger] self.spec_edges().contains((u, v))
@@ -286,7 +286,7 @@ broadcast use {
                             };
                         };
                         assert(neighbors@.len() + 1 < usize::MAX as nat);
-                        assert(vstd::laws_cmp::obeys_cmp_spec::<V>());
+                        assert(vstd::laws_cmp::obeys_cmp::<V>());
                         assert(view_ord_consistent::<V>());
                     }
                     neighbors.insert(w);
@@ -346,9 +346,9 @@ broadcast use {
                     seq.spec_avltreeseqsteph_wf(),
                     self.edges.spec_avltreesetmteph_wf(),
                     self.edges@.len() <= old(self).spec_edges().len(),
-                    vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                    vstd::laws_cmp::obeys_cmp::<V>(),
                     view_ord_consistent::<V>(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>(),
+                    vstd::laws_cmp::obeys_cmp::<Pair<V, V>>(),
                     view_ord_consistent::<Pair<V, V>>(),
                     self.edges@.subset_of(old(self).edges@),
                     !self.spec_vertices().contains(v_view),

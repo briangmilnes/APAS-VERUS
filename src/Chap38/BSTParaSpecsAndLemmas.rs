@@ -41,7 +41,7 @@ pub mod BSTParaSpecsAndLemmas {
     /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
     pub proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             a.cmp_spec(&b) == Greater,
         ensures
             b.cmp_spec(&a) == Less,
@@ -53,7 +53,7 @@ pub mod BSTParaSpecsAndLemmas {
     /// cmp_spec transitivity: Less(a,b) and Less(b,c) implies Less(a,c).
     pub proof fn lemma_cmp_transitivity<T: StT + Ord>(a: T, b: T, c: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             a.cmp_spec(&b) == Less,
             b.cmp_spec(&c) == Less,
         ensures
@@ -66,7 +66,7 @@ pub mod BSTParaSpecsAndLemmas {
     /// Equal-substitution: Less(a,b) and Equal(b,c) implies Less(a,c).
     pub proof fn lemma_cmp_eq_subst<T: StT + Ord>(a: T, b: T, c: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             a.cmp_spec(&b) == Less,
             b.cmp_spec(&c) == Equal,
@@ -80,7 +80,7 @@ pub mod BSTParaSpecsAndLemmas {
     /// Left congruence: Equal(a,b) implies a and b compare the same way to c.
     pub proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             a.cmp_spec(&b) == Equal,
         ensures
@@ -93,7 +93,7 @@ pub mod BSTParaSpecsAndLemmas {
     /// Right congruence: Equal(b,c) implies any a compares the same way to b and c.
     pub proof fn lemma_cmp_equal_congruent_right<T: StT + Ord>(a: T, b: T, c: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
             b.cmp_spec(&c) == Equal,
         ensures
@@ -103,13 +103,13 @@ pub mod BSTParaSpecsAndLemmas {
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
     }
 
-    /// Ordering axioms: restates obeys_cmp_spec and view_ord_consistent as postconditions.
+    /// Ordering axioms: restates obeys_cmp and view_ord_consistent as postconditions.
     pub proof fn lemma_cmp_order_axioms<T: StT + Ord>()
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
         ensures
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent::<T>(),
     {}
 

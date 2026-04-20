@@ -16,7 +16,7 @@ pub mod vec_if {
     // Broadcast axiom to reveal obeys_view_eq for all types
     broadcast proof fn axiom_view_eq_auto_reveal<V: Eq + View + Ord>()
         requires 
-            obeys_cmp_spec::<V>(),
+            obeys_cmp::<V>(),
             #[trigger] obeys_view_eq::<V>()
         ensures 
             forall|v1: V, v2: V|
@@ -32,7 +32,7 @@ pub mod vec_if {
     fn vec_elem_equals<V: Eq + View + Ord>(vec: &Vec<V>, i: usize, v: &V) -> (result: bool)
         requires 
             i < vec.len(),
-            obeys_cmp_spec::<V>(),
+            obeys_cmp::<V>(),
             obeys_view_eq::<V>(),
         ensures
             result  ==> vec@[i as int]@ == v@,
@@ -53,7 +53,7 @@ pub mod vec_if {
     fn vec_elem_equals_with_reveal<V: Eq + View + Ord>(vec: &Vec<V>, i: usize, v: &V) -> (result: bool)
         requires 
             i < vec.len(),
-            obeys_cmp_spec::<V>(),
+            obeys_cmp::<V>(),
             obeys_view_eq::<V>(),
         ensures
             result  ==> vec@[i as int]@ == v@,

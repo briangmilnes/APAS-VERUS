@@ -435,7 +435,7 @@ pub mod BSTTreapStEph {
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(key: T) -> (tree: Self)
-            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent_st::<T>(),
+            requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent_st::<T>(),
             ensures
                 tree@.finite(),
                 tree@ =~= Set::<<T as View>::V>::empty().insert(key@),
@@ -445,7 +445,7 @@ pub mod BSTTreapStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn expose(&self) -> (exposed: ExposedTreap<T>)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent_st::<T>(),
                 self.spec_parambsttreapsteph_wf(),
             ensures
@@ -469,7 +469,7 @@ pub mod BSTTreapStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
         fn join_mid(exposed: ExposedTreap<T>) -> (tree: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent_st::<T>(),
                 exposed matches ExposedTreap::Node(l, k, r) ==> (
                     l@.finite() && r@.finite()
@@ -504,7 +504,7 @@ pub mod BSTTreapStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn param_insert(&mut self, key: T)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent_st::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent_st::<T>(),
                 old(self).spec_parambsttreapsteph_wf(),
                 old(self)@.len() < usize::MAX as nat,
             ensures
@@ -516,7 +516,7 @@ pub mod BSTTreapStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn param_delete(&mut self, key: &T)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent_st::<T>(),
                 old(self).spec_parambsttreapsteph_wf(),
                 old(self)@.len() < usize::MAX as nat,
@@ -529,7 +529,7 @@ pub mod BSTTreapStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn param_find(&self, key: &T) -> (found: Option<T>)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent_st::<T>(),
                 self.spec_parambsttreapsteph_wf(),
             ensures
@@ -540,7 +540,7 @@ pub mod BSTTreapStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn param_split(&self, key: &T) -> (parts: (Self, bool, Self))
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent_st::<T>(),
                 self.spec_parambsttreapsteph_wf(),
             ensures
@@ -559,7 +559,7 @@ pub mod BSTTreapStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         fn param_join_pair(&self, other: Self) -> (joined: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent_st::<T>(),
                 self.spec_parambsttreapsteph_wf(),
                 other.spec_parambsttreapsteph_wf(),
@@ -577,7 +577,7 @@ pub mod BSTTreapStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
         fn param_union(&self, other: &Self) -> (combined: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent_st::<T>(),
                 self.spec_parambsttreapsteph_wf(),
                 other.spec_parambsttreapsteph_wf(),
@@ -591,7 +591,7 @@ pub mod BSTTreapStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
         fn param_intersect(&self, other: &Self) -> (common: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent_st::<T>(),
                 self.spec_parambsttreapsteph_wf(),
                 other.spec_parambsttreapsteph_wf(),
@@ -605,7 +605,7 @@ pub mod BSTTreapStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
         fn param_difference(&self, other: &Self) -> (diff: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent_st::<T>(),
                 self.spec_parambsttreapsteph_wf(),
                 other.spec_parambsttreapsteph_wf(),
@@ -623,7 +623,7 @@ pub mod BSTTreapStEph {
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         ) -> (filtered: Self)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent_st::<T>(),
                 self.spec_parambsttreapsteph_wf(),
                 forall|t: &T| #[trigger] predicate.requires((t,)),
@@ -643,7 +643,7 @@ pub mod BSTTreapStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
         fn param_reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent_st::<T>(),
                 obeys_feq_clone::<T>(),
                 self.spec_parambsttreapsteph_wf(),
@@ -654,7 +654,7 @@ pub mod BSTTreapStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|), Span O(|t|)
         fn param_in_order(&self) -> (ordered: ArraySeqStPerS<T>)
             requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent_st::<T>(),
                 self.spec_parambsttreapsteph_wf(),
             ensures self@.finite(), ordered.spec_len() == self@.len();
@@ -1978,7 +1978,7 @@ pub mod BSTTreapStEph {
         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
     ) -> (node: BSTTreapStEph<T>)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent_st::<T>(),
             left@.finite(), right@.finite(),
             left@.disjoint(right@),
@@ -2033,7 +2033,7 @@ pub mod BSTTreapStEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent_st::<T>(),
             spec_param_wf_link(&tree.root),
             tree.spec_bsttreapsteph_wf(),
@@ -2079,7 +2079,7 @@ pub mod BSTTreapStEph {
     ) -> (joined: BSTTreapStEph<T>)
         requires
             // Veracity: NEEDED proof block
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent_st::<T>(),
             left@.finite(), right@.finite(),
             left@.disjoint(right@),
@@ -2157,7 +2157,7 @@ pub mod BSTTreapStEph {
         tree: BSTTreapStEph<T>, key: &T,
     ) -> (parts: (BSTTreapStEph<T>, bool, BSTTreapStEph<T>))
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent_st::<T>(),
             spec_param_wf_link(&tree.root),
             tree.spec_bsttreapsteph_wf(),
@@ -2323,7 +2323,7 @@ pub mod BSTTreapStEph {
     // Veracity: NEEDED proof block
     ) -> (joined: BSTTreapStEph<T>)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent_st::<T>(),
             left@.finite(), right@.finite(),
             forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
@@ -2434,7 +2434,7 @@ pub mod BSTTreapStEph {
         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
     ) -> (combined: BSTTreapStEph<T>)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent_st::<T>(),
             a@.len() + b@.len() < usize::MAX as nat,
             spec_param_wf_link(&a.root), spec_param_wf_link(&b.root),
@@ -2528,7 +2528,7 @@ pub mod BSTTreapStEph {
         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
     ) -> (common: BSTTreapStEph<T>)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent_st::<T>(),
             a@.len() < usize::MAX as nat,
             spec_param_wf_link(&a.root), spec_param_wf_link(&b.root),
@@ -2633,7 +2633,7 @@ pub mod BSTTreapStEph {
         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
     ) -> (remaining: BSTTreapStEph<T>)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent_st::<T>(),
             // Veracity: NEEDED proof block
             a@.len() < usize::MAX as nat,
@@ -2868,7 +2868,7 @@ pub mod BSTTreapStEph {
         Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
     ) -> (filtered: BSTTreapStEph<T>)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent_st::<T>(),
             forall|t: &T| #[trigger] predicate.requires((t,)),
             forall|x: T, keep: bool| #[trigger] predicate.ensures((&x,), keep)
@@ -3048,7 +3048,7 @@ pub mod BSTTreapStEph {
         tree: BSTTreapStEph<T>, op: &F, identity: T,
     ) -> (reduced: T)
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent_st::<T>(),
             obeys_feq_clone::<T>(),
             tree@.finite(),
@@ -3086,7 +3086,7 @@ pub mod BSTTreapStEph {
         tree: BSTTreapStEph<T>, out: &mut Vec<T>,
     )
         requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            vstd::laws_cmp::obeys_cmp::<T>(),
             view_ord_consistent_st::<T>(),
             tree@.finite(),
             spec_param_wf_link(&tree.root),

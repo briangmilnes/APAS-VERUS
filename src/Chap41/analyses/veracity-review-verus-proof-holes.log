@@ -21,40 +21,40 @@ Table of Contents:
 =================================================================
 
 ℹ AVLTreeSetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:586: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:587: info: accept()
    Info: 1 total
 ℹ AVLTreeSetMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:706: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:707: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:513: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:520: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:514: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:521: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
 ℹ AVLTreeSetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:953: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:954: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:955: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:956: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:960: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:954: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:955: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:956: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:957: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:961: info: accept()
    Info: 5 total
    5 clean proof functions
 ℹ AVLTreeSetStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:832: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:833: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:834: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:835: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:839: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:833: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:834: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:835: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:836: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:840: info: accept()
    Info: 5 total
    4 clean proof functions
 ℹ ArraySetEnumMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:979: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:993: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:980: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:994: info: accept()
    Info: 2 total
    7 clean proof functions
 ℹ ArraySetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1191: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1192: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1215: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1229: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1192: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1193: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1216: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1230: info: accept()
    Info: 4 total
    7 clean proof functions
 ✓ OrdKeyMap.rs
@@ -125,9 +125,11 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 19:56:03 -07:00
-Ended:     2026-04-12 19:56:03 -07:00
-Duration:  100ms
+Started:   2026-04-18 04:58:00 -07:00
+Ended:     2026-04-18 04:58:00 -07:00
+Duration:  121ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
--review-verus-proof-holes.log
+on:  121ms
+
+Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log

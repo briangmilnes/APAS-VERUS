@@ -1,5 +1,5 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -e benches -e tests -e rust_verify_test -e src/vstdplus -e src/standards -e src/experiments /home/milnes/projects/APAS-VERUS-agent1
-Full output: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-review-verus-proof-holes.log
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes -e benches -e tests -e rust_verify_test -e src/vstdplus -e src/standards -e src/experiments /home/milnes/projects/APAS-VERUS
+Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
   1. File Holes
@@ -24,81 +24,97 @@ Table of Contents:
    1 clean proof function
 ✓ bugs/ice-set-type-projection/reproducer.rs
    4 clean proof functions
+⚠ bugs/new-mut-ref-var-local-id/reproducer.rs
+/home/milnes/projects/APAS-VERUS/bugs/new-mut-ref-var-local-id/reproducer.rs:23: error: fn_missing_ensures - fn minimal — exec fn should have ensures
+        21 | // Minimal case: loop invariant with `match found { Some(k) => expr(k), None => ... }`.
+        22 | // No &mut, no Vec, no ghost variables — just the match-in-invariant pattern.
+        24 |     let mut found: Option<u64> = None;
+        25 |     let mut i: u64 = 0;
+/home/milnes/projects/APAS-VERUS/bugs/new-mut-ref-var-local-id/reproducer.rs:38: error: fn_missing_ensures - fn search_with_break — exec fn should have ensures
+        23 | fn minimal(n: u64) {
+            ...
+        36 | // Slightly larger variant closer to the APAS-VERUS triggering code:
+        37 | // Option search with break + match invariant.
+        39 |     let mut found: Option<u64> = None;
+        40 |     let mut i: u64 = 0;
+/home/milnes/projects/APAS-VERUS/bugs/new-mut-ref-var-local-id/reproducer.rs:23: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/bugs/new-mut-ref-var-local-id/reproducer.rs:38: info: fn_missing_requires
+   Info: 2 total
 ✓ src/Chap02/FibonacciHFScheduler.rs
    5 clean proof functions
 ℹ src/Chap02/HFSchedulerMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:95: info: external_type_specification_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:96: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:109: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:31: info: struct_outside_verus_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:37: info: enum_outside_verus_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:96: info: external_type_specification_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:97: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:110: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:32: info: struct_outside_verus_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:38: info: enum_outside_verus_accept_hole
    Info: 5 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:118: info: structural_false_positive THREAD_SPAWN join — #[verifier::external_body] // accept hole [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:144: info: structural_false_positive THREAD_SPAWN spawn_join — #[verifier::external_body] // accept hole [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:174: info: structural_false_positive THREAD_SPAWN spawn — #[verifier::external_body] // accept hole [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:195: info: structural_false_positive THREAD_SPAWN wait — #[verifier::external_body] // accept hole [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:119: info: structural_false_positive THREAD_SPAWN join — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:145: info: structural_false_positive THREAD_SPAWN spawn_join — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:175: info: structural_false_positive THREAD_SPAWN spawn — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:196: info: structural_false_positive THREAD_SPAWN wait — #[verifier::external_body] // accept hole [medium]
    Info: 4 × structural_false_positive
 ✓ src/Chap03/InsertionSortStEph.rs
 ✓ src/Chap05/KleeneStPer.rs
    9 clean proof functions
 ℹ src/Chap05/MappingStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:659: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:660: info: accept()
    Info: 1 total
 ✓ src/Chap05/RelationStEph.rs
 ℹ src/Chap05/SetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1145: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1156: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1179: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1223: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1146: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1157: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1180: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1224: info: accept()
    Info: 4 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1166: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1167: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
    Info: 1 × structural_false_positive
    1 clean proof function
 ℹ src/Chap05/SetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:950: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:951: info: accept()
    Info: 1 total
    1 clean proof function
 ℹ src/Chap06/DirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:1056: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:1068: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:1080: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:1091: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:1103: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:1115: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:1127: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:1139: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:1152: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:1164: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:1175: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1057: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1069: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1081: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1092: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1104: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1116: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1128: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1140: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1153: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1165: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1176: info: accept()
    Info: 11 total
 ✓ src/Chap06/DirGraphStEph.rs
 ℹ src/Chap06/LabDirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabDirGraphMtEph.rs:919: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabDirGraphMtEph.rs:930: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:920: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:931: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabDirGraphMtEph.rs:892: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabDirGraphMtEph.rs:905: info: structural_false_positive RWLOCK_GHOST add_labeled_arc — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:893: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:906: info: structural_false_positive RWLOCK_GHOST add_labeled_arc — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
    Info: 2 × structural_false_positive
 ✓ src/Chap06/LabDirGraphStEph.rs
 ℹ src/Chap06/LabUnDirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs:834: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs:846: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs:858: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs:870: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs:882: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:835: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:847: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:859: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:871: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:883: info: accept()
    Info: 5 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs:893: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs:905: info: structural_false_positive RWLOCK_GHOST add_labeled_edge — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:894: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:906: info: structural_false_positive RWLOCK_GHOST add_labeled_edge — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
    Info: 2 × structural_false_positive
 ✓ src/Chap06/LabUnDirGraphStEph.rs
 ℹ src/Chap06/UnDirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs:708: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs:720: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs:732: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs:745: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs:757: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs:769: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs:780: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:709: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:721: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:733: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:746: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:758: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:770: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:781: info: accept()
    Info: 7 total
 ✓ src/Chap06/UnDirGraphStEph.rs
 ✓ src/Chap06/WeightedDirGraphStEphF64.rs
@@ -115,111 +131,111 @@ Table of Contents:
 ✓ src/Chap06/WeightedDirGraphStEphU8.rs
 ✓ src/Chap06/WeightedDirGraphStEphUsize.rs
 ℹ src/Chap11/FibonacciMtEph2Threads.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEph2Threads.rs:172: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEph2Threads.rs:181: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:173: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:182: info: accept()
    Info: 2 total
 ℹ src/Chap11/FibonacciMtEphRecomputes.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEphRecomputes.rs:168: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtEphRecomputes.rs:177: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:169: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:178: info: accept()
    Info: 2 total
 ✓ src/Chap11/FibonacciMtPerAllThreads.rs
 ℹ src/Chap11/FibonacciMtPerTSM.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtPerTSM.rs:162: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap11/FibonacciMtPerTSM.rs:171: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:163: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:172: info: accept()
    Info: 2 total
 ✓ src/Chap11/FibonacciStEph.rs
    3 clean proof functions
 ℹ src/Chap12/Exercise12_1.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:40: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:83: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:92: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:101: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:107: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_1.rs:118: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:41: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:84: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:93: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:102: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:108: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:119: info: external_body_accept_hole
    Info: 6 total
 ✓ src/Chap12/Exercise12_2.rs
 ℹ src/Chap12/Exercise12_5.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:41: info: external_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:52: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:67: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:106: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:114: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:129: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:145: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:151: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:162: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:124: info: unsafe_block_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:136: info: unsafe_block_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:138: info: unsafe_block_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap12/Exercise12_5.rs:169: info: unsafe_block_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:42: info: external_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:53: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:68: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:107: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:115: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:130: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:146: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:152: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:163: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:125: info: unsafe_block_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:137: info: unsafe_block_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:139: info: unsafe_block_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:170: info: unsafe_block_accept_hole
    Info: 13 total
 ℹ src/Chap17/MathSeq.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:695: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap17/MathSeq.rs:709: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:696: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:710: info: accept()
    Info: 2 total
 ℹ src/Chap18/ArraySeq.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1518: info: external_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1657: info: external_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1693: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1519: info: external_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1658: info: external_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1694: info: accept()
    Info: 3 total
    10 clean proof functions
 ℹ src/Chap18/ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:101: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:1937: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:102: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1938: info: accept()
    Info: 2 total
    2 clean proof functions
 ℹ src/Chap18/ArraySeqMtEphSlice.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEphSlice.rs:1695: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEphSlice.rs:1696: info: accept()
    Info: 1 total
    5 clean proof functions
 ℹ src/Chap18/ArraySeqMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:339: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:1884: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:340: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1885: info: accept()
    Info: 2 total
    2 clean proof functions
 ✓ src/Chap18/ArraySeqSpecsAndLemmas.rs
    2 clean proof functions
 ℹ src/Chap18/ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStEph.rs:342: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStEph.rs:1093: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:343: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1094: info: accept()
    Info: 2 total
    1 clean proof function
 ℹ src/Chap18/ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStPer.rs:333: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStPer.rs:1078: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:334: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1079: info: accept()
    Info: 2 total
    1 clean proof function
 ℹ src/Chap18/LinkedListStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:284: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:910: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:924: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:285: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:911: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:925: info: accept()
    Info: 3 total
    1 clean proof function
 ℹ src/Chap18/LinkedListStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:276: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:892: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:906: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:277: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:893: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:907: info: accept()
    Info: 3 total
    1 clean proof function
 ℹ src/Chap19/ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:433: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1728: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:434: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1729: info: accept()
    Info: 2 total
    4 clean proof functions
 ℹ src/Chap19/ArraySeqMtEphSlice.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEphSlice.rs:1722: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEphSlice.rs:1723: info: accept()
    Info: 1 total
    5 clean proof functions
 ✓ src/Chap19/ArraySeqSpecsAndLemmas.rs
    2 clean proof functions
 ℹ src/Chap19/ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:413: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStEph.rs:1177: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:414: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1178: info: accept()
    Info: 2 total
    4 clean proof functions
 ℹ src/Chap19/ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs:401: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqStPer.rs:1178: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:402: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:1179: info: accept()
    Info: 2 total
    4 clean proof functions
 ✓ src/Chap21/Exercise21_5.rs
@@ -231,24 +247,24 @@ Table of Contents:
 ✓ src/Chap21/Exercise21_9.rs
    3 clean proof functions
 ℹ src/Chap23/BalBinTreeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:504: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:813: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:849: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:866: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:505: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:814: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:850: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:867: info: accept()
    Info: 4 total
    2 clean proof functions
 ℹ src/Chap23/PrimTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:961: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:973: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1002: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1020: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1026: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:962: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:974: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1003: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1021: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1027: info: accept()
    Info: 5 total
 ✓ src/Chap26/DivConReduceMtPer.rs
    3 clean proof functions
 ✓ src/Chap26/DivConReduceStPer.rs
 ℹ src/Chap26/ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:607: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:608: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
    5 clean proof functions
 ✓ src/Chap26/ETSPStEph.rs
@@ -267,7 +283,7 @@ Table of Contents:
 ✓ src/Chap27/ReduceContractStEph.rs
 ✓ src/Chap27/ScanContractMtEph.rs
 ℹ src/Chap27/ScanContractStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap27/ScanContractStEph.rs:47: info: opaque
+/home/milnes/projects/APAS-VERUS/src/Chap27/ScanContractStEph.rs:48: info: opaque
    Info: 1 total
    1 clean proof function
 ✓ src/Chap28/MCSSSpec.rs
@@ -287,25 +303,25 @@ Table of Contents:
 ✓ src/Chap28/MaxContigSubSumReducedMcsseStEph.rs
 ✓ src/Chap28/MaxContigSubSumReducedStEph.rs
 ℹ src/Chap30/Probability.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:76: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:112: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:118: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:126: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:134: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:142: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:150: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:77: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:113: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:119: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:127: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:135: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:143: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:151: info: external_body_accept_hole
    Info: 7 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:84: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] // accept hole [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:91: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] // accept hole [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:180: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] // accept hole [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap30/Probability.rs:191: info: structural_false_positive STD_TRAIT_IMPL hash — #[verifier::external_body]  // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:85: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:92: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:181: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS/src/Chap30/Probability.rs:192: info: structural_false_positive STD_TRAIT_IMPL hash — #[verifier::external_body]  // accept hole [high]
    Info: 4 × structural_false_positive
 ℹ src/Chap35/OrderStatSelectMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap35/OrderStatSelectMtEph.rs:171: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:172: info: fn_missing_requires
    Info: 1 total
    3 clean proof functions
 ℹ src/Chap35/OrderStatSelectMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap35/OrderStatSelectMtPer.rs:171: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:172: info: fn_missing_requires
    Info: 1 total
    3 clean proof functions
 ✓ src/Chap35/OrderStatSelectStEph.rs
@@ -319,326 +335,326 @@ Table of Contents:
 ✓ src/Chap36/QuickSortStEph.rs
    2 clean proof functions
 ℹ src/Chap37/AVLTreeSeq.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:1357: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:1358: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:1359: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:1382: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1358: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1359: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1360: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1383: info: accept()
    Info: 4 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeq.rs:1222: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1223: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
    Info: 1 × structural_false_positive
    3 clean proof functions
 ℹ src/Chap37/AVLTreeSeqMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:1001: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:1002: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:1003: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:1016: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:1002: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:1003: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:1004: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:1017: info: accept()
    Info: 4 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:764: info: structural_false_positive OPAQUE_EXTERNAL subseq_copy — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqMtPer.rs:863: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:765: info: structural_false_positive OPAQUE_EXTERNAL subseq_copy — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:864: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
    2 clean proof functions
 ℹ src/Chap37/AVLTreeSeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:1257: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:1377: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:1378: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:1379: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1258: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1378: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1379: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1380: info: accept()
    Info: 4 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStEph.rs:1293: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1294: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
    Info: 1 × structural_false_positive
    4 clean proof functions
 ℹ src/Chap37/AVLTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:926: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:1097: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:1098: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:1099: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:1114: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:927: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:1098: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:1099: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:1100: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:1115: info: accept()
    Info: 5 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/AVLTreeSeqStPer.rs:977: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:978: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
    Info: 1 × structural_false_positive
    4 clean proof functions
 ℹ src/Chap37/BSTAVLMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:914: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:1009: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:915: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:1010: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:841: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:867: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:879: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:891: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:902: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTAVLMtEph.rs:913: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:842: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:868: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:880: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:892: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:903: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:914: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
    Info: 6 × structural_false_positive
 ✓ src/Chap37/BSTAVLStEph.rs
 ℹ src/Chap37/BSTBBAlphaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:721: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:827: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:722: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:828: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:634: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:657: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:672: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:684: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:697: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:708: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:720: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:734: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() == 0 ==> min.is_none()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:735: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() > 0 ==> min.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:736: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> self@.tree_contains(min.unwrap())); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:748: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() == 0 ==> max.is_none()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:749: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() > 0 ==> max.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTBBAlphaMtEph.rs:750: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> self@.tree_contains(max.unwrap())); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:635: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:658: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == tree); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:673: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:685: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:698: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:709: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:721: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:735: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() == 0 ==> min.is_none()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:736: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() > 0 ==> min.is_some()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:737: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> self@.tree_contains(min.unwrap())); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:749: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() == 0 ==> max.is_none()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:750: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() > 0 ==> max.is_some()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:751: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> self@.tree_contains(max.unwrap())); [medium]
    Info: 13 × structural_false_positive
 ✓ src/Chap37/BSTBBAlphaStEph.rs
 ℹ src/Chap37/BSTPlainMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:700: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:806: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:701: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:807: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:614: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:637: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:652: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:663: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:675: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:687: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:699: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:713: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() == 0 ==> min.is_none()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:714: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() > 0 ==> min.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:715: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> self@.tree_contains(min.unwrap())); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:727: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() == 0 ==> max.is_none()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:728: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() > 0 ==> max.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTPlainMtEph.rs:729: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> self@.tree_contains(max.unwrap())); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:615: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:638: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == tree); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:653: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:664: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:676: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:688: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:700: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:714: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() == 0 ==> min.is_none()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:715: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() > 0 ==> min.is_some()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:716: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> self@.tree_contains(min.unwrap())); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:728: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() == 0 ==> max.is_none()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:729: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() > 0 ==> max.is_some()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:730: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> self@.tree_contains(max.unwrap())); [medium]
    Info: 13 × structural_false_positive
 ✓ src/Chap37/BSTPlainStEph.rs
 ℹ src/Chap37/BSTRBMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:383: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:1119: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:1439: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:1566: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:384: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1120: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1440: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1567: info: accept()
    Info: 4 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:1298: info: structural_false_positive RWLOCK_GHOST from_sorted_slice — assume(spec_is_bst_link(ghost_link)); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:1310: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:1388: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:1400: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:1410: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@.spec_size() == 0)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:1426: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTRBMtEph.rs:1438: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1299: info: structural_false_positive RWLOCK_GHOST from_sorted_slice — assume(spec_is_bst_link(ghost_link)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1311: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1389: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1401: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1411: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@.spec_size() == 0)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1427: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1439: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
    Info: 7 × structural_false_positive
    5 clean proof functions
 ✓ src/Chap37/BSTRBStEph.rs
 ℹ src/Chap37/BSTSetAVLMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetAVLMtEph.rs:181: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetAVLMtEph.rs:599: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetAVLMtEph.rs:182: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetAVLMtEph.rs:600: info: accept()
    Info: 2 total
 ℹ src/Chap37/BSTSetBBAlphaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetBBAlphaMtEph.rs:180: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetBBAlphaMtEph.rs:552: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:181: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:553: info: accept()
    Info: 2 total
 ℹ src/Chap37/BSTSetPlainMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetPlainMtEph.rs:180: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetPlainMtEph.rs:552: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:181: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:553: info: accept()
    Info: 2 total
 ℹ src/Chap37/BSTSetRBMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetRBMtEph.rs:180: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetRBMtEph.rs:598: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:181: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:599: info: accept()
    Info: 2 total
 ℹ src/Chap37/BSTSetSplayMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSetSplayMtEph.rs:616: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:617: info: accept()
    Info: 1 total
 ✓ src/Chap37/BSTSpecsAndLemmas.rs
    11 clean proof functions
 ℹ src/Chap37/BSTSplayMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:1542: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:1996: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:2098: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1543: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1997: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:2099: info: accept()
    Info: 3 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:1923: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:1930: info: structural_false_positive RWLOCK_GHOST insert — assume(link_node_count(current) <= usize::MAX as nat); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:1931: info: structural_false_positive RWLOCK_GHOST insert — assume(link_spec_size(current) <= link_spec_size(old(self)@) [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:1950: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == link_contains(self@, *target)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:1960: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == link_spec_size(self@)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:1971: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is None)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:1985: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == link_height(self@)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:1995: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() <==> link_contains(self@, *target)); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:2007: info: structural_false_positive RWLOCK_GHOST minimum — assume(link_spec_size(self@) > 0 ==> min.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:2008: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> link_contains(self@, min.unwrap())) [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:2009: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> forall|x: T| link_contains(self@, x [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:2021: info: structural_false_positive RWLOCK_GHOST maximum — assume(link_spec_size(self@) > 0 ==> max.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:2022: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> link_contains(self@, max.unwrap())) [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap37/BSTSplayMtEph.rs:2023: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> forall|x: T| link_contains(self@, x [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1924: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1931: info: structural_false_positive RWLOCK_GHOST insert — assume(link_node_count(current) <= usize::MAX as nat); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1932: info: structural_false_positive RWLOCK_GHOST insert — assume(link_spec_size(current) <= link_spec_size(old(self)@) [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1951: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == link_contains(self@, *target)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1961: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == link_spec_size(self@)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1972: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is None)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1986: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == link_height(self@)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1996: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() <==> link_contains(self@, *target)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:2008: info: structural_false_positive RWLOCK_GHOST minimum — assume(link_spec_size(self@) > 0 ==> min.is_some()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:2009: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> link_contains(self@, min.unwrap())) [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:2010: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> forall|x: T| link_contains(self@, x [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:2022: info: structural_false_positive RWLOCK_GHOST maximum — assume(link_spec_size(self@) > 0 ==> max.is_some()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:2023: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> link_contains(self@, max.unwrap())) [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:2024: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> forall|x: T| link_contains(self@, x [medium]
    Info: 14 × structural_false_positive
    3 clean proof functions
 ✓ src/Chap37/BSTSplayStEph.rs
    3 clean proof functions
 ℹ src/Chap38/BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:118: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:1717: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:1736: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:119: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1726: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1745: info: accept()
    Info: 3 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:1822: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:1823: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1831: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1832: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
    Info: 2 × structural_false_positive
 ✓ src/Chap38/BSTParaSpecsAndLemmas.rs
    6 clean proof functions
 ℹ src/Chap38/BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:107: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:108: info: fn_missing_requires
    Info: 1 total
 ℹ src/Chap39/BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:78: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:88: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1810: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1811: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1812: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1821: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:79: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:89: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1811: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1812: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1813: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1822: info: accept()
    Info: 6 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:219: info: structural_false_positive OPAQUE_EXTERNAL priority_for — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1897: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Send for ParamTreap<T> {} [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1898: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Sync for ParamTreap<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:220: info: structural_false_positive OPAQUE_EXTERNAL priority_for — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1898: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Send for ParamTreap<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1899: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Sync for ParamTreap<T> {} [high]
    Info: 3 × structural_false_positive
 ℹ src/Chap39/BSTSetTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:553: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:554: info: accept()
    Info: 1 total
 ℹ src/Chap39/BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1246: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1467: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1482: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1619: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1620: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1630: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1651: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1652: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1659: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1247: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1468: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1483: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1620: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1621: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1631: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1652: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1653: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1660: info: accept()
    Info: 9 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1245: info: structural_false_positive RWLOCK_GHOST find — assume(result.is_some() <==> self@.contains(target@)); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1267: info: structural_false_positive RWLOCK_GHOST size — proof { assume(result as nat == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1298: info: structural_false_positive RWLOCK_GHOST minimum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1311: info: structural_false_positive RWLOCK_GHOST maximum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1325: info: structural_false_positive RWLOCK_GHOST in_order — proof { assume(ordered@.len() == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1339: info: structural_false_positive RWLOCK_GHOST pre_order — proof { assume(preordered@.len() == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1246: info: structural_false_positive RWLOCK_GHOST find — assume(result.is_some() <==> self@.contains(target@)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1268: info: structural_false_positive RWLOCK_GHOST size — proof { assume(result as nat == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1299: info: structural_false_positive RWLOCK_GHOST minimum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1312: info: structural_false_positive RWLOCK_GHOST maximum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1326: info: structural_false_positive RWLOCK_GHOST in_order — proof { assume(ordered@.len() == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1340: info: structural_false_positive RWLOCK_GHOST pre_order — proof { assume(preordered@.len() == self@.len()); } [medium]
    Info: 6 × structural_false_positive
    25 clean proof functions
 ✓ src/Chap39/BSTTreapSpecsAndLemmas.rs
    11 clean proof functions
 ℹ src/Chap39/BSTTreapStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1935: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1940: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1955: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1936: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1941: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1956: info: accept()
    Info: 3 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1962: info: structural_false_positive OPAQUE_EXTERNAL priority_for_st — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1963: info: structural_false_positive OPAQUE_EXTERNAL priority_for_st — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
    21 clean proof functions
 ℹ src/Chap40/BSTKeyValueStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:1394: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:1590: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:1590: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:1618: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:1639: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:1639: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTKeyValueStEph.rs:1642: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1395: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1591: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1591: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1619: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1640: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1640: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1643: info: accept()
    Info: 7 total
    14 clean proof functions
 ℹ src/Chap40/BSTReducedStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:169: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:172: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:195: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:1560: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:1715: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:1715: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:1774: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:1774: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTReducedStEph.rs:1777: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:170: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:173: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:196: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1561: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1716: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1716: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1775: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1775: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1778: info: accept()
    Info: 9 total
    8 clean proof functions
 ℹ src/Chap40/BSTSizeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:1441: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:1572: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:1572: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:1600: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:1618: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:1618: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap40/BSTSizeStEph.rs:1621: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1442: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1573: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1573: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1601: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1619: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1619: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1622: info: accept()
    Info: 7 total
    8 clean proof functions
 ℹ src/Chap41/AVLTreeSetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtEph.rs:586: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:587: info: accept()
    Info: 1 total
 ℹ src/Chap41/AVLTreeSetMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:706: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:707: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:513: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetMtPer.rs:520: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:514: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:521: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
 ℹ src/Chap41/AVLTreeSetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:953: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:954: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:955: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:956: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStEph.rs:960: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:954: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:955: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:956: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:957: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:961: info: accept()
    Info: 5 total
    5 clean proof functions
 ℹ src/Chap41/AVLTreeSetStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:832: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:833: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:834: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:835: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/AVLTreeSetStPer.rs:839: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:833: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:834: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:835: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:836: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:840: info: accept()
    Info: 5 total
    4 clean proof functions
 ℹ src/Chap41/ArraySetEnumMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:979: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetEnumMtEph.rs:993: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:980: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:994: info: accept()
    Info: 2 total
    7 clean proof functions
 ℹ src/Chap41/ArraySetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1191: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1192: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1215: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap41/ArraySetStEph.rs:1229: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1192: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1193: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1216: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1230: info: accept()
    Info: 4 total
    7 clean proof functions
 ✓ src/Chap41/OrdKeyMap.rs
    26 clean proof functions
 ℹ src/Chap42/TableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:2549: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:2561: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2550: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2562: info: accept()
    Info: 2 total
 ✓ src/Chap42/TableSpecsAndLemmas.rs
    15 clean proof functions
 ℹ src/Chap42/TableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStEph.rs:2680: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2681: info: accept()
    Info: 1 total
    1 clean proof function
 ℹ src/Chap42/TableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:2892: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:2903: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2893: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2904: info: accept()
    Info: 2 total
    5 clean proof functions
 ✓ src/Chap43/AugOrderedTableMtEph.rs
    1 clean proof function
 ℹ src/Chap43/AugOrderedTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/AugOrderedTableStEph.rs:989: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:1009: info: accept()
    Info: 1 total
    1 clean proof function
 ✓ src/Chap43/AugOrderedTableStPer.rs
    1 clean proof function
 ℹ src/Chap43/OrderedSetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:732: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:733: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:330: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:365: info: structural_false_positive RWLOCK_GHOST find — proof { assume(found == self@.contains(x@)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:380: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:437: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val@.len() + other_ref@.len() < usize: [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:469: info: structural_false_positive RWLOCK_GHOST to_seq — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:532: info: structural_false_positive RWLOCK_GHOST first — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:548: info: structural_false_positive RWLOCK_GHOST last — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:563: info: structural_false_positive RWLOCK_GHOST previous — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:577: info: structural_false_positive RWLOCK_GHOST next — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:585: info: structural_false_positive RWLOCK_GHOST split — proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:592: info: structural_false_positive RWLOCK_GHOST split — assume(left.spec_orderedsetsteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:593: info: structural_false_positive RWLOCK_GHOST split — assume(right.spec_orderedsetsteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:608: info: structural_false_positive RWLOCK_GHOST join — proof { assume(locked_val@.len() + other_inner@.len() < usiz [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:629: info: structural_false_positive RWLOCK_GHOST get_range — proof { assume(range.spec_orderedsetsteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:643: info: structural_false_positive RWLOCK_GHOST rank — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:658: info: structural_false_positive RWLOCK_GHOST select — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:666: info: structural_false_positive RWLOCK_GHOST split_rank — proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:673: info: structural_false_positive RWLOCK_GHOST split_rank — assume(left.spec_orderedsetsteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedSetMtEph.rs:674: info: structural_false_positive RWLOCK_GHOST split_rank — assume(right.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:331: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:366: info: structural_false_positive RWLOCK_GHOST find — proof { assume(found == self@.contains(x@)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:381: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:438: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val@.len() + other_ref@.len() < usize: [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:470: info: structural_false_positive RWLOCK_GHOST to_seq — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:533: info: structural_false_positive RWLOCK_GHOST first — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:549: info: structural_false_positive RWLOCK_GHOST last — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:564: info: structural_false_positive RWLOCK_GHOST previous — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:578: info: structural_false_positive RWLOCK_GHOST next — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:586: info: structural_false_positive RWLOCK_GHOST split — proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:593: info: structural_false_positive RWLOCK_GHOST split — assume(left.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:594: info: structural_false_positive RWLOCK_GHOST split — assume(right.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:609: info: structural_false_positive RWLOCK_GHOST join — proof { assume(locked_val@.len() + other_inner@.len() < usiz [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:630: info: structural_false_positive RWLOCK_GHOST get_range — proof { assume(range.spec_orderedsetsteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:644: info: structural_false_positive RWLOCK_GHOST rank — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:659: info: structural_false_positive RWLOCK_GHOST select — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:667: info: structural_false_positive RWLOCK_GHOST split_rank — proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:674: info: structural_false_positive RWLOCK_GHOST split_rank — assume(left.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:675: info: structural_false_positive RWLOCK_GHOST split_rank — assume(right.spec_orderedsetsteph_wf()); [medium]
    Info: 19 × structural_false_positive
 ✓ src/Chap43/OrderedSetStEph.rs
    3 clean proof functions
@@ -647,104 +663,104 @@ Table of Contents:
 ✓ src/Chap43/OrderedSpecsAndLemmas.rs
    11 clean proof functions
 ℹ src/Chap43/OrderedTableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1021: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1025: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1026: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1022: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1026: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1027: info: accept()
    Info: 3 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:425: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:459: info: structural_false_positive RWLOCK_GHOST find — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:480: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(!locked_val@.contains_key(k@) ==> locked_val@ [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:482: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:499: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:509: info: structural_false_positive RWLOCK_GHOST domain — assume(self@.dom().finite()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:514: info: structural_false_positive RWLOCK_GHOST domain — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:567: info: structural_false_positive RWLOCK_GHOST intersection — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:587: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val@.dom().len() + other_ref@.dom().le [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:589: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:609: info: structural_false_positive RWLOCK_GHOST difference — proof { assume(other_ref.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:611: info: structural_false_positive RWLOCK_GHOST difference — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:629: info: structural_false_positive RWLOCK_GHOST restrict — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:645: info: structural_false_positive RWLOCK_GHOST subtract — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:653: info: structural_false_positive RWLOCK_GHOST reduce — proof { assume(self@.dom().finite()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:657: info: structural_false_positive RWLOCK_GHOST reduce — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:665: info: structural_false_positive RWLOCK_GHOST collect — proof { assume(self@.dom().finite()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:679: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:681: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:692: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:694: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:705: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:707: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:718: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:721: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:738: info: structural_false_positive RWLOCK_GHOST split_key — proof { assume(empty_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:741: info: structural_false_positive RWLOCK_GHOST split_key — assume(left_inner.spec_orderedtablesteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:742: info: structural_false_positive RWLOCK_GHOST split_key — assume(right_inner.spec_orderedtablesteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:764: info: structural_false_positive RWLOCK_GHOST get_key_range — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:767: info: structural_false_positive RWLOCK_GHOST get_key_range — proof { assume(st_range.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:779: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:792: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:806: info: structural_false_positive RWLOCK_GHOST split_rank_key — proof { assume(empty_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:809: info: structural_false_positive RWLOCK_GHOST split_rank_key — assume(left.spec_orderedtablesteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:810: info: structural_false_positive RWLOCK_GHOST split_rank_key — assume(right.spec_orderedtablesteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:819: info: structural_false_positive RWLOCK_GHOST iter — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:855: info: structural_false_positive RWLOCK_GHOST from_st — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:972: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1079: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal + Ord> Send for OrderedTableMtEph<K, V> {} [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:1080: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal + Ord> Sync for OrderedTableMtEph<K, V> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:426: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:460: info: structural_false_positive RWLOCK_GHOST find — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:481: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(!locked_val@.contains_key(k@) ==> locked_val@ [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:483: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:500: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:510: info: structural_false_positive RWLOCK_GHOST domain — assume(self@.dom().finite()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:515: info: structural_false_positive RWLOCK_GHOST domain — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:568: info: structural_false_positive RWLOCK_GHOST intersection — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:588: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val@.dom().len() + other_ref@.dom().le [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:590: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:610: info: structural_false_positive RWLOCK_GHOST difference — proof { assume(other_ref.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:612: info: structural_false_positive RWLOCK_GHOST difference — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:630: info: structural_false_positive RWLOCK_GHOST restrict — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:646: info: structural_false_positive RWLOCK_GHOST subtract — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:654: info: structural_false_positive RWLOCK_GHOST reduce — proof { assume(self@.dom().finite()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:658: info: structural_false_positive RWLOCK_GHOST reduce — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:666: info: structural_false_positive RWLOCK_GHOST collect — proof { assume(self@.dom().finite()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:680: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:682: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:693: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:695: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:706: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:708: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:719: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:722: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:739: info: structural_false_positive RWLOCK_GHOST split_key — proof { assume(empty_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:742: info: structural_false_positive RWLOCK_GHOST split_key — assume(left_inner.spec_orderedtablesteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:743: info: structural_false_positive RWLOCK_GHOST split_key — assume(right_inner.spec_orderedtablesteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:765: info: structural_false_positive RWLOCK_GHOST get_key_range — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:768: info: structural_false_positive RWLOCK_GHOST get_key_range — proof { assume(st_range.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:780: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:793: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:807: info: structural_false_positive RWLOCK_GHOST split_rank_key — proof { assume(empty_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:810: info: structural_false_positive RWLOCK_GHOST split_rank_key — assume(left.spec_orderedtablesteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:811: info: structural_false_positive RWLOCK_GHOST split_rank_key — assume(right.spec_orderedtablesteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:820: info: structural_false_positive RWLOCK_GHOST iter — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:856: info: structural_false_positive RWLOCK_GHOST from_st — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:973: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1080: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal + Ord> Send for OrderedTableMtEph<K, V> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:1081: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal + Ord> Sync for OrderedTableMtEph<K, V> {} [high]
    Info: 40 × structural_false_positive
 ℹ src/Chap43/OrderedTableMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:905: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:906: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:906: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:907: info: accept()
    Info: 2 total
 ✓ src/Chap43/OrderedTableStEph.rs
 ℹ src/Chap43/OrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1519: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStPer.rs:1531: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1520: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1532: info: accept()
    Info: 2 total
 ℹ src/Chap44/DocumentIndex.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap44/DocumentIndex.rs:645: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:646: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap44/DocumentIndex.rs:651: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:652: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
    Info: 1 × structural_false_positive
 ℹ src/Chap45/BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:859: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:860: info: accept()
    Info: 1 total
    1 clean proof function
 ℹ src/Chap45/BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1847: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1864: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1848: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1865: info: accept()
    Info: 2 total
    5 clean proof functions
 ℹ src/Chap45/HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:115: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:132: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:116: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:133: info: accept()
    Info: 2 total
    1 clean proof function
 ℹ src/Chap45/LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:733: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1196: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1218: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1246: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1257: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:734: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1197: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1219: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1247: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1258: info: accept()
    Info: 5 total
    4 clean proof functions
 ℹ src/Chap45/SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1255: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1256: info: accept()
    Info: 1 total
    4 clean proof functions
 ℹ src/Chap45/UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:846: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:862: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:847: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:863: info: accept()
    Info: 2 total
    1 clean proof function
 ✓ src/Chap47/ChainedHashTable.rs
    5 clean proof functions
 ℹ src/Chap47/DoubleHashFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:104: info: structural_false_positive OPAQUE_EXTERNAL second_hash — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:105: info: structural_false_positive OPAQUE_EXTERNAL second_hash — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
    1 clean proof function
 ℹ src/Chap47/FlatHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:268: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:269: info: accept()
    Info: 1 total
    4 clean proof functions
 ✓ src/Chap47/LinProbFlatHashTableStEph.rs
@@ -755,10 +771,10 @@ Table of Contents:
 ✓ src/Chap47/QuadProbFlatHashTableStEph.rs
    6 clean proof functions
 ℹ src/Chap47/StructChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:880: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:898: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:931: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:946: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:881: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:899: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:932: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:947: info: accept()
    Info: 4 total
    1 clean proof function
 ✓ src/Chap47/VecChainedHashTableStEph.rs
@@ -772,90 +788,90 @@ Table of Contents:
 ✓ src/Chap49/SubsetSumStEph.rs
 ✓ src/Chap49/SubsetSumStPer.rs
 ℹ src/Chap50/MatrixChainMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:609: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtEph.rs:632: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:610: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:633: info: accept()
    Info: 2 total
 ℹ src/Chap50/MatrixChainMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtPer.rs:488: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainMtPer.rs:507: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:489: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:508: info: accept()
    Info: 2 total
 ℹ src/Chap50/MatrixChainStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStEph.rs:450: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStEph.rs:467: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:451: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:468: info: accept()
    Info: 2 total
 ℹ src/Chap50/MatrixChainStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStPer.rs:410: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/MatrixChainStPer.rs:426: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:411: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:427: info: accept()
    Info: 2 total
 ℹ src/Chap50/OptBinSearchTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:510: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:530: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtEph.rs:553: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:511: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:531: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:554: info: accept()
    Info: 3 total
 ℹ src/Chap50/OptBinSearchTreeMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:389: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:408: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeMtPer.rs:426: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:390: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:409: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:427: info: accept()
    Info: 3 total
 ℹ src/Chap50/OptBinSearchTreeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStEph.rs:324: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStEph.rs:343: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:325: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:344: info: accept()
    Info: 2 total
 ℹ src/Chap50/OptBinSearchTreeStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStPer.rs:290: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap50/OptBinSearchTreeStPer.rs:309: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:291: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:310: info: accept()
    Info: 2 total
 ℹ src/Chap51/BottomUpDPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPMtEph.rs:180: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPMtEph.rs:486: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:181: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:487: info: accept()
    Info: 2 total
    2 clean proof functions
 ℹ src/Chap51/BottomUpDPMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPMtPer.rs:160: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPMtPer.rs:457: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:161: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:458: info: accept()
    Info: 2 total
    2 clean proof functions
 ℹ src/Chap51/BottomUpDPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPStEph.rs:181: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPStEph.rs:505: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:182: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:506: info: accept()
    Info: 2 total
    2 clean proof functions
 ℹ src/Chap51/BottomUpDPStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPStPer.rs:161: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/BottomUpDPStPer.rs:469: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:162: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:470: info: accept()
    Info: 2 total
    2 clean proof functions
 ✓ src/Chap51/SeqSpecsAndLemmas.rs
    1 clean proof function
 ℹ src/Chap51/TopDownDPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtEph.rs:81: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtEph.rs:509: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:82: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:510: info: accept()
    Info: 2 total
    2 clean proof functions
 ℹ src/Chap51/TopDownDPMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtPer.rs:81: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPMtPer.rs:469: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:82: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:470: info: accept()
    Info: 2 total
    2 clean proof functions
 ℹ src/Chap51/TopDownDPStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPStEph.rs:395: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:396: info: accept()
    Info: 1 total
    2 clean proof functions
 ℹ src/Chap51/TopDownDPStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap51/TopDownDPStPer.rs:359: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:360: info: accept()
    Info: 1 total
    2 clean proof functions
 ✓ src/Chap52/AdjMatrixGraphMtEph.rs
 ✓ src/Chap52/AdjMatrixGraphMtPer.rs
 ✓ src/Chap52/AdjMatrixGraphStEph.rs
 ℹ src/Chap52/AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjMatrixGraphStPer.rs:665: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:666: info: accept()
    Info: 1 total
 ✓ src/Chap52/AdjSeqGraphMtEph.rs
 ✓ src/Chap52/AdjSeqGraphMtPer.rs
 ✓ src/Chap52/AdjSeqGraphStEph.rs
 ℹ src/Chap52/AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjSeqGraphStPer.rs:647: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:648: info: accept()
    Info: 1 total
 ✓ src/Chap52/AdjTableGraphMtPer.rs
 ✓ src/Chap52/AdjTableGraphSpecsAndLemmas.rs
@@ -864,18 +880,18 @@ Table of Contents:
 ✓ src/Chap52/AdjTableGraphStPer.rs
    3 clean proof functions
 ℹ src/Chap52/EdgeSetGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphMtEph.rs:438: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtEph.rs:439: info: accept()
    Info: 1 total
    1 clean proof function
 ✓ src/Chap52/EdgeSetGraphMtPer.rs
    1 clean proof function
 ℹ src/Chap52/EdgeSetGraphStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStEph.rs:478: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:479: info: accept()
    Info: 1 total
    1 clean proof function
 ℹ src/Chap52/EdgeSetGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStPer.rs:456: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStPer.rs:473: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:457: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:474: info: accept()
    Info: 2 total
    1 clean proof function
 ✓ src/Chap53/GraphSearchMtPer.rs
@@ -920,21 +936,21 @@ Table of Contents:
 ✓ src/Chap56/SSSPResultStPerF64.rs
 ✓ src/Chap56/SSSPResultStPerI64.rs
 ℹ src/Chap57/DijkstraStEphF64.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphF64.rs:145: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphF64.rs:147: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphF64.rs:149: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphF64.rs:151: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphF64.rs:154: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphF64.rs:171: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphF64.rs:173: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:146: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:148: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:150: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:152: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:155: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:172: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:174: info: external_body_accept_hole
    Info: 7 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphF64.rs:115: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphF64.rs:134: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:116: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:135: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
    6 clean proof functions
 ℹ src/Chap57/DijkstraStEphU64.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphU64.rs:111: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap57/DijkstraStEphU64.rs:128: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:112: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:129: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
    4 clean proof functions
 ✓ src/Chap57/StackStEph.rs
@@ -945,18 +961,18 @@ Table of Contents:
 ✓ src/Chap59/JohnsonStEphF64.rs
 ✓ src/Chap59/JohnsonStEphI64.rs
 ℹ src/Chap61/EdgeContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap61/EdgeContractionMtEph.rs:99: info: structural_false_positive OPAQUE_EXTERNAL edge_contract_mt — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:100: info: structural_false_positive OPAQUE_EXTERNAL edge_contract_mt — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
 ✓ src/Chap61/EdgeContractionStEph.rs
 ℹ src/Chap61/VertexMatchingMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap61/VertexMatchingMtEph.rs:147: info: structural_false_positive OPAQUE_EXTERNAL select_edges_parallel — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap61/VertexMatchingMtEph.rs:180: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:148: info: structural_false_positive OPAQUE_EXTERNAL select_edges_parallel — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:181: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
    Info: 2 × structural_false_positive
 ✓ src/Chap61/VertexMatchingStEph.rs
 ✓ src/Chap62/StarContractionMtEph.rs
 ✓ src/Chap62/StarContractionStEph.rs
 ℹ src/Chap62/StarPartitionMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap62/StarPartitionMtEph.rs:128: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionMtEph.rs:129: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
 ✓ src/Chap62/StarPartitionStEph.rs
 ✓ src/Chap63/ConnectivityMtEph.rs
@@ -967,7 +983,7 @@ Table of Contents:
 ✓ src/Chap65/KruskalStEph.rs
    1 clean proof function
 ℹ src/Chap65/PrimStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:506: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:507: info: accept()
    Info: 1 total
    4 clean proof functions
 ✓ src/Chap65/UnionFindArrayStEph.rs
@@ -975,21 +991,21 @@ Table of Contents:
 ✓ src/Chap65/UnionFindNoPCStEph.rs
    5 clean proof functions
 ℹ src/Chap65/UnionFindPCStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindPCStEph.rs:106: info: opaque
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindPCStEph.rs:122: info: opaque
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindPCStEph.rs:132: info: opaque
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:107: info: opaque
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:123: info: opaque
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:133: info: opaque
    Info: 3 total
    18 clean proof functions
 ℹ src/Chap66/BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:1129: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:1130: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:195: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:196: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
 ℹ src/Chap66/BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaStEph.rs:565: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:566: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
    Info: 1 × structural_false_positive
 ℹ src/Concurrency.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Concurrency.rs:26: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Concurrency.rs:27: info: external_body_accept_hole
    Info: 1 total
 ✓ src/ParaPairs.rs
 
@@ -1264,6 +1280,7 @@ Concurrency  depends upon only clean modules
 ParaPairs  depends upon only clean modules
 bugs::f64-bitvector-crash::reproducer  depends upon only clean modules
 bugs::ice-set-type-projection::reproducer  depends upon only clean modules
+bugs::new-mut-ref-var-local-id::reproducer  depends upon only clean modules
 
 =================================================================
 2.2. By File
@@ -1532,15 +1549,16 @@ src/Concurrency.rs  depends upon only clean modules
 src/ParaPairs.rs  depends upon only clean modules
 bugs/f64-bitvector-crash/reproducer.rs  depends upon only clean modules
 bugs/ice-set-type-projection/reproducer.rs  depends upon only clean modules
+bugs/new-mut-ref-var-local-id/reproducer.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   263 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
-   263 total
+   263 clean (no holes, no errors; 99%)
+   1 holed (holes or errors, 0%)
+   264 total
 
 Proof Functions:
    549 clean (100%)
@@ -1549,26 +1567,29 @@ Proof Functions:
 
 Function Specs:
    5910 exec fns with complete spec (requires+ensures) (65%)
-   56 exec fns missing spec (0%)
+   58 exec fns missing spec (0%)
    3100 proof/spec fns clean (34%)
    0 proof/spec fns with holes (0%)
-   9066 total fns
+   9068 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Accepted (reviewed): 294 total
+Warnings: 2 total
+   2 × fn_missing_ensures
+
+Accepted (reviewed): 296 total
    216 × accept()
    33 × external_body_accept_hole
+   17 × fn_missing_requires
    16 × trivial_spec_wf
-   15 × fn_missing_requires
-   4 × opaque
    4 × unsafe_block_accept_hole
+   4 × opaque
    3 × external_accept_hole
+   1 × struct_outside_verus_accept_hole
    1 × enum_outside_verus_accept_hole
    1 × external_type_specification_accept_hole
-   1 × struct_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  5  Chap05:  6  Chap06: 25
@@ -1589,7 +1610,7 @@ Structural (info only): 157
    6 × UNSAFE_SEND_SYNC
    4 × THREAD_SPAWN
 
-No proof holes or warnings found! All proofs are complete.
+No proof holes found! All proofs are complete.
 
 =================================================================
 4. Proof Targets
@@ -1601,52 +1622,52 @@ No proof holes or warnings found! All proofs are complete.
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Concurrency  (0 holes, 1 files)
-   2  Chap54  (0 holes, 5 files)
-   3  Chap39  (0 holes, 5 files)
-   4  Chap61  (0 holes, 4 files)
-   5  Chap56  (0 holes, 10 files)
-   6  Chap11  (0 holes, 5 files)
-   7  Chap18  (0 holes, 9 files)
-   8  Chap51  (0 holes, 9 files)
-   9  Chap27  (0 holes, 5 files)
-   10  Chap21  (0 holes, 5 files)
-   11  Chap37  (0 holes, 20 files)
-   12  Chap65  (0 holes, 5 files)
-   13  Chap59  (0 holes, 4 files)
-   14  Chap36  (0 holes, 3 files)
-   15  Chap63  (0 holes, 2 files)
-   16  ParaPairs  (0 holes, 1 files)
-   17  Chap53  (0 holes, 5 files)
-   18  Chap28  (0 holes, 11 files)
-   19  Chap06  (0 holes, 21 files)
-   20  Chap66  (0 holes, 2 files)
-   21  Chap47  (0 holes, 9 files)
-   22  Chap26  (0 holes, 8 files)
-   23  Chap12  (0 holes, 3 files)
-   24  Chap52  (0 holes, 16 files)
-   25  Chap35  (0 holes, 4 files)
-   26  Chap64  (0 holes, 3 files)
-   27  Chap38  (0 holes, 3 files)
+   1  Chap36  (0 holes, 3 files)
+   2  Chap02  (0 holes, 2 files)
+   3  Chap45  (0 holes, 6 files)
+   4  Chap18  (0 holes, 9 files)
+   5  Chap65  (0 holes, 5 files)
+   6  Chap19  (0 holes, 5 files)
+   7  Chap47  (0 holes, 9 files)
+   8  Chap54  (0 holes, 5 files)
+   9  Chap05  (0 holes, 5 files)
+   10  Chap42  (0 holes, 4 files)
+   11  Chap06  (0 holes, 21 files)
+   12  Chap28  (0 holes, 11 files)
+   13  Chap53  (0 holes, 5 files)
+   14  ParaPairs  (0 holes, 1 files)
+   15  Chap55  (0 holes, 9 files)
+   16  Chap63  (0 holes, 2 files)
+   17  Chap66  (0 holes, 2 files)
+   18  Chap21  (0 holes, 5 files)
+   19  Chap11  (0 holes, 5 files)
+   20  Chap23  (0 holes, 2 files)
+   21  Chap41  (0 holes, 7 files)
+   22  Chap50  (0 holes, 8 files)
+   23  Chap39  (0 holes, 5 files)
+   24  Chap12  (0 holes, 3 files)
+   25  Chap58  (0 holes, 2 files)
+   26  Chap51  (0 holes, 9 files)
+   27  Chap03  (0 holes, 1 files)
    28  Chap17  (0 holes, 1 files)
-   29  Chap49  (0 holes, 8 files)
-   30  Chap41  (0 holes, 7 files)
-   31  Chap05  (0 holes, 5 files)
-   32  Chap57  (0 holes, 3 files)
-   33  Chap03  (0 holes, 1 files)
-   34  Chap44  (0 holes, 1 files)
-   35  Chap55  (0 holes, 9 files)
-   36  Chap40  (0 holes, 3 files)
-   37  Chap58  (0 holes, 2 files)
-   38  Chap30  (0 holes, 1 files)
-   39  Chap02  (0 holes, 2 files)
-   40  Chap42  (0 holes, 4 files)
-   41  Chap43  (0 holes, 11 files)
-   42  Chap19  (0 holes, 5 files)
-   43  Chap23  (0 holes, 2 files)
-   44  Chap50  (0 holes, 8 files)
-   45  Chap45  (0 holes, 6 files)
-   46  Chap62  (0 holes, 4 files)
+   29  Chap64  (0 holes, 3 files)
+   30  Chap52  (0 holes, 16 files)
+   31  Chap38  (0 holes, 3 files)
+   32  Chap61  (0 holes, 4 files)
+   33  Chap57  (0 holes, 3 files)
+   34  Chap49  (0 holes, 8 files)
+   35  Chap56  (0 holes, 10 files)
+   36  Chap44  (0 holes, 1 files)
+   37  Concurrency  (0 holes, 1 files)
+   38  Chap59  (0 holes, 4 files)
+   39  Chap30  (0 holes, 1 files)
+   40  Chap62  (0 holes, 4 files)
+   41  Chap27  (0 holes, 5 files)
+   42  Chap26  (0 holes, 8 files)
+   43  Chap35  (0 holes, 4 files)
+   44  Chap37  (0 holes, 20 files)
+   45  Chap43  (0 holes, 11 files)
+   46  Chap40  (0 holes, 3 files)
 
 =================================================================
 4.4. Not Verusified
@@ -1728,8 +1749,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-12 19:56:04 -07:00
-Ended:     2026-04-12 19:56:06 -07:00
-Duration:  1624ms
+Started:   2026-04-18 04:58:01 -07:00
+Ended:     2026-04-18 04:58:03 -07:00
+Duration:  1932ms
 
-Full output: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-review-verus-proof-holes.log
+Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log
