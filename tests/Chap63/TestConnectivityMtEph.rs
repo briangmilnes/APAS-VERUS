@@ -99,8 +99,8 @@ fn test_count_components_hof_mt() {
 #[test]
 fn test_connected_components_hof_mt() {
     let graph = create_multi_component_graph();
-    let (reps_hof, comp_map_hof) = connected_components_hof(&graph, 1111);
-    let (reps_direct, _comp_map_direct) = connected_components_mt(&graph, 1111);
+    let (reps_hof, comp_map_hof) = connected_components_hof(&graph, 789);
+    let (reps_direct, _comp_map_direct) = connected_components_mt(&graph, 789);
 
     // Should produce same number of components
     assert_eq!(reps_hof.size(), reps_direct.size());

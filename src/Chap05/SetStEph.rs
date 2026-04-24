@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
-//! REVIEWED: NO
+//! REVIEWED: Brian G. Milnes <briangmilnes@gmail.com> 20206-04-23
 //! Ephemeral Set built on `std::collections::HashSet` as wrapped by vstd and vstdplus.
 
 //  Table of Contents

@@ -9,7 +9,7 @@ pub mod simple_seq_iter {
     use vstd::std_specs::clone::*;
     broadcast use {
             vstd::seq_lib::group_seq_properties,
-            crate::vstdplus::clone_view::clone_view::group_clone_view_axioms
+            crate::vstdplus::clone_view::clone_view::group_clone_view_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
         vstd::seq::group_seq_axioms,
         vstd::seq_lib::group_to_multiset_ensures,

@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
+//! REVIEWED: Brian G. Milnes <briangmilnes@gmail.com> 20206-04-23
 //! Help-first scheduler with bounded parallelism using a global pool.
 //!
 //! - Uses a help-first strategy: if no capacity available, runs sequentially.
 //! - Prevents deadlock from nested joins by not blocking when capacity exhausted.
 //! - Call `set_parallelism()` before first use to configure thread limit for a single
 //! parallel pool.
-//! Reviewed and is clean. briangmilnes@gmail.com 13 March 2026 
-
 
 //  Table of Contents
 //	Section 1. module

@@ -14,7 +14,7 @@ pub mod simple_set_iter {
             vstd::seq_lib::group_seq_properties,
             vstd::seq::group_seq_axioms,
             vstd::set::group_set_axioms,
-            crate::vstdplus::clone_view::clone_view::group_clone_view_axioms
+            crate::vstdplus::clone_view::clone_view::group_clone_view_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
         vstd::seq_lib::group_to_multiset_ensures,
         vstd::set_lib::group_set_lib_default,

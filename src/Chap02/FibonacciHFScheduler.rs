@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
+//! REVIEWED: Brian G. Milnes <briangmilnes@gmail.com> 20206-04-23
 //! Parallel Fibonacci demonstrating bounded parallelism with global pool.
-//! Reviewed and is clean. briangmilnes@gmail.com 13 March 2026 
-
 
 //  Table of Contents
 //	Section 1. module

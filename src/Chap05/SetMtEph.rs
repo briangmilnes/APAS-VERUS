@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
-//! REVIEWED: NO
-
+//! REVIEWED: Brian G. Milnes <briangmilnes@gmail.com> 20206-04-23
 //! Chapter 5.1 — Multi-threaded ephemeral Set built on `std::collections::HashSet`.
 //! Uses HFSchedulerMtEph for bounded parallel cartesian_product.
 

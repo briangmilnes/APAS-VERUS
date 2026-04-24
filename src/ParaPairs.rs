@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
+//! REVIEWED: Brian G. Milnes <briangmilnes@gmail.com> 20206-04-23
 //! Parallel pair abstractions for fork-join parallelism using the global work-stealing pool.
-
 
 //  Table of Contents
 //	Section 1. module

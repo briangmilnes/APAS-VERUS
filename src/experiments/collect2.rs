@@ -19,7 +19,7 @@ pub mod collect2 {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
         vstd::seq_lib::group_seq_properties,
-        crate::vstdplus::feq::feq::group_feq_axioms
+        crate::vstdplus::feq::feq::group_feq_axioms,
         vstd::seq_lib::group_to_multiset_ensures,
     };
 

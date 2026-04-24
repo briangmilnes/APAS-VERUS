@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
-//! REVIEWED: NO
-
+//! REVIEWED: Brian G. Milnes <briangmilnes@gmail.com> 20206-04-23
 //! Chapter 5.5 ephemeral Mapping (Function) built on `RelationStEph<A,B>`.
 
 //  Table of Contents

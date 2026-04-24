@@ -151,6 +151,7 @@ minor). You bring:
 | **"V1"** | Validate once. Run Verus, show full output, stop. Do not iterate or fix. |
 | **"leave the corpse"** | Leave failing code in place. Do not comment out, revert, add external_body, or add assume. |
 | **"full paths"** | Show complete on-disk paths to all referenced files. |
+| **"TIMESTAMP"** | Record the current moment in git history for later timing analysis. `git add -A && git commit -m "TIMESTAMP"` (or `--allow-empty` if nothing is staged) and `git push`. Pre-authorized: TIMESTAMP overrides the usual "ask before commit/push" gates — execute immediately without asking. Do not amend or squash TIMESTAMP commits; each one marks a real point in time. |
 
 ### Approval Gates
 

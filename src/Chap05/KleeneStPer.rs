@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
-//! REVIEWED: NO
-
+//! REVIEWED: Brian G. Milnes <briangmilnes@gmail.com> 20206-04-23
 //! Persistent Kleene Star and Plus over a finite alphabet (Definition 5.4, Exercise 5.1).
 
 //  Table of Contents
