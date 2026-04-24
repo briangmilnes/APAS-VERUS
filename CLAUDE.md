@@ -151,7 +151,9 @@ minor). You bring:
 | **"V1"** | Validate once. Run Verus, show full output, stop. Do not iterate or fix. |
 | **"leave the corpse"** | Leave failing code in place. Do not comment out, revert, add external_body, or add assume. |
 | **"full paths"** | Show complete on-disk paths to all referenced files. |
-| **"TIMESTAMP"** | Record the current moment in git history for later timing analysis. `git add -A && git commit -m "TIMESTAMP"` (or `--allow-empty` if nothing is staged) and `git push`. Pre-authorized: TIMESTAMP overrides the usual "ask before commit/push" gates — execute immediately without asking. Do not amend or squash TIMESTAMP commits; each one marks a real point in time. |
+| **"TIMESTAMP"** | Checkpoint marker for later timing analysis. `git add -A && git commit -m "TIMESTAMP <ISO-8601 UTC>" && git push`. If there is nothing to stage, create an empty commit with `--allow-empty` using the same message — the purpose is the timestamped log entry, not the diff. TIMESTAMP is pre-authorized: do NOT ask for commit or push approval. Do NOT pause to write a body or summary — a one-line commit message is sufficient. |
+| **"TIMESTAMP START"** | Marks the beginning of a timed task or session. Same `git add -A && git commit && git push` mechanics as TIMESTAMP; commit message is `TIMESTAMP START <ISO-8601 UTC>`. Pre-authorized. Use when kicking off a task you want to measure. |
+| **"TIMESTAMP STOP"** | Marks the end of a timed task or session. Same mechanics; commit message is `TIMESTAMP STOP <ISO-8601 UTC>`. Pair with a preceding TIMESTAMP START to bracket elapsed time. |
 
 ### Approval Gates
 
