@@ -270,6 +270,49 @@ to be restarted (not just given new prompts), say so explicitly.
 
 ---
 
+## Productivity Metrics
+
+Use these symbols consistently when reporting cost or productivity. They compare
+the AI-paired proof workflow (APAS-VERUS) against the AI-paired programming
+workflow (APAS-AI).
+
+| Symbol | Meaning |
+|---|---|
+| **LOC** | Lines of Code (executable Rust; APAS-AI is the reference codebase) |
+| **LOP** | Lines of Proof (Verus spec + proof lines; APAS-VERUS is the reference codebase) |
+| **LOP0R** | Lines of Proof at 0 reviews — raw proof lines as first drafted, no review pass |
+| **LOP2R** | Lines of Proof at 2 reviews — proof lines after two review passes (current shipped state) |
+| **R** | Review ratio = LOP2R / LOP0R — how much two rounds of review contract or expand raw proof output |
+| **C** | $/LOC from AI Paired Programming (APAS-AI): total spend on APAS-AI ÷ LOC |
+| **N** | $/LOP from AI Paired Proof (APAS-VERUS): total spend on APAS-VERUS ÷ LOP2R |
+
+### Source of truth for line counts
+
+`analyses/veracity-count-loc.log` is the authoritative line-count source. Read
+it (do not recount manually). Its `Summary` line gives spec/proof/exec/rust
+breakdowns and its `Grand total` block gives function-based LOP/LOC.
+
+Current shipped counts (from the log's Summary + Grand total):
+
+| # | Metric | APAS-AI | APAS-VERUS | Notes |
+|---|---|---|---|---|
+| 1 | LOC (exec Rust) | 31,751 | 67,384 | APAS-AI from wc `src/*.rs`; APAS-VERUS `exec` column |
+| 2 | Rust-only non-verus | — | 11,856 | APAS-VERUS `rust` column (outside `verus!`) |
+| 3 | LOP2R (spec + proof) | — | 73,296 | 31,530 spec + 41,766 proof |
+| 4 | LOP0R | — | ? | no snapshot captured yet — user supplies |
+| 5 | R = LOP2R / LOP0R | — | ? | review multiplier |
+| 6 | Spend ($) | ? | ? | total paired-session cost — user supplies |
+| 7 | C = $/LOC | ? | — | APAS-AI rate |
+| 8 | N = $/LOP2R | — | ? | APAS-VERUS rate on shipped proof |
+| 9 | N / C | — | ? | proof cost premium vs code |
+
+Update this table in place when the user supplies dollar figures or a LOP0R
+snapshot — do not scatter the numbers across per-round reports. Refresh rows
+1-3 after any `scripts/all-loc-by-chap.sh` (or equivalent) rerun that overwrites
+`analyses/veracity-count-loc.log`.
+
+---
+
 ## Source Layout & Structure
 
 ### File Locations
