@@ -1,31 +1,45 @@
-
 APAS-VERUS: AI Paired Proof Engineering Techniques and Experience
 
- Brian G. Milnes briangmilnes@gmail.com
+ Brian G. Milnes <briangmilnes@gmail.com>
 
- This talk will focus on my experience using LLM AIs to generate the Rust code for its
-parallel algorithms and then verifying it in Verus. I overview on the time, the costs, and
-the software engineering practice of using programmatic techniques to drive the LLMs
-which increase the quality of the code and reduce the costs of validation.
+ This talk focuses on my experiences using LLM AIs to generate Rust
+code for Acar and Blelloch's 'Algorithms Parallel and Sequential'
+textbook. I implemented all of its 121 algorithm variants, 81 of
+which are parallel, and then verified them in the Verus formal
+verification system.
 
- Then I'll compare and contrast my experience hand-proving in F* with Verus's currently
-fast moving targets. And discuss the practicality of targeting the trusted code bases
-given the rapidly expanding of ability of LLMs in penetrating code.
+ This work puts to rest the question of: can current AI LLMS be used
+to prove practical Industrial-grade, performant algorithms.
 
+ I'll discuss my experiences, the time, the costs, and the software
+engineering discipline developed using programmatic techniques to
+drive down the agentic coding and proof costs.  I'll review Rust's
+strengths and weaknesses, discuss Verus's strengths and weaknesses
+and review AI agents and their interfaces.
+
+ From this work I am able to provide three metrics, which I call the CPR$:
+
+ - C, a reasonable costs per lines estimate of code in agentic
+   programming a textbook,
+
+ - P, and a reasonable costs per lines of proof while proving that
+   code and learning Verus.
+
+ The bottleneck in agentic programming and proving is now the time
+to review the code and proofs. I derive an exact measure, R, of how
+proven code reduces the cost of programmer review.
 
  BIO:
 
-  M.S.  Computer Science, University of Washington
-  B.Sc. Mathematics (Computer Science), Carnegie Mellon 
+  M.Sc. Computer Science, University of Washington
+  B.Sc. Mathematics (Computer Science), Carnegie Mellon
 
-   I have done two years of industrial AI programming languages development, followed
- by seven years of AI research at Carnegie Mellon School of Computer Science. And
- two years of programming reasearch in programming languages there focusing on
- their use in systems programming and networking.
+  I have done two years of industrial AI programming languages
+development, followed by seven years of AI research at Carnegie
+Mellon School of Computer Science (SOAR). Then two years of
+programming research in programming languages focusing on their use
+in systems programming and networking (Fox Project).
 
-  Then I got drafted into the Internet boom and directed operations groups work in systems,
-performance, operations and architecture for Lycos, Amazon and Zillow.
-
-  More recently I've tried proving programs in Rocq, F* and now Verus.
-  
-
+  I was then drafted into the Internet boom and directed groups
+working in systems, performance, operations and architecture for
+Lycos, Amazon and Zillow.

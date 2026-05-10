@@ -1,12 +1,15 @@
 #!/bin/bash
 set -e
 cd "$(dirname "$0")"
-pandoc --slide-level=1 slidesMSR.md -o /tmp/slides_raw.pptx
+pandoc --pdf-engine=lualatex slidesCMUCS.md -o slidesCMUCS.pdf
+echo "-> $(pwd)/slidesCMUCS.pdf"
+
+pandoc --slide-level=1 slidesCMUCS.md -o /tmp/slides_raw.pptx
 python3 - <<'EOF'
 import zipfile, re
 
 src = "/tmp/slides_raw.pptx"
-dst = "/home/milnes/projects/APAS-VERUS/lectures/slidesMSR.pptx"
+dst = "/home/milnes/projects/APAS-VERUS/lectures/slidesCMUCS.pptx"
 TITLE_SZ = "3200"
 BODY_SZ  = "1800"
 
@@ -50,9 +53,11 @@ with zipfile.ZipFile(src, 'r') as zin, zipfile.ZipFile(dst, 'w', zipfile.ZIP_DEF
                 sz = TITLE_SZ if is_title else BODY_SZ
                 def fix_rpr(r):
                     rpr = r.group(0)
-                    if 'sz=' in rpr:
-                        return rpr
-                    return rpr.replace('<a:rPr', f'<a:rPr sz="{sz}"', 1)
+                    if 'sz=' not in rpr:
+                        rpr = rpr.replace('<a:rPr', f'<a:rPr sz="{sz}"', 1)
+                    if 'lang=' not in rpr:
+                        rpr = rpr.replace('<a:rPr', '<a:rPr lang="en-US"', 1)
+                    return rpr
                 shape = re.sub(r'<a:rPr[^>]*/>', fix_rpr, shape)
                 shape = re.sub(r'<a:rPr[^>]*(?<!/)>', fix_rpr, shape)
                 return shape

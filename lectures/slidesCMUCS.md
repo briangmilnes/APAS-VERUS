@@ -5,7 +5,7 @@
 - Algorithms Parallel and Sequential by Acar and Blelloch
 - in Rust
 - and then proving it in Verus.
-- Or What Can We Prove Today and for How Much?
+- Or **What Can We Prove Today and for How Much?**
 - https://github.com/briangmilnes/{APAS-VERUS,APAS-AI,rusticate,veracity}
 
 # Outline of the talk
@@ -23,6 +23,7 @@
 - APAS-VERUS - AI Paired Proving APAS in Verus
 - Veracity - Software Engineering AI Paired Proving
 - Software Engineering in AI Paired Proving
+- CPR$ - how to measure costs and mine
 - The AI Paired Programming Interfaces
 - The Internet Apocalypse
 - Review of the Talk
@@ -49,6 +50,7 @@
     - 81 of which can be parallel.
     - 740 concepts.
 - Not only is it a great textbook but it proved with very few changes needed!
+- Thank you Umut and Guy!
 
 # Rust - The Good
 
@@ -71,7 +73,7 @@
 - Macros, with typing checked at use, which is not so good.
 - No objects: it's great for what it was invented for: modeling the real world and interfaces
  by Ivan Sutherland in 1962! (sorry Bob!).
-- Terminology
+- Rust terminology is random.
 
 # Rust - Typeclasses are a weak module
 
@@ -80,10 +82,9 @@
 - The Rustaceans have decided that unless their module implements a typeclass at
   multiple types, they won't use it.
 - So reading Rust is every bit as scattered as reading C.
-- Verus is now doing this also, but I abuse the notation to put all the specs
+- Verus is now doing this also, but I ABUSE the notation to put all the specs
  together in APAS-VERUS for readability.
 - You will pine for ML modules!
-
 
 # Rust - The Ugly — Equality and Ordering
 
@@ -169,10 +170,9 @@
 
 # Verus
 
-- Specifications are written in a pure mathematical sublanguage:
+- Specifications are written in a pure math sublang: First order logic.
 - spec functions, forall/exists, arithmetic, sets, sequences.
-- First order logic.
-- Decidability is not guaranteed.
+- Undecidable.
 - Z3 handles linear arithmetic, arrays, and quantified formulas,
      but quantifier instantiation requires explicit trigger annotations.
 - But there is also a faster linear arithmetic solver, Singular.
@@ -191,6 +191,74 @@
      Map, Multiset, arithmetic, common lemmas, Fns ...
 - Ghost types live only in the verifier —
      they have no runtime cost and no runtime representation.
+
+# UnDirGraphStEph — Data Struct + View 
+
+\scriptsize
+
+```rust
+#[verifier::reject_recursive_types(V)]
+pub struct UnDirGraphStEph<V: StT + Hash> {
+    pub V: SetStEph<V>,
+    pub E: SetStEph<Edge<V>>,
+}
+
+impl<V: StT + Hash> View for UnDirGraphStEph<V> {
+    type V = GraphView<<V as View>::V>;
+    open spec fn view(&self) -> Self::V {
+        GraphView { V: self.V@, A: self.E@ }
+    }
+}
+```
+
+\normalsize
+
+# UnDirGraphStEph — Trait {.shrink}
+
+
+\scriptsize
+
+```rust
+pub trait UnDirGraphStEphTrait<V: StT + Hash>:
+    View<V = GraphView<<V as View>::V>> + Sized
+{
+    open spec fn spec_neighborhood(&self, v: V::V) -> Set<V::V>
+        recommends spec_graphview_wf(self@), self@.V.contains(v)
+    { Set::new(|w| self@.A.contains((v,w)) || self@.A.contains((w,v))) }
+
+    fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>)
+        requires spec_graphview_wf(self@), self@.V.contains(v@), ...
+        ensures  nbrs@ == self.spec_neighborhood(v@), nbrs@ <= self@.V;
+}
+```
+
+\normalsize
+
+# UnDirGraphStEph — Impl: `neighborhood` exec body {.shrink}
+
+
+\scriptsize
+
+```rust
+fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
+    let mut nbrs: SetStEph<V> = SetStEph::empty();
+    let mut it = self.E.iter();
+    let ghost edges_seq = it@.1;
+    loop
+        invariant nbrs@ == Set::new(|w| exists |i|
+            0 <= i < it@.0 && /* edges_seq[i] hits v on either side */ ...),
+        decreases edges_seq.len() - it@.0,
+    {
+        match it.next() {
+            None    => { proof { /* set-equality lemmas */ } return nbrs; }
+            Some(e) => { /* if feq(&e.0,v) insert e.1; sym. */ ... }
+        }
+    }
+}
+```
+
+\normalsize
+
 
 # Wrapping Rust — Declaring an external type
 
@@ -546,6 +614,64 @@
  a required module.
 - Johnson Chap59: 756 MB → 520 MB (−31%) memory reduction.
 
+# CPR$ — Three Numbers and One Ratio {.shrink}
+
+| # | Symbol | Name          | Measures                                                           |
+|--:|:-------|:--------------|:-------------------------------------------------------------------|
+| 1 | C      | Cost of Code  | $ to produce executable code                                       |
+| 2 | P      | Cost of Proof | $ to produce specs, contracts, and proofs                          |
+| 3 | C+P    | Total         | Full bill for the verified artifact                                |
+| 4 | R      | Review Ratio  | Fraction of deliverable a proofgrammer must read (LOC0R excluded)  |
+
+# Inputs & Computation {.shrink}
+
+- total_hours      = person_days × avg_hrs_per_day
+- programmer_cost  = total_hours × (programmer_costs / 1,760)
+- AI_cost          = total_hours × (ai_costs        / 1,760)
+- LoEC_share       = LoEC / total_LOC
+- C = total_cost × LoEC_share
+- P = total_cost × (1 − LoEC_share)
+- R = LOPC2R / (LOPC2R + LOC0R)
+
+# Worked Example — Inputs {.shrink}
+- **Programmer rate**: $375,000/yr (senior + 50% loading)
+- **Real AI spend**: < $7,000 across the whole effort
+- **Derived `--ai-costs`**: $4.886/hr × 1,760 = **$8,599/yr**
+- **AI split by task-hours**: 21.6% APAS-AI ($1,512) / 78.4% APAS-VERUS ($5,488)
+| # | Project               | Hours    | LOC     | LoEC   | LOPC2R | LOC0R  |
+|:--|:----------------------|---------:|--------:|-------:|-------:|-------:|
+| 1 | APAS-AI + Rusticate   |   309.6  |  31,751 | 31,751 | —      | —      |
+| 2 | APAS-VERUS + Veracity | 1,123.4  | 166,401 | 56,549 | 47,828 | 95,908 |
+| 3 | Combined              | 1,432.96 | 198,152 | 88,300 | 47,828 | 95,908 |
+
+
+# CPR$ — Combined Result
+
+| # | Quantity                         | Value         |
+|:---|:------------------------------|:--------------:|
+| 1 | C — Cost of Code               | **$150,723**  |
+| 2 | P — Cost of Proof              | **$161,594**  |
+| 3 | C + P — Total                  | **$312,317**  |
+| 4 | R — Review Ratio               | **33.3%**     |
+| 5 | $ / verified deliverable line  | **$1.877**    |
+| 6 | C / KLOEC                      | **$2.665**    |
+| 7 | P / KLOPC2R                    | **$3.378**    |
+| 8 | P / KLOP                       | **$6.305**    |
+
+# Head-to-Head — seL4 (2009) vs APAS-VERUS {.shrink}
+
+| #  | Quantity         | seL4 (pre-AI) | APAS-VERUS (AI-paired) | Ratio              |
+|:-|:-----------------|--------------:|:-----------------------:|:-----------------:|
+|  1 | Person-years     |           22  |                  0.64  | seL4 ~34×         |
+|  2 | Hours            |       45,760  |                 1,123  | seL4 ~41×         |
+|  3 | KLOE             |           10  |                  ~57   | Verus ~5.7×       |
+|  4 | KLOP             |          480  |                  ~110  | seL4 ~4.4×        |
+|  5 | KLOP / KLOE      |           48  |                  ~1.9  | seL4 **~25×**     |
+|  6 | Klines / hour    |       0.0107  |                 0.148  | Verus ~14×        |
+|  7 | $ / KLOE         |     $825,000  |               ~$4,300  | seL4 **~192×**    |
+|  8 | $ / KLOP         |      $17,188  |               ~$2,225  | seL4 ~7.7×        |
+|  9 | C + P total      |  $8,250,000   |              $244,840  | seL4 **~33.7×**   |
+
 # Rusticate + Veracity allow quantitative software engineering
 
 - I downloaded the 1036 most downloaded Rust projects, 3636 crates.
@@ -588,15 +714,16 @@ the output and have the AI write a lot of tests.
     - 147 traits in vstd.
 - How many total Rust Methods does Verus wrap?
     - 154 methods currently wrapped.
+- A small but growing percentage.
 
 # Software Engineering in AI Paired Proving
 
 - Software engineering in the AI age is much like managing programmers.
 - You can't possibly read all their code.
-- So you have:
-- linters both programmatic and AI
-- stylers both programmatic and AI
-- AI reviews directed by programmatic tools.
+- So you use:
+    - linters both programmatic and AI
+    - stylers both programmatic and AI
+    - AI reviews directed by programmatic tools.
 
 # Software Engineering in AI Paired Proving
 
@@ -661,7 +788,8 @@ the PSP failed.
 
 # Software Engineering in AI Paired Proving- Problems
 
-- What is the limiting factor now? Code Review! But really Spec review.
+- What is the limiting factor now? **Code Review!**
+- But really **Spec Review** when you prove.
 - What can we do to simplify code review?
 - 1. Modularity - traits/impls in Verus.
 - 2. TOC     - This organizes the boilerplate to make reading easier.
@@ -671,7 +799,6 @@ the PSP failed.
 - 5. Formatting - rust formatting has been adopted in Verus. It is very
   low density. I built a minimizing formatter to cut down on my working
   memory load while reviewing. F* is much tighter.
-
 
 # The AI Paired Programming Interfaces
 
@@ -685,6 +812,52 @@ question and change it.
 - I suspect they are hiding most of their thinking now to
     prevent them from being used to train new AIs.
 - And you want it not to delete your previous conversation on token compression.
+
+# Mythos Audit Rust/Firefox 
+  
+| # | Metric                | Rust (Compiler/Std) | Firefox (Entire Codebase) |
+|---|-----------------------|---------------------|---------------------------|
+| 1 | Codebase Size         | ~4,500 KLOC         | ~40,000 KLOC              |
+| 2 | Mythos Bugs Found     | 189                 | 271                       |
+| 3 | Vulnerability Density | 0.0420 bugs/KLOC    | 0.0068 bugs/KLOC          |
+| 4 | Ratio                 | **6.18**            |  1                        |
+
+# The Internet Apocalypse
+
+- I asked Claude Code to check its switches on startup for me, at the End of Jan 2026.
+- It immediately started disassembling itself.
+- Scared the heck out of me.
+- I told it to read it's docs.
+- I have 100% belief that these LLMs are moving faster than computer security.
+- It's verify or be hacked at this point.
+
+# The Internet Apocalypse
+
+- Where should we focus our limited, but quickly growing, proving power?
+- In theory 70% of intrusions are solved by type safe languages.
+- I suspect that this just ignores way too much of the human aspect.
+- I have never liked a single estimation paper's methods.
+- One way to help us focus our new-found superpowers is to survey
+  KLOC type-unsafe x Interfaces x Running Services x $ Value.
+- Which Amazon and Microsoft can probably measure. 
+
+# Future Work
+
+- GRASE (Medical Acronym) -
+    - Generally Recognized as Safe and Effective
+- **GRASE-**
+    - **Git Recording Agentic Software Engineering**
+-  The GRASE project's goal is to make statistical process software optimization
+   for agentic coding: 
+    - **Generally Regarded As Simple and Effective.**
+- A Watt's Humphrey style PSP data collection done essentially effortlessly by
+ the agents in the background.
+
+# Review of the Talk
+- Ah let's just get to the questions!
+- I have a ton of them for you! and I hope you have many for me.
+
+#  Extra Slides
 
 # AI Paired Programming Size: Quick Review
 
@@ -700,47 +873,16 @@ question and change it.
 
 # AI Paired Proving Size: Quick Review
 
- - APAS-VERUS Lines of Code
+- APAS-VERUS Lines of Code
     - Source: 229,319
     - Tests (RTT): 58,503
     - PTTs (rust_verify_test): 15,938
     - Benches: 8,027
     - Total code: 311,787
-  - Veracity Lines of Code
+- Veracity Lines of Code
     - Source: 65,189
     - Tests: 2,851
     - Total code: 68,040
-
-# The Internet Apocalypse
-
-- I asked Claude Code to check its switches on startup for me, at the End of Jan 2026.
-- It immediately started disassembling itself.
-- Scared the heck out of me.
-- I told it to read it's docs.
-- I have 100% belief that these LLMs are moving faster than computer security.
-- It's verify or die at this point.
-
-# The Internet Apocalypse
-
-- Where should we focus our limited, but quickly growing, proving power?
-- In theory 70% of intrusions are solved by type safe languages.
-- I suspect that this just ignores way too much of the human aspect.
-- I have never liked a single estimation paper's methods.
-- One way to help us focus our new-found superpowers is to survey
-  LOC type-unsafe x Interfaces x Running Services x $ Value.
-- Inside MSFT you have the ability to measure inside Azure, the OS,
- the desktops, the browser use.
-- I think you should at this point, and NOT TELL ANYONE!
-- And use this cost risk model to evangelize for rapid change in MSFT products
- in a priority order, quantitative software engineering at the enterprise scale.
-
-# Review of the Talk
-
--
-- Let's get to the questions!
-- I have a ton of them for you! and I hope you have many for me.
-
-#  Extra Slides
 
 # Blood on the Road - Open Source =
 
