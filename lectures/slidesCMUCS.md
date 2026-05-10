@@ -1,3 +1,8 @@
+---
+header-includes: |
+  \AtBeginEnvironment{Highlighting}{\scriptsize}
+---
+
 # APAS-VERUS: AI Paired Proof Engineering Techniques and Experience
 
 - Brian G. Milnes <briangmilnes@gmail.com>
