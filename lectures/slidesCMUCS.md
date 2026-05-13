@@ -56,6 +56,9 @@ header-includes: |
     - 740 concepts.
 - Not only is it a great textbook but it proved with very few changes needed!
 - Thank you Umut and Guy!
+- A few weeks ago Zach Tatlock was on a call with Sandia National labs.
+- They said: "You can't prove algorithms like that!" 
+- He pointed them to APAS-VERUS and my linkedin racked up 1200 views.
 
 # Rust - The Good
 
@@ -504,6 +507,7 @@ fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
 - 6 verified loop patterns per collection
 - {loop, for} X {borrow iter,  borrow into, consume}
 - Iterators requires one assume!
+- And there is a new 'prophetic' iterator coming along!
 
 # APAS-VERUS: Verified Iteration
 
@@ -638,17 +642,22 @@ fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
 - P = total_cost × (1 − LoEC_share)
 - R = LOPC2R / (LOPC2R + LOC0R)
 
-# Worked Example — Inputs {.shrink}
+# Proofgrammer/AI Costs
+
 - **Programmer rate**: $375,000/yr (senior + 50% loading)
 - **Real AI spend**: < $7,000 across the whole effort
-- **Derived `--ai-costs`**: $4.886/hr × 1,760 = **$8,599/yr**
-- **AI split by task-hours**: 21.6% APAS-AI ($1,512) / 78.4% APAS-VERUS ($5,488)
-| # | Project               | Hours    | LOC     | LoEC   | LOPC2R | LOC0R  |
-|:--|:----------------------|---------:|--------:|-------:|-------:|-------:|
+- **Derived --ai-costs**: $4.886/hr × 1,760 = **$8,599/yr**
+- **AI split by task-hours**: 
+    - 21.6% APAS-AI ($1,512)
+    - 78.4% APAS-VERUS ($5,488)
+
+# Proofgrammer/AI Costs
+
+| # | Project               | Hours    | LOC     | LoEC   | LOPC2R | LOC0R |
+|:---|:-----------------------|---------:|--------:|-------:|-------:|-------:|
 | 1 | APAS-AI + Rusticate   |   309.6  |  31,751 | 31,751 | —      | —      |
 | 2 | APAS-VERUS + Veracity | 1,123.4  | 166,401 | 56,549 | 47,828 | 95,908 |
 | 3 | Combined              | 1,432.96 | 198,152 | 88,300 | 47,828 | 95,908 |
-
 
 # CPR$ — Combined Result
 
@@ -657,25 +666,24 @@ fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
 | 1 | C — Cost of Code               | **$150,723**  |
 | 2 | P — Cost of Proof              | **$161,594**  |
 | 3 | C + P — Total                  | **$312,317**  |
-| 4 | R — Review Ratio               | **33.3%**     |
+| 4 | R — Review Ratio               | **~33.3%**    |
 | 5 | $ / verified deliverable line  | **$1.877**    |
 | 6 | C / KLOEC                      | **$2.665**    |
-| 7 | P / KLOPC2R                    | **$3.378**    |
-| 8 | P / KLOP                       | **$6.305**    |
+| 7 | P / KLOP                       | **$6.305**    |
 
 # Head-to-Head — seL4 (2009) vs APAS-VERUS {.shrink}
 
 | #  | Quantity         | seL4 (pre-AI) | APAS-VERUS (AI-paired) | Ratio              |
-|:-|:-----------------|--------------:|:-----------------------:|:-----------------:|
-|  1 | Person-years     |           22  |                  0.64  | seL4 ~34×         |
-|  2 | Hours            |       45,760  |                 1,123  | seL4 ~41×         |
-|  3 | KLOE             |           10  |                  ~57   | Verus ~5.7×       |
-|  4 | KLOP             |          480  |                  ~110  | seL4 ~4.4×        |
-|  5 | KLOP / KLOE      |           48  |                  ~1.9  | seL4 **~25×**     |
-|  6 | Klines / hour    |       0.0107  |                 0.148  | Verus ~14×        |
-|  7 | $ / KLOE         |     $825,000  |               ~$4,300  | seL4 **~192×**    |
-|  8 | $ / KLOP         |      $17,188  |               ~$2,225  | seL4 ~7.7×        |
-|  9 | C + P total      |  $8,250,000   |              $244,840  | seL4 **~33.7×**   |
+|:-|:-----------------|--------------:|:-------------------:|:-----------------:|
+|  1 | Person-years     |           22  |     0.64  | seL4 ~34×         |
+|  2 | Hours            |       45,760  | 1,123     | seL4 ~41×         |
+|  3 | KLOE             |           10  |   ~57     | Verus ~5.7×       |
+|  4 | KLOP             |          480  |  ~110     | seL4 ~4.4×        |
+|  5 | KLOP / KLOE      |           48  |  ~1.9     | seL4 **~25×**     |
+|  6 | Klines / hour    |       0.0107  |     0.148 | Verus ~14×        |
+|  7 | $ / KLOE         |     $825,000  | ~$4,300   | seL4 **~192×**    |
+|  8 | $ / KLOP         |      $17,188  | ~$2,225   | seL4 ~7.7×        |
+|  9 | C + P total      |  $8,250,000   | $244,840  | seL4 **~33.7×**   |
 
 # Rusticate + Veracity allow quantitative software engineering
 
