@@ -653,11 +653,11 @@ fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
 
 # Proofgrammer/AI Costs
 
-| # | Project               | Hours    | LOC     | LoEC   | LOPC2R | LOC0R |
-|:---|:-----------------------|---------:|--------:|-------:|-------:|-------:|
-| 1 | APAS-AI + Rusticate   |   309.6  |  31,751 | 31,751 | —      | —      |
-| 2 | APAS-VERUS + Veracity | 1,123.4  | 166,401 | 56,549 | 47,828 | 95,908 |
-| 3 | Combined              | 1,432.96 | 198,152 | 88,300 | 47,828 | 95,908 |
+| # | Project               | Hours    | KLOC  | KLoEC | KLOPC2R | KLOC0R |
+|:---|:----------------------|---------:|------:|------:|--------:|-------:|
+| 1 | APAS-AI + Rusticate   |   309.6  |  31.8 |  31.8 |    —    |   —    |
+| 2 | APAS-VERUS + Veracity | 1,123.4  | 166.4 |  56.5 |  47.8   |  95.9  |
+| 3 | Combined              | 1,432.96 | 198.2 |  88.3 |  47.8   |  95.9  |
 
 # CPR$ — Combined Result
 
@@ -666,12 +666,12 @@ fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
 | 1 | C — Cost of Code               | **$150,723**  |
 | 2 | P — Cost of Proof              | **$161,594**  |
 | 3 | C + P — Total                  | **$312,317**  |
-| 5 | $ / verified deliverable line  | **$1.877**    |
-| 6 | C / KLOEC                      | **$2.665**    |
-| 7 | P / KLOP                       | **$6.305**    |
+| 5 | $ / KLines                     | **$1,877**    |
+| 6 | C / KLOE                       | **$2,665**    |
+| 7 | P / KLOP                       | **$6,305**    |
 | 4 | R — Review Ratio               | **~33.3%**    |
 
-# Head-to-Head — seL4 (2009) vs APAS-VERUS {.shrink}
+# Head-to-Head — seL4 (2009) vs APAS-VERUS — 22 py base {.shrink}
 
 | #  | Quantity         | seL4 (pre-AI) | APAS-VERUS (AI-paired) | Ratio              |
 |:-|:-----------------|--------------:|:-------------------:|:-----------------:|
@@ -685,11 +685,26 @@ fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
 |  8 | $ / KLOP         |      $17,188  | ~$2,225   | seL4 ~7.7×        |
 |  9 | C + P total      |  $8,250,000   | $244,840  | seL4 **~33.7×**   |
 
+# Head-to-Head — seL4 (2009) vs APAS-VERUS — 22.5 py base {.shrink}
+
+| #  | Quantity         | seL4 (pre-AI) | APAS-VERUS (AI-paired) | Ratio              |
+|:--:|:-----------------|--------------:|-----------------------:|:------------------:|
+|  1 | Person-years     |          22.5 |                   0.64 | seL4 ~35×          |
+|  2 | Hours            |        46,800 |                  1,123 | seL4 ~42×          |
+|  3 | KLOE             |            10 |                  ~ 57  | Verus ~5.7×        |
+|  4 | KLOP             |           480 |                  ~ 110 | seL4 ~4.4×         |
+|  5 | KLOP / KLOE      |            48 |                  ~ 1.9 | seL4 **~25×**      |
+|  6 | KLines / hour    |        0.0105 |                  0.148 | Verus ~14×         |
+|  7 | $ / KLOE         |     $ 843,750 |             ~ $ 4,300  | seL4 **~196×**     |
+|  8 | $ / KLOP         |      $ 17,578 |             ~ $ 2,225  | seL4 ~7.9×         |
+|  9 | C + P total      |   $ 8,437,500 |              $ 244,840 | seL4 **~34.5×**    |
+
 # R
 
 - LOPC2R = Lines of proven code 2 review
 - LOPC0R = Lines of proven code not to review
 - R = LOPC2R / (LOPC2R + LOC0R)
+- 47,828 / 143,736 = 0.332749 = 33.2749 %
 - R — Review Ratio **~33.3%**
 
 # Rusticate + Veracity allow quantitative software engineering
