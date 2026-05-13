@@ -666,10 +666,10 @@ fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
 | 1 | C — Cost of Code               | **$150,723**  |
 | 2 | P — Cost of Proof              | **$161,594**  |
 | 3 | C + P — Total                  | **$312,317**  |
-| 4 | R — Review Ratio               | **~33.3%**    |
 | 5 | $ / verified deliverable line  | **$1.877**    |
 | 6 | C / KLOEC                      | **$2.665**    |
 | 7 | P / KLOP                       | **$6.305**    |
+| 4 | R — Review Ratio               | **~33.3%**    |
 
 # Head-to-Head — seL4 (2009) vs APAS-VERUS {.shrink}
 
@@ -684,6 +684,13 @@ fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
 |  7 | $ / KLOE         |     $825,000  | ~$4,300   | seL4 **~192×**    |
 |  8 | $ / KLOP         |      $17,188  | ~$2,225   | seL4 ~7.7×        |
 |  9 | C + P total      |  $8,250,000   | $244,840  | seL4 **~33.7×**   |
+
+# R
+
+- LOPC2R = Lines of proven code 2 review
+- LOPC0R = Lines of proven code not to review
+- R = LOPC2R / (LOPC2R + LOC0R)
+- R — Review Ratio **~33.3%**
 
 # Rusticate + Veracity allow quantitative software engineering
 
