@@ -184,3 +184,143 @@ SetStEph/SetMtEph pair and the standard rewrite are the long poles.
    and return `std::slice::Iter` directly where the collection is `Vec`-backed?
 3. **Pilot file:** `Chap18/ArraySeqStEph.rs` is the documented reference — OK as
    the pilot, or prefer another?
+
+## 10. Iterator classification — delegated vs custom (per type)
+
+There are exactly two iterator styles, both defined in the standard:
+**delegated** — `iter()` returns a std library iterator — and **custom** —
+`iter()` returns a type that implements `IteratorSpecImpl` by hand. Of 71
+collection iterators, 68 migrate to delegated and 3 to custom.
+
+The migration is **algorithm-preserving**: every collection keeps its current
+iterator complexity. Delegated collections already return — or already flatten
+to — the std iterator they will return; the 3 custom collections keep their
+lazy traversal. See the complexity note below the table.
+
+"Iterator field today" is the field of the current `*Iter` struct, read from
+the source. It is the evidence for the Style column:
+
+- `std::slice::Iter` / `std::vec::IntoIter` — already a std iterator; the
+  migrated `iter()` returns it directly.
+- another APAS collection's `*Iter` — the collection re-exposes that
+  collection's iterator, so it migrates after its backing collection.
+- `Vec<T> + position index` — a hand-rolled iterator over a `Vec` the
+  collection already builds (a tree flattened in order, or a snapshot); the
+  migrated `iter()` returns that `Vec`'s `std::vec::IntoIter`.
+- `Vec<&Node>` stack / `&tree + position index` — a genuine lazy tree
+  traversal with no std iterator to return. These are the 3 custom rows.
+
+| # | Chap | File | Style | Iterator field today |
+|---|------|------|-------|----------------------|
+| 1 | 05 | SetStEph.rs | delegated | HashSetWithViewPlusIter |
+| 2 | 05 | SetMtEph.rs | delegated | HashSetWithViewPlusIter |
+| 3 | 05 | RelationStEph.rs | delegated | SetStEphIter |
+| 4 | 05 | MappingStEph.rs | delegated | RelationStEphIter |
+| 5 | 06 | DirGraphStEph.rs | delegated | SetStEphIter |
+| 6 | 06 | DirGraphMtEph.rs | delegated | SetStEphIter |
+| 7 | 06 | UnDirGraphStEph.rs | delegated | SetStEphIter |
+| 8 | 06 | UnDirGraphMtEph.rs | delegated | SetStEphIter |
+| 9 | 06 | LabDirGraphStEph.rs | delegated | SetStEphIter |
+| 10 | 06 | LabDirGraphMtEph.rs | delegated | SetStEphIter |
+| 11 | 06 | LabUnDirGraphStEph.rs | delegated | SetStEphIter |
+| 12 | 06 | LabUnDirGraphMtEph.rs | delegated | SetStEphIter |
+| 13 | 17 | MathSeq.rs | delegated | std::slice::Iter |
+| 14 | 18 | ArraySeq.rs | delegated | std::slice::Iter |
+| 15 | 18 | ArraySeqStEph.rs | delegated | std::slice::Iter |
+| 16 | 18 | ArraySeqStPer.rs | delegated | std::slice::Iter |
+| 17 | 18 | ArraySeqMtEph.rs | delegated | std::slice::Iter |
+| 18 | 18 | ArraySeqMtEphSlice.rs | delegated | std::slice::Iter |
+| 19 | 18 | ArraySeqMtPer.rs | delegated | std::slice::Iter |
+| 20 | 18 | LinkedListStEph.rs | delegated | std::slice::Iter |
+| 21 | 18 | LinkedListStPer.rs | delegated | std::slice::Iter |
+| 22 | 19 | ArraySeqStEph.rs | delegated | std::slice::Iter |
+| 23 | 19 | ArraySeqStPer.rs | delegated | std::slice::Iter |
+| 24 | 19 | ArraySeqMtEph.rs | delegated | std::slice::Iter |
+| 25 | 19 | ArraySeqMtEphSlice.rs | delegated | std::slice::Iter |
+| 26 | 23 | BalBinTreeStEph.rs | delegated | std::vec::IntoIter |
+| 27 | 23 | PrimTreeSeqStPer.rs | delegated | std::slice::Iter |
+| 28 | 37 | AVLTreeSeq.rs | custom | &tree + position index |
+| 29 | 37 | AVLTreeSeqStEph.rs | custom | Vec<&Node> stack (lazy) |
+| 30 | 37 | AVLTreeSeqStPer.rs | custom | Vec<&Node> stack (lazy) |
+| 31 | 37 | AVLTreeSeqMtPer.rs | delegated | Vec<T> + position index |
+| 32 | 37 | BSTAVLStEph.rs | delegated | std::vec::IntoIter |
+| 33 | 37 | BSTBBAlphaStEph.rs | delegated | std::vec::IntoIter |
+| 34 | 37 | BSTPlainStEph.rs | delegated | std::vec::IntoIter |
+| 35 | 37 | BSTRBStEph.rs | delegated | std::vec::IntoIter |
+| 36 | 37 | BSTSplayStEph.rs | delegated | std::vec::IntoIter |
+| 37 | 37 | BSTAVLMtEph.rs | delegated | Vec<T> + position index |
+| 38 | 37 | BSTBBAlphaMtEph.rs | delegated | Vec<T> + position index |
+| 39 | 37 | BSTPlainMtEph.rs | delegated | Vec<T> + position index |
+| 40 | 37 | BSTRBMtEph.rs | delegated | Vec<T> + position index |
+| 41 | 37 | BSTSetAVLMtEph.rs | delegated | Vec<T> + position index |
+| 42 | 37 | BSTSetBBAlphaMtEph.rs | delegated | Vec<T> + position index |
+| 43 | 37 | BSTSetPlainMtEph.rs | delegated | Vec<T> + position index |
+| 44 | 37 | BSTSetRBMtEph.rs | delegated | Vec<T> + position index |
+| 45 | 37 | BSTSetSplayMtEph.rs | delegated | Vec<T> + position index |
+| 46 | 38 | BSTParaStEph.rs | delegated | std::vec::IntoIter |
+| 47 | 39 | BSTTreapStEph.rs | delegated | std::vec::IntoIter |
+| 48 | 39 | BSTTreapMtEph.rs | delegated | std::vec::IntoIter |
+| 49 | 39 | BSTParaTreapMtEph.rs | delegated | std::vec::IntoIter |
+| 50 | 39 | BSTSetTreapMtEph.rs | delegated | std::vec::IntoIter |
+| 51 | 40 | BSTKeyValueStEph.rs | delegated | std::vec::IntoIter |
+| 52 | 40 | BSTReducedStEph.rs | delegated | std::vec::IntoIter |
+| 53 | 40 | BSTSizeStEph.rs | delegated | std::vec::IntoIter |
+| 54 | 41 | ArraySetStEph.rs | delegated | ArraySeqStEphIter |
+| 55 | 41 | AVLTreeSetStEph.rs | delegated | std::vec::IntoIter |
+| 56 | 41 | AVLTreeSetStPer.rs | delegated | std::vec::IntoIter |
+| 57 | 41 | AVLTreeSetMtEph.rs | delegated | Vec<T> + position index |
+| 58 | 41 | AVLTreeSetMtPer.rs | delegated | std::vec::IntoIter |
+| 59 | 41 | OrdKeyMap.rs | delegated | std::vec::IntoIter |
+| 60 | 42 | TableStEph.rs | delegated | ArraySeqStEphIter |
+| 61 | 42 | TableMtEph.rs | delegated | ArraySeqMtEphIter |
+| 62 | 42 | TableStPer.rs | delegated | ArraySeqStPerIter |
+| 63 | 43 | OrderedSetStEph.rs | delegated | std::vec::IntoIter |
+| 64 | 43 | OrderedSetStPer.rs | delegated | std::vec::IntoIter |
+| 65 | 43 | OrderedSetMtEph.rs | delegated | Vec<T> + position index |
+| 66 | 43 | OrderedTableStEph.rs | delegated | std::vec::IntoIter |
+| 67 | 43 | OrderedTableStPer.rs | delegated | std::vec::IntoIter |
+| 68 | 43 | OrderedTableMtEph.rs | delegated | Vec<Pair> + position index |
+| 69 | 43 | OrderedTableMtPer.rs | delegated | OrderedTableStPerIter |
+| 70 | — | vstdplus/hash_set_with_view_plus.rs | delegated | std::collections::hash_set::Iter |
+| 71 | — | vstdplus/hash_map_with_view_plus.rs | delegated | std::collections::hash_map::Iter |
+
+### Complexity verification — was vs proposed, all 71 iterators
+
+The migration swaps each iterator's *type* (custom `XxxIter` wrapper → a std
+iterator) and deletes the ghost-only `ForLoopGhostIterator` machinery. It does
+**not** rewrite the algorithmic body of `iter()`/`next()` — the in-order flatten
+(`Node::in_order`), `self.seq.iter()`, `push_left_iter`
+(`src/Chap37/AVLTreeSeqStEph.rs:441`), and `tree.nth` are all untouched. So
+complexity is preserved by construction. Every cell below is `was → proposed`
+and the two are equal.
+
+| # | Variant (iterator field today) | iter() | next() | Space | First k then break | Full | Files |
+|---|--------------------------------|--------|--------|-------|--------------------|------|-------|
+| 1 | `slice::Iter` wrap (Vec-backed) | O(1)→O(1) | O(1)→O(1) | O(1)→O(1) | O(k)→O(k) | O(n)→O(n) | 14 |
+| 2 | flatten → `vec::IntoIter` (in-order walk) | O(n)→O(n) | O(1)→O(1) | O(n)→O(n) | O(n)→O(n) | O(n)→O(n) | 22 |
+| 3 | flatten → `Vec` snapshot + index | O(n)→O(n) | O(1)→O(1) | O(n)→O(n) | O(n)→O(n) | O(n)→O(n) | 13 |
+| 4 | lazy node-ref stack (AVLTreeSeq StEph/StPer) | O(lg n)→O(lg n) | O(1)†→O(1)† | O(lg n)→O(lg n) | O(lg n+k)→O(lg n+k) | O(n)→O(n) | 2 |
+| 5 | lazy tree index (AVLTreeSeq base) | O(1)→O(1) | O(lg n)→O(lg n) | O(1)→O(1) | O(k lg n)→O(k lg n) | O(n lg n)→O(n lg n) | 1 |
+| 6 | chained — re-expose inner iterator | inherits | inherits | inherits | inherits | inherits | 15 |
+| 7 | `hash_set`/`hash_map::Iter` | O(1)→O(1) | O(1)†→O(1)† | O(1)→O(1) | O(k)→O(k) | O(n)→O(n) | 4 |
+
+† amortized over the traversal. File total: 14+22+13+2+1+15+4 = 71 (per-file
+mapping is the table above). Row 6 inherits its backing collection's profile
+(adding O(1) per-`next()` forwarding): Relation/Mapping/8 graphs inherit row 7;
+ArraySet/3 Tables inherit row 1; OrderedTableMtPer inherits row 2.
+
+Evidence, read from source:
+- Row 1 — `ArraySeqStEph::iter()` is `{ inner: self.seq.iter() }`.
+- Row 2 — `BSTPlainStEph::into_iter()` is `self.root.in_order(); ...into_iter()`.
+- Row 3 — `BSTAVLMtEph::iter()` annotated `Work O(n) — snapshot iteration`.
+- Row 4 — `AVLTreeSeqStEph::iter()` is `push_left_iter(...)`, annotated `O(lg n)`.
+- Row 5 — `AVLTreeSeq::next()` is `self.tree.nth(self.pos); pos += 1`.
+- Row 7 — `SetStEph::iter()` annotated `Work O(1) — Creates iterator handle`.
+
+The only place a change was possible is rows 4–5 (the 3 lazy AVLTreeSeq files):
+flattening them would push iter() to O(n) and space to O(n) and falsify their
+`Alg Analysis: Work O(lg n)` annotations. They therefore stay custom — port the
+lazy iterator to a from-scratch `IteratorSpecImpl` (per `CountIter` in the
+standard). `AVLTreeSeqMtPer` already flattens (row 3); leave it. Row 5's
+O(n lg n) full traversal is suboptimal today; the migration preserves it as-is —
+improving it is a separate APAS cost-spec question, out of scope here.
