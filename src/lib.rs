@@ -203,6 +203,7 @@ pub mod standards {
     pub mod multi_struct_standard;
     pub mod mut_standard;
     pub mod partial_eq_eq_clone_standard;
+    pub mod prophetic_iterators_standard;
     pub mod spec_naming_convention;
     pub mod spec_wf_standard;
     pub mod table_of_contents_standard;

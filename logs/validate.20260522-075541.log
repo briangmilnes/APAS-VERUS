@@ -1,0 +1,1446 @@
+Mode: full
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+  --> src/standards/deep_view_standard.rs:85:23
+   |
+85 |             self.inner@
+   |                       ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/standards/deep_view_standard.rs:253:19
+    |
+253 |                 it@.0 == 0,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/standards/deep_view_standard.rs:254:19
+    |
+254 |                 it@.1 == self.seq@,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+  --> src/standards/iterators_standard.rs:74:23
+   |
+74 |             self.inner@
+   |                       ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/standards/iterators_standard.rs:273:19
+    |
+273 |                 it@.0 == 0,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/standards/iterators_standard.rs:274:19
+    |
+274 |                 it@.1 == self.seq@,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+  --> src/standards/mod_standard.rs:67:23
+   |
+67 |             self.inner@
+   |                       ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/standards/mod_standard.rs:238:19
+    |
+238 |                 it@.0 == 0,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/standards/mod_standard.rs:239:19
+    |
+239 |                 it@.1 == self.seq@,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+   --> src/standards/table_of_contents_standard.rs:306:23
+    |
+306 |             self.inner@
+    |                       ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/standards/table_of_contents_standard.rs:437:19
+    |
+437 |                 it@.0 == 0,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/standards/table_of_contents_standard.rs:438:19
+    |
+438 |                 it@.1 == self.seq@,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+  --> src/standards/view_standard.rs:87:23
+   |
+87 |             self.inner@
+   |                       ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/standards/view_standard.rs:284:19
+    |
+284 |                 it@.0 == 0,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/standards/view_standard.rs:285:19
+    |
+285 |                 it@.1 == self.seq@,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+   --> src/standards/wrapping_iterators_standard.rs:183:23
+    |
+183 |             self.inner@
+    |                       ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::collections::hash_set::Iter<'a, K>` in the current scope
+   --> src/vstdplus/hash_set_with_view_plus.rs:174:19
+    |
+174 |         self.inner@
+    |                   ^ method not found in `std::collections::hash_set::Iter<'a, Key>`
+
+error[E0599]: no method named `view` found for struct `std::collections::hash_map::Iter<'a, K, V>` in the current scope
+   --> src/vstdplus/hash_map_with_view_plus.rs:180:19
+    |
+180 |         self.inner@
+    |                   ^ method not found in `std::collections::hash_map::Iter<'a, Key, Value>`
+
+error[E0277]: the trait bound `T: vstd::prelude::SpecEq<std::sync::Arc<T>>` is not satisfied
+  --> src/vstdplus/arc_rwlock.rs:65:17
+   |
+65 |         ensures *cloned == *arc,
+   |                 ^^^^^^^--------
+   |                 |
+   |                 the trait `vstd::prelude::SpecEq<std::sync::Arc<T>>` is not implemented for `T`
+   |                 required by a bound introduced by this call
+   |
+note: required by a bound in `vstd::prelude::spec_eq`
+  --> builtin/src/lib.rs:1202:0
+help: consider restricting type parameter `T` with trait `SpecEq`
+   |
+64 |     pub fn clone_arc<T: vstd::prelude::SpecEq<std::sync::Arc<T>>>(arc: &Arc<T>) -> (cloned: Arc<T>)
+   |                       ++++++++++++++++++++++++++++++++++++++++++
+
+error[E0609]: no field `elements` on type `vstd::std_specs::iter::VerusForLoopWrapper<'_, std::vec::IntoIter<T>>`
+   --> src/Chap05/SetStEph.rs:331:26
+    |
+331 |                     iter.elements == v_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+
+error[E0609]: no field `pos` on type `vstd::std_specs::iter::VerusForLoopWrapper<'_, std::vec::IntoIter<T>>`
+   --> src/Chap05/SetStEph.rs:332:43
+    |
+332 |                     s@ == v_seq.take(iter.pos).map(|idx: int, t: T| t@).to_set(),
+    |                                           ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+
+error[E0609]: no field `pos` on type `vstd::std_specs::iter::VerusForLoopWrapper<'_, std::vec::IntoIter<T>>`
+   --> src/Chap05/SetStEph.rs:335:87
+    |
+335 |                 proof { lemma_take_one_more_extends_the_seq_set_with_view(v_seq, iter.pos); }
+    |                                                                                       ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:368:26
+    |
+368 |                     iter.elements == iter_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-2024094462337557525.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:371:48
+    |
+371 |                     seq@ == iter_seq.take(iter.pos),
+    |                                                ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-2024094462337557525.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:412:26
+    |
+412 |                     iter.elements == s2_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7690280645753709792.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:414:62
+    |
+414 |                     union@ == s1_view.union(s2_seq.take(iter.pos).map(|i: int, k: T| k@).to_set()),
+    |                                                              ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7690280645753709792.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:417:88
+    |
+417 |                 proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.pos); }
+    |                                                                                        ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-680819535031400045.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:439:27
+    |
+439 |                     iter1.elements == it1_seq,
+    |                           ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7690280645753709792.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:441:50
+    |
+441 |                     union@ == it1_seq.take(iter1.pos).map(|i: int, k: T| k@).to_set(),
+    |                                                  ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7690280645753709792.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:444:90
+    |
+444 |                 proof { lemma_take_one_more_extends_the_seq_set_with_view(it1_seq, iter1.pos); }
+    |                                                                                          ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-680819535031400045.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:457:27
+    |
+457 |                     iter2.elements == it2_seq,
+    |                           ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-16880692224346374917.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:461:64
+    |
+461 |                     union@ == s1_view.union(it2_seq.take(iter2.pos).map(|i: int, k: T| k@).to_set()),
+    |                                                                ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-16880692224346374917.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:464:90
+    |
+464 |                 proof { lemma_take_one_more_extends_the_seq_set_with_view(it2_seq, iter2.pos); }
+    |                                                                                          ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-17159852768539587547.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:488:26
+    |
+488 |                     iter.elements == s1_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7690280645753709792.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:491:55
+    |
+491 |                     intersection@ == s1_seq.take(iter.pos).map(|i: int, k: T| k@).to_set().intersect(s2_view),
+    |                                                       ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7690280645753709792.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:493:26
+    |
+493 |                     iter.pos < iter.elements.len() ==> s1mem == iter.elements[iter.pos as int],
+    |                          ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7690280645753709792.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:493:37
+    |
+493 |                     iter.pos < iter.elements.len() ==> s1mem == iter.elements[iter.pos as int],
+    |                                     ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7690280645753709792.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:493:70
+    |
+493 |                     iter.pos < iter.elements.len() ==> s1mem == iter.elements[iter.pos as int],
+    |                                                                      ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7690280645753709792.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:493:84
+    |
+493 |                     iter.pos < iter.elements.len() ==> s1mem == iter.elements[iter.pos as int],
+    |                                                                                    ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7690280645753709792.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:496:77
+    |
+496 |                 proof { lemma_take_one_more_intersect(s1_seq, s2_view, iter.pos); }
+    |                                                                             ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-6106350188073359182.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:521:26
+    |
+521 |                     iter.elements == s1_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7690280645753709792.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:526:47
+    |
+526 | ...                   (s1_seq.take(iter.pos).map(|i: int, k: T| k@).to_set().contains(av) && s2_view.contains(bv)),
+    |                                         ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7690280645753709792.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:529:88
+    |
+529 |                 proof { lemma_take_one_more_extends_the_seq_set_with_view(s1_seq, iter.pos); }
+    |                                                                                        ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-14802789562174119121.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, U>>`
+   --> src/Chap05/SetStEph.rs:551:26
+    |
+551 |                     iter.elements == s2_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-4413195587929490605.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, U>>`
+   --> src/Chap05/SetStEph.rs:556:59
+    |
+556 |                         (av == a_view && s2_seq.take(iter.pos).map(|i: int, k: U| k@).to_set().contains(bv)),
+    |                                                           ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-4413195587929490605.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, U>>`
+   --> src/Chap05/SetStEph.rs:559:88
+    |
+559 |                 proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.pos); }
+    |                                                                                        ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-13433315939931385573.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:730:26
+    |
+730 |                     iter.elements == iter_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-12628864274305236558.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:736:65
+    |
+736 |                     first@.union(second@) == iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set(),
+    |                                                                 ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-12628864274305236558.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:737:45
+    |
+737 |                     first@.len() == if iter.pos <= n { iter.pos } else { n as int },
+    |                                             ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-12628864274305236558.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:737:61
+    |
+737 |                     first@.len() == if iter.pos <= n { iter.pos } else { n as int },
+    |                                                             ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-12628864274305236558.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:738:46
+    |
+738 |                     second@.len() == if iter.pos <= n { 0 } else { iter.pos - n },
+    |                                              ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-12628864274305236558.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:738:73
+    |
+738 |                     second@.len() == if iter.pos <= n { 0 } else { iter.pos - n },
+    |                                                                         ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-12628864274305236558.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:742:86
+    |
+742 |                     lemma_take_one_more_extends_the_seq_set_with_view(iter_seq, iter.pos);
+    |                                                                                      ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-8813418399147962048.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:744:48
+    |
+744 |                     assert(!iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@)) by {
+    |                                                ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-8813418399147962048.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:746:47
+    |
+746 |                         if iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@) {
+    |                                               ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-8813418399147962048.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, T>>`
+   --> src/Chap05/SetStEph.rs:747:61
+    |
+747 | ...                   let mapped = iter_seq.take(iter.pos).map(|_i: int, k: T| k@);
+    |                                                       ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-8813418399147962048.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `vstd::std_specs::iter::VerusForLoopWrapper<'_, std::vec::IntoIter<T>>`
+   --> src/Chap05/SetMtEph.rs:349:26
+    |
+349 |                     iter.elements == v_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+
+error[E0609]: no field `pos` on type `vstd::std_specs::iter::VerusForLoopWrapper<'_, std::vec::IntoIter<T>>`
+   --> src/Chap05/SetMtEph.rs:350:43
+    |
+350 |                     s@ == v_seq.take(iter.pos).map(|idx: int, t: T| t@).to_set(),
+    |                                           ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+
+error[E0609]: no field `pos` on type `vstd::std_specs::iter::VerusForLoopWrapper<'_, std::vec::IntoIter<T>>`
+   --> src/Chap05/SetMtEph.rs:353:87
+    |
+353 |                 proof { lemma_take_one_more_extends_the_seq_set_with_view(v_seq, iter.pos); }
+    |                                                                                       ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:386:26
+    |
+386 |                     iter.elements == iter_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-548420716034923993.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:387:26
+    |
+387 |                     iter.pos <= iter_seq.len(),
+    |                          ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-548420716034923993.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:390:48
+    |
+390 |                     seq@ == iter_seq.take(iter.pos),
+    |                                                ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-548420716034923993.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:431:26
+    |
+431 |                     iter.elements == s2_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-15536504053498281956.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:432:26
+    |
+432 |                     iter.pos <= s2_seq.len(),
+    |                          ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-15536504053498281956.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:434:62
+    |
+434 |                     union@ == s1_view.union(s2_seq.take(iter.pos).map(|i: int, k: T| k@).to_set()),
+    |                                                              ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-15536504053498281956.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:437:88
+    |
+437 |                 proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.pos); }
+    |                                                                                        ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-240223027491171987.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:457:27
+    |
+457 |                     iter1.elements == it1_seq,
+    |                           ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-15536504053498281956.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:458:27
+    |
+458 |                     iter1.pos <= it1_seq.len(),
+    |                           ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-15536504053498281956.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:460:50
+    |
+460 |                     union@ == it1_seq.take(iter1.pos).map(|i: int, k: T| k@).to_set(),
+    |                                                  ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-15536504053498281956.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:463:90
+    |
+463 |                 proof { lemma_take_one_more_extends_the_seq_set_with_view(it1_seq, iter1.pos); }
+    |                                                                                          ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-240223027491171987.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:475:27
+    |
+475 |                     iter2.elements == it2_seq,
+    |                           ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-2890154356287390508.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:476:27
+    |
+476 |                     iter2.pos <= it2_seq.len(),
+    |                           ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-2890154356287390508.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:479:64
+    |
+479 |                     union@ == s1_view.union(it2_seq.take(iter2.pos).map(|i: int, k: T| k@).to_set()),
+    |                                                                ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-2890154356287390508.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:482:90
+    |
+482 |                 proof { lemma_take_one_more_extends_the_seq_set_with_view(it2_seq, iter2.pos); }
+    |                                                                                          ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-16763506954079215695.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:506:26
+    |
+506 |                     iter.elements == s1_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-15536504053498281956.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:507:26
+    |
+507 |                     iter.pos <= s1_seq.len(),
+    |                          ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-15536504053498281956.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:510:55
+    |
+510 |                     intersection@ == s1_seq.take(iter.pos).map(|i: int, k: T| k@).to_set().intersect(s2_view),
+    |                                                       ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-15536504053498281956.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:513:77
+    |
+513 |                 proof { lemma_take_one_more_intersect(s1_seq, s2_view, iter.pos); }
+    |                                                                             ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7334649555929208008.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, U>>`
+   --> src/Chap05/SetMtEph.rs:538:26
+    |
+538 |                     iter.elements == s2_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-12001347117359965274.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, U>>`
+   --> src/Chap05/SetMtEph.rs:543:58
+    |
+543 |                        (av == a_view && s2_seq.take(iter.pos).map(|i: int, k: U| k@).to_set().contains(bv)),
+    |                                                          ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-12001347117359965274.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, U>>`
+   --> src/Chap05/SetMtEph.rs:546:88
+    |
+546 |                 proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.pos); }
+    |                                                                                        ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-5667941476691060005.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:871:26
+    |
+871 |                     iter.elements == iter_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-15847421085817830796.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:877:65
+    |
+877 |                     first@.union(second@) == iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set(),
+    |                                                                 ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-15847421085817830796.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:878:45
+    |
+878 |                     first@.len() == if iter.pos <= n { iter.pos } else { n as int },
+    |                                             ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-15847421085817830796.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:878:61
+    |
+878 |                     first@.len() == if iter.pos <= n { iter.pos } else { n as int },
+    |                                                             ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-15847421085817830796.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:879:46
+    |
+879 |                     second@.len() == if iter.pos <= n { 0 } else { iter.pos - n },
+    |                                              ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-15847421085817830796.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:879:73
+    |
+879 |                     second@.len() == if iter.pos <= n { 0 } else { iter.pos - n },
+    |                                                                         ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-15847421085817830796.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:883:86
+    |
+883 |                     lemma_take_one_more_extends_the_seq_set_with_view(iter_seq, iter.pos);
+    |                                                                                      ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7684094985571398668.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:885:48
+    |
+885 |                     assert(!iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@)) by {
+    |                                                ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7684094985571398668.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:887:47
+    |
+887 |                         if iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@) {
+    |                                               ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7684094985571398668.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetMtEphIter<'_, T>>`
+   --> src/Chap05/SetMtEph.rs:888:61
+    |
+888 | ...                   let mapped = iter_seq.take(iter.pos).map(|_i: int, k: T| k@);
+    |                                                       ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-7684094985571398668.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, RelationStEphIter<'_, X, Y>>`
+   --> src/Chap05/RelationStEph.rs:200:26
+    |
+200 |                     iter.elements == pairs_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-8958996034574910609.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, RelationStEphIter<'_, X, Y>>`
+   --> src/Chap05/RelationStEph.rs:201:26
+    |
+201 |                     iter.pos <= pairs_seq.len(),
+    |                          ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-8958996034574910609.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, RelationStEphIter<'_, X, Y>>`
+   --> src/Chap05/RelationStEph.rs:204:80
+    |
+204 |                         exists |i: int| #![trigger pairs_seq[i]] 0 <= i < iter.pos && pairs_seq[i]@.0 == x),
+    |                                                                                ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-8958996034574910609.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, RelationStEphIter<'_, X, Y>>`
+   --> src/Chap05/RelationStEph.rs:244:26
+    |
+244 |                     iter.elements == pairs_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-8958996034574910609.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, RelationStEphIter<'_, X, Y>>`
+   --> src/Chap05/RelationStEph.rs:245:26
+    |
+245 |                     iter.pos <= pairs_seq.len(),
+    |                          ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-8958996034574910609.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, RelationStEphIter<'_, X, Y>>`
+   --> src/Chap05/RelationStEph.rs:248:80
+    |
+248 |                         exists |i: int| #![trigger pairs_seq[i]] 0 <= i < iter.pos && pairs_seq[i]@.1 == y),
+    |                                                                                ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-8958996034574910609.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+   --> src/Chap17/MathSeq.rs:568:63
+    |
+568 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap17/MathSeq.rs:673:19
+    |
+673 |                 it@.0 == 0,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap17/MathSeq.rs:674:19
+    |
+674 |                 it@.1 == self.data@,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap18/ArraySeq.rs:1544:23
+     |
+1544 |             self.inner@
+     |                       ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeq.rs:1651:19
+     |
+1651 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeq.rs:1652:19
+     |
+1652 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+   --> src/Chap18/ArraySeqStPer.rs:933:63
+    |
+933 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqStPer.rs:1053:19
+     |
+1053 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqStPer.rs:1054:19
+     |
+1054 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+   --> src/Chap18/ArraySeqStEph.rs:952:63
+    |
+952 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqStEph.rs:1058:19
+     |
+1058 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqStEph.rs:1059:19
+     |
+1059 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+   --> src/Chap18/LinkedListStPer.rs:765:63
+    |
+765 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap18/LinkedListStPer.rs:869:19
+    |
+869 |                 it@.0 == 0,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap18/LinkedListStPer.rs:870:19
+    |
+870 |                 it@.1 == self.seq@,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+   --> src/Chap18/LinkedListStEph.rs:783:63
+    |
+783 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap18/LinkedListStEph.rs:887:19
+    |
+887 |                 it@.0 == 0,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap18/LinkedListStEph.rs:888:19
+    |
+888 |                 it@.1 == self.seq@,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap18/ArraySeqMtEph.rs:1430:63
+     |
+1430 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqMtEph.rs:1536:19
+     |
+1536 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqMtEph.rs:1537:19
+     |
+1537 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1559:63
+     |
+1559 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap18/ArraySeqMtPer.rs:1743:63
+     |
+1743 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqMtPer.rs:1850:19
+     |
+1850 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqMtPer.rs:1851:19
+     |
+1851 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap19/ArraySeqStPer.rs:1035:63
+     |
+1035 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqStPer.rs:1144:19
+     |
+1144 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqStPer.rs:1145:19
+     |
+1145 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap19/ArraySeqStEph.rs:1033:63
+     |
+1033 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqStEph.rs:1142:19
+     |
+1142 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqStEph.rs:1143:19
+     |
+1143 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqMtEph.rs:1562:25
+     |
+1562 |                     iter@.0 == j as int,
+     |                         ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqMtEph.rs:1563:25
+     |
+1563 |                     iter@.1 == b_view,
+     |                         ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap19/ArraySeqMtEph.rs:1587:63
+     |
+1587 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqMtEph.rs:1694:19
+     |
+1694 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqMtEph.rs:1695:19
+     |
+1695 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1588:63
+     |
+1588 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap23/PrimTreeSeqStPer.rs:581:19
+    |
+581 |                 it@.0 == 0,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap23/PrimTreeSeqStPer.rs:582:19
+    |
+582 |                 it@.1 == self.seq@,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+   --> src/Chap23/PrimTreeSeqStPer.rs:624:63
+    |
+624 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap23/BalBinTreeStEph.rs:533:23
+    |
+533 |             self.inner@
+    |                       ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap23/BalBinTreeStEph.rs:540:23
+    |
+540 |             self.inner@
+    |                       ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap23/BalBinTreeStEph.rs:547:23
+    |
+547 |             self.inner@
+    |                       ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap37/BSTPlainStEph.rs:703:63
+    |
+703 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap37/BSTAVLStEph.rs:955:63
+    |
+955 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:600:63
+    |
+600 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap37/BSTSplayStEph.rs:1618:63
+     |
+1618 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap37/BSTBBAlphaStEph.rs:691:63
+    |
+691 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap38/BSTParaStEph.rs:1578:63
+     |
+1578 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap39/BSTTreapStEph.rs:3122:63
+     |
+3122 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap39/BSTTreapMtEph.rs:1508:63
+     |
+1508 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:1643:63
+     |
+1643 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap39/BSTSetTreapMtEph.rs:442:63
+    |
+442 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap40/BSTKeyValueStEph.rs:1482:63
+     |
+1482 |         open spec fn view(&self) -> (int, Seq<K>) { self.inner@ }
+     |                                                               ^ method not found in `std::vec::IntoIter<K>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap40/BSTSizeStEph.rs:1465:63
+     |
+1465 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap40/BSTReducedStEph.rs:1607:63
+     |
+1607 |         open spec fn view(&self) -> (int, Seq<K>) { self.inner@ }
+     |                                                               ^ method not found in `std::vec::IntoIter<K>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap41/OrdKeyMap.rs:4830:23
+     |
+4830 |             self.inner@
+     |                       ^ method not found in `std::vec::IntoIter<Types::Types::Pair<K, V>>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap41/AVLTreeSetStEph.rs:832:63
+    |
+832 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap41/AVLTreeSetStPer.rs:711:63
+    |
+711 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:554:63
+    |
+554 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap43/OrderedTableStEph.rs:1799:72
+     |
+1799 |         open spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
+     |                                                                        ^ method not found in `std::vec::IntoIter<Types::Types::Pair<K, V>>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap43/OrderedTableStPer.rs:1401:72
+     |
+1401 |         open spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
+     |                                                                        ^ method not found in `std::vec::IntoIter<Types::Types::Pair<K, V>>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap43/OrderedSetStEph.rs:1013:63
+     |
+1013 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap43/OrderedSetStPer.rs:1080:63
+     |
+1080 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::str::Chars<'a>` in the current scope
+   --> src/Chap44/DocumentIndex.rs:613:28
+    |
+613 |             decreases chars@.1.len() - chars@.0,
+    |                            ^ method not found in `std::str::Chars<'_>`
+
+error[E0599]: no method named `view` found for struct `std::str::Chars<'a>` in the current scope
+   --> src/Chap44/DocumentIndex.rs:613:45
+    |
+613 |             decreases chars@.1.len() - chars@.0,
+    |                                             ^ method not found in `std::str::Chars<'_>`
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, LabEdge<usize, i128>>>`
+   --> src/Chap59/JohnsonMtEphI64.rs:313:22
+    |
+313 |                 iter.elements == arcs_seq,
+    |                      ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-17465055742585497642.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, LabEdge<usize, i128>>>`
+   --> src/Chap59/JohnsonMtEphI64.rs:412:22
+    |
+412 |                 iter.elements == arcs_seq,
+    |                      ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-16552781569731808255.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, LabEdge<usize, i128>>>`
+   --> src/Chap59/JohnsonMtEphI64.rs:413:22
+    |
+413 |                 iter.pos <= arcs_seq.len(),
+    |                      ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-16552781569731808255.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, LabEdge<usize, i128>>>`
+   --> src/Chap59/JohnsonMtEphI64.rs:416:49
+    |
+416 |                 reweighted_edges@.len() <= iter.pos as nat,
+    |                                                 ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-16552781569731808255.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, LabEdge<usize, WrappedF64>>>`
+   --> src/Chap59/JohnsonMtEphF64.rs:324:22
+    |
+324 |                 iter.elements == arcs_seq,
+    |                      ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-25350077690517236.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, LabEdge<usize, WrappedF64>>>`
+   --> src/Chap59/JohnsonMtEphF64.rs:424:22
+    |
+424 |                 iter.elements == arcs_seq,
+    |                      ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-16917284623960680407.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, LabEdge<usize, WrappedF64>>>`
+   --> src/Chap59/JohnsonMtEphF64.rs:425:22
+    |
+425 |                 iter.pos <= arcs_seq.len(),
+    |                      ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-16917284623960680407.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `pos` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, LabEdge<usize, WrappedF64>>>`
+   --> src/Chap59/JohnsonMtEphF64.rs:428:49
+    |
+428 |                 reweighted_edges@.len() <= iter.pos as nat,
+    |                                                 ^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-16917284623960680407.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, Edge<V>>>`
+   --> src/Chap63/ConnectivityStEph.rs:163:22
+    |
+163 |                 iter.elements == edge_seq,
+    |                      ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-740729011588197854.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, V>>`
+   --> src/Chap63/ConnectivityStEph.rs:238:26
+    |
+238 |                     iter.elements == elem_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-16857265379044263089.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, V>>`
+   --> src/Chap63/ConnectivityMtEph.rs:236:26
+    |
+236 |                     iter.elements == elem_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-16857265379044263089.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, HashSetWithViewPlusIter<'_, Edge<V>>>`
+   --> src/Chap64/SpanTreeStEph.rs:135:26
+    |
+135 |                     iter.elements == qt_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-6992701050784667703.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, Edge<V>>>`
+   --> src/Chap64/SpanTreeStEph.rs:203:22
+    |
+203 |                 iter.elements == edge_seq,
+    |                      ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-11776318605673397773.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, HashSetWithViewPlusIter<'_, Edge<V>>>`
+   --> src/Chap64/SpanTreeMtEph.rs:142:26
+    |
+142 |                     iter.elements == qt_seq,
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-6992701050784667703.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `VerusForLoopWrapper<'_, SetStEphIter<'_, Edge<V>>>`
+   --> src/Chap64/SpanTreeMtEph.rs:209:22
+    |
+209 |                 iter.elements == edge_seq,
+    |                      ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `index`, `snapshot`, `init`, `iter`, `history`
+    = note: the full name for the type has been written to 'lib.long-type-11776318605673397773.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error: aborting due to 178 previous errors
+
+Some errors have detailed explanations: E0277, E0599, E0609.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 1174MB, peak z3 RSS: 0MB, min free: 21726MB
+Sampled CPU Usage: rust_verify: 24s, z3 children: 0s

@@ -320,7 +320,7 @@ snapshot — do not scatter the numbers across per-round reports. Refresh rows
 - Source files: `src/`
 - Runtime tests: `tests/`
 - Proof time tests: `rust_verify_test/tests/`
-- Rust toolchain: pinned to 1.93.0 via `rust-toolchain.toml`
+- Rust toolchain: pinned to 1.95.0 via `rust-toolchain.toml`
 
 ### Module Header Format
 
