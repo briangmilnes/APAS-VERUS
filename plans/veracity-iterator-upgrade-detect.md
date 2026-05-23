@@ -1203,38 +1203,18 @@ read-only — no in-place edits.
 **Acceptance.** After refresh, the §13a.1 manifest line reads
 `Scanned 71 of 71 — 0 missing, 0 extra`.
 
-## 14. Phase 2 — `--dry-run-apply` (separate plan)
+## 14. Phase 2 — `--dry-run-apply` and `--apply`
 
-Per veracity's review (`plans/veracity-iterator-upgrade-detect-review.md`),
-`--detect`-only stepping is expensive at scale: ~1,000 findings × 30–60 s
-per finding × N reviewers = 70–150 person-hours. The cure is a Phase 2
-mode that emits a unified diff per file so reviewers work in `git
-diff` / `vimdiff` / GitHub instead of `M-x compile` (~2 min per file,
-~2.5 hours per reviewer total).
+Phase 2 has its own plan at `plans/veracity-iterator-upgrade-apply.md`.
+It adds two modes: `--dry-run-apply` (emits unified diffs per file, no
+mutation) and `--apply` (rewrites files in place inside the veracity
+fixture). The (a)-vs-(b) open question this section used to carry was
+resolved by shipping both as separate modes.
 
-Phase 2 is **a separate plan, written after `--detect` is calibrated
-green**. Shape:
-
-- `veracity-iterator-upgrade --dry-run-apply --root <fixture> --out-dir <path>`
-- Same AST scan, same matchers, same pinned classification.
-- Output: per-file unified diff at `<out-dir>/<relative-path>.diff`
-  reflecting D-deletions + T-rewrites; **no source mutation**.
-- Plus the per-chapter summary (D/T/U counts) — unchanged.
-- Plus the compile-format log, but **restricted to U-classes only**
-  (the human-attention list). T1–T8 live in the diff.
-
-Open question for the orchestrator (decide before writing the Phase 2
-plan):
-
-- **(a)** veracity emits diffs only, reviewers `git apply` per file, OR
-- **(b)** veracity also writes the modified files to `<out-dir>`,
-  reviewers `cp <out-dir>/<path> <root>/<path>` per file.
-
-(b) is one line of code more and friendlier to non-Emacs reviewers.
-This file does not commit to either.
-
-`--detect` ships first. Phase 2 is gated on the matchers being right,
-which is exactly what `--detect` is designed to prove.
+Scope: 1198 of 1236 findings are mechanical (500 D-deletes + 480
+textually-trivial T-rewrites + 218 templated T-rewrites). 38 U-class
+findings (U-CUSTOM, U-CHAIN, U-CLASS) are out of scope and stay for
+human review.
 
 ## 15. See also
 
