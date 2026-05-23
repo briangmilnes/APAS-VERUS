@@ -255,6 +255,17 @@ to be restarted (not just given new prompts), say so explicitly.
   throwaway Python.
 - **No Perl.** Never use Perl for any purpose — no `perl -e`, no `perl -i`, no Perl one-liners.
 - Plans and proposed work tables go in `${cwd}/plans/`, not in `~/.claude`.
+- **New plan files in `plans/` are prefixed `rNNN-`** where NNN is the
+  round number. Before creating a new plan, find the current max with
+  `ls plans | grep -ioE 'r[0-9]+' | sort -V | uniq | tail -1` and use
+  that number (for plans that continue an in-flight round) or the next
+  one (for plans that open a new round). Multiple plans may share a
+  round number — that is the norm, not an error. Do NOT rename existing
+  un-prefixed plans (legacy plans and inbound review files from other
+  agents stay as-is); the rule applies to new files only. Filenames
+  use lowercase-kebab-case after the prefix:
+  `r204-veracity-iterator-upgrade-apply.md`, not
+  `r204_Veracity_Upgrade.md`.
 - **Agent status reports**: When finishing a round, write your summary to
   `plans/agent{N}-round{R}-report.md` (e.g., `plans/agent3-round7-report.md`).
   Include: holes before/after per file (table), chapters closed, verification counts,

@@ -1205,7 +1205,7 @@ read-only — no in-place edits.
 
 ## 14. Phase 2 — `--dry-run-apply` and `--apply`
 
-Phase 2 has its own plan at `plans/veracity-iterator-upgrade-apply.md`.
+Phase 2 has its own plan at `plans/r204-veracity-iterator-upgrade-apply.md`.
 It adds two modes: `--dry-run-apply` (emits unified diffs per file, no
 mutation) and `--apply` (rewrites files in place inside the veracity
 fixture). The (a)-vs-(b) open question this section used to carry was
