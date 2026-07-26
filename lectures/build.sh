@@ -1,15 +1,23 @@
 #!/bin/bash
+# Build one lecture deck to PDF (beamer) and PPTX.
+# Usage: build.sh [deck-basename]      e.g. build.sh slidesTOPOS
 set -e
 cd "$(dirname "$0")"
-pandoc -t beamer --slide-level=1 --pdf-engine=lualatex slidesCMUCS.md -o slidesCMUCS.pdf
-echo "-> $(pwd)/slidesCMUCS.pdf"
+DECK="${1:-slidesCMUCS}"
+DECK="${DECK%.md}"
+[ -f "$DECK.md" ] || { echo "build.sh: no such deck: $DECK.md" >&2; exit 1; }
 
-pandoc --slide-level=1 slidesCMUCS.md -o /tmp/slides_raw.pptx
+pandoc -t beamer --slide-level=1 --pdf-engine=lualatex "$DECK.md" -o "$DECK.pdf"
+echo "-> $(pwd)/$DECK.pdf"
+
+RAW_PPTX="/tmp/${DECK}_raw.pptx"
+pandoc --slide-level=1 "$DECK.md" -o "$RAW_PPTX"
+export RAW_PPTX DST_PPTX="$(pwd)/$DECK.pptx"
 python3 - <<'EOF'
-import zipfile, re
+import os, zipfile, re
 
-src = "/tmp/slides_raw.pptx"
-dst = "/home/milnes/projects/APAS-VERUS/lectures/slidesCMUCS.pptx"
+src = os.environ["RAW_PPTX"]
+dst = os.environ["DST_PPTX"]
 TITLE_SZ = "3200"
 BODY_SZ  = "1800"
 CODE_SZ  = "1100"

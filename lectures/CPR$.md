@@ -2,8 +2,7 @@
 % Veracity Project
 % 2026-05-09
 
-# CPR$ — Three Numbers and One Ratio {.shrink}
-
+# CPR$ — Three Numbers and One Ratio
 | # | Symbol | Name          | Measures                                                |
 |--:|:-------|:--------------|:--------------------------------------------------------|
 | 1 | C      | Cost of Code  | $ to produce KLOE (code bodies, signatures, types)      |
@@ -15,8 +14,7 @@
   size, domain, and prover
 - Most engineering decisions hinge on **which is bigger**
 
-# Inputs & Computation {.shrink}
-
+# Inputs & Computation
 - **Tool inputs**: `veracity-count-loc` + `veracity-count-lines-of-review`
 - **External inputs**: `--programmer-costs`, `--ai-costs`,
   `--person-days`, `--average-hours-per-day`
@@ -33,8 +31,7 @@ P = total_cost × (KLOP / KLOC)
 R = LOPC2R / (LOPC2R + LOC0R)   # proof reviewed / all proof
 ```
 
-# Worked Example — Inputs {.shrink}
-
+# Worked Example — Inputs
 | # | Project               | Hours    | KLOE   | KLOP   | KLOC    |
 |--:|:----------------------|---------:|-------:|-------:|--------:|
 | 1 | APAS-AI + Rusticate   |   309.6  | 31.751 |    —   |  31.751 |
@@ -49,8 +46,7 @@ R = LOPC2R / (LOPC2R + LOC0R)   # proof reviewed / all proof
 - **AI share of total cost**: just **2.2%**
 - **R inputs**: LOPC2R 47,828 / (47,828 + 95,908) = **33.3%**
 
-# CPR$ — Combined Result (APAS-AI + APAS-VERUS) {.shrink}
-
+# CPR$ — Combined Result (APAS-AI + APAS-VERUS)
 | # | Quantity           | Value    | Definition                              |
 |--:|:-------------------|---------:|:----------------------------------------|
 | 1 | C — Cost of Code   | $185,252 | $ to produce KLOE (both projects)       |
@@ -65,8 +61,7 @@ R = LOPC2R / (LOPC2R + LOC0R)   # proof reviewed / all proof
 - The code rate ($1,905/K) exceeds the proof rate only because APAS-AI's
   unverified code cost more per line ($2,125/K) than APAS-VERUS ($1,799/K)
 
-# CPR$ — APAS-VERUS Only {.shrink}
-
+# CPR$ — APAS-VERUS Only
 | # | Quantity           | Value    | Definition                              |
 |--:|:-------------------|---------:|:----------------------------------------|
 | 1 | C — Cost of Code   | $117,775 | $ to produce KLOE (Verus)               |
@@ -82,22 +77,7 @@ R = LOPC2R / (LOPC2R + LOC0R)   # proof reviewed / all proof
 - Blank lines and comments are not billed separately; the full bill is
   attributed to code + proof
 
-# Head-to-Head — seL4 (2009) vs APAS-VERUS — 22 py {.shrink}
-
-| #  | Quantity         | seL4 (pre-AI) | APAS-VERUS (AI-paired) | Ratio          |
-|---:|:-----------------|--------------:|-----------------------:|:---------------|
-|  1 | Person-years     |           22  |                  0.64  | seL4 ~34×      |
-|  2 | Hours            |       45,760  |                 1,123  | seL4 ~41×      |
-|  3 | KLOE             |           10  |                    65  | Verus ~6.5×    |
-|  4 | KLOP             |          480  |                    71  | seL4 ~6.8×     |
-|  5 | KLOP / KLOE      |           48  |                   1.1  | seL4 **~44×**  |
-|  6 | Klines / hour    |       0.0107  |                 0.121  | Verus ~11×     |
-|  7 | $ / KLOE         |     $825,000  |               ~$3,739  | seL4 **~221×** |
-|  8 | $ / KLOP         |      $17,188  |               ~$3,466  | seL4 ~5.0×     |
-|  9 | C + P total      |  $8,250,000   |              $244,840  | seL4 **~33.7×**|
-
-# Head-to-Head — seL4 (2009) vs APAS-VERUS — 22.5 py {.shrink}
-
+# Head-to-Head — seL4 (2009) vs APAS-VERUS — 22.5 Person Years
 | #  | Quantity         | seL4 (pre-AI) | APAS-VERUS (AI-paired) | Ratio          |
 |---:|:-----------------|--------------:|-----------------------:|:---------------|
 |  1 | Person-years     |         22.5  |                  0.64  | seL4 ~35×      |
