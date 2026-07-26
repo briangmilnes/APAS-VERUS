@@ -22,16 +22,15 @@ header-includes: |
 - Algorithms Parallel and Sequential (APAS)
 - Rust      - The Good, The Bad and the Ugly
 - APAS-AI   - AI Paired Programming APAS in Rust
-- Rusticate - sending Python back to the family estate
 - Verus     - Proving Rust
 
 # Outline of the talk
 
 - APAS-VERUS - AI Paired Proving APAS in Verus
-- Veracity - Software Engineering AI Paired Proving
+- Rusticate and Veracity - Software Engineering AI Paired Proving
 - Software Engineering in AI Paired Proving
 - CPR$ - how to measure costs and my costs
-- How bad is our computer security?
+- How Bad is Our Computer Security?
 - How much Proof do we need to save computer security?
 - Review of the Talk
 - Questions
@@ -68,8 +67,8 @@ header-includes: |
 - Industrial acceptance: AWS, Google, Huawei, Microsoft, and Mozilla.
 - Linux Kernel now uses it!
 - Linear typing plus borrowing! No GC!
-- Clear mutability.
-- Slicing! with ownership.
+- Clear mutability, algebraic data types.
+- Slicing! with ownership and borrow.
 - Their 'cargo' package system works rather well.
 - No objects for modularity! Good.
 
@@ -129,7 +128,7 @@ header-includes: |
     - Jung, Ralf, et al. "RustBelt: Securing the foundations of the Rust programming language." 45th ACM POPL 2018
     - Hance, Travis, et al. "VerusBelt: A Semantic Foundation for Verus’s Proof-Oriented Extensions to the Rust Type System." PLDI (2026): 1962-1986.
 
-# APAS-AI   - AI Paired Programming APAS in Rust
+# APAS-AI - AI Programming APAS in Rust
 
 - APAS-AI is a nearly complete, idiomatic Rust implementation of
      the algorithms from Acar and Blelloch.
@@ -152,7 +151,6 @@ header-includes: |
     - 246 files
     - 55,223 LOC
     - 3,923 test functions
-    - 1.2× the source code size which is heavy.
     - Tests are now so cheap and automated, I generally don't count them.
 - Benchmarks: 171 files, 13,890 LOC, 360 benchmark functions
 
@@ -179,24 +177,23 @@ header-includes: |
 # Verus
 
 - Specifications are written in a pure **First Order Logic**.
-- spec functions, forall/exists, arithmetic, sets, sequences.
+- Spec functions, forall/exists, arithmetic, sets, sequences.
 - Undecidable.
 - Z3 SMT handles linear arithmetic, arrays, and quantified formulas,
      but quantifier instantiation requires explicit trigger annotations.
 - Z3 is NOT building certified proofs for Verus (but cvc5 might be coming).
-- Wraps existing Rust code: - spec / proof / requires / ensures on fns
+- Wraps existing Rust code: spec / proof / requires / ensures on fns
 - Linear Logic + Borrowing from the Rust type system, which rustc checks.
 - The TCB then is Verus+Z3+Rust+Libs, which is easily **= 2 M LOC**.
 
 # Views and the Libraries
 
-- A View maps an executable Rust type to a mathematical ghost type:
-     "Vec<T> views as Seq<T>",  "HashSet<K> views as Set<K::V>".
+- A View maps an executable Rust type to a math ghost type:
+    - "Vec<T> views as Seq<T>",  "HashSet<K> views as Set<K::V>".
 - Specs are written over the view; exec code manipulates the real type.
 - vstd is Verus's standard library — specs for Vec, Seq, Set,
-     Map, Multiset, arithmetic, common lemmas, Fns ...
-- Ghost types live only in the verifier —
-     they have no runtime cost and no runtime representation.
+    - Map, Multiset, arithmetic, common lemmas, Fns ...
+- Ghost types live only in the verifier
 
 # UnDirGraphStEph — Data Struct + View 
 
@@ -240,8 +237,7 @@ pub trait UnDirGraphStEphTrait<V: StT + Hash>:
 
 \normalsize
 
-# UnDirGraphStEph — Impl: `neighborhood` exec body {.shrink}
-
+# UnDirGraphStEph — Impl:  {.shrink}
 
 \scriptsize
 
@@ -287,7 +283,7 @@ fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
   { v.push(value) }
 ```
 
-# Wrapping Rust — Declaring an external function/method
+# Wrapping Rust — Declaring an external fun
   - Add a View and specs to a foreign type.
 ```rust
   #[verifier::external_type_specification]
@@ -300,15 +296,16 @@ fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
 # Wrapping Rust — external\_trait\_specification
 
   - Adds a spec to a foreign trait without modifying it:
-  ```rust
-  #[verifier::external_trait_specification]
+```rust
+
+#[verifier::external_trait_specification]
   pub trait ExClone: Sized {
       type ExternalTraitSpecificationFor: core::clone::Clone;
       fn clone(&self) -> Self;
   }
-  ```
+```
   - The proxy trait name is `Ex<TraitName>` by convention.
-  - Add `requires`/`ensures` to the method to give it a full contract.
+  - Add `requires`/`ensures` to the method to give it a full spec.
   - Limitation: no generics.
 
 # Tokenized State Machines — Hance, CMU 2024
@@ -405,14 +402,14 @@ fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
 
 - I first built a toolset call Rusticate for APAS-AI.
 - Everything one can do in programmatic SE, I try and do in programmatic SE.
-- The follow on tool for APAS-VERUS is Veracity, a suite of 22+ tools for analyzing, reviewing, and
+- Then Veracity, a suite of 22+ tools for analyzing, reviewing, and
      fixing Verus codebases.
 - Review tools:
     - proof holes (assume, external_body, admit),
     - style enforcement (21 rules, auto-reorder),
     - with spec strength classification fed to AI,
     - veracity-count-loc (spec/proof/exec breakdown),
-    - chapter-cleanliness-status (clean vs. holed chapter summary vs blocked by),
+    - chapter-cleanliness-status
     - string-hacking detector, function inventory, etc.
 - One of the best is veracity-minimize-proofs
 - Heck, I had to run the string hacking detector on the string hacking detector.
@@ -469,8 +466,7 @@ fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
 
 # Taking Claude to SE process
 
-- Although APAS-AI and APAS-VERUS were developed without a formal SE process
-- I eventually settled into a style and taught it to my AIs
+- I eventually settled into a semi-formal SE style and taught it to my AIs
 - In medicine: GRASE (Medical Acronym) - Generally Recognized as Safe and Effective
 - In SE: GRASE - Git Recording Agentic Software Engineering
 - https://github.com/briangmilnes/GRASE
@@ -517,7 +513,7 @@ fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
 | # | Sym    | Name          | Measures                                                           |
 |--:|:-------|:--------------|:-------------------------------------------------------------------|
 | 1 | C      | Cost of Code  | $ to produce executable code                                       |
-| 2 | P      | Cost of Proof | $ to produce specs, contracts, and proofs                          |
+| 2 | P      | Cost of Proof | $ to produce specs and proofs                                      |
 | 3 | C+P    | Total         | Full bill for the verified artifact                                |
 | 4 | R      | Review Ratio  | Fraction of deliverable a proofgrammer must read (LOC0R excluded)  |
 
@@ -540,7 +536,7 @@ fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
 
 # CPR$ — Combined Result
 
-| # | Quantity                         | Value         |
+| # | Quantity                       | Value         |
 |:---|:------------------------------|:--------------:|
 | 1 | C — Cost of Code               | **$150,723**  |
 | 2 | P — Cost of Proof              | **$161,594**  |
@@ -584,8 +580,7 @@ fn neighborhood(&self, v: &V) -> (nbrs: SetStEph<V>) {
  is right!
 - 4. Tests   - are hugely useful when you don't trust your coding team.
 - 5. Formatting - rust formatting has been adopted in Verus. It is very
-  low density. I built a minimizing formatter to cut down on my working
-  memory load while reviewing. F* is much tighter.
+  low density. 
 
 # Quantitative SE: What Rust Cargos use in std.
 
@@ -632,15 +627,16 @@ systems and their LOP and LOC.
 
 # The Exemplars
 
--  One measured system per artifact — **bold** = carries a machine-checked proof
+- One measured system per artifact — **bold** = carries a machine-checked proof
 - **Semantics** — **Rocq** · **CoqQFBV** · **cake_lpr** · **Iris** · **RustBelt**
 - **PL** — **CompCert** · **CompCertELF** · **CakeML GC**
-- **Std Library** — Rust core · **VST malloc** · **CakeML basis** · **HACL\*/EverCrypt**
+- **Std Library** — Rust core · **VST malloc** · **CakeML basis** · **HACL\***
 - **OS boot** — U-Boot · **DICE\***
-- **OS core** — **Atmosphere** · Asterinas OSTD/OSDK · Linux net/ · **FSCQ**
-- **OS devices** — Linux drivers/base · **Pancake i.MX8 NIC** · **SeKVM** · **Vigor/Klint**
-- **Utilities & Apps** — Unbound · chrony · BusyBox · Suricata · nginx · Redis · SQLite · NGINX Unit
-- **Distributed & POP** — **CapybaraKV** · S3 ShardStore · **Verdi raft** · FoundationDB · git · **Verus (vstd)** · cvc5
+- **OS core** — **Atmosphere** · Asterinas · Linux net/ · **FSCQ**
+- **OS devices** — Linux drivers · **Pancake i.MX8 NIC** · **SeKVM** · **Vigor/Klint**
+- **Utilities & Apps** — Unbound · chrony · BusyBox · Suricata · nginx · Redis · SQLite
+- **Distributed** — **CapybaraKV** · S3 ShardStore · **Verdi raft** · FoundationDB · 
+- **POP ** - **Verus (vstd)** · cvc5
 
 # Cost of Proving 'Everything' You Need for Security
 
@@ -656,19 +652,20 @@ systems and their LOP and LOC.
 | 8 Proof of Programs  |      500 |      2 |     38 |    540 |
 | **Total**            |**19,186**| **599**| **785**|**20,570**|
 
-# 20,570 KLOC · $90.9M · 3.0% example proven today
+# Cost of Proving 'Everything' You Need for Security
 
 - $2,000/KLOC to write · 1.1 proof lines per line · $2,200/KLOP to prove
-
-| Estimated cost of Total KLOC        |    $41,140,000 |
-| Estimated cost of Total Proven KLOC |     $49,779,400 |
-| **Estimated Total Cost**            | **$90,919,400** |
+- 20,570 KLOC · $90.9M · 3.0% example proven today
+- Estimated cost of Total KLOC - $41,140,000 
+- Estimated cost of Total Proven KLOC -     $49,779,400 
+- **Estimated Total Cost**            - **$90,919,400** 
 
 # The Enemies of Proven Code
 
 - Proven Formal Semantics - we are getting close.
 - Code bloat: Rust's Libs are a great example!
 - Will AIs just brute force the security problems?
+- Programmers: will they accept proof?
 - Features - how much is enough?
 - The Innovator's Dilemma - would MSFT, Amazon, ... do this?
 - Complexity: how much can we really specify?
