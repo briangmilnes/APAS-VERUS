@@ -1,0 +1,11 @@
+    Spec/   Proof/    Exec/    Rust File
+--------------------------------------------
+--------------------------------------------
+    spec    proof     exec     rust
+       0/       0/       0/       0 Total
+
+Summary 2026-08-17
+  0 lines (with comments), 0 without comments, 0 files, elapsed 0ms
+  spec 0, proof 0, exec 0, rust 0
+  comments 0, veracity 0, alg-APAS 0, alg-Claude 0, other 0
+  test code 0, bench code 0
