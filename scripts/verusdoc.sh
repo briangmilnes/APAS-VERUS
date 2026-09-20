@@ -1,12 +1,13 @@
 #!/bin/bash
-# Generate Verus documentation with specifications for APAS-VERUS
-# Adapted from ~/projects/verus/source/tools/docs.sh
+# Generate Verus documentation with specifications for APAS-VERUS.
+# Adapted from verus source/tools/docs.sh, using the prebuilt release in
+# ~/projects/verus (flat layout: verus, verusdoc, z3, lib*.rlib, lib*.so).
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APAS_ROOT="$(dirname "$SCRIPT_DIR")"
-VERUS_SOURCE="$HOME/projects/verus/source"
+VERUS_HOME="${VERUS_HOME:-$HOME/projects/verus}"
 
 # Detect dynamic library extension
 if [ "$(uname)" == "Darwin" ]; then
@@ -18,21 +19,12 @@ else
     exit 1
 fi
 
-# Build verusdoc and vstd debug if not present
-cd "$VERUS_SOURCE"
-. "$HOME/projects/verus/tools/activate"
-
-if [ ! -f "$VERUS_SOURCE/target/debug/verusdoc" ]; then
-    echo "Building verusdoc..."
-    vargo build -p verusdoc
-fi
-
-if [ ! -f "$VERUS_SOURCE/target-verus/debug/libvstd.rlib" ]; then
-    echo "Building vstd (debug, no verify)..."
-    vargo build --vstd-no-verify
-fi
-
-cd "$APAS_ROOT"
+for needed in verusdoc libvstd.rlib libverus_builtin.rlib; do
+    if [ ! -e "$VERUS_HOME/$needed" ]; then
+        echo "Missing $VERUS_HOME/$needed — unpack a verus release into $VERUS_HOME." >&2
+        exit 1
+    fi
+done
 
 # Create doc output directory
 mkdir -p "$APAS_ROOT/target/verusdoc"
@@ -40,17 +32,14 @@ mkdir -p "$APAS_ROOT/target/verusdoc"
 echo "Running rustdoc with Verus macros..."
 cd "$APAS_ROOT"
 
-# Use debug builds like verus docs.sh does
-VERUS_TARGET="$VERUS_SOURCE/target-verus/debug"
-
-RUSTC_BOOTSTRAP=1 VERUSDOC=1 VERUS_Z3_PATH="$VERUS_SOURCE/z3" rustdoc \
+RUSTC_BOOTSTRAP=1 VERUSDOC=1 VERUS_Z3_PATH="$VERUS_HOME/z3" rustdoc \
   --crate-name apas_verus \
   --crate-type lib \
-  -L "$VERUS_TARGET" \
-  --extern vstd="$VERUS_TARGET/libvstd.rlib" \
-  --extern verus_builtin="$VERUS_TARGET/libverus_builtin.rlib" \
-  --extern verus_builtin_macros="$VERUS_TARGET/libverus_builtin_macros.$DYN_LIB_EXT" \
-  --extern verus_state_machines_macros="$VERUS_TARGET/libverus_state_machines_macros.$DYN_LIB_EXT" \
+  -L "$VERUS_HOME" \
+  --extern vstd="$VERUS_HOME/libvstd.rlib" \
+  --extern verus_builtin="$VERUS_HOME/libverus_builtin.rlib" \
+  --extern verus_builtin_macros="$VERUS_HOME/libverus_builtin_macros.$DYN_LIB_EXT" \
+  --extern verus_state_machines_macros="$VERUS_HOME/libverus_state_machines_macros.$DYN_LIB_EXT" \
   --edition=2021 \
   --cfg verus_keep_ghost \
   --cfg verus_keep_ghost_body \
@@ -75,9 +64,8 @@ echo "Running verusdoc post-processor..."
 cd "$APAS_ROOT/target"
 rm -rf doc
 ln -s verusdoc doc
-"$VERUS_SOURCE/target/debug/verusdoc"
+"$VERUS_HOME/verusdoc"
 
 echo ""
 echo "Documentation generated at:"
 echo "  $APAS_ROOT/target/verusdoc/apas_verus/index.html"
-

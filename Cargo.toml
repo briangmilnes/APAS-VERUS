@@ -1448,10 +1448,10 @@ type_complexity = "allow"
 [workspace]
 members = ["."]
 
-# Use local Verus fork for vstd and state machines (for rust-analyzer navigation)
+# Verus git repo pinned to the prebuilt release commit in ~/projects/verus (see version.json).
 [patch.crates-io]
-vstd = { path = "/home/milnes/projects/verus/source/vstd" }
-verus_state_machines_macros = { path = "/home/milnes/projects/verus/source/state_machines_macros" }
+vstd = { git = "https://github.com/verus-lang/verus", rev = "671956ec527d3b7164779f767bdbfe769bedce6c" }
+verus_state_machines_macros = { git = "https://github.com/verus-lang/verus", rev = "671956ec527d3b7164779f767bdbfe769bedce6c" }
 [[test]]
 name = "TestMaxContigSubSumBruteStEph"
 path = "tests/Chap28/TestMaxContigSubSumBruteStEph.rs"

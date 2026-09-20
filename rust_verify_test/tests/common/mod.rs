@@ -241,7 +241,7 @@ pub fn run_verus(
 
     let verus_target_path = std::env::var("VERUS_TARGET_PATH")
         .map(std::path::PathBuf::from)
-        .unwrap_or_else(|_| std::path::PathBuf::from("/home/milnes/projects/verus/source/target-verus/release"));
+        .unwrap_or_else(|_| std::path::PathBuf::from("/home/milnes/projects/verus"));
 
     let verus_target_path_str = verus_target_path.to_str().unwrap();
 
