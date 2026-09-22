@@ -1,0 +1,199 @@
+r212 RTT for Chap51: cargo test --release on 8 targets: TestBottomUpDPMtEph TestBottomUpDPMtPer TestBottomUpDPStEph TestBottomUpDPStPer TestTopDownDPMtEph TestTopDownDPMtPer TestTopDownDPStEph TestTopDownDPStPer
+Starting RTT at 06:18:05
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.17s
+     Running tests/Chap51/TestBottomUpDPMtEph.rs (target/release/deps/TestBottomUpDPMtEph-c40149c1cd647fa3)
+
+running 11 tests
+test test_default ... ok
+test test_display ... ok
+test test_is_empty_false ... ok
+test test_med_bottom_up_parallel_empty ... ok
+test test_med_bottom_up_parallel_identical ... ok
+test test_is_empty_true ... ok
+test test_new ... ok
+test test_med_bottom_up_parallel_textbook ... ok
+test test_partial_eq ... ok
+test test_s_length ... ok
+test test_t_length ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap51/TestBottomUpDPMtPer.rs (target/release/deps/TestBottomUpDPMtPer-4c9ff047589adbdc)
+
+running 12 tests
+test test_default ... ok
+test test_display ... ok
+test test_is_empty_false ... ok
+test test_med_bottom_up_parallel_empty ... ok
+test test_is_empty_true ... ok
+test test_med_bottom_up_parallel_identical ... ok
+test test_med_bottom_up_parallel_one_empty ... ok
+test test_med_bottom_up_parallel_textbook ... ok
+test test_new ... ok
+test test_partial_eq ... ok
+test test_s_length ... ok
+test test_t_length ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap51/TestBottomUpDPStEph.rs (target/release/deps/TestBottomUpDPStEph-dea3ba5896a703c1)
+
+running 13 tests
+test test_default ... ok
+test test_display ... ok
+test test_med_bottom_up_empty ... ok
+test test_is_empty_false ... ok
+test test_med_bottom_up_identical ... ok
+test test_is_empty_true ... ok
+test test_med_bottom_up_textbook ... ok
+test test_new ... ok
+test test_partial_eq ... ok
+test test_s_length ... ok
+test test_set_s ... ok
+test test_set_t ... ok
+test test_t_length ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap51/TestBottomUpDPStPer.rs (target/release/deps/TestBottomUpDPStPer-5415020cd1d33801)
+
+running 15 tests
+test test_default ... ok
+test test_is_empty_true ... ok
+test test_med_bottom_up_identical ... ok
+test test_is_empty_false ... ok
+test test_med_bottom_up_one_empty ... ok
+test test_display ... ok
+test test_med_bottom_up_single_char_different ... ok
+test test_med_bottom_up_single_char_same ... ok
+test test_med_bottom_up_empty ... ok
+test test_med_bottom_up_textbook ... ok
+test test_new ... ok
+test test_partial_eq_false ... ok
+test test_partial_eq_true ... ok
+test test_s_length ... ok
+test test_t_length ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap51/TestTopDownDPMtEph.rs (target/release/deps/TestTopDownDPMtEph-59c3f4246aa7eee6)
+
+running 14 tests
+test test_default ... ok
+test test_display ... ok
+test test_med_memoized_concurrent_empty ... ok
+test test_is_empty_true ... ok
+test test_is_empty_false ... ok
+test test_med_memoized_concurrent_identical ... ok
+test test_med_memoized_concurrent_textbook ... ok
+test test_new ... ok
+test test_partial_eq ... ok
+test test_s_length ... ok
+test test_set_s ... ok
+test test_set_t ... ok
+test test_t_length ... ok
+test test_med_memoized_parallel ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap51/TestTopDownDPMtPer.rs (target/release/deps/TestTopDownDPMtPer-bb8d0a6ba26457f7)
+
+running 12 tests
+test test_default ... ok
+test test_display ... ok
+test test_is_empty_false ... ok
+test test_is_empty_true ... ok
+test test_med_memoized_concurrent_empty ... ok
+test test_med_memoized_concurrent_identical ... ok
+test test_med_memoized_concurrent_textbook ... ok
+test test_new ... ok
+test test_partial_eq ... ok
+test test_s_length ... ok
+test test_t_length ... ok
+test test_med_memoized_parallel ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap51/TestTopDownDPStEph.rs (target/release/deps/TestTopDownDPStEph-57d45d643ce22019)
+
+running 17 tests
+test test_clear_memo ... ok
+test test_default ... ok
+test test_get_memoized ... ok
+test test_insert_memo ... ok
+test test_insert_memo_overwrite ... ok
+test test_display ... ok
+test test_is_empty_false ... ok
+test test_is_empty_true ... ok
+test test_is_memoized ... ok
+test test_med_memoized_empty ... ok
+test test_med_memoized_identical ... ok
+test test_med_memoized_textbook ... ok
+test test_memo_size ... ok
+test test_new ... ok
+test test_partial_eq ... ok
+test test_s_length ... ok
+test test_t_length ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap51/TestTopDownDPStPer.rs (target/release/deps/TestTopDownDPStPer-ef0fc78106caf063)
+
+running 15 tests
+test test_clear_memo ... ok
+test test_default ... ok
+test test_display ... ok
+test test_is_empty_false ... ok
+test test_get_memoized ... ok
+test test_is_empty_true ... ok
+test test_is_memoized ... ok
+test test_med_memoized_empty ... ok
+test test_med_memoized_identical ... ok
+test test_med_memoized_textbook ... ok
+test test_memo_size ... ok
+test test_new ... ok
+test test_partial_eq ... ok
+test test_s_length ... ok
+test test_t_length ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 0s

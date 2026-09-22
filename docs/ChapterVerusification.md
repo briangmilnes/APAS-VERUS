@@ -74,7 +74,7 @@ calls, removed chapter by chapter as each is migrated.
 | 27 | 47 | 18 | 0 | r213: 1161 verified, 0 err, 0 warn; RTT 102 pass | `validate.20260922-061642.log` |
 | 28 | 49 | 02, 18, 19 | 0 | r213: 1283 verified, 0 err, 0 warn; RTT 136 pass | `validate.20260922-061718.log` |
 | 29 | 50 | 02, 30 | 0 | r213: 766 verified, 0 err, 0 warn; RTT 167 pass | `validate.20260922-061737.log` |
-| 30 | 51 | 02, 18, 19 | 0 | type-checked in r209; blocked on 18, 19 | `validate.20260921-085917.log` |
+| 30 | 51 | 02, 18, 19 | 0 | r213: 1333 verified, 0 err, 0 warn; RTT 109 pass | `validate.20260922-061753.log` |
 | 31 | 52 | 18, 19, 37, 38, 41, 43 | 7 | `Set::new` in 4 `EdgeSetGraph*` files | full log |
 | 32 | 53 | 37, 38, 41 | 1 | `lemma_map_finite` in `PQMinStPer.rs` | full log |
 | 33 | 54 | 02, 18, 19 | 0 | blocked on 18, 19 | full log |
