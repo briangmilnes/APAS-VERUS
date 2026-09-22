@@ -1,0 +1,171 @@
+r212 RTT for Chap05: cargo test --release on 5 targets: TestSetStEph TestRelationStEph TestMappingStEph TestKleeneStPer TestSetMtEph
+Starting RTT at 05:06:32
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1340:17
+     |
+1340 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 4 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.24s
+     Running tests/Chap05/TestKleeneStPer.rs (target/release/deps/TestKleeneStPer-9cf9a4484ddc0857)
+
+running 10 tests
+test test_alphabet_accessor ... ok
+test test_empty_alphabet ... ok
+test test_integer_alphabet ... ok
+test test_plus_multi_element_strings ... ok
+test test_plus_rejects_empty_string ... ok
+test test_plus_single_element ... ok
+test test_singleton_alphabet ... ok
+test test_star_empty_string_always_accepted ... ok
+test test_star_multi_element_strings ... ok
+test test_star_single_element ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap05/TestMappingStEph.rs (target/release/deps/TestMappingStEph-90f4eb0886f400c2)
+
+running 16 tests
+test test_domain_and_range ... ok
+test test_empty_mapping ... ok
+test test_empty_mapping_operations ... ok
+test test_empty_mapping_trait ... ok
+test test_from_relation ... ok
+test test_from_relation_empty_edge ... ok
+test test_from_vec_basic ... ok
+test test_iter ... ok
+test test_mapping_clone ... ok
+test test_mapping_debug_display ... ok
+test test_from_vec_duplicate_keys - should panic ... ok
+test test_mapping_equality ... ok
+test test_mapping_extreme_values_graceful ... ok
+test test_mappinglit_macro_functionality ... ok
+test test_mem_comprehensive ... ok
+test test_mapping_large_dataset_stress ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap05/TestRelationStEph.rs (target/release/deps/TestRelationStEph-2a951ef0c2c6c8f2)
+
+running 16 tests
+test test_empty_relation_domain_range ... ok
+test test_relation_clone ... ok
+test test_relation_debug_display ... ok
+test test_relation_domain_range_and_mem ... ok
+test test_relation_domain_empty_edge ... ok
+test test_relation_empty ... ok
+test test_relation_fromvec ... ok
+test test_relation_equality ... ok
+test test_relation_iter ... ok
+test test_relation_iterator_boundaries ... ok
+test test_relation_mem_empty_edge ... ok
+test test_relation_range_empty_edge ... ok
+test test_relation_size ... ok
+test test_relationlit_macro_direct ... ok
+test test_relationlit_macro_functionality ... ok
+test test_relation_maximum_size_boundary ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/Chap05/TestSetMtEph.rs (target/release/deps/TestSetMtEph-d3a5fa9eff8e2d35)
+
+running 14 tests
+test test_set_basic ... ok
+test test_set_empty ... ok
+test test_set_intersection ... ok
+test test_set_from_vec_deduplicates ... ok
+test test_set_insert ... ok
+test test_set_large_intersection ... ok
+test test_cartesian_product ... ok
+test test_set_union ... ok
+test test_set_iter ... ok
+test test_set_intersection_disjoint ... ok
+test test_cartesian_product_empty ... ok
+test test_set_large_union ... ok
+test test_set_union_with_empty ... ok
+test test_cartesian_product_larger ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap05/TestSetStEph.rs (target/release/deps/TestSetStEph-95f927270ffd7fce)
+
+running 33 tests
+test test_cartesian_product_empty_edge ... ok
+test test_cartesian_product_example_5_1 ... ok
+test test_display_trait ... ok
+test test_debug_trait ... ok
+test test_empty_set_intersection ... ok
+test test_empty_set_union ... ok
+test test_partition_example_5_2_false_due_to_overlap ... ok
+test test_partition_example_5_2_true ... ok
+test test_partition_false_due_to_missing_element ... ok
+test test_set_empty ... ok
+test test_set_fromvec ... ok
+test test_set_insert ... ok
+test test_set_intersection ... ok
+test test_set_iter ... ok
+test test_set_iterator_boundaries ... ok
+test test_set_mem_comprehensive ... ok
+test test_set_single_element_boundary ... ok
+test test_set_size_comprehensive ... ok
+test test_set_singleton ... ok
+test test_set_union ... ok
+test test_setlit_macro_direct ... ok
+test test_setlit_macro_functionality ... ok
+test test_setlit_macro_type_safety ... ok
+test test_trait_cartesian_product ... ok
+test test_trait_empty ... ok
+test test_trait_from_vec ... ok
+test test_trait_insert ... ok
+test test_trait_intersection ... ok
+test test_trait_partition ... ok
+test test_trait_singleton ... ok
+test test_trait_union ... ok
+test test_set_large_operations_stress ... ok
+test test_set_maximum_size_boundary ... ok
+
+test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+cargo test rc: 0
+Elapsed: 0s

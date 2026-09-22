@@ -23,7 +23,11 @@ file, or listed at the end.
 | # | Chap | Verified | Err | Warn | RTT | PTT | Commit |
 |---|------|---------:|----:|-----:|-----|-----|--------|
 | 1 | 02 | 631 | 0 | 0 | 41 pass | none | 1afd25de1 |
-| 2 | 03 | 622 | 0 | 0 | 40 pass | none | r213 Chap03 |
+| 2 | 03 | 622 | 0 | 0 | 40 pass | none | 9da5c4aba |
+| 3 | 05 | 760 | 0 | 0 | 89 pass | 5 of 21 (1) | r213 Chap05 |
+
+Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
+and do not compile; see the chapter section.
 
 ## Chapter sections
 
@@ -40,3 +44,18 @@ file, or listed at the end.
   (`logs/validate.20260922-050550.log`). No edit.
 - RTT: 1 target, 40 tests pass (`logs/rtt.20260922-050553.log`).
 - PTT: none registered.
+
+### Chap05
+
+- Start and end: 760 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-050624.log`). No edit; no `finite()` left in
+  source.
+- RTT: 5 targets, 89 tests pass (`logs/rtt.20260922-050632.log`).
+- PTT (`logs/ptt-Chap05.20260922-050636.log`): 7 registered files, 5 of 21
+  tests pass (`ProveKleeneStPer` 3, one each in `SetStEph.rs`,
+  `SetMtEph.rs`); 16 fail to compile because they are still written on the
+  pre-09.13 iterator model (`SetStEphIter`, `SetMtEphIter`,
+  `RelationStEphIter`, `MappingStEphIter`, `iter_invariant`, `it@.0`). The
+  iterator tool reports them as `ptt-no-definer` (the definers were migrated
+  by hand in r208), so they need a hand rewrite to the templates of
+  `src/standards/iterator_ptt_standard.rs`. Not done in this pass.
