@@ -1,0 +1,23 @@
+Mode: isolate
+Isolate: including Chap19 Chap06 Chap05 Chap02 Chap58 Chap56
+error: postcondition not satisfied
+   --> src/Chap19/ArraySeqStEph.rs:173:21
+    |
+173 |             ensures *nth_elem == self.spec_index(index as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+457 |             nth_elem
+    |             -------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+%return == old(self).spec_index(old(index)) 
+
+verification results:: 1369 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 1862MB, peak z3 RSS: 263MB, min free: 24351MB
+Sampled CPU Usage: rust_verify: 20s, z3 children: 16s

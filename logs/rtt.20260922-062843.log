@@ -1,0 +1,95 @@
+r212 RTT for Chap58: cargo test --release on 2 targets: TestBellmanFordStEphF64 TestBellmanFordStEphI64
+Starting RTT at 06:28:43
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 5.50s
+     Running tests/Chap58/TestBellmanFordStEphF64.rs (target/release/deps/TestBellmanFordStEphF64-6866470939ba57cc)
+
+running 13 tests
+test test_basic_path ... ok
+test test_diamond_graph ... ok
+test test_chain_4_vertices ... ok
+test test_negative_cycle ... ok
+test test_longer_path_cheaper ... ok
+test test_negative_edges ... ok
+test test_fractional_weights ... ok
+test test_path_extraction_f64 ... ok
+test test_predecessor_f64 ... ok
+test test_single_vertex ... ok
+test test_two_negative_edges_no_cycle ... ok
+test test_unreachable ... ok
+test test_zero_weight_edges ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap58/TestBellmanFordStEphI64.rs (target/release/deps/TestBellmanFordStEphI64-b4e2cd848211c77b)
+
+running 28 tests
+test test_all_negative_edges_no_cycle ... ok
+test test_bidirectional_edges ... ok
+test test_chain_5_vertices ... ok
+test test_convergence_early_termination ... ok
+test test_complete_graph_4 ... ok
+test test_currency_exchange_example_58_1 ... ok
+test test_example_58_2_dijkstra_fails ... ok
+test test_example_58_3_k_hop_distances ... ok
+test test_diamond_graph ... ok
+test test_example_58_4_algorithm_steps ... ok
+test test_get_predecessor ... ok
+test test_large_positive_weights ... ok
+test test_is_reachable ... ok
+test test_longer_path_cheaper ... ok
+test test_longer_path_with_negatives ... ok
+test test_multiple_negative_edges_no_cycle ... ok
+test test_multiple_shortest_paths_same_cost ... ok
+test test_negative_cycle_detection ... ok
+test test_negative_cycle_reachable ... ok
+test test_parallel_paths ... ok
+test test_path_extraction_chain ... ok
+test test_path_extraction_source ... ok
+test test_self_loop_zero_weight ... ok
+test test_single_vertex ... ok
+test test_star_graph ... ok
+test test_two_vertices_bidirectional ... ok
+test test_unreachable_vertices ... ok
+test test_zero_weight_edges ... ok
+
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 5s

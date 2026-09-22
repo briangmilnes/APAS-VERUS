@@ -444,12 +444,18 @@ pub mod ArraySeqStEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn length(&self) -> (len: usize) {
-            self.seq.len()
+            let len = self.seq.len();
+            assert(len == self.seq@.len());
+            assert(self.spec_len() == self.seq@.len());
+            len
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn nth(&self, index: usize) -> (nth_elem: &T) {
-            &self.seq[index]
+            let nth_elem = &self.seq[index];
+            assert(*nth_elem == self.seq@[index as int]);
+            assert(self.spec_index(index as int) == self.seq@[index as int]);
+            nth_elem
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length)

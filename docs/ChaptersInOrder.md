@@ -58,6 +58,7 @@ file, or listed at the end.
 | 34 | 55 | 2290 | 0 | 0 | 58 pass | none | r213 Chap55 |
 | 35 | 56 | 948 | 0 | 0 | 54 pass | none | r213 Chap56 |
 | 36 | 57 | 2583 | 0 | 0 | 48 pass | none | r213 Chap57 |
+| 37 | 58 | 1370 | 0 | 0 | 41 pass | none | r213 Chap58 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -639,4 +640,27 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
 - End: 2583 verified, 0 errors, 0 warnings, 0 trigger notes
   (`logs/validate.20260922-062519.log`).
 - RTT: 3 targets, 48 tests pass (`logs/rtt.20260922-062549.log`).
+- PTT: none registered.
+
+### Chap58
+
+- Start: 1368 verified, 2 errors, 0 warnings (`logs/validate.20260922-062607.log`,
+  reproduced in `logs/validate.20260922-062655.log`). Both errors are in
+  the dependency Chap19, `ArraySeqStEph.rs`: the postconditions of `length`
+  (`len == self.spec_len()`) and `nth` (`*nth_elem == self.spec_index(i)`)
+  and the `Vec` index precondition in `nth`. They appear only in this
+  dependency set (Chap02, 05, 06, 19, 56, 58, without Chap18); `isolate
+  Chap19`, `Chap56` and `Chap57` verify the same bodies. The `group_vec_axioms`
+  facts that connect `Vec::len` and `Vec` indexing to `self.seq@` do not fire
+  here.
+- Edit class 5, proof repair (Chap19 `ArraySeqStEph.rs`): `length` binds the
+  result and asserts `len == self.seq@.len()` and
+  `self.spec_len() == self.seq@.len()`; `nth` binds the reference and
+  asserts `*nth_elem == self.seq@[index]` and
+  `self.spec_index(index) == self.seq@[index]`. Exec behaviour and cost
+  unchanged (a `let` binding instead of a tail expression).
+- `iterator-upgrade` found no site; no `finite()` sites.
+- End: 1370 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-062822.log`).
+- RTT: 2 targets, 41 tests pass (`logs/rtt.20260922-062843.log`).
 - PTT: none registered.

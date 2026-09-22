@@ -81,7 +81,7 @@ calls, removed chapter by chapter as each is migrated.
 | 34 | 55 | 19, 37, 41 | 0 | r213: 2290 verified, 0 err, 0 warn; RTT 58 pass | `validate.20260922-062417.log` |
 | 35 | 56 | 19 | 0 | r213: 948 verified, 0 err, 0 warn; RTT 54 pass | `validate.20260922-062449.log` |
 | 36 | 57 | 05, 06, 45, 56 | 0 | r213: 2583 verified, 0 err, 0 warn; RTT 48 pass | `validate.20260922-062519.log` |
-| 37 | 58 | 05, 06, 56 | 16 | old-model loops in 2 BellmanFord files | full log |
+| 37 | 58 | 05, 06, 56 | 0 | r213: 1370 verified, 0 err, 0 warn; RTT 41 pass | `validate.20260922-062822.log` |
 | 38 | 59 | 05, 06, 19, 56, 57, 58 | 32 | old-model loops in 4 Johnson files | full log |
 | 39 | 61 | 05, 06, 19 | 0 | type-checked in r209; blocked on 19 | `validate.20260921-091115.log` |
 | 40 | 62 | 05, 06, 19 | 0 | type-checked in r209; blocked on 19 | `validate.20260921-091932.log` |
