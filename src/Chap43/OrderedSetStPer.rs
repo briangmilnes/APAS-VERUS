@@ -1066,6 +1066,17 @@ broadcast use {
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
+    // The view is `self.base_set@`, and `AVLTreeSetStPer`'s own `eq` carries
+    // `ensures equal == (self@ == other@)`, so the postcondition follows from
+    // the delegate with no bridging hole of its own.
+    impl<T: StT + Ord + TotalOrder> PartialEq for OrderedSetStPer<T> {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            self.base_set == other.base_set
+        }
+    }
+
     impl<T: StT + Ord + TotalOrder> Eq for OrderedSetStPer<T> {}
 
     } // verus!
@@ -1085,12 +1096,6 @@ broadcast use {
     }
 
     //		Section 14. derive impls outside verus!
-
-    impl<T: StT + Ord + TotalOrder> PartialEq for OrderedSetStPer<T> {
-        fn eq(&self, other: &Self) -> bool {
-            self.base_set == other.base_set
-        }
-    }
 
     impl<T: StT + Ord + TotalOrder> fmt::Debug for OrderedSetStPer<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

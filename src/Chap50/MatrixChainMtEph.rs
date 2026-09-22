@@ -73,7 +73,7 @@ broadcast use {
 
 
     #[verifier::reject_recursive_types]
-    #[derive(Clone, Copy, PartialEq, Eq, Debug)]
+    #[derive(Clone, Copy, PartialEq, Eq, Debug, StructuralEq)]
     pub struct MatrixDim {
         pub rows: usize,
         pub cols: usize,

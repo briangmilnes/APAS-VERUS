@@ -1,0 +1,742 @@
+r212 RTT for Chap37: cargo test --release on 24 targets: TestAVLTreeSeqMtPer TestAVLTreeSeq TestAVLTreeSeqStEph18 TestAVLTreeSeqStEphChap37 TestAVLTreeSeqStEph TestAVLTreeSeqStPer18 TestAVLTreeSeqStPer19 TestAVLTreeSeqStPer TestBSTAVLMtEph TestBSTAVLStEph TestBSTBBAlphaMtEph TestBSTBBAlphaStEph TestBSTMtEph TestBSTPlainMtEph TestBSTPlainStEph TestBSTRBMtEph TestBSTRBStEph TestBSTSetAVLMtEph TestBSTSetBBAlphaMtEph TestBSTSetPlainMtEph TestBSTSetRBMtEph TestBSTSetSplayMtEph TestBSTSplayMtEph TestBSTSplayStEph
+Starting RTT at 13:13:06
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap37/TestBSTMtEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestBSTMtEph") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 6.93s
+     Running tests/Chap37/TestAVLTreeSeq.rs (target/release/deps/TestAVLTreeSeq-ded23d6c8d065e74)
+
+running 53 tests
+test test_avltreeseq_alternating_operations ... ok
+test test_avltreeseq_complex_rotation_patterns ... ok
+test test_avltreeseq_debug_display ... ok
+test test_avltreeseq_contains_value_comprehensive ... ok
+test test_avltreeseq_delete_all_elements ... ok
+test test_avltreeseq_default_trait ... ok
+test test_avltreeseq_delete_value_multiple ... ok
+test test_avltreeseq_empty_constructor ... ok
+test test_avltreeseq_empty_operations_comprehensive ... ok
+test test_avltreeseq_eq_trait ... ok
+test test_avltreeseq_equality_comparison ... ok
+test test_avltreeseq_equality_comprehensive ... ok
+test test_avltreeseq_from_vec_empty ... ok
+test test_avltreeseq_insert_at_boundaries ... ok
+test test_avltreeseq_iterator ... ok
+test test_avltreeseq_large_subseq_operations ... ok
+test test_avltreeseq_large_tree ... ok
+test test_avltreeseq_length_method ... ok
+test test_avltreeseq_mixed_operations ... ok
+test test_avltreeseq_multiple_equality_checks ... ok
+test test_avltreeseq_new_constructor ... ok
+test test_avltreeseq_nth_method ... ok
+test test_avltreeseq_predicates ... ok
+test test_avltreeseq_nth_panic_empty - should panic ... ok
+test test_avltreeseq_nth_panic_outofbounds - should panic ... ok
+test test_avltreeseq_push_back_multiple ... ok
+test test_avltreeseq_push_back_to_empty ... ok
+test test_avltreeseq_reverse_insertion_order ... ok
+test test_avltreeseq_set_all_indices ... ok
+test test_avltreeseq_set_method ... ok
+test test_avltreeseq_set_multiple_elements ... ok
+test test_avltreeseq_singleton_constructor ... ok
+test test_avltreeseq_subseq_copy ... ok
+test test_avltreeseq_subseq_multiple_elements ... ok
+test test_avltreeseq_to_arrayseq_empty ... ok
+test test_avltreeseq_trigger_left_right_rotation ... ok
+test test_avltreeseq_trigger_left_rotation ... ok
+test test_avltreeseq_trigger_right_left_rotation ... ok
+test test_avltreeseq_trigger_right_rotation ... ok
+test test_avltreeseq_update_chain ... ok
+test test_avltreeseq_values_in_order_comprehensive ... ok
+test test_avltreeseq_zero_length_operations ... ok
+test test_avltreeseq_very_large_tree ... ok
+test test_contains_value ... ok
+test test_delete_value ... ok
+test test_from_vec ... ok
+test test_insert_value ... ok
+test test_is_tree_empty ... ok
+test test_new_root ... ok
+test test_push_back ... ok
+test test_to_arrayseq ... ok
+test test_update ... ok
+test test_values_in_order ... ok
+
+test result: ok. 53 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestAVLTreeSeqMtPer.rs (target/release/deps/TestAVLTreeSeqMtPer-e0e6de01d37b6ee8)
+
+running 44 tests
+test test_alternating_sets ... ok
+test test_clone ... ok
+test test_debug_trait ... ok
+test test_default_trait ... ok
+test test_deep_rotation_cascade ... ok
+test test_empty_operations ... ok
+test test_empty ... ok
+test test_empty_subseq ... ok
+test test_eq ... ok
+test test_equality_comprehensive ... ok
+test test_extreme_imbalance_scenarios ... ok
+test test_force_all_rotation_cases ... ok
+test test_from_vec ... ok
+test test_isempty ... ok
+test test_issingleton ... ok
+test test_iter ... ok
+test test_iterator_comprehensive ... ok
+test test_large_sequence ... ok
+test test_left_right_rotation ... ok
+test test_length ... ok
+test test_large_tree_rotations ... ok
+test test_multiple_sets ... ok
+test test_multiple_structural_sharing ... ok
+test test_new ... ok
+test test_nth ... ok
+test test_persistence ... ok
+test test_reverse_insertion_order ... ok
+test test_right_left_rotation ... ok
+test test_rotation_left_heavy ... ok
+test test_rotation_right_heavy ... ok
+test test_sequential_insertions_causing_rotations ... ok
+test test_set ... ok
+test test_set_at_index_zero_empty ... ok
+test test_set_boundary ... ok
+test test_set_out_of_bounds ... ok
+test test_singleton ... ok
+test test_trigger_rotations ... ok
+test test_values_in_order ... ok
+test test_values_in_order_comprehensive ... ok
+test test_singleton_operations ... ok
+test test_very_large_sequence ... ok
+test test_subseq_copy ... ok
+test test_subseq_then_modify ... ok
+test test_subseq_copy_comprehensive ... ok
+
+test result: ok. 44 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestAVLTreeSeqStEph.rs (target/release/deps/TestAVLTreeSeqStEph-d0b9ab63e9f872a5)
+
+running 22 tests
+test test_clone_impl ... ok
+test test_contains_value ... ok
+test test_default_impl ... ok
+test test_empty ... ok
+test test_eq_impl ... ok
+test test_delete_value ... ok
+test test_from_vec ... ok
+test test_insert_value ... ok
+test test_isEmpty ... ok
+test test_isSingleton ... ok
+test test_iter ... ok
+test test_length ... ok
+test test_new ... ok
+test test_new_root ... ok
+test test_nth ... ok
+test test_partialeq_impl ... ok
+test test_push_back ... ok
+test test_set ... ok
+test test_singleton ... ok
+test test_subseq_copy ... ok
+test test_to_arrayseq ... ok
+test test_update ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestAVLTreeSeqStEph18.rs (target/release/deps/TestAVLTreeSeqStEph18-a7003040735c18f5)
+
+running 4 tests
+test test_append_union ... ok
+test test_filter_even ... ok
+test test_map_increment ... ok
+test test_tabulate_inorder ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestAVLTreeSeqStEphChap37.rs (target/release/deps/TestAVLTreeSeqStEphChap37-22efe0f497eccba7)
+
+running 24 tests
+test test_avl_contains_value ... ok
+test test_avl_delete_value ... ok
+test test_avl_empty_constructor ... ok
+test test_avl_ephemeral_basic ... ok
+test test_avl_equality ... ok
+test test_avl_iterator ... ok
+test test_avl_insert_value ... ok
+test test_avl_from_vec_constructor ... ok
+test test_avl_large_tree_operations ... ok
+test test_avl_macro_literal ... ok
+test test_avl_push_back ... ok
+test test_avl_set_method ... ok
+test test_avl_singleton_constructor ... ok
+test test_avl_nth_out_of_bounds_panics - should panic ... ok
+test test_avl_stress_operations ... ok
+test test_avl_subseq_copy ... ok
+test test_avl_to_arrayseq ... ok
+test test_avl_update_method ... ok
+test test_clone ... ok
+test test_default_trait ... ok
+test test_deflate_and_filter ... ok
+test test_select_and_append ... ok
+test test_tabulate_and_map ... ok
+test test_very_large_tree_with_deletions ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestAVLTreeSeqStPer.rs (target/release/deps/TestAVLTreeSeqStPer-51a5bceac5ed4705)
+
+running 33 tests
+test test_alternating_access_pattern ... ok
+test test_avl_empty_and_singleton_edge_cases ... ok
+test test_avl_equality_and_debug ... ok
+test test_avl_large_tree_balancing ... ok
+test test_avl_left_heavy_rebalancing ... ok
+test test_avl_left_right_rotation ... ok
+test test_avl_right_heavy_rebalancing ... ok
+test test_avl_nth_out_of_bounds_panics - should panic ... ok
+test test_avl_right_left_rotation ... ok
+test test_avl_sequential_modifications ... ok
+test test_avl_set_out_of_bounds_error ... ok
+test test_avl_stress_balancing ... ok
+test test_avl_subseq_balancing ... ok
+test test_avl_to_arrayseq_conversion ... ok
+test test_clone_preserves_structure ... ok
+test test_debug_formatting ... ok
+test test_equality_comprehensive ... ok
+test test_from_vec_empty ... ok
+test test_iterator_empty ... ok
+test test_from_vec_large ... ok
+test test_iterator_inorder_values ... ok
+test test_iterator_singleton ... ok
+test test_iterator_large_tree ... ok
+test test_macro_variants ... ok
+test test_persistence_verification ... ok
+test test_persistent_set_does_not_mutate ... ok
+test test_set_on_empty_at_zero ... ok
+test test_subseq_copy_edge_cases ... ok
+test test_to_arrayseq_empty ... ok
+test test_to_arrayseq_singleton ... ok
+test test_values_in_order_empty ... ok
+test test_values_in_order_large ... ok
+test test_very_large_tree ... ok
+
+test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestAVLTreeSeqStPer18.rs (target/release/deps/TestAVLTreeSeqStPer18-08bc869f17b6b345)
+
+running 4 tests
+test test_append_union ... ok
+test test_filter_even ... ok
+test test_map_increment ... ok
+test test_tabulate_inorder ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestAVLTreeSeqStPer19.rs (target/release/deps/TestAVLTreeSeqStPer19-57df531af6d4e86b)
+
+running 3 tests
+test test_deflate_and_filter_ch19 ... ok
+test test_select_and_append_ch19 ... ok
+test test_tabulate_and_map_ch19 ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTAVLMtEph.rs (target/release/deps/TestBSTAVLMtEph-ab33c286bc91d619)
+
+running 11 tests
+test test_bstavlmtephlit_macro_functionality ... ok
+test test_contains ... ok
+test test_duplicate_insert ... ok
+test test_insert_and_contains ... ok
+test test_height ... ok
+test test_insert_sequential ... ok
+test test_is_empty ... ok
+test test_new_empty ... ok
+test test_size ... ok
+test test_trait_insert_direct ... ok
+test test_trait_new_direct ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTAVLStEph.rs (target/release/deps/TestBSTAVLStEph-5d4e219ebad77bc0)
+
+running 9 tests
+test test_avl_balancing_ascending ... ok
+test test_avl_contains ... ok
+test test_avl_duplicate_insert ... ok
+test test_avl_height ... ok
+test test_avl_insert_and_find ... ok
+test test_avl_new_empty ... ok
+test test_avl_size ... ok
+test test_bstavlstephlit_macro_empty ... ok
+test test_bstavlstephlit_macro_with_elements ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTBBAlphaMtEph.rs (target/release/deps/TestBSTBBAlphaMtEph-4425a8fb8f8346bc)
+
+running 11 tests
+test test_bstbbalphamtephlit_macro_functionality ... ok
+test test_contains ... ok
+test test_duplicate_insert ... ok
+test test_insert_and_contains ... ok
+test test_height ... ok
+test test_insert_sequential ... ok
+test test_is_empty ... ok
+test test_new_empty ... ok
+test test_size ... ok
+test test_trait_insert_direct ... ok
+test test_trait_new_direct ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTBBAlphaStEph.rs (target/release/deps/TestBSTBBAlphaStEph-76959258c1203e05)
+
+running 14 tests
+test test_bstbbalphastephlit_macro_empty ... ok
+test test_balancing_ascending ... ok
+test test_bstbbalphastephlit_macro_with_elements ... ok
+test test_contains ... ok
+test test_delete_leaf ... ok
+test test_delete_all ... ok
+test test_delete_nonexistent ... ok
+test test_delete_root ... ok
+test test_delete_with_children ... ok
+test test_duplicate_insert ... ok
+test test_height ... ok
+test test_insert_and_find ... ok
+test test_new_empty ... ok
+test test_size ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTMtEph.rs (target/release/deps/TestBSTMtEph-10504991860c7172)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTPlainMtEph.rs (target/release/deps/TestBSTPlainMtEph-4a411defb1c6020d)
+
+running 11 tests
+test test_bstplainmtephlit_macro_functionality ... ok
+test test_contains ... ok
+test test_duplicate_insert ... ok
+test test_insert_and_contains ... ok
+test test_height ... ok
+test test_insert_sequential ... ok
+test test_is_empty ... ok
+test test_new_empty ... ok
+test test_size ... ok
+test test_trait_insert_direct ... ok
+test test_trait_new_direct ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTPlainStEph.rs (target/release/deps/TestBSTPlainStEph-bc82c96235bf0cd7)
+
+running 14 tests
+test test_bstplainstephlit_macro_empty ... ok
+test test_bstplainstephlit_macro_with_elements ... ok
+test test_contains ... ok
+test test_delete_all ... ok
+test test_delete_leaf ... ok
+test test_delete_nonexistent ... ok
+test test_delete_root ... ok
+test test_delete_with_children ... ok
+test test_duplicate_insert ... ok
+test test_height ... ok
+test test_insert_and_find ... ok
+test test_is_empty ... ok
+test test_new_empty ... ok
+test test_size ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTRBMtEph.rs (target/release/deps/TestBSTRBMtEph-eb2f234b464cf726)
+
+running 25 tests
+test test_bstrbmtephlit_macro_functionality ... ok
+test test_contains ... ok
+test test_duplicate_insert ... ok
+test test_default ... ok
+test test_filter ... ok
+test test_filter_all ... ok
+test test_filter_none ... ok
+test test_from_sorted_slice ... ok
+test test_from_sorted_slice_empty ... ok
+test test_height ... ok
+test test_in_order_traversal ... ok
+test test_insert_and_find ... ok
+test test_is_empty ... ok
+test test_minimum_maximum ... ok
+test test_new_empty ... ok
+test test_pre_order_traversal ... ok
+test test_rb_balancing ... ok
+test test_reduce_empty ... ok
+test test_reduce_max ... ok
+test test_reduce_product ... ok
+test test_reduce_sum ... ok
+test test_size ... ok
+test test_trait_from_sorted ... ok
+test test_trait_methods_direct ... ok
+test test_trait_new ... ok
+
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTRBStEph.rs (target/release/deps/TestBSTRBStEph-3da0bdc5c3de5c6f)
+
+running 9 tests
+test test_bstrbstephlit_macro_empty ... ok
+test test_bstrbstephlit_macro_with_elements ... ok
+test test_rb_balancing_ascending ... ok
+test test_rb_contains ... ok
+test test_rb_duplicate_insert ... ok
+test test_rb_height ... ok
+test test_rb_insert_and_find ... ok
+test test_rb_new_empty ... ok
+test test_rb_size ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTSetAVLMtEph.rs (target/release/deps/TestBSTSetAVLMtEph-8c3f16dbe93a0b58)
+
+running 42 tests
+test test_as_tree ... ok
+test test_bstsetavlmtephlit_macro_functionality ... ok
+test test_delete_multiple ... ok
+test test_delete ... ok
+test test_duplicate_insert ... ok
+test test_empty ... ok
+test test_filter ... ok
+test test_balanced_after_inserts ... ok
+test test_insert_and_contains ... ok
+test test_iter_in_order ... ok
+test test_join_m ... ok
+test test_join_m_with_empty ... ok
+test test_minimum_maximum ... ok
+test test_negative_numbers ... ok
+test test_difference ... ok
+test test_large_set ... ok
+test test_reduce ... ok
+test test_singleton ... ok
+test test_join_pair ... ok
+test test_split ... ok
+test test_trait_impl_as_tree ... ok
+test test_trait_impl_contains ... ok
+test test_trait_impl_delete ... ok
+test test_intersection ... ok
+test test_intersection_disjoint ... ok
+test test_trait_impl_empty ... ok
+test test_trait_impl_filter ... ok
+test test_trait_impl_find ... ok
+test test_trait_impl_insert ... ok
+test test_trait_impl_iter_in_order ... ok
+test test_trait_impl_difference ... ok
+test test_trait_impl_join_m ... ok
+test test_trait_impl_join_pair ... ok
+test test_trait_impl_maximum ... ok
+test test_trait_impl_minimum ... ok
+test test_trait_impl_reduce ... ok
+test test_trait_impl_intersection ... ok
+test test_trait_impl_singleton ... ok
+test test_trait_impl_split ... ok
+test test_union_empty ... ok
+test test_trait_impl_union ... ok
+test test_union ... ok
+
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTSetBBAlphaMtEph.rs (target/release/deps/TestBSTSetBBAlphaMtEph-c53044878c1b5271)
+
+running 42 tests
+test test_as_tree ... ok
+test test_bstsetbbalphamtephlit_macro_functionality ... ok
+test test_delete ... ok
+test test_delete_multiple ... ok
+test test_duplicate_insert ... ok
+test test_filter ... ok
+test test_empty ... ok
+test test_balanced_after_inserts ... ok
+test test_insert_and_contains ... ok
+test test_iter_in_order ... ok
+test test_join_m ... ok
+test test_difference ... ok
+test test_join_m_with_empty ... ok
+test test_join_pair ... ok
+test test_negative_numbers ... ok
+test test_reduce ... ok
+test test_singleton ... ok
+test test_split ... ok
+test test_intersection_disjoint ... ok
+test test_minimum_maximum ... ok
+test test_trait_impl_as_tree ... ok
+test test_trait_impl_contains ... ok
+test test_large_set ... ok
+test test_trait_impl_delete ... ok
+test test_trait_impl_empty ... ok
+test test_intersection ... ok
+test test_trait_impl_filter ... ok
+test test_trait_impl_find ... ok
+test test_trait_impl_insert ... ok
+test test_trait_impl_iter_in_order ... ok
+test test_trait_impl_difference ... ok
+test test_trait_impl_join_m ... ok
+test test_trait_impl_join_pair ... ok
+test test_trait_impl_maximum ... ok
+test test_trait_impl_minimum ... ok
+test test_trait_impl_singleton ... ok
+test test_trait_impl_reduce ... ok
+test test_trait_impl_intersection ... ok
+test test_trait_impl_split ... ok
+test test_union_empty ... ok
+test test_trait_impl_union ... ok
+test test_union ... ok
+
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTSetPlainMtEph.rs (target/release/deps/TestBSTSetPlainMtEph-7464cd2a9d3e92cc)
+
+running 49 tests
+test test_as_tree ... ok
+test test_delete_nonexistent ... ok
+test test_delete ... ok
+test test_delete_multiple ... ok
+test test_difference_empty ... ok
+test test_bstsetplainmtephlit_macro_functionality ... ok
+test test_duplicate_insert ... ok
+test test_empty ... ok
+test test_filter ... ok
+test test_filter_empty_result ... ok
+test test_find_returns_value ... ok
+test test_insert_and_contains ... ok
+test test_intersection_empty ... ok
+test test_join_pair ... ok
+test test_difference ... ok
+test test_join_m ... ok
+test test_join_m_with_empty ... ok
+test test_iter_in_order ... ok
+test test_maximum ... ok
+test test_negative_numbers ... ok
+test test_minimum ... ok
+test test_reduce ... ok
+test test_singleton ... ok
+test test_split ... ok
+test test_split_not_found ... ok
+test test_trait_impl_as_tree ... ok
+test test_trait_impl_contains ... ok
+test test_intersection_disjoint ... ok
+test test_trait_impl_delete ... ok
+test test_intersection ... ok
+test test_trait_impl_empty ... ok
+test test_trait_impl_filter ... ok
+test test_trait_impl_find ... ok
+test test_trait_impl_insert ... ok
+test test_large_set ... ok
+test test_trait_impl_iter_in_order ... ok
+test test_trait_impl_join_m ... ok
+test test_trait_impl_difference ... ok
+test test_trait_impl_join_pair ... ok
+test test_trait_impl_maximum ... ok
+test test_trait_impl_minimum ... ok
+test test_trait_impl_reduce ... ok
+test test_trait_impl_singleton ... ok
+test test_trait_impl_intersection ... ok
+test test_trait_impl_split ... ok
+test test_union_empty ... ok
+test test_trait_impl_union ... ok
+test test_union ... ok
+test test_union_with_overlap ... ok
+
+test result: ok. 49 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTSetRBMtEph.rs (target/release/deps/TestBSTSetRBMtEph-4cfa904892d7ae66)
+
+running 42 tests
+test test_as_tree ... ok
+test test_balanced_after_inserts ... ok
+test test_bstsetrbmtephlit_macro_functionality ... ok
+test test_delete_multiple ... ok
+test test_delete ... ok
+test test_duplicate_insert ... ok
+test test_empty ... ok
+test test_filter ... ok
+test test_insert_and_contains ... ok
+test test_iter_in_order ... ok
+test test_join_pair ... ok
+test test_difference ... ok
+test test_minimum_maximum ... ok
+test test_negative_numbers ... ok
+test test_join_m_with_empty ... ok
+test test_large_set ... ok
+test test_join_m ... ok
+test test_reduce ... ok
+test test_singleton ... ok
+test test_split ... ok
+test test_intersection_disjoint ... ok
+test test_trait_impl_as_tree ... ok
+test test_trait_impl_contains ... ok
+test test_trait_impl_delete ... ok
+test test_trait_impl_empty ... ok
+test test_trait_impl_filter ... ok
+test test_trait_impl_find ... ok
+test test_trait_impl_insert ... ok
+test test_intersection ... ok
+test test_trait_impl_iter_in_order ... ok
+test test_trait_impl_join_m ... ok
+test test_trait_impl_join_pair ... ok
+test test_trait_impl_difference ... ok
+test test_trait_impl_maximum ... ok
+test test_trait_impl_minimum ... ok
+test test_trait_impl_intersection ... ok
+test test_trait_impl_reduce ... ok
+test test_trait_impl_singleton ... ok
+test test_trait_impl_split ... ok
+test test_trait_impl_union ... ok
+test test_union_empty ... ok
+test test_union ... ok
+
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTSetSplayMtEph.rs (target/release/deps/TestBSTSetSplayMtEph-52612d1487f49558)
+
+running 42 tests
+test test_as_tree ... ok
+test test_balanced_after_inserts ... ok
+test test_bstsetsplaymtephlit_macro_functionality ... ok
+test test_delete ... ok
+test test_delete_multiple ... ok
+test test_duplicate_insert ... ok
+test test_empty ... ok
+test test_filter ... ok
+test test_insert_and_contains ... ok
+test test_iter_in_order ... ok
+test test_join_pair ... ok
+test test_minimum_maximum ... ok
+test test_join_m_with_empty ... ok
+test test_difference ... ok
+test test_join_m ... ok
+test test_large_set ... ok
+test test_reduce ... ok
+test test_negative_numbers ... ok
+test test_singleton ... ok
+test test_intersection_disjoint ... ok
+test test_split ... ok
+test test_trait_impl_as_tree ... ok
+test test_trait_impl_contains ... ok
+test test_intersection ... ok
+test test_trait_impl_delete ... ok
+test test_trait_impl_empty ... ok
+test test_trait_impl_filter ... ok
+test test_trait_impl_find ... ok
+test test_trait_impl_insert ... ok
+test test_trait_impl_difference ... ok
+test test_trait_impl_iter_in_order ... ok
+test test_trait_impl_join_m ... ok
+test test_trait_impl_join_pair ... ok
+test test_trait_impl_maximum ... ok
+test test_trait_impl_intersection ... ok
+test test_trait_impl_minimum ... ok
+test test_trait_impl_reduce ... ok
+test test_trait_impl_singleton ... ok
+test test_trait_impl_split ... ok
+test test_union_empty ... ok
+test test_trait_impl_union ... ok
+test test_union ... ok
+
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTSplayMtEph.rs (target/release/deps/TestBSTSplayMtEph-b33c0718efa6a53c)
+
+running 23 tests
+test test_bstsplaymtephlit_macro_functionality ... ok
+test test_default_trait ... ok
+test test_default ... ok
+test test_contains ... ok
+test test_filter ... ok
+test test_duplicate_insert ... ok
+test test_filter_all ... ok
+test test_from_sorted_slice ... ok
+test test_filter_none ... ok
+test test_from_sorted_slice_empty ... ok
+test test_height ... ok
+test test_in_order_traversal ... ok
+test test_insert_and_find ... ok
+test test_is_empty ... ok
+test test_minimum_maximum ... ok
+test test_new_empty ... ok
+test test_pre_order_traversal ... ok
+test test_reduce_empty ... ok
+test test_reduce_max ... ok
+test test_reduce_product ... ok
+test test_reduce_sum ... ok
+test test_size ... ok
+test test_trait_new ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap37/TestBSTSplayStEph.rs (target/release/deps/TestBSTSplayStEph-a29275dfe65c7aed)
+
+running 13 tests
+test splay_basic_behaviour ... ok
+test splay_duplicate_insert_is_idempotent ... ok
+test test_bstsplaystephlit_macro_functionality ... ok
+test test_height ... ok
+test test_empty ... ok
+test test_into_iter_collects_all_elements ... ok
+test test_into_iter_empty ... ok
+test test_into_iter_for_loop ... ok
+test test_large_tree ... ok
+test test_negative_numbers ... ok
+test test_pre_order ... ok
+test test_reverse_insert ... ok
+test test_singleton ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 7s

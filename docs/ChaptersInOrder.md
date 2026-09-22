@@ -46,13 +46,13 @@ file, or listed at the end.
 | 15 | 30 | 626 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 16 | 35 | 1224 | 0 | 0 | 58 | 58 | 0 | 0 | 0 | 0 |
 | 17 | 36 | 867 | 0 | 0 | 24 | 24 | 0 | 0 | 0 | 0 |
-| 18 | 37 | 1862 | 0 | 0 | 544 | 544 | 0 | 24 | 24 | 0 |
+| 18 | 37 | 1863 | 0 | 0 | 544 | 544 | 0 | 24 | 24 | 0 |
 | 19 | 38 | 1078 | 0 | 0 | 53 | 53 | 0 | 2 | 2 | 0 |
 | 20 | 39 | 1218 | 0 | 0 | 148 | 148 | 0 | 8 | 8 | 0 |
 | 21 | 40 | 1180 | 0 | 0 | 54 | 54 | 0 | 6 | 6 | 0 |
 | 22 | 41 | 2188 | 0 | 0 | 250 | 250 | 0 | 10 | 10 | 0 |
 | 23 | 42 | 2312 | 0 | 0 | 66 | 66 | 0 | 10 | 10 | 0 |
-| 24 | 43 | 2686 | 0 | 0 | 279 | 279 | 0 | 14 | 14 | 0 |
+| 24 | 43 | 2687 | 0 | 0 | 279 | 279 | 0 | 14 | 14 | 0 |
 | 25 | 44 | 2336 | 0 | 0 | 45 | 45 | 0 | 0 | 0 | 0 |
 | 26 | 45 | 2034 | 0 | 0 | 210 | 210 | 0 | 0 | 0 | 0 |
 | 27 | 47 | 1161 | 0 | 0 | 102 | 102 | 0 | 0 | 0 | 0 |
@@ -316,6 +316,13 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   (`logs/validate.20260922-051953.log`). No edit.
 - RTT: 24 targets, 544 tests pass (`logs/rtt.20260922-052010.log`).
 - PTT: 12 files, 24 tests pass (`logs/ptt-Chap37.20260922-052011.log`). `AVLTreeSeq.rs` `insert_at_link` keeps the `#[verifier::rlimit(20)]` r212 added.
+- r217: 1863 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-131112.log`); RTT 544 pass
+  (`logs/rtt.20260922-131306.log`). The summary row now carries 1863; the
+  extra verified function is in the dependency Chap18, not Chap37. r217
+  added `StructuralEq` to `BSTRBMtEph.rs`'s `Color`, so a colour comparison
+  now decides spec equality and the variant test
+  (`docs/DerivesApplied.md` §2).
 
 ### Chap38
 
@@ -521,6 +528,14 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   (`logs/validate.20260922-060943.log`).
 - RTT: 11 targets, 279 tests pass (`logs/rtt.20260922-061245.log`).
 - PTT: 7 files, 14 tests pass (`logs/ptt-Chap43.20260922-061251.log`).
+- r217: 2687 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-131127.log`); RTT 279 pass
+  (`logs/rtt.20260922-131313.log`). The one new verified function is
+  `OrderedSetStPer<T>::eq`, moved from section 14, outside `verus!`, into
+  section 12 with `ensures equal == (self@ == other@)`. It proves from
+  `AVLTreeSetStPer::eq`'s own postcondition with no `accept`, which retires
+  one of the three unchecked `PartialEqSpecImpl` declarations r216 found
+  (`docs/DerivesApplied.md` §2.4).
 
 ### Chap44
 

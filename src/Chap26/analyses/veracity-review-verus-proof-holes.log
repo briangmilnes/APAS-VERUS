@@ -24,7 +24,7 @@ Table of Contents:
    3 clean proof functions
 ✓ DivConReduceStPer.rs
 ℹ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:617: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:612: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
    5 clean proof functions
 ✓ ETSPStEph.rs
@@ -83,11 +83,11 @@ Proof Functions:
    19 total
 
 Function Specs:
-   61 exec fns with complete spec (requires+ensures) (48%)
+   57 exec fns with complete spec (requires+ensures) (46%)
    1 exec fns missing spec (0%)
-   64 proof/spec fns clean (50%)
+   64 proof/spec fns clean (52%)
    0 proof/spec fns with holes (0%)
-   126 total fns
+   122 total fns
 
 
 Holes Found: 0 (actionable)
@@ -102,9 +102,8 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-09-22 11:25:12 -07:00
-Ended:     2026-09-22 11:25:12 -07:00
-Duration:  34ms
+Started:   2026-09-22 13:15:06 -07:00
+Ended:     2026-09-22 13:15:06 -07:00
+Duration:  43ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
-racity-review-verus-proof-holes.log

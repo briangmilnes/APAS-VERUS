@@ -60,7 +60,7 @@ pub mod BSTRBMtEph {
     // (Arc kept for filter_parallel/reduce_parallel closure sharing.)
 
 
-    #[derive(Clone, Copy, PartialEq, Eq)]
+    #[derive(Clone, Copy, PartialEq, Eq, StructuralEq)]
     pub enum Color {
         Red,
         Black,

@@ -34,8 +34,8 @@ Table of Contents:
    Info: 2 × structural_false_positive
    6 clean proof functions
 ℹ DijkstraStEphU64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:113: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:130: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:110: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:127: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
    4 clean proof functions
 ✓ StackStEph.rs
@@ -75,11 +75,11 @@ Proof Functions:
    10 total
 
 Function Specs:
-   26 exec fns with complete spec (requires+ensures) (53%)
+   24 exec fns with complete spec (requires+ensures) (53%)
    2 exec fns missing spec (4%)
-   21 proof/spec fns clean (42%)
+   19 proof/spec fns clean (42%)
    0 proof/spec fns with holes (0%)
-   49 total fns
+   45 total fns
 
 
 Holes Found: 0 (actionable)
@@ -97,9 +97,8 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-09-22 11:25:13 -07:00
-Ended:     2026-09-22 11:25:13 -07:00
-Duration:  11ms
+Started:   2026-09-22 13:15:07 -07:00
+Ended:     2026-09-22 13:15:07 -07:00
+Duration:  10ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
-57/analyses/veracity-review-verus-proof-holes.log

@@ -1,0 +1,185 @@
+r212 RTT for Chap47: cargo test --release on 7 targets: TestDoubleHashFlatHashTable TestLinkedListChainedHashTable TestLinProbFlatHashTable TestParaHashTableStEph TestQuadProbFlatHashTable TestStructChainedHashTable TestVecChainedHashTable
+Starting RTT at 13:13:27
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 0.04s
+     Running tests/Chap47/TestDoubleHashFlatHashTable.rs (target/release/deps/TestDoubleHashFlatHashTable-84dbdf2fce024b24)
+
+running 15 tests
+test test_delete_maintains_probe_chain ... ok
+test test_delete ... ok
+test test_different_probe_sequences_for_colliding_keys ... ok
+test test_probe_visits_all_slots_prime_size ... ok
+test test_insert_and_lookup ... ok
+test test_resize_with_elements ... ok
+test test_second_hash_is_odd ... ok
+test test_second_hash_nonzero ... ok
+test test_find_slot ... ok
+test test_update_existing_key ... ok
+test test_lookup_nonexistent_key ... ok
+test test_probe_double_hash_sequence ... ok
+test test_load_and_size ... ok
+test test_high_load_factor ... ok
+test test_resize_empty_table ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap47/TestLinProbFlatHashTable.rs (target/release/deps/TestLinProbFlatHashTable-82847d5b06d9f36a)
+
+running 26 tests
+test test_default_insert_with_probe ... ok
+test test_delete_exhaustive_probe ... ok
+test test_default_lookup ... ok
+test test_delete ... ok
+test test_find_slot ... ok
+test test_delete_not_found ... ok
+test test_find_slot_table_full_fallback ... ok
+test test_find_slot_with_occupied_matching_key ... ok
+test test_flat_entry_clone ... ok
+test test_flat_entry_debug ... ok
+test test_flat_entry_delete ... ok
+test test_flat_entry_insert ... ok
+test test_flat_entry_lookup ... ok
+test test_flat_entry_new ... ok
+test test_flat_entry_partial_eq ... ok
+test test_insert_and_lookup ... ok
+test test_insert_into_deleted_slot ... ok
+test test_insert_update_existing_key ... ok
+test test_lookup_exhaustive_probe ... ok
+test test_load_and_size ... ok
+test test_lookup_through_deleted_entries ... ok
+test test_probe ... ok
+test test_resize_empty_table ... ok
+test test_resize_preserves_deleted_not_reinserted ... ok
+test test_resize_smaller ... ok
+test test_resize_with_elements ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap47/TestLinkedListChainedHashTable.rs (target/release/deps/TestLinkedListChainedHashTable-8a384b33d1ec1115)
+
+running 13 tests
+test test_collision_handling ... ok
+test test_entry_delete_not_found ... ok
+test test_linkedlist_chained_delete ... ok
+test test_entry_lookup_not_found ... ok
+test test_linkedlist_entry_delete ... ok
+test test_linkedlist_chained_insert_lookup ... ok
+test test_linkedlist_entry_insert ... ok
+test test_linkedlist_entry_new ... ok
+test test_linkedlist_entry_update ... ok
+test test_load_and_size ... ok
+test test_resize_empty_table ... ok
+test test_resize_with_elements ... ok
+test test_update_existing_key ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap47/TestParaHashTableStEph.rs (target/release/deps/TestParaHashTableStEph-6316b6f130784c1b)
+
+running 4 tests
+test test_createtable ... ok
+test test_loadandsize_empty ... ok
+test test_metrics ... ok
+test test_loadandsize_with_elements ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap47/TestQuadProbFlatHashTable.rs (target/release/deps/TestQuadProbFlatHashTable-be134fef6e4d6409)
+
+running 12 tests
+test test_delete ... ok
+test test_delete_maintains_probe_chain ... ok
+test test_load_and_size ... ok
+test test_insert_and_lookup ... ok
+test test_find_slot ... ok
+test test_lookup_stops_at_max_attempts ... ok
+test test_max_attempts_ceiling_m_over_2 ... ok
+test test_prime_size_guarantees ... ok
+test test_probe_quadratic_sequence ... ok
+test test_resize_empty_table ... ok
+test test_resize_with_elements ... ok
+test test_update_existing_key ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap47/TestStructChainedHashTable.rs (target/release/deps/TestStructChainedHashTable-07539e9542764f0c)
+
+running 16 tests
+test test_chainlist_default ... ok
+test test_chainlist_delete ... ok
+test test_chainlist_delete_head ... ok
+test test_chainlist_delete_all ... ok
+test test_chainlist_delete_not_found ... ok
+test test_chainlist_insert ... ok
+test test_chainlist_insert_multiple ... ok
+test test_chainlist_new ... ok
+test test_chainlist_update ... ok
+test test_node_clone ... ok
+test test_struct_chained_delete ... ok
+test test_struct_chained_insert_lookup ... ok
+test test_struct_chained_lookup_nonexistent ... ok
+test test_struct_chained_overwrite ... ok
+test test_struct_chained_many_elements ... ok
+test test_struct_chained_resize ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap47/TestVecChainedHashTable.rs (target/release/deps/TestVecChainedHashTable-f9d3118d7de4b7e3)
+
+running 16 tests
+test test_vec_chained_delete ... ok
+test test_vec_chained_delete_nonexistent ... ok
+test test_vec_chained_hash_index ... ok
+test test_vec_chained_insert_then_delete_then_lookup ... ok
+test test_vec_chained_insert_lookup ... ok
+test test_vec_chained_lookup_nonexistent ... ok
+test test_vec_chained_overwrite_value ... ok
+test test_vec_chained_many_collisions ... ok
+test test_vec_chained_resize ... ok
+test test_vec_entry_delete ... ok
+test test_vec_entry_delete_all ... ok
+test test_vec_entry_delete_nonexistent ... ok
+test test_vec_entry_insert ... ok
+test test_vec_entry_multiple_inserts ... ok
+test test_vec_entry_new ... ok
+test test_vec_entry_update ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 0s

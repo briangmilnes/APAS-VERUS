@@ -51,7 +51,7 @@ pub mod ParaHashTableStEph {
     //		Section 4a. type definitions
 
 
-    #[derive(Clone, Copy, PartialEq)]
+    #[derive(Clone, Copy, PartialEq, StructuralEq)]
     pub struct LoadAndSize {
         pub load: usize,
         pub size: usize,

@@ -49,6 +49,7 @@ pub mod experiments {
 //    pub mod derive_0913_ord_totalorder_bridge;            // SUCCEEDS: r216, TotalOrder from OrdSpecImpl, no assuming defaults
 //    pub mod derive_0913_ord_with_ordspecimpl;             // SUCCEEDS: r216, hand OrdSpecImpl specifies a derived Ord, but is trusted
 //    pub mod derive_0913_structural_eq_enum;               // SUCCEEDS: r216, StructuralEq specifies == on a non-generic enum
+//    pub mod derive_0913_structural_eq_r217_shapes;        // SUCCEEDS: r217, StructuralEq on the four shapes r217 adds it to
 //    pub mod derive_0913_structural_eq_struct;             // SUCCEEDS: r216, StructuralEq specifies == and gives obeys_concrete_eq
 //    pub mod derive_0913_structural_eq_view_bridge;        // SUCCEEDS: r216, StructuralEq discharges the APAS view postcondition
 //    pub mod derive_clone_enum_in_verus;                   // SUCCEEDS: #[derive(Clone)] on enum verifies
