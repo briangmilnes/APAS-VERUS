@@ -1,0 +1,31 @@
+r212 PTT for Chap40 (isolate: Chap40 Chap18 Chap02); tests: ProveBSTSizeStEph ProveBSTKeyValueStEph ProveBSTReducedStEph
+Starting PTT at 05:30:58
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 0.78s
+     Running tests/Chap40/ProveBSTKeyValueStEph.rs (target/release/build/rust_verify_test/abfd7f6ab8a37b3f/out/ProveBSTKeyValueStEph-abfd7f6ab8a37b3f)
+
+running 2 tests
+test bstkeyvaluesteph_loop_borrow_iter ... ok
+test bstkeyvaluesteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.54s
+
+     Running tests/Chap40/ProveBSTReducedStEph.rs (target/release/build/rust_verify_test/e9e8712927cad66f/out/ProveBSTReducedStEph-e9e8712927cad66f)
+
+running 2 tests
+test bstreducedsteph_loop_borrow_iter ... ok
+test bstreducedsteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.58s
+
+     Running tests/Chap40/ProveBSTSizeStEph.rs (target/release/build/rust_verify_test/92451e2c9f1cfcda/out/ProveBSTSizeStEph-92451e2c9f1cfcda)
+
+running 2 tests
+test bstsizesteph_for_borrow_iter ... ok
+test bstsizesteph_loop_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.56s
+
+cargo test rc: 0
+Elapsed: 7s

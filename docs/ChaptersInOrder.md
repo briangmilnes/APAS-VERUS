@@ -42,6 +42,7 @@ file, or listed at the end.
 | 18 | 37 | 1862 | 0 | 0 | 544 pass | 24 pass | r213 Chap37 |
 | 19 | 38 | 1078 | 0 | 0 | 53 pass | 2 pass | r213 Chap38 |
 | 20 | 39 | 1218 | 0 | 0 | 148 pass | 8 pass | r213 Chap39 |
+| 21 | 40 | 1180 | 0 | 0 | 54 pass | 6 pass | r213 Chap40 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -332,3 +333,10 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   joined to the next token (`ensuresjoined@`), fixed before this run.
 - RTT: 4 targets, 148 tests pass (`logs/rtt.20260922-053019.log`).
 - PTT: 4 files, 8 tests pass (`logs/ptt-Chap39.20260922-053025.log`).
+
+### Chap40
+
+- Start and end: 1180 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-053048.log`). No edit.
+- RTT: 3 targets, 54 tests pass (`logs/rtt.20260922-053058.log`).
+- PTT: 3 files, 6 tests pass (`logs/ptt-Chap40.20260922-053058.log`).

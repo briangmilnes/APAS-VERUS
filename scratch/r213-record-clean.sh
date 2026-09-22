@@ -10,7 +10,7 @@ cat >> $DOC <<EOT
 
 ### Chap$NN
 
-- First run on 09.13: $V verified, 0 errors, 0 warnings, 0 trigger notes
+- Start and end: $V verified, 0 errors, 0 warnings, 0 trigger notes
   (\`logs/validate.$VL.log\`). No edit.
 - RTT: $RT targets, $RP tests pass (\`logs/rtt.$RL.log\`).
 - PTT: $PTXT
