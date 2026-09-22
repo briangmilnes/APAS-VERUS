@@ -1,0 +1,207 @@
+r212 PTT for Chap06 (isolate: Chap06 Chap05 Chap02); tests: ProveDirGraphMtEph ProveDirGraphStEph ProveLabDirGraphMtEph ProveLabDirGraphStEph ProveLabUnDirGraphMtEph ProveLabUnDirGraphStEph ProveUnDirGraphMtEph ProveUnDirGraphStEph ProveWeightedDirGraphStEphI128 ProveWeightedDirGraphStEphI16 ProveWeightedDirGraphStEphI32 ProveWeightedDirGraphStEphI64 ProveWeightedDirGraphStEphI8 ProveWeightedDirGraphStEphIsize ProveWeightedDirGraphStEphU128 ProveWeightedDirGraphStEphU16 ProveWeightedDirGraphStEphU32 ProveWeightedDirGraphStEphU64 ProveWeightedDirGraphStEphU8 ProveWeightedDirGraphStEphUsize
+Starting PTT at 07:27:31
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 2.42s
+     Running tests/Chap06/ProveDirGraphMtEph.rs (target/release/build/rust_verify_test/7f90c607a4d5ca2e/out/ProveDirGraphMtEph-7f90c607a4d5ca2e)
+
+running 4 tests
+test dirgraphmteph_loop_borrow_iter_arcs ... ok
+test dirgraphmteph_loop_borrow_iter_vertices ... ok
+test dirgraphmteph_for_borrow_iter_vertices ... ok
+test dirgraphmteph_for_borrow_iter_arcs ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.68s
+
+     Running tests/Chap06/ProveDirGraphStEph.rs (target/release/build/rust_verify_test/66cf27b927b3ab93/out/ProveDirGraphStEph-66cf27b927b3ab93)
+
+running 4 tests
+test dirgraphsteph_loop_borrow_iter_arcs ... ok
+test dirgraphsteph_loop_borrow_iter_vertices ... ok
+test dirgraphsteph_for_borrow_iter_vertices ... ok
+test dirgraphsteph_for_borrow_iter_arcs ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.70s
+
+     Running tests/Chap06/ProveLabDirGraphMtEph.rs (target/release/build/rust_verify_test/500b1a7fc15b606b/out/ProveLabDirGraphMtEph-500b1a7fc15b606b)
+
+running 4 tests
+test labdirgraphmteph_for_borrow_iter_vertices ... ok
+test labdirgraphmteph_loop_borrow_iter_arcs ... ok
+test labdirgraphmteph_for_borrow_iter_arcs ... ok
+test labdirgraphmteph_loop_borrow_iter_vertices ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+
+     Running tests/Chap06/ProveLabDirGraphStEph.rs (target/release/build/rust_verify_test/7991ad130b0626fa/out/ProveLabDirGraphStEph-7991ad130b0626fa)
+
+running 4 tests
+test labdirgraphsteph_loop_borrow_iter_vertices ... ok
+test labdirgraphsteph_loop_borrow_iter_arcs ... ok
+test labdirgraphsteph_for_borrow_iter_vertices ... ok
+test labdirgraphsteph_for_borrow_iter_arcs ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.69s
+
+     Running tests/Chap06/ProveLabUnDirGraphMtEph.rs (target/release/build/rust_verify_test/f6d283be33194d04/out/ProveLabUnDirGraphMtEph-f6d283be33194d04)
+
+running 4 tests
+test labundirgraphmteph_loop_borrow_iter_vertices ... ok
+test labundirgraphmteph_loop_borrow_iter_edges ... ok
+test labundirgraphmteph_for_borrow_iter_vertices ... ok
+test labundirgraphmteph_for_borrow_iter_edges ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+
+     Running tests/Chap06/ProveLabUnDirGraphStEph.rs (target/release/build/rust_verify_test/df21358f72b054b5/out/ProveLabUnDirGraphStEph-df21358f72b054b5)
+
+running 4 tests
+test labundirgraphsteph_loop_borrow_iter_edges ... ok
+test labundirgraphsteph_loop_borrow_iter_vertices ... ok
+test labundirgraphsteph_for_borrow_iter_edges ... ok
+test labundirgraphsteph_for_borrow_iter_vertices ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+
+     Running tests/Chap06/ProveUnDirGraphMtEph.rs (target/release/build/rust_verify_test/9d7653e821b05d95/out/ProveUnDirGraphMtEph-9d7653e821b05d95)
+
+running 4 tests
+test undirgraphmteph_loop_borrow_iter_vertices ... ok
+test undirgraphmteph_loop_borrow_iter_edges ... ok
+test undirgraphmteph_for_borrow_iter_edges ... ok
+test undirgraphmteph_for_borrow_iter_vertices ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.69s
+
+     Running tests/Chap06/ProveUnDirGraphStEph.rs (target/release/build/rust_verify_test/a8c75c0880e01bbb/out/ProveUnDirGraphStEph-a8c75c0880e01bbb)
+
+running 4 tests
+test undirgraphsteph_loop_borrow_iter_edges ... ok
+test undirgraphsteph_for_borrow_iter_edges ... ok
+test undirgraphsteph_loop_borrow_iter_vertices ... ok
+test undirgraphsteph_for_borrow_iter_vertices ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.68s
+
+     Running tests/Chap06/ProveWeightedDirGraphStEphI128.rs (target/release/build/rust_verify_test/9ab29de83b417d40/out/ProveWeightedDirGraphStEphI128-9ab29de83b417d40)
+
+running 4 tests
+test weighteddirgraphstephi128_loop_borrow_iter_vertices ... ok
+test weighteddirgraphstephi128_loop_borrow_iter_arcs ... ok
+test weighteddirgraphstephi128_for_borrow_iter_vertices ... ok
+test weighteddirgraphstephi128_for_borrow_iter_arcs ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.69s
+
+     Running tests/Chap06/ProveWeightedDirGraphStEphI16.rs (target/release/build/rust_verify_test/4c366312acf8bcbb/out/ProveWeightedDirGraphStEphI16-4c366312acf8bcbb)
+
+running 4 tests
+test weighteddirgraphstephi16_loop_borrow_iter_vertices ... ok
+test weighteddirgraphstephi16_loop_borrow_iter_arcs ... ok
+test weighteddirgraphstephi16_for_borrow_iter_arcs ... ok
+test weighteddirgraphstephi16_for_borrow_iter_vertices ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.70s
+
+     Running tests/Chap06/ProveWeightedDirGraphStEphI32.rs (target/release/build/rust_verify_test/b920b66780c2e3ee/out/ProveWeightedDirGraphStEphI32-b920b66780c2e3ee)
+
+running 4 tests
+test weighteddirgraphstephi32_loop_borrow_iter_arcs ... ok
+test weighteddirgraphstephi32_loop_borrow_iter_vertices ... ok
+test weighteddirgraphstephi32_for_borrow_iter_vertices ... ok
+test weighteddirgraphstephi32_for_borrow_iter_arcs ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+
+     Running tests/Chap06/ProveWeightedDirGraphStEphI64.rs (target/release/build/rust_verify_test/4bb58f4802878ace/out/ProveWeightedDirGraphStEphI64-4bb58f4802878ace)
+
+running 4 tests
+test weighteddirgraphstephi64_loop_borrow_iter_arcs ... ok
+test weighteddirgraphstephi64_loop_borrow_iter_vertices ... ok
+test weighteddirgraphstephi64_for_borrow_iter_arcs ... ok
+test weighteddirgraphstephi64_for_borrow_iter_vertices ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+
+     Running tests/Chap06/ProveWeightedDirGraphStEphI8.rs (target/release/build/rust_verify_test/e6f79afc9db5a1b7/out/ProveWeightedDirGraphStEphI8-e6f79afc9db5a1b7)
+
+running 4 tests
+test weighteddirgraphstephi8_loop_borrow_iter_vertices ... ok
+test weighteddirgraphstephi8_loop_borrow_iter_arcs ... ok
+test weighteddirgraphstephi8_for_borrow_iter_vertices ... ok
+test weighteddirgraphstephi8_for_borrow_iter_arcs ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.68s
+
+     Running tests/Chap06/ProveWeightedDirGraphStEphIsize.rs (target/release/build/rust_verify_test/30f185d921561b52/out/ProveWeightedDirGraphStEphIsize-30f185d921561b52)
+
+running 4 tests
+test weighteddirgraphstephisize_loop_borrow_iter_arcs ... ok
+test weighteddirgraphstephisize_loop_borrow_iter_vertices ... ok
+test weighteddirgraphstephisize_for_borrow_iter_vertices ... ok
+test weighteddirgraphstephisize_for_borrow_iter_arcs ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.70s
+
+     Running tests/Chap06/ProveWeightedDirGraphStEphU128.rs (target/release/build/rust_verify_test/d4091683bf6edbd4/out/ProveWeightedDirGraphStEphU128-d4091683bf6edbd4)
+
+running 4 tests
+test weighteddirgraphstephu128_loop_borrow_iter_vertices ... ok
+test weighteddirgraphstephu128_loop_borrow_iter_arcs ... ok
+test weighteddirgraphstephu128_for_borrow_iter_vertices ... ok
+test weighteddirgraphstephu128_for_borrow_iter_arcs ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.70s
+
+     Running tests/Chap06/ProveWeightedDirGraphStEphU16.rs (target/release/build/rust_verify_test/3b79f74d3000398f/out/ProveWeightedDirGraphStEphU16-3b79f74d3000398f)
+
+running 4 tests
+test weighteddirgraphstephu16_loop_borrow_iter_arcs ... ok
+test weighteddirgraphstephu16_loop_borrow_iter_vertices ... ok
+test weighteddirgraphstephu16_for_borrow_iter_arcs ... ok
+test weighteddirgraphstephu16_for_borrow_iter_vertices ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s
+
+     Running tests/Chap06/ProveWeightedDirGraphStEphU32.rs (target/release/build/rust_verify_test/d4f6000162b90ff3/out/ProveWeightedDirGraphStEphU32-d4f6000162b90ff3)
+
+running 4 tests
+test weighteddirgraphstephu32_loop_borrow_iter_vertices ... ok
+test weighteddirgraphstephu32_loop_borrow_iter_arcs ... ok
+test weighteddirgraphstephu32_for_borrow_iter_vertices ... ok
+test weighteddirgraphstephu32_for_borrow_iter_arcs ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.70s
+
+     Running tests/Chap06/ProveWeightedDirGraphStEphU64.rs (target/release/build/rust_verify_test/ddff220f11789c3f/out/ProveWeightedDirGraphStEphU64-ddff220f11789c3f)
+
+running 4 tests
+test weighteddirgraphstephu64_loop_borrow_iter_arcs ... ok
+test weighteddirgraphstephu64_loop_borrow_iter_vertices ... ok
+test weighteddirgraphstephu64_for_borrow_iter_arcs ... ok
+test weighteddirgraphstephu64_for_borrow_iter_vertices ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+
+     Running tests/Chap06/ProveWeightedDirGraphStEphU8.rs (target/release/build/rust_verify_test/52daf4bc80c664f8/out/ProveWeightedDirGraphStEphU8-52daf4bc80c664f8)
+
+running 4 tests
+test weighteddirgraphstephu8_loop_borrow_iter_arcs ... ok
+test weighteddirgraphstephu8_for_borrow_iter_arcs ... ok
+test weighteddirgraphstephu8_loop_borrow_iter_vertices ... ok
+test weighteddirgraphstephu8_for_borrow_iter_vertices ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.70s
+
+     Running tests/Chap06/ProveWeightedDirGraphStEphUsize.rs (target/release/build/rust_verify_test/44632d811d548cb9/out/ProveWeightedDirGraphStEphUsize-44632d811d548cb9)
+
+running 4 tests
+test weighteddirgraphstephusize_loop_borrow_iter_vertices ... ok
+test weighteddirgraphstephusize_for_borrow_iter_arcs ... ok
+test weighteddirgraphstephusize_loop_borrow_iter_arcs ... ok
+test weighteddirgraphstephusize_for_borrow_iter_vertices ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.71s
+
+cargo test rc: 0
+Elapsed: 22s

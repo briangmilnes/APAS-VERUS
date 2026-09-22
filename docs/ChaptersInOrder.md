@@ -25,7 +25,7 @@ file, or listed at the end.
 | 1 | 02 | 631 | 0 | 0 | 41 pass | none | 1afd25de1 |
 | 2 | 03 | 622 | 0 | 0 | 40 pass | none | 9da5c4aba |
 | 3 | 05 | 760 | 0 | 0 | 89 pass | 29 pass (r214) | 7680a0ea8 |
-| 4 | 06 | 1037 | 0 | 0 | 275 pass | not registered | 8c5300b01 |
+| 4 | 06 | 1037 | 0 | 0 | 275 pass | 80 pass (r214) | 8c5300b01 |
 | 5 | 11 | 651 | 0 | 0 | 40 pass | none | 58e3ecf69 |
 | 6 | 12 | 635 | 0 | 0 | 40 pass | none | 571ed7e81 |
 | 7 | 17 | 645 | 0 | 0 | 40 pass | 9 pass (r214) | 8c46d30bd |
@@ -897,3 +897,24 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
 - `prove_MathSeq_iters.rs`: `mathseq_iter_range` used the old range wrapper
   field `iter.cur`; it now reads `it.index() <= len`.
 - Result: 2 files, 9 of 9 pass (`logs/ptt-Chap17.20260922-072539.log`).
+
+### Chap06 PTTs (registered, passing)
+
+- The 20 files in `rust_verify_test/tests/Chap06/` are now registered in
+  `rust_verify_test/Cargo.toml`.
+- They used `SetStEphIter`, `iter_invariant`, `it@` and the old `for`-loop
+  wrapper fields (`iter.elements`, `iter.pos`). They also called
+  `g.iter_vertices()`, `g.iter_arcs()` and `g.iter_edges()`, which only
+  `DirGraphStEph` still has.
+- Migration (`scratch/r214/migrate_chap06_ptt.sh`):
+  - Setup code, `requires` clauses and test names are copied unchanged.
+  - Each loop is replaced with the `iterator_ptt_standard.rs` template over
+    `hash_set::Iter`, with `orig = into_iter_hash_keys(it0)`.
+  - `DirGraphStEph` keeps `iter_vertices()` and `iter_arcs()`.
+  - The other graphs iterate through the accessor sets:
+    `g.vertices().iter()`, `g.arcs().iter()` or `g.edges().iter()` for
+    `Edge`, and `g.labeled_arcs().iter()` or `g.labeled_edges().iter()` for
+    `LabEdge`.
+  - The old trailing `assert(iter_seq.no_duplicates())` is not in the
+    template and was dropped.
+- Result: 20 files, 80 of 80 pass (`logs/ptt-Chap06.20260922-072731.log`).

@@ -39,7 +39,7 @@ calls, removed chapter by chapter as each is migrated.
 | 3 | `standards/` | all 21 registered standards verify, 0 errors | `docs/StandardsUpgrade.md` |
 | 4 | `experiments/` | all commented out in `lib.rs` with `RESULT` status; 17 added in r207–r209 | `src/lib.rs` |
 | 5 | RTT (`scripts/rtt.sh`) | not run since the upgrade; entries for Chap62, 63, 66 and `test_partial_order` commented out in `Cargo.toml` | — |
-| 6 | PTT (`scripts/ptt.sh`) | cannot run: 162 crate errors and `cargo-nextest` missing on the nightly toolchain; 84 of 97 PTT files on the old iterator model | `logs/ptt.20260920-155305.log` |
+| 6 | PTT (`scripts/ptt.sh`) | cannot run: 162 crate errors and `cargo-nextest` missing on the nightly toolchain; 84 of 97 PTT files on the old iterator model. r213/r214: every registered chapter PTT passes through `scratch/r212-ptt.sh ChapNN` (r214 migrated Chap05, Chap06, Chap17) | `logs/ptt.20260920-155305.log` |
 
 ## Chapters
 
@@ -48,7 +48,7 @@ calls, removed chapter by chapter as each is migrated.
 | 1 | 02 | — | 0 | r213: 631 verified, 0 err, 0 warn; RTT 41 pass | `validate.20260922-050445.log` |
 | 2 | 03 | — | 0 | r213: 622 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-050550.log` |
 | 3 | 05 | 02 | 0 | r213: 760 verified, 0 err, 0 warn; RTT 89 pass; r214 PTT 29 pass | `validate.20260922-050624.log` |
-| 4 | 06 | 05 | 0 | r213: 1037 verified, 0 err, 0 warn; RTT 275 pass | `validate.20260922-050731.log` |
+| 4 | 06 | 05 | 0 | r213: 1037 verified, 0 err, 0 warn; RTT 275 pass; r214 PTT 80 pass | `validate.20260922-050731.log` |
 | 5 | 11 | 02 | 0 | r213: 651 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-050801.log` |
 | 6 | 12 | 02 | 0 | r213: 635 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-050809.log` |
 | 7 | 17 | — | 0 | r213: 645 verified, 0 err, 0 warn; RTT 40 pass; r214 PTT 9 pass | `validate.20260922-050830.log` |
