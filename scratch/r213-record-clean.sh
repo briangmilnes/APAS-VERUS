@@ -24,7 +24,7 @@ awk -v ln="$ln" -v row="| $idx | $NN | $V | 0 | 0 | $RP pass | $PCELL | r213 Cha
 # Status row in ChapterVerusification.md.
 CV=docs/ChapterVerusification.md
 awk -v nn="$NN" -v st="r213: $V verified, 0 err, 0 warn; RTT $RP pass" -v ev="\`validate.$VL.log\`" \
-    'BEGIN{FS=OFS="|"} $3==" " nn " " && NF==8 {$6=" " st " "; $7=" " ev " "} {print}' $CV > $CV.tmp && mv $CV.tmp $CV
+    'BEGIN{FS=OFS="|"} $3==" " nn " " && NF==8 {$5=" 0 "; $6=" " st " "; $7=" " ev " "} {print}' $CV > $CV.tmp && mv $CV.tmp $CV
 git add -A
 git commit -q -m "r213 Chap$NN: $V verified, 0 errors, 0 warnings; RTT $RP pass
 

@@ -1,0 +1,80 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error[E0425]: cannot find value `ensuresjoined` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:2307:9
+     |
+2307 |         ensuresjoined@ =~= left@.union(right@),
+     |         ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `joined` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:2308:33
+     |
+2308 |             spec_param_wf_link(&joined.root),
+     |                                 ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `joined` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:2309:13
+     |
+2309 |             joined.spec_bsttreapsteph_wf(),
+     |             ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ensurescombined` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:2415:9
+     |
+2415 |         ensurescombined@ == a@.union(b@),
+     |         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `combined` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:2416:33
+     |
+2416 |             spec_param_wf_link(&combined.root),
+     |                                 ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `combined` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:2417:13
+     |
+2417 |             combined.spec_bsttreapsteph_wf(),
+     |             ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ensurescommon` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:2509:9
+     |
+2509 |         ensurescommon@ == a@.intersect(b@),
+     |         ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `common` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:2510:33
+     |
+2510 |             spec_param_wf_link(&common.root),
+     |                                 ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `common` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:2511:13
+     |
+2511 |             common.spec_bsttreapsteph_wf(),
+     |             ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `ensuresremaining` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:2615:9
+     |
+2615 |         ensuresremaining@ == a@.difference(b@),
+     |         ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `remaining` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:2616:33
+     |
+2616 |             spec_param_wf_link(&remaining.root),
+     |                                 ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `remaining` in this scope
+    --> src/Chap39/BSTTreapStEph.rs:2617:13
+     |
+2617 |             remaining.spec_bsttreapsteph_wf(),
+     |             ^^^^^^^^^ not found in this scope
+
+error: aborting due to 12 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 25971MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

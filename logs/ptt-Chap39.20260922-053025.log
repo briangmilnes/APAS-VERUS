@@ -1,0 +1,39 @@
+r212 PTT for Chap39 (isolate: Chap39 Chap18 Chap02); tests: ProveBSTTreapStEph ProveBSTSetTreapMtEph ProveBSTParaTreapMtEph ProveBSTTreapMtEph
+Starting PTT at 05:30:25
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 0.85s
+     Running tests/Chap39/ProveBSTParaTreapMtEph.rs (target/release/build/rust_verify_test/f0a1ce8a53c4a2b8/out/ProveBSTParaTreapMtEph-f0a1ce8a53c4a2b8)
+
+running 2 tests
+test bstparatreapmteph_loop_borrow_iter ... ok
+test bstparatreapmteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.58s
+
+     Running tests/Chap39/ProveBSTSetTreapMtEph.rs (target/release/build/rust_verify_test/bec6e0ae02541b68/out/ProveBSTSetTreapMtEph-bec6e0ae02541b68)
+
+running 2 tests
+test bstsettreapmteph_loop_borrow_iter ... ok
+test bstsettreapmteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.60s
+
+     Running tests/Chap39/ProveBSTTreapMtEph.rs (target/release/build/rust_verify_test/321eb767cbda5587/out/ProveBSTTreapMtEph-321eb767cbda5587)
+
+running 2 tests
+test bsttreapmteph_loop_borrow_into ... ok
+test bsttreapmteph_for_borrow_into ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s
+
+     Running tests/Chap39/ProveBSTTreapStEph.rs (target/release/build/rust_verify_test/22853ea3b3a3f7e2/out/ProveBSTTreapStEph-22853ea3b3a3f7e2)
+
+running 2 tests
+test bsttreapsteph_loop_borrow_iter ... ok
+test bsttreapsteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.53s
+
+cargo test rc: 0
+Elapsed: 7s

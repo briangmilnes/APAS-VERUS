@@ -821,18 +821,21 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    proof fn lemma_set_of_link_finite<T: StTInMtT + Ord>(link: &Link<T>)
-        ensures spec_set_of_link(link).finite(),
-        decreases *link,
-    {
-        match link {
-            None => {},
-            Some(node) => {
-                lemma_set_of_link_finite(&node.left);
-                lemma_set_of_link_finite(&node.right);
-            }
-        }
-    }
+    // BYPASSED (r213): the lemma's only postcondition was
+    // `spec_set_of_link(link).finite()`, `true` for every `Set` at verus
+    // 0.2026.09.13; it has no caller.
+    // proof fn lemma_set_of_link_finite<T: StTInMtT + Ord>(link: &Link<T>)
+    //     ensures spec_set_of_link(link).finite(),
+    //     decreases *link,
+    // {
+    //     match link {
+    //         None => {},
+    //         Some(node) => {
+    //             lemma_set_of_link_finite(&node.left);
+    //             lemma_set_of_link_finite(&node.right);
+    //         }
+    //     }
+    // }
 
     proof fn lemma_height_le_size<T: StTInMtT + Ord>(link: &Link<T>)
         requires
@@ -1066,11 +1069,11 @@ pub mod BSTTreapMtEph {
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
-            ensures count == self@.len(), self@.finite();
+            ensures count == self@.len();
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool)
-            ensures empty == (self@.len() == 0), self@.finite();
+            ensures empty == (self@.len() == 0);
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> (h: usize)
@@ -1099,7 +1102,7 @@ pub mod BSTTreapMtEph {
     impl<T: StTInMtT + Ord + IsLtTransitive> BSTTreapMtEph<T> {
         #[verifier::type_invariant]
         spec fn wf(self) -> bool {
-            self.ghost_locked_root@.finite()
+            true
         }
 
         pub closed spec fn spec_ghost_locked_root(self) -> Set<<T as View>::V> {
@@ -1109,7 +1112,7 @@ pub mod BSTTreapMtEph {
 
     impl<T: StTInMtT + Ord + IsLtTransitive> BSTTreapMtEphTrait<T> for BSTTreapMtEph<T> {
         open spec fn spec_bsttreapmteph_wf(&self) -> bool {
-            self@.finite()
+            true
         }
 
         open spec fn spec_size(self) -> nat {
@@ -1259,8 +1262,7 @@ pub mod BSTTreapMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn size(&self) -> (count: usize)
-            ensures count == self@.len(), self@.finite()
-        {
+            ensures count == self@.len()        {
 // Veracity: UNNEEDED proof block             // Veracity: NEEDED proof block
             proof { use_type_invariant(&*self); }
             let handle = self.locked_root.acquire_read();
@@ -1274,8 +1276,7 @@ pub mod BSTTreapMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool)
             // Veracity: NEEDED proof block (speed hint)
-            ensures empty == (self@.len() == 0), self@.finite()
-        {
+            ensures empty == (self@.len() == 0)        {
             self.size() == 0
         }
 
@@ -1556,7 +1557,6 @@ pub mod BSTTreapMtEph {
             // Veracity: NEEDED proof block
             proof {
                 accept(spec_bsttreapmteph_link_wf(&inner_clone));
-                accept(self.ghost_locked_root@.finite());
             }
             let cloned = BSTTreapMtEph {
                 locked_root: RwLock::new(inner_clone, Ghost(BSTTreapMtEphInv)),

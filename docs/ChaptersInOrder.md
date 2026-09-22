@@ -41,6 +41,7 @@ file, or listed at the end.
 | 17 | 36 | 867 | 0 | 0 | 24 pass | none | r213 Chap36 |
 | 18 | 37 | 1862 | 0 | 0 | 544 pass | 24 pass | r213 Chap37 |
 | 19 | 38 | 1078 | 0 | 0 | 53 pass | 2 pass | r213 Chap38 |
+| 20 | 39 | 1218 | 0 | 0 | 148 pass | 8 pass | r213 Chap39 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -298,3 +299,36 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   bypassed fn is no longer compiled.
 - RTT: 2 targets, 53 tests pass (`logs/rtt.20260922-052434.log`).
 - PTT: 1 file, 2 tests pass (`logs/ptt-Chap38.20260922-052440.log`).
+
+### Chap39
+
+- Start: 1221 verified, 0 errors, 138 warnings (deprecated `finite()`), 0
+  trigger notes (`logs/validate.20260922-052508.log`).
+- Edit class 1, `finite()` removal in `BSTParaTreapMtEph.rs` (51 sites),
+  `BSTTreapStEph.rs` (45), `BSTSetTreapMtEph.rs` (23), `BSTTreapMtEph.rs`
+  (11): conjuncts deleted from `requires`, `ensures`, closure `ensures`,
+  `Exposed`/parts implications and the lock predicates; `&&& lv.finite() &&
+  rv.finite()` deleted from `spec_param_wf_link`; four wf predicates whose
+  only conjunct was `finite()` now read `true`
+  (`spec_bstparatreapmteph_wf`, `spec_bstsettreapmteph_wf`,
+  `spec_bsttreapmteph_wf` and the `BSTTreapMtEph` type invariant `wf`), as
+  `src/standards/finite_sets_standard.rs` rule 1 prescribes.
+- Edit class 2, finiteness-only proof steps: three fns whose only
+  postcondition was `finite()` are commented out under `// BYPASSED (r213):`
+  notes: `param_treap_assert_finite` (`BSTParaTreapMtEph.rs`; its two calls in
+  `BSTSetTreapMtEph::join_m` removed; the commented block includes its
+  `/// - Alg Analysis` line, kept verbatim inside the comment),
+  `lemma_set_of_link_finite` (`BSTTreapMtEph.rs`, no caller) and
+  `lemma_wf_implies_finite` (`BSTTreapStEph.rs`, four calls in
+  `param_size`, `param_reduce`, `param_in_order` removed). Two
+  `assert(old_view.finite())` and two `assert(left@/right@.finite())` deleted.
+  One hole removed: `accept(self.ghost_locked_root@.finite())` in
+  `BSTTreapMtEph::clone`, whose type invariant is now `true`.
+- Exec cost: the two removed calls of `param_treap_assert_finite` were O(1)
+  ghost-only calls; `join_m` stays O(lg n). No other exec change.
+- End: 1218 verified (three fewer fns), 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-053007.log`). A first run after the removal
+  stopped at 12 `E0425` errors from four `ensures` keywords the Edit tool had
+  joined to the next token (`ensuresjoined@`), fixed before this run.
+- RTT: 4 targets, 148 tests pass (`logs/rtt.20260922-053019.log`).
+- PTT: 4 files, 8 tests pass (`logs/ptt-Chap39.20260922-053025.log`).

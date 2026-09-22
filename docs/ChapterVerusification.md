@@ -64,7 +64,7 @@ calls, removed chapter by chapter as each is migrated.
 | 17 | 36 | 19 | 0 | r213: 867 verified, 0 err, 0 warn; RTT 24 pass | `validate.20260922-051831.log` |
 | 18 | 37 | 02, 18, 19, 23 | 0 | r213: 1862 verified, 0 err, 0 warn; RTT 544 pass | `validate.20260922-051953.log` |
 | 19 | 38 | 18 | 0 | r213: 1078 verified, 0 err, 0 warn; RTT 53, PTT 2 pass | `validate.20260922-052403.log` |
-| 20 | 39 | 18 | 4 | old iterator model in 4 files; blocked on 18 | full log |
+| 20 | 39 | 18 | 0 | r213: 1218 verified, 0 err, 0 warn; RTT 148, PTT 8 pass | `validate.20260922-053007.log` |
 | 21 | 40 | 18 | 3 | old iterator model in 3 files; blocked on 18 | full log |
 | 22 | 41 | 18, 19, 37, 38 | 15 | `Set::new` (9, `ArraySetEnumMtEph.rs`), `Map::new`, old iterators | full log |
 | 23 | 42 | 02, 19, 41 | 0 | blocked on 19, 41 | full log |

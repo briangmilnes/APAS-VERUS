@@ -73,20 +73,20 @@ pub mod BSTSetTreapMtEph {
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (set: Self)
-            ensures set@.finite(), set@.len() == 0, set.spec_bstsettreapmteph_wf();
+            ensures set@.len() == 0, set.spec_bstsettreapmteph_wf();
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn singleton(value: T) -> (set: Self)
             requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
-            ensures set@.finite(), set@.len() == 1, set@.contains(value@), set.spec_bstsettreapmteph_wf();
+            ensures set@.len() == 1, set@.contains(value@), set.spec_bstsettreapmteph_wf();
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
-            ensures self@.finite(), count == self@.len();
+            ensures count == self@.len();
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool)
-            ensures self@.finite(), empty == (self@.len() == 0);
+            ensures empty == (self@.len() == 0);
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn find(&self, value: &T) -> (found: Option<T>)
@@ -104,7 +104,6 @@ pub mod BSTSetTreapMtEph {
         fn minimum(&self) -> (min: Option<T>)
             requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
             ensures
-                self@.finite(),
                 self@.len() == 0 ==> min is None,
                 min matches Some(v) ==> self@.contains(v@);
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n), Span O(lg n)
@@ -112,7 +111,6 @@ pub mod BSTSetTreapMtEph {
         fn maximum(&self) -> (max: Option<T>)
             requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
             ensures
-                self@.finite(),
                 self@.len() == 0 ==> max is None,
                 max matches Some(v) ==> self@.contains(v@);
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n), Span O(lg n)
@@ -122,7 +120,7 @@ pub mod BSTSetTreapMtEph {
                 vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 old(self)@.len() < usize::MAX as nat,
-            ensures self@.finite(), self@ =~= old(self)@.insert(value@);
+            ensures self@ =~= old(self)@.insert(value@);
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn delete(&mut self, target: &T)
@@ -130,7 +128,7 @@ pub mod BSTSetTreapMtEph {
                 vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 old(self)@.len() < usize::MAX as nat,
-            ensures self@.finite(), self@ =~= old(self)@.remove(target@);
+            ensures self@ =~= old(self)@.remove(target@);
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(m · lg(n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)), Span O(lg n)
         fn union(&self, other: &Self) -> (combined: Self)
@@ -138,7 +136,7 @@ pub mod BSTSetTreapMtEph {
                 vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 self@.len() + other@.len() < usize::MAX as nat,
-            ensures combined@.finite(), combined@ == self@.union(other@);
+            ensures combined@ == self@.union(other@);
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(m · lg(n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)), Span O(lg n)
         fn intersection(&self, other: &Self) -> (common: Self)
@@ -146,7 +144,7 @@ pub mod BSTSetTreapMtEph {
                 vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 self@.len() < usize::MAX as nat,
-            ensures common@.finite(), common@ == self@.intersect(other@);
+            ensures common@ == self@.intersect(other@);
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(m · lg(n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)), Span O(lg n)
         fn difference(&self, other: &Self) -> (diff: Self)
@@ -154,15 +152,13 @@ pub mod BSTSetTreapMtEph {
                 vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 self@.len() < usize::MAX as nat,
-            ensures diff@.finite(), diff@ == self@.difference(other@);
+            ensures diff@ == self@.difference(other@);
         /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg |t|), Span O(lg |t|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn split(&self, pivot: &T) -> (parts: (Self, bool, Self))
             requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
             ensures
-                parts.0@.finite(), parts.2@.finite(),
                 parts.1 == self@.contains(pivot@),
-                self@.finite(),
                 parts.0@.disjoint(parts.2@),
                 !parts.0@.contains(pivot@) && !parts.2@.contains(pivot@),
                 parts.0@.union(parts.2@) =~= self@.remove(pivot@),
@@ -177,12 +173,11 @@ pub mod BSTSetTreapMtEph {
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
-                left@.finite(), right@.finite(),
                 left@.disjoint(right@),
                 left@.len() + right@.len() < usize::MAX as nat,
                 forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
                     left@.contains(s@) && right@.contains(o@) ==> s.cmp_spec(&o) == Less,
-            ensures joined@.finite(), joined@ =~= left@.union(right@);
+            ensures joined@ =~= left@.union(right@);
         /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)
@@ -195,7 +190,7 @@ pub mod BSTSetTreapMtEph {
                 left@.len() + right@.len() < usize::MAX as nat,
                 forall|t: T| (#[trigger] left@.contains(t@)) ==> t.cmp_spec(&pivot) == Less,
                 forall|t: T| (#[trigger] right@.contains(t@)) ==> t.cmp_spec(&pivot) == Greater,
-            ensures joined@.finite(), joined@ =~= left@.union(right@).insert(pivot@);
+            ensures joined@ =~= left@.union(right@).insert(pivot@);
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n)
         fn filter<F: Pred<T>>(
@@ -211,7 +206,6 @@ pub mod BSTSetTreapMtEph {
                     predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
                 self@.len() < usize::MAX as nat,
             ensures
-                filtered@.finite(),
                 filtered@.subset_of(self@),
                 forall|v: T::V| #[trigger] filtered@.contains(v)
                     ==> self@.contains(v) && spec_pred(v),
@@ -231,7 +225,7 @@ pub mod BSTSetTreapMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn iter_in_order(&self) -> (ordered: ArraySeqStPerS<T>)
             requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
-            ensures self@.finite(), ordered.spec_len() == self@.len();
+            ensures ordered.spec_len() == self@.len();
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn as_tree(&self) -> (tree: &ParamTreap<T>)
@@ -246,7 +240,6 @@ pub mod BSTSetTreapMtEph {
     fn minimum_inner<T: MtKey + ClonePreservesView>(tree: &ParamTreap<T>) -> (min: Option<T>)
         requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
         ensures
-            tree@.finite(),
             tree@.len() == 0 ==> min is None,
             min matches Some(v) ==> tree@.contains(v@),
     {
@@ -270,7 +263,6 @@ pub mod BSTSetTreapMtEph {
     fn maximum_inner<T: MtKey + ClonePreservesView>(tree: &ParamTreap<T>) -> (max: Option<T>)
         requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
         ensures
-            tree@.finite(),
             tree@.len() == 0 ==> max is None,
             max matches Some(v) ==> tree@.contains(v@),
     {
@@ -288,7 +280,7 @@ pub mod BSTSetTreapMtEph {
 
     impl<T: MtKey + ClonePreservesView> BSTSetTreapMtEphTrait<T> for BSTSetTreapMtEph<T> {
         open spec fn spec_bstsettreapmteph_wf(&self) -> bool {
-            self@.finite()
+            true
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -398,8 +390,6 @@ pub mod BSTSetTreapMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self) {
-            param_treap_assert_finite(&left.tree);
-            param_treap_assert_finite(&right.tree);
             BSTSetTreapMtEph {
                 tree: ParamTreap::join_mid(Exposed::Node(left.tree, pivot, right.tree)),
             }

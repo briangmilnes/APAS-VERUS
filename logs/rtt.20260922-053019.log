@@ -1,0 +1,214 @@
+r212 RTT for Chap39: cargo test --release on 4 targets: TestBSTParaTreapMtEph TestBSTSetTreapMtEph TestBSTTreapMtEph TestBSTTreapStEph
+Starting RTT at 05:30:19
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 5.65s
+     Running tests/Chap39/TestBSTParaTreapMtEph.rs (target/release/deps/TestBSTParaTreapMtEph-29d69846be4d2dc0)
+
+running 30 tests
+test test_delete ... ok
+test test_delete_nonexistent ... ok
+test test_duplicate_insert ... ok
+test test_expose ... ok
+test test_filter_all ... ok
+test test_filter_none ... ok
+test test_find ... ok
+test test_insert ... ok
+test test_filter ... ok
+test test_difference_complete ... ok
+test test_into_iter_collects_all_elements ... ok
+test test_into_iter_for_loop ... ok
+test test_difference ... ok
+test test_into_iter_empty ... ok
+test test_join_mid ... ok
+test test_join_pair ... ok
+test test_new ... ok
+test test_intersect_empty ... ok
+test test_paramtreaplit_macro_functionality ... ok
+test test_intersect ... ok
+test test_reduce_empty ... ok
+test test_sequential_operations ... ok
+test test_split_boundaries ... ok
+test test_split ... ok
+test test_split_empty ... ok
+test test_string_keys ... ok
+test test_reduce ... ok
+test test_union ... ok
+test test_union_disjoint ... ok
+test test_large_tree ... ok
+
+test result: ok. 30 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap39/TestBSTSetTreapMtEph.rs (target/release/deps/TestBSTSetTreapMtEph-d32b130f5e933d95)
+
+running 45 tests
+test test_as_tree ... ok
+test test_delete ... ok
+test test_bstsettreapmtephlit_macro_functionality ... ok
+test test_duplicate_insert ... ok
+test test_empty ... ok
+test test_delete_multiple ... ok
+test test_insert_and_contains ... ok
+test test_filter ... ok
+test test_into_iter_collects_all_elements ... ok
+test test_minimum_maximum ... ok
+test test_join_m ... ok
+test test_into_iter_empty ... ok
+test test_negative_numbers ... ok
+test test_trait_impl_as_tree ... ok
+test test_intersection_disjoint ... ok
+test test_trait_impl_contains ... ok
+test test_trait_impl_delete ... ok
+test test_trait_impl_empty ... ok
+test test_trait_impl_filter ... ok
+test test_trait_impl_find ... ok
+test test_trait_impl_insert ... ok
+test test_trait_impl_difference ... ok
+test test_intersection ... ok
+test test_reduce ... ok
+test test_join_pair ... ok
+test test_trait_impl_intersection ... ok
+test test_into_iter_for_loop ... ok
+test test_trait_impl_join_pair ... ok
+test test_trait_impl_maximum ... ok
+test test_trait_impl_minimum ... ok
+test test_trait_impl_iter_in_order ... ok
+test test_trait_impl_singleton ... ok
+test test_singleton ... ok
+test test_trait_impl_split ... ok
+test test_join_m_with_empty ... ok
+test test_split ... ok
+test test_trait_impl_union ... ok
+test test_union_empty ... ok
+test test_trait_impl_reduce ... ok
+test test_trait_impl_join_m ... ok
+test test_iter_in_order ... ok
+test test_union ... ok
+test test_difference ... ok
+test test_balanced_after_inserts ... ok
+test test_large_set ... ok
+
+test result: ok. 45 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap39/TestBSTTreapMtEph.rs (target/release/deps/TestBSTTreapMtEph-9da68cbfd4df3d2e)
+
+running 40 tests
+test test_clone_independent_copy ... ok
+test test_contains ... ok
+test test_contains_step_pattern ... ok
+test test_delete_all ... ok
+test test_default ... ok
+test test_delete_root ... ok
+test test_debug_format ... ok
+test test_delete_then_reinsert ... ok
+test test_delete_leaf ... ok
+test test_delete_from_empty ... ok
+test test_delete_basic ... ok
+test test_delete_nonexistent ... ok
+test test_empty_operations ... ok
+test test_concurrent_readers ... ok
+test test_height ... ok
+test test_extremes ... ok
+test test_height_balanced ... ok
+test test_in_order ... ok
+test test_insert_and_size ... ok
+test test_duplicate_insert ... ok
+test test_into_iter_collects_all_elements ... ok
+test test_into_iter_empty ... ok
+test test_into_iter_for_loop ... ok
+test test_is_empty ... ok
+test test_find ... ok
+test test_large_tree ... ok
+test test_macro_empty ... ok
+test test_macro_with_elements ... ok
+test test_maximum ... ok
+test test_minimum ... ok
+test test_mixed_positive_negative ... ok
+test test_negative_numbers ... ok
+test test_new_empty ... ok
+test test_pre_order ... ok
+test test_reverse_order_insert ... ok
+test test_single_element ... ok
+test test_singleton_traversal ... ok
+test test_string_keys ... ok
+test test_traversal_empty ... ok
+test test_concurrent_readers_after_build ... ok
+
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap39/TestBSTTreapStEph.rs (target/release/deps/TestBSTTreapStEph-46a2aba75ff1b36f)
+
+running 33 tests
+test test_bsttreapstephlit_macro_functionality ... ok
+test test_contains ... ok
+test test_delete_requires_left_recursion_after_rotation ... ok
+test test_contains_after_many_inserts ... ok
+test test_duplicate_insert ... ok
+test test_empty ... ok
+test test_empty_operations ... ok
+test test_extremes ... ok
+test test_find ... ok
+test test_find_missing ... ok
+test test_height ... ok
+test test_height_balanced ... ok
+test test_in_order ... ok
+test test_in_order_traversal ... ok
+test test_insert_and_size ... ok
+test test_into_iter_collects_all_elements ... ok
+test test_into_iter_empty ... ok
+test test_into_iter_for_loop ... ok
+test test_is_empty ... ok
+test test_large_tree ... ok
+test test_minimum_maximum ... ok
+test test_mixed_positive_negative ... ok
+test test_negative_numbers ... ok
+test test_pre_order ... ok
+test test_pre_order_traversal ... ok
+test test_random_order_inserts ... ok
+test test_reverse_order_insert ... ok
+test test_sequential_inserts ... ok
+test test_single_element ... ok
+test test_singleton_traversal ... ok
+test test_string_treap ... ok
+test test_traversal_empty_tree ... ok
+test test_zero_value ... ok
+
+test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 5s
