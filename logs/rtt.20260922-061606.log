@@ -1,0 +1,294 @@
+r212 RTT for Chap45: cargo test --release on 7 targets: TestBalancedTreePQ TestBinaryHeapPQ TestExample45_2 TestHeapsortExample TestLeftistHeapPQ TestSortedListPQ TestUnsortedListPQ
+Starting RTT at 06:16:06
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 5.61s
+     Running tests/Chap45/TestBalancedTreePQ.rs (target/release/deps/TestBalancedTreePQ-dd25ef4e1db861c7)
+
+running 43 tests
+test test_balancedtreepqlit_macro_functionality ... ok
+test test_contains ... ok
+test test_default ... ok
+test test_contains_empty ... ok
+test test_delete_max ... ok
+test test_delete_max_empty ... ok
+test test_delete_min ... ok
+test test_delete_min_empty ... ok
+test test_display ... ok
+test test_duplicate_elements ... ok
+test test_empty_priority_queue ... ok
+test test_extract_all_sorted ... ok
+test test_filter ... ok
+test test_filter_empty_result ... ok
+test test_find_max ... ok
+test test_from_seq ... ok
+test test_from_vec ... ok
+test test_insert_all ... ok
+test test_height ... ok
+test test_insert_and_find_min ... ok
+test test_is_sorted ... ok
+test test_is_sorted_empty ... ok
+test test_join ... ok
+test test_map ... ok
+test test_map_to_string ... ok
+test test_meld_multiple ... ok
+test test_meld_two_priority_queues ... ok
+test test_meld_with_empty ... ok
+test test_persistent_semantics ... ok
+test test_priority_queue_ordering ... ok
+test test_range ... ok
+test test_range_empty_result ... ok
+test test_remove ... ok
+test test_remove_not_found ... ok
+test test_sequential_delete_min_all ... ok
+test test_singleton_priority_queue ... ok
+test test_split ... ok
+test test_split_not_found ... ok
+test test_string_priority_queue ... ok
+test test_to_seq ... ok
+test test_to_sorted_vec ... ok
+test test_to_vec ... ok
+test test_large_priority_queue ... ok
+
+test result: ok. 43 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap45/TestBinaryHeapPQ.rs (target/release/deps/TestBinaryHeapPQ-37d79c1786e13d99)
+
+running 33 tests
+test test_ascending_insertion ... ok
+test test_binaryheappqlit_macro_functionality ... ok
+test test_default ... ok
+test test_delete_min_empty ... ok
+test test_delete_min ... ok
+test test_descending_insertion ... ok
+test test_display ... ok
+test test_duplicate_elements ... ok
+test test_empty ... ok
+test test_extract_all_sorted ... ok
+test test_find_min ... ok
+test test_from_seq ... ok
+test test_from_vec ... ok
+test test_heap_property_after_operations ... ok
+test test_heapsort_via_extract ... ok
+test test_height ... ok
+test test_insert_all ... ok
+test test_insert_maintains_heap_property ... ok
+test test_is_valid_heap ... ok
+test test_level_elements ... ok
+test test_macro_type_check ... ok
+test test_meld ... ok
+test test_meld_multiple ... ok
+test test_meld_with_empty ... ok
+test test_large_heap ... ok
+test test_persistent_semantics ... ok
+test test_sequential_delete_all ... ok
+test test_single_element_operations ... ok
+test test_singleton ... ok
+test test_string_heap ... ok
+test test_to_seq ... ok
+test test_to_sorted_vec ... ok
+test test_to_vec ... ok
+
+test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap45/TestExample45_2.rs (target/release/deps/TestExample45_2-49bdece2f1320e12)
+
+running 8 tests
+test test_already_sorted ... ok
+test test_duplicates ... ok
+test test_efficiency_demonstration ... ok
+test test_empty ... ok
+test test_single_element ... ok
+test test_textbook_example ... ok
+test test_reverse_sorted ... ok
+test test_run_example_45_2 ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap45/TestHeapsortExample.rs (target/release/deps/TestHeapsortExample-fc0afe2f3afdb9ff)
+
+running 25 tests
+test test_already_sorted_example ... ok
+test test_complexity_analysis ... ok
+test test_compare_all_heapsorts ... ok
+test test_efficiency_demonstration ... ok
+test test_duplicates_example ... ok
+test test_empty_example ... ok
+test test_generate_test_sequences ... ok
+test test_heapsort_already_sorted ... ok
+test test_heapsort_balanced_tree_basic ... ok
+test test_heapsort_binary_heap_basic ... ok
+test test_correctness_verification ... ok
+test test_heapsort_duplicates ... ok
+test test_heapsort_empty ... ok
+test test_heapsort_leftist_heap_basic ... ok
+test test_heapsort_reverse_sorted ... ok
+test test_heapsort_single_element ... ok
+test test_heapsort_sorted_list_basic ... ok
+test test_heapsort_unsorted_list_basic ... ok
+test test_is_sorted_utility ... ok
+test test_large_example ... ok
+test test_single_element_example ... ok
+test test_reverse_sorted_example ... ok
+test test_vec_to_array_seq ... ok
+test test_textbook_example ... ok
+test test_vec_to_avl_seq ... ok
+
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap45/TestLeftistHeapPQ.rs (target/release/deps/TestLeftistHeapPQ-a40da6ed3ec8b230)
+
+running 34 tests
+test test_ascending_insertion ... ok
+test test_default ... ok
+test test_delete_min ... ok
+test test_delete_min_empty ... ok
+test test_descending_insertion ... ok
+test test_display ... ok
+test test_duplicate_elements ... ok
+test test_empty ... ok
+test test_efficient_multi_way_merge ... ok
+test test_extract_all_sorted ... ok
+test test_find_min ... ok
+test test_from_seq ... ok
+test test_from_vec ... ok
+test test_height ... ok
+test test_insert ... ok
+test test_is_valid_leftist_heap ... ok
+test test_leftist_property_after_meld ... ok
+test test_leftistheappqlit_macro_functionality ... ok
+test test_meld_efficiency ... ok
+test test_meld ... ok
+test test_meld_multiple_empty ... ok
+test test_meld_multiple ... ok
+test test_meld_with_empty ... ok
+test test_parallel_heap_construction ... ok
+test test_persistent_semantics ... ok
+test test_root_rank ... ok
+test test_sequential_delete_all ... ok
+test test_single_element_operations ... ok
+test test_singleton ... ok
+test test_split ... ok
+test test_string_heap ... ok
+test test_to_sorted_vec ... ok
+test test_to_vec ... ok
+test test_large_heap ... ok
+
+test result: ok. 34 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap45/TestSortedListPQ.rs (target/release/deps/TestSortedListPQ-26103f6288453d44)
+
+running 38 tests
+test test_debug_trait ... ok
+test test_default_trait ... ok
+test test_delete_max ... ok
+test test_delete_min_from_empty ... ok
+test test_delete_min ... ok
+test test_delete_min_from_singleton ... ok
+test test_display_trait ... ok
+test test_duplicate_elements ... ok
+test test_empty_priority_queue ... ok
+test test_equality ... ok
+test test_extract_all_sorted ... ok
+test test_find_max ... ok
+test test_from_empty_seq ... ok
+test test_from_seq ... ok
+test test_from_seq_with_duplicates ... ok
+test test_from_vec ... ok
+test test_insert_all ... ok
+test test_insert_and_find_min ... ok
+test test_insert_maintains_order ... ok
+test test_is_sorted ... ok
+test test_large_sequence ... ok
+test test_macro_with_values ... ok
+test test_meld_large_queues ... ok
+test test_meld_priority_queues ... ok
+test test_meld_same_elements ... ok
+test test_meld_with_empty ... ok
+test test_mixed_positive_negative ... ok
+test test_multiple_inserts_and_deletes ... ok
+test test_negative_numbers ... ok
+test test_persistent_nature ... ok
+test test_singleton_priority_queue ... ok
+test test_sortedlistpqlit_macro_functionality ... ok
+test test_string_elements ... ok
+test test_to_seq_conversion ... ok
+test test_to_seq_empty ... ok
+test test_to_sorted_vec ... ok
+test test_to_vec ... ok
+test test_zero_value ... ok
+
+test result: ok. 38 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap45/TestUnsortedListPQ.rs (target/release/deps/TestUnsortedListPQ-6b4006afeadd8181)
+
+running 29 tests
+test test_delete_min_sequence ... ok
+test test_complexity_characteristics ... ok
+test test_display_formatting ... ok
+test test_edge_cases ... ok
+test test_duplicate_elements ... ok
+test test_empty_constructor ... ok
+test test_empty_priority_queue ... ok
+test test_from_seq ... ok
+test test_from_vec_convenience ... ok
+test test_insert_after_delete ... ok
+test test_insert_all ... ok
+test test_insert_and_find_min ... ok
+test test_macro_creation ... ok
+test test_meld_multiple ... ok
+test test_meld_operation ... ok
+test test_meld_with_empty ... ok
+test test_mixed_positive_negative ... ok
+test test_negative_numbers ... ok
+test test_persistent_behavior ... ok
+test test_roundtrip_vec ... ok
+test test_singleton_constructor ... ok
+test test_singleton_priority_queue ... ok
+test test_string_elements ... ok
+test test_to_seq ... ok
+test test_to_seq_empty ... ok
+test test_to_vec ... ok
+test test_to_vec_empty ... ok
+test test_unsortedlistpqlit_macro_functionality ... ok
+test test_large_dataset ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 5s

@@ -47,6 +47,7 @@ file, or listed at the end.
 | 23 | 42 | 2312 | 0 | 0 | 66 pass | 10 pass | r213 Chap42 |
 | 24 | 43 | 2686 | 0 | 0 | 279 pass | 14 pass | r213 Chap43 |
 | 25 | 44 | 2336 | 0 | 0 | 45 pass | none | r213 Chap44 |
+| 26 | 45 | 2034 | 0 | 0 | 210 pass | none | r213 Chap45 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -497,4 +498,11 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
 - End: 2336 verified, 0 errors, 0 warnings, 0 trigger notes
   (`logs/validate.20260922-061449.log`).
 - RTT: 2 targets, 45 tests pass (`logs/rtt.20260922-061517.log`).
+- PTT: none registered.
+
+### Chap45
+
+- Start and end: 2034 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-061545.log`). No edit.
+- RTT: 7 targets, 210 tests pass (`logs/rtt.20260922-061606.log`).
 - PTT: none registered.
