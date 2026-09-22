@@ -36,6 +36,7 @@ file, or listed at the end.
 | 12 | 26 | 1098 | 0 | 0 | 59 pass | none | r213 Chap26 |
 | 13 | 27 | 846 | 0 | 0 | 48 pass | none | r213 Chap27 |
 | 14 | 28 | 883 | 0 | 0 | 68 pass | none | r213 Chap28 |
+| 15 | 30 | 626 | 0 | 0 | none | none | r213 Chap30 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -198,4 +199,16 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
 - First run on 09.13: 883 verified, 0 errors, 0 warnings, 0 trigger notes
   (`logs/validate.20260922-051419.log`). No edit.
 - RTT: 10 targets, 68 tests pass (`logs/rtt.20260922-051427.log`).
+- PTT: none registered.
+
+### Chap30
+
+- First run on 09.13: 626 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-051446.log`). No edit.
+- RTT: none registered. Because `scratch/r212-rtt.sh` with no target runs the
+  whole suite, that run (`logs/rtt.20260922-051451.log`) is a full-suite
+  measurement at this point: 265 targets, 4199 tests pass; the 12 failures
+  are the pre-existing doc-test blocks of
+  `src/standards/partial_eq_eq_clone_standard.rs` and `spec_wf_standard.rs`
+  (Verus text compiled by rustdoc), as in r211 and r212.
 - PTT: none registered.
