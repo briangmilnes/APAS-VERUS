@@ -33,6 +33,8 @@ pub mod BSTAVLMtEph {
     use core::marker::PhantomData;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     use vstd::rwlock::{ReadHandle, RwLock, RwLockPredicate, WriteHandle};
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
@@ -794,9 +796,11 @@ pub mod BSTAVLMtEph {
             requires self.spec_bstavlmteph_wf(), obeys_feq_clone::<T>(),
             ensures true;
         /// - Alg Analysis: Code review (Claude Sonnet 4.6): Work O(n), Span O(n) — snapshot iteration.
-        fn iter(&self) -> (it: BSTAVLMtEphIter<T>) where T: Clone + Eq
+        fn iter(&self) -> (it: std::vec::IntoIter<T>) where T: Clone + Eq
             requires self.spec_bstavlmteph_wf(), obeys_feq_clone::<T>()
-            ensures it@.0 == 0, iter_invariant_bstavlmteph(&it);
+            ensures
+                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
+                IteratorSpec::decrease(&it) is Some;
     }
 
     //		Section 9b. impls
@@ -955,118 +959,19 @@ pub mod BSTAVLMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Sonnet 4.6): Work O(n), Span O(n) — snapshot iteration.
-        fn iter(&self) -> BSTAVLMtEphIter<T> where T: Clone + Eq {
+        fn iter(&self) -> std::vec::IntoIter<T> where T: Clone + Eq {
             let seq = self.in_order();
-            BSTAVLMtEphIter { snapshot: seq.seq, pos: 0 }
+            seq.seq.into_iter()
         }
     }
 
     //		Section 10b. iterators — BSTAVLMtEph
 
-    /// Snapshot iterator over BSTAVLMtEph elements in ascending key order.
-    #[verifier::reject_recursive_types(T)]
-    pub struct BSTAVLMtEphIter<T: TotalOrder + Clone> {
-        pub snapshot: Vec<T>,
-        pub pos: usize,
-    }
-
-    impl<T: TotalOrder + Clone> View for BSTAVLMtEphIter<T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) {
-            (self.pos as int, self.snapshot@)
-        }
-    }
-
-    pub open spec fn iter_invariant_bstavlmteph<T: TotalOrder + Clone>(it: &BSTAVLMtEphIter<T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<T: TotalOrder + Clone> std::iter::Iterator for BSTAVLMtEphIter<T> {
-        type Item = T;
-        fn next(&mut self) -> (next: Option<T>)
-            ensures
-                ({
-                    let (old_index, old_seq) = old(self)@;
-                    match next {
-                        None => {
-                            &&& self@ == old(self)@
-                            &&& old_index >= old_seq.len()
-                        },
-                        Some(element) => {
-                            let (new_index, new_seq) = self@;
-                            &&& 0 <= old_index < old_seq.len()
-                            &&& new_seq == old_seq
-                            &&& new_index == old_index + 1
-                            &&& element == old_seq[old_index]
-                        },
-                    }
-                }),
-        {
-            if self.pos >= self.snapshot.len() {
-                None
-            } else {
-                let item = self.snapshot[self.pos].clone();
-                self.pos = self.pos + 1;
-                proof { accept(item == old(self)@.1[old(self)@.0]); }
-                Some(item)
-            }
-        }
-    }
-
-    /// Ghost iterator for for-loop support over BSTAVLMtEphIter.
-    #[verifier::reject_recursive_types(T)]
-    pub struct BSTAVLMtEphGhostIterator<T: TotalOrder + Clone> {
-        pub pos: int,
-        pub elements: Seq<T>,
-    }
-
-    impl<T: TotalOrder + Clone> View for BSTAVLMtEphGhostIterator<T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    impl<T: TotalOrder + Clone> vstd::pervasive::ForLoopGhostIteratorNew for BSTAVLMtEphIter<T> {
-        type GhostIter = BSTAVLMtEphGhostIterator<T>;
-        open spec fn ghost_iter(&self) -> BSTAVLMtEphGhostIterator<T> {
-            BSTAVLMtEphGhostIterator { pos: self@.0, elements: self@.1 }
-        }
-    }
-
-    impl<T: TotalOrder + Clone> vstd::pervasive::ForLoopGhostIterator for BSTAVLMtEphGhostIterator<T> {
-        type ExecIter = BSTAVLMtEphIter<T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &BSTAVLMtEphIter<T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &BSTAVLMtEphIter<T>) -> BSTAVLMtEphGhostIterator<T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
+    // r212 form C: this `IntoIterator` impl required `requires self.spec_bstavlmteph_wf(), obeys_feq_clone::<T>()`, which
+    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
+    // can establish; use `iter()`, which keeps the requires
+    // (src/experiments/intoiter_form_c_no_impl.rs).
+    /*
     impl<'a, T: TotalOrder + Clone + Eq> std::iter::IntoIterator for &'a BSTAVLMtEph<T> {
         type Item = T;
         type IntoIter = BSTAVLMtEphIter<T>;
@@ -1077,6 +982,7 @@ pub mod BSTAVLMtEph {
             self.iter()
         }
     }
+    */
 
     //		Section 11a. top level coarse locking
 

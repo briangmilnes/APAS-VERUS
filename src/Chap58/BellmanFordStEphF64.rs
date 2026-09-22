@@ -23,6 +23,8 @@ pub mod BellmanFordStEphF64 {
     //		Section 2. imports
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
@@ -129,8 +131,9 @@ pub mod BellmanFordStEphF64 {
                         sssp.spec_predecessors().len() == n as int,
                         sssp.spec_source() == source,
                         sssp.spec_distances() == original_distances,
-                        it@.0 <= it@.1.len(),
-                    decreases it@.1.len() - it@.0,
+                        IteratorSpec::obeys_prophetic_iter_laws(&it),
+                        IteratorSpec::decrease(&it) is Some,
+                    decreases IteratorSpec::decrease(&it)->0,
                 {
                     match it.next() {
                         None => break,
@@ -223,8 +226,9 @@ pub mod BellmanFordStEphF64 {
                 loop
                     invariant
                         distances@.len() == n as int,
-                        it@.0 <= it@.1.len(),
-                    decreases it@.1.len() - it@.0,
+                        IteratorSpec::obeys_prophetic_iter_laws(&it),
+                        IteratorSpec::decrease(&it) is Some,
+                    decreases IteratorSpec::decrease(&it)->0,
                 {
                     match it.next() {
                         None => break,

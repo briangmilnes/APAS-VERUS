@@ -28,6 +28,8 @@ pub mod JohnsonStEphF64 {
     //		Section 2. imports
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
@@ -192,11 +194,12 @@ pub mod JohnsonStEphF64 {
                     valid_key_type_WeightedEdge::<usize, WrappedF64>(),
                     u < n,
                     forall|v: usize| graph@.V.contains(v) <==> v < n,
-                    it@.0 <= it@.1.len(),
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
                     forall|a: usize, b: usize, w: f64|
                         #[trigger] edges@.contains((a, b, w)) ==>
                         vertices@.contains(a) && vertices@.contains(b),
-                decreases it@.1.len() - it@.0,
+                decreases IteratorSpec::decrease(&it)->0,
             {
                 match it.next() {
                     None => break,
@@ -269,7 +272,10 @@ pub mod JohnsonStEphF64 {
         // Iterate over all arcs directly.
         let arcs = graph.labeled_arcs();
         let mut it = arcs.iter();
-        let ghost arcs_seq = it@.1;
+        // r212: the prophetic model keeps the consumed count in a ghost `pos`
+        // and the creation-time contents in `arcs_seq` (docs/IteratorMigrationStudy.md §6).
+        let ghost arcs_seq = vstd::std_specs::hash::into_iter_hash_keys(it);
+        let ghost mut pos: int = 0;
 
         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         loop
@@ -284,19 +290,24 @@ pub mod JohnsonStEphF64 {
                 forall|v: usize| graph@.V.contains(v) <==> v < n,
                 n > 0,
                 n < usize::MAX,
-                it@.0 <= it@.1.len(),
-                it@.1 == arcs_seq,
+                IteratorSpec::obeys_prophetic_iter_laws(&it),
+                IteratorSpec::decrease(&it) is Some,
+                0 <= pos <= arcs_seq.len(),
+                IteratorSpec::remaining(&it).len() == arcs_seq.len() - pos,
+                forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                    ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == arcs_seq[pos + i],
                 arcs_seq.map(|i: int, k: LabEdge<usize, WrappedF64>| k@).to_set() =~= graph@.A,
                 arcs_seq.no_duplicates(),
-                edges@.len() <= it@.0,
+                edges@.len() <= pos,
                 forall|a: usize, b: usize, w: f64|
                     #[trigger] edges@.contains((a, b, w)) ==>
                     vertices@.contains(a) && vertices@.contains(b),
-            decreases arcs_seq.len() - it@.0,
+            decreases IteratorSpec::decrease(&it)->0,
         {
             match it.next() {
                 None => break,
                 Some(arc) => {
+                    proof { pos = pos + 1; }
                     let from = arc.0;
                     let to = arc.1;
                     let weight = arc.2;

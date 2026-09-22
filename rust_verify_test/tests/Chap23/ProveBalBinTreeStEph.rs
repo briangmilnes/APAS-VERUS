@@ -17,6 +17,7 @@ use common::*;
 test_verify_one_file! {
     #[test] balbintree_loop_inorder verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
         use apas_verus::vstdplus::feq::feq::*;
 
@@ -29,30 +30,39 @@ test_verify_one_file! {
                 BalBinTree::node(BalBinTree::leaf(), 3, BalBinTree::leaf()),
             );
 
-            let mut it: InOrderIter<u64> = tree.iter_in_order();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            #[verifier::loop_isolation(false)]
+            let ghost orig: Seq<u64> = tree.spec_in_order();
+            let mut collected: Vec<u64> = Vec::new();
+            let mut it: std::vec::IntoIter<u64> = tree.iter_in_order();
+            let ghost mut pos: int = 0;
             loop
                 invariant
-                    items =~= iter_seq.take(it@.0),
-                    in_order_iter_invariant(&it),
-                    iter_seq == it@.1,
-                    it@.0 <= iter_seq.len(),
-                decreases iter_seq.len() - it@.0,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= orig.len(),
+                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> #[trigger] IteratorSpec::remaining(&it)[i] == orig[pos + i],
+                    collected.len() == pos,
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == orig[i],
+                decreases IteratorSpec::decrease(&it)->0,
             {
-                if let Some(x) = it.next() {
-                    proof {
-                        items = items.push(x);
-                    }
-                } else {
-                    break;
+                let ghost old_pos = pos;
+                match it.next() {
+                    Some(x) => {
+                        proof {
+                            pos = pos + 1;
+                            assert(orig[old_pos] == x);
+                        }
+                        collected.push(x);
+                    },
+                    None => {
+                        assert(pos == orig.len());
+                        assert(collected@ =~= orig);
+                        break;
+                    },
                 }
             }
-
-            assert(it@.0 == iter_seq.len());
-            assert(items =~= iter_seq);
         }
     } => Ok(())
 }
@@ -61,6 +71,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] balbintree_loop_preorder verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
         use apas_verus::vstdplus::feq::feq::*;
 
@@ -73,30 +84,39 @@ test_verify_one_file! {
                 BalBinTree::node(BalBinTree::leaf(), 3, BalBinTree::leaf()),
             );
 
-            let mut it: PreOrderIter<u64> = tree.iter_pre_order();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            #[verifier::loop_isolation(false)]
+            let ghost orig: Seq<u64> = tree.spec_pre_order();
+            let mut collected: Vec<u64> = Vec::new();
+            let mut it: std::vec::IntoIter<u64> = tree.iter_pre_order();
+            let ghost mut pos: int = 0;
             loop
                 invariant
-                    items =~= iter_seq.take(it@.0),
-                    pre_order_iter_invariant(&it),
-                    iter_seq == it@.1,
-                    it@.0 <= iter_seq.len(),
-                decreases iter_seq.len() - it@.0,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= orig.len(),
+                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> #[trigger] IteratorSpec::remaining(&it)[i] == orig[pos + i],
+                    collected.len() == pos,
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == orig[i],
+                decreases IteratorSpec::decrease(&it)->0,
             {
-                if let Some(x) = it.next() {
-                    proof {
-                        items = items.push(x);
-                    }
-                } else {
-                    break;
+                let ghost old_pos = pos;
+                match it.next() {
+                    Some(x) => {
+                        proof {
+                            pos = pos + 1;
+                            assert(orig[old_pos] == x);
+                        }
+                        collected.push(x);
+                    },
+                    None => {
+                        assert(pos == orig.len());
+                        assert(collected@ =~= orig);
+                        break;
+                    },
                 }
             }
-
-            assert(it@.0 == iter_seq.len());
-            assert(items =~= iter_seq);
         }
     } => Ok(())
 }
@@ -105,6 +125,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] balbintree_for_inorder verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
         use apas_verus::vstdplus::feq::feq::*;
 
@@ -117,22 +138,18 @@ test_verify_one_file! {
                 BalBinTree::node(BalBinTree::leaf(), 3, BalBinTree::leaf()),
             );
 
-            let it: InOrderIter<u64> = tree.iter_in_order();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            for x in iter: it
+            let ghost orig: Seq<u64> = tree.spec_in_order();
+            let mut collected: Vec<u64> = Vec::new();
+            for x in it: tree.iter_in_order()
                 invariant
-                    iter.elements == iter_seq,
-                    items =~= iter_seq.take(iter.pos),
-                    iter.pos <= iter_seq.len(),
+                    it.seq() == orig,
+                    collected.len() == it.index(),
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == it.seq()[i],
             {
-                proof {
-                    items = items.push(x);
-                }
+                collected.push(x);
             }
-
-            assert(items =~= iter_seq);
+            assert(collected@ =~= orig);
         }
     } => Ok(())
 }
@@ -141,6 +158,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] balbintree_for_preorder verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
         use apas_verus::vstdplus::feq::feq::*;
 
@@ -153,22 +171,18 @@ test_verify_one_file! {
                 BalBinTree::node(BalBinTree::leaf(), 3, BalBinTree::leaf()),
             );
 
-            let it: PreOrderIter<u64> = tree.iter_pre_order();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            for x in iter: it
+            let ghost orig: Seq<u64> = tree.spec_pre_order();
+            let mut collected: Vec<u64> = Vec::new();
+            for x in it: tree.iter_pre_order()
                 invariant
-                    iter.elements == iter_seq,
-                    items =~= iter_seq.take(iter.pos),
-                    iter.pos <= iter_seq.len(),
+                    it.seq() == orig,
+                    collected.len() == it.index(),
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == it.seq()[i],
             {
-                proof {
-                    items = items.push(x);
-                }
+                collected.push(x);
             }
-
-            assert(items =~= iter_seq);
+            assert(collected@ =~= orig);
         }
     } => Ok(())
 }
@@ -177,6 +191,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] balbintree_loop_postorder verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
         use apas_verus::vstdplus::feq::feq::*;
 
@@ -189,30 +204,39 @@ test_verify_one_file! {
                 BalBinTree::node(BalBinTree::leaf(), 3, BalBinTree::leaf()),
             );
 
-            let mut it: PostOrderIter<u64> = tree.iter_post_order();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            #[verifier::loop_isolation(false)]
+            let ghost orig: Seq<u64> = tree.spec_post_order();
+            let mut collected: Vec<u64> = Vec::new();
+            let mut it: std::vec::IntoIter<u64> = tree.iter_post_order();
+            let ghost mut pos: int = 0;
             loop
                 invariant
-                    items =~= iter_seq.take(it@.0),
-                    post_order_iter_invariant(&it),
-                    iter_seq == it@.1,
-                    it@.0 <= iter_seq.len(),
-                decreases iter_seq.len() - it@.0,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= orig.len(),
+                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> #[trigger] IteratorSpec::remaining(&it)[i] == orig[pos + i],
+                    collected.len() == pos,
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == orig[i],
+                decreases IteratorSpec::decrease(&it)->0,
             {
-                if let Some(x) = it.next() {
-                    proof {
-                        items = items.push(x);
-                    }
-                } else {
-                    break;
+                let ghost old_pos = pos;
+                match it.next() {
+                    Some(x) => {
+                        proof {
+                            pos = pos + 1;
+                            assert(orig[old_pos] == x);
+                        }
+                        collected.push(x);
+                    },
+                    None => {
+                        assert(pos == orig.len());
+                        assert(collected@ =~= orig);
+                        break;
+                    },
                 }
             }
-
-            assert(it@.0 == iter_seq.len());
-            assert(items =~= iter_seq);
         }
     } => Ok(())
 }
@@ -221,6 +245,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] balbintree_for_postorder verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
         use apas_verus::vstdplus::feq::feq::*;
 
@@ -233,22 +258,18 @@ test_verify_one_file! {
                 BalBinTree::node(BalBinTree::leaf(), 3, BalBinTree::leaf()),
             );
 
-            let it: PostOrderIter<u64> = tree.iter_post_order();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            for x in iter: it
+            let ghost orig: Seq<u64> = tree.spec_post_order();
+            let mut collected: Vec<u64> = Vec::new();
+            for x in it: tree.iter_post_order()
                 invariant
-                    iter.elements == iter_seq,
-                    items =~= iter_seq.take(iter.pos),
-                    iter.pos <= iter_seq.len(),
+                    it.seq() == orig,
+                    collected.len() == it.index(),
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == it.seq()[i],
             {
-                proof {
-                    items = items.push(x);
-                }
+                collected.push(x);
             }
-
-            assert(items =~= iter_seq);
+            assert(collected@ =~= orig);
         }
     } => Ok(())
 }

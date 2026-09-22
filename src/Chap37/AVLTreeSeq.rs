@@ -35,6 +35,8 @@ pub mod AVLTreeSeq {
     use std::fmt::{Debug, Display, Formatter};
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
@@ -434,7 +436,8 @@ pub mod AVLTreeSeq {
             ensures
                 it@.0 == 0int,
                 it@.1.map_values(|t: T| t@) =~= self.spec_avltreeseq_seq(),
-                iter_invariant(&it);
+                IteratorSpec::remaining(&it) == it@.1.as_ref(),
+                IteratorSpec::decrease(&it) is Some;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn push_back(&mut self, value: T)
@@ -660,6 +663,9 @@ pub mod AVLTreeSeq {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+    // r212: verifies at the default rlimit under isolate Chap37, but exceeds it
+    // when Chap57-59 are also in scope (validate isolate Chap57).
+    #[verifier::rlimit(20)]
     fn insert_at_link(self, index: usize, value: T, next_key: &mut usize) -> (inserted: Self)
         decreases self,
     {
@@ -1026,11 +1032,16 @@ pub mod AVLTreeSeq {
 
         fn iter<'a>(&'a self) -> (it: AVLTreeSeqIter<'a, T>) {
             proof { lemma_inorder_values_maps_to_inorder::<T>(self.root); }
-            AVLTreeSeqIter {
+            let it = AVLTreeSeqIter {
                 tree: self,
                 pos: 0,
                 len: self.length(),
+            };
+            proof {
+                let elts = spec_avltreeseq_inorder_values(self.root);
+                assert(elts.subrange(0, elts.len() as int) =~= elts);
             }
+            it
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
@@ -1193,13 +1204,6 @@ pub mod AVLTreeSeq {
         pub len: usize,
     }
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct AVLTreeSeqGhostIterator<'a, T: StT> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
     impl<'a, T: StT> View for AVLTreeSeqIter<'a, T> {
         type V = (int, Seq<T>);
         open spec fn view(&self) -> (int, Seq<T>) {
@@ -1207,13 +1211,41 @@ pub mod AVLTreeSeq {
         }
     }
 
-    impl<'a, T: StT> View for AVLTreeSeqGhostIterator<'a, T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
+    /// The prophetic specification of the in-order cursor: `remaining` is the
+    /// suffix of the in-order values from `pos`, `peek` reads the same values.
+    #[cfg(verus_keep_ghost)]
+    impl<'a, T: StT> IteratorSpecImpl for AVLTreeSeqIter<'a, T> {
+        open spec fn obeys_prophetic_iter_laws(&self) -> bool {
+            true
+        }
 
-    pub open spec fn iter_invariant<'a, T: StT>(it: &AVLTreeSeqIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
+        closed spec fn remaining(&self) -> Seq<&'a T> {
+            if 0 <= self@.0 <= self@.1.len() {
+                self@.1.subrange(self@.0, self@.1.len() as int).as_ref()
+            } else {
+                Seq::empty()
+            }
+        }
+
+        closed spec fn will_return_none(&self) -> bool {
+            true
+        }
+
+        closed spec fn decrease(&self) -> Option<nat> {
+            if 0 <= self@.0 <= self@.1.len() {
+                Some((self@.1.len() - self@.0) as nat)
+            } else {
+                Some(0)
+            }
+        }
+
+        open spec fn peek(&self, index: int) -> Option<&'a T> {
+            if 0 <= index < self@.1.len() {
+                Some(&self@.1[index])
+            } else {
+                None
+            }
+        }
     }
 
 
@@ -1249,48 +1281,11 @@ pub mod AVLTreeSeq {
         }
     }
 
-    impl<'a, T: StT> vstd::pervasive::ForLoopGhostIteratorNew for AVLTreeSeqIter<'a, T> {
-        type GhostIter = AVLTreeSeqGhostIterator<'a, T>;
-        open spec fn ghost_iter(&self) -> AVLTreeSeqGhostIterator<'a, T> {
-            AVLTreeSeqGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, T: StT> vstd::pervasive::ForLoopGhostIterator for AVLTreeSeqGhostIterator<'a, T> {
-        type ExecIter = AVLTreeSeqIter<'a, T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &AVLTreeSeqIter<'a, T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &AVLTreeSeqIter<'a, T>) -> AVLTreeSeqGhostIterator<'a, T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
+    // r212 form C: this `IntoIterator` impl required `requires self.spec_avltreeseq_wf()`, which
+    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
+    // can establish; use `iter()`, which keeps the requires
+    // (src/experiments/intoiter_form_c_no_impl.rs).
+    /*
     impl<'a, T: StT> std::iter::IntoIterator for &'a AVLTreeS<T> {
         type Item = &'a T;
         type IntoIter = AVLTreeSeqIter<'a, T>;
@@ -1304,6 +1299,7 @@ pub mod AVLTreeSeq {
             self.iter()
         }
     }
+    */
 
     //		Section 12a. derive impls in verus!
 
@@ -1421,18 +1417,6 @@ pub mod AVLTreeSeq {
     impl<'a, T: StT> Display for AVLTreeSeqIter<'a, T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(f, "AVLTreeSeqIter(pos={}, len={})", self.pos, self.len)
-        }
-    }
-
-    impl<'a, T: StT> Debug for AVLTreeSeqGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            f.debug_struct("AVLTreeSeqGhostIterator").finish()
-        }
-    }
-
-    impl<'a, T: StT> Display for AVLTreeSeqGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(f, "AVLTreeSeqGhostIterator")
         }
     }
 

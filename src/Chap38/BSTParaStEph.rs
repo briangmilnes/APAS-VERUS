@@ -42,9 +42,10 @@ pub mod BSTParaStEph {
 
     use std::cmp::Ordering::{Equal, Greater, Less};
     use std::fmt::{Debug, Display, Formatter};
-    use std::vec::IntoIter;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     use vstd::rwlock::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::{OrdSpec, PartialEqSpec, PartialOrdSpec};
@@ -503,7 +504,7 @@ pub mod BSTParaStEph {
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
             ensures
                 seq@.len() == self@.len(),
-                forall|v: T::V| self@.contains(v) <==> seq@.contains(v),
+                forall|v: T::V| self@.contains(v) <==> #[trigger] seq@.contains(v),
                 seq@.no_duplicates();
     }
 
@@ -1533,7 +1534,7 @@ pub mod BSTParaStEph {
                 // Containment: self@.contains(v) <==> seq@.contains(v).
                 // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
-                assert forall|v: T::V| self@.contains(v) implies result@.contains(v) by {
+                assert forall|v: T::V| self@.contains(v) implies #[trigger] result@.contains(v) by {
                     let i = choose|i: int| #![trigger out@[i]] 0 <= i < out@.len() && out@[i]@ == v;
                     // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
@@ -1541,7 +1542,7 @@ pub mod BSTParaStEph {
                 };
                 // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
-                assert forall|v: T::V| result@.contains(v) implies self@.contains(v) by {
+                assert forall|v: T::V| #[trigger] result@.contains(v) implies self@.contains(v) by {
                     let i = choose|i: int| 0 <= i < result@.len() && result@[i] == v;
                     // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
@@ -1566,102 +1567,11 @@ pub mod BSTParaStEph {
 
     //		Section 10d. iterators — ParamBST
 
-    /// Snapshot iterator over ParamBST — collects elements via in_order traversal,
-    /// then yields owned T values from the captured Vec.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ParamBSTIter<T: StT + Ord> {
-        pub inner: IntoIter<T>,
-    }
-
-    impl<T: StT + Ord> View for ParamBSTIter<T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant_parambststeph<T: StT + Ord>(it: &ParamBSTIter<T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<T: StT + Ord> std::iter::Iterator for ParamBSTIter<T> {
-        type Item = T;
-
-        fn next(&mut self) -> (next: Option<T>)
-            ensures
-                ({
-                    let (old_index, old_seq) = old(self)@;
-                    match next {
-                        None => {
-                            &&& self@ == old(self)@
-                            &&& old_index >= old_seq.len()
-                        },
-                        Some(element) => {
-                            let (new_index, new_seq) = self@;
-                            &&& 0 <= old_index < old_seq.len()
-                            &&& new_seq == old_seq
-                            &&& new_index == old_index + 1
-                            &&& element == old_seq[old_index]
-                        },
-                    }
-                }),
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for for-loop support over ParamBSTIter.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ParamBSTGhostIterator<T: StT + Ord> {
-        pub pos: int,
-        pub elements: Seq<T>,
-    }
-
-    impl<T: StT + Ord> View for ParamBSTGhostIterator<T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    impl<T: StT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for ParamBSTIter<T> {
-        type GhostIter = ParamBSTGhostIterator<T>;
-        open spec fn ghost_iter(&self) -> ParamBSTGhostIterator<T> {
-            ParamBSTGhostIterator { pos: self@.0, elements: self@.1 }
-        }
-    }
-
-    impl<T: StT + Ord> vstd::pervasive::ForLoopGhostIterator for ParamBSTGhostIterator<T> {
-        type ExecIter = ParamBSTIter<T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &ParamBSTIter<T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &ParamBSTIter<T>) -> ParamBSTGhostIterator<T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
+    // r212 form C: this `IntoIterator` impl required `requires self.spec_bstparasteph_wf()`, which
+    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
+    // can establish; use `iter()`, which keeps the requires
+    // (src/experiments/intoiter_form_c_no_impl.rs).
+    /*
     impl<'a, T: StT + Ord> std::iter::IntoIterator for &'a ParamBST<T> {
         type Item = T;
         type IntoIter = ParamBSTIter<T>;
@@ -1675,19 +1585,20 @@ pub mod BSTParaStEph {
             self.iter()
         }
     }
+    */
 
     impl<T: StT + Ord> ParamBST<T> {
         /// Returns a snapshot iterator over the BST elements in sorted order.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) - in_order traversal.
-        pub fn iter(&self) -> (it: ParamBSTIter<T>)
+        pub fn iter(&self) -> (it: std::vec::IntoIter<T>)
             requires self.spec_bstparasteph_wf()
             ensures
-                it@.0 == 0,
-                it@.1.len() == self@.len(),
-                iter_invariant_parambststeph(&it),
+                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
+                IteratorSpec::decrease(&it) is Some,
+                vstd::std_specs::vec::into_iter_elts(it).len() == self@.len(),
         {
             let in_ord = self.in_order();
-            ParamBSTIter { inner: in_ord.seq.into_iter() }
+            in_ord.seq.into_iter()
         }
     }
 
@@ -1838,28 +1749,4 @@ pub mod BSTParaStEph {
     }
 
     //		Section 14e. derive impls outside verus!
-
-    impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for ParamBSTIter<T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "ParamBSTIter")
-        }
-    }
-
-    impl<T: StT + Ord + Display> Display for ParamBSTIter<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "ParamBSTIter")
-        }
-    }
-
-    impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for ParamBSTGhostIterator<T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "ParamBSTGhostIterator")
-        }
-    }
-
-    impl<T: StT + Ord + Display> Display for ParamBSTGhostIterator<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "ParamBSTGhostIterator")
-        }
-    }
 }

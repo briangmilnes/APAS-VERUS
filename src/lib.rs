@@ -208,6 +208,9 @@ pub mod experiments {
 //    pub mod vstd_hash_map_derived;                        // SUCCEEDS: r209 every HashMapWithViewPlus postcondition derivable from vstd std_specs/hash.rs
 //    pub mod vstd_hash_set_clone_plus;                     // SUCCEEDS: r209 vstdplus/hash_specs_plus HashSet::clone spec gives t@ == s@ for every key type
 //    pub mod vstd_hash_eq_plus;                            // SUCCEEDS: r209 vstdplus/hash_specs_plus HashSet/HashMap eq specs give r == (a@ == b@)
+//    pub mod intoiter_form_a_type_invariant;               // SUCCEEDS: r212 IntoIterator form A, type_invariant carries the slice bound (8 verified)
+//    pub mod intoiter_form_b_total_body;                   // SUCCEEDS: r212 IntoIterator form B, total body with O(1) bounds check, wf ==> triple (7 verified); chosen
+//    pub mod intoiter_form_c_no_impl;                      // SUCCEEDS: r212 IntoIterator form C, no impl, iter() keeps requires (4 verified)
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "isolate")))]

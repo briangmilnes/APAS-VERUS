@@ -394,7 +394,7 @@ pub mod BSTParaMtEph {
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
             ensures
                 seq@.len() == self@.len(),
-                forall|v: T::V| self@.contains(v) <==> seq@.contains(v),
+                forall|v: T::V| self@.contains(v) <==> #[trigger] seq@.contains(v),
                 seq@.no_duplicates();
     }
 
@@ -759,7 +759,7 @@ pub mod BSTParaMtEph {
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
             ensures
                 seq@.len() == self@.len(),
-                forall|v: T::V| self@.contains(v) <==> seq@.contains(v),
+                forall|v: T::V| self@.contains(v) <==> #[trigger] seq@.contains(v),
                 seq@.no_duplicates(),
                 seq@.to_set() =~= self@,
         {
@@ -771,7 +771,7 @@ pub mod BSTParaMtEph {
             proof {
                 // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
-                assert forall|v: T::V| self@.contains(v) implies result@.contains(v) by {
+                assert forall|v: T::V| self@.contains(v) implies #[trigger] result@.contains(v) by {
                     let i = choose|i: int| #![trigger out@[i]] 0 <= i < out@.len() && out@[i]@ == v;
                     // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
@@ -779,7 +779,7 @@ pub mod BSTParaMtEph {
                 };
                 // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
-                assert forall|v: T::V| result@.contains(v) implies self@.contains(v) by {
+                assert forall|v: T::V| #[trigger] result@.contains(v) implies self@.contains(v) by {
                     let i = choose|i: int| 0 <= i < result@.len() && result@[i] == v;
                     // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
@@ -931,6 +931,9 @@ pub mod BSTParaMtEph {
                             // expose_internal ensures for the right subtree ordering.
                             assert(forall|t: T| #[trigger] right@.contains(t@)
                                 ==> t.cmp_spec(&root_key) == Greater);
+                            // r212: verus 0.2026.09.13 also needs the left ordering stated.
+                            assert(forall|t: T| #[trigger] lr@.contains(t@)
+                                ==> t.cmp_spec(&root_key) == Less);
                         }
                         let rebuilt = ParamBST::<T>::join_mid(Exposed::Node(lr, root_key, right));
                         let ghost llv = ll@;

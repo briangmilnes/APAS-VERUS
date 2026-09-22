@@ -33,6 +33,8 @@ pub mod ArraySeqMtEphSlice {
     use std::sync::Arc;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     pub use crate::Chap19::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::*;
 
     verus!
@@ -441,12 +443,12 @@ pub mod ArraySeqMtEphSlice {
                     updates@,
                     Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)));
 
-        fn iter(&self) -> (it: ArraySeqMtEphSliceIter<'_, T>)
+        fn iter(&self) -> (it: std::slice::Iter<'_, T>)
             requires self.spec_arrayseqmtephslice_wf(),
             ensures
-                it@.0 == 0,
-                it@.1 == self.spec_backing_seq(),
-                iter_invariant(&it);
+                IteratorSpec::remaining(&it) == self.spec_backing_seq().as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self.spec_backing_seq(),
+                IteratorSpec::decrease(&it) is Some;
 
         /// Parallel reduce via D&C on O(1) slices.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C + join, O(1) split.
@@ -822,9 +824,9 @@ pub mod ArraySeqMtEphSlice {
             injected
         }
 
-        fn iter(&self) -> (it: ArraySeqMtEphSliceIter<'_, T>) {
+        fn iter(&self) -> (it: std::slice::Iter<'_, T>) {
             let sl: &[T] = arc_vec_as_slice(&self.data, self.start, self.len);
-            ArraySeqMtEphSliceIter { inner: sl.iter() }
+            sl.iter()
         }
 
         fn reduce<F: MtReduceFn<T>>(
@@ -1577,114 +1579,28 @@ pub mod ArraySeqMtEphSlice {
 
     //		Section 10. iterators
 
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct ArraySeqMtEphSliceIter<'a, T> {
-        pub inner: std::slice::Iter<'a, T>,
-    }
-
-    impl<'a, T> View for ArraySeqMtEphSliceIter<'a, T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqMtEphSliceIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<'a, T> std::iter::Iterator for ArraySeqMtEphSliceIter<'a, T> {
-        type Item = &'a T;
-
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ArraySeqMtEphSliceGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
-    impl<'a, T> View for ArraySeqMtEphSliceGhostIterator<'a, T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqMtEphSliceIter<'a, T> {
-        type GhostIter = ArraySeqMtEphSliceGhostIterator<'a, T>;
-        open spec fn ghost_iter(&self) -> ArraySeqMtEphSliceGhostIterator<'a, T> {
-            ArraySeqMtEphSliceGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ArraySeqMtEphSliceGhostIterator<'a, T> {
-        type ExecIter = ArraySeqMtEphSliceIter<'a, T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &ArraySeqMtEphSliceIter<'a, T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &ArraySeqMtEphSliceIter<'a, T>) -> ArraySeqMtEphSliceGhostIterator<'a, T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
     impl<'a, T: StTInMtT> std::iter::IntoIterator for &'a ArraySeqMtEphSliceS<T> {
         type Item = &'a T;
-        type IntoIter = ArraySeqMtEphSliceIter<'a, T>;
+        type IntoIter = std::slice::Iter<'a, T>;
 
         fn into_iter(self) -> (it: Self::IntoIter)
-            requires self.spec_arrayseqmtephslice_wf(),
             ensures
-                it@.0 == 0,
-                it@.1 == self.spec_backing_seq(),
-                iter_invariant(&it),
+                self.spec_arrayseqmtephslice_wf() ==> {
+                    &&& IteratorSpec::remaining(&it) == self.spec_backing_seq().as_ref()
+                    &&& vstd::std_specs::slice::into_iter_elts(it) == self.spec_backing_seq()
+                    &&& IteratorSpec::decrease(&it) is Some
+                },
         {
-            let sl: &[T] = arc_vec_as_slice(&self.data, self.start, self.len);
-            ArraySeqMtEphSliceIter { inner: sl.iter() }
+            // Verus 0.2026.09.13 rejects `requires` on an external trait's
+            // impl, so the well-formedness bound the old `requires` carried is
+            // checked here in O(1) (r212, src/experiments/intoiter_form_b_total_body.rs).
+            let backing: &Vec<T> = arc_deref(&self.data);
+            let sl: &[T] = if self.len <= backing.len() && self.start <= backing.len() - self.len {
+                arc_vec_as_slice(&self.data, self.start, self.len)
+            } else {
+                arc_vec_as_slice(&self.data, 0, 0)
+            };
+            sl.iter()
         }
     }
 
@@ -1773,30 +1689,6 @@ pub mod ArraySeqMtEphSlice {
                 write!(f, "{item}")?;
             }
             write!(f, "]")
-        }
-    }
-
-    impl<'a, T: std::fmt::Debug> std::fmt::Debug for ArraySeqMtEphSliceIter<'a, T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "ArraySeqMtEphSliceIter({:?})", self.inner)
-        }
-    }
-
-    impl<'a, T> std::fmt::Display for ArraySeqMtEphSliceIter<'a, T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "ArraySeqMtEphSliceIter")
-        }
-    }
-
-    impl<'a, T> std::fmt::Debug for ArraySeqMtEphSliceGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "ArraySeqMtEphSliceGhostIterator")
-        }
-    }
-
-    impl<'a, T> std::fmt::Display for ArraySeqMtEphSliceGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "ArraySeqMtEphSliceGhostIterator")
         }
     }
 }

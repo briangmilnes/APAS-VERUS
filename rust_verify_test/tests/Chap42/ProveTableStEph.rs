@@ -18,34 +18,46 @@ use common::*;
 test_verify_one_file! {
     #[test] tablesteph_loop_borrow_iter verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap42::TableStEph::TableStEph::*;
         use apas_verus::Types::Types::*;
 
         fn test_loop_borrow_iter() {
             let a: TableStEph<u64, u64> = TableStEph::empty();
 
-            let mut it: TableStEphIter<u64, u64> = a.iter();
-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
-
-            #[verifier::loop_isolation(false)]
+            let ghost orig: Seq<u64> = a.entries.seq@;
+            let mut collected: Vec<u64> = Vec::new();
+            let mut it: std::slice::Iter<'_, u64> = a.iter();
+            let ghost mut pos: int = 0;
             loop
                 invariant
-                    items =~= iter_seq.take(it@.0 as int),
-                    iter_invariant_table(&it),
-                    iter_seq == it@.1,
-                    it@.0 <= iter_seq.len(),
-                decreases iter_seq.len() - it@.0,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= orig.len(),
+                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
+                    collected.len() == pos,
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == orig[i],
+                decreases IteratorSpec::decrease(&it)->0,
             {
-                if let Some(x) = it.next() {
-                    proof { items = items.push(*x); }
-                } else {
-                    break;
+                let ghost old_pos = pos;
+                match it.next() {
+                    Some(x) => {
+                        proof {
+                            pos = pos + 1;
+                            assert(orig[old_pos] == *x);
+                        }
+                        collected.push(*x);
+                    },
+                    None => {
+                        assert(pos == orig.len());
+                        assert(collected@ =~= orig);
+                        break;
+                    },
                 }
             }
-
-            assert(it@.0 == iter_seq.len());
-            assert(items =~= iter_seq);
         }
     } => Ok(())
 }
@@ -54,34 +66,46 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] tablesteph_loop_borrow_into verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap42::TableStEph::TableStEph::*;
         use apas_verus::Types::Types::*;
 
         fn test_loop_borrow_into() {
             let a: TableStEph<u64, u64> = TableStEph::empty();
 
-            let mut it: TableStEphIter<u64, u64> = (&a).into_iter();
-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
-
-            #[verifier::loop_isolation(false)]
+            let ghost orig: Seq<u64> = a.entries.seq@;
+            let mut collected: Vec<u64> = Vec::new();
+            let mut it: std::slice::Iter<'_, u64> = (&a).into_iter();
+            let ghost mut pos: int = 0;
             loop
                 invariant
-                    items =~= iter_seq.take(it@.0 as int),
-                    iter_invariant_table(&it),
-                    iter_seq == it@.1,
-                    it@.0 <= iter_seq.len(),
-                decreases iter_seq.len() - it@.0,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= orig.len(),
+                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
+                    collected.len() == pos,
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == orig[i],
+                decreases IteratorSpec::decrease(&it)->0,
             {
-                if let Some(x) = it.next() {
-                    proof { items = items.push(*x); }
-                } else {
-                    break;
+                let ghost old_pos = pos;
+                match it.next() {
+                    Some(x) => {
+                        proof {
+                            pos = pos + 1;
+                            assert(orig[old_pos] == *x);
+                        }
+                        collected.push(*x);
+                    },
+                    None => {
+                        assert(pos == orig.len());
+                        assert(collected@ =~= orig);
+                        break;
+                    },
                 }
             }
-
-            assert(it@.0 == iter_seq.len());
-            assert(items =~= iter_seq);
         }
     } => Ok(())
 }
@@ -90,26 +114,25 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] tablesteph_for_borrow_iter verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap42::TableStEph::TableStEph::*;
         use apas_verus::Types::Types::*;
 
         fn test_for_borrow_iter() {
             let a: TableStEph<u64, u64> = TableStEph::empty();
 
-            let it: TableStEphIter<u64, u64> = a.iter();
-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
-
-            for x in iter: it
+            let ghost orig: Seq<u64> = a.entries.seq@;
+            let mut collected: Vec<u64> = Vec::new();
+            for x in it: a.iter()
                 invariant
-                    iter.elements == iter_seq,
-                    items =~= iter_seq.take(iter.pos),
-                    iter.pos <= iter_seq.len(),
+                    it.seq() == orig.as_ref(),
+                    collected.len() == it.index(),
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == *it.seq()[i],
             {
-                proof { items = items.push(*x); }
+                collected.push(*x);
             }
-
-            assert(items =~= iter_seq);
+            assert(collected@ =~= orig);
         }
     } => Ok(())
 }
@@ -118,26 +141,25 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] tablesteph_for_borrow_into verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap42::TableStEph::TableStEph::*;
         use apas_verus::Types::Types::*;
 
         fn test_for_borrow_into() {
             let a: TableStEph<u64, u64> = TableStEph::empty();
 
-            let it: TableStEphIter<u64, u64> = (&a).into_iter();
-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
-
-            for x in iter: it
+            let ghost orig: Seq<u64> = a.entries.seq@;
+            let mut collected: Vec<u64> = Vec::new();
+            for x in it: (&a).into_iter()
                 invariant
-                    iter.elements == iter_seq,
-                    items =~= iter_seq.take(iter.pos),
-                    iter.pos <= iter_seq.len(),
+                    it.seq() == orig.as_ref(),
+                    collected.len() == it.index(),
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == *it.seq()[i],
             {
-                proof { items = items.push(*x); }
+                collected.push(*x);
             }
-
-            assert(items =~= iter_seq);
+            assert(collected@ =~= orig);
         }
     } => Ok(())
 }

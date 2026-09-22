@@ -38,11 +38,12 @@ pub mod BSTParaTreapMtEph {
     use std::cmp::Ordering::{Equal, Greater, Less};
     use std::fmt;
     use std::fmt::Write;
-    use std::vec::IntoIter;
     use std::hash::{Hash, Hasher};
     use std::sync::Arc;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     use vstd::rwlock::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::OrdSpec;
@@ -387,6 +388,8 @@ pub mod BSTParaTreapMtEph {
                         // Veracity: NEEDED assert
                         // Veracity: NEEDED assert
                         assert forall|t: T| (#[trigger] rlv.contains(t@)) implies t.cmp_spec(&key) == Greater by {
+                            // r212: verus 0.2026.09.13 needs the subset step stated.
+                            assert(right@.contains(t@));
                         }
                     }
                     let merged_left = join_with_priority(left, key, priority, rl);
@@ -1631,102 +1634,11 @@ pub mod BSTParaTreapMtEph {
 
     //		Section 10d. iterators — ParamTreap
 
-    /// Snapshot iterator over ParamTreap — collects elements via in_order traversal,
-    /// then yields owned T values from the captured Vec.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ParamTreapIter<T: MtKey> {
-        pub inner: IntoIter<T>,
-    }
-
-    impl<T: MtKey> View for ParamTreapIter<T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant_paramtreap<T: MtKey>(it: &ParamTreapIter<T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<T: MtKey> std::iter::Iterator for ParamTreapIter<T> {
-        type Item = T;
-
-        fn next(&mut self) -> (next: Option<T>)
-            ensures
-                ({
-                    let (old_index, old_seq) = old(self)@;
-                    match next {
-                        None => {
-                            &&& self@ == old(self)@
-                            &&& old_index >= old_seq.len()
-                        },
-                        Some(element) => {
-                            let (new_index, new_seq) = self@;
-                            &&& 0 <= old_index < old_seq.len()
-                            &&& new_seq == old_seq
-                            &&& new_index == old_index + 1
-                            &&& element == old_seq[old_index]
-                        },
-                    }
-                }),
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for for-loop support over ParamTreapIter.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ParamTreapGhostIterator<T: MtKey> {
-        pub pos: int,
-        pub elements: Seq<T>,
-    }
-
-    impl<T: MtKey> View for ParamTreapGhostIterator<T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    impl<T: MtKey> vstd::pervasive::ForLoopGhostIteratorNew for ParamTreapIter<T> {
-        type GhostIter = ParamTreapGhostIterator<T>;
-        open spec fn ghost_iter(&self) -> ParamTreapGhostIterator<T> {
-            ParamTreapGhostIterator { pos: self@.0, elements: self@.1 }
-        }
-    }
-
-    impl<T: MtKey> vstd::pervasive::ForLoopGhostIterator for ParamTreapGhostIterator<T> {
-        type ExecIter = ParamTreapIter<T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &ParamTreapIter<T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &ParamTreapIter<T>) -> ParamTreapGhostIterator<T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
+    // r212 form C: this `IntoIterator` impl required `requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>()`, which
+    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
+    // can establish; use `iter()`, which keeps the requires
+    // (src/experiments/intoiter_form_c_no_impl.rs).
+    /*
     impl<'a, T: MtKey + ClonePreservesView> std::iter::IntoIterator for &'a ParamTreap<T> {
         type Item = T;
         type IntoIter = ParamTreapIter<T>;
@@ -1739,6 +1651,22 @@ pub mod BSTParaTreapMtEph {
         {
             let in_ord = self.in_order();
             ParamTreapIter { inner: in_ord.seq.into_iter() }
+        }
+    }
+    */
+
+    impl<T: MtKey + ClonePreservesView> ParamTreap<T> {
+        /// Returns a snapshot iterator over the tree elements in ascending key order.
+        /// - Alg Analysis: Code review (Claude Fable 5.1): Work O(n), Span O(n) — in-order traversal.
+        pub fn iter(&self) -> (it: std::vec::IntoIter<T>)
+            requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
+            ensures
+                IteratorSpec::remaining(&it).len() == self@.len(),
+                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
+                IteratorSpec::decrease(&it) is Some,
+        {
+            let in_ord = self.in_order();
+            in_ord.seq.into_iter()
         }
     }
 
@@ -1911,28 +1839,4 @@ pub mod BSTParaTreapMtEph {
     }
 
     //		Section 14e. derive impls outside verus!
-
-    impl<T: MtKey> fmt::Debug for ParamTreapIter<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "ParamTreapIter")
-        }
-    }
-
-    impl<T: MtKey> fmt::Display for ParamTreapIter<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "ParamTreapIter")
-        }
-    }
-
-    impl<T: MtKey> fmt::Debug for ParamTreapGhostIterator<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "ParamTreapGhostIterator")
-        }
-    }
-
-    impl<T: MtKey> fmt::Display for ParamTreapGhostIterator<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "ParamTreapGhostIterator")
-        }
-    }
 }

@@ -30,6 +30,8 @@ pub mod TableMtEph {
     use std::sync::Arc;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
 
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
@@ -266,7 +268,7 @@ broadcast use {
         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>)
             ensures spec_entries_to_map(entries@) == self@;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn iter(&self) -> (it: TableMtEphIter<'_, K, V>)
+        fn iter(&self) -> (it: std::slice::Iter<'_, Pair<K, V>>)
             requires self.spec_tablemteph_wf()
             ensures it@.0 == 0, iter_invariant_tablemteph(&it);
     }
@@ -2404,8 +2406,8 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn iter(&self) -> TableMtEphIter<'_, K, V> {
-            TableMtEphIter { inner: self.entries.iter() }
+        fn iter(&self) -> std::slice::Iter<'_, Pair<K, V>> {
+            self.entries.iter()
         }
     }
 
@@ -2423,109 +2425,10 @@ broadcast use {
 
     //		Section 10. iterators — TableMtEph
 
-    /// Reference iterator over TableMtEph entries, wrapping ArraySeqMtEphIter.
-    #[verifier::reject_recursive_types(K)]
-    #[verifier::reject_recursive_types(V)]
-    pub struct TableMtEphIter<'a, K: MtKey, V: MtVal> {
-        pub inner: ArraySeqMtEphIter<'a, Pair<K, V>>,
-    }
-
-    impl<'a, K: MtKey, V: MtVal> View for TableMtEphIter<'a, K, V> {
-        type V = (int, Seq<Pair<K, V>>);
-        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) {
-            self.inner@
-        }
-    }
-
-    pub open spec fn iter_invariant_tablemteph<'a, K: MtKey, V: MtVal>(it: &TableMtEphIter<'a, K, V>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<'a, K: MtKey, V: MtVal> std::iter::Iterator for TableMtEphIter<'a, K, V> {
-        type Item = &'a Pair<K, V>;
-        fn next(&mut self) -> (next: Option<&'a Pair<K, V>>)
-            ensures
-                ({
-                    let (old_index, old_seq) = old(self)@;
-                    match next {
-                        None => {
-                            &&& self@ == old(self)@
-                            &&& old_index >= old_seq.len()
-                        },
-                        Some(element) => {
-                            let (new_index, new_seq) = self@;
-                            &&& 0 <= old_index < old_seq.len()
-                            &&& new_seq == old_seq
-                            &&& new_index == old_index + 1
-                            &&& element == old_seq[old_index]
-                        },
-                    }
-                }),
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for for-loop support over TableMtEphIter.
-    #[verifier::reject_recursive_types(K)]
-    #[verifier::reject_recursive_types(V)]
-    pub struct TableMtEphGhostIterator<'a, K: MtKey, V: MtVal> {
-        pub pos: int,
-        pub elements: Seq<Pair<K, V>>,
-        pub phantom: core::marker::PhantomData<&'a Pair<K, V>>,
-    }
-
-    impl<'a, K: MtKey, V: MtVal> View for TableMtEphGhostIterator<'a, K, V> {
-        type V = Seq<Pair<K, V>>;
-        open spec fn view(&self) -> Seq<Pair<K, V>> { self.elements.take(self.pos) }
-    }
-
-    impl<'a, K: MtKey, V: MtVal> vstd::pervasive::ForLoopGhostIteratorNew for TableMtEphIter<'a, K, V> {
-        type GhostIter = TableMtEphGhostIterator<'a, K, V>;
-        open spec fn ghost_iter(&self) -> TableMtEphGhostIterator<'a, K, V> {
-            TableMtEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, K: MtKey, V: MtVal> vstd::pervasive::ForLoopGhostIterator for TableMtEphGhostIterator<'a, K, V> {
-        type ExecIter = TableMtEphIter<'a, K, V>;
-        type Item = Pair<K, V>;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &TableMtEphIter<'a, K, V>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &TableMtEphIter<'a, K, V>) -> TableMtEphGhostIterator<'a, K, V> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
     impl<'a, K: MtKey, V: MtVal> std::iter::IntoIterator for &'a TableMtEph<K, V> {
         type Item = &'a Pair<K, V>;
-        type IntoIter = TableMtEphIter<'a, K, V>;
-        fn into_iter(self) -> (it: TableMtEphIter<'a, K, V>)
+        type IntoIter = std::slice::Iter<'a, Pair<K, V>>;
+        fn into_iter(self) -> (it: std::slice::Iter<'a, Pair<K, V>>)
             requires self.spec_tablemteph_wf()
             ensures it@.0 == 0, iter_invariant_tablemteph(&it),
         {

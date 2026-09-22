@@ -305,12 +305,12 @@ pub mod JohnsonMtEphI64 {
         let mut edges = SetStEph::<WeightedEdge<usize, i128>>::empty();
         let arcs = graph.labeled_arcs();
         let it = arcs.iter();
-        let ghost arcs_seq = it@.1;
+        let ghost arcs_seq = vstd::std_specs::hash::into_iter_hash_keys(it);
 
         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         for labeled_edge in iter: it
             invariant
-                iter.elements == arcs_seq,
+                iter.seq().unref() == arcs_seq,
                 arcs_seq.map(|i: int, e: LabEdge<usize, i128>| e@).to_set() =~= graph@.A,
                 edges.spec_setsteph_wf(),
                 vertices.spec_setsteph_wf(),
@@ -404,16 +404,16 @@ pub mod JohnsonMtEphI64 {
         let mut reweighted_edges = SetStEph::<WeightedEdge<usize, i128>>::empty();
         let arcs = graph.labeled_arcs();
         let it = arcs.iter();
-        let ghost arcs_seq = it@.1;
+        let ghost arcs_seq = vstd::std_specs::hash::into_iter_hash_keys(it);
 
         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         for labeled_edge in iter: it
             invariant
-                iter.elements == arcs_seq,
-                iter.pos <= arcs_seq.len(),
+                iter.seq().unref() == arcs_seq,
+                iter.index() <= arcs_seq.len(),
                 arcs_seq.map(|i: int, e: LabEdge<usize, i128>| e@).to_set() =~= graph@.A,
                 reweighted_edges.spec_setsteph_wf(),
-                reweighted_edges@.len() <= iter.pos as nat,
+                reweighted_edges@.len() <= iter.index() as nat,
                 vertices.spec_setsteph_wf(),
                 vertices@.len() == n as nat,
                 forall|k: usize| vertices@.contains(k) <==> k < n,

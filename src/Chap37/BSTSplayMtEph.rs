@@ -763,9 +763,11 @@ pub mod BSTSplayMtEph {
                                         reveal_with_fuel(link_contains, 3);
                                         if x == root_key {
                                         } else if link_contains(lr_right, x) {
-// Veracity: UNNEEDED assert                                             assert(link_contains(orig_left_right, x));
+                                            // r212: needed again under verus 0.2026.09.13.
+                                            assert(link_contains(orig_left_right, x));
                                         // Veracity: NEEDED proof block
                                         } else {
+                                            assert(link_contains(orig_root_right, x));
                                         }
                                     }
                                 };

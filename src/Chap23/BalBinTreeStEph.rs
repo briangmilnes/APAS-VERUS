@@ -31,9 +31,10 @@ pub mod BalBinTreeStEph {
     //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter};
-    use std::vec::IntoIter;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
 
     verus! 
 {
@@ -341,43 +342,43 @@ pub mod BalBinTreeStEph {
         /// Returns an in-order iterator.
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n) — dominated by in_order traversal.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — calls in_order() then wraps in iterator.
-        pub fn iter_in_order(&self) -> (it: InOrderIter<T>)
+        pub fn iter_in_order(&self) -> (it: std::vec::IntoIter<T>)
             requires self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),
             ensures
-                it@.0 == 0,
-                it@.1 =~= self.spec_in_order(),
-                in_order_iter_invariant(&it),
+                IteratorSpec::remaining(&it) == self.spec_in_order(),
+                vstd::std_specs::vec::into_iter_elts(it) == self.spec_in_order(),
+                IteratorSpec::decrease(&it) is Some,
         {
-            InOrderIter { inner: self.in_order().into_iter() }
+            self.in_order().into_iter()
         }
 
         /// Returns a pre-order iterator.
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n) — dominated by pre_order traversal.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — calls pre_order() then wraps in iterator.
-        pub fn iter_pre_order(&self) -> (it: PreOrderIter<T>)
+        pub fn iter_pre_order(&self) -> (it: std::vec::IntoIter<T>)
             requires self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),
             ensures
-                it@.0 == 0,
-                it@.1 =~= self.spec_pre_order(),
-                pre_order_iter_invariant(&it),
+                IteratorSpec::remaining(&it) == self.spec_pre_order(),
+                vstd::std_specs::vec::into_iter_elts(it) == self.spec_pre_order(),
+                IteratorSpec::decrease(&it) is Some,
         {
-            PreOrderIter { inner: self.pre_order().into_iter() }
+            self.pre_order().into_iter()
         }
 
         /// Returns a post-order iterator.
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n) — dominated by post_order traversal.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — calls post_order() then wraps in iterator.
-        pub fn iter_post_order(&self) -> (it: PostOrderIter<T>)
+        pub fn iter_post_order(&self) -> (it: std::vec::IntoIter<T>)
             requires self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),
             ensures
-                it@.0 == 0,
-                it@.1 =~= self.spec_post_order(),
-                post_order_iter_invariant(&it),
+                IteratorSpec::remaining(&it) == self.spec_post_order(),
+                vstd::std_specs::vec::into_iter_elts(it) == self.spec_post_order(),
+                IteratorSpec::decrease(&it) is Some,
         {
-            PostOrderIter { inner: self.post_order().into_iter() }
+            self.post_order().into_iter()
         }
     }
 
@@ -392,19 +393,6 @@ pub mod BalBinTreeStEph {
     }
 
     //		Section 6b. spec fns
-
-
-    pub open spec fn in_order_iter_invariant<T>(it: &InOrderIter<T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    pub open spec fn pre_order_iter_invariant<T>(it: &PreOrderIter<T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    pub open spec fn post_order_iter_invariant<T>(it: &PostOrderIter<T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
 
     //		Section 7b. proof fns/broadcast groups
 
@@ -508,286 +496,6 @@ pub mod BalBinTreeStEph {
 
     //		Section 10b. iterators
 
-
-    /// Iterator over in-order traversal of a BalBinTree.
-    #[verifier::reject_recursive_types(T)]
-    pub struct InOrderIter<T> {
-        pub inner: IntoIter<T>,
-    }
-
-    /// Iterator over pre-order traversal of a BalBinTree.
-    #[verifier::reject_recursive_types(T)]
-    pub struct PreOrderIter<T> {
-        pub inner: IntoIter<T>,
-    }
-
-    /// Iterator over post-order traversal of a BalBinTree.
-    #[verifier::reject_recursive_types(T)]
-    pub struct PostOrderIter<T> {
-        pub inner: IntoIter<T>,
-    }
-
-    impl<T> View for InOrderIter<T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) {
-            self.inner@
-        }
-    }
-
-    impl<T> View for PreOrderIter<T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) {
-            self.inner@
-        }
-    }
-
-    impl<T> View for PostOrderIter<T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) {
-            self.inner@
-        }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support (in-order).
-    #[verifier::reject_recursive_types(T)]
-    pub struct InOrderGhostIterator<T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support (pre-order).
-    #[verifier::reject_recursive_types(T)]
-    pub struct PreOrderGhostIterator<T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support (post-order).
-    #[verifier::reject_recursive_types(T)]
-    pub struct PostOrderGhostIterator<T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-    }
-
-    impl<T> View for InOrderGhostIterator<T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    impl<T> View for PreOrderGhostIterator<T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    impl<T> View for PostOrderGhostIterator<T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    impl<T> std::iter::Iterator for InOrderIter<T> {
-        type Item = T;
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
-        fn next(&mut self) -> (next: Option<T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    impl<T> std::iter::Iterator for PreOrderIter<T> {
-        type Item = T;
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
-        fn next(&mut self) -> (next: Option<T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    impl<T> std::iter::Iterator for PostOrderIter<T> {
-        type Item = T;
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
-        fn next(&mut self) -> (next: Option<T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    impl<T> vstd::pervasive::ForLoopGhostIteratorNew for InOrderIter<T> {
-        type GhostIter = InOrderGhostIterator<T>;
-        open spec fn ghost_iter(&self) -> InOrderGhostIterator<T> {
-            InOrderGhostIterator { pos: self@.0, elements: self@.1 }
-        }
-    }
-
-    impl<T> vstd::pervasive::ForLoopGhostIterator for InOrderGhostIterator<T> {
-        type ExecIter = InOrderIter<T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &InOrderIter<T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &InOrderIter<T>) -> InOrderGhostIterator<T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    impl<T> vstd::pervasive::ForLoopGhostIteratorNew for PreOrderIter<T> {
-        type GhostIter = PreOrderGhostIterator<T>;
-        open spec fn ghost_iter(&self) -> PreOrderGhostIterator<T> {
-            PreOrderGhostIterator { pos: self@.0, elements: self@.1 }
-        }
-    }
-
-    impl<T> vstd::pervasive::ForLoopGhostIterator for PreOrderGhostIterator<T> {
-        type ExecIter = PreOrderIter<T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &PreOrderIter<T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &PreOrderIter<T>) -> PreOrderGhostIterator<T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    impl<T> vstd::pervasive::ForLoopGhostIteratorNew for PostOrderIter<T> {
-        type GhostIter = PostOrderGhostIterator<T>;
-        open spec fn ghost_iter(&self) -> PostOrderGhostIterator<T> {
-            PostOrderGhostIterator { pos: self@.0, elements: self@.1 }
-        }
-    }
-
-    impl<T> vstd::pervasive::ForLoopGhostIterator for PostOrderGhostIterator<T> {
-        type ExecIter = PostOrderIter<T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &PostOrderIter<T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &PostOrderIter<T>) -> PostOrderGhostIterator<T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
     //		Section 12a. derive impls in verus!
 
 
@@ -872,79 +580,6 @@ pub mod BalBinTreeStEph {
     } // verus!
 
     //		Section 14. derive impls outside verus!
-
-
-    impl<T: Debug> Debug for InOrderIter<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "InOrderIter({:?})", self.inner)
-        }
-    }
-
-    impl<T> Display for InOrderIter<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "InOrderIter")
-        }
-    }
-
-    impl<T: Debug> Debug for PreOrderIter<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "PreOrderIter({:?})", self.inner)
-        }
-    }
-
-    impl<T> Display for PreOrderIter<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "PreOrderIter")
-        }
-    }
-
-    impl<T: Debug> Debug for PostOrderIter<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "PostOrderIter({:?})", self.inner)
-        }
-    }
-
-    impl<T> Display for PostOrderIter<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "PostOrderIter")
-        }
-    }
-
-    impl<T> Debug for InOrderGhostIterator<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "InOrderGhostIterator")
-        }
-    }
-
-    impl<T> Display for InOrderGhostIterator<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "InOrderGhostIterator")
-        }
-    }
-
-    impl<T> Debug for PreOrderGhostIterator<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "PreOrderGhostIterator")
-        }
-    }
-
-    impl<T> Display for PreOrderGhostIterator<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "PreOrderGhostIterator")
-        }
-    }
-
-    impl<T> Debug for PostOrderGhostIterator<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "PostOrderGhostIterator")
-        }
-    }
-
-    impl<T> Display for PostOrderGhostIterator<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "PostOrderGhostIterator")
-        }
-    }
 
     //		Section 14a. derive impls outside verus!
 

@@ -38,11 +38,12 @@ pub mod BSTKeyValueStEph {
     //		Section 2. imports
 
     use std::fmt;
-    use std::vec::IntoIter;
 
     use core::cmp::Ordering;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
@@ -1469,104 +1470,11 @@ pub mod BSTKeyValueStEph {
 
     //		Section 10b. iterators — BSTKeyValueStEph
 
-    /// Snapshot key iterator over BSTKeyValueStEph — collects keys via in-order traversal,
-    /// then yields owned K values from the captured Vec.
-    #[verifier::reject_recursive_types(K)]
-    pub struct BSTKeyValueStEphIter<K: StT + Ord, V: StT> {
-        pub inner: IntoIter<K>,
-        pub phantom: core::marker::PhantomData<V>,
-    }
-
-    impl<K: StT + Ord, V: StT> View for BSTKeyValueStEphIter<K, V> {
-        type V = (int, Seq<K>);
-        open spec fn view(&self) -> (int, Seq<K>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant_bstkeyvaluesteph<K: StT + Ord, V: StT>(it: &BSTKeyValueStEphIter<K, V>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<K: StT + Ord, V: StT> std::iter::Iterator for BSTKeyValueStEphIter<K, V> {
-        type Item = K;
-
-        fn next(&mut self) -> (next: Option<K>)
-            ensures
-                ({
-                    let (old_index, old_seq) = old(self)@;
-                    match next {
-                        None => {
-                            &&& self@ == old(self)@
-                            &&& old_index >= old_seq.len()
-                        },
-                        Some(element) => {
-                            let (new_index, new_seq) = self@;
-                            &&& 0 <= old_index < old_seq.len()
-                            &&& new_seq == old_seq
-                            &&& new_index == old_index + 1
-                            &&& element == old_seq[old_index]
-                        },
-                    }
-                }),
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for for-loop support over BSTKeyValueStEphIter.
-    #[verifier::reject_recursive_types(K)]
-    pub struct BSTKeyValueStEphGhostIterator<K: StT + Ord, V: StT> {
-        pub pos: int,
-        pub elements: Seq<K>,
-        pub phantom: core::marker::PhantomData<V>,
-    }
-
-    impl<K: StT + Ord, V: StT> View for BSTKeyValueStEphGhostIterator<K, V> {
-        type V = Seq<K>;
-        open spec fn view(&self) -> Seq<K> { self.elements.take(self.pos) }
-    }
-
-    impl<K: StT + Ord, V: StT> vstd::pervasive::ForLoopGhostIteratorNew for BSTKeyValueStEphIter<K, V> {
-        type GhostIter = BSTKeyValueStEphGhostIterator<K, V>;
-        open spec fn ghost_iter(&self) -> BSTKeyValueStEphGhostIterator<K, V> {
-            BSTKeyValueStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<K: StT + Ord, V: StT> vstd::pervasive::ForLoopGhostIterator for BSTKeyValueStEphGhostIterator<K, V> {
-        type ExecIter = BSTKeyValueStEphIter<K, V>;
-        type Item = K;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &BSTKeyValueStEphIter<K, V>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<K> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &BSTKeyValueStEphIter<K, V>) -> BSTKeyValueStEphGhostIterator<K, V> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
+    // r212 form C: this `IntoIterator` impl required `requires self.spec_bstkeyvaluesteph_wf()`, which
+    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
+    // can establish; use `iter()`, which keeps the requires
+    // (src/experiments/intoiter_form_c_no_impl.rs).
+    /*
     impl<'a, K: StT + Ord + TotalOrder, V: StT> std::iter::IntoIterator for &'a BSTKeyValueStEph<K, V> {
         type Item = K;
         type IntoIter = BSTKeyValueStEphIter<K, V>;
@@ -1579,6 +1487,22 @@ pub mod BSTKeyValueStEph {
         {
             let ks = self.keys();
             BSTKeyValueStEphIter { inner: ks.seq.into_iter(), phantom: core::marker::PhantomData }
+        }
+    }
+    */
+
+    impl<K: StT + Ord + TotalOrder, V: StT> BSTKeyValueStEph<K, V> {
+        /// Returns a snapshot iterator over the keys in ascending order.
+        /// - Alg Analysis: Code review (Claude Fable 5.1): Work O(n), Span O(n) — in-order key collection.
+        pub fn iter(&self) -> (it: std::vec::IntoIter<K>)
+            requires self.spec_bstkeyvaluesteph_wf(),
+            ensures
+                IteratorSpec::remaining(&it).len() == self.spec_size(),
+                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
+                IteratorSpec::decrease(&it) is Some,
+        {
+            let ks = self.keys();
+            ks.seq.into_iter()
         }
     }
 
@@ -1720,28 +1644,4 @@ pub mod BSTKeyValueStEph {
     }
 
     //		Section 14d. derive impls outside verus!
-
-    impl<K: StT + Ord, V: StT> fmt::Debug for BSTKeyValueStEphIter<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "BSTKeyValueStEphIter")
-        }
-    }
-
-    impl<K: StT + Ord, V: StT> fmt::Display for BSTKeyValueStEphIter<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "BSTKeyValueStEphIter")
-        }
-    }
-
-    impl<K: StT + Ord, V: StT> fmt::Debug for BSTKeyValueStEphGhostIterator<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "BSTKeyValueStEphGhostIterator")
-        }
-    }
-
-    impl<K: StT + Ord, V: StT> fmt::Display for BSTKeyValueStEphGhostIterator<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "BSTKeyValueStEphGhostIterator")
-        }
-    }
 }

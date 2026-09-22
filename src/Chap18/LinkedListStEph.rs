@@ -32,6 +32,8 @@ pub mod LinkedListStEph {
 
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     pub use crate::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::*;
 
@@ -724,11 +726,15 @@ pub mod LinkedListStEph {
                 }
                 acc = f(&acc, &a.seq[i]);
                 proof {
-                    let ghost t = s.take(i as int + 1);
-                    // Veracity: NEEDED assert
-                    // Veracity: NEEDED proof block
-                    assert(t.drop_last() =~= s.take(i as int));
-                    reveal(Seq::fold_left);
+                    // r212: the one-step unfolding moved into
+                    // lemma_take_fold_left_step so `reveal(Seq::fold_left)`
+                    // no longer meets the loop's quantified invariants; in
+                    // the loop's own context it exceeded the rlimit under
+                    // verus 0.2026.09.13 once more modules were in scope.
+                    // BYPASSED (r212): let ghost t = s.take(i as int + 1);
+                    // BYPASSED (r212): assert(t.drop_last() =~= s.take(i as int));
+                    // BYPASSED (r212): reveal(Seq::fold_left);
+                    lemma_take_fold_left_step(s, i as int, id, spec_f);
                 }
                 let cloned = acc.clone();
                 proof {
@@ -752,6 +758,17 @@ pub mod LinkedListStEph {
     }
 
 
+    /// One step of a prefix fold: folding the first `i + 1` elements is `f`
+    /// applied to the fold of the first `i` and element `i`.
+    proof fn lemma_take_fold_left_step<T>(s: Seq<T>, i: int, id: T, f: spec_fn(T, T) -> T)
+        requires 0 <= i < s.len(),
+        ensures s.take(i + 1).fold_left(id, f) == f(s.take(i).fold_left(id, f), s[i]),
+    {
+        let t = s.take(i + 1);
+        assert(t.drop_last() =~= s.take(i));
+        reveal(Seq::fold_left);
+    }
+
     impl<T> LinkedListStEphS<T> {
         broadcast proof fn lemma_spec_index(&self, i: int)
             requires 0 <= i < self.spec_len()
@@ -760,121 +777,29 @@ pub mod LinkedListStEph {
 
         /// Returns an iterator over the list elements.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
-        pub fn iter(&self) -> (it: LinkedListStEphIter<'_, T>)
+        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
-                iter_invariant(&it),
+                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
-            LinkedListStEphIter { inner: self.seq.iter() }
+            self.seq.iter()
         }
     }
 
     //		Section 10. iterators
 
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct LinkedListStEphIter<'a, T> {
-        pub inner: std::slice::Iter<'a, T>,
-    }
-
-    impl<'a, T> View for LinkedListStEphIter<'a, T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant<'a, T>(it: &LinkedListStEphIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<'a, T> std::iter::Iterator for LinkedListStEphIter<'a, T> {
-        type Item = &'a T;
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
-        // Relies on vstd's assume_specification for slice::Iter::next.
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(T)]
-    pub struct LinkedListStEphGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for LinkedListStEphIter<'a, T> {
-        type GhostIter = LinkedListStEphGhostIterator<'a, T>;
-        open spec fn ghost_iter(&self) -> LinkedListStEphGhostIterator<'a, T> {
-            LinkedListStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for LinkedListStEphGhostIterator<'a, T> {
-        type ExecIter = LinkedListStEphIter<'a, T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &LinkedListStEphIter<'a, T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool { self.pos == self.elements.len() }
-        open spec fn ghost_decrease(&self) -> Option<int> { Some(self.elements.len() - self.pos) }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &LinkedListStEphIter<'a, T>) -> LinkedListStEphGhostIterator<'a, T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    impl<'a, T> View for LinkedListStEphGhostIterator<'a, T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
     impl<'a, T> std::iter::IntoIterator for &'a LinkedListStEphS<T> {
         type Item = &'a T;
-        type IntoIter = LinkedListStEphIter<'a, T>;
+        type IntoIter = std::slice::Iter<'a, T>;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
-                iter_invariant(&it),
+                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
-            LinkedListStEphIter { inner: self.seq.iter() }
+            self.seq.iter()
         }
     }
 
@@ -884,8 +809,9 @@ pub mod LinkedListStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
+                IteratorSpec::remaining(&it) == self.seq@,
+                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
             self.seq.into_iter()
         }
@@ -946,30 +872,6 @@ pub mod LinkedListStEph {
                 write!(f, "{item}")?;
             }
             write!(f, "]")
-        }
-    }
-
-    impl<'a, T: Debug> Debug for LinkedListStEphIter<'a, T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "LinkedListStEphIter({:?})", self.inner)
-        }
-    }
-
-    impl<'a, T> Display for LinkedListStEphIter<'a, T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "LinkedListStEphIter")
-        }
-    }
-
-    impl<'a, T> Debug for LinkedListStEphGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "LinkedListStEphGhostIterator")
-        }
-    }
-
-    impl<'a, T> Display for LinkedListStEphGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "LinkedListStEphGhostIterator")
         }
     }
 }

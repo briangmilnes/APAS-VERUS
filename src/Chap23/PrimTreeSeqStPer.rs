@@ -42,6 +42,8 @@ pub mod PrimTreeSeqStPer {
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
 
     verus! 
 {
@@ -109,13 +111,13 @@ pub mod PrimTreeSeqStPer {
     impl<T> PrimTreeSeqStS<T> {
         /// Returns a borrow iterator over the sequence elements.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — wraps slice::Iter.
-        pub fn iter(&self) -> (it: PrimTreeSeqStIter<'_, T>)
+        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
-                prim_tree_seq_iter_invariant(&it),
+                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
-            PrimTreeSeqStIter { inner: self.seq.iter() }
+            self.seq.iter()
         }
     }
 
@@ -578,8 +580,9 @@ pub mod PrimTreeSeqStPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — consumes Vec into IntoIter.
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
+                IteratorSpec::remaining(&it) == self.seq@,
+                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
             self.seq.into_iter()
         }
@@ -613,109 +616,17 @@ pub mod PrimTreeSeqStPer {
 
     //		Section 10b. iterators
 
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct PrimTreeSeqStIter<'a, T> {
-        pub inner: std::slice::Iter<'a, T>,
-    }
-
-    impl<'a, T> View for PrimTreeSeqStIter<'a, T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(T)]
-    pub struct PrimTreeSeqStGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
-    impl<'a, T> View for PrimTreeSeqStGhostIterator<'a, T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    impl<'a, T> std::iter::Iterator for PrimTreeSeqStIter<'a, T> {
-        type Item = &'a T;
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — delegates to slice::Iter::next.
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for PrimTreeSeqStIter<'a, T> {
-        type GhostIter = PrimTreeSeqStGhostIterator<'a, T>;
-        open spec fn ghost_iter(&self) -> PrimTreeSeqStGhostIterator<'a, T> {
-            PrimTreeSeqStGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for PrimTreeSeqStGhostIterator<'a, T> {
-        type ExecIter = PrimTreeSeqStIter<'a, T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &PrimTreeSeqStIter<'a, T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &PrimTreeSeqStIter<'a, T>) -> PrimTreeSeqStGhostIterator<'a, T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
     impl<'a, T> std::iter::IntoIterator for &'a PrimTreeSeqStS<T> {
         type Item = &'a T;
-        type IntoIter = PrimTreeSeqStIter<'a, T>;
+        type IntoIter = std::slice::Iter<'a, T>;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — wraps slice::Iter.
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
-                prim_tree_seq_iter_invariant(&it),
+                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
-            PrimTreeSeqStIter { inner: self.seq.iter() }
+            self.seq.iter()
         }
     }
 
@@ -731,11 +642,6 @@ pub mod PrimTreeSeqStPer {
     }
 
     //		Section 6c. spec fns
-
-
-    pub open spec fn prim_tree_seq_iter_invariant<'a, T>(it: &PrimTreeSeqStIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
 
     //		Section 8c. traits
 
@@ -1039,31 +945,6 @@ pub mod PrimTreeSeqStPer {
     } // verus!
 
     //		Section 14. derive impls outside verus!
-
-
-    impl<'a, T: Debug> Debug for PrimTreeSeqStIter<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "PrimTreeSeqStIter({:?})", self.inner)
-        }
-    }
-
-    impl<'a, T> Display for PrimTreeSeqStIter<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "PrimTreeSeqStIter")
-        }
-    }
-
-    impl<'a, T> Debug for PrimTreeSeqStGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "PrimTreeSeqStGhostIterator")
-        }
-    }
-
-    impl<'a, T> Display for PrimTreeSeqStGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "PrimTreeSeqStGhostIterator")
-        }
-    }
 
     //		Section 14a. derive impls outside verus!
 

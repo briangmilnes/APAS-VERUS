@@ -117,7 +117,7 @@ fn test_height() {
 #[test]
 fn test_into_iter_collects_all_elements() {
     let tree: BSTSplayStEph<i32> = BSTSplayStEphLit![5, 3, 7, 1, 9];
-    let collected: Vec<i32> = (&tree).into_iter().collect();
+    let collected: Vec<i32> = tree.iter().collect();
     let mut sorted = collected.clone();
     sorted.sort();
     assert_eq!(sorted, vec![1, 3, 5, 7, 9]);
@@ -126,7 +126,7 @@ fn test_into_iter_collects_all_elements() {
 #[test]
 fn test_into_iter_empty() {
     let tree: BSTSplayStEph<i32> = BSTSplayStEphLit![];
-    let collected: Vec<i32> = (&tree).into_iter().collect();
+    let collected: Vec<i32> = tree.iter().collect();
     assert!(collected.is_empty());
 }
 
@@ -134,7 +134,7 @@ fn test_into_iter_empty() {
 fn test_into_iter_for_loop() {
     let tree: BSTSplayStEph<i32> = BSTSplayStEphLit![10, 20, 30];
     let mut sum = 0i32;
-    for v in &tree {
+    for v in tree.iter() {
         sum += v;
     }
     assert_eq!(sum, 60);

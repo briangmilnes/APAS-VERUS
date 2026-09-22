@@ -26,11 +26,12 @@ pub mod BSTSetTreapMtEph {
     //		Section 2. imports
 
     use std::fmt;
-    use std::vec::IntoIter;
 
     use std::cmp::Ordering::{Less, Greater};
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::OrdSpec;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
@@ -430,102 +431,11 @@ pub mod BSTSetTreapMtEph {
 
     //		Section 10. iterators — BSTSetTreapMtEph
 
-    /// Snapshot iterator over BSTSetTreapMtEph — collects elements via iter_in_order,
-    /// then yields owned T values from the captured Vec.
-    #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetTreapMtEphIter<T: MtKey> {
-        pub inner: IntoIter<T>,
-    }
-
-    impl<T: MtKey> View for BSTSetTreapMtEphIter<T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant_bststreapmteph<T: MtKey>(it: &BSTSetTreapMtEphIter<T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<T: MtKey> std::iter::Iterator for BSTSetTreapMtEphIter<T> {
-        type Item = T;
-
-        fn next(&mut self) -> (next: Option<T>)
-            ensures
-                ({
-                    let (old_index, old_seq) = old(self)@;
-                    match next {
-                        None => {
-                            &&& self@ == old(self)@
-                            &&& old_index >= old_seq.len()
-                        },
-                        Some(element) => {
-                            let (new_index, new_seq) = self@;
-                            &&& 0 <= old_index < old_seq.len()
-                            &&& new_seq == old_seq
-                            &&& new_index == old_index + 1
-                            &&& element == old_seq[old_index]
-                        },
-                    }
-                }),
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for for-loop support over BSTSetTreapMtEphIter.
-    #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetTreapMtEphGhostIterator<T: MtKey> {
-        pub pos: int,
-        pub elements: Seq<T>,
-    }
-
-    impl<T: MtKey> View for BSTSetTreapMtEphGhostIterator<T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    impl<T: MtKey> vstd::pervasive::ForLoopGhostIteratorNew for BSTSetTreapMtEphIter<T> {
-        type GhostIter = BSTSetTreapMtEphGhostIterator<T>;
-        open spec fn ghost_iter(&self) -> BSTSetTreapMtEphGhostIterator<T> {
-            BSTSetTreapMtEphGhostIterator { pos: self@.0, elements: self@.1 }
-        }
-    }
-
-    impl<T: MtKey> vstd::pervasive::ForLoopGhostIterator for BSTSetTreapMtEphGhostIterator<T> {
-        type ExecIter = BSTSetTreapMtEphIter<T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &BSTSetTreapMtEphIter<T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &BSTSetTreapMtEphIter<T>) -> BSTSetTreapMtEphGhostIterator<T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
+    // r212 form C: this `IntoIterator` impl required `requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>()`, which
+    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
+    // can establish; use `iter()`, which keeps the requires
+    // (src/experiments/intoiter_form_c_no_impl.rs).
+    /*
     impl<'a, T: MtKey + ClonePreservesView> std::iter::IntoIterator for &'a BSTSetTreapMtEph<T> {
         type Item = T;
         type IntoIter = BSTSetTreapMtEphIter<T>;
@@ -538,6 +448,22 @@ pub mod BSTSetTreapMtEph {
         {
             let in_ord = self.iter_in_order();
             BSTSetTreapMtEphIter { inner: in_ord.seq.into_iter() }
+        }
+    }
+    */
+
+    impl<T: MtKey + ClonePreservesView> BSTSetTreapMtEph<T> {
+        /// Returns a snapshot iterator over the set elements in ascending key order.
+        /// - Alg Analysis: Code review (Claude Fable 5.1): Work O(n), Span O(n) — in-order traversal.
+        pub fn iter(&self) -> (it: std::vec::IntoIter<T>)
+            requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent::<T>(),
+            ensures
+                IteratorSpec::remaining(&it).len() == self@.len(),
+                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
+                IteratorSpec::decrease(&it) is Some,
+        {
+            let in_ord = self.iter_in_order();
+            in_ord.seq.into_iter()
         }
     }
 
@@ -588,28 +514,4 @@ pub mod BSTSetTreapMtEph {
     }
 
     //		Section 14b. derive impls outside verus!
-
-    impl<T: MtKey> fmt::Debug for BSTSetTreapMtEphIter<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "BSTSetTreapMtEphIter")
-        }
-    }
-
-    impl<T: MtKey> fmt::Display for BSTSetTreapMtEphIter<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "BSTSetTreapMtEphIter")
-        }
-    }
-
-    impl<T: MtKey> fmt::Debug for BSTSetTreapMtEphGhostIterator<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "BSTSetTreapMtEphGhostIterator")
-        }
-    }
-
-    impl<T: MtKey> fmt::Display for BSTSetTreapMtEphGhostIterator<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "BSTSetTreapMtEphGhostIterator")
-        }
-    }
 }

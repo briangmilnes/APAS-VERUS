@@ -428,7 +428,7 @@ fn test_into_iter_collects_keys() {
     bst.insert(5, 50, rand_priority());
     bst.insert(3, 30, rand_priority());
     bst.insert(7, 70, rand_priority());
-    let collected: Vec<i32> = (&bst).into_iter().collect();
+    let collected: Vec<i32> = bst.iter().collect();
     let mut sorted = collected.clone();
     sorted.sort();
     assert_eq!(sorted, vec![3, 5, 7]);
@@ -437,7 +437,7 @@ fn test_into_iter_collects_keys() {
 #[test]
 fn test_into_iter_empty() {
     let bst: BSTSumStEph<i32, i32> = BSTreeReduced::new();
-    let collected: Vec<i32> = (&bst).into_iter().collect();
+    let collected: Vec<i32> = bst.iter().collect();
     assert!(collected.is_empty());
 }
 
@@ -448,7 +448,7 @@ fn test_into_iter_for_loop() {
     bst.insert(20, 200, rand_priority());
     bst.insert(30, 300, rand_priority());
     let mut sum = 0i32;
-    for k in &bst {
+    for k in bst.iter() {
         sum += k;
     }
     assert_eq!(sum, 60);

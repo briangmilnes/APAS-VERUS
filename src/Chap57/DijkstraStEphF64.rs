@@ -34,6 +34,8 @@ pub mod DijkstraStEphF64 {
     use std::fmt::Result as FmtResult;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
@@ -244,11 +246,15 @@ pub mod DijkstraStEphF64 {
                 if v < n {
                     let neighbors = graph.out_neighbors_weighed(&v);
                     let mut it = neighbors.iter();
+                    // r212: the prophetic model keeps the consumed count in a ghost `pos`
+                    // and the creation-time contents in `orig` (docs/IteratorMigrationStudy.md §6).
+                    let ghost orig = vstd::std_specs::hash::into_iter_hash_keys(it);
+                    let ghost mut pos: int = 0;
 
                     // Pre-compute: every iterator element corresponds to a graph edge.
                     proof {
-                        assert forall |j: int| 0 <= j < it@.1.len()
-                            implies graph@.A.contains((v, (#[trigger] it@.1[j])@.0, it@.1[j]@.1))
+                        assert forall |j: int| 0 <= j < orig.len()
+                            implies graph@.A.contains((v, (#[trigger] orig[j])@.0, orig[j]@.1))
                         by {
                         };
                     }
@@ -259,7 +265,12 @@ pub mod DijkstraStEphF64 {
                             sssp.spec_ssspresultstephf64_wf(),
                             sssp.spec_distances().len() == n as int,
                             sssp.spec_source() == source,
-                            it@.0 <= it@.1.len(),
+                            IteratorSpec::obeys_prophetic_iter_laws(&it),
+                            IteratorSpec::decrease(&it) is Some,
+                            0 <= pos <= orig.len(),
+                            IteratorSpec::remaining(&it).len() == orig.len() - pos,
+                            forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                                ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
                             obeys_feq_clone::<PQEntry>(),
                             m as int == graph@.A.len(),
                             graph@.A.len() * 2 + 2 <= usize::MAX as int,
@@ -269,17 +280,22 @@ pub mod DijkstraStEphF64 {
                             used_edges.subset_of(graph@.A),
                             used_edges.finite(),
                             used_edges.len() as int == m as int - remaining_budget,
-                            it@.1.no_duplicates(),
+                            orig.no_duplicates(),
                             visited@.contains(v),
                             forall |e: (usize, usize, f64)| #[trigger] used_edges.contains(e) ==> visited@.contains(e.0),
-                            forall |j: int| 0 <= j < it@.1.len() ==>
-                                graph@.A.contains((v, (#[trigger] it@.1[j])@.0, it@.1[j]@.1)),
+                            forall |j: int| 0 <= j < orig.len() ==>
+                                graph@.A.contains((v, (#[trigger] orig[j])@.0, orig[j]@.1)),
                             forall |e: (usize, usize, f64)| #[trigger] used_edges.contains(e) ==>
-                                (e.0 != v || (exists |j: int| 0 <= j < it@.0 && #[trigger] it@.1[j]@ == (e.1, e.2))),
+                                (e.0 != v || (exists |j: int| 0 <= j < pos && #[trigger] orig[j]@ == (e.1, e.2))),
                     {
+                        let ghost old_pos = pos;
                         match it.next() {
                             None => break,
                             Some(pair) => {
+                                proof {
+                                    pos = pos + 1;
+                                    assert(orig[old_pos] == *pair);
+                                }
                                 let Pair(u, weight) = pair;
                                 if *u < n {
                                     let u_dist = sssp.get_distance(*u);
@@ -295,7 +311,7 @@ pub mod DijkstraStEphF64 {
                                     if is_better {
                                         proof {
                                             let new_edge: (usize, usize, f64) = (v, *u, weight@);
-                                            let ghost pos = (it@.0 - 1) as int;
+                                            let ghost idx = old_pos;
                                             let new_used = used_edges.insert(new_edge);
                                             vstd::set_lib::lemma_len_subset::<(usize, usize, f64)>(new_used, graph@.A);
                                         }

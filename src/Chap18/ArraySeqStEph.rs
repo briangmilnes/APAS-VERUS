@@ -31,6 +31,8 @@ pub mod ArraySeqStEph {
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     pub use crate::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::*;
 
     verus!
@@ -800,10 +802,19 @@ pub mod ArraySeqStEph {
                 }
                 acc = f(&acc, &a.seq[i]);
                 proof {
-                    let ghost t = s.take(i as int + 1);
-                    // Veracity: NEEDED assert
-                    assert(t.drop_last() =~= s.take(i as int));
-                    reveal(Seq::fold_left);
+                    // r212 accepted hole (user, 2026-09-21): on Z3 4.16 the
+                    // `while i < len` loop exceeds the rlimit with the proof
+                    // below, which is token-identical to the five sibling
+                    // files that verify (docs/IteratorTransformerChap18.md §4).
+                    // The fold step the bypassed lines established is accepted.
+                    // BYPASSED (r212):
+                    // let ghost t = s.take(i as int + 1);
+                    // // Veracity: NEEDED assert
+                    // assert(t.drop_last() =~= s.take(i as int));
+                    // reveal(Seq::fold_left);
+                    // BYPASSED (r212, replaced by lemma_take_fold_left_step):
+                    // accept(acc == s.take(i as int + 1).fold_left(id, spec_f));
+                    lemma_take_fold_left_step(s, i as int, id, spec_f);
                 }
                 let cloned = acc.clone();
                 proof {
@@ -922,6 +933,17 @@ pub mod ArraySeqStEph {
     }
 
 
+    /// One step of a prefix fold: folding the first `i + 1` elements is `f`
+    /// applied to the fold of the first `i` and element `i`.
+    proof fn lemma_take_fold_left_step<T>(s: Seq<T>, i: int, id: T, f: spec_fn(T, T) -> T)
+        requires 0 <= i < s.len(),
+        ensures s.take(i + 1).fold_left(id, f) == f(s.take(i).fold_left(id, f), s[i]),
+    {
+        let t = s.take(i + 1);
+        assert(t.drop_last() =~= s.take(i));
+        reveal(Seq::fold_left);
+    }
+
     impl<T> ArraySeqStEphS<T> {
         broadcast proof fn lemma_spec_index(&self, i: int)
             requires 0 <= i < self.spec_len()
@@ -929,124 +951,28 @@ pub mod ArraySeqStEph {
         {}
 
         /// Returns an iterator over the sequence elements.
-        pub fn iter(&self) -> (it: ArraySeqStEphIter<'_, T>)
+        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
-                iter_invariant(&it),
+                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
-            ArraySeqStEphIter { inner: self.seq.iter() }
+            self.seq.iter()
         }
     }
 
     //		Section 10. iterators
 
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct ArraySeqStEphIter<'a, T> {
-        pub inner: std::slice::Iter<'a, T>,
-    }
-
-    impl<'a, T> View for ArraySeqStEphIter<'a, T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ArraySeqStEphGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
-    impl<'a, T> View for ArraySeqStEphGhostIterator<'a, T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqStEphIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<'a, T> std::iter::Iterator for ArraySeqStEphIter<'a, T> {
-        type Item = &'a T;
-
-        // Relies on vstd's assume_specification for slice::Iter::next.
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqStEphIter<'a, T> {
-        type GhostIter = ArraySeqStEphGhostIterator<'a, T>;
-        open spec fn ghost_iter(&self) -> ArraySeqStEphGhostIterator<'a, T> {
-            ArraySeqStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ArraySeqStEphGhostIterator<'a, T> {
-        type ExecIter = ArraySeqStEphIter<'a, T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &ArraySeqStEphIter<'a, T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &ArraySeqStEphIter<'a, T>) -> ArraySeqStEphGhostIterator<'a, T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStEphS<T> {
         type Item = &'a T;
-        type IntoIter = ArraySeqStEphIter<'a, T>;
+        type IntoIter = std::slice::Iter<'a, T>;
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
-                iter_invariant(&it),
+                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
-            ArraySeqStEphIter { inner: self.seq.iter() }
+            self.seq.iter()
         }
     }
 
@@ -1055,8 +981,9 @@ pub mod ArraySeqStEph {
         type IntoIter = IntoIter<T>;
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
+                IteratorSpec::remaining(&it) == self.seq@,
+                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
             self.seq.into_iter()
         }
@@ -1115,30 +1042,6 @@ pub mod ArraySeqStEph {
                 write!(f, "{item}")?;
             }
             write!(f, "]")
-        }
-    }
-
-    impl<'a, T: Debug> Debug for ArraySeqStEphIter<'a, T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "ArraySeqStEphIter({:?})", self.inner)
-        }
-    }
-
-    impl<'a, T> Display for ArraySeqStEphIter<'a, T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "ArraySeqStEphIter")
-        }
-    }
-
-    impl<'a, T> Debug for ArraySeqStEphGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "ArraySeqStEphGhostIterator")
-        }
-    }
-
-    impl<'a, T> Display for ArraySeqStEphGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "ArraySeqStEphGhostIterator")
         }
     }
 }
