@@ -1,0 +1,51 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:421:20
+    |
+421 |               assert(forall|k: int| mid as int <= k < end as int ==>
+    |  ____________________^
+422 | |                 #[trigger] key_view(cf2@).contains_key(e2@[k]@.0) && key_view(cf2@).contains_key(e2@[k]@.1) &&
+423 | |                 key_view(vi2@).contains_key(e2@[k]@.0) && key_view(vi2@).contains_key(e2@[k]@.1));
+    | |________________________________________________________________________________________________^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:428:20
+    |
+428 |             assert(f2.requires(()));
+    |                    ^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+forall |k|
+    let tmp%% = mid in let tmp%% = k in let tmp%% = end in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        key_view(cf2.view()).dom().to_iset().contains(e2.view().index(k).view().0) ✔
+        key_view(cf2.view()).dom().to_iset().contains(e2.view().index(k).view().1) ✔
+        key_view(vi2.view()).dom().to_iset().contains(e2.view().index(k).view().0) ✔
+        key_view(vi2.view()).dom().to_iset().contains(e2.view().index(k).view().1) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap62/StarPartitionMtEph.rs:350:50
+    |
+350 |                         let j2 = choose|j2: int| 0 <= j2 < nv as int && #[trigger] vertices@[j2]@ == v@;
+    |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap62/StarPartitionMtEph.rs:361:50
+    |
+361 |                         let j2 = choose|j2: int| 0 <= j2 < nv as int && #[trigger] vertices@[j2]@ == u@;
+    |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1255 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 1854MB, peak z3 RSS: 227MB, min free: 24419MB
+Sampled CPU Usage: rust_verify: 19s, z3 children: 16s

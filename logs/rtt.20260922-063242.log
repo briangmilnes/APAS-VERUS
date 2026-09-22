@@ -1,0 +1,105 @@
+r212 RTT for Chap62: cargo test --release on 4 targets: TestStarContractionMtEph TestStarContractionStEph TestStarPartitionMtEph TestStarPartitionStEph
+Starting RTT at 06:32:42
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 5.41s
+     Running tests/Chap62/TestStarContractionMtEph.rs (target/release/deps/TestStarContractionMtEph-3c02167a8e1786fb)
+
+running 9 tests
+test test_empty_graph_contraction_mt ... ok
+test test_single_vertex_mt ... ok
+test test_path_graph_mt ... ok
+test test_single_edge_mt ... ok
+test test_triangle_mt ... ok
+test test_contract_to_vertices_mt_cycle ... ok
+test test_complete_graph_mt ... ok
+test test_determinism_mt ... ok
+test test_large_cycle_mt ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/Chap62/TestStarContractionStEph.rs (target/release/deps/TestStarContractionStEph-aaffa46cd20c916f)
+
+running 11 tests
+test test_complete_graph_contraction ... ok
+test test_contract_to_vertices_cycle ... ok
+test test_contract_with_base_expand ... ok
+test test_disconnected_contraction ... ok
+test test_empty_graph_contraction ... ok
+test test_path_contraction ... ok
+test test_single_edge_contraction ... ok
+test test_large_cycle_contraction ... ok
+test test_single_vertex_contraction ... ok
+test test_star_graph_contraction ... ok
+test test_triangle_contraction ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap62/TestStarPartitionMtEph.rs (target/release/deps/TestStarPartitionMtEph-7f6624c17edc1cbf)
+
+running 7 tests
+test test_empty_graph_mt ... ok
+test test_single_vertex_mt ... ok
+test test_parallel_star_partition_star ... ok
+test test_parallel_star_partition_cycle ... ok
+test test_complete_graph_mt ... ok
+test test_partition_validity ... ok
+test test_determinism ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap62/TestStarPartitionStEph.rs (target/release/deps/TestStarPartitionStEph-71ad1b6a3894b8c6)
+
+running 12 tests
+test test_complete_graph ... ok
+test test_empty_graph ... ok
+test test_path_graph ... ok
+test test_large_cycle ... ok
+test test_partition_properties ... ok
+test test_sequential_star_partition_cycle ... ok
+test test_sequential_star_partition_star ... ok
+test test_single_vertex ... ok
+test test_three_isolated ... ok
+test test_two_vertices_connected ... ok
+test test_two_vertices_disconnected ... ok
+test test_wheel_graph ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 5s

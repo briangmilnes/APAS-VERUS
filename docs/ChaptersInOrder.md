@@ -61,6 +61,7 @@ file, or listed at the end.
 | 37 | 58 | 1370 | 0 | 0 | 41 pass | none | r213 Chap58 |
 | 38 | 59 | 2632 | 0 | 0 | 41 pass | none | r213 Chap59 |
 | 39 | 61 | 1243 | 0 | 0 | 40 pass | none | r213 Chap61 |
+| 40 | 62 | 1256 | 0 | 0 | 39 pass | none | r213 Chap62 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -679,4 +680,35 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
 - Start and end: 1243 verified, 0 errors, 0 warnings, 0 trigger notes
   (`logs/validate.20260922-062947.log`). No edit.
 - RTT: 4 targets, 40 tests pass (`logs/rtt.20260922-063003.log`).
+- PTT: none registered.
+
+### Chap62
+
+- Start: 1254 verified, 2 errors, 0 warnings
+  (`logs/validate.20260922-063012.log`), both in `StarPartitionMtEph.rs`:
+  - `hash_coin_flips_mt`: the merge loop's invariant "every key of `right`
+    occurs in `it_seq`" was not established before the loop;
+  - `build_p_vec_with_inject_mt`, `size == 1`: three postconditions at
+    `return result` (the `Some(center)` branch).
+  After those were fixed, a third failure surfaced
+  (`logs/validate.20260922-063125.log`): `f2.requires(())` at the
+  `ParaPair!` in `build_th_edges_mt`, with every conjunct of the requires
+  proved separately ("the proof is flaky" note).
+- Edit class 5, proof repair (all ghost code):
+  - before the merge loop, an `assert forall` from the `HashMap::iter`
+    postcondition (`remaining(&rit).contains((&k, &right@[k]))`, and
+    `it_seq` is its `unref`), choosing the index and asserting
+    `it_seq[i] == (k, right@[k])`;
+  - in the `Some(center)` branch, asserts that `satellite_map@` contains the
+    raw vertex, that `key_view(satellite_map@)` contains `sv` with value
+    `*center`, and that `result@[0]@` is that value's view, which lets the
+    requires quantifiers on satellite keys and values fire;
+  - before the `ParaPair!` in `build_th_edges_mt`, an `assert forall ...
+    by` for the edge-range requires of `f2` (one assert per conjunct), the
+    two vertex-index requires, and `assert(f2.requires(()))`.
+- `iterator-upgrade` found no site; no `finite()` sites.
+- Exec cost: none changed.
+- End: 1256 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-063225.log`).
+- RTT: 4 targets, 39 tests pass (`logs/rtt.20260922-063242.log`).
 - PTT: none registered.

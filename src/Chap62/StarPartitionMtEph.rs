@@ -204,6 +204,18 @@ pub mod StarPartitionMtEph {
         // right map; the iterator's sequence `it_seq` records every entry.
         let rit = right.iter();
         let ghost it_seq = vstd::std_specs::hash::into_iter(rit);
+        proof {
+            // Every key of right occurs in it_seq: the iterator's remaining
+            // sequence contains (&k, &right@[k]), and it_seq is its unref.
+            assert forall|k: V| #[trigger] right@.contains_key(k) implies
+                exists|pair: (V, bool)| #[trigger] it_seq.contains(pair) && pair.0 == k by {
+                let r = vstd::std_specs::iter::IteratorSpec::remaining(&rit);
+                assert(r.contains((&k, &right@[k])));
+                let i = choose|i: int| 0 <= i < r.len() && r[i] == (&k, &right@[k]);
+                assert(it_seq[i] == (k, right@[k]));
+                assert(it_seq.contains((k, right@[k])));
+            };
+        }
         for kv in it: rit
             invariant
                 it.seq().unref() == it_seq,
@@ -404,6 +416,22 @@ pub mod StarPartitionMtEph {
         {
             build_th_edges_mt(e2, cf2, vi2, vt2, nv, mid, end)
         };
+
+        proof {
+            assert forall|k: int| mid as int <= k < end as int implies
+                #[trigger] key_view(cf2@).contains_key(e2@[k]@.0) && key_view(cf2@).contains_key(e2@[k]@.1) &&
+                key_view(vi2@).contains_key(e2@[k]@.0) && key_view(vi2@).contains_key(e2@[k]@.1) by {
+                assert(key_view(cf2@).contains_key(e2@[k]@.0));
+                assert(key_view(cf2@).contains_key(e2@[k]@.1));
+                assert(key_view(vi2@).contains_key(e2@[k]@.0));
+                assert(key_view(vi2@).contains_key(e2@[k]@.1));
+            };
+            assert(forall|j: int| 0 <= j < nv as int ==>
+                #[trigger] key_view(vi2@).contains_key(vt2@[j]@) && key_view(vi2@)[vt2@[j]@] as usize == j);
+            assert(forall|v_view: V::V| #[trigger] key_view(vi2@).contains_key(v_view) ==>
+                exists|j: int| 0 <= j < nv as int && #[trigger] vt2@[j]@ == v_view);
+            assert(f2.requires(()));
+        }
 
         let Pair(mut result, right) = crate::ParaPair!(f1, f2);
 
@@ -1013,6 +1041,11 @@ pub mod StarPartitionMtEph {
                     // Veracity: NEEDED proof block
                     proof {
                         let ghost sv = vertices@[start as int]@;
+                        // The raw lookup hit, so sv is a satellite_map key whose value is center.
+                        assert(satellite_map@.contains_key(vertices@[start as int]));
+                        assert(key_view(satellite_map@).contains_key(sv));
+                        assert(key_view(satellite_map@)[sv] == *center);
+                        assert(result@[0]@ == key_view(satellite_map@)[sv]@);
                         // Heads preserve: satellite_map key is tails, so coin_flips[sv] is false => vacuous.
                         // Modified entry points to heads.
                         // In vertex_to_index.

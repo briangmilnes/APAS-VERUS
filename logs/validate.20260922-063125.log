@@ -1,0 +1,48 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: precondition not satisfied
+   --> src/ParaPairs.rs:124:9
+    |
+ 86 |             f2.requires(()),
+    |             --------------- failed precondition
+...
+124 |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap62/StarPartitionMtEph.rs:420:39
+    |
+420 |         let Pair(mut result, right) = crate::ParaPair!(f1, f2);
+    |                                       ------------------------ in this macro invocation
+    |
+    = note: this error originates in the macro `crate::ParaPair` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+note: diagnostics via expansion
+
+note: 
+
+ClosureReq(f1, ()) ✔
+ClosureReq(f2, ()) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap62/StarPartitionMtEph.rs:350:50
+    |
+350 |                         let j2 = choose|j2: int| 0 <= j2 < nv as int && #[trigger] vertices@[j2]@ == v@;
+    |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap62/StarPartitionMtEph.rs:361:50
+    |
+361 |                         let j2 = choose|j2: int| 0 <= j2 < nv as int && #[trigger] vertices@[j2]@ == u@;
+    |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1255 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 1797MB, peak z3 RSS: 178MB, min free: 24465MB
+Sampled CPU Usage: rust_verify: 19s, z3 children: 16s

@@ -1,0 +1,247 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:214:63
+    |
+214 |                     #[trigger] key_view(merged@).contains_key(verts_view[j]@),
+    |                                                               ^^^^^^^^^^^^^
+    |
+   --> seq.rs:972:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied before loop
+   --> src/Chap62/StarPartitionMtEph.rs:219:17
+    |
+219 | /                 forall|k: V| #[trigger] right@.contains_key(k) ==>
+220 | |                     exists|pair: (V, bool)| #[trigger] it_seq.contains(pair) && pair.0 == k,
+    | |___________________________________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:223:62
+    |
+223 |                     #[trigger] key_view(right@).contains_key(verts_view[j]@),
+    |                                                              ^^^^^^^^^^^^^
+    |
+   --> seq.rs:972:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+    --> src/Chap62/StarPartitionMtEph.rs:985:13
+     |
+ 985 | /             forall|j: int| 0 <= j < p_vec@.len() ==>
+ 986 | |                 key_view(coin_flips@).contains_key(vertices@[(start as int + j)]@) &&
+ 987 | |                 (key_view(coin_flips@)[vertices@[(start as int + j)]@] ==>
+ 988 | |                  #[trigger] p_vec@[j]@ == vertices@[(start as int + j)]@),
+     | |_________________________________________________________________________^ failed this postcondition
+...
+1034 |               return result;
+     |               ------------- at this exit
+
+error: postcondition not satisfied
+    --> src/Chap62/StarPartitionMtEph.rs:990:13
+     |
+ 990 | /             forall|j: int| 0 <= j < p_vec@.len() ==>
+ 991 | |                 p_vec@[j]@ != vertices@[(start as int + j)]@ ==>
+ 992 | |                 (key_view(coin_flips@).contains_key(#[trigger] p_vec@[j]@) &&
+ 993 | |                  key_view(coin_flips@)[p_vec@[j]@]),
+     | |___________________________________________________^ failed this postcondition
+...
+1034 |               return result;
+     |               ------------- at this exit
+
+error: postcondition not satisfied
+    --> src/Chap62/StarPartitionMtEph.rs:995:13
+     |
+ 995 | /             forall|j: int| 0 <= j < p_vec@.len() ==>
+ 996 | |                 key_view(vertex_to_index@).contains_key(#[trigger] p_vec@[j]@) &&
+ 997 | |                 (key_view(vertex_to_index@)[p_vec@[j]@] as usize) < nv,
+     | |______________________________________________________________________^ failed this postcondition
+...
+1034 |               return result;
+     |               ------------- at this exit
+
+note: diagnostics via expansion
+   --> src/Chap62/StarPartitionMtEph.rs:988:18
+    |
+988 |                  #[trigger] p_vec@[j]@ == vertices@[(start as int + j)]@),
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+992 |                 (key_view(coin_flips@).contains_key(#[trigger] p_vec@[j]@) &&
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+993 |                  key_view(coin_flips@)[p_vec@[j]@]),
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+996 |                 key_view(vertex_to_index@).contains_key(#[trigger] p_vec@[j]@) &&
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+p_vec.view().len() == old(end) - old(start) ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = p_vec.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        key_view(old(coin_flips).view()).dom().to_iset().contains(old(vertices).view().index(old(start) + j).view()) ✔
+        key_view(old(coin_flips).view()).index(old(vertices).view().index(old(start) + j).view()) ==>
+            p_vec.view().index(j).view() == old(vertices).view().index(old(start) + j).view() ✘
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = p_vec.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        !(p_vec.view().index(j).view() == old(vertices).view().index(old(start) + j).view()) ==>
+            key_view(old(coin_flips).view()).dom().to_iset().contains(p_vec.view().index(j).view()) ✘
+                function is uninterpreted
+            key_view(old(coin_flips).view()).index(p_vec.view().index(j).view()) ✘
+                function is uninterpreted
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = p_vec.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        key_view(old(vertex_to_index).view()).dom().to_iset().contains(p_vec.view().index(j).view()) ✘
+            function is uninterpreted
+        clip(usize, key_view(old(vertex_to_index).view()).index(p_vec.view().index(j).view())) < old(nv) 
+
+note: recommendation not met
+    --> src/Chap62/StarPartitionMtEph.rs:1131:56
+     |
+1131 |                     key_view(coin_flips@).contains_key(verts_view[(mid as int + j)]@) &&
+     |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> seq.rs:972:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap62/StarPartitionMtEph.rs:1132:44
+     |
+1132 |                     (key_view(coin_flips@)[verts_view[(mid as int + j)]@] ==>
+     |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> seq.rs:972:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap62/StarPartitionMtEph.rs:1136:35
+     |
+1136 |                     right@[j]@ != verts_view[(mid as int + j)]@ ==>
+     |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> seq.rs:972:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap62/StarPartitionMtEph.rs:1134:47
+     |
+1134 |                      #[trigger] right@[j]@ == verts_view[(mid as int + j)]@),
+     |                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> seq.rs:972:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap62/StarPartitionMtEph.rs:1125:46
+     |
+1125 |                     #[trigger] result@[j] == left_snap[j],
+     |                                              ^^^^^^^^^^^^
+     |
+    --> seq.rs:972:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap62/StarPartitionMtEph.rs:1067:49
+     |
+1067 |                     key_view(cf1@).contains_key(v1@[(start as int + j)]@) &&
+     |                                                 ^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> seq.rs:972:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap62/StarPartitionMtEph.rs:1098:49
+     |
+1098 |                     key_view(cf2@).contains_key(v2@[(mid as int + j)]@) &&
+     |                                                 ^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> seq.rs:972:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap62/StarPartitionMtEph.rs:1099:37
+     |
+1099 |                     (key_view(cf2@)[v2@[(mid as int + j)]@] ==>
+     |                                     ^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> seq.rs:972:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap62/StarPartitionMtEph.rs:1100:43
+     |
+1100 |                      #[trigger] r@[j]@ == v2@[(mid as int + j)]@),
+     |                                           ^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> seq.rs:972:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap62/StarPartitionMtEph.rs:1102:31
+     |
+1102 |                     r@[j]@ != v2@[(mid as int + j)]@ ==>
+     |                               ^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> seq.rs:972:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met: value may be out of range of the target type (use `#[verifier::truncate]` on the cast to silence this warning)
+    --> src/Chap62/StarPartitionMtEph.rs:1105:72
+     |
+1105 |                     key_view(vi2@).contains_key(#[trigger] r@[j]@) && (key_view(vi2@)[r@[j]@] as usize) < nv,
+     |                                                                        ^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+    --> src/Chap62/StarPartitionMtEph.rs:1068:37
+     |
+1068 |                     (key_view(cf1@)[v1@[(start as int + j)]@] ==>
+     |                                     ^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> seq.rs:972:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap62/StarPartitionMtEph.rs:1071:31
+     |
+1071 |                     r@[j]@ != v1@[(start as int + j)]@ ==>
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> seq.rs:972:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met: value may be out of range of the target type (use `#[verifier::truncate]` on the cast to silence this warning)
+    --> src/Chap62/StarPartitionMtEph.rs:1074:72
+     |
+1074 |                     key_view(vi1@).contains_key(#[trigger] r@[j]@) && (key_view(vi1@)[r@[j]@] as usize) < nv,
+     |                                                                        ^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+    --> src/Chap62/StarPartitionMtEph.rs:1069:43
+     |
+1069 |                      #[trigger] r@[j]@ == v1@[(start as int + j)]@),
+     |                                           ^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> seq.rs:972:12
+     |
+     = note: recommendation not met
+
+verification results:: 1254 verified, 2 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 1856MB, peak z3 RSS: 222MB, min free: 24301MB
+Sampled CPU Usage: rust_verify: 19s, z3 children: 15s
