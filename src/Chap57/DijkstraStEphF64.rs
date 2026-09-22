@@ -214,7 +214,6 @@ pub mod DijkstraStEphF64 {
                 sssp.spec_distances().len() == n as int,
                 sssp.spec_source() == source,
                 n == graph@.V.len(),
-                visited@.finite(),
                 spec_labgraphview_wf(graph@),
                 valid_key_type_WeightedEdge::<usize, WrappedF64>(),
                 obeys_feq_clone::<PQEntry>(),
@@ -224,7 +223,6 @@ pub mod DijkstraStEphF64 {
                 pq@.len() + remaining_budget <= m as int + 1,
                 BinaryHeapPQ::<PQEntry>::spec_is_exec_heap(pq.spec_seq()),
                 used_edges.subset_of(graph@.A),
-                used_edges.finite(),
                 used_edges.len() as int == m as int - remaining_budget,
                 forall |e: (usize, usize, f64)| #[trigger] used_edges.contains(e) ==> visited@.contains(e.0),
         {
@@ -278,7 +276,6 @@ pub mod DijkstraStEphF64 {
                             pq@.len() + remaining_budget <= m as int,
                             BinaryHeapPQ::<PQEntry>::spec_is_exec_heap(pq.spec_seq()),
                             used_edges.subset_of(graph@.A),
-                            used_edges.finite(),
                             used_edges.len() as int == m as int - remaining_budget,
                             orig.no_duplicates(),
                             visited@.contains(v),

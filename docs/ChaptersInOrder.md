@@ -57,6 +57,7 @@ file, or listed at the end.
 | 33 | 54 | 1277 | 0 | 0 | 53 pass | 8 pass | r213 Chap54 |
 | 34 | 55 | 2290 | 0 | 0 | 58 pass | none | r213 Chap55 |
 | 35 | 56 | 948 | 0 | 0 | 54 pass | none | r213 Chap56 |
+| 36 | 57 | 2583 | 0 | 0 | 48 pass | none | r213 Chap57 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -626,4 +627,16 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
 - Start and end: 948 verified, 0 errors, 0 warnings, 0 trigger notes
   (`logs/validate.20260922-062449.log`). No edit.
 - RTT: 12 targets, 54 tests pass (`logs/rtt.20260922-062459.log`).
+- PTT: none registered.
+
+### Chap57
+
+- Start: 6 deprecated `finite()` warnings (`visited@.finite()`,
+  `used_edges.finite()` loop-invariant conjuncts in `DijkstraStEphF64.rs`
+  and `DijkstraStEphU64.rs`); not run separately before the edit.
+- Edit class 1: the six conjuncts deleted. `iterator-upgrade` found no site.
+- Exec cost: none changed.
+- End: 2583 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-062519.log`).
+- RTT: 3 targets, 48 tests pass (`logs/rtt.20260922-062549.log`).
 - PTT: none registered.
