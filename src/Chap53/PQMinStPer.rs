@@ -63,7 +63,7 @@ pub mod PQMinStPer {
     pub open spec fn spec_pqminstper_wf_generic<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder>(
         s: &PQMinResult<V, P>,
     ) -> bool {
-        s.visited@.finite() && s.priorities@.finite()
+        true
     }
 
     //		Section 8. traits
@@ -82,7 +82,6 @@ pub mod PQMinStPer {
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
-                vertex_universe.finite(),
                 vertex_universe.len() + 1 < usize::MAX as nat,
                 vertex_universe.contains(source@),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
@@ -108,7 +107,6 @@ pub mod PQMinStPer {
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
-                vertex_universe.finite(),
                 vertex_universe.len() + 1 < usize::MAX as nat,
                 sources@.subset_of(vertex_universe),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
@@ -156,7 +154,6 @@ pub mod PQMinStPer {
             forall|v: &V| #[trigger] graph.requires((v,)),
             forall|v: &V| #[trigger] priority_fn.requires((v,)),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
-            vertex_universe.finite(),
             vertex_universe.len() + 1 < usize::MAX as nat,
             vertex_universe.contains(source@),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
@@ -223,7 +220,6 @@ pub mod PQMinStPer {
             forall|v: &V| #[trigger] priority_fn.requires((v,)),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
             // Vertex universe constraints for capacity proofs.
-            vertex_universe.finite(),
             vertex_universe.len() + 1 < usize::MAX as nat,
             visited_init@.subset_of(vertex_universe),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
@@ -258,7 +254,6 @@ pub mod PQMinStPer {
                 forall|v: &V, p: P| #[trigger] priority_fn.ensures((v,), p) ==> p@ == spec_priority(v@),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
                 // Vertex universe invariants.
-                vertex_universe.finite(),
                 vertex_universe.len() + 1 < usize::MAX as nat,
                 visited@.subset_of(vertex_universe),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
@@ -325,7 +320,6 @@ pub mod PQMinStPer {
                     forall|v: &V| #[trigger] priority_fn.requires((v,)),
                     forall|v: &V, p: P| #[trigger] priority_fn.ensures((v,), p) ==> p@ == spec_priority(v@),
                     // Vertex universe invariants for frontier vertex tracking.
-                    vertex_universe.finite(),
                     vertex_universe.len() + 1 < usize::MAX as nat,
                     forall|j: int| 0 <= j < neighbors_seq@.len()
                         ==> vertex_universe.contains(#[trigger] neighbors_seq@[j]),
@@ -358,7 +352,6 @@ pub mod PQMinStPer {
                         // Prove injection is injective on frontier_updated@.
                         // Image: frontier.map(f) ⊆ vertex_universe.
                         let projected = frontier_updated@.map(f);
-                        frontier_updated@.lemma_map_finite(f);
                         // |frontier| == |projected| via injective map.
                         vstd::set_lib::lemma_map_size(frontier_updated@, projected, f);
                         // |projected| ≤ |vertex_universe| via subset.
@@ -446,7 +439,6 @@ pub mod PQMinStPer {
             forall|v: &V| #[trigger] graph.requires((v,)),
             forall|v: &V| #[trigger] priority_fn.requires((v,)),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
-            vertex_universe.finite(),
             vertex_universe.len() + 1 < usize::MAX as nat,
             sources@.subset_of(vertex_universe),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
@@ -484,7 +476,6 @@ pub mod PQMinStPer {
                 initial_frontier@.len() <= i as nat,
                 // Frontier vertex invariant: all entry vertices belong to vertex_universe.
                 sources@.subset_of(vertex_universe),
-                vertex_universe.finite(),
                 vertex_universe.len() + 1 < usize::MAX as nat,
                 forall|j: int| 0 <= j < sources_seq@.len()
                     ==> vertex_universe.contains(#[trigger] sources_seq@[j]),

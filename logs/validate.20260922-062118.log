@@ -1,0 +1,19 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error[E0599]: no method named `lemma_map_finite` found for struct `vstd::set::Set<A>` in the current scope
+   --> src/Chap53/PQMinStPer.rs:355:43
+    |
+355 |                         frontier_updated@.lemma_map_finite(f);
+    |                                           ^^^^^^^^^^^^^^^^
+    |
+help: there is a method `lemma_map_contains` with a similar name, but with different arguments
+   --> set_lib.rs:32:4
+    = note: the full name for the type has been written to 'lib.long-type-12484792435522961615.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 685MB, peak z3 RSS: 0MB, min free: 25846MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

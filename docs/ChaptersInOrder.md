@@ -53,6 +53,7 @@ file, or listed at the end.
 | 29 | 50 | 766 | 0 | 0 | 167 pass | none | r213 Chap50 |
 | 30 | 51 | 1333 | 0 | 0 | 109 pass | none | r213 Chap51 |
 | 31 | 52 | 2943 | 0 | 0 | 148 pass | none | r213 Chap52 |
+| 32 | 53 | 2246 | 0 | 0 | 46 pass | none | r213 Chap53 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -574,4 +575,22 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
 - End: 2943 verified, 0 errors, 0 warnings, 0 trigger notes
   (`logs/validate.20260922-061938.log`).
 - RTT: 15 targets, 148 tests pass (`logs/rtt.20260922-062011.log`).
+- PTT: none registered.
+
+### Chap53
+
+- Start: did not compile (`logs/validate.20260922-062118.log`, after the
+  `finite()` edits): `PQMinStPer` called `Set::lemma_map_finite`, which
+  vstd no longer has; before the edits, 45 deprecated `finite()` sites.
+- Edit class 1 and 2, `finite()` removal: 43 `vertex_universe.finite()`
+  conjuncts deleted from `requires` and loop invariants in the five files;
+  `spec_pqminsteph_wf_generic` and its StPer twin, whose body was
+  `s.visited@.finite() && s.priorities@.finite()`, now read `true`; the
+  finite-only `frontier_updated@.lemma_map_finite(f)` call removed (the
+  `lemma_map_size` and `lemma_len_subset` capacity proof after it is
+  unchanged). `iterator-upgrade` found no site.
+- Exec cost: none changed.
+- End: 2246 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-062132.log`).
+- RTT: 5 targets, 46 tests pass (`logs/rtt.20260922-062156.log`).
 - PTT: none registered.

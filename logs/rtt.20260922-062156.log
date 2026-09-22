@@ -1,0 +1,130 @@
+r212 RTT for Chap53: cargo test --release on 5 targets: TestGraphSearchMtPer TestGraphSearchStEph TestGraphSearchStPer TestPQMinStEph TestPQMinStPer
+Starting RTT at 06:21:56
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap53/TestGraphSearchMtPer.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestGraphSearchMtPer") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 5.68s
+     Running tests/Chap53/TestGraphSearchMtPer.rs (target/release/deps/TestGraphSearchMtPer-3c653667cb2fa2f3)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap53/TestGraphSearchStEph.rs (target/release/deps/TestGraphSearchStEph-77ac089682291ca6)
+
+running 12 tests
+test test_cycle_detection ... ok
+test test_diamond_graph ... ok
+test test_disconnected_graph ... ok
+test test_graph_search_single_source ... ok
+test test_reachable_simple_path ... ok
+test test_linear_chain ... ok
+test test_reachable_single_node ... ok
+test test_graph_search_multi_source ... ok
+test test_empty_graph ... ok
+test test_self_loop ... ok
+test test_star_graph ... ok
+test test_select_one_strategy ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap53/TestGraphSearchStPer.rs (target/release/deps/TestGraphSearchStPer-1386e82523631357)
+
+running 11 tests
+test test_cycle ... ok
+test test_dag ... ok
+test test_disconnected_component ... ok
+test test_linear_chain ... ok
+test test_empty_graph ... ok
+test test_multi_source ... ok
+test test_reachable ... ok
+test test_self_loop ... ok
+test test_select_one_dfs_style ... ok
+test test_single_edge ... ok
+test test_star_graph ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap53/TestPQMinStEph.rs (target/release/deps/TestPQMinStEph-25137ae778c44445)
+
+running 16 tests
+test test_pq_min_complete_graph ... ok
+test test_pq_min_custom_priority ... ok
+test test_pq_min_cycle ... ok
+test test_pq_min_binary_tree ... ok
+test test_pq_min_dag ... ok
+test test_pq_min_diamond ... ok
+test test_pq_min_empty_graph ... ok
+test test_pq_min_disconnected_graph ... ok
+test test_pq_min_linear_chain ... ok
+test test_pq_min_multi_source ... ok
+test test_pq_min_multi_disconnected ... ok
+test test_pq_min_priority_order ... ok
+test test_pq_min_self_loop ... ok
+test test_pq_min_reversed_priority ... ok
+test test_pq_min_single_edge ... ok
+test test_pq_min_star_graph ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap53/TestPQMinStPer.rs (target/release/deps/TestPQMinStPer-ad85c4c483e4f098)
+
+running 7 tests
+test test_pq_min_cycle ... ok
+test test_pq_min_empty_graph ... ok
+test test_pq_min_dag ... ok
+test test_pq_min_multi_source ... ok
+test test_pq_min_linear_chain ... ok
+test test_pq_min_single_edge ... ok
+test test_pq_min_priority_order ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 6s

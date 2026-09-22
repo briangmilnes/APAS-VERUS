@@ -76,7 +76,7 @@ calls, removed chapter by chapter as each is migrated.
 | 29 | 50 | 02, 30 | 0 | r213: 766 verified, 0 err, 0 warn; RTT 167 pass | `validate.20260922-061737.log` |
 | 30 | 51 | 02, 18, 19 | 0 | r213: 1333 verified, 0 err, 0 warn; RTT 109 pass | `validate.20260922-061753.log` |
 | 31 | 52 | 18, 19, 37, 38, 41, 43 | 0 | r213: 2943 verified, 0 err, 0 warn; RTT 148 pass | `validate.20260922-061938.log` |
-| 32 | 53 | 37, 38, 41 | 1 | `lemma_map_finite` in `PQMinStPer.rs` | full log |
+| 32 | 53 | 37, 38, 41 | 0 | r213: 2246 verified, 0 err, 0 warn; RTT 46 pass | `validate.20260922-062132.log` |
 | 33 | 54 | 02, 18, 19 | 0 | blocked on 18, 19 | full log |
 | 34 | 55 | 19, 37, 41 | 0 | blocked on 19, 37, 41 | full log |
 | 35 | 56 | 19 | 0 | blocked on 19 | full log |

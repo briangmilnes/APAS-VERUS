@@ -60,7 +60,7 @@ pub mod PQMinStEph {
     pub open spec fn spec_pqminsteph_wf_generic<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder>(
         s: &PQMinResult<V, P>,
     ) -> bool {
-        s.visited@.finite() && s.priorities@.finite()
+        true
     }
 
     //		Section 8. traits
@@ -79,7 +79,6 @@ pub mod PQMinStEph {
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
-                vertex_universe.finite(),
                 vertex_universe.len() + 1 < usize::MAX as nat,
                 vertex_universe.contains(source@),
                 forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
@@ -110,7 +109,6 @@ pub mod PQMinStEph {
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
-                vertex_universe.finite(),
                 vertex_universe.len() + 1 < usize::MAX as nat,
                 sources@.subset_of(vertex_universe),
                 forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
@@ -163,7 +161,6 @@ pub mod PQMinStEph {
             forall|v: &V| #[trigger] graph.requires((v,)),
             forall|v: &V| #[trigger] priority_fn.requires((v,)),
             forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
-            vertex_universe.finite(),
             vertex_universe.len() + 1 < usize::MAX as nat,
             vertex_universe.contains(source@),
             forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
@@ -232,7 +229,6 @@ pub mod PQMinStEph {
             forall|v: &V| #[trigger] priority_fn.requires((v,)),
             forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
             // Vertex universe constraints for capacity proofs.
-            vertex_universe.finite(),
             vertex_universe.len() + 1 < usize::MAX as nat,
             visited_init@.subset_of(vertex_universe),
             forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
@@ -274,7 +270,6 @@ pub mod PQMinStEph {
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
                 // Vertex universe invariants.
-                vertex_universe.finite(),
                 vertex_universe.len() + 1 < usize::MAX as nat,
                 visited@.subset_of(vertex_universe),
                 forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
@@ -351,7 +346,6 @@ pub mod PQMinStEph {
                     frontier_updated.spec_avltreesetsteph_wf(),
                     forall|v: &V| #[trigger] priority_fn.requires((v,)),
                     // Vertex universe invariants for frontier vertex tracking.
-                    vertex_universe.finite(),
                     vertex_universe.len() + 1 < usize::MAX as nat,
                     forall|j: int| 0 <= j < neighbors_seq@.len()
                         ==> vertex_universe.contains(#[trigger] neighbors_seq@[j]),
@@ -497,7 +491,6 @@ pub mod PQMinStEph {
             forall|v: &V| #[trigger] graph.requires((v,)),
             forall|v: &V| #[trigger] priority_fn.requires((v,)),
             forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
-            vertex_universe.finite(),
             vertex_universe.len() + 1 < usize::MAX as nat,
             sources@.subset_of(vertex_universe),
             forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
@@ -539,7 +532,6 @@ pub mod PQMinStEph {
                 initial_frontier@.len() <= i as nat,
                 // Frontier vertex invariant: all entry vertices belong to vertex_universe.
                 sources@.subset_of(vertex_universe),
-                vertex_universe.finite(),
                 vertex_universe.len() + 1 < usize::MAX as nat,
                 forall|j: int| 0 <= j < sources_seq@.len()
                     ==> vertex_universe.contains(#[trigger] sources_seq@[j]),
