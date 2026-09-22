@@ -20,21 +20,40 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-ℹ TableMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2550: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2562: info: accept()
+⚠ TableMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2423: error: fn_missing_ensures - fn from_sorted_entries — exec fn should have ensures
+      2411 |         fn iter(&self) -> (it: std::slice::Iter<'_, Pair<K, V>>) {
+            ...
+      2421 |     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+      2422 |     // veracity: no_requires
+      2424 |     {
+      2425 |         let seq = ArraySeqMtEphS::from_vec(entries);
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2464: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2476: info: accept()
    Info: 2 total
 ✓ TableSpecsAndLemmas.rs
-   15 clean proof functions
-ℹ TableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2681: info: accept()
+   14 clean proof functions
+⚠ TableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2533: error: fn_missing_ensures - fn from_sorted_entries — exec fn should have ensures
+      2517 |         fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>) {
+            ...
+      2531 |     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+      2532 |     // veracity: no_requires
+      2534 |         entries: Vec<Pair<K, V>>,
+      2535 |     ) -> (cloned: TableStEph<K, V>)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2576: info: accept()
    Info: 1 total
-   1 clean proof function
-ℹ TableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2893: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2904: info: accept()
+⚠ TableStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2586: error: fn_missing_ensures - fn from_sorted_entries — exec fn should have ensures
+      2569 |         fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>)
+            ...
+      2584 |     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+      2585 |     // veracity: no_requires
+      2587 |         entries: Vec<Pair<K, V>>,
+      2588 |     ) -> (cloned: TableStPer<K, V>)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2786: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2797: info: accept()
    Info: 2 total
-   5 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -63,38 +82,41 @@ TableStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   1 clean (no holes, no errors; 25%)
+   3 holed (holes or errors, 75%)
    4 total
 
 Proof Functions:
-   21 clean (100%)
+   20 clean (100%)
    0 holed (0%)
-   21 total
+   20 total
 
 Function Specs:
-   128 exec fns with complete spec (requires+ensures) (60%)
+   124 exec fns with complete spec (requires+ensures) (70%)
    3 exec fns missing spec (1%)
-   80 proof/spec fns clean (37%)
+   49 proof/spec fns clean (27%)
    0 proof/spec fns with holes (0%)
-   211 total fns
+   176 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
+Warnings: 3 total
+   3 × fn_missing_ensures
+
 Accepted (reviewed): 5 total
    5 × accept()
 
-No proof holes or warnings found! All proofs are complete.
+No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-18 04:58:00 -07:00
-Ended:     2026-04-18 04:58:01 -07:00
-Duration:  101ms
+Started:   2026-09-22 11:25:12 -07:00
+Ended:     2026-09-22 11:25:12 -07:00
+Duration:  65ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
+

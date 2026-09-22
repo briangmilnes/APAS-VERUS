@@ -23,8 +23,12 @@ Table of Contents:
 ✓ GraphSearchMtPer.rs
 ✓ GraphSearchStEph.rs
 ✓ GraphSearchStPer.rs
-✓ PQMinStEph.rs
-✓ PQMinStPer.rs
+ℹ PQMinStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:60: info: trivial_spec_wf
+   Info: 1 total
+ℹ PQMinStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:63: info: trivial_spec_wf
+   Info: 1 total
 
 =================================================================
 2. Depends Upon
@@ -75,15 +79,18 @@ Function Specs:
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
+Accepted (reviewed): 2 total
+   2 × trivial_spec_wf
+
 No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-18 04:58:01 -07:00
-Ended:     2026-04-18 04:58:01 -07:00
-Duration:  23ms
+Started:   2026-09-22 11:25:13 -07:00
+Ended:     2026-09-22 11:25:13 -07:00
+Duration:  30ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
+

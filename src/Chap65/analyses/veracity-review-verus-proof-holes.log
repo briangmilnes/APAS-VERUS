@@ -23,19 +23,19 @@ Table of Contents:
 ✓ KruskalStEph.rs
    1 clean proof function
 ℹ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:507: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:492: info: accept()
    Info: 1 total
    4 clean proof functions
 ✓ UnionFindArrayStEph.rs
-   11 clean proof functions
+   12 clean proof functions
 ✓ UnionFindNoPCStEph.rs
-   5 clean proof functions
+   7 clean proof functions
 ℹ UnionFindPCStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:107: info: opaque
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:123: info: opaque
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:133: info: opaque
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:116: info: opaque
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:131: info: opaque
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindPCStEph.rs:141: info: opaque
    Info: 3 total
-   18 clean proof functions
+   20 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -71,16 +71,16 @@ Modules:
    5 total
 
 Proof Functions:
-   39 clean (100%)
+   44 clean (100%)
    0 holed (0%)
-   39 total
+   44 total
 
 Function Specs:
-   50 exec fns with complete spec (requires+ensures) (34%)
+   50 exec fns with complete spec (requires+ensures) (32%)
    2 exec fns missing spec (1%)
-   95 proof/spec fns clean (64%)
+   100 proof/spec fns clean (65%)
    0 proof/spec fns with holes (0%)
-   147 total fns
+   152 total fns
 
 
 Holes Found: 0 (actionable)
@@ -96,9 +96,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-18 04:58:01 -07:00
-Ended:     2026-04-18 04:58:01 -07:00
-Duration:  45ms
+Started:   2026-09-22 11:25:13 -07:00
+Ended:     2026-09-22 11:25:13 -07:00
+Duration:  39ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+iew-verus-proof-holes.log

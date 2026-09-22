@@ -33,33 +33,33 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `edge_contract_mt` | Y |  |  | Y | Y |  |  | hole | 40&#8209;44 |
-| 2 | `contract_round_mt` | Y |  |  | Y | Y |  |  | unknown | 48&#8209;52 |
-| 3 | `build_edges_parallel` |  |  |  | Y | Y |  |  | unknown | 122&#8209;134 |
+| 1 | `edge_contract_mt` | Y |  |  | Y | Y |  |  | hole | 60&#8209;64 |
+| 2 | `contract_round_mt` | Y |  |  | Y | Y |  |  | unknown | 69&#8209;73 |
+| 3 | `build_edges_parallel` |  |  |  | Y | Y |  |  | unknown | 149&#8209;161 |
 
 ### Chap61/EdgeContractionStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 4 | `edge_contract` | Y |  |  | Y | Y |  |  | unknown | 39&#8209;43 |
-| 5 | `contract_round` | Y |  |  | Y | Y |  |  | unknown | 47&#8209;48 |
+| 4 | `edge_contract` | Y |  |  | Y | Y |  |  | unknown | 70&#8209;74 |
+| 5 | `contract_round` | Y |  |  | Y | Y |  |  | unknown | 79&#8209;80 |
 
 ### Chap61/VertexMatchingMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 6 | `parallel_matching_mt` | Y |  |  | Y | Y |  |  | unknown | 40&#8209;41 |
-| 7 | `flip_coins_parallel` |  |  |  | Y | Y |  |  | unknown | 88&#8209;93 |
-| 8 | `select_edges_parallel` |  |  |  | Y | Y |  |  | hole | 120&#8209;124 |
-| 9 | `select_edges_recursive` |  |  |  | Y | Y |  |  | hole | 154&#8209;160 |
-| 10 | `should_select_edge` |  |  |  | Y | Y |  |  | unknown | 202&#8209;208 |
+| 6 | `parallel_matching_mt` | Y |  |  | Y | Y |  |  | unknown | 60&#8209;61 |
+| 7 | `flip_coins_parallel` |  |  |  | Y | Y |  |  | unknown | 115&#8209;120 |
+| 8 | `select_edges_parallel` |  |  |  | Y | Y |  |  | hole | 149&#8209;153 |
+| 9 | `select_edges_recursive` |  |  |  | Y | Y |  |  | hole | 182&#8209;188 |
+| 10 | `should_select_edge` |  |  |  | Y | Y |  |  | unknown | 231&#8209;239 |
 
 ### Chap61/VertexMatchingStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 11 | `greedy_matching` | Y |  |  | Y | Y |  |  | unknown | 38&#8209;39 |
-| 12 | `parallel_matching_st` | Y |  |  | Y | Y |  |  | unknown | 43&#8209;44 |
+| 11 | `greedy_matching` | Y |  |  | Y | Y |  |  | unknown | 58&#8209;59 |
+| 12 | `parallel_matching_st` | Y |  |  | Y | Y |  |  | unknown | 64&#8209;65 |
 
 
 ### Legend

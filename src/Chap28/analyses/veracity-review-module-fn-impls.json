@@ -3,7 +3,7 @@
     "id": 1,
     "function": "lemma_range_sum_snoc",
     "file": "Chap28/MCSSSpec.rs",
-    "lines": "144-151",
+    "lines": "154-161",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_range_sum_snoc(s: Seq<i32>, lo: int, hi: int)\n        requires\n            0 <= lo,\n            lo < hi,\n            hi <= s.len(),\n        ensures\n            spec_range_sum(s, lo, hi) == spec_range_sum(s, lo, hi - 1) + s[hi - 1] as int,\n        decreases hi - lo,"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "function": "lemma_range_sum_single",
     "file": "Chap28/MCSSSpec.rs",
-    "lines": "160-164",
+    "lines": "170-174",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_range_sum_single(s: Seq<i32>, i: int)\n        requires\n            0 <= i < s.len(),\n        ensures\n            spec_range_sum(s, i, i + 1) == s[i] as int,"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "function": "lemma_range_sum_empty",
     "file": "Chap28/MCSSSpec.rs",
-    "lines": "170-172",
+    "lines": "180-182",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_range_sum_empty(s: Seq<i32>, lo: int, hi: int)\n        requires lo >= hi,\n        ensures spec_range_sum(s, lo, hi) == 0,"
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "function": "lemma_range_sum_split",
     "file": "Chap28/MCSSSpec.rs",
-    "lines": "177-182",
+    "lines": "187-192",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_range_sum_split(s: Seq<i32>, lo: int, mid: int, hi: int)\n        requires\n            0 <= lo <= mid <= hi <= s.len(),\n        ensures\n            spec_range_sum(s, lo, hi) == spec_range_sum(s, lo, mid) + spec_range_sum(s, mid, hi),\n        decreases mid - lo,"
   },
@@ -35,7 +35,7 @@
     "id": 5,
     "function": "lemma_range_sum_via_prefix",
     "file": "Chap28/MCSSSpec.rs",
-    "lines": "191-195",
+    "lines": "201-205",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_range_sum_via_prefix(s: Seq<i32>, lo: int, hi: int)\n        requires\n            0 <= lo <= hi <= s.len(),\n        ensures\n            spec_range_sum(s, lo, hi) == spec_prefix_sum(s, hi) - spec_prefix_sum(s, lo),"
   },
@@ -43,7 +43,7 @@
     "id": 6,
     "function": "lemma_min_prefix_sum_is_min",
     "file": "Chap28/MCSSSpec.rs",
-    "lines": "201-206",
+    "lines": "211-216",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_min_prefix_sum_is_min(s: Seq<i32>, k: int, j: int)\n        requires\n            0 <= j <= k,\n        ensures\n            spec_min_prefix_sum(s, k) <= spec_prefix_sum(s, j),\n        decreases k,"
   },
@@ -51,7 +51,7 @@
     "id": 7,
     "function": "lemma_min_prefix_sum_achieved",
     "file": "Chap28/MCSSSpec.rs",
-    "lines": "215-220",
+    "lines": "225-230",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_min_prefix_sum_achieved(s: Seq<i32>, k: int)\n        requires k >= 0,\n        ensures\n            exists|j: int| #![trigger spec_prefix_sum(s, j)]\n                0 <= j <= k && spec_prefix_sum(s, j) == spec_min_prefix_sum(s, k),\n        decreases k,"
   },
@@ -59,7 +59,7 @@
     "id": 8,
     "function": "lemma_range_sum_subseq",
     "file": "Chap28/MCSSSpec.rs",
-    "lines": "237-245",
+    "lines": "248-256",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_range_sum_subseq(full: Seq<i32>, sub: Seq<i32>, offset: int, lo: int, hi: int)\n        requires\n            0 <= offset,\n            0 <= lo <= hi <= sub.len(),\n            offset + hi <= full.len(),\n            forall|i: int| #![trigger sub[i]] 0 <= i < sub.len() ==> sub[i] == full[offset + i],\n        ensures\n            spec_range_sum(sub, lo, hi) == spec_range_sum(full, offset + lo, offset + hi),\n        decreases hi - lo,"
   },
@@ -67,7 +67,7 @@
     "id": 9,
     "function": "lemma_crossing_decompose",
     "file": "Chap28/MCSSSpec.rs",
-    "lines": "256-260",
+    "lines": "267-271",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_crossing_decompose(s: Seq<i32>, lo: int, mid: int, hi: int)\n        requires\n            0 <= lo < mid < hi <= s.len(),\n        ensures\n            spec_range_sum(s, lo, hi) == spec_range_sum(s, lo, mid) + spec_range_sum(s, mid, hi),"
   },
@@ -75,7 +75,7 @@
     "id": 10,
     "function": "lemma_sums_fit_subseq",
     "file": "Chap28/MCSSSpec.rs",
-    "lines": "266-273",
+    "lines": "277-284",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_sums_fit_subseq(full: Seq<i32>, sub: Seq<i32>, offset: int)\n        requires\n            sums_fit_i32(full),\n            0 <= offset,\n            offset + sub.len() <= full.len(),\n            forall|i: int| #![trigger sub[i]] 0 <= i < sub.len() ==> sub[i] == full[offset + i],\n        ensures\n            sums_fit_i32(sub),"
   },
@@ -83,7 +83,7 @@
     "id": 11,
     "function": "max_contig_sub_sum_brute",
     "file": "Chap28/MaxContigSubSumBruteStEph.rs",
-    "lines": "53-59",
+    "lines": "60-66",
     "spec_strength": "unknown",
     "snippet": "        fn max_contig_sub_sum_brute(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)\n            requires\n                sums_fit_i32(a.seq@),\n            ensures\n                a.seq@.len() == 0 ==> mcss.is_none(),\n                a.seq@.len() > 0 ==> mcss.is_some(),\n                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);"
   },
@@ -91,7 +91,7 @@
     "id": 12,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumBruteStEph.rs",
-    "lines": "70-72",
+    "lines": "77-79",
     "spec_strength": "unknown",
     "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures\n            max == spec_max_opt_i32(a, b),"
   },
@@ -99,7 +99,7 @@
     "id": 13,
     "function": "max_contig_sub_sum_divcon_mt",
     "file": "Chap28/MaxContigSubSumDivConMtEph.rs",
-    "lines": "48-55",
+    "lines": "56-63",
     "spec_strength": "unknown",
     "snippet": "        fn max_contig_sub_sum_divcon_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)\n            requires\n                sums_fit_i32(a.seq@),\n                obeys_feq_clone::<i32>(),\n            ensures\n                a.seq@.len() == 0 ==> mcss.is_none(),\n                a.seq@.len() > 0 ==> mcss.is_some(),\n                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);"
   },
@@ -107,7 +107,7 @@
     "id": 14,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumDivConMtEph.rs",
-    "lines": "64-65",
+    "lines": "72-73",
     "spec_strength": "unknown",
     "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures max == spec_max_opt_i32(a, b),"
   },
@@ -115,7 +115,7 @@
     "id": 15,
     "function": "max_suffix_sum",
     "file": "Chap28/MaxContigSubSumDivConMtEph.rs",
-    "lines": "78-80",
+    "lines": "86-88",
     "spec_strength": "unknown",
     "snippet": "    fn max_suffix_sum(a: &ArraySeqMtEphS<i32>) -> (mss: i32)\n        requires a.seq@.len() > 0, sums_fit_i32(a.seq@),\n        ensures is_max_suffix_sum(a.seq@, mss as int),"
   },
@@ -123,7 +123,7 @@
     "id": 16,
     "function": "max_prefix_sum",
     "file": "Chap28/MaxContigSubSumDivConMtEph.rs",
-    "lines": "131-133",
+    "lines": "144-146",
     "spec_strength": "unknown",
     "snippet": "    fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> (mps: i32)\n        requires a.seq@.len() > 0, sums_fit_i32(a.seq@),\n        ensures is_max_prefix_sum(a.seq@, mps as int),"
   },
@@ -131,7 +131,7 @@
     "id": 17,
     "function": "max_contig_sub_sum_divcon_opt_mt",
     "file": "Chap28/MaxContigSubSumDivConOptMtEph.rs",
-    "lines": "54-61",
+    "lines": "62-69",
     "spec_strength": "unknown",
     "snippet": "        fn max_contig_sub_sum_divcon_opt_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)\n            requires\n                sums_fit_i32(a.seq@),\n                obeys_feq_clone::<i32>(),\n            ensures\n                a.seq@.len() == 0 ==> mcss.is_none(),\n                a.seq@.len() > 0 ==> mcss.is_some(),\n                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);"
   },
@@ -139,7 +139,7 @@
     "id": 18,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumDivConOptMtEph.rs",
-    "lines": "70-71",
+    "lines": "78-79",
     "spec_strength": "unknown",
     "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures max == spec_max_opt_i32(a, b),"
   },
@@ -147,7 +147,7 @@
     "id": 19,
     "function": "max_contig_sub_sum_aux",
     "file": "Chap28/MaxContigSubSumDivConOptMtEph.rs",
-    "lines": "84-92",
+    "lines": "92-100",
     "spec_strength": "unknown",
     "snippet": "    fn max_contig_sub_sum_aux(a: &ArraySeqMtEphS<i32>) -> (mcss: StrengthResult)\n        requires a.seq@.len() > 0, sums_fit_i32(a.seq@), obeys_feq_clone::<i32>(),\n        ensures\n            mcss.0.is_some(),\n            is_mcss_of(a.seq@, mcss.0.unwrap() as int),\n            is_max_prefix_sum(a.seq@, mcss.1 as int),\n            is_max_suffix_sum(a.seq@, mcss.2 as int),\n            mcss.3 as int == spec_range_sum(a.seq@, 0, a.seq@.len() as int),\n        decreases a.seq@.len(),"
   },
@@ -155,7 +155,7 @@
     "id": 20,
     "function": "lemma_strength_combine",
     "file": "Chap28/MaxContigSubSumDivConOptStEph.rs",
-    "lines": "69-118",
+    "lines": "79-128",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_strength_combine(\n        s: Seq<i32>,\n        left: Seq<i32>,\n        right: Seq<i32>,\n        mid: int,\n        m_left: int,\n        p_left: int,\n        s_left: int,\n        t_left: int,\n        m_right: int,\n        p_right: int,\n        s_right: int,\n        t_right: int,\n    )\n        requires\n            s.len() > 1,\n            0 < mid < s.len() as int,\n            left.len() == mid,\n            right.len() == s.len() - mid,\n            forall|i: int| #![trigger left[i]] 0 <= i < left.len() ==> left[i] == s[i],\n            forall|i: int| #![trigger right[i]] 0 <= i < right.len() ==> right[i] == s[mid + i],\n            is_mcss_of(left, m_left),\n            is_max_prefix_sum(left, p_left),\n            is_max_suffix_sum(left, s_left),\n            t_left == spec_range_sum(left, 0, left.len() as int),\n            is_mcss_of(right, m_right),\n            is_max_prefix_sum(right, p_right),\n            is_max_suffix_sum(right, s_right),\n            t_right == spec_range_sum(right, 0, right.len() as int),\n        ensures\n            // mcss of whole\n            ({\n                let crossing = s_left + p_right;\n                let m = if m_left >= m_right && m_left >= crossing { m_left }\n                        else if m_right >= crossing { m_right }\n                        else { crossing };\n                is_mcss_of(s, m)\n            }),\n            // max prefix of whole\n            ({\n                let p = if p_left >= t_left + p_right { p_left } else { t_left + p_right };\n                is_max_prefix_sum(s, p)\n            }),\n            // max suffix of whole\n            ({\n                let ss = if s_right >= s_left + t_right { s_right } else { s_left + t_right };\n                is_max_suffix_sum(s, ss)\n            }),\n            // total\n            t_left + t_right == spec_range_sum(s, 0, s.len() as int),"
   },
@@ -163,7 +163,7 @@
     "id": 21,
     "function": "max_contig_sub_sum_divcon_opt",
     "file": "Chap28/MaxContigSubSumDivConOptStEph.rs",
-    "lines": "263-269",
+    "lines": "275-281",
     "spec_strength": "unknown",
     "snippet": "        fn max_contig_sub_sum_divcon_opt(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)\n            requires\n                sums_fit_i32(a.seq@),\n            ensures\n                a.seq@.len() == 0 ==> mcss.is_none(),\n                a.seq@.len() > 0 ==> mcss.is_some(),\n                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);"
   },
@@ -171,7 +171,7 @@
     "id": 22,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumDivConOptStEph.rs",
-    "lines": "280-281",
+    "lines": "292-293",
     "spec_strength": "unknown",
     "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures max == spec_max_opt_i32(a, b),"
   },
@@ -179,7 +179,7 @@
     "id": 23,
     "function": "max_contig_sub_sum_aux",
     "file": "Chap28/MaxContigSubSumDivConOptStEph.rs",
-    "lines": "294-304",
+    "lines": "306-316",
     "spec_strength": "unknown",
     "snippet": "    fn max_contig_sub_sum_aux(a: &ArraySeqStEphS<i32>) -> (mcss: StrengthResult)\n        requires\n            a.seq@.len() > 0,\n            sums_fit_i32(a.seq@),\n        ensures\n            mcss.0.is_some(),\n            is_mcss_of(a.seq@, mcss.0.unwrap() as int),\n            is_max_prefix_sum(a.seq@, mcss.1 as int),\n            is_max_suffix_sum(a.seq@, mcss.2 as int),\n            mcss.3 as int == spec_range_sum(a.seq@, 0, a.seq@.len() as int),\n        decreases a.seq@.len(),"
   },
@@ -187,7 +187,7 @@
     "id": 24,
     "function": "lemma_divcon_combine",
     "file": "Chap28/MaxContigSubSumDivConStEph.rs",
-    "lines": "61-88",
+    "lines": "71-98",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_divcon_combine(\n        s: Seq<i32>,\n        left: Seq<i32>,\n        right: Seq<i32>,\n        mid: int,\n        m_left: int,\n        m_right: int,\n        s_left: int,\n        p_right: int,\n    )\n        requires\n            s.len() > 1,\n            0 < mid < s.len() as int,\n            left.len() == mid,\n            right.len() == s.len() - mid,\n            forall|i: int| #![trigger left[i]] 0 <= i < left.len() ==> left[i] == s[i],\n            forall|i: int| #![trigger right[i]] 0 <= i < right.len() ==> right[i] == s[mid + i],\n            is_mcss_of(left, m_left),\n            is_mcss_of(right, m_right),\n            is_max_suffix_sum(left, s_left),\n            is_max_prefix_sum(right, p_right),\n        ensures\n            is_mcss_of(s, ({\n                let crossing = s_left + p_right;\n                if m_left >= m_right && m_left >= crossing { m_left }\n                else if m_right >= crossing { m_right }\n                else { crossing }\n            })),"
   },
@@ -195,7 +195,7 @@
     "id": 25,
     "function": "max_contig_sub_sum_divcon",
     "file": "Chap28/MaxContigSubSumDivConStEph.rs",
-    "lines": "154-160",
+    "lines": "163-169",
     "spec_strength": "unknown",
     "snippet": "        fn max_contig_sub_sum_divcon(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)\n            requires\n                sums_fit_i32(a.seq@),\n            ensures\n                a.seq@.len() == 0 ==> mcss.is_none(),\n                a.seq@.len() > 0 ==> mcss.is_some(),\n                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);"
   },
@@ -203,7 +203,7 @@
     "id": 26,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumDivConStEph.rs",
-    "lines": "171-172",
+    "lines": "180-181",
     "spec_strength": "unknown",
     "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures max == spec_max_opt_i32(a, b),"
   },
@@ -211,7 +211,7 @@
     "id": 27,
     "function": "max_suffix_sum",
     "file": "Chap28/MaxContigSubSumDivConStEph.rs",
-    "lines": "187-192",
+    "lines": "196-201",
     "spec_strength": "unknown",
     "snippet": "    fn max_suffix_sum(a: &ArraySeqStEphS<i32>) -> (mss: i32)\n        requires\n            a.seq@.len() > 0,\n            sums_fit_i32(a.seq@),\n        ensures\n            is_max_suffix_sum(a.seq@, mss as int),"
   },
@@ -219,7 +219,7 @@
     "id": 28,
     "function": "max_prefix_sum",
     "file": "Chap28/MaxContigSubSumDivConStEph.rs",
-    "lines": "263-268",
+    "lines": "277-282",
     "spec_strength": "unknown",
     "snippet": "    fn max_prefix_sum(a: &ArraySeqStEphS<i32>) -> (mps: i32)\n        requires\n            a.seq@.len() > 0,\n            sums_fit_i32(a.seq@),\n        ensures\n            is_max_prefix_sum(a.seq@, mps as int),"
   },
@@ -227,7 +227,7 @@
     "id": 29,
     "function": "lemma_max_ending_at_is_max",
     "file": "Chap28/MaxContigSubSumIterStEph.rs",
-    "lines": "74-80",
+    "lines": "83-89",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_max_ending_at_is_max(s: Seq<i32>, j: int, lo: int)\n        requires\n            0 <= lo <= j,\n            j < s.len(),\n        ensures\n            spec_range_sum(s, lo, j + 1) <= spec_max_ending_at(s, j),\n        decreases j,"
   },
@@ -235,7 +235,7 @@
     "id": 30,
     "function": "lemma_max_ending_at_achieved",
     "file": "Chap28/MaxContigSubSumIterStEph.rs",
-    "lines": "97-104",
+    "lines": "106-113",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_max_ending_at_achieved(s: Seq<i32>, j: int)\n        requires\n            0 <= j < s.len(),\n        ensures\n            exists|lo: int|\n                #![trigger spec_range_sum(s, lo, j + 1)]\n                0 <= lo <= j && spec_range_sum(s, lo, j + 1) == spec_max_ending_at(s, j),\n        decreases j,"
   },
@@ -243,7 +243,7 @@
     "id": 31,
     "function": "max_contig_sub_sum_iter",
     "file": "Chap28/MaxContigSubSumIterStEph.rs",
-    "lines": "133-139",
+    "lines": "141-147",
     "spec_strength": "unknown",
     "snippet": "        fn max_contig_sub_sum_iter(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)\n            requires\n                sums_fit_i32(a.seq@),\n            ensures\n                a.seq@.len() == 0 ==> mcss.is_none(),\n                a.seq@.len() > 0 ==> mcss.is_some(),\n                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);"
   },
@@ -251,7 +251,7 @@
     "id": 32,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumIterStEph.rs",
-    "lines": "148-149",
+    "lines": "156-157",
     "spec_strength": "unknown",
     "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures max == spec_max_opt_i32(a, b),"
   },
@@ -259,7 +259,7 @@
     "id": 33,
     "function": "max_contig_sub_sum_opt_mt",
     "file": "Chap28/MaxContigSubSumOptMtEph.rs",
-    "lines": "22-29",
+    "lines": "40-47",
     "spec_strength": "unknown",
     "snippet": "        fn max_contig_sub_sum_opt_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)\n            requires\n                sums_fit_i32(a.seq@),\n                a.seq@.len() < usize::MAX,\n            ensures\n                a.seq@.len() == 0 ==> mcss.is_none(),\n                a.seq@.len() > 0 ==> mcss.is_some(),\n                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);"
   },
@@ -267,7 +267,7 @@
     "id": 34,
     "function": "lemma_prefix_opt_is_mcss",
     "file": "Chap28/MaxContigSubSumOptStEph.rs",
-    "lines": "30-46",
+    "lines": "52-68",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_prefix_opt_is_mcss(s: Seq<i32>, m: int, n: int)\n        requires\n            n == s.len(),\n            n > 0,\n            sums_fit_i32(s),\n            // m is achieved by some hi\n            exists|hi: int|\n                #![trigger spec_prefix_sum(s, hi)]\n                1 <= hi <= n &&\n                m == spec_prefix_sum(s, hi) - spec_min_prefix_sum(s, hi - 1),\n            // m is maximal over all hi\n            forall|hi: int|\n                #![trigger spec_prefix_sum(s, hi)]\n                1 <= hi <= n ==>\n                m >= spec_prefix_sum(s, hi) - spec_min_prefix_sum(s, hi - 1),\n        ensures\n            is_mcss_of(s, m),"
   },
@@ -275,7 +275,7 @@
     "id": 35,
     "function": "max_contig_sub_sum_opt",
     "file": "Chap28/MaxContigSubSumOptStEph.rs",
-    "lines": "79-86",
+    "lines": "105-112",
     "spec_strength": "unknown",
     "snippet": "        fn max_contig_sub_sum_opt(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)\n            requires\n                sums_fit_i32(a.seq@),\n                a.seq@.len() < usize::MAX,\n            ensures\n                a.seq@.len() == 0 ==> mcss.is_none(),\n                a.seq@.len() > 0 ==> mcss.is_some(),\n                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);"
   },
@@ -283,7 +283,7 @@
     "id": 36,
     "function": "max_contig_sub_sum_reduced_mcsse",
     "file": "Chap28/MaxContigSubSumReducedMcsseStEph.rs",
-    "lines": "52-58",
+    "lines": "59-65",
     "spec_strength": "unknown",
     "snippet": "        fn max_contig_sub_sum_reduced_mcsse(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)\n            requires\n                sums_fit_i32(a.seq@),\n            ensures\n                a.seq@.len() == 0 ==> mcss.is_none(),\n                a.seq@.len() > 0 ==> mcss.is_some(),\n                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);"
   },
@@ -291,7 +291,7 @@
     "id": 37,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumReducedMcsseStEph.rs",
-    "lines": "69-70",
+    "lines": "76-77",
     "spec_strength": "unknown",
     "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures max == spec_max_opt_i32(a, b),"
   },
@@ -299,7 +299,7 @@
     "id": 38,
     "function": "max_contig_sub_sum_reduced",
     "file": "Chap28/MaxContigSubSumReducedStEph.rs",
-    "lines": "49-55",
+    "lines": "56-62",
     "spec_strength": "unknown",
     "snippet": "        fn max_contig_sub_sum_reduced(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)\n            requires\n                sums_fit_i32(a.seq@),\n            ensures\n                a.seq@.len() == 0 ==> mcss.is_none(),\n                a.seq@.len() > 0 ==> mcss.is_some(),\n                mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);"
   },
@@ -307,7 +307,7 @@
     "id": 39,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumReducedStEph.rs",
-    "lines": "66-67",
+    "lines": "73-74",
     "spec_strength": "unknown",
     "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures max == spec_max_opt_i32(a, b),"
   }

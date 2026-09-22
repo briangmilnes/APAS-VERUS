@@ -22,14 +22,15 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap51 | BottomUpDPMtEph | 8 | 10 | 0 | 0 | 10 | 0 | 9 | 1 | 0 |
-| 2 | Chap51 | BottomUpDPMtPer | 6 | 8 | 0 | 0 | 8 | 0 | 7 | 1 | 0 |
-| 3 | Chap51 | BottomUpDPStEph | 10 | 12 | 0 | 0 | 12 | 0 | 11 | 1 | 0 |
-| 4 | Chap51 | BottomUpDPStPer | 8 | 10 | 0 | 0 | 10 | 0 | 9 | 1 | 0 |
-| 5 | Chap51 | TopDownDPMtEph | 9 | 11 | 0 | 3 | 14 | 0 | 13 | 1 | 0 |
-| 6 | Chap51 | TopDownDPMtPer | 7 | 9 | 0 | 3 | 12 | 0 | 11 | 1 | 0 |
-| 7 | Chap51 | TopDownDPStEph | 14 | 16 | 0 | 1 | 17 | 0 | 16 | 1 | 0 |
-| 8 | Chap51 | TopDownDPStPer | 12 | 14 | 0 | 1 | 15 | 0 | 14 | 1 | 0 |
+| 1 | Chap51 | BottomUpDPMtEph | 10 | 12 | 0 | 0 | 12 | 0 | 12 | 0 | 0 |
+| 2 | Chap51 | BottomUpDPMtPer | 8 | 10 | 0 | 0 | 10 | 0 | 10 | 0 | 0 |
+| 3 | Chap51 | BottomUpDPStEph | 10 | 12 | 0 | 0 | 12 | 0 | 12 | 0 | 0 |
+| 4 | Chap51 | BottomUpDPStPer | 8 | 10 | 0 | 0 | 10 | 0 | 10 | 0 | 0 |
+| 5 | Chap51 | SeqSpecsAndLemmas | 0 | 0 | 0 | 1 | 1 | 0 | 1 | 0 | 0 |
+| 6 | Chap51 | TopDownDPMtEph | 9 | 11 | 0 | 2 | 13 | 0 | 13 | 0 | 0 |
+| 7 | Chap51 | TopDownDPMtPer | 7 | 9 | 0 | 2 | 11 | 0 | 11 | 0 | 0 |
+| 8 | Chap51 | TopDownDPStEph | 14 | 16 | 0 | 0 | 16 | 0 | 16 | 0 | 0 |
+| 9 | Chap51 | TopDownDPStPer | 12 | 14 | 0 | 0 | 14 | 0 | 14 | 0 | 0 |
 
 ## Function-by-Function Detail
 
@@ -37,139 +38,145 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 51&#8209;52 |
-| 2 | `new` | Y | Y |  |  | Y |  |  | unknown | 56&#8209;61 |
-| 3 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 65&#8209;66 |
-| 4 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;71 |
-| 5 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 75&#8209;76 |
-| 6 | `set_s` | Y | Y |  |  | Y |  |  | unknown | 80&#8209;83 |
-| 7 | `set_t` | Y | Y |  |  | Y |  |  | unknown | 87&#8209;90 |
-| 8 | `med_bottom_up_parallel` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;102 |
-| 9 | `default` |  | Y |  |  | Y |  |  | unknown | 298&#8209;301 |
-| 10 | `eq` |  | Y |  |  | Y |  |  | hole | 324&#8209;325 |
+| 1 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 58&#8209;59 |
+| 2 | `new` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;68 |
+| 3 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;73 |
+| 4 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;78 |
+| 5 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;83 |
+| 6 | `set_s` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;91 |
+| 7 | `set_t` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;99 |
+| 8 | `med_bottom_up_parallel` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;114 |
+| 9 | `initialize_base_cases` | Y | Y |  |  | Y |  |  | unknown | 117&#8209;132 |
+| 10 | `compute_cell_value` | Y | Y |  |  | Y |  |  | unknown | 135&#8209;157 |
+| 11 | `default` |  | Y |  |  | Y |  |  | unknown | 455&#8209;459 |
+| 12 | `eq` |  | Y |  |  | Y |  |  | unknown | 481&#8209;482 |
 
 ### Chap51/BottomUpDPMtPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 11 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 51&#8209;52 |
-| 12 | `new` | Y | Y |  |  | Y |  |  | unknown | 54&#8209;59 |
-| 13 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 61&#8209;62 |
-| 14 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 64&#8209;65 |
-| 15 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
-| 16 | `med_bottom_up_parallel` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;76 |
-| 17 | `default` |  | Y |  |  | Y |  |  | unknown | 265&#8209;268 |
-| 18 | `eq` |  | Y |  |  | Y |  |  | hole | 291&#8209;292 |
+| 13 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 58&#8209;59 |
+| 14 | `new` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;68 |
+| 15 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;73 |
+| 16 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;78 |
+| 17 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;83 |
+| 18 | `med_bottom_up_parallel` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;94 |
+| 19 | `initialize_base_cases` | Y | Y |  |  | Y |  |  | unknown | 97&#8209;112 |
+| 20 | `compute_cell_value` | Y | Y |  |  | Y |  |  | unknown | 115&#8209;137 |
+| 21 | `default` |  | Y |  |  | Y |  |  | unknown | 426&#8209;430 |
+| 22 | `eq` |  | Y |  |  | Y |  |  | unknown | 452&#8209;453 |
 
 ### Chap51/BottomUpDPStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 19 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 50&#8209;51 |
-| 20 | `new` | Y | Y |  |  | Y |  |  | unknown | 55&#8209;60 |
-| 21 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 64&#8209;65 |
-| 22 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 69&#8209;70 |
-| 23 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;75 |
-| 24 | `set_s` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;82 |
-| 25 | `set_t` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;89 |
-| 26 | `med_bottom_up` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;101 |
-| 27 | `initialize_base_cases` | Y | Y |  |  | Y |  |  | unknown | 105&#8209;119 |
-| 28 | `compute_cell_value` | Y | Y |  |  | Y |  |  | unknown | 123&#8209;144 |
-| 29 | `default` |  | Y |  |  | Y |  |  | unknown | 450&#8209;453 |
-| 30 | `eq` |  | Y |  |  | Y |  |  | hole | 476&#8209;477 |
+| 23 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 59&#8209;60 |
+| 24 | `new` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;69 |
+| 25 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 72&#8209;74 |
+| 26 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 77&#8209;79 |
+| 27 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 82&#8209;84 |
+| 28 | `set_s` | Y | Y |  |  | Y |  |  | unknown | 87&#8209;92 |
+| 29 | `set_t` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;100 |
+| 30 | `med_bottom_up` | Y | Y |  |  | Y |  |  | unknown | 104&#8209;115 |
+| 31 | `initialize_base_cases` | Y | Y |  |  | Y |  |  | unknown | 118&#8209;133 |
+| 32 | `compute_cell_value` | Y | Y |  |  | Y |  |  | unknown | 136&#8209;158 |
+| 33 | `default` |  | Y |  |  | Y |  |  | unknown | 474&#8209;478 |
+| 34 | `eq` |  | Y |  |  | Y |  |  | unknown | 500&#8209;501 |
 
 ### Chap51/BottomUpDPStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 31 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 51&#8209;52 |
-| 32 | `new` | Y | Y |  |  | Y |  |  | unknown | 54&#8209;59 |
-| 33 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 61&#8209;62 |
-| 34 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 64&#8209;65 |
-| 35 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
-| 36 | `med_bottom_up` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;76 |
-| 37 | `initialize_base_cases` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;92 |
-| 38 | `compute_cell_value` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;115 |
-| 39 | `default` |  | Y |  |  | Y |  |  | unknown | 407&#8209;410 |
-| 40 | `eq` |  | Y |  |  | Y |  |  | hole | 433&#8209;434 |
+| 35 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 58&#8209;59 |
+| 36 | `new` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;68 |
+| 37 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;73 |
+| 38 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;78 |
+| 39 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;83 |
+| 40 | `med_bottom_up` | Y | Y |  |  | Y |  |  | unknown | 87&#8209;95 |
+| 41 | `initialize_base_cases` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;113 |
+| 42 | `compute_cell_value` | Y | Y |  |  | Y |  |  | unknown | 116&#8209;138 |
+| 43 | `default` |  | Y |  |  | Y |  |  | unknown | 438&#8209;442 |
+| 44 | `eq` |  | Y |  |  | Y |  |  | unknown | 464&#8209;465 |
+
+### Chap51/SeqSpecsAndLemmas.rs
+
+| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
+|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
+| 45 | `lemma_spec_med_fn_bounded` |  |  |  | Y | Y |  |  | unknown | 65&#8209;67 |
 
 ### Chap51/TopDownDPMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 41 | `lemma_spec_med_fn_bounded` |  |  |  | Y | Y |  |  | unknown | 97&#8209;99 |
-| 42 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 118&#8209;119 |
-| 43 | `new` | Y | Y |  |  | Y |  |  | unknown | 123&#8209;128 |
-| 44 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 132&#8209;133 |
-| 45 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 137&#8209;138 |
-| 46 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 142&#8209;143 |
-| 47 | `set_s` | Y | Y |  |  | Y |  |  | unknown | 147&#8209;150 |
-| 48 | `set_t` | Y | Y |  |  | Y |  |  | unknown | 154&#8209;157 |
-| 49 | `med_memoized_concurrent` | Y | Y |  |  | Y |  |  | unknown | 161&#8209;169 |
-| 50 | `med_memoized_parallel` | Y | Y |  |  | Y |  |  | unknown | 173&#8209;181 |
-| 51 | `med_recursive_sequential` |  |  |  | Y | Y |  |  | unknown | 189&#8209;206 |
-| 52 | `med_recursive_parallel` |  |  |  | Y | Y |  |  | unknown | 265&#8209;280 |
-| 53 | `default` |  | Y |  |  | Y |  |  | unknown | 454&#8209;457 |
-| 54 | `eq` |  | Y |  |  | Y |  |  | hole | 480&#8209;481 |
+| 46 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 158&#8209;159 |
+| 47 | `new` | Y | Y |  |  | Y |  |  | unknown | 162&#8209;168 |
+| 48 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 171&#8209;173 |
+| 49 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 176&#8209;178 |
+| 50 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 181&#8209;183 |
+| 51 | `set_s` | Y | Y |  |  | Y |  |  | unknown | 186&#8209;191 |
+| 52 | `set_t` | Y | Y |  |  | Y |  |  | unknown | 194&#8209;199 |
+| 53 | `med_memoized_concurrent` | Y | Y |  |  | Y |  |  | unknown | 203&#8209;214 |
+| 54 | `med_memoized_parallel` | Y | Y |  |  | Y |  |  | unknown | 218&#8209;229 |
+| 55 | `med_recursive_sequential` |  |  |  | Y | Y |  |  | unknown | 238&#8209;253 |
+| 56 | `med_recursive_parallel` |  |  |  | Y | Y |  |  | unknown | 319&#8209;334 |
+| 57 | `default` |  | Y |  |  | Y |  |  | unknown | 478&#8209;482 |
+| 58 | `eq` |  | Y |  |  | Y |  |  | unknown | 505&#8209;506 |
 
 ### Chap51/TopDownDPMtPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 55 | `lemma_spec_med_fn_bounded` |  |  |  | Y | Y |  |  | unknown | 97&#8209;99 |
-| 56 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 118&#8209;119 |
-| 57 | `new` | Y | Y |  |  | Y |  |  | unknown | 121&#8209;126 |
-| 58 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 128&#8209;129 |
-| 59 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 131&#8209;132 |
-| 60 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 134&#8209;135 |
-| 61 | `med_memoized_concurrent` | Y | Y |  |  | Y |  |  | unknown | 137&#8209;139 |
-| 62 | `med_memoized_parallel` | Y | Y |  |  | Y |  |  | unknown | 141&#8209;143 |
-| 63 | `med_recursive_sequential` |  |  |  | Y | Y |  |  | unknown | 149&#8209;166 |
-| 64 | `med_recursive_parallel` |  |  |  | Y | Y |  |  | unknown | 223&#8209;238 |
-| 65 | `default` |  | Y |  |  | Y |  |  | unknown | 409&#8209;412 |
-| 66 | `eq` |  | Y |  |  | Y |  |  | hole | 435&#8209;436 |
+| 59 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 152&#8209;153 |
+| 60 | `new` | Y | Y |  |  | Y |  |  | unknown | 156&#8209;162 |
+| 61 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 165&#8209;167 |
+| 62 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 170&#8209;172 |
+| 63 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 175&#8209;177 |
+| 64 | `med_memoized_concurrent` | Y | Y |  |  | Y |  |  | unknown | 180&#8209;184 |
+| 65 | `med_memoized_parallel` | Y | Y |  |  | Y |  |  | unknown | 187&#8209;191 |
+| 66 | `med_recursive_sequential` |  |  |  | Y | Y |  |  | unknown | 199&#8209;214 |
+| 67 | `med_recursive_parallel` |  |  |  | Y | Y |  |  | unknown | 279&#8209;294 |
+| 68 | `default` |  | Y |  |  | Y |  |  | unknown | 438&#8209;442 |
+| 69 | `eq` |  | Y |  |  | Y |  |  | unknown | 465&#8209;466 |
 
 ### Chap51/TopDownDPStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 67 | `lemma_spec_med_fn_bounded` |  |  |  | Y | Y |  |  | unknown | 70&#8209;72 |
-| 68 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;94 |
-| 69 | `new` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;103 |
-| 70 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 107&#8209;108 |
-| 71 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 112&#8209;113 |
-| 72 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 117&#8209;118 |
-| 73 | `memo_size` | Y | Y |  |  | Y |  |  | unknown | 122&#8209;123 |
-| 74 | `is_memoized` | Y | Y |  |  | Y |  |  | unknown | 127&#8209;128 |
-| 75 | `get_memoized` | Y | Y |  |  | Y |  |  | unknown | 132&#8209;138 |
-| 76 | `insert_memo` | Y | Y |  |  | Y |  |  | unknown | 142&#8209;146 |
-| 77 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 150&#8209;154 |
-| 78 | `set_s` | Y | Y |  |  | Y |  |  | unknown | 158&#8209;161 |
-| 79 | `set_t` | Y | Y |  |  | Y |  |  | unknown | 165&#8209;168 |
-| 80 | `med_memoized` | Y | Y |  |  | Y |  |  | unknown | 172&#8209;180 |
-| 81 | `med_recursive` | Y | Y |  |  | Y |  |  | unknown | 184&#8209;197 |
-| 82 | `default` |  | Y |  |  | Y |  |  | unknown | 351&#8209;354 |
-| 83 | `eq` |  | Y |  |  | Y |  |  | hole | 378&#8209;379 |
+| 70 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;75 |
+| 71 | `new` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;84 |
+| 72 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 87&#8209;89 |
+| 73 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 92&#8209;94 |
+| 74 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 97&#8209;99 |
+| 75 | `memo_size` | Y | Y |  |  | Y |  |  | unknown | 102&#8209;104 |
+| 76 | `is_memoized` | Y | Y |  |  | Y |  |  | unknown | 107&#8209;109 |
+| 77 | `get_memoized` | Y | Y |  |  | Y |  |  | unknown | 112&#8209;119 |
+| 78 | `insert_memo` | Y | Y |  |  | Y |  |  | unknown | 122&#8209;127 |
+| 79 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 130&#8209;135 |
+| 80 | `set_s` | Y | Y |  |  | Y |  |  | unknown | 138&#8209;143 |
+| 81 | `set_t` | Y | Y |  |  | Y |  |  | unknown | 146&#8209;151 |
+| 82 | `med_memoized` | Y | Y |  |  | Y |  |  | unknown | 155&#8209;166 |
+| 83 | `med_recursive` | Y | Y |  |  | Y |  |  | unknown | 170&#8209;183 |
+| 84 | `default` |  | Y |  |  | Y |  |  | unknown | 373&#8209;377 |
+| 85 | `eq` |  | Y |  |  | Y |  |  | unknown | 400&#8209;401 |
 
 ### Chap51/TopDownDPStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 84 | `lemma_spec_med_fn_bounded` |  |  |  | Y | Y |  |  | unknown | 70&#8209;72 |
-| 85 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;94 |
-| 86 | `new` | Y | Y |  |  | Y |  |  | unknown | 96&#8209;101 |
-| 87 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;104 |
-| 88 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;107 |
-| 89 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 109&#8209;110 |
-| 90 | `memo_size` | Y | Y |  |  | Y |  |  | unknown | 112&#8209;113 |
-| 91 | `is_memoized` | Y | Y |  |  | Y |  |  | unknown | 115&#8209;116 |
-| 92 | `get_memoized` | Y | Y |  |  | Y |  |  | unknown | 118&#8209;124 |
-| 93 | `with_memo_table` | Y | Y |  |  | Y |  |  | unknown | 126&#8209;129 |
-| 94 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 131&#8209;134 |
-| 95 | `med_memoized` | Y | Y |  |  | Y |  |  | unknown | 136&#8209;138 |
-| 96 | `med_recursive` | Y | Y |  |  | Y |  |  | unknown | 140&#8209;154 |
-| 97 | `default` |  | Y |  |  | Y |  |  | unknown | 300&#8209;303 |
-| 98 | `eq` |  | Y |  |  | Y |  |  | hole | 327&#8209;328 |
+| 86 | `lemma_spec_med_bounded` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;75 |
+| 87 | `new` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;84 |
+| 88 | `s_length` | Y | Y |  |  | Y |  |  | unknown | 87&#8209;89 |
+| 89 | `t_length` | Y | Y |  |  | Y |  |  | unknown | 92&#8209;94 |
+| 90 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 97&#8209;99 |
+| 91 | `memo_size` | Y | Y |  |  | Y |  |  | unknown | 102&#8209;104 |
+| 92 | `is_memoized` | Y | Y |  |  | Y |  |  | unknown | 107&#8209;109 |
+| 93 | `get_memoized` | Y | Y |  |  | Y |  |  | unknown | 112&#8209;119 |
+| 94 | `with_memo_table` | Y | Y |  |  | Y |  |  | unknown | 122&#8209;125 |
+| 95 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 128&#8209;132 |
+| 96 | `med_memoized` | Y | Y |  |  | Y |  |  | unknown | 135&#8209;139 |
+| 97 | `med_recursive` | Y | Y |  |  | Y |  |  | unknown | 142&#8209;156 |
+| 98 | `default` |  | Y |  |  | Y |  |  | unknown | 336&#8209;340 |
+| 99 | `eq` |  | Y |  |  | Y |  |  | unknown | 364&#8209;365 |
 
 
 ### Legend

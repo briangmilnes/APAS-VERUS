@@ -30,20 +30,20 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `new` | Y | Y |  |  | Y |  | Y |  | 32 |
-| 2 | `value` | Y | Y |  |  | Y |  | Y |  | 36 |
-| 3 | `infinity` | Y | Y |  |  | Y |  |  | hole | 40 |
-| 4 | `zero` | Y | Y |  |  | Y |  | Y |  | 44 |
-| 5 | `default` |  | Y |  |  | Y |  | Y |  | 60 |
-| 6 | `eq` |  | Y |  |  | Y |  |  | hole | 68 |
-| 7 | `partial_cmp` |  | Y |  |  | Y |  |  | hole | 79 |
-| 8 | `cmp` |  | Y |  |  | Y |  |  | hole | 87 |
-| 9 | `hash` |  | Y |  |  | Y |  |  | hole | 110 |
-| 10 | `from` x2 |  | Y |  |  | Y |  |  | hole | 117 |
-| 11 | `add` |  | Y |  |  | Y |  |  | hole | 133 |
-| 12 | `sub` |  | Y |  |  | Y |  |  | hole | 142 |
-| 13 | `mul` |  | Y |  |  | Y |  |  | hole | 151 |
-| 14 | `div` |  | Y |  |  | Y |  |  | hole | 160 |
+| 1 | `new` | Y | Y |  |  | Y |  | Y |  | 56 |
+| 2 | `value` | Y | Y |  |  | Y |  | Y |  | 59 |
+| 3 | `infinity` | Y | Y |  |  | Y |  |  | hole | 62 |
+| 4 | `zero` | Y | Y |  |  | Y |  | Y |  | 65 |
+| 5 | `partial_cmp` |  | Y |  |  | Y |  |  | hole | 86 |
+| 6 | `cmp` |  | Y |  |  | Y |  |  | hole | 93 |
+| 7 | `from` x2 |  | Y |  |  | Y |  |  | hole | 114 |
+| 8 | `add` |  | Y |  |  | Y |  |  | hole | 128 |
+| 9 | `sub` |  | Y |  |  | Y |  |  | hole | 136 |
+| 10 | `mul` |  | Y |  |  | Y |  |  | hole | 144 |
+| 11 | `div` |  | Y |  |  | Y |  |  | hole | 152 |
+| 12 | `default` |  | Y |  |  | Y |  | Y |  | 175 |
+| 13 | `eq` |  | Y |  |  | Y |  |  | hole | 182 |
+| 14 | `hash` |  | Y |  |  | Y |  |  | hole | 193 |
 
 
 ### Legend

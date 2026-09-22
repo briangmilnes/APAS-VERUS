@@ -31,21 +31,21 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `count_components_mt` | Y |  |  | Y | Y |  |  | unknown | 42&#8209;43 |
-| 2 | `connected_components_mt` | Y |  |  | Y | Y |  |  | unknown | 47&#8209;51 |
-| 3 | `count_components_hof` | Y |  |  | Y | Y |  |  | unknown | 55&#8209;56 |
-| 4 | `connected_components_hof` | Y |  |  | Y | Y |  |  | unknown | 60&#8209;64 |
-| 5 | `compose_maps_parallel` |  |  |  | Y | Y |  |  | unknown | 123&#8209;129 |
+| 1 | `count_components_mt` | Y |  |  | Y | Y |  |  | unknown | 78&#8209;79 |
+| 2 | `connected_components_mt` | Y |  |  | Y | Y |  |  | unknown | 84&#8209;88 |
+| 3 | `count_components_hof` | Y |  |  | Y | Y |  |  | unknown | 93&#8209;94 |
+| 4 | `connected_components_hof` | Y |  |  | Y | Y |  |  | unknown | 99&#8209;103 |
+| 5 | `compose_maps_parallel` |  |  |  | Y | Y |  |  | unknown | 164&#8209;172 |
 
 ### Chap63/ConnectivityStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 6 | `count_components` | Y |  |  | Y | Y |  |  | unknown | 43&#8209;44 |
-| 7 | `connected_components` | Y |  |  | Y | Y |  |  | unknown | 48&#8209;49 |
-| 8 | `count_components_hof` | Y |  |  | Y | Y |  |  | unknown | 53&#8209;54 |
-| 9 | `connected_components_hof` | Y |  |  | Y | Y |  |  | unknown | 58&#8209;59 |
-| 10 | `build_quotient_edges` |  |  |  | Y | Y |  |  | unknown | 115&#8209;123 |
+| 6 | `count_components` | Y |  |  | Y | Y |  |  | unknown | 73&#8209;74 |
+| 7 | `connected_components` | Y |  |  | Y | Y |  |  | unknown | 79&#8209;80 |
+| 8 | `count_components_hof` | Y |  |  | Y | Y |  |  | unknown | 85&#8209;86 |
+| 9 | `connected_components_hof` | Y |  |  | Y | Y |  |  | unknown | 91&#8209;92 |
+| 10 | `build_quotient_edges` |  |  |  | Y | Y |  |  | unknown | 150&#8209;158 |
 
 
 ### Legend

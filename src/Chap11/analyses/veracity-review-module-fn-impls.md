@@ -34,35 +34,35 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `fib_2threads` |  |  |  | Y | Y |  |  | hole | 100&#8209;102 |
+| 1 | `fib_2threads` |  |  |  | Y | Y |  |  | hole | 112&#8209;114 |
 
 ### Chap11/FibonacciMtEphRecomputes.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 2 | `fib_recomputes` |  |  |  | Y | Y |  |  | hole | 92&#8209;95 |
+| 2 | `fib_recomputes` |  |  |  | Y | Y |  |  | hole | 104&#8209;107 |
 
 ### Chap11/FibonacciMtPerAllThreads.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3 | `fib` |  |  |  | Y | Y |  |  | unknown | 21&#8209;26 |
+| 3 | `fib` |  |  |  | Y | Y |  |  | unknown | 38&#8209;43 |
 
 ### Chap11/FibonacciMtPerTSM.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 4 | `fib` |  |  |  | Y | Y |  |  | hole | 86&#8209;89 |
+| 4 | `fib` |  |  |  | Y | Y |  |  | hole | 98&#8209;101 |
 
 ### Chap11/FibonacciStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 5 | `lemma_fib_bound` |  |  |  | Y | Y |  |  | unknown | 48&#8209;50 |
-| 6 | `lemma_fib_fits_u64` |  |  |  | Y | Y |  |  | unknown | 66&#8209;68 |
-| 7 | `lemma_fib_sum_fits_u64` |  |  |  | Y | Y |  |  | unknown | 76&#8209;78 |
-| 8 | `fib` |  |  |  | Y | Y |  |  | unknown | 89&#8209;93 |
-| 9 | `fib_recursive` |  |  |  | Y | Y |  |  | unknown | 127&#8209;132 |
+| 5 | `lemma_fib_bound` |  |  |  | Y | Y |  |  | unknown | 56&#8209;58 |
+| 6 | `lemma_fib_fits_u64` |  |  |  | Y | Y |  |  | unknown | 76&#8209;78 |
+| 7 | `lemma_fib_sum_fits_u64` |  |  |  | Y | Y |  |  | unknown | 86&#8209;88 |
+| 8 | `fib` |  |  |  | Y | Y |  |  | unknown | 99&#8209;103 |
+| 9 | `fib_recursive` |  |  |  | Y | Y |  |  | unknown | 139&#8209;144 |
 
 
 ### Legend

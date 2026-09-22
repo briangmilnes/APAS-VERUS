@@ -3,7 +3,7 @@
     "id": 1,
     "function": "lemma_pow2_mono",
     "file": "Chap02/FibonacciHFScheduler.rs",
-    "lines": "24-26",
+    "lines": "44-46",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_pow2_mono(a: nat, b: nat)\n        requires a <= b,\n        ensures pow2(a) <= pow2(b),"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "function": "lemma_pow2_46_lt_u64_max",
     "file": "Chap02/FibonacciHFScheduler.rs",
-    "lines": "31-32",
+    "lines": "51-52",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_pow2_46_lt_u64_max()\n        ensures pow2(46) < u64::MAX as nat,"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "function": "lemma_fib_bound",
     "file": "Chap02/FibonacciHFScheduler.rs",
-    "lines": "37-39",
+    "lines": "57-59",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_fib_bound(n: nat)\n        ensures spec_fib(n) < pow2(n),\n        decreases n,"
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "function": "lemma_fib_fits_u64",
     "file": "Chap02/FibonacciHFScheduler.rs",
-    "lines": "54-56",
+    "lines": "75-77",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_fib_fits_u64(n: nat)\n        requires n <= 46,\n        ensures spec_fib(n) <= u64::MAX as nat,"
   },
@@ -35,7 +35,7 @@
     "id": 5,
     "function": "lemma_fib_sum_fits_u64",
     "file": "Chap02/FibonacciHFScheduler.rs",
-    "lines": "63-65",
+    "lines": "84-86",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_fib_sum_fits_u64(n: nat)\n        requires 2 <= n <= 46,\n        ensures spec_fib((n-1) as nat) + spec_fib((n-2) as nat) <= u64::MAX as nat,"
   },
@@ -43,7 +43,7 @@
     "id": 6,
     "function": "fib_seq",
     "file": "Chap02/FibonacciHFScheduler.rs",
-    "lines": "72-75",
+    "lines": "96-99",
     "spec_strength": "unknown",
     "snippet": "    pub fn fib_seq(n: u64) -> (fibonacci: u64)\n        requires n <= 46,\n        ensures fibonacci == spec_fib(n as nat),\n        decreases n,"
   },
@@ -51,7 +51,7 @@
     "id": 7,
     "function": "fib_par",
     "file": "Chap02/FibonacciHFScheduler.rs",
-    "lines": "87-90",
+    "lines": "112-115",
     "spec_strength": "unknown",
     "snippet": "    pub fn fib_par(n: u64) -> (fibonacci: u64)\n        requires n <= 46,\n        ensures fibonacci == spec_fib(n as nat),\n        decreases n,"
   },
@@ -59,7 +59,7 @@
     "id": 8,
     "function": "set_parallelism",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "95",
+    "lines": "110",
     "spec_strength": "hole",
     "snippet": "    pub fn set_parallelism(n: usize) {"
   },
@@ -67,7 +67,7 @@
     "id": 9,
     "function": "join",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "105-116",
+    "lines": "119-130",
     "spec_strength": "hole",
     "snippet": "    pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))\n    where\n        FA: FnOnce() -> A + Send + 'static,\n        FB: FnOnce() -> B + Send + 'static,\n        A: Send + 'static,\n        B: Send + 'static,\n        requires\n            fa.requires(()),\n            fb.requires(()),\n        ensures\n            fa.ensures((), joined_pair.0),\n            fb.ensures((), joined_pair.1),"
   },
@@ -75,7 +75,7 @@
     "id": 10,
     "function": "spawn_join",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "132-143",
+    "lines": "145-156",
     "spec_strength": "hole",
     "snippet": "    pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))\n    where\n        FA: FnOnce() -> A + Send + 'static,\n        FB: FnOnce() -> B + Send + 'static,\n        A: Send + 'static,\n        B: Send + 'static,\n        requires\n            fa.requires(()),\n            fb.requires(()),\n        ensures\n            fa.ensures((), joined_pair.0),\n            fb.ensures((), joined_pair.1),"
   },
@@ -83,7 +83,7 @@
     "id": 11,
     "function": "spawn",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "163-170",
+    "lines": "175-182",
     "spec_strength": "hole",
     "snippet": "    pub fn spawn<T, F>(f: F) -> (task: TaskState<T>)\n    where\n        F: FnOnce() -> T + Send + 'static,\n        T: Send + 'static,\n        requires\n            f.requires(()),\n        ensures\n            forall|ret: T| #[trigger] task.predicate(ret) ==> f.ensures((), ret),"
   },
@@ -91,7 +91,7 @@
     "id": 12,
     "function": "wait",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "185-187",
+    "lines": "196-198",
     "spec_strength": "hole",
     "snippet": "    pub fn wait<T: Send + 'static>(task: TaskState<T>) -> (task_result: T)\n        ensures\n            task.predicate(task_result),"
   },
@@ -99,32 +99,32 @@
     "id": 13,
     "function": "init_pool",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "32-46",
+    "lines": "45-58",
     "spec_strength": "",
-    "snippet": "    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reads config, creates mutex/condvar.\n    fn init_pool() -> PoolState {\n        let n = PARALLELISM.read().unwrap();\n        let threads = n.unwrap_or_else(|| {\n            let cpus = std::thread::available_parallelism()\n                .map(|n| n.get())\n                .unwrap_or(2);\n            (cpus - 1).max(1)\n        });\n        PoolState {\n            available_tasks: Mutex::new(threads),\n            task_freed: Condvar::new(),\n        }\n    }"
+    "snippet": "    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — reads config, creates mutex/condvar.\n    fn init_pool() -> PoolState {\n        let n = PARALLELISM.read().unwrap();\n        let threads = n.unwrap_or_else(|| {\n            let cpus = std::thread::available_parallelism()\n                .map(|n| n.get())\n                .unwrap_or(2);\n            (cpus - 1).max(1)\n        });\n        PoolState {\n            available_tasks: Mutex::new(threads),\n            task_freed: Condvar::new(),\n        }\n    }"
   },
   {
     "id": 14,
     "function": "try_acquire",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "50-60",
+    "lines": "62-71",
     "spec_strength": "",
-    "snippet": "    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — lock, check, unlock.\n    fn try_acquire() -> bool {\n        let mut available = POOL.available_tasks.lock().unwrap();\n        if *available > 0 {\n            *available -= 1;\n            true\n        } else {\n            false\n        }\n    }"
+    "snippet": "    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — lock, check, unlock.\n    fn try_acquire() -> bool {\n        let mut available = POOL.available_tasks.lock().unwrap();\n        if *available > 0 {\n            *available -= 1;\n            true\n        } else {\n            false\n        }\n    }"
   },
   {
     "id": 15,
     "function": "acquire",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "62-70",
+    "lines": "73-80",
     "spec_strength": "",
-    "snippet": "    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(1) amortized, Span Θ(1) amortized — waits on condvar.\n    fn acquire() {\n        let mut available = POOL.available_tasks.lock().unwrap();\n        while *available == 0 {\n            available = POOL.task_freed.wait(available).unwrap();\n        }\n        *available -= 1;\n    }"
+    "snippet": "    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — waits on condvar.\n    fn acquire() {\n        let mut available = POOL.available_tasks.lock().unwrap();\n        while *available == 0 {\n            available = POOL.task_freed.wait(available).unwrap();\n        }\n        *available -= 1;\n    }"
   },
   {
     "id": 16,
     "function": "release",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "72-78",
+    "lines": "82-87",
     "spec_strength": "",
-    "snippet": "    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — lock, increment, notify, unlock.\n    fn release() {\n        let mut available = POOL.available_tasks.lock().unwrap();\n        *available += 1;\n        POOL.task_freed.notify_one();\n    }"
+    "snippet": "    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — lock, increment, notify, unlock.\n    fn release() {\n        let mut available = POOL.available_tasks.lock().unwrap();\n        *available += 1;\n        POOL.task_freed.notify_one();\n    }"
   }
 ]

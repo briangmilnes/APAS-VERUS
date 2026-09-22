@@ -3,15 +3,15 @@
     "id": 1,
     "function": "star_contract_mt",
     "file": "Chap62/StarContractionMtEph.rs",
-    "lines": "45-55",
+    "lines": "94-112",
     "spec_strength": "unknown",
-    "snippet": "        fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R\n        where\n            V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,\n            F: Fn(&SetStEph<V>) -> R,\n            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R\n        requires\n            Self::spec_starcontractionmteph_wf(graph),\n            valid_key_type_Edge::<V>(),\n            forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),\n            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|\n                #[trigger] expand.requires((v, e, c, p, r));"
+    "snippet": "        fn star_contract_mt<V, R, F, G>(\n            graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G,\n            Ghost(r_inv): Ghost<spec_fn(R) -> bool>,\n        ) -> (contracted: R)\n        where\n            V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,\n            F: Fn(&SetStEph<V>) -> R,\n            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R\n        requires\n            Self::spec_starcontractionmteph_wf(graph),\n            valid_key_type_Edge::<V>(),\n            forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),\n            forall|s: &SetStEph<V>, r: R| s.spec_setsteph_wf() && base.ensures((s,), r) ==> r_inv(r),\n            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R|\n                v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf() && r_inv(r)\n                ==> #[trigger] expand.requires((v, e, c, p, r)),\n            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R, out: R|\n                #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),\n        ensures r_inv(contracted);"
   },
   {
     "id": 2,
     "function": "contract_to_vertices_mt",
     "file": "Chap62/StarContractionMtEph.rs",
-    "lines": "59-62",
+    "lines": "117-120",
     "spec_strength": "unknown",
     "snippet": "        fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<V>\n            requires\n                Self::spec_starcontractionmteph_wf(graph),\n                valid_key_type_Edge::<V>();"
   },
@@ -19,39 +19,39 @@
     "id": 3,
     "function": "star_contract_mt_fuel",
     "file": "Chap62/StarContractionMtEph.rs",
-    "lines": "86-102",
+    "lines": "128-150",
     "spec_strength": "unknown",
-    "snippet": "    fn star_contract_mt_fuel<V, R, F, G>(\n        graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G, fuel: usize,\n    ) -> (result: R)\n    where\n        V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,\n        F: Fn(&SetStEph<V>) -> R,\n        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R,\n    requires\n        spec_graphview_wf(graph@),\n        valid_key_type_Edge::<V>(),\n        forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),\n        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|\n            #[trigger] expand.requires((v, e, c, p, r)),\n    ensures\n        (graph@.A.is_empty() || fuel == 0) ==>\n            exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),\n    decreases fuel,"
+    "snippet": "    fn star_contract_mt_fuel<V, R, F, G>(\n        graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G, fuel: usize,\n        Ghost(r_inv): Ghost<spec_fn(R) -> bool>,\n    ) -> (contracted: R)\n    where\n        V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,\n        F: Fn(&SetStEph<V>) -> R,\n        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R,\n    requires\n        spec_graphview_wf(graph@),\n        valid_key_type_Edge::<V>(),\n        forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),\n        forall|s: &SetStEph<V>, r: R| s.spec_setsteph_wf() && base.ensures((s,), r) ==> r_inv(r),\n        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R|\n            v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf() && r_inv(r)\n            ==> #[trigger] expand.requires((v, e, c, p, r)),\n        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R, out: R|\n            #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),\n    ensures\n        r_inv(contracted),\n        (graph@.A.is_empty() || fuel == 0) ==>\n            exists|s: &SetStEph<V>| #[trigger] s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), contracted),\n    decreases fuel,"
   },
   {
     "id": 4,
     "function": "build_quotient_graph_parallel",
     "file": "Chap62/StarContractionMtEph.rs",
-    "lines": "181-192",
+    "lines": "261-272",
     "spec_strength": "unknown",
-    "snippet": "    fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n        graph: &UnDirGraphMtEph<V>,\n        centers: &SetStEph<V>,\n        partition_map: &HashMapWithViewPlus<V, V>,\n    ) -> (quotient: UnDirGraphMtEph<V>)\n        requires\n            valid_key_type_Edge::<V>(),\n            spec_graphview_wf(graph@),\n            centers.spec_setsteph_wf(),\n            spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@),\n        ensures\n            spec_graphview_wf(quotient@),"
+    "snippet": "    fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n        graph: &UnDirGraphMtEph<V>,\n        centers: &SetStEph<V>,\n        partition_map: &HashMap<V, V>,\n    ) -> (quotient: UnDirGraphMtEph<V>)\n        requires\n            valid_key_type_Edge::<V>(),\n            spec_graphview_wf(graph@),\n            centers.spec_setsteph_wf(),\n            spec_valid_partition_map::<V>(graph@.V, centers@, key_view(partition_map@)),\n        ensures\n            spec_graphview_wf(quotient@),"
   },
   {
     "id": 5,
     "function": "route_edges_parallel",
     "file": "Chap62/StarContractionMtEph.rs",
-    "lines": "249-270",
+    "lines": "329-350",
     "spec_strength": "unknown",
-    "snippet": "    fn route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n        edges: Arc<ArraySeqStEphS<Edge<V>>>,\n        partition_map: Arc<HashMapWithViewPlus<V, V>>,\n        Ghost(graph_v_view): Ghost<Set<V::V>>,\n        Ghost(centers_view): Ghost<Set<V::V>>,\n        start: usize,\n        end: usize,\n    ) -> (result: SetStEph<Edge<V>>)\n        requires\n            start <= end,\n            end as nat <= (*edges)@.len(),\n            valid_key_type_Edge::<V>(),\n            forall |j: int| start as int <= j < end as int ==>\n                graph_v_view.contains(#[trigger] (*edges).spec_index(j)@.0) &&\n                graph_v_view.contains((*edges).spec_index(j)@.1),\n            spec_valid_partition_map::<V>(graph_v_view, centers_view, (*partition_map)@),\n        ensures\n            result.spec_setsteph_wf(),\n            forall |u_v: V::V, w_v: V::V|\n                #[trigger] result@.contains((u_v, w_v)) ==>\n                    centers_view.contains(u_v) && centers_view.contains(w_v),\n        decreases end - start,"
+    "snippet": "    fn route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n        edges: Arc<ArraySeqStEphS<Edge<V>>>,\n        partition_map: Arc<HashMap<V, V>>,\n        Ghost(graph_v_view): Ghost<Set<V::V>>,\n        Ghost(centers_view): Ghost<Set<V::V>>,\n        start: usize,\n        end: usize,\n    ) -> (quotient_edges: SetStEph<Edge<V>>)\n        requires\n            start <= end,\n            end as nat <= (*edges)@.len(),\n            valid_key_type_Edge::<V>(),\n            forall |j: int| start as int <= j < end as int ==>\n                graph_v_view.contains(#[trigger] (*edges).spec_index(j)@.0) &&\n                graph_v_view.contains((*edges).spec_index(j)@.1),\n            spec_valid_partition_map::<V>(graph_v_view, centers_view, key_view((*partition_map)@)),\n        ensures\n            quotient_edges.spec_setsteph_wf(),\n            forall |u_v: V::V, w_v: V::V|\n                #[trigger] quotient_edges@.contains((u_v, w_v)) ==>\n                    centers_view.contains(u_v) && centers_view.contains(w_v),\n        decreases end - start,"
   },
   {
     "id": 6,
     "function": "star_contract",
     "file": "Chap62/StarContractionStEph.rs",
-    "lines": "44-54",
+    "lines": "74-92",
     "spec_strength": "unknown",
-    "snippet": "        fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R\n        where\n            V: HashOrd,\n            F: Fn(&SetStEph<V>) -> R,\n            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R\n        requires\n            Self::spec_starcontractionsteph_wf(graph),\n            valid_key_type_Edge::<V>(),\n            forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),\n            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|\n                #[trigger] expand.requires((v, e, c, p, r));"
+    "snippet": "        fn star_contract<V, R, F, G>(\n            graph: &UnDirGraphStEph<V>, base: &F, expand: &G,\n            Ghost(r_inv): Ghost<spec_fn(R) -> bool>,\n        ) -> (contracted: R)\n        where\n            V: HashOrd,\n            F: Fn(&SetStEph<V>) -> R,\n            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R\n        requires\n            Self::spec_starcontractionsteph_wf(graph),\n            valid_key_type_Edge::<V>(),\n            forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),\n            forall|s: &SetStEph<V>, r: R| s.spec_setsteph_wf() && base.ensures((s,), r) ==> r_inv(r),\n            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R|\n                v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf() && r_inv(r)\n                ==> #[trigger] expand.requires((v, e, c, p, r)),\n            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R, out: R|\n                #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),\n        ensures r_inv(contracted);"
   },
   {
     "id": 7,
     "function": "contract_to_vertices",
     "file": "Chap62/StarContractionStEph.rs",
-    "lines": "58-61",
+    "lines": "97-100",
     "spec_strength": "unknown",
     "snippet": "        fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V>\n            requires\n                Self::spec_starcontractionsteph_wf(graph),\n                valid_key_type_Edge::<V>();"
   },
@@ -59,32 +59,104 @@
     "id": 8,
     "function": "star_contract_fuel",
     "file": "Chap62/StarContractionStEph.rs",
-    "lines": "67-83",
+    "lines": "108-130",
     "spec_strength": "unknown",
-    "snippet": "    fn star_contract_fuel<V, R, F, G>(\n        graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,\n    ) -> (result: R)\n    where\n        V: HashOrd,\n        F: Fn(&SetStEph<V>) -> R,\n        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R,\n    requires\n        spec_graphview_wf(graph@),\n        valid_key_type_Edge::<V>(),\n        forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),\n        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|\n            #[trigger] expand.requires((v, e, c, p, r)),\n    ensures\n        (graph@.A.is_empty() || fuel == 0) ==>\n            exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), result),\n    decreases fuel,"
+    "snippet": "    fn star_contract_fuel<V, R, F, G>(\n        graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,\n        Ghost(r_inv): Ghost<spec_fn(R) -> bool>,\n    ) -> (contracted: R)\n    where\n        V: HashOrd,\n        F: Fn(&SetStEph<V>) -> R,\n        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R,\n    requires\n        spec_graphview_wf(graph@),\n        valid_key_type_Edge::<V>(),\n        forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),\n        forall|s: &SetStEph<V>, r: R| s.spec_setsteph_wf() && base.ensures((s,), r) ==> r_inv(r),\n        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R|\n            v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf() && r_inv(r)\n            ==> #[trigger] expand.requires((v, e, c, p, r)),\n        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R, out: R|\n            #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),\n    ensures\n        r_inv(contracted),\n        (graph@.A.is_empty() || fuel == 0) ==>\n            exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), contracted),\n    decreases fuel,"
   },
   {
     "id": 9,
     "function": "build_quotient_graph",
     "file": "Chap62/StarContractionStEph.rs",
-    "lines": "162-173",
+    "lines": "240-251",
     "spec_strength": "unknown",
-    "snippet": "    fn build_quotient_graph<V: HashOrd>(\n        graph: &UnDirGraphStEph<V>,\n        centers: &SetStEph<V>,\n        partition_map: &HashMapWithViewPlus<V, V>,\n    ) -> (quotient: UnDirGraphStEph<V>)\n        requires\n            valid_key_type_Edge::<V>(),\n            spec_graphview_wf(graph@),\n            centers.spec_setsteph_wf(),\n            spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@),\n        ensures\n            spec_graphview_wf(quotient@),"
+    "snippet": "    fn build_quotient_graph<V: HashOrd>(\n        graph: &UnDirGraphStEph<V>,\n        centers: &SetStEph<V>,\n        partition_map: &HashMap<V, V>,\n    ) -> (quotient: UnDirGraphStEph<V>)\n        requires\n            valid_key_type_Edge::<V>(),\n            spec_graphview_wf(graph@),\n            centers.spec_setsteph_wf(),\n            spec_valid_partition_map::<V>(graph@.V, centers@, key_view(partition_map@)),\n        ensures\n            spec_graphview_wf(quotient@),"
   },
   {
     "id": 10,
     "function": "parallel_star_partition",
     "file": "Chap62/StarPartitionMtEph.rs",
-    "lines": "43-47",
+    "lines": "116-120",
     "spec_strength": "unknown",
-    "snippet": "        fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n            graph: &UnDirGraphMtEph<V>,\n            seed: u64,\n        ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)\n            requires Self::spec_starpartitionmteph_wf(graph), valid_key_type_Edge::<V>();"
+    "snippet": "        fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n            graph: &UnDirGraphMtEph<V>,\n            seed: u64,\n        ) -> (SetStEph<V>, HashMap<V, V>)\n            requires Self::spec_starpartitionmteph_wf(graph), valid_key_type_Edge::<V>();"
   },
   {
     "id": 11,
+    "function": "hash_coin",
+    "file": "Chap62/StarPartitionMtEph.rs",
+    "lines": "132",
+    "spec_strength": "hole",
+    "snippet": "    fn hash_coin(seed: u64, index: usize) -> bool {"
+  },
+  {
+    "id": 12,
+    "function": "hash_coin_flips_mt",
+    "file": "Chap62/StarPartitionMtEph.rs",
+    "lines": "145-159",
+    "spec_strength": "unknown",
+    "snippet": "    fn hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n        vertices: Arc<Vec<V>>,\n        seed: u64,\n        start: usize,\n        end: usize,\n    ) -> (flips: HashMap<V, bool>)\n        requires\n            start <= end,\n            end <= vertices@.len(),\n            valid_key_type_Edge::<V>(),\n            vertices@.no_duplicates(),\n        ensures\n            forall|j: int| start as int <= j < end as int ==>\n                #[trigger] key_view(flips@).contains_key(vertices@[j]@),\n        decreases end - start,"
+  },
+  {
+    "id": 13,
+    "function": "build_th_edges_mt",
+    "file": "Chap62/StarPartitionMtEph.rs",
+    "lines": "281-309",
+    "spec_strength": "unknown",
+    "snippet": "    fn build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n        edges: Arc<Vec<Edge<V>>>,\n        coin_flips: Arc<HashMap<V, bool>>,\n        vertex_to_index: Arc<HashMap<V, usize>>,\n        vertices: Arc<Vec<V>>,\n        nv: usize,\n        start: usize,\n        end: usize,\n    ) -> (th_edges: Vec<(usize, V)>)\n        requires\n            start <= end,\n            end <= edges@.len(),\n            valid_key_type_Edge::<V>(),\n            nv == vertices@.len(),\n            vertices@.no_duplicates(),\n            forall|k: int| start as int <= k < end as int ==>\n                #[trigger] key_view(coin_flips@).contains_key(edges@[k]@.0) &&\n                key_view(coin_flips@).contains_key(edges@[k]@.1) &&\n                key_view(vertex_to_index@).contains_key(edges@[k]@.0) &&\n                key_view(vertex_to_index@).contains_key(edges@[k]@.1),\n            forall|j: int| 0 <= j < nv as int ==>\n                #[trigger] key_view(vertex_to_index@).contains_key(vertices@[j]@) &&\n                key_view(vertex_to_index@)[vertices@[j]@] as usize == j,\n            forall|v_view: V::V| #[trigger] key_view(vertex_to_index@).contains_key(v_view) ==>\n                exists|j: int| 0 <= j < nv as int && #[trigger] vertices@[j]@ == v_view,\n        ensures\n            forall|s: int| 0 <= s < th_edges@.len() ==>\n                #[trigger] spec_valid_th_entry(th_edges@[s], nv as nat, key_view(coin_flips@), vertices@, key_view(vertex_to_index@)),\n        decreases end - start,"
+  },
+  {
+    "id": 14,
+    "function": "build_p_vec_mt",
+    "file": "Chap62/StarPartitionMtEph.rs",
+    "lines": "470-482",
+    "spec_strength": "unknown",
+    "snippet": "    fn build_p_vec_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n        vertices: Arc<Vec<V>>,\n        start: usize,\n        end: usize,\n    ) -> (p_vec: Vec<V>)\n        requires\n            start <= end,\n            end <= vertices@.len(),\n        ensures\n            p_vec@.len() == (end - start) as int,\n            forall|j: int| 0 <= j < p_vec@.len() ==>\n                #[trigger] p_vec@[j]@ == vertices@[(start as int + j)]@,\n        decreases end - start,"
+  },
+  {
+    "id": 15,
+    "function": "build_vertex_to_index_mt",
+    "file": "Chap62/StarPartitionMtEph.rs",
+    "lines": "577-593",
+    "spec_strength": "unknown",
+    "snippet": "    fn build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n        vertices: Arc<Vec<V>>,\n        start: usize,\n        end: usize,\n    ) -> (vi: HashMap<V, usize>)\n        requires\n            start <= end,\n            end <= vertices@.len(),\n            vertices@.no_duplicates(),\n            valid_key_type_Edge::<V>(),\n        ensures\n            forall|j: int| start as int <= j < end as int ==>\n                #[trigger] key_view(vi@).contains_key(vertices@[j]@) &&\n                key_view(vi@)[vertices@[j]@] as usize == j,\n            forall|v_view: V::V| #[trigger] key_view(vi@).contains_key(v_view) ==>\n                exists|j: int| start as int <= j < end as int && #[trigger] vertices@[j]@ == v_view,\n        decreases end - start,"
+  },
+  {
+    "id": 16,
+    "function": "build_satellite_map_mt",
+    "file": "Chap62/StarPartitionMtEph.rs",
+    "lines": "758-790",
+    "spec_strength": "unknown",
+    "snippet": "    fn build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n        th_edges: Arc<Vec<(usize, V)>>,\n        vertices: Arc<Vec<V>>,\n        nv: usize,\n        coin_flips: Arc<HashMap<V, bool>>,\n        vertex_to_index: Arc<HashMap<V, usize>>,\n        start: usize,\n        end: usize,\n    ) -> (sm: HashMap<V, V>)\n        requires\n            start <= end,\n            end <= th_edges@.len(),\n            nv == vertices@.len(),\n            vertices@.no_duplicates(),\n            valid_key_type_Edge::<V>(),\n            forall|s: int| 0 <= s < th_edges@.len() ==>\n                #[trigger] spec_valid_th_entry(th_edges@[s], nv as nat, key_view(coin_flips@), vertices@, key_view(vertex_to_index@)),\n        ensures\n            // Every key in sm came from a th_edge in [start, end).\n            forall|v_view: V::V| #[trigger] key_view(sm@).contains_key(v_view) ==>\n                exists|s: int| start as int <= s < end as int &&\n                    #[trigger] vertices@[th_edges@[s].0 as int]@ == v_view,\n            // Values are heads vertices with valid vertex_to_index entries.\n            forall|v_view: V::V| #[trigger] key_view(sm@).contains_key(v_view) ==>\n                key_view(coin_flips@).contains_key(key_view(sm@)[v_view]@) &&\n                key_view(coin_flips@)[key_view(sm@)[v_view]@] &&\n                key_view(vertex_to_index@).contains_key(key_view(sm@)[v_view]@) &&\n                (key_view(vertex_to_index@)[key_view(sm@)[v_view]@] as usize) < nv,\n            // Keys are tails vertices (not heads).\n            forall|v_view: V::V| #[trigger] key_view(sm@).contains_key(v_view) ==>\n                key_view(coin_flips@).contains_key(v_view) &&\n                !key_view(coin_flips@)[v_view],\n        decreases end - start,"
+  },
+  {
+    "id": 17,
+    "function": "build_p_vec_with_inject_mt",
+    "file": "Chap62/StarPartitionMtEph.rs",
+    "lines": "977-1027",
+    "spec_strength": "unknown",
+    "snippet": "    fn build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n        vertices: Arc<Vec<V>>,\n        satellite_map: Arc<HashMap<V, V>>,\n        coin_flips: Arc<HashMap<V, bool>>,\n        vertex_to_index: Arc<HashMap<V, usize>>,\n        nv: usize,\n        start: usize,\n        end: usize,\n    ) -> (p_vec: Vec<V>)\n        requires\n            start <= end,\n            end <= vertices@.len(),\n            nv == vertices@.len(),\n            vertices@.no_duplicates(),\n            valid_key_type_Edge::<V>(),\n            // coin_flips covers all vertices.\n            forall|j: int| 0 <= j < nv as int ==>\n                #[trigger] key_view(coin_flips@).contains_key(vertices@[j]@),\n            // satellite_map values are heads with valid vi entries.\n            forall|v_view: V::V| #[trigger] key_view(satellite_map@).contains_key(v_view) ==>\n                key_view(coin_flips@).contains_key(key_view(satellite_map@)[v_view]@) &&\n                key_view(coin_flips@)[key_view(satellite_map@)[v_view]@] &&\n                key_view(vertex_to_index@).contains_key(key_view(satellite_map@)[v_view]@) &&\n                (key_view(vertex_to_index@)[key_view(satellite_map@)[v_view]@] as usize) < nv,\n            // satellite_map keys are tails.\n            forall|v_view: V::V| #[trigger] key_view(satellite_map@).contains_key(v_view) ==>\n                key_view(coin_flips@).contains_key(v_view) && !key_view(coin_flips@)[v_view],\n            // vertex_to_index maps all vertices.\n            forall|j: int| 0 <= j < nv as int ==>\n                #[trigger] key_view(vertex_to_index@).contains_key(vertices@[j]@) &&\n                key_view(vertex_to_index@)[vertices@[j]@] as usize == j,\n            forall|v_view: V::V| #[trigger] key_view(vertex_to_index@).contains_key(v_view) ==>\n                exists|j: int| 0 <= j < nv as int && #[trigger] vertices@[j]@ == v_view,\n        ensures\n            p_vec@.len() == (end - start) as int,\n            // Heads preserve: heads vertices keep themselves.\n            forall|j: int| 0 <= j < p_vec@.len() ==>\n                key_view(coin_flips@).contains_key(vertices@[(start as int + j)]@) &&\n                (key_view(coin_flips@)[vertices@[(start as int + j)]@] ==>\n                 #[trigger] p_vec@[j]@ == vertices@[(start as int + j)]@),\n            // Modified entries point to heads.\n            forall|j: int| 0 <= j < p_vec@.len() ==>\n                p_vec@[j]@ != vertices@[(start as int + j)]@ ==>\n                (key_view(coin_flips@).contains_key(#[trigger] p_vec@[j]@) &&\n                 key_view(coin_flips@)[p_vec@[j]@]),\n            // All entries in vertex_to_index.\n            forall|j: int| 0 <= j < p_vec@.len() ==>\n                key_view(vertex_to_index@).contains_key(#[trigger] p_vec@[j]@) &&\n                (key_view(vertex_to_index@)[p_vec@[j]@] as usize) < nv,\n        // Veracity: NEEDED proof block\n        decreases end - start,"
+  },
+  {
+    "id": 18,
+    "function": "build_partition_map_mt",
+    "file": "Chap62/StarPartitionMtEph.rs",
+    "lines": "1245-1265",
+    "spec_strength": "unknown",
+    "snippet": "    fn build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n        vertices: Arc<Vec<V>>,\n        p_vec: Arc<Vec<V>>,\n        start: usize,\n        end: usize,\n    ) -> (pm: HashMap<V, V>)\n        requires\n            start <= end,\n            end <= vertices@.len(),\n            p_vec@.len() == vertices@.len(),\n            vertices@.no_duplicates(),\n            valid_key_type_Edge::<V>(),\n        ensures\n            forall|j: int| start as int <= j < end as int ==>\n                #[trigger] key_view(pm@).contains_key(vertices@[j]@),\n            forall|j: int| start as int <= j < end as int ==>\n                key_view(pm@).contains_key(vertices@[j]@) ==>\n                key_view(pm@)[vertices@[j]@]@ == #[trigger] p_vec@[j]@,\n            forall|v_view: V::V| #[trigger] key_view(pm@).contains_key(v_view) ==>\n                exists|j: int| start as int <= j < end as int && #[trigger] vertices@[j]@ == v_view,\n        decreases end - start,"
+  },
+  {
+    "id": 19,
+    "function": "build_centers_mt",
+    "file": "Chap62/StarPartitionMtEph.rs",
+    "lines": "1453-1469",
+    "spec_strength": "unknown",
+    "snippet": "    fn build_centers_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n        vertices: Arc<Vec<V>>,\n        p_vec: Arc<Vec<V>>,\n        start: usize,\n        end: usize,\n    ) -> (centers: SetStEph<V>)\n        requires\n            start <= end,\n            end <= vertices@.len(),\n            p_vec@.len() == vertices@.len(),\n            valid_key_type_Edge::<V>(),\n        ensures\n            centers.spec_setsteph_wf(),\n            forall|j: int| start as int <= j < end as int ==>\n                p_vec@[j]@ == vertices@[j]@ ==>\n                #[trigger] centers@.contains(p_vec@[j]@),\n        decreases end - start,"
+  },
+  {
+    "id": 20,
     "function": "sequential_star_partition",
     "file": "Chap62/StarPartitionStEph.rs",
-    "lines": "41-42",
+    "lines": "90-91",
     "spec_strength": "unknown",
-    "snippet": "        fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)\n            requires Self::spec_starpartitionsteph_wf(graph);"
+    "snippet": "        fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)\n            requires Self::spec_starpartitionsteph_wf(graph);"
   }
 ]

@@ -31,27 +31,27 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `lemma_pow2_mono` |  |  |  | Y | Y |  |  | unknown | 24&#8209;26 |
-| 2 | `lemma_pow2_46_lt_u64_max` |  |  |  | Y | Y |  |  | unknown | 31&#8209;32 |
-| 3 | `lemma_fib_bound` |  |  |  | Y | Y |  |  | unknown | 37&#8209;39 |
-| 4 | `lemma_fib_fits_u64` |  |  |  | Y | Y |  |  | unknown | 54&#8209;56 |
-| 5 | `lemma_fib_sum_fits_u64` |  |  |  | Y | Y |  |  | unknown | 63&#8209;65 |
-| 6 | `fib_seq` |  |  |  | Y | Y |  |  | unknown | 72&#8209;75 |
-| 7 | `fib_par` |  |  |  | Y | Y |  |  | unknown | 87&#8209;90 |
+| 1 | `lemma_pow2_mono` |  |  |  | Y | Y |  |  | unknown | 44&#8209;46 |
+| 2 | `lemma_pow2_46_lt_u64_max` |  |  |  | Y | Y |  |  | unknown | 51&#8209;52 |
+| 3 | `lemma_fib_bound` |  |  |  | Y | Y |  |  | unknown | 57&#8209;59 |
+| 4 | `lemma_fib_fits_u64` |  |  |  | Y | Y |  |  | unknown | 75&#8209;77 |
+| 5 | `lemma_fib_sum_fits_u64` |  |  |  | Y | Y |  |  | unknown | 84&#8209;86 |
+| 6 | `fib_seq` |  |  |  | Y | Y |  |  | unknown | 96&#8209;99 |
+| 7 | `fib_par` |  |  |  | Y | Y |  |  | unknown | 112&#8209;115 |
 
 ### Chap02/HFSchedulerMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 8 | `set_parallelism` |  |  |  | Y | Y |  |  | hole | 95 |
-| 9 | `join` |  |  |  | Y | Y |  |  | hole | 105&#8209;116 |
-| 10 | `spawn_join` |  |  |  | Y | Y |  |  | hole | 132&#8209;143 |
-| 11 | `spawn` |  |  |  | Y | Y |  |  | hole | 163&#8209;170 |
-| 12 | `wait` |  |  |  | Y | Y |  |  | hole | 185&#8209;187 |
-| 13 | `init_pool` |  |  |  | Y |  | Y | Y |  | 32&#8209;46 |
-| 14 | `try_acquire` |  |  |  | Y |  | Y | Y |  | 50&#8209;60 |
-| 15 | `acquire` |  |  |  | Y |  | Y | Y |  | 62&#8209;70 |
-| 16 | `release` |  |  |  | Y |  | Y | Y |  | 72&#8209;78 |
+| 8 | `set_parallelism` |  |  |  | Y | Y |  |  | hole | 110 |
+| 9 | `join` |  |  |  | Y | Y |  |  | hole | 119&#8209;130 |
+| 10 | `spawn_join` |  |  |  | Y | Y |  |  | hole | 145&#8209;156 |
+| 11 | `spawn` |  |  |  | Y | Y |  |  | hole | 175&#8209;182 |
+| 12 | `wait` |  |  |  | Y | Y |  |  | hole | 196&#8209;198 |
+| 13 | `init_pool` |  |  |  | Y |  | Y | Y |  | 45&#8209;58 |
+| 14 | `try_acquire` |  |  |  | Y |  | Y | Y |  | 62&#8209;71 |
+| 15 | `acquire` |  |  |  | Y |  | Y | Y |  | 73&#8209;80 |
+| 16 | `release` |  |  |  | Y |  | Y | Y |  | 82&#8209;87 |
 
 
 ### Legend

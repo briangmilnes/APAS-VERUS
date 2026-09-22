@@ -3,80 +3,80 @@
     "id": 1,
     "function": "count_components_mt",
     "file": "Chap63/ConnectivityMtEph.rs",
-    "lines": "42-43",
+    "lines": "78-79",
     "spec_strength": "unknown",
-    "snippet": "        fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N\n            requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();"
+    "snippet": "        fn count_components_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> usize\n            requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();"
   },
   {
     "id": 2,
     "function": "connected_components_mt",
     "file": "Chap63/ConnectivityMtEph.rs",
-    "lines": "47-51",
+    "lines": "84-88",
     "spec_strength": "unknown",
-    "snippet": "        fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(\n            graph: &UnDirGraphMtEph<V>,\n            seed: u64,\n        ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)\n            requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();"
+    "snippet": "        fn connected_components_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n            graph: &UnDirGraphMtEph<V>,\n            seed: u64,\n        ) -> (SetStEph<V>, HashMap<V, V>)\n            requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();"
   },
   {
     "id": 3,
     "function": "count_components_hof",
     "file": "Chap63/ConnectivityMtEph.rs",
-    "lines": "55-56",
+    "lines": "93-94",
     "spec_strength": "unknown",
-    "snippet": "        fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N\n            requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();"
+    "snippet": "        fn count_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> usize\n            requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();"
   },
   {
     "id": 4,
     "function": "connected_components_hof",
     "file": "Chap63/ConnectivityMtEph.rs",
-    "lines": "60-64",
+    "lines": "99-103",
     "spec_strength": "unknown",
-    "snippet": "        fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(\n            graph: &UnDirGraphMtEph<V>,\n            seed: u64,\n        ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)\n            requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();"
+    "snippet": "        fn connected_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n            graph: &UnDirGraphMtEph<V>,\n            seed: u64,\n        ) -> (SetStEph<V>, HashMap<V, V>)\n            requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();"
   },
   {
     "id": 5,
     "function": "compose_maps_parallel",
     "file": "Chap63/ConnectivityMtEph.rs",
-    "lines": "123-129",
+    "lines": "164-172",
     "spec_strength": "unknown",
-    "snippet": "    fn compose_maps_parallel<V: StT + MtT + Hash + Ord + 'static>(\n        partition_map: &HashMapWithViewPlus<V, V>,\n        component_map: &HashMapWithViewPlus<V, V>,\n    ) -> (result: HashMapWithViewPlus<V, V>)\n        requires obeys_key_model::<V>(),\n        ensures\n            forall|k: V::V| #[trigger] result@.contains_key(k) ==> partition_map@.contains_key(k),"
+    "snippet": "    fn compose_maps_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n        partition_map: &HashMap<V, V>,\n        component_map: &HashMap<V, V>,\n    ) -> (composed: HashMap<V, V>)\n        requires\n            obeys_key_model::<V>(),\n            obeys_feq_view_injective::<V>(),\n        ensures\n            forall|k: V::V| #[trigger] key_view(composed@).contains_key(k) ==> key_view(partition_map@).contains_key(k),"
   },
   {
     "id": 6,
     "function": "count_components",
     "file": "Chap63/ConnectivityStEph.rs",
-    "lines": "43-44",
+    "lines": "73-74",
     "spec_strength": "unknown",
-    "snippet": "        fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N\n            requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();"
+    "snippet": "        fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> usize\n            requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();"
   },
   {
     "id": 7,
     "function": "connected_components",
     "file": "Chap63/ConnectivityStEph.rs",
-    "lines": "48-49",
+    "lines": "79-80",
     "spec_strength": "unknown",
-    "snippet": "        fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)\n            requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();"
+    "snippet": "        fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)\n            requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();"
   },
   {
     "id": 8,
     "function": "count_components_hof",
     "file": "Chap63/ConnectivityStEph.rs",
-    "lines": "53-54",
+    "lines": "85-86",
     "spec_strength": "unknown",
-    "snippet": "        fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N\n            requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();"
+    "snippet": "        fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> usize\n            requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();"
   },
   {
     "id": 9,
     "function": "connected_components_hof",
     "file": "Chap63/ConnectivityStEph.rs",
-    "lines": "58-59",
+    "lines": "91-92",
     "spec_strength": "unknown",
-    "snippet": "        fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)\n            requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();"
+    "snippet": "        fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)\n            requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();"
   },
   {
     "id": 10,
     "function": "build_quotient_edges",
     "file": "Chap63/ConnectivityStEph.rs",
-    "lines": "115-123",
+    "lines": "150-158",
     "spec_strength": "unknown",
-    "snippet": "    fn build_quotient_edges<V: HashOrd>(\n        graph: &UnDirGraphStEph<V>,\n        partition_map: &HashMapWithViewPlus<V, V>,\n    ) -> (quotient_edges: SetStEph<Edge<V>>)\n        requires\n            spec_graphview_wf(graph@),\n            valid_key_type_Edge::<V>(),\n        ensures\n            quotient_edges.spec_setsteph_wf(),"
+    "snippet": "    fn build_quotient_edges<V: HashOrd>(\n        graph: &UnDirGraphStEph<V>,\n        partition_map: &HashMap<V, V>,\n    ) -> (quotient_edges: SetStEph<Edge<V>>)\n        requires\n            spec_graphview_wf(graph@),\n            valid_key_type_Edge::<V>(),\n        ensures\n            quotient_edges.spec_setsteph_wf(),"
   }
 ]

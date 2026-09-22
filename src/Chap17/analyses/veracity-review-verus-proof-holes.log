@@ -21,8 +21,8 @@ Table of Contents:
 =================================================================
 
 ℹ MathSeq.rs
-/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:696: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:710: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:577: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:591: info: accept()
    Info: 2 total
 
 =================================================================
@@ -56,11 +56,11 @@ Proof Functions:
    0 total
 
 Function Specs:
-   41 exec fns with complete spec (requires+ensures) (62%)
+   40 exec fns with complete spec (requires+ensures) (72%)
    0 exec fns missing spec (0%)
-   25 proof/spec fns clean (37%)
+   15 proof/spec fns clean (27%)
    0 proof/spec fns with holes (0%)
-   66 total fns
+   55 total fns
 
 
 Holes Found: 0 (actionable)
@@ -75,9 +75,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-18 04:58:00 -07:00
-Ended:     2026-04-18 04:58:00 -07:00
-Duration:  7ms
+Started:   2026-09-22 11:25:11 -07:00
+Ended:     2026-09-22 11:25:11 -07:00
+Duration:  9ms
 
 Full output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap17/analyses/veracity-review-verus-proof-holes.log

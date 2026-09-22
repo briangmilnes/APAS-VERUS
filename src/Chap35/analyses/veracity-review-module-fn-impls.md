@@ -22,8 +22,8 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap35 | OrderStatSelectMtEph | 1 | 1 | 0 | 4 | 5 | 0 | 5 | 0 | 0 |
-| 2 | Chap35 | OrderStatSelectMtPer | 1 | 1 | 0 | 4 | 5 | 0 | 5 | 0 | 0 |
+| 1 | Chap35 | OrderStatSelectMtEph | 1 | 1 | 0 | 7 | 8 | 0 | 8 | 0 | 0 |
+| 2 | Chap35 | OrderStatSelectMtPer | 1 | 1 | 0 | 7 | 8 | 0 | 8 | 0 | 0 |
 | 3 | Chap35 | OrderStatSelectStEph | 1 | 1 | 0 | 2 | 3 | 0 | 3 | 0 | 0 |
 | 4 | Chap35 | OrderStatSelectStPer | 1 | 1 | 0 | 2 | 3 | 0 | 3 | 0 | 0 |
 
@@ -33,37 +33,43 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `lemma_total_ordering` |  |  |  | Y | Y |  |  | unknown | 68&#8209;69 |
-| 2 | `lemma_const_seq_multiset` |  |  |  | Y | Y |  |  | unknown | 93&#8209;98 |
-| 3 | `select` | Y | Y |  |  | Y |  |  | unknown | 113&#8209;118 |
-| 4 | `parallel_three_way_partition` |  |  |  | Y | Y |  |  | unknown | 129&#8209;151 |
-| 5 | `select_inner` |  |  |  | Y | Y |  |  | unknown | 408&#8209;417 |
+| 1 | `lemma_total_ordering` |  |  |  | Y | Y |  |  | unknown | 86&#8209;87 |
+| 2 | `lemma_const_seq_multiset` |  |  |  | Y | Y |  |  | unknown | 120&#8209;125 |
+| 3 | `lemma_all_equal_multiset` |  |  |  | Y | Y |  |  | unknown | 136&#8209;141 |
+| 4 | `select` | Y | Y |  |  | Y |  |  | unknown | 158&#8209;165 |
+| 5 | `append_vec` |  |  |  | Y | Y |  |  | unknown | 172&#8209;173 |
+| 6 | `partition_three_dc` |  |  |  | Y | Y |  |  | unknown | 218&#8209;235 |
+| 7 | `parallel_three_way_partition` |  |  |  | Y | Y |  |  | unknown | 374&#8209;397 |
+| 8 | `select_inner` |  |  |  | Y | Y |  |  | unknown | 493&#8209;503 |
 
 ### Chap35/OrderStatSelectMtPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 6 | `lemma_total_ordering` |  |  |  | Y | Y |  |  | unknown | 68&#8209;69 |
-| 7 | `lemma_const_seq_multiset` |  |  |  | Y | Y |  |  | unknown | 93&#8209;98 |
-| 8 | `select` | Y | Y |  |  | Y |  |  | unknown | 113&#8209;118 |
-| 9 | `parallel_three_way_partition` |  |  |  | Y | Y |  |  | unknown | 129&#8209;151 |
-| 10 | `select_inner` |  |  |  | Y | Y |  |  | unknown | 408&#8209;417 |
+| 9 | `lemma_total_ordering` |  |  |  | Y | Y |  |  | unknown | 86&#8209;87 |
+| 10 | `lemma_const_seq_multiset` |  |  |  | Y | Y |  |  | unknown | 120&#8209;125 |
+| 11 | `lemma_all_equal_multiset` |  |  |  | Y | Y |  |  | unknown | 136&#8209;141 |
+| 12 | `select` | Y | Y |  |  | Y |  |  | unknown | 158&#8209;165 |
+| 13 | `append_vec` |  |  |  | Y | Y |  |  | unknown | 172&#8209;173 |
+| 14 | `partition_three_dc` |  |  |  | Y | Y |  |  | unknown | 218&#8209;235 |
+| 15 | `parallel_three_way_partition` |  |  |  | Y | Y |  |  | unknown | 374&#8209;397 |
+| 16 | `select_inner` |  |  |  | Y | Y |  |  | unknown | 491&#8209;501 |
 
 ### Chap35/OrderStatSelectStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 11 | `lemma_total_ordering` |  |  |  | Y | Y |  |  | unknown | 60&#8209;61 |
-| 12 | `select` | Y | Y |  |  | Y |  |  | unknown | 90&#8209;95 |
-| 13 | `select_inner` |  |  |  | Y | Y |  |  | unknown | 115&#8209;122 |
+| 17 | `lemma_total_ordering` |  |  |  | Y | Y |  |  | unknown | 67&#8209;68 |
+| 18 | `select` | Y | Y |  |  | Y |  |  | unknown | 107&#8209;112 |
+| 19 | `select_inner` |  |  |  | Y | Y |  |  | unknown | 134&#8209;141 |
 
 ### Chap35/OrderStatSelectStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 14 | `lemma_total_ordering` |  |  |  | Y | Y |  |  | unknown | 59&#8209;60 |
-| 15 | `select` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;94 |
-| 16 | `select_inner` |  |  |  | Y | Y |  |  | unknown | 114&#8209;121 |
+| 20 | `lemma_total_ordering` |  |  |  | Y | Y |  |  | unknown | 67&#8209;68 |
+| 21 | `select` | Y | Y |  |  | Y |  |  | unknown | 107&#8209;112 |
+| 22 | `select_inner` |  |  |  | Y | Y |  |  | unknown | 134&#8209;141 |
 
 
 ### Legend

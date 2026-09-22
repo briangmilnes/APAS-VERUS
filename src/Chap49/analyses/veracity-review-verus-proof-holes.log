@@ -24,8 +24,26 @@ Table of Contents:
 ✓ MinEditDistMtPer.rs
 ✓ MinEditDistStEph.rs
 ✓ MinEditDistStPer.rs
-✓ SubsetSumMtEph.rs
-✓ SubsetSumMtPer.rs
+⚠ SubsetSumMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:336: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+       321 |         fn memo_size(&self) -> (count: usize) {
+            ...
+       334 |         // (`Set` is finite by type); a real invariant needs the multiset length as a
+       335 |         // ghost field of this predicate (docs/HashMigration.md, Needs discussion).
+       337 |             true
+       338 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:148: info: fn_missing_requires
+   Info: 1 total
+⚠ SubsetSumMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:304: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+       289 |         fn memo_size(&self) -> (count: usize) {
+            ...
+       302 |         // (`Set` is finite by type); a real invariant needs the multiset length as a
+       303 |         // ghost field of this predicate (docs/HashMigration.md, Needs discussion).
+       305 |             true
+       306 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:131: info: fn_missing_requires
+   Info: 1 total
 ✓ SubsetSumStEph.rs
 ✓ SubsetSumStPer.rs
 
@@ -64,8 +82,8 @@ SubsetSumStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   8 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   6 clean (no holes, no errors; 75%)
+   2 holed (holes or errors, 25%)
    8 total
 
 Proof Functions:
@@ -74,15 +92,18 @@ Proof Functions:
    0 total
 
 Function Specs:
-   132 exec fns with complete spec (requires+ensures) (74%)
-   0 exec fns missing spec (0%)
-   46 proof/spec fns clean (25%)
+   130 exec fns with complete spec (requires+ensures) (72%)
+   2 exec fns missing spec (1%)
+   48 proof/spec fns clean (26%)
    0 proof/spec fns with holes (0%)
-   178 total fns
+   180 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
+
+Accepted (reviewed): 2 total
+   2 × fn_missing_requires
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -90,9 +111,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-18 04:58:01 -07:00
-Ended:     2026-04-18 04:58:01 -07:00
-Duration:  22ms
+Started:   2026-09-22 11:25:12 -07:00
+Ended:     2026-09-22 11:25:12 -07:00
+Duration:  15ms
 
 Full output: src/Chap49/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap49/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap49/analyses/veracity-review-verus-proof-holes.log

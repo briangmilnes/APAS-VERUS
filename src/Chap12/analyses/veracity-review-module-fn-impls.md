@@ -32,30 +32,30 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `new` | Y | Y |  |  | Y |  |  | hole | 33&#8209;34 |
-| 2 | `lock` | Y | Y |  |  | Y |  |  | hole | 39&#8209;40 |
-| 3 | `unlock` | Y | Y |  |  | Y |  |  | hole | 45&#8209;47 |
-| 4 | `with_lock` | Y | Y |  |  | Y |  |  | hole | 54 |
-| 5 | `parallel_increment` |  |  |  | Y | Y |  |  | hole | 94&#8209;95 |
-| 6 | `default` |  | Y |  |  | Y |  | Y |  | 121 |
+| 1 | `new` | Y | Y |  |  | Y |  |  | hole | 56&#8209;57 |
+| 2 | `lock` | Y | Y |  |  | Y |  |  | hole | 61&#8209;62 |
+| 3 | `unlock` | Y | Y |  |  | Y |  |  | hole | 66&#8209;68 |
+| 4 | `with_lock` | Y | Y |  |  | Y |  |  | hole | 74 |
+| 5 | `parallel_increment` |  |  |  | Y | Y |  |  | hole | 120&#8209;121 |
+| 6 | `default` |  | Y |  |  | Y |  | Y |  | 150 |
 
 ### Chap12/Exercise12_2.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 7 | `fetch_add_cas` | Y | Y |  |  | Y |  | Y |  | 22 |
+| 7 | `fetch_add_cas` | Y | Y |  |  | Y |  | Y |  | 39 |
 
 ### Chap12/Exercise12_5.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 8 | `new` | Y | Y |  |  | Y |  |  | hole | 58&#8209;59 |
-| 9 | `push` | Y | Y |  |  | Y |  |  | hole | 64&#8209;65 |
-| 10 | `pop` | Y | Y |  |  | Y |  |  | hole | 72&#8209;73 |
-| 11 | `is_empty` | Y | Y |  |  | Y |  |  | hole | 79&#8209;80 |
-| 12 | `drain` | Y | Y |  |  | Y |  |  | hole | 87&#8209;88 |
-| 13 | `default` |  | Y |  |  | Y |  | Y |  | 148 |
-| 14 | `drop` |  | Y |  |  | Y |  |  | hole | 155&#8209;157 |
+| 8 | `new` | Y | Y |  |  | Y |  |  | hole | 72&#8209;73 |
+| 9 | `push` | Y | Y |  |  | Y |  |  | hole | 77&#8209;78 |
+| 10 | `pop` | Y | Y |  |  | Y |  |  | hole | 84&#8209;85 |
+| 11 | `is_empty` | Y | Y |  |  | Y |  |  | hole | 90&#8209;91 |
+| 12 | `drain` | Y | Y |  |  | Y |  |  | hole | 97&#8209;98 |
+| 13 | `drop` |  | Y |  |  | Y |  |  | hole | 164&#8209;166 |
+| 14 | `default` |  | Y |  |  | Y |  | Y |  | 182 |
 
 
 ### Legend

@@ -3,7 +3,7 @@
     "id": 1,
     "function": "new",
     "file": "Chap30/Probability.rs",
-    "lines": "32",
+    "lines": "56",
     "spec_strength": "",
     "snippet": "        fn new(p: f64) -> Self;"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "function": "value",
     "file": "Chap30/Probability.rs",
-    "lines": "36",
+    "lines": "59",
     "spec_strength": "",
     "snippet": "        fn value(&self) -> f64;"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "function": "infinity",
     "file": "Chap30/Probability.rs",
-    "lines": "40",
+    "lines": "62",
     "spec_strength": "hole",
     "snippet": "        fn infinity() -> Self;"
   },
@@ -27,88 +27,88 @@
     "id": 4,
     "function": "zero",
     "file": "Chap30/Probability.rs",
-    "lines": "44",
+    "lines": "65",
     "spec_strength": "",
     "snippet": "        fn zero() -> Self;"
   },
   {
     "id": 5,
-    "function": "default",
-    "file": "Chap30/Probability.rs",
-    "lines": "60",
-    "spec_strength": "",
-    "snippet": "        fn default() -> Self { <Probability as ProbabilityTrait>::zero() }"
-  },
-  {
-    "id": 6,
-    "function": "eq",
-    "file": "Chap30/Probability.rs",
-    "lines": "68",
-    "spec_strength": "hole",
-    "snippet": "        fn eq(&self, other: &Self) -> bool {"
-  },
-  {
-    "id": 7,
     "function": "partial_cmp",
     "file": "Chap30/Probability.rs",
-    "lines": "79",
+    "lines": "86",
     "spec_strength": "hole",
     "snippet": "        fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }"
   },
   {
-    "id": 8,
+    "id": 6,
     "function": "cmp",
     "file": "Chap30/Probability.rs",
-    "lines": "87",
+    "lines": "93",
     "spec_strength": "hole",
     "snippet": "        fn cmp(&self, other: &Self) -> Ordering {"
   },
   {
-    "id": 9,
-    "function": "hash",
-    "file": "Chap30/Probability.rs",
-    "lines": "110",
-    "spec_strength": "hole",
-    "snippet": "        fn hash<H: Hasher>(&self, state: &mut H) { self.0.to_bits().hash(state); }"
-  },
-  {
-    "id": 10,
+    "id": 7,
     "function": "from`",
     "file": "Chap30/Probability.rs",
-    "lines": "117",
+    "lines": "114",
     "spec_strength": "hole",
     "snippet": "        fn from(value: f64) -> Self { Probability(value) }"
   },
   {
-    "id": 11,
+    "id": 8,
     "function": "add",
     "file": "Chap30/Probability.rs",
-    "lines": "133",
+    "lines": "128",
     "spec_strength": "hole",
     "snippet": "        fn add(self, other: Self) -> Self { Probability(self.0 + other.0) }"
   },
   {
-    "id": 12,
+    "id": 9,
     "function": "sub",
     "file": "Chap30/Probability.rs",
-    "lines": "142",
+    "lines": "136",
     "spec_strength": "hole",
     "snippet": "        fn sub(self, other: Self) -> Self { Probability(self.0 - other.0) }"
   },
   {
-    "id": 13,
+    "id": 10,
     "function": "mul",
     "file": "Chap30/Probability.rs",
-    "lines": "151",
+    "lines": "144",
     "spec_strength": "hole",
     "snippet": "        fn mul(self, other: Self) -> Self { Probability(self.0 * other.0) }"
   },
   {
-    "id": 14,
+    "id": 11,
     "function": "div",
     "file": "Chap30/Probability.rs",
-    "lines": "160",
+    "lines": "152",
     "spec_strength": "hole",
     "snippet": "        fn div(self, other: Self) -> Self { Probability(self.0 / other.0) }"
+  },
+  {
+    "id": 12,
+    "function": "default",
+    "file": "Chap30/Probability.rs",
+    "lines": "175",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { <Probability as ProbabilityTrait>::zero() }"
+  },
+  {
+    "id": 13,
+    "function": "eq",
+    "file": "Chap30/Probability.rs",
+    "lines": "182",
+    "spec_strength": "hole",
+    "snippet": "        fn eq(&self, other: &Self) -> bool {"
+  },
+  {
+    "id": 14,
+    "function": "hash",
+    "file": "Chap30/Probability.rs",
+    "lines": "193",
+    "spec_strength": "hole",
+    "snippet": "        fn hash<H: Hasher>(&self, state: &mut H) { self.0.to_bits().hash(state); }"
   }
 ]

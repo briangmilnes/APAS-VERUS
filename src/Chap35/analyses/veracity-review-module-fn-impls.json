@@ -3,7 +3,7 @@
     "id": 1,
     "function": "lemma_total_ordering",
     "file": "Chap35/OrderStatSelectMtEph.rs",
-    "lines": "68-69",
+    "lines": "86-87",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_total_ordering<T: TotalOrder>()\n        ensures total_ordering(spec_leq::<T>())"
   },
@@ -11,119 +11,167 @@
     "id": 2,
     "function": "lemma_const_seq_multiset",
     "file": "Chap35/OrderStatSelectMtEph.rs",
-    "lines": "93-98",
+    "lines": "120-125",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_const_seq_multiset<T>(n: nat, v: T)\n        ensures\n            spec_const_seq(n, v).to_multiset().count(v) == n,\n            forall|x: T| x != v ==>\n                (#[trigger] spec_const_seq(n, v).to_multiset().count(x)) == 0nat,\n        decreases n,"
   },
   {
     "id": 3,
-    "function": "select",
+    "function": "lemma_all_equal_multiset",
     "file": "Chap35/OrderStatSelectMtEph.rs",
-    "lines": "113-118",
+    "lines": "136-141",
     "spec_strength": "unknown",
-    "snippet": "        fn select(a: &ArraySeqMtEphS<T>, k: usize) -> (found: Option<T>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                k >= a.spec_len() ==> found is None,\n                k < a.spec_len() ==> found == Some(spec_kth::<T>(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));"
+    "snippet": "    proof fn lemma_all_equal_multiset<T>(s: Seq<T>, v: T)\n        requires forall|i: int| 0 <= i < s.len() ==> (#[trigger] s[i]) == v,\n        ensures\n            s.to_multiset().count(v) == s.len(),\n            forall|x: T| x != v ==> (#[trigger] s.to_multiset().count(x)) == 0nat,\n        decreases s.len(),"
   },
   {
     "id": 4,
-    "function": "parallel_three_way_partition",
+    "function": "select",
     "file": "Chap35/OrderStatSelectMtEph.rs",
-    "lines": "129-151",
+    "lines": "158-165",
     "spec_strength": "unknown",
-    "snippet": "    fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(\n        a: &ArraySeqMtEphS<T>, pivot: T, pivot_idx: usize, n: usize,\n    ) -> (partition: (Vec<T>, usize, Vec<T>))\n        requires\n            n == a.spec_len(),\n            n <= usize::MAX,\n            n >= 2,\n            pivot_idx < n,\n            pivot == a.spec_index(pivot_idx as int),\n        ensures\n            forall|j: int| 0 <= j < partition.0@.len() ==>\n                (#[trigger] T::le(partition.0@[j], pivot)) && partition.0@[j] != pivot,\n            forall|j: int| 0 <= j < partition.2@.len() ==>\n                (#[trigger] T::le(pivot, partition.2@[j])) && partition.2@[j] != pivot,\n            partition.0@.len() + partition.1 + partition.2@.len() == n,\n            partition.0@.len() + partition.2@.len() < n,\n            ({\n                let s = Seq::new(n as nat, |i: int| a.spec_index(i));\n                let eq_seq = Seq::new(partition.1 as nat, |i: int| pivot);\n                s.to_multiset() =~=\n                    partition.0@.to_multiset().add(partition.2@.to_multiset()).add(eq_seq.to_multiset())\n            }),\n            partition.1 >= 1,"
+    "snippet": "        fn select(a: &ArraySeqMtEphS<T>, k: usize) -> (found: Option<T>)\n            requires\n                a.spec_len() <= usize::MAX,\n                obeys_feq_clone::<T>(),\n            ensures\n                k >= a.spec_len() ==> found is None,\n                k < a.spec_len() ==> found == Some(spec_kth::<T>(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));"
   },
   {
     "id": 5,
-    "function": "select_inner",
+    "function": "append_vec",
     "file": "Chap35/OrderStatSelectMtEph.rs",
-    "lines": "408-417",
+    "lines": "172-173",
     "spec_strength": "unknown",
-    "snippet": "    fn select_inner<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(\n        a: &ArraySeqMtEphS<T>, k: usize,\n    ) -> (found: Option<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            0 <= k < a.spec_len(),\n        ensures\n            found == Some(spec_kth::<T>(\n                Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int)),\n        decreases a.spec_len(),"
+    "snippet": "    fn append_vec<T: Copy>(a: &mut Vec<T>, b: &Vec<T>)\n        ensures a@ =~= old(a)@ + b@"
   },
   {
     "id": 6,
+    "function": "partition_three_dc",
+    "file": "Chap35/OrderStatSelectMtEph.rs",
+    "lines": "218-235",
+    "spec_strength": "unknown",
+    "snippet": "    fn partition_three_dc<T: StTInMtT + TotalOrder + Copy>(\n        a: &ArraySeqMtEphSliceS<T>,\n        pivot: &T,\n    ) -> (partitioned: (Vec<T>, Vec<T>, Vec<T>))\n        requires\n            a.spec_arrayseqmtephslice_wf(),\n            obeys_feq_clone::<T>(),\n        ensures\n            forall|j: int| #![trigger partitioned.0@[j]] 0 <= j < partitioned.0@.len() ==>\n                T::le(partitioned.0@[j], *pivot) && partitioned.0@[j] != *pivot,\n            forall|j: int| #![trigger partitioned.1@[j]] 0 <= j < partitioned.1@.len() ==>\n                partitioned.1@[j] == *pivot,\n            forall|j: int| #![trigger partitioned.2@[j]] 0 <= j < partitioned.2@.len() ==>\n                T::le(*pivot, partitioned.2@[j]) && partitioned.2@[j] != *pivot,\n            spec_slice_elements(*a).to_multiset() =~=\n                partitioned.0@.to_multiset().add(partitioned.2@.to_multiset()).add(partitioned.1@.to_multiset()),\n            partitioned.0@.len() + partitioned.1@.len() + partitioned.2@.len() == a.spec_len(),\n        decreases a.spec_len(),"
+  },
+  {
+    "id": 7,
+    "function": "parallel_three_way_partition",
+    "file": "Chap35/OrderStatSelectMtEph.rs",
+    "lines": "374-397",
+    "spec_strength": "unknown",
+    "snippet": "    fn parallel_three_way_partition<T: StTInMtT + TotalOrder + Copy>(\n        a: &ArraySeqMtEphS<T>, pivot: T, pivot_idx: usize, n: usize,\n    ) -> (partition: (Vec<T>, usize, Vec<T>))\n        requires\n            n == a.spec_len(),\n            n <= usize::MAX,\n            n >= 2,\n            pivot_idx < n,\n            pivot == a.spec_index(pivot_idx as int),\n            obeys_feq_clone::<T>(),\n        ensures\n            forall|j: int| 0 <= j < partition.0@.len() ==>\n                (#[trigger] T::le(partition.0@[j], pivot)) && partition.0@[j] != pivot,\n            forall|j: int| 0 <= j < partition.2@.len() ==>\n                (#[trigger] T::le(pivot, partition.2@[j])) && partition.2@[j] != pivot,\n            partition.0@.len() + partition.1 + partition.2@.len() == n,\n            partition.0@.len() + partition.2@.len() < n,\n            ({\n                let s = Seq::new(n as nat, |i: int| a.spec_index(i));\n                let eq_seq = Seq::new(partition.1 as nat, |i: int| pivot);\n                s.to_multiset() =~=\n                    partition.0@.to_multiset().add(partition.2@.to_multiset()).add(eq_seq.to_multiset())\n            }),\n            partition.1 >= 1,"
+  },
+  {
+    "id": 8,
+    "function": "select_inner",
+    "file": "Chap35/OrderStatSelectMtEph.rs",
+    "lines": "493-503",
+    "spec_strength": "unknown",
+    "snippet": "    fn select_inner<T: StTInMtT + TotalOrder + Copy>(\n        a: &ArraySeqMtEphS<T>, k: usize,\n    ) -> (found: Option<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            0 <= k < a.spec_len(),\n            obeys_feq_clone::<T>(),\n        ensures\n            found == Some(spec_kth::<T>(\n                Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int)),\n        decreases a.spec_len(),"
+  },
+  {
+    "id": 9,
     "function": "lemma_total_ordering",
     "file": "Chap35/OrderStatSelectMtPer.rs",
-    "lines": "68-69",
+    "lines": "86-87",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_total_ordering<T: TotalOrder>()\n        ensures total_ordering(spec_leq::<T>())"
   },
   {
-    "id": 7,
+    "id": 10,
     "function": "lemma_const_seq_multiset",
     "file": "Chap35/OrderStatSelectMtPer.rs",
-    "lines": "93-98",
+    "lines": "120-125",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_const_seq_multiset<T>(n: nat, v: T)\n        ensures\n            spec_const_seq(n, v).to_multiset().count(v) == n,\n            forall|x: T| x != v ==>\n                (#[trigger] spec_const_seq(n, v).to_multiset().count(x)) == 0nat,\n        decreases n,"
   },
   {
-    "id": 8,
-    "function": "select",
-    "file": "Chap35/OrderStatSelectMtPer.rs",
-    "lines": "113-118",
-    "spec_strength": "unknown",
-    "snippet": "        fn select(a: &ArraySeqMtPerS<T>, k: usize) -> (found: Option<T>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                k >= a.spec_len() ==> found is None,\n                k < a.spec_len() ==> found == Some(spec_kth::<T>(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));"
-  },
-  {
-    "id": 9,
-    "function": "parallel_three_way_partition",
-    "file": "Chap35/OrderStatSelectMtPer.rs",
-    "lines": "129-151",
-    "spec_strength": "unknown",
-    "snippet": "    fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(\n        a: &ArraySeqMtPerS<T>, pivot: T, pivot_idx: usize, n: usize,\n    ) -> (partition: (Vec<T>, usize, Vec<T>))\n        requires\n            n == a.spec_len(),\n            n <= usize::MAX,\n            n >= 2,\n            pivot_idx < n,\n            pivot == a.spec_index(pivot_idx as int),\n        ensures\n            forall|j: int| 0 <= j < partition.0@.len() ==>\n                (#[trigger] T::le(partition.0@[j], pivot)) && partition.0@[j] != pivot,\n            forall|j: int| 0 <= j < partition.2@.len() ==>\n                (#[trigger] T::le(pivot, partition.2@[j])) && partition.2@[j] != pivot,\n            partition.0@.len() + partition.1 + partition.2@.len() == n,\n            partition.0@.len() + partition.2@.len() < n,\n            ({\n                let s = Seq::new(n as nat, |i: int| a.spec_index(i));\n                let eq_seq = Seq::new(partition.1 as nat, |i: int| pivot);\n                s.to_multiset() =~=\n                    partition.0@.to_multiset().add(partition.2@.to_multiset()).add(eq_seq.to_multiset())\n            }),\n            partition.1 >= 1,"
-  },
-  {
-    "id": 10,
-    "function": "select_inner",
-    "file": "Chap35/OrderStatSelectMtPer.rs",
-    "lines": "408-417",
-    "spec_strength": "unknown",
-    "snippet": "    fn select_inner<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(\n        a: &ArraySeqMtPerS<T>, k: usize,\n    ) -> (found: Option<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            0 <= k < a.spec_len(),\n        ensures\n            found == Some(spec_kth::<T>(\n                Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int)),\n        decreases a.spec_len(),"
-  },
-  {
     "id": 11,
-    "function": "lemma_total_ordering",
-    "file": "Chap35/OrderStatSelectStEph.rs",
-    "lines": "60-61",
+    "function": "lemma_all_equal_multiset",
+    "file": "Chap35/OrderStatSelectMtPer.rs",
+    "lines": "136-141",
     "spec_strength": "unknown",
-    "snippet": "    pub proof fn lemma_total_ordering<T: TotalOrder>()\n        ensures total_ordering(spec_leq::<T>())"
+    "snippet": "    proof fn lemma_all_equal_multiset<T>(s: Seq<T>, v: T)\n        requires forall|i: int| 0 <= i < s.len() ==> (#[trigger] s[i]) == v,\n        ensures\n            s.to_multiset().count(v) == s.len(),\n            forall|x: T| x != v ==> (#[trigger] s.to_multiset().count(x)) == 0nat,\n        decreases s.len(),"
   },
   {
     "id": 12,
     "function": "select",
-    "file": "Chap35/OrderStatSelectStEph.rs",
-    "lines": "90-95",
+    "file": "Chap35/OrderStatSelectMtPer.rs",
+    "lines": "158-165",
     "spec_strength": "unknown",
-    "snippet": "        fn select(a: &ArraySeqStEphS<T>, k: usize) -> (found: Option<T>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                k >= a.spec_len() ==> found is None,\n                k < a.spec_len() ==> found == Some(spec_kth::<T>(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));"
+    "snippet": "        fn select(a: &ArraySeqMtPerS<T>, k: usize) -> (found: Option<T>)\n            requires\n                a.spec_len() <= usize::MAX,\n                obeys_feq_clone::<T>(),\n            ensures\n                k >= a.spec_len() ==> found is None,\n                k < a.spec_len() ==> found == Some(spec_kth::<T>(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));"
   },
   {
     "id": 13,
-    "function": "select_inner",
-    "file": "Chap35/OrderStatSelectStEph.rs",
-    "lines": "115-122",
+    "function": "append_vec",
+    "file": "Chap35/OrderStatSelectMtPer.rs",
+    "lines": "172-173",
     "spec_strength": "unknown",
-    "snippet": "    fn select_inner<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>, k: usize) -> (found: Option<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            0 <= k < a.spec_len(),\n        ensures\n            found == Some(spec_kth::<T>(\n                Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int)),\n        decreases a.spec_len(),"
+    "snippet": "    fn append_vec<T: Copy>(a: &mut Vec<T>, b: &Vec<T>)\n        ensures a@ =~= old(a)@ + b@"
   },
   {
     "id": 14,
-    "function": "lemma_total_ordering",
-    "file": "Chap35/OrderStatSelectStPer.rs",
-    "lines": "59-60",
+    "function": "partition_three_dc",
+    "file": "Chap35/OrderStatSelectMtPer.rs",
+    "lines": "218-235",
     "spec_strength": "unknown",
-    "snippet": "    pub proof fn lemma_total_ordering<T: TotalOrder>()\n        ensures total_ordering(spec_leq::<T>())"
+    "snippet": "    fn partition_three_dc<T: StTInMtT + TotalOrder + Copy>(\n        a: &ArraySeqMtEphSliceS<T>,\n        pivot: &T,\n    ) -> (partitioned: (Vec<T>, Vec<T>, Vec<T>))\n        requires\n            a.spec_arrayseqmtephslice_wf(),\n            obeys_feq_clone::<T>(),\n        ensures\n            forall|j: int| #![trigger partitioned.0@[j]] 0 <= j < partitioned.0@.len() ==>\n                T::le(partitioned.0@[j], *pivot) && partitioned.0@[j] != *pivot,\n            forall|j: int| #![trigger partitioned.1@[j]] 0 <= j < partitioned.1@.len() ==>\n                partitioned.1@[j] == *pivot,\n            forall|j: int| #![trigger partitioned.2@[j]] 0 <= j < partitioned.2@.len() ==>\n                T::le(*pivot, partitioned.2@[j]) && partitioned.2@[j] != *pivot,\n            spec_slice_elements(*a).to_multiset() =~=\n                partitioned.0@.to_multiset().add(partitioned.2@.to_multiset()).add(partitioned.1@.to_multiset()),\n            partitioned.0@.len() + partitioned.1@.len() + partitioned.2@.len() == a.spec_len(),\n        decreases a.spec_len(),"
   },
   {
     "id": 15,
-    "function": "select",
-    "file": "Chap35/OrderStatSelectStPer.rs",
-    "lines": "89-94",
+    "function": "parallel_three_way_partition",
+    "file": "Chap35/OrderStatSelectMtPer.rs",
+    "lines": "374-397",
     "spec_strength": "unknown",
-    "snippet": "        fn select(a: &ArraySeqStPerS<T>, k: usize) -> (found: Option<T>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                k >= a.spec_len() ==> found is None,\n                k < a.spec_len() ==> found == Some(spec_kth::<T>(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));"
+    "snippet": "    fn parallel_three_way_partition<T: StTInMtT + TotalOrder + Copy>(\n        a: &ArraySeqMtPerS<T>, pivot: T, pivot_idx: usize, n: usize,\n    ) -> (partition: (Vec<T>, usize, Vec<T>))\n        requires\n            n == a.spec_len(),\n            n <= usize::MAX,\n            n >= 2,\n            pivot_idx < n,\n            pivot == a.spec_index(pivot_idx as int),\n            obeys_feq_clone::<T>(),\n        ensures\n            forall|j: int| 0 <= j < partition.0@.len() ==>\n                (#[trigger] T::le(partition.0@[j], pivot)) && partition.0@[j] != pivot,\n            forall|j: int| 0 <= j < partition.2@.len() ==>\n                (#[trigger] T::le(pivot, partition.2@[j])) && partition.2@[j] != pivot,\n            partition.0@.len() + partition.1 + partition.2@.len() == n,\n            partition.0@.len() + partition.2@.len() < n,\n            ({\n                let s = Seq::new(n as nat, |i: int| a.spec_index(i));\n                let eq_seq = Seq::new(partition.1 as nat, |i: int| pivot);\n                s.to_multiset() =~=\n                    partition.0@.to_multiset().add(partition.2@.to_multiset()).add(eq_seq.to_multiset())\n            }),\n            partition.1 >= 1,"
   },
   {
     "id": 16,
     "function": "select_inner",
+    "file": "Chap35/OrderStatSelectMtPer.rs",
+    "lines": "491-501",
+    "spec_strength": "unknown",
+    "snippet": "    fn select_inner<T: StTInMtT + TotalOrder + Copy>(\n        a: &ArraySeqMtPerS<T>, k: usize,\n    ) -> (found: Option<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            0 <= k < a.spec_len(),\n            obeys_feq_clone::<T>(),\n        ensures\n            found == Some(spec_kth::<T>(\n                Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int)),\n        decreases a.spec_len(),"
+  },
+  {
+    "id": 17,
+    "function": "lemma_total_ordering",
+    "file": "Chap35/OrderStatSelectStEph.rs",
+    "lines": "67-68",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_total_ordering<T: TotalOrder>()\n        ensures total_ordering(spec_leq::<T>())"
+  },
+  {
+    "id": 18,
+    "function": "select",
+    "file": "Chap35/OrderStatSelectStEph.rs",
+    "lines": "107-112",
+    "spec_strength": "unknown",
+    "snippet": "        fn select(a: &ArraySeqStEphS<T>, k: usize) -> (found: Option<T>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                k >= a.spec_len() ==> found is None,\n                k < a.spec_len() ==> found == Some(spec_kth::<T>(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));"
+  },
+  {
+    "id": 19,
+    "function": "select_inner",
+    "file": "Chap35/OrderStatSelectStEph.rs",
+    "lines": "134-141",
+    "spec_strength": "unknown",
+    "snippet": "    fn select_inner<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>, k: usize) -> (found: Option<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            0 <= k < a.spec_len(),\n        ensures\n            found == Some(spec_kth::<T>(\n                Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int)),\n        decreases a.spec_len(),"
+  },
+  {
+    "id": 20,
+    "function": "lemma_total_ordering",
     "file": "Chap35/OrderStatSelectStPer.rs",
-    "lines": "114-121",
+    "lines": "67-68",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_total_ordering<T: TotalOrder>()\n        ensures total_ordering(spec_leq::<T>())"
+  },
+  {
+    "id": 21,
+    "function": "select",
+    "file": "Chap35/OrderStatSelectStPer.rs",
+    "lines": "107-112",
+    "spec_strength": "unknown",
+    "snippet": "        fn select(a: &ArraySeqStPerS<T>, k: usize) -> (found: Option<T>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                k >= a.spec_len() ==> found is None,\n                k < a.spec_len() ==> found == Some(spec_kth::<T>(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));"
+  },
+  {
+    "id": 22,
+    "function": "select_inner",
+    "file": "Chap35/OrderStatSelectStPer.rs",
+    "lines": "134-141",
     "spec_strength": "unknown",
     "snippet": "    fn select_inner<T: TotalOrder + Copy>(a: &ArraySeqStPerS<T>, k: usize) -> (found: Option<T>)\n        requires\n            a.spec_len() <= usize::MAX,\n            0 <= k < a.spec_len(),\n        ensures\n            found == Some(spec_kth::<T>(\n                Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int)),\n        decreases a.spec_len(),"
   }

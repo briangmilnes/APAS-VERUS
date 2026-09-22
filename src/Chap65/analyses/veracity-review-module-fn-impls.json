@@ -1,122 +1,586 @@
 [
   {
     "id": 1,
-    "function": "kruskal_mst",
+    "function": "lemma_sorted_edge_in_graph_v",
     "file": "Chap65/KruskalStEph.rs",
-    "lines": "42-45",
+    "lines": "63-83",
     "spec_strength": "unknown",
-    "snippet": "        fn kruskal_mst<V: HashOrd>(\n            graph: &LabUnDirGraphStEph<V, WrappedF64>,\n        ) -> SetStEph<LabEdge<V, WrappedF64>>\n            requires Self::spec_kruskalsteph_wf(graph);"
+    "snippet": "    proof fn lemma_sorted_edge_in_graph_v<V: HashOrd>(\n        edges_vec_i: LabEdge<V, u64>,\n        pre_sort: Seq<LabEdge<V, u64>>,\n        edge_seq: Seq<LabEdge<V, u64>>,\n        mapped_es: Seq<(<V as View>::V, <V as View>::V, u64)>,\n        labeled_view: Set<(<V as View>::V, <V as View>::V, u64)>,\n        graph_V: Set<<V as View>::V>,\n        graph_A: Set<(<V as View>::V, <V as View>::V, u64)>,\n    )\n        requires\n            pre_sort.contains(edges_vec_i),\n            pre_sort.len() == edge_seq.len(),\n            forall|k: int| 0 <= k < pre_sort.len() ==> #[trigger] pre_sort[k]@ == edge_seq[k]@,\n            mapped_es == edge_seq.map(|_i: int, e: LabEdge<V, u64>| e@),\n            forall|x: (<V as View>::V, <V as View>::V, u64)|\n                labeled_view.contains(x) <==> #[trigger] mapped_es.contains(x),\n            labeled_view =~= graph_A,\n            spec_labgraphview_wf(LabGraphView { V: graph_V, A: graph_A }),\n        ensures\n            graph_V.contains(edges_vec_i@.0),\n            graph_V.contains(edges_vec_i@.1),"
   },
   {
     "id": 2,
-    "function": "mst_weight",
+    "function": "kruskal_mst",
     "file": "Chap65/KruskalStEph.rs",
-    "lines": "49-50",
+    "lines": "110-113",
     "spec_strength": "unknown",
-    "snippet": "        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64\n            requires mst.spec_setsteph_wf();"
+    "snippet": "        fn kruskal_mst<V: HashOrd>(\n            graph: &LabUnDirGraphStEph<V, u64>,\n        ) -> SetStEph<LabEdge<V, u64>>\n            requires Self::spec_kruskalsteph_wf(graph);"
   },
   {
     "id": 3,
-    "function": "verify_mst_size",
+    "function": "mst_weight",
     "file": "Chap65/KruskalStEph.rs",
-    "lines": "54-58",
+    "lines": "117-119",
     "spec_strength": "unknown",
-    "snippet": "        fn verify_mst_size<V: HashOrd>(\n            graph: &LabUnDirGraphStEph<V, WrappedF64>,\n            mst: &SetStEph<LabEdge<V, WrappedF64>>,\n        ) -> B\n            requires Self::spec_kruskalsteph_wf(graph), mst.spec_setsteph_wf();"
+    "snippet": "        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, u64>>) -> (total: u64)\n            requires mst.spec_setsteph_wf(),\n            ensures mst@.len() == 0 ==> total == 0;"
   },
   {
     "id": 4,
-    "function": "sort_edges_by_weight",
+    "function": "verify_mst_size",
     "file": "Chap65/KruskalStEph.rs",
-    "lines": "62-70",
+    "lines": "123-127",
     "spec_strength": "unknown",
-    "snippet": "    fn sort_edges_by_weight<V: HashOrd>(edges: &mut Vec<LabEdge<V, WrappedF64>>)\n        requires forall|i: int| 0 <= i < edges@.len() ==> #[trigger] edges@[i].2.spec_is_finite(),\n        ensures\n            edges@.len() == old(edges)@.len(),\n            forall|i: int| 0 <= i < edges@.len() ==>\n                old(edges)@.contains(#[trigger] edges@[i]),\n            forall|i: int, j: int| #![trigger edges@[i], edges@[j]]\n                0 <= i <= j < edges@.len() ==>\n                edges@[i].2.val.le(edges@[j].2.val),"
+    "snippet": "        fn verify_mst_size<V: HashOrd>(\n            graph: &LabUnDirGraphStEph<V, u64>,\n            mst: &SetStEph<LabEdge<V, u64>>,\n        ) -> bool\n            requires Self::spec_kruskalsteph_wf(graph), mst.spec_setsteph_wf();"
   },
   {
     "id": 5,
-    "function": "prim_mst",
-    "file": "Chap65/PrimStEph.rs",
-    "lines": "60-65",
+    "function": "kruskal_process_edge",
+    "file": "Chap65/KruskalStEph.rs",
+    "lines": "133-146",
     "spec_strength": "unknown",
-    "snippet": "        fn prim_mst<V: HashOrd>(\n            graph: &LabUnDirGraphStEph<V, WrappedF64>,\n            start: V,\n        ) -> (result: SetStEph<LabEdge<V, WrappedF64>>)\n            requires Self::spec_primsteph_wf(graph),\n            ensures result.spec_setsteph_wf();"
+    "snippet": "    pub fn kruskal_process_edge<V: HashOrd>(\n        uf: &mut UnionFindPC<V>,\n        mst_edges: &mut SetStEph<LabEdge<V, u64>>,\n        edge: LabEdge<V, u64>,\n    )\n        requires\n            old(uf).spec_wf(),\n            old(mst_edges).spec_setsteph_wf(),\n            old(uf).spec_contains(edge@.0),\n            old(uf).spec_contains(edge@.1),\n        ensures\n            uf.spec_wf(),\n            mst_edges.spec_setsteph_wf(),\n            forall|z: <V as View>::V| old(uf).spec_contains(z) <==> uf.spec_contains(z),"
   },
   {
     "id": 6,
-    "function": "mst_weight",
-    "file": "Chap65/PrimStEph.rs",
-    "lines": "69-70",
+    "function": "kruskal_greedy_phase",
+    "file": "Chap65/KruskalStEph.rs",
+    "lines": "157-184",
     "spec_strength": "unknown",
-    "snippet": "        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64\n            requires mst.spec_setsteph_wf();"
+    "snippet": "    fn kruskal_greedy_phase<V: HashOrd>(\n        uf: &mut UnionFindPC<V>,\n        mst_edges: &mut SetStEph<LabEdge<V, u64>>,\n        edges_vec: &Vec<LabEdge<V, u64>>,\n        Ghost(pre_sort): Ghost<Seq<LabEdge<V, u64>>>,\n        Ghost(edge_seq): Ghost<Seq<LabEdge<V, u64>>>,\n        Ghost(mapped_es): Ghost<Seq<(<V as View>::V, <V as View>::V, u64)>>,\n        Ghost(labeled_view): Ghost<Set<(<V as View>::V, <V as View>::V, u64)>>,\n        Ghost(graph_V): Ghost<Set<<V as View>::V>>,\n        Ghost(graph_A): Ghost<Set<(<V as View>::V, <V as View>::V, u64)>>,\n    )\n        requires\n            old(uf).spec_wf(),\n            old(mst_edges).spec_setsteph_wf(),\n            forall|v: <V as View>::V| #[trigger] graph_V.contains(v) ==>\n                old(uf).spec_contains(v),\n            forall|k: int| 0 <= k < edges_vec@.len() ==>\n                pre_sort.contains(#[trigger] edges_vec@[k]),\n            pre_sort.len() == edge_seq.len(),\n            forall|k: int| 0 <= k < pre_sort.len() ==>\n                #[trigger] pre_sort[k]@ == edge_seq[k]@,\n            mapped_es == edge_seq.map(|_i: int, e: LabEdge<V, u64>| e@),\n            forall|x: (<V as View>::V, <V as View>::V, u64)|\n                labeled_view.contains(x) <==> #[trigger] mapped_es.contains(x),\n            labeled_view =~= graph_A,\n            spec_labgraphview_wf(LabGraphView { V: graph_V, A: graph_A }),\n        ensures\n            mst_edges.spec_setsteph_wf(),"
   },
   {
     "id": 7,
-    "function": "pq_entry_new",
-    "file": "Chap65/PrimStEph.rs",
-    "lines": "76-78",
+    "function": "sort_edges_by_weight",
+    "file": "Chap65/KruskalStEph.rs",
+    "lines": "223-230",
     "spec_strength": "unknown",
-    "snippet": "    fn pq_entry_new<V: HashOrd>(priority: WrappedF64, vertex: V, parent: Option<V>) -> (entry: PQEntry<V>)\n        requires priority.spec_is_finite(),\n        ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,"
+    "snippet": "    fn sort_edges_by_weight<V: HashOrd>(edges: &mut Vec<LabEdge<V, u64>>)\n        ensures\n            edges@.len() == old(edges)@.len(),\n            forall|i: int| 0 <= i < edges@.len() ==>\n                old(edges)@.contains(#[trigger] edges@[i]),\n            forall|i: int, j: int| #![trigger edges@[i], edges@[j]]\n                0 <= i <= j < edges@.len() ==>\n                edges@[i].2 <= edges@[j].2,"
   },
   {
     "id": 8,
-    "function": "cmp",
+    "function": "prim_mst",
     "file": "Chap65/PrimStEph.rs",
-    "lines": "332-334",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn cmp(&self, other: &Self) -> Ordering { self.priority.cmp(&other.priority) }"
+    "lines": "92-97",
+    "spec_strength": "unknown",
+    "snippet": "        fn prim_mst<V: HashOrd + TotalOrder>(\n            graph: &LabUnDirGraphStEph<V, u64>,\n            start: V,\n        ) -> (mst: SetStEph<LabEdge<V, u64>>)\n            requires Self::spec_primsteph_wf(graph),\n            ensures mst.spec_setsteph_wf();"
   },
   {
     "id": 9,
-    "function": "partial_cmp",
+    "function": "mst_weight",
     "file": "Chap65/PrimStEph.rs",
-    "lines": "338-340",
-    "spec_strength": "",
-    "snippet": "        /// - APAS: N/A — Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)\n        fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }"
+    "lines": "102-104",
+    "spec_strength": "unknown",
+    "snippet": "        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, u64>>) -> (total: u64)\n            requires mst.spec_setsteph_wf(),\n            ensures mst@.len() == 0 ==> total == 0;"
   },
   {
     "id": 10,
-    "function": "new",
-    "file": "Chap65/UnionFindStEph.rs",
-    "lines": "73-82",
-    "spec_strength": "unknown",
-    "snippet": "        fn new() -> (uf: Self)\n            requires\n                obeys_key_model::<V>(),\n                obeys_feq_full::<V>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,\n            ensures\n                uf@.parent =~= Map::<<V as View>::V, V>::empty(),\n                uf@.rank =~= Map::<<V as View>::V, usize>::empty(),\n                uf@.elements =~= Seq::<V>::empty(),\n                uf@.roots =~= Map::<<V as View>::V, <V as View>::V>::empty();"
+    "function": "reflexive",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "154",
+    "spec_strength": "",
+    "snippet": "        proof fn reflexive(x: Self) {"
   },
   {
     "id": 11,
-    "function": "insert",
-    "file": "Chap65/UnionFindStEph.rs",
-    "lines": "86-92",
-    "spec_strength": "unknown",
-    "snippet": "        fn insert(&mut self, v: V)\n            requires\n                old(self).spec_unionfindsteph_wf(),\n            ensures\n                self.spec_unionfindsteph_wf(),\n                old(self)@.parent.contains_key(v@) ==> self@ == old(self)@,\n                !old(self)@.parent.contains_key(v@) ==> {"
+    "function": "transitive",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "162",
+    "spec_strength": "",
+    "snippet": "        proof fn transitive(x: Self, y: Self, z: Self) {"
   },
   {
     "id": 12,
-    "function": "find",
-    "file": "Chap65/UnionFindStEph.rs",
-    "lines": "101-114",
-    "spec_strength": "unknown",
-    "snippet": "        fn find(&mut self, v: &V) -> (root: V)\n            requires\n                old(self).spec_unionfindsteph_wf(),\n                old(self)@.parent.contains_key(v@),\n            ensures\n                self.spec_unionfindsteph_wf(),\n                // Result is the canonical root.\n                root@ == old(self)@.roots[v@],\n                // Path compression preserves the logical partition.\n                self@.roots =~= old(self)@.roots,\n                // Domain unchanged.\n                self@.parent.dom() =~= old(self)@.parent.dom(),\n                self@.rank =~= old(self)@.rank,\n                self@.elements =~= old(self)@.elements;"
+    "function": "antisymmetric",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "180",
+    "spec_strength": "",
+    "snippet": "        proof fn antisymmetric(x: Self, y: Self) {"
   },
   {
     "id": 13,
-    "function": "union",
-    "file": "Chap65/UnionFindStEph.rs",
-    "lines": "118-128",
-    "spec_strength": "unknown",
-    "snippet": "        fn union(&mut self, u: &V, v: &V)\n            requires\n                old(self).spec_unionfindsteph_wf(),\n                old(self)@.parent.contains_key(u@),\n                old(self)@.parent.contains_key(v@),\n            ensures\n                self.spec_unionfindsteph_wf(),\n                self@.parent.dom() =~= old(self)@.parent.dom(),\n                self@.elements =~= old(self)@.elements,\n                // Merged elements share a new root; others unchanged.\n                forall|x: <V as View>::V| #[trigger] self@.roots.contains_key(x) ==> {"
+    "function": "total",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "190",
+    "spec_strength": "",
+    "snippet": "        proof fn total(x: Self, y: Self) {"
   },
   {
     "id": 14,
-    "function": "equals",
-    "file": "Chap65/UnionFindStEph.rs",
-    "lines": "140-149",
-    "spec_strength": "unknown",
-    "snippet": "        fn equals(&mut self, u: &V, v: &V) -> (same: B)\n            requires\n                old(self).spec_unionfindsteph_wf(),\n                old(self)@.parent.contains_key(u@),\n                old(self)@.parent.contains_key(v@),\n            ensures\n                self.spec_unionfindsteph_wf(),\n                same == (old(self)@.roots[u@] == old(self)@.roots[v@]),\n                self@.roots =~= old(self)@.roots,\n                self@.parent.dom() =~= old(self)@.parent.dom();"
+    "function": "cmp`",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "203",
+    "spec_strength": "",
+    "snippet": "        fn cmp(&self, other: &Self) -> (c: Ordering) {"
   },
   {
     "id": 15,
-    "function": "num_sets",
-    "file": "Chap65/UnionFindStEph.rs",
-    "lines": "153-159",
+    "function": "pq_entry_new",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "251-252",
     "spec_strength": "unknown",
-    "snippet": "        fn num_sets(&mut self) -> (count: usize)\n            requires\n                old(self).spec_unionfindsteph_wf(),\n            ensures\n                self.spec_unionfindsteph_wf(),\n                self@.roots =~= old(self)@.roots,\n                self@.parent.dom() =~= old(self)@.parent.dom();"
+    "snippet": "    fn pq_entry_new<V: HashOrd>(priority: u64, vertex: V, parent: Option<V>) -> (entry: PQEntry<V>)\n        ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,"
+  },
+  {
+    "id": 16,
+    "function": "partial_cmp",
+    "file": "Chap65/PrimStEph.rs",
+    "lines": "526-527",
+    "spec_strength": "",
+    "snippet": "        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)\n        fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(Ord::cmp(self, other)) }"
+  },
+  {
+    "id": 17,
+    "function": "lemma_count_above_mono",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "115-118",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_count_above_mono(rank: Seq<int>, r1: int, r2: int, k: nat, n: nat)\n        requires rank.len() == n, r1 <= r2,\n        ensures spec_count_above(rank, r2, k, n) <= spec_count_above(rank, r1, k, n),\n        decreases n - k,"
+  },
+  {
+    "id": 18,
+    "function": "lemma_count_above_strict",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "121-124",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_count_above_strict(rank: Seq<int>, r: int, px: int, k: nat, n: nat)\n        requires rank.len() == n, 0 <= px < n as int, rank[px] > r, k as int <= px,\n        ensures spec_count_above(rank, r, k, n) > spec_count_above(rank, rank[px], k, n),\n        decreases n - k,"
+  },
+  {
+    "id": 19,
+    "function": "lemma_pure_find_in_bounds",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "130-138",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_pure_find_in_bounds(parent: Seq<int>, rank: Seq<int>, n: nat, x: int)\n        requires\n            n > 0, parent.len() == n, rank.len() == n,\n            forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] parent[i] && parent[i] < n as int,\n            forall|i: int| 0 <= i < n as int && parent[i] != i ==> #[trigger] rank[i] < rank[parent[i] as int],\n            forall|i: int| 0 <= i < n as int ==> rank[i] < n as int,\n            0 <= x < n as int,\n        ensures 0 <= spec_pure_find(parent, rank, n, x) < n as int,\n        decreases spec_count_above(rank, rank[x], 0, n),"
+  },
+  {
+    "id": 20,
+    "function": "lemma_pure_find_is_root",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "146-155",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_pure_find_is_root(parent: Seq<int>, rank: Seq<int>, n: nat, x: int)\n        requires\n            n > 0, parent.len() == n, rank.len() == n,\n            forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] parent[i] && parent[i] < n as int,\n            forall|i: int| 0 <= i < n as int ==> #[trigger] rank[i] >= 0,\n            forall|i: int| 0 <= i < n as int && parent[i] != i ==> #[trigger] rank[i] < rank[parent[i] as int],\n            forall|i: int| 0 <= i < n as int ==> rank[i] < n as int,\n            0 <= x < n as int,\n        ensures spec_is_root(parent, spec_pure_find(parent, rank, n, x)),\n        decreases spec_count_above(rank, rank[x], 0, n),"
+  },
+  {
+    "id": 21,
+    "function": "lemma_find_after_link",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "163-186",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_find_after_link(\n        po: Seq<int>, ro: Seq<int>, pn: Seq<int>, rn: Seq<int>,\n        n: nat, ra: int, rb: int, z: int,\n    )\n        requires\n            n > 0, po.len() == n, ro.len() == n, pn.len() == n, rn.len() == n,\n            forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] po[i] && po[i] < n as int,\n            forall|i: int| 0 <= i < n as int ==> #[trigger] ro[i] >= 0,\n            forall|i: int| 0 <= i < n as int && po[i] != i ==> #[trigger] ro[i] < ro[po[i] as int],\n            forall|i: int| 0 <= i < n as int ==> ro[i] < n as int,\n            forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] pn[i] && pn[i] < n as int,\n            forall|i: int| 0 <= i < n as int ==> #[trigger] rn[i] >= 0,\n            forall|i: int| 0 <= i < n as int && pn[i] != i ==> #[trigger] rn[i] < rn[pn[i] as int],\n            forall|i: int| 0 <= i < n as int ==> rn[i] < n as int,\n            0 <= ra < n as int, 0 <= rb < n as int, ra != rb,\n            po[ra] == ra, po[rb] == rb, pn == po.update(ra, rb),\n            forall|i: int| 0 <= i < n as int ==> rn[i] >= ro[i],\n            0 <= z < n as int,\n        ensures ({\n            let fo = spec_pure_find(po, ro, n, z);\n            let fn_ = spec_pure_find(pn, rn, n, z);\n            if fo == ra { fn_ == rb } else if fo == rb { fn_ == rb } else { fn_ == fo }\n        }),\n        decreases spec_count_above(ro, ro[z], 0, n),"
+  },
+  {
+    "id": 22,
+    "function": "lemma_map_update",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "201-204",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_map_update(s: Seq<usize>, idx: int, val: usize)\n        requires 0 <= idx < s.len(),\n        ensures s.update(idx, val).map(|_i, v: usize| v as int) =~=\n                s.map(|_i, v: usize| v as int).update(idx, val as int),"
+  },
+  {
+    "id": 23,
+    "function": "lemma_root_counted_at",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "211-222",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_root_counted_at(\n        parent: Seq<int>, rank: Seq<int>, n: nat, root: int, k: nat,\n    )\n        requires\n            n > 0, parent.len() == n, rank.len() == n,\n            forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] parent[i] && parent[i] < n as int,\n            forall|i: int| 0 <= i < n as int ==> #[trigger] rank[i] >= 0,\n            forall|i: int| 0 <= i < n as int && parent[i] != i ==> #[trigger] rank[i] < rank[parent[i] as int],\n            forall|i: int| 0 <= i < n as int ==> rank[i] < n as int,\n            0 <= root < n as int, parent[root] == root, k as int <= root,\n        ensures spec_count_with_root(parent, rank, n, root, k) >= 1,\n        decreases n - k,"
+  },
+  {
+    "id": 24,
+    "function": "lemma_count_disjoint",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "225-236",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_count_disjoint(\n        parent: Seq<int>, rank: Seq<int>, n: nat, rx: int, ry: int, k: nat,\n    )\n        requires\n            n > 0, parent.len() == n, rank.len() == n,\n            forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] parent[i] && parent[i] < n as int,\n            forall|i: int| 0 <= i < n as int && parent[i] != i ==> #[trigger] rank[i] < rank[parent[i] as int],\n            forall|i: int| 0 <= i < n as int ==> rank[i] < n as int,\n            0 <= rx < n as int, 0 <= ry < n as int, rx != ry,\n            parent[rx] == rx, parent[ry] == ry, k <= n,\n        ensures spec_count_with_root(parent, rank, n, rx, k) + spec_count_with_root(parent, rank, n, ry, k) <= (n - k) as nat,\n        decreases n - k,"
+  },
+  {
+    "id": 25,
+    "function": "lemma_count_additive",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "240-259",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_count_additive(\n        po: Seq<int>, ro: Seq<int>, pn: Seq<int>, rn: Seq<int>,\n        n: nat, ra: int, rb: int, k: nat,\n    )\n        requires\n            n > 0, po.len() == n, ro.len() == n, pn.len() == n, rn.len() == n,\n            forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] po[i] && po[i] < n as int,\n            forall|i: int| 0 <= i < n as int ==> #[trigger] ro[i] >= 0,\n            forall|i: int| 0 <= i < n as int && po[i] != i ==> #[trigger] ro[i] < ro[po[i] as int],\n            forall|i: int| 0 <= i < n as int ==> ro[i] < n as int,\n            forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] pn[i] && pn[i] < n as int,\n            forall|i: int| 0 <= i < n as int ==> #[trigger] rn[i] >= 0,\n            forall|i: int| 0 <= i < n as int && pn[i] != i ==> #[trigger] rn[i] < rn[pn[i] as int],\n            forall|i: int| 0 <= i < n as int ==> rn[i] < n as int,\n            0 <= ra < n as int, 0 <= rb < n as int, ra != rb,\n            po[ra] == ra, po[rb] == rb, pn == po.update(ra, rb),\n            forall|i: int| 0 <= i < n as int ==> rn[i] >= ro[i],\n            k <= n,\n        ensures spec_count_with_root(pn, rn, n, rb, k) == spec_count_with_root(po, ro, n, ra, k) + spec_count_with_root(po, ro, n, rb, k),\n        decreases n - k,"
+  },
+  {
+    "id": 26,
+    "function": "lemma_count_other",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "268-287",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_count_other(\n        po: Seq<int>, ro: Seq<int>, pn: Seq<int>, rn: Seq<int>,\n        n: nat, ra: int, rb: int, other: int, k: nat,\n    )\n        requires\n            n > 0, po.len() == n, ro.len() == n, pn.len() == n, rn.len() == n,\n            forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] po[i] && po[i] < n as int,\n            forall|i: int| 0 <= i < n as int ==> #[trigger] ro[i] >= 0,\n            forall|i: int| 0 <= i < n as int && po[i] != i ==> #[trigger] ro[i] < ro[po[i] as int],\n            forall|i: int| 0 <= i < n as int ==> ro[i] < n as int,\n            forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] pn[i] && pn[i] < n as int,\n            forall|i: int| 0 <= i < n as int ==> #[trigger] rn[i] >= 0,\n            forall|i: int| 0 <= i < n as int && pn[i] != i ==> #[trigger] rn[i] < rn[pn[i] as int],\n            forall|i: int| 0 <= i < n as int ==> rn[i] < n as int,\n            0 <= ra < n as int, 0 <= rb < n as int, ra != rb,\n            po[ra] == ra, po[rb] == rb, pn == po.update(ra, rb),\n            forall|i: int| 0 <= i < n as int ==> rn[i] >= ro[i],\n            0 <= other < n as int, other != ra, other != rb, k <= n,\n        ensures spec_count_with_root(pn, rn, n, other, k) == spec_count_with_root(po, ro, n, other, k),\n        decreases n - k,"
+  },
+  {
+    "id": 27,
+    "function": "lemma_rank_lt_n_minus_1",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "296-308",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_rank_lt_n_minus_1(\n        parent: Seq<int>, rank: Seq<int>, n: nat, rx: int, ry: int,\n    )\n        requires\n            n > 0, parent.len() == n, rank.len() == n,\n            forall|i: int| 0 <= i < n as int ==> 0 <= #[trigger] parent[i] && parent[i] < n as int,\n            forall|i: int| 0 <= i < n as int ==> #[trigger] rank[i] >= 0,\n            forall|i: int| 0 <= i < n as int && parent[i] != i ==> #[trigger] rank[i] < rank[parent[i] as int],\n            forall|i: int| 0 <= i < n as int ==> rank[i] < n as int,\n            spec_size_rank_inv(UnionFindArrayView { parent, rank, n }),\n            0 <= rx < n as int, 0 <= ry < n as int, rx != ry,\n            parent[rx] == rx, parent[ry] == ry, rank[rx] == rank[ry],\n        ensures rank[rx] + 1 < n as int,"
+  },
+  {
+    "id": 28,
+    "function": "lemma_link_preserves_wf",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "326-347",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_link_preserves_wf(po: Seq<int>, ro: Seq<int>, n: nat, ra: int, rb: int, rn: Seq<int>)\n        requires\n            spec_wf(UnionFindArrayView { parent: po, rank: ro, n }),\n            spec_rank_invariant(UnionFindArrayView { parent: po, rank: ro, n }),\n            spec_rank_bounded(UnionFindArrayView { parent: po, rank: ro, n }),\n            spec_size_rank_inv(UnionFindArrayView { parent: po, rank: ro, n }),\n            0 <= ra < n as int, 0 <= rb < n as int, ra != rb, po[ra] == ra, po[rb] == rb,\n            (rn == ro && ro[ra] < ro[rb])\n                || (ro[ra] == ro[rb] && ro[rb] + 1 < n as int && rn == ro.update(rb, ro[rb] + 1)),\n        ensures\n            spec_wf(UnionFindArrayView { parent: po.update(ra, rb), rank: rn, n }),\n            spec_rank_invariant(UnionFindArrayView { parent: po.update(ra, rb), rank: rn, n }),\n            spec_rank_bounded(UnionFindArrayView { parent: po.update(ra, rb), rank: rn, n }),\n            spec_size_rank_inv(UnionFindArrayView { parent: po.update(ra, rb), rank: rn, n }),\n            forall|z: int| #![trigger spec_pure_find(po.update(ra, rb), rn, n, z)]\n                0 <= z < n as int ==>\n                spec_pure_find(po.update(ra, rb), rn, n, z) ==\n                    (if spec_pure_find(po, ro, n, z) == ra || spec_pure_find(po, ro, n, z) == rb {\n                        rb\n                    } else {\n                        spec_pure_find(po, ro, n, z)\n                    }),"
+  },
+  {
+    "id": 29,
+    "function": "new",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "405-408",
+    "spec_strength": "unknown",
+    "snippet": "        fn new(n: usize) -> (uf: Self)\n            requires n > 0, n < usize::MAX,\n            ensures uf.spec_unionfindarraysteph_wf(), uf@.n == n as nat,\n                forall|i: int| 0 <= i < n as int ==> #[trigger] spec_is_root(uf@.parent, i);"
+  },
+  {
+    "id": 30,
+    "function": "find",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "410-415",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&mut self, x: usize) -> (root: usize)\n            requires old(self).spec_unionfindarraysteph_wf(), (x as int) < old(self)@.n as int,\n            ensures self.spec_unionfindarraysteph_wf(), self@ == old(self)@,\n                (root as int) < self@.n as int,\n                root as int == spec_pure_find(self@.parent, self@.rank, self@.n, x as int),\n                spec_is_root(self@.parent, root as int);"
+  },
+  {
+    "id": 31,
+    "function": "union",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "417-428",
+    "spec_strength": "unknown",
+    "snippet": "        fn union(&mut self, x: usize, y: usize)\n            requires old(self).spec_unionfindarraysteph_wf(),\n                (x as int) < old(self)@.n as int, (y as int) < old(self)@.n as int,\n            ensures self.spec_unionfindarraysteph_wf(), self@.n == old(self)@.n,\n                spec_same_set(self@, x as int, y as int),\n                forall|z: int| 0 <= z < self@.n as int\n                    && spec_pure_find(old(self)@.parent, old(self)@.rank, old(self)@.n, z)\n                        != spec_pure_find(old(self)@.parent, old(self)@.rank, old(self)@.n, x as int)\n                    && spec_pure_find(old(self)@.parent, old(self)@.rank, old(self)@.n, z)\n                        != spec_pure_find(old(self)@.parent, old(self)@.rank, old(self)@.n, y as int)\n                    ==> #[trigger] spec_pure_find(self@.parent, self@.rank, self@.n, z)\n                        == spec_pure_find(old(self)@.parent, old(self)@.rank, old(self)@.n, z);"
+  },
+  {
+    "id": 32,
+    "function": "num_sets",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "430",
+    "spec_strength": "unknown",
+    "snippet": "        fn num_sets(&self) -> (count: usize) requires self.spec_unionfindarraysteph_wf();"
+  },
+  {
+    "id": 33,
+    "function": "size",
+    "file": "Chap65/UnionFindArrayStEph.rs",
+    "lines": "431-432",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (n: usize)\n            requires self.spec_unionfindarraysteph_wf(), ensures n as nat == self@.n;"
+  },
+  {
+    "id": 34,
+    "function": "lemma_find_in_dom",
+    "file": "Chap65/UnionFindNoPCStEph.rs",
+    "lines": "131-144",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_find_in_dom<V: View>(\n        parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat, v: V::V,\n    )\n        requires\n            parent.dom().contains(v),\n            forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k),\n            forall|k: V::V| #[trigger] parent.dom().contains(k) ==>\n                parent.dom().contains(#[trigger] pv::<V>(parent, k)),\n            forall|k: V::V| parent.dom().contains(k) && pv::<V>(parent, k) != k ==>\n                (#[trigger] rank[k] as int) < (rank[pv::<V>(parent, k)] as int),\n            forall|k: V::V| parent.dom().contains(k) ==>\n                (#[trigger] rank[k] as int) < n as int,\n        ensures parent.dom().contains(spec_pure_find::<V>(parent, rank, n, v)),\n        decreases n as int - (rank[v] as int),"
+  },
+  {
+    "id": 35,
+    "function": "lemma_find_is_root",
+    "file": "Chap65/UnionFindNoPCStEph.rs",
+    "lines": "155-168",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_find_is_root<V: View>(\n        parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat, v: V::V,\n    )\n        requires\n            parent.dom().contains(v),\n            forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k),\n            forall|k: V::V| #[trigger] parent.dom().contains(k) ==>\n                parent.dom().contains(#[trigger] pv::<V>(parent, k)),\n            forall|k: V::V| parent.dom().contains(k) && pv::<V>(parent, k) != k ==>\n                (#[trigger] rank[k] as int) < (rank[pv::<V>(parent, k)] as int),\n            forall|k: V::V| parent.dom().contains(k) ==>\n                (#[trigger] rank[k] as int) < n as int,\n        ensures spec_is_root_map::<V>(parent, spec_pure_find::<V>(parent, rank, n, v)),\n        decreases n as int - (rank[v] as int),"
+  },
+  {
+    "id": 36,
+    "function": "lemma_find_after_link",
+    "file": "Chap65/UnionFindNoPCStEph.rs",
+    "lines": "180-212",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_find_after_link<V: View>(\n        po: Map<V::V, V>, ro: Map<V::V, usize>,\n        pn: Map<V::V, V>, rn: Map<V::V, usize>,\n        n: nat, ra: V::V, rb: V::V, z: V::V,\n    )\n        requires\n            po.dom().contains(z), po.dom().contains(ra), po.dom().contains(rb),\n            pn.dom().contains(z), rn.dom().contains(z), ro.dom().contains(z),\n            ra != rb,\n            pv::<V>(po, ra) == ra, pv::<V>(po, rb) == rb,\n            pv::<V>(pn, ra) == rb, pv::<V>(pn, rb) == rb,\n            forall|k: V::V| po.dom().contains(k) && k != ra ==> #[trigger] pv::<V>(pn, k) == pv::<V>(po, k),\n            forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k),\n            // Old invariants.\n            forall|k: V::V| #[trigger] po.dom().contains(k) <==> ro.dom().contains(k),\n            forall|k: V::V| #[trigger] po.dom().contains(k) ==> po.dom().contains(#[trigger] pv::<V>(po, k)),\n            forall|k: V::V| po.dom().contains(k) && pv::<V>(po, k) != k ==>\n                (#[trigger] ro[k] as int) < (ro[pv::<V>(po, k)] as int),\n            forall|k: V::V| po.dom().contains(k) ==> (#[trigger] ro[k] as int) < n as int,\n            // New invariants.\n            forall|k: V::V| #[trigger] pn.dom().contains(k) <==> rn.dom().contains(k),\n            forall|k: V::V| #[trigger] pn.dom().contains(k) ==> pn.dom().contains(#[trigger] pv::<V>(pn, k)),\n            forall|k: V::V| pn.dom().contains(k) && pv::<V>(pn, k) != k ==>\n                (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int),\n            forall|k: V::V| pn.dom().contains(k) ==> (#[trigger] rn[k] as int) < n as int,\n        ensures ({\n            let fo = spec_pure_find::<V>(po, ro, n, z);\n            let fn_ = spec_pure_find::<V>(pn, rn, n, z);\n            if fo == ra { fn_ == rb }\n            else if fo == rb { fn_ == rb }\n            else { fn_ == fo }\n        }),\n        decreases n as int - (ro[z] as int),"
+  },
+  {
+    "id": 37,
+    "function": "lemma_link_size_rank_inv",
+    "file": "Chap65/UnionFindNoPCStEph.rs",
+    "lines": "255-284",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_link_size_rank_inv<V: View>(\n        po: Map<V::V, V>, ro: Map<V::V, usize>,\n        pn: Map<V::V, V>, rn: Map<V::V, usize>,\n        n: nat, ra: V::V, rb: V::V,\n    )\n        requires\n            po.dom().contains(ra), po.dom().contains(rb),\n            ra != rb,\n            pv::<V>(po, ra) == ra, pv::<V>(po, rb) == rb,\n            pv::<V>(pn, ra) == rb, pv::<V>(pn, rb) == rb,\n            forall|k: V::V| po.dom().contains(k) && k != ra ==> #[trigger] pv::<V>(pn, k) == pv::<V>(po, k),\n            forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k),\n            // Old invariants.\n            forall|k: V::V| #[trigger] po.dom().contains(k) <==> ro.dom().contains(k),\n            forall|k: V::V| #[trigger] po.dom().contains(k) ==> po.dom().contains(#[trigger] pv::<V>(po, k)),\n            forall|k: V::V| po.dom().contains(k) && pv::<V>(po, k) != k ==>\n                (#[trigger] ro[k] as int) < (ro[pv::<V>(po, k)] as int),\n            forall|k: V::V| po.dom().contains(k) ==> (#[trigger] ro[k] as int) < n as int,\n            spec_size_rank_inv_map::<V>(po, ro, n),\n            // New invariants.\n            forall|k: V::V| #[trigger] pn.dom().contains(k) <==> rn.dom().contains(k),\n            forall|k: V::V| #[trigger] pn.dom().contains(k) ==> pn.dom().contains(#[trigger] pv::<V>(pn, k)),\n            forall|k: V::V| pn.dom().contains(k) && pv::<V>(pn, k) != k ==>\n                (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int),\n            forall|k: V::V| pn.dom().contains(k) ==> (#[trigger] rn[k] as int) < n as int,\n            // Only rb's rank may change, and by a bounded amount.\n            forall|k: V::V| rn.dom().contains(k) && k != rb ==> #[trigger] rn[k] == ro[k],\n            rn[rb] as int <= ro[ra] as int + ro[rb] as int + 1,\n        ensures\n            spec_size_rank_inv_map::<V>(pn, rn, n),"
+  },
+  {
+    "id": 38,
+    "function": "lemma_link_preserves_inv",
+    "file": "Chap65/UnionFindNoPCStEph.rs",
+    "lines": "347-380",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_link_preserves_inv<V: View>(\n        po: Map<V::V, V>, ro: Map<V::V, usize>, n: nat,\n        ra: V::V, rb: V::V, x: V, rn: Map<V::V, usize>,\n    )\n        requires\n            n == po.dom().len(),\n            po.dom().contains(ra), po.dom().contains(rb), ra != rb,\n            pv::<V>(po, ra) == ra, pv::<V>(po, rb) == rb,\n            x@ == rb,\n            forall|k: V::V| #[trigger] po.dom().contains(k) <==> ro.dom().contains(k),\n            forall|k: V::V| #[trigger] po.dom().contains(k) ==> po.dom().contains(#[trigger] pv::<V>(po, k)),\n            forall|k: V::V| po.dom().contains(k) && pv::<V>(po, k) != k ==>\n                (#[trigger] ro[k] as int) < (ro[pv::<V>(po, k)] as int),\n            forall|k: V::V| po.dom().contains(k) ==> (#[trigger] ro[k] as int) < n as int,\n            spec_size_rank_inv_map::<V>(po, ro, n),\n            (rn == ro && ro[ra] < ro[rb])\n                || (ro[ra] == ro[rb] && (ro[rb] as int) + 1 < n as int\n                    && rn == ro.insert(rb, rn[rb]) && rn[rb] as int == ro[rb] as int + 1),\n        ensures\n            po.insert(ra, x).dom() == po.dom(),\n            forall|k: V::V| #[trigger] po.insert(ra, x).dom().contains(k) <==> rn.dom().contains(k),\n            forall|k: V::V| #[trigger] po.insert(ra, x).dom().contains(k) ==>\n                po.insert(ra, x).dom().contains(#[trigger] pv::<V>(po.insert(ra, x), k)),\n            forall|k: V::V| po.insert(ra, x).dom().contains(k) && pv::<V>(po.insert(ra, x), k) != k ==>\n                (#[trigger] rn[k] as int) < (rn[pv::<V>(po.insert(ra, x), k)] as int),\n            forall|k: V::V| po.insert(ra, x).dom().contains(k) ==> (#[trigger] rn[k] as int) < n as int,\n            spec_size_rank_inv_map::<V>(po.insert(ra, x), rn, n),\n            forall|z: V::V| po.dom().contains(z) ==>\n                #[trigger] spec_pure_find::<V>(po.insert(ra, x), rn, n, z) ==\n                    (if spec_pure_find::<V>(po, ro, n, z) == ra || spec_pure_find::<V>(po, ro, n, z) == rb {\n                        rb\n                    } else {\n                        spec_pure_find::<V>(po, ro, n, z)\n                    }),"
+  },
+  {
+    "id": 39,
+    "function": "lemma_find_insert_unchanged",
+    "file": "Chap65/UnionFindNoPCStEph.rs",
+    "lines": "443-467",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_find_insert_unchanged<V: View>(\n        po: Map<V::V, V>, ro: Map<V::V, usize>, n_old: nat,\n        pn: Map<V::V, V>, rn: Map<V::V, usize>, n_new: nat,\n        v: V::V, k: V::V,\n    )\n        requires\n            po.dom().contains(k), !po.dom().contains(v),\n            n_new == n_old + 1,\n            pn == po.insert(v, pn[v]), rn == ro.insert(v, 0),\n            pv::<V>(pn, v) == v,\n            // Old invariants.\n            forall|j: V::V| #[trigger] po.dom().contains(j) <==> ro.dom().contains(j),\n            forall|j: V::V| #[trigger] po.dom().contains(j) ==> po.dom().contains(#[trigger] pv::<V>(po, j)),\n            forall|j: V::V| po.dom().contains(j) && pv::<V>(po, j) != j ==>\n                (#[trigger] ro[j] as int) < (ro[pv::<V>(po, j)] as int),\n            forall|j: V::V| po.dom().contains(j) ==> (#[trigger] ro[j] as int) < n_old as int,\n            // New invariants.\n            forall|j: V::V| #[trigger] pn.dom().contains(j) <==> rn.dom().contains(j),\n            forall|j: V::V| #[trigger] pn.dom().contains(j) ==> pn.dom().contains(#[trigger] pv::<V>(pn, j)),\n            forall|j: V::V| pn.dom().contains(j) && pv::<V>(pn, j) != j ==>\n                (#[trigger] rn[j] as int) < (rn[pv::<V>(pn, j)] as int),\n            forall|j: V::V| pn.dom().contains(j) ==> (#[trigger] rn[j] as int) < n_new as int,\n        ensures\n            spec_pure_find::<V>(pn, rn, n_new, k) == spec_pure_find::<V>(po, ro, n_old, k),\n        decreases n_old as int - (ro[k] as int),"
+  },
+  {
+    "id": 40,
+    "function": "lemma_rank_lt_n_minus_1",
+    "file": "Chap65/UnionFindNoPCStEph.rs",
+    "lines": "487-498",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_rank_lt_n_minus_1<V: View>(\n        parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat,\n        ru: V::V, rv: V::V,\n    )\n        requires\n            parent.dom().contains(ru), parent.dom().contains(rv),\n            ru != rv,\n            pv::<V>(parent, ru) == ru, pv::<V>(parent, rv) == rv,\n            rank[ru] == rank[rv],\n            n == parent.dom().len(),\n            spec_size_rank_inv_map::<V>(parent, rank, n),\n        ensures (rank[ru] as int) + 1 < n as int,"
+  },
+  {
+    "id": 41,
+    "function": "new",
+    "file": "Chap65/UnionFindNoPCStEph.rs",
+    "lines": "545-547",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (uf: Self)\n            requires obeys_key_model::<V>(), obeys_feq_view_injective::<V>(), obeys_feq_full::<V>(),\n            ensures uf.spec_wf(), uf.spec_n() == 0;"
+  },
+  {
+    "id": 42,
+    "function": "insert",
+    "file": "Chap65/UnionFindNoPCStEph.rs",
+    "lines": "549-551",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, v: V)\n            requires old(self).spec_wf(), !old(self).spec_contains(v@),\n            ensures self.spec_wf(), self.spec_contains(v@);"
+  },
+  {
+    "id": 43,
+    "function": "find",
+    "file": "Chap65/UnionFindNoPCStEph.rs",
+    "lines": "553-556",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, v: &V) -> (root: V)\n            requires self.spec_wf(), self.spec_contains(v@),\n            ensures self.spec_contains(root@), root@ == self.spec_find(v@),\n                self.spec_is_root(root@);"
+  },
+  {
+    "id": 44,
+    "function": "union_sets",
+    "file": "Chap65/UnionFindNoPCStEph.rs",
+    "lines": "558-560",
+    "spec_strength": "unknown",
+    "snippet": "        fn union_sets(&mut self, u: &V, v: &V)\n            requires old(self).spec_wf(), old(self).spec_contains(u@), old(self).spec_contains(v@),\n            ensures self.spec_wf(), self.spec_same_set(u@, v@);"
+  },
+  {
+    "id": 45,
+    "function": "equals",
+    "file": "Chap65/UnionFindNoPCStEph.rs",
+    "lines": "562-564",
+    "spec_strength": "unknown",
+    "snippet": "        fn equals(&self, u: &V, v: &V) -> (eq: bool)\n            requires self.spec_wf(), self.spec_contains(u@), self.spec_contains(v@),\n            ensures eq == self.spec_same_set(u@, v@);"
+  },
+  {
+    "id": 46,
+    "function": "size",
+    "file": "Chap65/UnionFindNoPCStEph.rs",
+    "lines": "566",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (n: usize) requires self.spec_wf(), ensures n as nat == self.spec_n();"
+  },
+  {
+    "id": 47,
+    "function": "lemma_compose_find_preserved",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "151-164",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_compose_find_preserved<V: View>(\n        p1: Map<V::V, V>, r1: Map<V::V, usize>, n1: nat,\n        p2: Map<V::V, V>, r2: Map<V::V, usize>, n2: nat,\n        p3: Map<V::V, V>, r3: Map<V::V, usize>, n3: nat,\n    )\n        requires\n            forall|z: V::V| #[trigger] p1.dom().contains(z) ==>\n                spec_pure_find::<V>(p2, r2, n2, z) == spec_pure_find::<V>(p1, r1, n1, z),\n            forall|z: V::V| #[trigger] p2.dom().contains(z) ==>\n                spec_pure_find::<V>(p3, r3, n3, z) == spec_pure_find::<V>(p2, r2, n2, z),\n            forall|k: V::V| p1.dom().contains(k) <==> #[trigger] p2.dom().contains(k),\n        ensures\n            forall|z: V::V| #[trigger] p1.dom().contains(z) ==>\n                spec_pure_find::<V>(p3, r3, n3, z) == spec_pure_find::<V>(p1, r1, n1, z),"
+  },
+  {
+    "id": 48,
+    "function": "lemma_find_in_dom",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "172-185",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_find_in_dom<V: View>(\n        parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat, v: V::V,\n    )\n        requires\n            parent.dom().contains(v),\n            forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k),\n            forall|k: V::V| #[trigger] parent.dom().contains(k) ==>\n                parent.dom().contains(#[trigger] pv::<V>(parent, k)),\n            forall|k: V::V| parent.dom().contains(k) && pv::<V>(parent, k) != k ==>\n                (#[trigger] rank[k] as int) < (rank[pv::<V>(parent, k)] as int),\n            forall|k: V::V| parent.dom().contains(k) ==>\n                (#[trigger] rank[k] as int) < n as int,\n        ensures parent.dom().contains(spec_pure_find::<V>(parent, rank, n, v)),\n        decreases n as int - (rank[v] as int),"
+  },
+  {
+    "id": 49,
+    "function": "lemma_find_is_root",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "196-209",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_find_is_root<V: View>(\n        parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat, v: V::V,\n    )\n        requires\n            parent.dom().contains(v),\n            forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k),\n            forall|k: V::V| #[trigger] parent.dom().contains(k) ==>\n                parent.dom().contains(#[trigger] pv::<V>(parent, k)),\n            forall|k: V::V| parent.dom().contains(k) && pv::<V>(parent, k) != k ==>\n                (#[trigger] rank[k] as int) < (rank[pv::<V>(parent, k)] as int),\n            forall|k: V::V| parent.dom().contains(k) ==>\n                (#[trigger] rank[k] as int) < n as int,\n        ensures spec_is_root_map::<V>(parent, spec_pure_find::<V>(parent, rank, n, v)),\n        decreases n as int - (rank[v] as int),"
+  },
+  {
+    "id": 50,
+    "function": "lemma_rank_lt_find",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "220-235",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_rank_lt_find<V: View>(\n        parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat, v: V::V,\n    )\n        requires\n            parent.dom().contains(v),\n            pv::<V>(parent, v) != v,\n            forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k),\n            forall|k: V::V| #[trigger] parent.dom().contains(k) ==>\n                parent.dom().contains(#[trigger] pv::<V>(parent, k)),\n            forall|k: V::V| parent.dom().contains(k) && pv::<V>(parent, k) != k ==>\n                (#[trigger] rank[k] as int) < (rank[pv::<V>(parent, k)] as int),\n            forall|k: V::V| parent.dom().contains(k) ==>\n                (#[trigger] rank[k] as int) < n as int,\n        ensures\n            (rank[v] as int) < (rank[spec_pure_find::<V>(parent, rank, n, v)] as int),\n        decreases n as int - (rank[v] as int),"
+  },
+  {
+    "id": 51,
+    "function": "lemma_compress_preserves_find",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "262-292",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_compress_preserves_find<V: View>(\n        po: Map<V::V, V>, pn: Map<V::V, V>,\n        rank: Map<V::V, usize>, n: nat,\n        v: V::V, root: V::V, z: V::V,\n    )\n        requires\n            // po is a valid forest.\n            po.dom().contains(v), po.dom().contains(z),\n            forall|k: V::V| #[trigger] po.dom().contains(k) <==> rank.dom().contains(k),\n            forall|k: V::V| #[trigger] po.dom().contains(k) ==>\n                po.dom().contains(#[trigger] pv::<V>(po, k)),\n            forall|k: V::V| po.dom().contains(k) && pv::<V>(po, k) != k ==>\n                (#[trigger] rank[k] as int) < (rank[pv::<V>(po, k)] as int),\n            forall|k: V::V| po.dom().contains(k) ==>\n                (#[trigger] rank[k] as int) < n as int,\n            root == spec_pure_find::<V>(po, rank, n, v),\n            spec_is_root_map::<V>(po, root),\n            n == po.dom().len(),\n            // pn characterization.\n            pv::<V>(pn, v) == root,\n            forall|k: V::V| k != v && po.dom().contains(k) ==> #[trigger] pv::<V>(pn, k) == pv::<V>(po, k),\n            forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k),\n            pn.dom().contains(z), rank.dom().contains(z),\n            // pn wf (needed for recursive call and ensures evaluation).\n            forall|k: V::V| #[trigger] pn.dom().contains(k) ==>\n                pn.dom().contains(#[trigger] pv::<V>(pn, k)),\n            forall|k: V::V| pn.dom().contains(k) && pv::<V>(pn, k) != k ==>\n                (#[trigger] rank[k] as int) < (rank[pv::<V>(pn, k)] as int),\n        ensures\n            spec_pure_find::<V>(pn, rank, n, z) == spec_pure_find::<V>(po, rank, n, z),\n        decreases n as int - (rank[z] as int),"
+  },
+  {
+    "id": 52,
+    "function": "lemma_compress_preserves_find_all",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "329-357",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_compress_preserves_find_all<V: View>(\n        po: Map<V::V, V>, pn: Map<V::V, V>,\n        rank: Map<V::V, usize>, n: nat,\n        v: V::V, root: V::V,\n    )\n        requires\n            po.dom().contains(v),\n            forall|k: V::V| #[trigger] po.dom().contains(k) <==> rank.dom().contains(k),\n            forall|k: V::V| #[trigger] po.dom().contains(k) ==>\n                po.dom().contains(#[trigger] pv::<V>(po, k)),\n            forall|k: V::V| po.dom().contains(k) && pv::<V>(po, k) != k ==>\n                (#[trigger] rank[k] as int) < (rank[pv::<V>(po, k)] as int),\n            forall|k: V::V| po.dom().contains(k) ==>\n                (#[trigger] rank[k] as int) < n as int,\n            root == spec_pure_find::<V>(po, rank, n, v),\n            spec_is_root_map::<V>(po, root),\n            n == po.dom().len(),\n            // pn characterization.\n            pv::<V>(pn, v) == root,\n            forall|k: V::V| k != v && po.dom().contains(k) ==> #[trigger] pv::<V>(pn, k) == pv::<V>(po, k),\n            forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k),\n            // pn wf.\n            forall|k: V::V| #[trigger] pn.dom().contains(k) ==>\n                pn.dom().contains(#[trigger] pv::<V>(pn, k)),\n            forall|k: V::V| pn.dom().contains(k) && pv::<V>(pn, k) != k ==>\n                (#[trigger] rank[k] as int) < (rank[pv::<V>(pn, k)] as int),\n        ensures\n            forall|z: V::V| #[trigger] po.dom().contains(z) ==>\n                spec_pure_find::<V>(pn, rank, n, z) == spec_pure_find::<V>(po, rank, n, z),"
+  },
+  {
+    "id": 53,
+    "function": "lemma_compress_basic",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "370-389",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_compress_basic<V: View>(\n        po: Map<V::V, V>, pn: Map<V::V, V>,\n        rank: Map<V::V, usize>, n: nat,\n        curr: V::V, root: V::V,\n    )\n        requires\n            forall|k: V::V| #[trigger] po.dom().contains(k) <==> rank.dom().contains(k),\n            n == po.dom().len(),\n            po.dom().contains(root), spec_is_root_map::<V>(po, root), root != curr,\n            pv::<V>(pn, curr) == root,\n            forall|k: V::V| k != curr && po.dom().contains(k) ==> #[trigger] pv::<V>(pn, k) == pv::<V>(po, k),\n            forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k),\n            forall|k: V::V| po.dom().contains(k) ==>\n                (#[trigger] rank[k] as int) < n as int,\n        ensures\n            n == pn.dom().len(),\n            forall|k: V::V| #[trigger] pn.dom().contains(k) <==> rank.dom().contains(k),\n            forall|k: V::V| pn.dom().contains(k) ==>\n                (#[trigger] rank[k] as int) < n as int,\n            spec_is_root_map::<V>(pn, root),"
+  },
+  {
+    "id": 54,
+    "function": "lemma_compress_parent_in_dom",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "404-417",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_compress_parent_in_dom<V: View>(\n        po: Map<V::V, V>, pn: Map<V::V, V>,\n        curr: V::V, root: V::V,\n    )\n        requires\n            forall|k: V::V| #[trigger] po.dom().contains(k) ==>\n                po.dom().contains(#[trigger] pv::<V>(po, k)),\n            po.dom().contains(root),\n            pv::<V>(pn, curr) == root,\n            forall|k: V::V| k != curr && po.dom().contains(k) ==> #[trigger] pv::<V>(pn, k) == pv::<V>(po, k),\n            forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k),\n        ensures\n            forall|k: V::V| #[trigger] pn.dom().contains(k) ==>\n                pn.dom().contains(#[trigger] pv::<V>(pn, k)),"
+  },
+  {
+    "id": 55,
+    "function": "lemma_compress_rank_inv",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "425-439",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_compress_rank_inv<V: View>(\n        po: Map<V::V, V>, pn: Map<V::V, V>,\n        rank: Map<V::V, usize>,\n        curr: V::V, root: V::V,\n    )\n        requires\n            forall|k: V::V| po.dom().contains(k) && pv::<V>(po, k) != k ==>\n                (#[trigger] rank[k] as int) < (rank[pv::<V>(po, k)] as int),\n            (rank[curr] as int) < (rank[root] as int),\n            pv::<V>(pn, curr) == root,\n            forall|k: V::V| k != curr && po.dom().contains(k) ==> #[trigger] pv::<V>(pn, k) == pv::<V>(po, k),\n            forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k),\n        ensures\n            forall|k: V::V| pn.dom().contains(k) && pv::<V>(pn, k) != k ==>\n                (#[trigger] rank[k] as int) < (rank[pv::<V>(pn, k)] as int),"
+  },
+  {
+    "id": 56,
+    "function": "lemma_compress_iter",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "451-479",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_compress_iter<V: View>(\n        po: Map<V::V, V>, pn: Map<V::V, V>,\n        rank: Map<V::V, usize>,\n        orig_parent: Map<V::V, V>, orig_rank: Map<V::V, usize>, orig_n: nat,\n        root: V::V, curr: V::V, next: V::V,\n    )\n        requires\n            spec_light_wf::<V>(po, rank, orig_n),\n            spec_same_domain::<V>(po, orig_parent),\n            spec_find_preserved::<V>(po, rank, orig_n, orig_parent, orig_rank, orig_n),\n            po.dom().contains(curr), po.dom().contains(root),\n            spec_is_root_map::<V>(po, root),\n            root == spec_pure_find::<V>(po, rank, orig_n, curr),\n            pv::<V>(po, curr) == next,\n            pv::<V>(po, curr) != curr,\n            orig_n == po.dom().len(),\n            // pn characterization (from HashMap::insert).\n            pv::<V>(pn, curr) == root,\n            forall|k: V::V| k != curr && po.dom().contains(k) ==> #[trigger] pv::<V>(pn, k) == pv::<V>(po, k),\n            forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k),\n        ensures\n            spec_light_wf::<V>(pn, rank, orig_n),\n            spec_same_domain::<V>(pn, orig_parent),\n            spec_find_preserved::<V>(pn, rank, orig_n, orig_parent, orig_rank, orig_n),\n            spec_is_root_map::<V>(pn, root),\n            pn.dom().contains(root), pn.dom().contains(next),\n            spec_pure_find::<V>(pn, rank, orig_n, next) == root,\n            orig_n == pn.dom().len(),\n            (rank[next] as int) > (rank[curr] as int),"
+  },
+  {
+    "id": 57,
+    "function": "lemma_build_final_wf",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "509-527",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_build_final_wf<V: StT + Hash + ClonePreservesView>(\n        uf: &UnionFindPC<V>,\n        orig_parent: Map<V::V, V>, orig_rank: Map<V::V, usize>, orig_n: nat,\n    )\n        requires\n            obeys_key_model::<V>(),\n            obeys_feq_view_injective::<V>(),\n            obeys_feq_full::<V>(),\n            spec_light_wf::<V>(key_view(uf.parent@), key_view(uf.rank@), key_view(uf.parent@).dom().len()),\n            spec_light_wf::<V>(orig_parent, orig_rank, orig_n),\n            spec_size_rank_inv_map::<V>(orig_parent, orig_rank, orig_n),\n            spec_same_domain::<V>(key_view(uf.parent@), orig_parent),\n            spec_find_preserved::<V>(\n                key_view(uf.parent@), key_view(uf.rank@), key_view(uf.parent@).dom().len(),\n                orig_parent, orig_rank, orig_n),\n            key_view(uf.rank@) == orig_rank,\n            key_view(uf.parent@).dom().len() == orig_n,\n        ensures\n            spec_size_rank_inv_map::<V>(key_view(uf.parent@), key_view(uf.rank@), key_view(uf.parent@).dom().len()),"
+  },
+  {
+    "id": 58,
+    "function": "lemma_rank_lt_n_from_light_wf",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "560-564",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_rank_lt_n_from_light_wf<V: View>(\n        parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat, k: V::V,\n    )\n        requires spec_light_wf::<V>(parent, rank, n), parent.dom().contains(k),\n        ensures (rank[k] as int) < n as int,"
+  },
+  {
+    "id": 59,
+    "function": "lemma_root_find_self",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "571-576",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_root_find_self<V: View>(\n        parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat, curr: V::V,\n    )\n        requires spec_light_wf::<V>(parent, rank, n), parent.dom().contains(curr),\n            pv::<V>(parent, curr) == curr,\n        ensures spec_pure_find::<V>(parent, rank, n, curr) == curr,"
+  },
+  {
+    "id": 60,
+    "function": "lemma_non_root_next",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "582-590",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_non_root_next<V: View>(\n        parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat, curr: V::V,\n    )\n        requires spec_light_wf::<V>(parent, rank, n), parent.dom().contains(curr),\n            pv::<V>(parent, curr) != curr,\n        ensures\n            parent.dom().contains(pv::<V>(parent, curr)),\n            rank.dom().contains(pv::<V>(parent, curr)),\n            (rank[pv::<V>(parent, curr)] as int) > (rank[curr] as int),"
+  },
+  {
+    "id": 61,
+    "function": "lemma_compress_step_find",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "597-626",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_compress_step_find<V: View>(\n        po: Map<V::V, V>, pn: Map<V::V, V>,\n        rank: Map<V::V, usize>, n: nat,\n        curr: V::V, root: V::V,\n    )\n        requires\n            // po wf.\n            po.dom().contains(curr), po.dom().contains(root),\n            forall|k: V::V| #[trigger] po.dom().contains(k) <==> rank.dom().contains(k),\n            forall|k: V::V| #[trigger] po.dom().contains(k) ==>\n                po.dom().contains(#[trigger] pv::<V>(po, k)),\n            forall|k: V::V| po.dom().contains(k) && pv::<V>(po, k) != k ==>\n                (#[trigger] rank[k] as int) < (rank[pv::<V>(po, k)] as int),\n            forall|k: V::V| po.dom().contains(k) ==>\n                (#[trigger] rank[k] as int) < n as int,\n            root == spec_pure_find::<V>(po, rank, n, curr),\n            spec_is_root_map::<V>(po, root),\n            n == po.dom().len(),\n            // pn characterization.\n            pv::<V>(pn, curr) == root,\n            forall|k: V::V| k != curr && po.dom().contains(k) ==> #[trigger] pv::<V>(pn, k) == pv::<V>(po, k),\n            forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k),\n            // pn wf (from step_wf).\n            forall|k: V::V| #[trigger] pn.dom().contains(k) ==>\n                pn.dom().contains(#[trigger] pv::<V>(pn, k)),\n            forall|k: V::V| pn.dom().contains(k) && pv::<V>(pn, k) != k ==>\n                (#[trigger] rank[k] as int) < (rank[pv::<V>(pn, k)] as int),\n        ensures\n            forall|z: V::V| #[trigger] po.dom().contains(z) ==>\n                spec_pure_find::<V>(pn, rank, n, z) == spec_pure_find::<V>(po, rank, n, z),"
+  },
+  {
+    "id": 62,
+    "function": "lemma_find_after_link",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "642-672",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_find_after_link<V: View>(\n        po: Map<V::V, V>, ro: Map<V::V, usize>,\n        pn: Map<V::V, V>, rn: Map<V::V, usize>,\n        n: nat, ra: V::V, rb: V::V, z: V::V,\n    )\n        requires\n            po.dom().contains(z), po.dom().contains(ra), po.dom().contains(rb),\n            pn.dom().contains(z), rn.dom().contains(z), ro.dom().contains(z),\n            ra != rb,\n            pv::<V>(po, ra) == ra, pv::<V>(po, rb) == rb,\n            pv::<V>(pn, ra) == rb, pv::<V>(pn, rb) == rb,\n            forall|k: V::V| po.dom().contains(k) && k != ra ==> #[trigger] pv::<V>(pn, k) == pv::<V>(po, k),\n            forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k),\n            forall|k: V::V| #[trigger] po.dom().contains(k) <==> ro.dom().contains(k),\n            forall|k: V::V| #[trigger] po.dom().contains(k) ==> po.dom().contains(#[trigger] pv::<V>(po, k)),\n            forall|k: V::V| po.dom().contains(k) && pv::<V>(po, k) != k ==>\n                (#[trigger] ro[k] as int) < (ro[pv::<V>(po, k)] as int),\n            forall|k: V::V| po.dom().contains(k) ==> (#[trigger] ro[k] as int) < n as int,\n            forall|k: V::V| #[trigger] pn.dom().contains(k) <==> rn.dom().contains(k),\n            forall|k: V::V| #[trigger] pn.dom().contains(k) ==> pn.dom().contains(#[trigger] pv::<V>(pn, k)),\n            forall|k: V::V| pn.dom().contains(k) && pv::<V>(pn, k) != k ==>\n                (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int),\n            forall|k: V::V| pn.dom().contains(k) ==> (#[trigger] rn[k] as int) < n as int,\n        ensures ({\n            let fo = spec_pure_find::<V>(po, ro, n, z);\n            let fn_ = spec_pure_find::<V>(pn, rn, n, z);\n            if fo == ra { fn_ == rb }\n            else if fo == rb { fn_ == rb }\n            else { fn_ == fo }\n        }),\n        decreases n as int - (ro[z] as int),"
+  },
+  {
+    "id": 63,
+    "function": "lemma_link_size_rank_inv",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "708-737",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_link_size_rank_inv<V: View>(\n        po: Map<V::V, V>, ro: Map<V::V, usize>,\n        pn: Map<V::V, V>, rn: Map<V::V, usize>,\n        n: nat, ra: V::V, rb: V::V,\n    )\n        requires\n            po.dom().contains(ra), po.dom().contains(rb),\n            ra != rb,\n            pv::<V>(po, ra) == ra, pv::<V>(po, rb) == rb,\n            pv::<V>(pn, ra) == rb, pv::<V>(pn, rb) == rb,\n            forall|k: V::V| po.dom().contains(k) && k != ra ==> #[trigger] pv::<V>(pn, k) == pv::<V>(po, k),\n            forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k),\n            // Old invariants.\n            forall|k: V::V| #[trigger] po.dom().contains(k) <==> ro.dom().contains(k),\n            forall|k: V::V| #[trigger] po.dom().contains(k) ==> po.dom().contains(#[trigger] pv::<V>(po, k)),\n            forall|k: V::V| po.dom().contains(k) && pv::<V>(po, k) != k ==>\n                (#[trigger] ro[k] as int) < (ro[pv::<V>(po, k)] as int),\n            forall|k: V::V| po.dom().contains(k) ==> (#[trigger] ro[k] as int) < n as int,\n            spec_size_rank_inv_map::<V>(po, ro, n),\n            // New invariants.\n            forall|k: V::V| #[trigger] pn.dom().contains(k) <==> rn.dom().contains(k),\n            forall|k: V::V| #[trigger] pn.dom().contains(k) ==> pn.dom().contains(#[trigger] pv::<V>(pn, k)),\n            forall|k: V::V| pn.dom().contains(k) && pv::<V>(pn, k) != k ==>\n                (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int),\n            forall|k: V::V| pn.dom().contains(k) ==> (#[trigger] rn[k] as int) < n as int,\n            // Only rb's rank may change, and by a bounded amount.\n            forall|k: V::V| rn.dom().contains(k) && k != rb ==> #[trigger] rn[k] == ro[k],\n            rn[rb] as int <= ro[ra] as int + ro[rb] as int + 1,\n        ensures\n            spec_size_rank_inv_map::<V>(pn, rn, n),"
+  },
+  {
+    "id": 64,
+    "function": "lemma_link_preserves_inv",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "794-817",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_link_preserves_inv<V: View>(\n        po: Map<V::V, V>, ro: Map<V::V, usize>, n: nat,\n        ra: V::V, rb: V::V, x: V, rn: Map<V::V, usize>,\n    )\n        requires\n            spec_light_wf::<V>(po, ro, n),\n            spec_size_rank_inv_map::<V>(po, ro, n),\n            po.dom().contains(ra), po.dom().contains(rb), ra != rb,\n            pv::<V>(po, ra) == ra, pv::<V>(po, rb) == rb,\n            x@ == rb,\n            (rn == ro && ro[ra] < ro[rb])\n                || (ro[ra] == ro[rb] && (ro[rb] as int) + 1 < n as int\n                    && rn == ro.insert(rb, rn[rb]) && rn[rb] as int == ro[rb] as int + 1),\n        ensures\n            po.insert(ra, x).dom() == po.dom(),\n            spec_light_wf::<V>(po.insert(ra, x), rn, n),\n            spec_size_rank_inv_map::<V>(po.insert(ra, x), rn, n),\n            forall|z: V::V| po.dom().contains(z) ==>\n                #[trigger] spec_pure_find::<V>(po.insert(ra, x), rn, n, z) ==\n                    (if spec_pure_find::<V>(po, ro, n, z) == ra || spec_pure_find::<V>(po, ro, n, z) == rb {\n                        rb\n                    } else {\n                        spec_pure_find::<V>(po, ro, n, z)\n                    }),"
+  },
+  {
+    "id": 65,
+    "function": "lemma_find_insert_unchanged",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "881-903",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_find_insert_unchanged<V: View>(\n        po: Map<V::V, V>, ro: Map<V::V, usize>, n_old: nat,\n        pn: Map<V::V, V>, rn: Map<V::V, usize>, n_new: nat,\n        v: V::V, k: V::V,\n    )\n        requires\n            po.dom().contains(k), !po.dom().contains(v),\n            n_new == n_old + 1,\n            pn == po.insert(v, pn[v]), rn == ro.insert(v, 0),\n            pv::<V>(pn, v) == v,\n            forall|j: V::V| #[trigger] po.dom().contains(j) <==> ro.dom().contains(j),\n            forall|j: V::V| #[trigger] po.dom().contains(j) ==> po.dom().contains(#[trigger] pv::<V>(po, j)),\n            forall|j: V::V| po.dom().contains(j) && pv::<V>(po, j) != j ==>\n                (#[trigger] ro[j] as int) < (ro[pv::<V>(po, j)] as int),\n            forall|j: V::V| po.dom().contains(j) ==> (#[trigger] ro[j] as int) < n_old as int,\n            forall|j: V::V| #[trigger] pn.dom().contains(j) <==> rn.dom().contains(j),\n            forall|j: V::V| #[trigger] pn.dom().contains(j) ==> pn.dom().contains(#[trigger] pv::<V>(pn, j)),\n            forall|j: V::V| pn.dom().contains(j) && pv::<V>(pn, j) != j ==>\n                (#[trigger] rn[j] as int) < (rn[pv::<V>(pn, j)] as int),\n            forall|j: V::V| pn.dom().contains(j) ==> (#[trigger] rn[j] as int) < n_new as int,\n        ensures\n            spec_pure_find::<V>(pn, rn, n_new, k) == spec_pure_find::<V>(po, ro, n_old, k),\n        decreases n_old as int - (ro[k] as int),"
+  },
+  {
+    "id": 66,
+    "function": "lemma_rank_lt_n_minus_1",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "919-930",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_rank_lt_n_minus_1<V: View>(\n        parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat,\n        ru: V::V, rv: V::V,\n    )\n        requires\n            parent.dom().contains(ru), parent.dom().contains(rv),\n            ru != rv,\n            pv::<V>(parent, ru) == ru, pv::<V>(parent, rv) == rv,\n            rank[ru] == rank[rv],\n            n == parent.dom().len(),\n            spec_size_rank_inv_map::<V>(parent, rank, n),\n        ensures (rank[ru] as int) + 1 < n as int,"
+  },
+  {
+    "id": 67,
+    "function": "new",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "965-967",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (uf: Self)\n            requires obeys_key_model::<V>(), obeys_feq_view_injective::<V>(), obeys_feq_full::<V>(),\n            ensures uf.spec_wf(), uf.spec_n() == 0;"
+  },
+  {
+    "id": 68,
+    "function": "insert",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "969-976",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, v: V)\n            requires old(self).spec_wf(), !old(self).spec_contains(v@),\n            ensures\n                self.spec_wf(),\n                self.spec_contains(v@),\n                forall|z: V::V| z != v@ ==>\n                    (#[trigger] self.spec_contains(z) <==> old(self).spec_contains(z)),\n                self.spec_n() == old(self).spec_n() + 1;"
+  },
+  {
+    "id": 69,
+    "function": "find_root",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "978-981",
+    "spec_strength": "unknown",
+    "snippet": "        fn find_root(&self, v: &V) -> (root: V)\n            requires self.spec_wf(), self.spec_contains(v@),\n            ensures self.spec_contains(root@), root@ == self.spec_find(v@),\n                self.spec_is_root(root@);"
+  },
+  {
+    "id": 70,
+    "function": "find",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "983-993",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&mut self, v: &V) -> (root: V)\n            requires old(self).spec_wf(), old(self).spec_contains(v@),\n            ensures\n                self.spec_wf(),\n                self.spec_contains(root@),\n                root@ == old(self).spec_find(v@),\n                self.spec_is_root(root@),\n                forall|z: V::V| old(self).spec_contains(z) ==>\n                    self.spec_find(z) == old(self).spec_find(z),\n                forall|z: V::V| old(self).spec_contains(z) <==> self.spec_contains(z),\n                self.spec_n() == old(self).spec_n();"
+  },
+  {
+    "id": 71,
+    "function": "union",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "995-1001",
+    "spec_strength": "unknown",
+    "snippet": "        fn union(&mut self, u: &V, v: &V)\n            requires old(self).spec_wf(), old(self).spec_contains(u@), old(self).spec_contains(v@),\n            ensures\n                self.spec_wf(),\n                self.spec_same_set(u@, v@),\n                forall|z: V::V| old(self).spec_contains(z) <==> self.spec_contains(z),\n                self.spec_n() == old(self).spec_n();"
+  },
+  {
+    "id": 72,
+    "function": "equals",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "1003-1009",
+    "spec_strength": "unknown",
+    "snippet": "        fn equals(&mut self, u: &V, v: &V) -> (eq: bool)\n            requires old(self).spec_wf(), old(self).spec_contains(u@), old(self).spec_contains(v@),\n            ensures\n                eq == old(self).spec_same_set(u@, v@),\n                self.spec_wf(),\n                forall|z: V::V| old(self).spec_contains(z) <==> self.spec_contains(z),\n                self.spec_n() == old(self).spec_n();"
+  },
+  {
+    "id": 73,
+    "function": "size",
+    "file": "Chap65/UnionFindPCStEph.rs",
+    "lines": "1011",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (n: usize) requires self.spec_wf(), ensures n as nat == self.spec_n();"
   }
 ]

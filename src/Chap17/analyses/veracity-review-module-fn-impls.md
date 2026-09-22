@@ -22,7 +22,7 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap17 | MathSeq | 18 | 20 | 1 | 0 | 20 | 1 | 19 | 1 | 1 |
+| 1 | Chap17 | MathSeq | 18 | 19 | 1 | 0 | 19 | 1 | 19 | 0 | 1 |
 
 ## Function-by-Function Detail
 
@@ -30,27 +30,26 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `new` | Y | Y |  |  | Y |  |  | unknown | 138&#8209;141 |
-| 2 | `set` | Y | Y |  |  | Y |  |  | unknown | 145&#8209;151 |
-| 3 | `length` | Y | Y |  |  | Y |  |  | unknown | 155&#8209;156 |
-| 4 | `nth` | Y | Y |  |  | Y |  |  | unknown | 160&#8209;162 |
-| 5 | `empty` | Y | Y |  |  | Y |  |  | unknown | 166&#8209;167 |
-| 6 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 171&#8209;174 |
-| 7 | `add_last` | Y | Y |  |  | Y |  |  | unknown | 178&#8209;182 |
-| 8 | `delete_last` | Y | Y |  |  | Y |  |  | unknown | 186&#8209;192 |
-| 9 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 196&#8209;197 |
-| 10 | `is_singleton` | Y | Y |  |  | Y |  |  | unknown | 201&#8209;202 |
-| 11 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 206&#8209;207 |
-| 12 | `with_len` | Y | Y |  |  | Y |  |  | unknown | 211&#8209;214 |
-| 13 | `subseq` | Y | Y |  |  | Y |  |  | unknown | 218&#8209;225 |
-| 14 | `subseq_copy` | Y | Y |  |  | Y |  |  | unknown | 229&#8209;234 |
-| 15 | `domain` | Y | Y |  |  | Y |  |  | unknown | 238&#8209;241 |
-| 16 | `range` | Y | Y |  |  | Y |  |  | unknown | 245&#8209;249 |
-| 17 | `multiset_range` | Y | Y |  |  | Y |  |  | unknown | 253&#8209;258 |
-| 18 | `iter` | Y | Y |  |  | Y |  |  | unknown | 263&#8209;267 |
-| 19 | `next` |  | Y |  |  | Y |  |  | unknown | 614&#8209;630 |
-| 20 | `eq` |  | Y |  |  | Y |  |  | hole | 721&#8209;722 |
-| 21 | `iter_mut` |  |  | Y |  |  | Y | Y |  | 735&#8209;740 |
+| 1 | `new` | Y | Y |  |  | Y |  |  | unknown | 124&#8209;127 |
+| 2 | `set` | Y | Y |  |  | Y |  |  | unknown | 130&#8209;136 |
+| 3 | `length` | Y | Y |  |  | Y |  |  | unknown | 139&#8209;140 |
+| 4 | `nth` | Y | Y |  |  | Y |  |  | unknown | 143&#8209;145 |
+| 5 | `empty` | Y | Y |  |  | Y |  |  | unknown | 148&#8209;149 |
+| 6 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 152&#8209;155 |
+| 7 | `add_last` | Y | Y |  |  | Y |  |  | unknown | 158&#8209;162 |
+| 8 | `delete_last` | Y | Y |  |  | Y |  |  | unknown | 165&#8209;171 |
+| 9 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 174&#8209;175 |
+| 10 | `is_singleton` | Y | Y |  |  | Y |  |  | unknown | 178&#8209;179 |
+| 11 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 182&#8209;183 |
+| 12 | `with_len` | Y | Y |  |  | Y |  |  | unknown | 186&#8209;189 |
+| 13 | `subseq` | Y | Y |  |  | Y |  |  | unknown | 192&#8209;199 |
+| 14 | `subseq_copy` | Y | Y |  |  | Y |  |  | unknown | 202&#8209;207 |
+| 15 | `domain` | Y | Y |  |  | Y |  |  | unknown | 210&#8209;213 |
+| 16 | `range` | Y | Y |  |  | Y |  |  | unknown | 216&#8209;220 |
+| 17 | `multiset_range` | Y | Y |  |  | Y |  |  | unknown | 223&#8209;228 |
+| 18 | `iter` | Y | Y |  |  | Y |  |  | unknown | 232&#8209;236 |
+| 19 | `eq` |  | Y |  |  | Y |  |  | unknown | 586&#8209;587 |
+| 20 | `iter_mut` |  |  | Y |  |  | Y | Y |  | 617&#8209;621 |
 
 
 ### Legend

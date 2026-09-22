@@ -22,18 +22,26 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap58 | BellmanFordStEphI64 | 1 | 0 | 0 | 4 | 4 | 0 | 4 | 0 | 0 |
+| 1 | Chap58 | BellmanFordStEphF64 | 1 | 0 | 0 | 2 | 2 | 0 | 2 | 0 | 0 |
+| 2 | Chap58 | BellmanFordStEphI64 | 1 | 0 | 0 | 4 | 4 | 0 | 4 | 0 | 0 |
 
 ## Function-by-Function Detail
+
+### Chap58/BellmanFordStEphF64.rs
+
+| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
+|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
+| 1 | `bellman_ford` | Y |  |  | Y | Y |  |  | unknown | 64&#8209;72 |
+| 2 | `reconstruct_predecessors` |  |  |  | Y | Y |  |  | unknown | 80&#8209;102 |
 
 ### Chap58/BellmanFordStEphI64.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `bellman_ford` | Y |  |  | Y | Y |  |  | unknown | 47&#8209;55 |
-| 2 | `clamp_weight` |  |  |  | Y | Y |  |  | unknown | 64&#8209;68 |
-| 3 | `add_distance` |  |  |  | Y | Y |  |  | unknown | 79&#8209;85 |
-| 4 | `reconstruct_predecessors` |  |  |  | Y | Y |  |  | unknown | 96&#8209;116 |
+| 3 | `bellman_ford` | Y |  |  | Y | Y |  |  | unknown | 61&#8209;69 |
+| 4 | `clamp_weight` |  |  |  | Y | Y |  |  | unknown | 78&#8209;82 |
+| 5 | `add_distance` |  |  |  | Y | Y |  |  | unknown | 92&#8209;98 |
+| 6 | `reconstruct_predecessors` |  |  |  | Y | Y |  |  | unknown | 108&#8209;128 |
 
 
 ### Legend

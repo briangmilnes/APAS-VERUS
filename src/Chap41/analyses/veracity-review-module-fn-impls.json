@@ -3,23 +3,23 @@
     "id": 1,
     "function": "size",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "115-117",
-    "spec_strength": "hole",
-    "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_avltreesetmteph_wf(),\n            ensures count == self@.len(), self@.finite();"
+    "lines": "94-96",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_avltreesetmteph_wf(),\n            ensures count == self@.len();"
   },
   {
     "id": 2,
     "function": "to_seq",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "120-125",
-    "spec_strength": "hole",
-    "snippet": "        fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)\n            requires self.spec_avltreesetmteph_wf(),\n            ensures\n                self@.finite(),\n                seq@.to_set() =~= self@,\n                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);"
+    "lines": "101-108",
+    "spec_strength": "unknown",
+    "snippet": "        fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)\n            requires\n                self.spec_avltreesetmteph_wf(),\n                self@.len() < usize::MAX as nat,\n            ensures\n                seq@.to_set() =~= self@,\n                seq.spec_avltreeseqsteph_wf(),\n                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);"
   },
   {
     "id": 3,
     "function": "empty",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "128-131",
+    "lines": "112-115",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty: Self)\n            ensures\n                empty@ == Set::<<T as View>::V>::empty(),\n                empty.spec_avltreesetmteph_wf();"
   },
@@ -27,119 +27,119 @@
     "id": 4,
     "function": "singleton",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "134-138",
+    "lines": "120-123",
     "spec_strength": "unknown",
-    "snippet": "        fn singleton(x: T) -> (tree: Self)\n            ensures\n                tree@ == Set::<<T as View>::V>::empty().insert(x@),\n                tree@.finite(),\n                tree.spec_avltreesetmteph_wf();"
+    "snippet": "        fn singleton(x: T) -> (tree: Self)\n            ensures\n                tree@ == Set::<<T as View>::V>::empty().insert(x@),\n                tree.spec_avltreesetmteph_wf();"
   },
   {
     "id": 5,
     "function": "from_seq",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "140-144",
+    "lines": "128-135",
     "spec_strength": "unknown",
-    "snippet": "        fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)\n            requires seq.spec_avltreeseqsteph_wf(),\n            ensures\n                constructed@.finite(),\n                constructed.spec_avltreesetmteph_wf();"
+    "snippet": "        fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)\n            requires\n                seq.spec_avltreeseqsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                constructed@ =~= seq@.to_set(),\n                constructed.spec_avltreesetmteph_wf();"
   },
   {
     "id": 6,
     "function": "filter",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "147-164",
-    "spec_strength": "hole",
-    "snippet": "        fn filter<F: Pred<T> + Clone>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetmteph_wf(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.finite(),\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetmteph_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
+    "lines": "140-158",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter<F: Pred<T> + Clone>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetmteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetmteph_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
   },
   {
     "id": 7,
     "function": "intersection",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "167-172",
-    "spec_strength": "hole",
-    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires self.spec_avltreesetmteph_wf(), other.spec_avltreesetmteph_wf(),\n            ensures\n                common@ == self@.intersect(other@),\n                common@.finite(),\n                common.spec_avltreesetmteph_wf();"
+    "lines": "163-171",
+    "spec_strength": "unknown",
+    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_avltreesetmteph_wf(),\n                other.spec_avltreesetmteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetmteph_wf();"
   },
   {
     "id": 8,
     "function": "difference",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "175-180",
-    "spec_strength": "hole",
-    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires self.spec_avltreesetmteph_wf(), other.spec_avltreesetmteph_wf(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining@.finite(),\n                remaining.spec_avltreesetmteph_wf();"
+    "lines": "176-184",
+    "spec_strength": "unknown",
+    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_avltreesetmteph_wf(),\n                other.spec_avltreesetmteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetmteph_wf();"
   },
   {
     "id": 9,
     "function": "union",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "183-191",
-    "spec_strength": "hole",
-    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetmteph_wf(),\n                other.spec_avltreesetmteph_wf(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined@.finite(),\n                combined.spec_avltreesetmteph_wf();"
+    "lines": "189-198",
+    "spec_strength": "unknown",
+    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetmteph_wf(),\n                other.spec_avltreesetmteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetmteph_wf();"
   },
   {
     "id": 10,
     "function": "find",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "194-196",
-    "spec_strength": "hole",
-    "snippet": "        fn find(&self, x: &T) -> (found: B)\n            requires self.spec_avltreesetmteph_wf(),\n            ensures found == self@.contains(x@);"
+    "lines": "203-208",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, x: &T) -> (found: bool)\n            requires\n                self.spec_avltreesetmteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures found == self@.contains(x@);"
   },
   {
     "id": 11,
     "function": "delete",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "199-204",
+    "lines": "213-221",
     "spec_strength": "unknown",
-    "snippet": "        fn delete(&mut self, x: &T)\n            requires old(self).spec_avltreesetmteph_wf(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self@.finite(),\n                self.spec_avltreesetmteph_wf();"
+    "snippet": "        fn delete(&mut self, x: &T)\n            requires\n                old(self).spec_avltreesetmteph_wf(),\n                old(self)@.len() < usize::MAX as nat,\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self.spec_avltreesetmteph_wf();"
   },
   {
     "id": 12,
     "function": "insert",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "207-214",
-    "spec_strength": "hole",
-    "snippet": "        fn insert(&mut self, x: T)\n            requires\n                old(self).spec_avltreesetmteph_wf(),\n                old(self)@.len() + 1 < usize::MAX as nat,\n            ensures\n                self@ == old(self)@.insert(x@),\n                self@.finite(),\n                self.spec_avltreesetmteph_wf();"
+    "lines": "226-234",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, x: T)\n            requires\n                old(self).spec_avltreesetmteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                old(self)@.len() + 1 < usize::MAX as nat,\n            ensures\n                self@ == old(self)@.insert(x@),\n                self.spec_avltreesetmteph_wf();"
   },
   {
     "id": 13,
     "function": "iter",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "215-217",
+    "lines": "235-239",
     "spec_strength": "unknown",
-    "snippet": "        fn iter(&self) -> (it: AVLTreeSetMtEphIter<T>)\n            requires self.spec_avltreesetmteph_wf(),\n            ensures it@.0 == 0, avltreesetmteph_iter_invariant(&it);"
+    "snippet": "        fn iter(&self) -> (it: std::vec::IntoIter<T>)\n            requires self.spec_avltreesetmteph_wf(),\n            ensures\n                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),\n                IteratorSpec::decrease(&it) is Some;"
   },
   {
     "id": 14,
-    "function": "default",
+    "function": "from_vec_dc",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "453",
-    "spec_strength": "",
-    "snippet": "        fn default() -> Self { Self::empty() }"
+    "lines": "247-255",
+    "spec_strength": "unknown",
+    "snippet": "    fn from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)\n        requires\n            obeys_feq_full_trigger::<T>(),\n            vals@.len() <= usize::MAX,\n            vstd::laws_cmp::obeys_cmp::<T>(),\n            view_ord_consistent::<T>(),\n        ensures\n            tree@ =~= vals@.map_values(|t: T| t@).to_set(),\n        decreases vals@.len(),"
   },
   {
     "id": 15,
-    "function": "next",
+    "function": "default",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "461-477",
-    "spec_strength": "hole",
-    "snippet": "        fn next(&mut self) -> (next: Option<T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
+    "lines": "551",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::empty() }"
   },
   {
     "id": 16,
     "function": "size",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "93-95",
-    "spec_strength": "hole",
-    "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_avltreesetmtper_wf(),\n            ensures count == self@.len(), self@.finite();"
+    "lines": "97-99",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_avltreesetmtper_wf(),\n            ensures count == self@.len();"
   },
   {
     "id": 17,
     "function": "to_seq",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "98-104",
-    "spec_strength": "hole",
-    "snippet": "        fn to_seq(&self) -> (seq: AVLTreeSeqMtPerS<T>)\n            requires self.spec_avltreesetmtper_wf(),\n            ensures\n                self@.finite(),\n                seq@.to_set() =~= self@,\n                seq.spec_avltreeseqmtper_wf(),\n                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);"
+    "lines": "104-111",
+    "spec_strength": "unknown",
+    "snippet": "        fn to_seq(&self) -> (seq: AVLTreeSeqMtPerS<T>)\n            requires\n                self.spec_avltreesetmtper_wf(),\n                self@.len() < usize::MAX as nat,\n            ensures\n                seq@.to_set() =~= self@,\n                seq.spec_avltreeseqmtper_wf(),\n                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);"
   },
   {
     "id": 18,
     "function": "empty",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "107-108",
+    "lines": "115-116",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty: Self)\n            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_avltreesetmtper_wf();"
   },
@@ -147,956 +147,1004 @@
     "id": 19,
     "function": "singleton",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "111-112",
+    "lines": "121-122",
     "spec_strength": "unknown",
-    "snippet": "        fn singleton(x: T) -> (tree: Self)\n            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_avltreesetmtper_wf();"
+    "snippet": "        fn singleton(x: T) -> (tree: Self)\n            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_avltreesetmtper_wf();"
   },
   {
     "id": 20,
     "function": "from_seq",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "114-115",
+    "lines": "127-134",
     "spec_strength": "unknown",
-    "snippet": "        fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)\n            ensures constructed@.finite(), constructed.spec_avltreesetmtper_wf();"
+    "snippet": "        fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)\n            requires\n                seq@.len() <= usize::MAX - 2,\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                constructed@ =~= seq@.to_set(),\n                constructed.spec_avltreesetmtper_wf();"
   },
   {
     "id": 21,
     "function": "filter",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "118-134",
-    "spec_strength": "hole",
-    "snippet": "        fn filter<F: Pred<T> + Clone>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.finite(),\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetmtper_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
+    "lines": "139-157",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter<F: Pred<T> + Clone>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetmtper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetmtper_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
   },
   {
     "id": 22,
     "function": "intersection",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "137-138",
-    "spec_strength": "hole",
-    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            ensures common@ == self@.intersect(other@), common@.finite(), common.spec_avltreesetmtper_wf();"
+    "lines": "162-168",
+    "spec_strength": "unknown",
+    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_avltreesetmtper_wf(),\n                other.spec_avltreesetmtper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures common@ == self@.intersect(other@), common.spec_avltreesetmtper_wf();"
   },
   {
     "id": 23,
     "function": "difference",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "141-142",
-    "spec_strength": "hole",
-    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            ensures remaining@ == self@.difference(other@), remaining@.finite(), remaining.spec_avltreesetmtper_wf();"
+    "lines": "173-179",
+    "spec_strength": "unknown",
+    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_avltreesetmtper_wf(),\n                other.spec_avltreesetmtper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures remaining@ == self@.difference(other@), remaining.spec_avltreesetmtper_wf();"
   },
   {
     "id": 24,
     "function": "union",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "145-146",
-    "spec_strength": "hole",
-    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            ensures combined@ == self@.union(other@), combined@.finite(), combined.spec_avltreesetmtper_wf();"
+    "lines": "184-191",
+    "spec_strength": "unknown",
+    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetmtper_wf(),\n                other.spec_avltreesetmtper_wf(),\n                self@.len() + other@.len() <= usize::MAX as nat,\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures combined@ == self@.union(other@), combined.spec_avltreesetmtper_wf();"
   },
   {
     "id": 25,
     "function": "find",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "149-151",
-    "spec_strength": "hole",
-    "snippet": "        fn find(&self, x: &T) -> (found: B)\n            requires self.spec_avltreesetmtper_wf(),\n            ensures found == self@.contains(x@);"
+    "lines": "196-201",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, x: &T) -> (found: bool)\n            requires\n                self.spec_avltreesetmtper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures found == self@.contains(x@);"
   },
   {
     "id": 26,
     "function": "delete",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "154-155",
-    "spec_strength": "hole",
-    "snippet": "        fn delete(&self, x: &T) -> (updated: Self)\n            ensures updated@ == self@.remove(x@), updated@.finite(), updated.spec_avltreesetmtper_wf();"
+    "lines": "206-211",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(&self, x: &T) -> (updated: Self)\n            requires\n                self.spec_avltreesetmtper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures updated@ == self@.remove(x@), updated.spec_avltreesetmtper_wf();"
   },
   {
     "id": 27,
     "function": "insert",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "158-159",
-    "spec_strength": "hole",
-    "snippet": "        fn insert(&self, x: T) -> (updated: Self)\n            ensures updated@ == self@.insert(x@), updated@.finite(), updated.spec_avltreesetmtper_wf();"
+    "lines": "216-222",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&self, x: T) -> (updated: Self)\n            requires\n                self.spec_avltreesetmtper_wf(),\n                self@.len() < usize::MAX as nat,\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures updated@ == self@.insert(x@), updated.spec_avltreesetmtper_wf();"
   },
   {
     "id": 28,
-    "function": "default",
+    "function": "assert_avltreesetmtper_always_wf",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "382",
-    "spec_strength": "",
-    "snippet": "        fn default() -> Self { Self::empty() }"
+    "lines": "239-240",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn assert_avltreesetmtper_always_wf<T: StTInMtT + Ord + TotalOrder + 'static>(s: &AVLTreeSetMtPer<T>)\n        ensures s.spec_avltreesetmtper_wf()"
   },
   {
     "id": 29,
-    "function": "eq",
+    "function": "assert_avltreesetmtper_bounded_size",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "394-395",
-    "spec_strength": "hole",
-    "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
+    "lines": "247-253",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn assert_avltreesetmtper_bounded_size<T: StTInMtT + Ord + TotalOrder + 'static>(\n        s: &AVLTreeSetMtPer<T>,\n    ) -> (sz: usize)\n        ensures\n            s.spec_avltreesetmtper_wf(),\n            sz as nat == s@.len(),\n            s@.len() <= usize::MAX as nat,"
   },
   {
     "id": 30,
-    "function": "partial_cmp",
+    "function": "from_vec_dc_per",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "408",
-    "spec_strength": "",
-    "snippet": "        fn partial_cmp(&self, other: &Self) -> (ord: Option<Ordering>) {"
+    "lines": "261-269",
+    "spec_strength": "unknown",
+    "snippet": "    fn from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)\n        requires\n            obeys_feq_full_trigger::<T>(),\n            vals@.len() <= usize::MAX,\n            vstd::laws_cmp::obeys_cmp::<T>(),\n            view_ord_consistent::<T>(),\n        ensures\n            tree@ =~= vals@.map_values(|t: T| t@).to_set(),\n        decreases vals@.len(),"
   },
   {
     "id": 31,
+    "function": "partial_cmp",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "512",
+    "spec_strength": "hole",
+    "snippet": "        fn partial_cmp(&self, other: &Self) -> (ord: Option<Ordering>) {"
+  },
+  {
+    "id": 32,
     "function": "cmp",
     "file": "Chap41/AVLTreeSetMtPer.rs",
-    "lines": "416",
+    "lines": "519",
     "spec_strength": "hole",
     "snippet": "        fn cmp(&self, other: &Self) -> (ord: Ordering)"
   },
   {
-    "id": 32,
+    "id": 33,
+    "function": "default",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "560",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self { Self::empty() }"
+  },
+  {
+    "id": 34,
+    "function": "eq",
+    "file": "Chap41/AVLTreeSetMtPer.rs",
+    "lines": "572-573",
+    "spec_strength": "unknown",
+    "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
+  },
+  {
+    "id": 35,
     "function": "lemma_wf_implies_len_bound",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "96-101",
+    "lines": "110-115",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_wf_implies_len_bound<T: StT>(link: &Link<T>)\n        requires spec_avltreeseqsteph_wf(*link),\n        ensures\n            spec_cached_size(link) == spec_inorder(*link).len(),\n            spec_inorder(*link).len() < usize::MAX,\n        decreases *link,"
   },
   {
-    "id": 33,
+    "id": 36,
     "function": "lemma_inorder_values_maps_to_views",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "114-116",
+    "lines": "128-130",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_inorder_values_maps_to_views<T: StT>(link: Link<T>)\n        ensures spec_inorder_values(link).map_values(|t: T| t@) =~= spec_inorder(link),\n        decreases link,"
   },
   {
-    "id": 34,
+    "id": 37,
     "function": "lemma_empty_set_is_sorted",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "134-139",
+    "lines": "146-151",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_empty_set_is_sorted<T: StT + Ord + TotalOrder>(set: &AVLTreeSetStEph<T>)\n        requires\n            set@ =~= Set::<<T as View>::V>::empty(),\n            set.spec_avltreesetsteph_wf(),\n        ensures\n            set.spec_elements_sorted(),"
   },
   {
-    "id": 35,
+    "id": 38,
     "function": "lemma_push_sorted",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "143-148",
+    "lines": "155-160",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_push_sorted<T: TotalOrder>(s: Seq<T>, v: T)\n        requires\n            spec_seq_sorted(s),\n            s.len() > 0 ==> TotalOrder::le(s.last(), v),\n        ensures\n            spec_seq_sorted(s.push(v)),"
   },
   {
-    "id": 36,
+    "id": 39,
     "function": "lemma_subseq_sorted",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "170-175",
+    "lines": "178-183",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_subseq_sorted<T: TotalOrder>(s: Seq<T>, lo: int, hi: int)\n        requires\n            spec_seq_sorted(s),\n            0 <= lo <= hi <= s.len(),\n        ensures\n            spec_seq_sorted(s.subrange(lo, hi)),"
   },
   {
-    "id": 37,
+    "id": 40,
     "function": "size",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "192-194",
+    "lines": "198-200",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_avltreesetsteph_wf(),\n            ensures count == self@.len();"
   },
   {
-    "id": 38,
+    "id": 41,
     "function": "to_seq",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "197-202",
+    "lines": "205-210",
     "spec_strength": "unknown",
     "snippet": "        fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)\n            requires self.spec_avltreesetsteph_wf(),\n            ensures\n                seq.spec_avltreeseqsteph_wf(),\n                seq@.to_set() =~= self@,\n                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);"
   },
   {
-    "id": 39,
+    "id": 42,
     "function": "empty",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "205-208",
+    "lines": "214-217",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty: Self)\n            ensures\n                empty@ == Set::<<T as View>::V>::empty(),\n                empty.spec_avltreesetsteph_wf();"
   },
   {
-    "id": 40,
+    "id": 43,
     "function": "singleton",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "211-214",
+    "lines": "222-225",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(x: T) -> (tree: Self)\n            ensures\n                tree@ == Set::<<T as View>::V>::empty().insert(x@),\n                tree.spec_avltreesetsteph_wf();"
   },
   {
-    "id": 41,
+    "id": 44,
     "function": "from_seq",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "216-220",
+    "lines": "230-237",
     "spec_strength": "unknown",
-    "snippet": "        fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)\n            requires seq.spec_avltreeseqsteph_wf(),\n            ensures\n                constructed@ =~= seq@.to_set(),\n                constructed.spec_avltreesetsteph_wf();"
-  },
-  {
-    "id": 42,
-    "function": "filter",
-    "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "222-238",
-    "spec_strength": "unknown",
-    "snippet": "        fn filter<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetsteph_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
-  },
-  {
-    "id": 43,
-    "function": "intersection",
-    "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "240-244",
-    "spec_strength": "unknown",
-    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetsteph_wf();"
-  },
-  {
-    "id": 44,
-    "function": "difference",
-    "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "246-250",
-    "spec_strength": "unknown",
-    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetsteph_wf();"
+    "snippet": "        fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)\n            requires\n                seq.spec_avltreeseqsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                constructed@ =~= seq@.to_set(),\n                constructed.spec_avltreesetsteph_wf();"
   },
   {
     "id": 45,
-    "function": "union",
+    "function": "filter",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "252-259",
+    "lines": "241-259",
     "spec_strength": "unknown",
-    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                other.spec_avltreesetsteph_wf(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetsteph_wf();"
+    "snippet": "        fn filter<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetsteph_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
   },
   {
     "id": 46,
-    "function": "find",
+    "function": "intersection",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "261-263",
+    "lines": "263-271",
     "spec_strength": "unknown",
-    "snippet": "        fn find(&self, x: &T) -> (found: B)\n            requires self.spec_avltreesetsteph_wf(),\n            ensures found == self@.contains(x@);"
+    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                other.spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetsteph_wf();"
   },
   {
     "id": 47,
-    "function": "delete",
+    "function": "difference",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "265-269",
+    "lines": "275-283",
     "spec_strength": "unknown",
-    "snippet": "        fn delete(&mut self, x: &T)\n            requires old(self).spec_avltreesetsteph_wf(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self.spec_avltreesetsteph_wf();"
+    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                other.spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetsteph_wf();"
   },
   {
     "id": 48,
-    "function": "insert",
+    "function": "union",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "271-277",
+    "lines": "287-296",
     "spec_strength": "unknown",
-    "snippet": "        fn insert(&mut self, x: T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                old(self)@.len() + 1 < usize::MAX as nat,\n            ensures\n                self@ == old(self)@.insert(x@),\n                self.spec_avltreesetsteph_wf();"
+    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                other.spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetsteph_wf();"
   },
   {
     "id": 49,
-    "function": "find_iter",
+    "function": "find",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "279-281",
+    "lines": "300-305",
     "spec_strength": "unknown",
-    "snippet": "        fn find_iter(&self, x: &T) -> (found: B)\n            requires self.spec_avltreesetsteph_wf(),\n            ensures found == self@.contains(x@);"
+    "snippet": "        fn find(&self, x: &T) -> (found: bool)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures found == self@.contains(x@);"
   },
   {
     "id": 50,
-    "function": "insert_iter",
+    "function": "delete",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "283-289",
+    "lines": "309-316",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_iter(&mut self, x: T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                old(self)@.len() + 1 < usize::MAX as nat,\n            ensures\n                self@ == old(self)@.insert(x@),\n                self.spec_avltreesetsteph_wf();"
+    "snippet": "        fn delete(&mut self, x: &T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self.spec_avltreesetsteph_wf();"
   },
   {
     "id": 51,
-    "function": "delete_iter",
+    "function": "insert",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "291-295",
+    "lines": "320-328",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_iter(&mut self, x: &T)\n            requires old(self).spec_avltreesetsteph_wf(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self.spec_avltreesetsteph_wf();"
+    "snippet": "        fn insert(&mut self, x: T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                old(self)@.len() + 1 < usize::MAX as nat,\n            ensures\n                self@ == old(self)@.insert(x@),\n                self.spec_avltreesetsteph_wf();"
   },
   {
     "id": 52,
-    "function": "filter_iter",
+    "function": "find_iter",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "297-313",
+    "lines": "331-336",
     "spec_strength": "unknown",
-    "snippet": "        fn filter_iter<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetsteph_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
+    "snippet": "        fn find_iter(&self, x: &T) -> (found: bool)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures found == self@.contains(x@);"
   },
   {
     "id": 53,
-    "function": "intersection_iter",
+    "function": "insert_iter",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "315-319",
+    "lines": "339-347",
     "spec_strength": "unknown",
-    "snippet": "        fn intersection_iter(&self, other: &Self) -> (common: Self)\n            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetsteph_wf();"
+    "snippet": "        fn insert_iter(&mut self, x: T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                old(self)@.len() + 1 < usize::MAX as nat,\n            ensures\n                self@ == old(self)@.insert(x@),\n                self.spec_avltreesetsteph_wf();"
   },
   {
     "id": 54,
-    "function": "union_iter",
+    "function": "delete_iter",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "321-328",
+    "lines": "350-357",
     "spec_strength": "unknown",
-    "snippet": "        fn union_iter(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                other.spec_avltreesetsteph_wf(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetsteph_wf();"
+    "snippet": "        fn delete_iter(&mut self, x: &T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self.spec_avltreesetsteph_wf();"
   },
   {
     "id": 55,
-    "function": "difference_iter",
+    "function": "filter_iter",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "330-334",
+    "lines": "360-378",
     "spec_strength": "unknown",
-    "snippet": "        fn difference_iter(&self, other: &Self) -> (remaining: Self)\n            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetsteph_wf();"
+    "snippet": "        fn filter_iter<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetsteph_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
   },
   {
     "id": 56,
-    "function": "insert_sorted",
+    "function": "intersection_iter",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "343-351",
+    "lines": "381-389",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_sorted(&mut self, x: T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                old(self).spec_elements_sorted(),\n                old(self)@.len() + 1 < usize::MAX as nat,\n            ensures\n                self@ == old(self)@.insert(x@),\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted();"
+    "snippet": "        fn intersection_iter(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                other.spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetsteph_wf();"
   },
   {
     "id": 57,
-    "function": "delete_sorted",
+    "function": "union_iter",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "353-360",
+    "lines": "392-401",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_sorted(&mut self, x: &T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                old(self).spec_elements_sorted(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted();"
+    "snippet": "        fn union_iter(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                other.spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetsteph_wf();"
   },
   {
     "id": 58,
-    "function": "filter_sorted",
+    "function": "difference_iter",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "362-380",
+    "lines": "404-412",
     "spec_strength": "unknown",
-    "snippet": "        fn filter_sorted<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetsteph_wf(),\n                filtered.spec_elements_sorted(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
+    "snippet": "        fn difference_iter(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                other.spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetsteph_wf();"
   },
   {
     "id": 59,
-    "function": "intersection_sorted",
+    "function": "insert_sorted",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "382-390",
+    "lines": "422-432",
     "spec_strength": "unknown",
-    "snippet": "        fn intersection_sorted(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted(),\n                other.spec_avltreesetsteph_wf(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetsteph_wf(),\n                common.spec_elements_sorted();"
+    "snippet": "        fn insert_sorted(&mut self, x: T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                old(self).spec_elements_sorted(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                old(self)@.len() + 1 < usize::MAX as nat,\n            ensures\n                self@ == old(self)@.insert(x@),\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted();"
   },
   {
     "id": 60,
-    "function": "difference_sorted",
+    "function": "delete_sorted",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "392-400",
+    "lines": "435-444",
     "spec_strength": "unknown",
-    "snippet": "        fn difference_sorted(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted(),\n                other.spec_avltreesetsteph_wf(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetsteph_wf(),\n                remaining.spec_elements_sorted();"
+    "snippet": "        fn delete_sorted(&mut self, x: &T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                old(self).spec_elements_sorted(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted();"
   },
   {
     "id": 61,
-    "function": "union_sorted",
+    "function": "filter_sorted",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "402-411",
+    "lines": "447-467",
     "spec_strength": "unknown",
-    "snippet": "        fn union_sorted(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted(),\n                other.spec_avltreesetsteph_wf(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetsteph_wf(),\n                combined.spec_elements_sorted();"
+    "snippet": "        fn filter_sorted<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetsteph_wf(),\n                filtered.spec_elements_sorted(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
   },
   {
     "id": 62,
+    "function": "intersection_sorted",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "470-480",
+    "spec_strength": "unknown",
+    "snippet": "        fn intersection_sorted(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted(),\n                other.spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetsteph_wf(),\n                common.spec_elements_sorted();"
+  },
+  {
+    "id": 63,
+    "function": "difference_sorted",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "483-493",
+    "spec_strength": "unknown",
+    "snippet": "        fn difference_sorted(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted(),\n                other.spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetsteph_wf(),\n                remaining.spec_elements_sorted();"
+  },
+  {
+    "id": 64,
+    "function": "union_sorted",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "496-507",
+    "spec_strength": "unknown",
+    "snippet": "        fn union_sorted(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted(),\n                other.spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetsteph_wf(),\n                combined.spec_elements_sorted();"
+  },
+  {
+    "id": 65,
+    "function": "iter",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "519-524",
+    "spec_strength": "unknown",
+    "snippet": "        pub fn iter(&self) -> (it: std::vec::IntoIter<T>)\n            requires self.spec_avltreesetsteph_wf()\n            ensures\n                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),\n                IteratorSpec::decrease(&it) is Some,\n                vstd::std_specs::vec::into_iter_elts(it).len() == self@.len(),"
+  },
+  {
+    "id": 66,
+    "function": "clone_wf",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "810",
+    "spec_strength": "",
+    "snippet": "        fn clone_wf(&self) -> (cloned: Self) {"
+  },
+  {
+    "id": 67,
     "function": "default",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "697",
+    "lines": "847",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::empty() }"
   },
   {
-    "id": 63,
+    "id": 68,
     "function": "eq",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "709-710",
-    "spec_strength": "hole",
+    "lines": "859-860",
+    "spec_strength": "unknown",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
   {
-    "id": 64,
+    "id": 69,
     "function": "lemma_inorder_values_maps_to_views_per",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "82-84",
+    "lines": "111-113",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_inorder_values_maps_to_views_per<T: StT>(link: &Link<T>)\n        ensures spec_inorder_values_per(*link).map_values(|t: T| t@) =~= spec_inorder(*link),\n        decreases *link,"
   },
   {
-    "id": 65,
+    "id": 70,
     "function": "lemma_push_sorted_per",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "104-109",
+    "lines": "126-131",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_push_sorted_per<T: TotalOrder>(s: Seq<T>, v: T)\n        requires\n            spec_seq_sorted_per(s),\n            s.len() > 0 ==> TotalOrder::le(s.last(), v),\n        ensures\n            spec_seq_sorted_per(s.push(v)),"
   },
   {
-    "id": 66,
+    "id": 71,
     "function": "lemma_map_view_feq_implies_ext_eq_per",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "132-137",
+    "lines": "150-155",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_map_view_feq_implies_ext_eq_per<T: View + Eq + Clone>(a: Seq<T>, b: Seq<T>)\n        requires\n            a.map_values(|t: T| t@) =~= b.map_values(|t: T| t@),\n            obeys_feq_full::<T>(),\n        ensures\n            a =~= b,"
   },
   {
-    "id": 67,
+    "id": 72,
     "function": "lemma_subseq_sorted_per",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "153-158",
+    "lines": "170-175",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_subseq_sorted_per<T: TotalOrder>(s: Seq<T>, lo: int, hi: int)\n        requires\n            spec_seq_sorted_per(s),\n            0 <= lo <= hi <= s.len(),\n        ensures\n            spec_seq_sorted_per(s.subrange(lo, hi)),"
   },
   {
-    "id": 68,
+    "id": 73,
     "function": "size",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "175-177",
+    "lines": "190-192",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_avltreesetstper_wf(),\n            ensures count == self@.len();"
   },
   {
-    "id": 69,
+    "id": 74,
     "function": "to_seq",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "180-183",
+    "lines": "197-202",
     "spec_strength": "unknown",
-    "snippet": "        fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)\n            ensures\n                seq@.to_set() =~= self@,\n                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);"
+    "snippet": "        fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)\n            requires self.spec_avltreesetstper_wf(),\n            ensures\n                seq.spec_avltreeseqstper_wf(),\n                seq@.to_set() =~= self@,\n                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);"
   },
   {
-    "id": 70,
+    "id": 75,
     "function": "empty",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "186-189",
+    "lines": "206-209",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty: Self)\n            ensures\n                empty@ == Set::<<T as View>::V>::empty(),\n                empty.spec_avltreesetstper_wf();"
   },
   {
-    "id": 71,
+    "id": 76,
     "function": "singleton",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "192-195",
+    "lines": "214-217",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(x: T) -> (tree: Self)\n            ensures\n                tree@ == Set::<<T as View>::V>::empty().insert(x@),\n                tree.spec_avltreesetstper_wf();"
   },
   {
-    "id": 72,
+    "id": 77,
     "function": "from_seq",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "197-201",
+    "lines": "222-229",
     "spec_strength": "unknown",
-    "snippet": "        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)\n            requires seq.spec_avltreeseqstper_wf(),\n            ensures\n                constructed@ =~= seq@.to_set(),\n                constructed.spec_avltreesetstper_wf();"
-  },
-  {
-    "id": 73,
-    "function": "filter",
-    "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "204-220",
-    "spec_strength": "unknown",
-    "snippet": "        fn filter<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetstper_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
-  },
-  {
-    "id": 74,
-    "function": "intersection",
-    "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "223-229",
-    "spec_strength": "unknown",
-    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetstper_wf();"
-  },
-  {
-    "id": 75,
-    "function": "difference",
-    "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "232-238",
-    "spec_strength": "unknown",
-    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetstper_wf();"
-  },
-  {
-    "id": 76,
-    "function": "union",
-    "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "241-248",
-    "spec_strength": "unknown",
-    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetstper_wf();"
-  },
-  {
-    "id": 77,
-    "function": "find",
-    "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "251-253",
-    "spec_strength": "unknown",
-    "snippet": "        fn find(&self, x: &T) -> (found: B)\n            requires self.spec_avltreesetstper_wf(),\n            ensures found == self@.contains(x@);"
+    "snippet": "        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)\n            requires\n                seq.spec_avltreeseqstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                constructed@ =~= seq@.to_set(),\n                constructed.spec_avltreesetstper_wf();"
   },
   {
     "id": 78,
-    "function": "delete",
+    "function": "filter",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "256-260",
+    "lines": "233-251",
     "spec_strength": "unknown",
-    "snippet": "        fn delete(&self, x: &T) -> (updated: Self)\n            requires self.spec_avltreesetstper_wf(),\n            ensures\n                updated@ == self@.remove(x@),\n                updated.spec_avltreesetstper_wf();"
+    "snippet": "        fn filter<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetstper_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
   },
   {
     "id": 79,
-    "function": "insert",
+    "function": "intersection",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "263-269",
+    "lines": "255-263",
     "spec_strength": "unknown",
-    "snippet": "        fn insert(&self, x: T) -> (updated: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                self@.len() + 1 < usize::MAX as nat,\n            ensures\n                updated@ == self@.insert(x@),\n                updated.spec_avltreesetstper_wf();"
+    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetstper_wf();"
   },
   {
     "id": 80,
-    "function": "find_iter",
+    "function": "difference",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "271-273",
+    "lines": "267-275",
     "spec_strength": "unknown",
-    "snippet": "        fn find_iter(&self, x: &T) -> (found: B)\n            requires self.spec_avltreesetstper_wf(),\n            ensures found == self@.contains(x@);"
+    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetstper_wf();"
   },
   {
     "id": 81,
-    "function": "insert_iter",
+    "function": "union",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "275-281",
+    "lines": "279-288",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_iter(&self, x: T) -> (updated: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                self@.len() + 1 < usize::MAX as nat,\n            ensures\n                updated@ == self@.insert(x@),\n                updated.spec_avltreesetstper_wf();"
+    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetstper_wf();"
   },
   {
     "id": 82,
-    "function": "delete_iter",
+    "function": "find",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "283-287",
+    "lines": "292-297",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_iter(&self, x: &T) -> (updated: Self)\n            requires self.spec_avltreesetstper_wf(),\n            ensures\n                updated@ == self@.remove(x@),\n                updated.spec_avltreesetstper_wf();"
+    "snippet": "        fn find(&self, x: &T) -> (found: bool)\n            requires\n                self.spec_avltreesetstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures found == self@.contains(x@);"
   },
   {
     "id": 83,
-    "function": "filter_iter",
+    "function": "delete",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "289-305",
+    "lines": "301-308",
     "spec_strength": "unknown",
-    "snippet": "        fn filter_iter<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetstper_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
+    "snippet": "        fn delete(&self, x: &T) -> (updated: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                updated@ == self@.remove(x@),\n                updated.spec_avltreesetstper_wf();"
   },
   {
     "id": 84,
-    "function": "intersection_iter",
+    "function": "insert",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "307-313",
+    "lines": "312-320",
     "spec_strength": "unknown",
-    "snippet": "        fn intersection_iter(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetstper_wf();"
+    "snippet": "        fn insert(&self, x: T) -> (updated: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                self@.len() + 1 < usize::MAX as nat,\n            ensures\n                updated@ == self@.insert(x@),\n                updated.spec_avltreesetstper_wf();"
   },
   {
     "id": 85,
-    "function": "union_iter",
+    "function": "find_iter",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "315-322",
+    "lines": "323-328",
     "spec_strength": "unknown",
-    "snippet": "        fn union_iter(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetstper_wf();"
+    "snippet": "        fn find_iter(&self, x: &T) -> (found: bool)\n            requires\n                self.spec_avltreesetstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures found == self@.contains(x@);"
   },
   {
     "id": 86,
-    "function": "difference_iter",
+    "function": "insert_iter",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "324-330",
+    "lines": "331-339",
     "spec_strength": "unknown",
-    "snippet": "        fn difference_iter(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetstper_wf();"
+    "snippet": "        fn insert_iter(&self, x: T) -> (updated: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                self@.len() + 1 < usize::MAX as nat,\n            ensures\n                updated@ == self@.insert(x@),\n                updated.spec_avltreesetstper_wf();"
   },
   {
     "id": 87,
-    "function": "insert_sorted_per",
+    "function": "delete_iter",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "339-347",
+    "lines": "342-349",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_sorted_per(&self, x: T) -> (updated: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                self.spec_elements_sorted_per(),\n                self@.len() + 1 < usize::MAX as nat,\n            ensures\n                updated@ == self@.insert(x@),\n                updated.spec_avltreesetstper_wf(),\n                updated.spec_elements_sorted_per();"
+    "snippet": "        fn delete_iter(&self, x: &T) -> (updated: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                updated@ == self@.remove(x@),\n                updated.spec_avltreesetstper_wf();"
   },
   {
     "id": 88,
+    "function": "filter_iter",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "352-370",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter_iter<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetstper_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
+  },
+  {
+    "id": 89,
+    "function": "intersection_iter",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "373-381",
+    "spec_strength": "unknown",
+    "snippet": "        fn intersection_iter(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetstper_wf();"
+  },
+  {
+    "id": 90,
+    "function": "union_iter",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "384-393",
+    "spec_strength": "unknown",
+    "snippet": "        fn union_iter(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetstper_wf();"
+  },
+  {
+    "id": 91,
+    "function": "difference_iter",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "396-404",
+    "spec_strength": "unknown",
+    "snippet": "        fn difference_iter(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetstper_wf();"
+  },
+  {
+    "id": 92,
+    "function": "insert_sorted_per",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "414-424",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert_sorted_per(&self, x: T) -> (updated: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                self.spec_elements_sorted_per(),\n                vstd::laws_cmp::obeys_cmp::<T>(),\n                view_ord_consistent::<T>(),\n                self@.len() + 1 < usize::MAX as nat,\n            ensures\n                updated@ == self@.insert(x@),\n                updated.spec_avltreesetstper_wf(),\n                updated.spec_elements_sorted_per();"
+  },
+  {
+    "id": 93,
+    "function": "iter",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "433-438",
+    "spec_strength": "unknown",
+    "snippet": "        pub fn iter(&self) -> (it: std::vec::IntoIter<T>)\n            requires self.spec_avltreesetstper_wf()\n            ensures\n                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),\n                IteratorSpec::decrease(&it) is Some,\n                vstd::std_specs::vec::into_iter_elts(it).len() == self@.len(),"
+  },
+  {
+    "id": 94,
+    "function": "clone_wf",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "689",
+    "spec_strength": "",
+    "snippet": "        fn clone_wf(&self) -> (cloned: Self) {"
+  },
+  {
+    "id": 95,
     "function": "default",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "1656",
+    "lines": "726",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::empty() }"
   },
   {
-    "id": 89,
+    "id": 96,
     "function": "eq",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "1666-1667",
-    "spec_strength": "hole",
+    "lines": "738-739",
+    "spec_strength": "unknown",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
   {
-    "id": 90,
+    "id": 97,
     "function": "zero_bit_false",
     "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "102-104",
+    "lines": "110-112",
     "spec_strength": "unknown",
     "snippet": "    proof fn zero_bit_false(i: u64)\n        requires i < 64,\n        ensures !get_bit64!(0u64, i),"
   },
   {
-    "id": 91,
+    "id": 98,
     "function": "set_bit64_proof",
     "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "108-115",
+    "lines": "116-123",
     "spec_strength": "unknown",
     "snippet": "    proof fn set_bit64_proof(bv_new: u64, bv_old: u64, index: u64, bit: bool)\n        requires\n            bv_new == set_bit64!(bv_old, index, bit),\n            index < 64,\n        ensures\n            get_bit64!(bv_new, index) == bit,\n            forall|loc2: u64| #![trigger (0x1u64 & (bv_new >> loc2))] (loc2 < 64 && loc2 != index) ==>\n                (get_bit64!(bv_new, loc2) == get_bit64!(bv_old, loc2)),"
   },
   {
-    "id": 92,
+    "id": 99,
     "function": "bit_or_64_proof",
     "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "119-122",
+    "lines": "127-130",
     "spec_strength": "unknown",
     "snippet": "    proof fn bit_or_64_proof(bv1: u64, bv2: u64, bv_new: u64)\n        requires bv_new == bv1 | bv2,\n        ensures forall|i: u64| #![trigger (0x1u64 & (bv_new >> i))] (i < 64) ==>\n            get_bit64!(bv_new, i) == (get_bit64!(bv1, i) || get_bit64!(bv2, i)),"
   },
   {
-    "id": 93,
+    "id": 100,
     "function": "bit_and_64_proof",
     "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "126-129",
+    "lines": "134-137",
     "spec_strength": "unknown",
     "snippet": "    proof fn bit_and_64_proof(bv1: u64, bv2: u64, bv_new: u64)\n        requires bv_new == bv1 & bv2,\n        ensures forall|i: u64| #![trigger (0x1u64 & (bv_new >> i))] (i < 64) ==>\n            get_bit64!(bv_new, i) == (get_bit64!(bv1, i) && get_bit64!(bv2, i)),"
   },
   {
-    "id": 94,
+    "id": 101,
     "function": "bit_andnot_64_proof",
     "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "133-136",
+    "lines": "141-144",
     "spec_strength": "unknown",
     "snippet": "    proof fn bit_andnot_64_proof(bv1: u64, bv2: u64, bv_new: u64)\n        requires bv_new == bv1 & !bv2,\n        ensures forall|i: u64| #![trigger (0x1u64 & (bv_new >> i))] (i < 64) ==>\n            get_bit64!(bv_new, i) == (get_bit64!(bv1, i) && !get_bit64!(bv2, i)),"
   },
   {
-    "id": 95,
-    "function": "lemma_bounded_usize_set_finite",
-    "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "140-142",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_bounded_usize_set_finite(n: usize)\n        ensures Set::new(|i: usize| (i as int) < n as int).finite()\n        decreases n"
-  },
-  {
-    "id": 96,
-    "function": "lemma_view_finite",
-    "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "154-159",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_view_finite(bits: Seq<u64>, universe_size: usize)\n        requires bits.len() == num_words(universe_size as int),\n        ensures Set::new(|i: usize|\n            (i as int) < universe_size as int\n            && u64_view(bits[i as int / 64])[i as int % 64]\n        ).finite(),"
-  },
-  {
-    "id": 97,
+    "id": 102,
     "function": "new",
     "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "178-182",
+    "lines": "195-199",
     "spec_strength": "unknown",
     "snippet": "        fn new(u: usize) -> (empty: Self)\n            ensures\n                empty@ == Set::<usize>::empty(),\n                empty.spec_arraysetenummteph_wf(),\n                empty.spec_universe_size() == u;"
   },
   {
-    "id": 98,
+    "id": 103,
     "function": "size",
     "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "186-188",
+    "lines": "204-206",
     "spec_strength": "unknown",
-    "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_arraysetenummteph_wf(),\n            ensures count == self@.len(), self@.finite();"
+    "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_arraysetenummteph_wf(),\n            ensures count == self@.len();"
   },
   {
-    "id": 99,
+    "id": 104,
     "function": "to_seq",
     "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "192-197",
+    "lines": "211-215",
     "spec_strength": "unknown",
-    "snippet": "        fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)\n            requires self.spec_arraysetenummteph_wf(),\n            ensures\n                self@.finite(),\n                seq@.to_set() =~= self@,\n                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);"
+    "snippet": "        fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)\n            requires self.spec_arraysetenummteph_wf(),\n            ensures\n                seq@.to_set() =~= self@,\n                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);"
   },
   {
-    "id": 100,
+    "id": 105,
     "function": "empty",
     "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "200-204",
+    "lines": "219-223",
     "spec_strength": "unknown",
     "snippet": "        fn empty(u: usize) -> (empty: Self)\n            ensures\n                empty@ == Set::<usize>::empty(),\n                empty.spec_arraysetenummteph_wf(),\n                empty.spec_universe_size() == u;"
   },
   {
-    "id": 101,
+    "id": 106,
     "function": "singleton",
     "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "208-214",
+    "lines": "228-233",
     "spec_strength": "unknown",
-    "snippet": "        fn singleton(u: usize, x: usize) -> (tree: Self)\n            ensures\n                (x < u ==> tree@ == Set::<usize>::empty().insert(x)),\n                (x >= u ==> tree@ == Set::<usize>::empty()),\n                tree@.finite(),\n                tree.spec_arraysetenummteph_wf(),\n                tree.spec_universe_size() == u;"
-  },
-  {
-    "id": 102,
-    "function": "from_seq",
-    "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "217-221",
-    "spec_strength": "unknown",
-    "snippet": "        fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)\n            ensures\n                constructed@.finite(),\n                constructed.spec_arraysetenummteph_wf(),\n                constructed.spec_universe_size() == u;"
-  },
-  {
-    "id": 103,
-    "function": "filter",
-    "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "225-233",
-    "spec_strength": "unknown",
-    "snippet": "        fn filter<F: Fn(usize) -> bool + Send + Sync + 'static + Clone>(&self, f: F) -> (filtered: Self)\n            requires\n                self.spec_arraysetenummteph_wf(),\n                forall|i: usize| i < self.spec_universe_size() ==> #[trigger] f.requires((i,)),\n            ensures\n                filtered@.finite(),\n                filtered@.subset_of(self@),\n                filtered.spec_arraysetenummteph_wf(),\n                filtered.spec_universe_size() == self.spec_universe_size();"
-  },
-  {
-    "id": 104,
-    "function": "intersection",
-    "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "237-246",
-    "spec_strength": "unknown",
-    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_arraysetenummteph_wf(),\n                other.spec_arraysetenummteph_wf(),\n                self.spec_universe_size() == other.spec_universe_size(),\n            ensures\n                common@ == self@.intersect(other@),\n                common@.finite(),\n                common.spec_arraysetenummteph_wf(),\n                common.spec_universe_size() == self.spec_universe_size();"
-  },
-  {
-    "id": 105,
-    "function": "difference",
-    "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "250-259",
-    "spec_strength": "unknown",
-    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_arraysetenummteph_wf(),\n                other.spec_arraysetenummteph_wf(),\n                self.spec_universe_size() == other.spec_universe_size(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining@.finite(),\n                remaining.spec_arraysetenummteph_wf(),\n                remaining.spec_universe_size() == self.spec_universe_size();"
-  },
-  {
-    "id": 106,
-    "function": "union",
-    "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "263-272",
-    "spec_strength": "unknown",
-    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_arraysetenummteph_wf(),\n                other.spec_arraysetenummteph_wf(),\n                self.spec_universe_size() == other.spec_universe_size(),\n            ensures\n                combined@ == self@.union(other@),\n                combined@.finite(),\n                combined.spec_arraysetenummteph_wf(),\n                combined.spec_universe_size() == self.spec_universe_size();"
+    "snippet": "        fn singleton(u: usize, x: usize) -> (tree: Self)\n            ensures\n                (x < u ==> tree@ == Set::<usize>::empty().insert(x)),\n                (x >= u ==> tree@ == Set::<usize>::empty()),\n                tree.spec_arraysetenummteph_wf(),\n                tree.spec_universe_size() == u;"
   },
   {
     "id": 107,
-    "function": "find",
+    "function": "from_seq",
     "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "276-278",
+    "lines": "238-241",
     "spec_strength": "unknown",
-    "snippet": "        fn find(&self, x: usize) -> (found: B)\n            requires self.spec_arraysetenummteph_wf(),\n            ensures found == self@.contains(x);"
+    "snippet": "        fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)\n            ensures\n                constructed.spec_arraysetenummteph_wf(),\n                constructed.spec_universe_size() == u;"
   },
   {
     "id": 108,
-    "function": "delete",
+    "function": "filter",
     "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "282-288",
+    "lines": "246-253",
     "spec_strength": "unknown",
-    "snippet": "        fn delete(&mut self, x: usize)\n            requires old(self).spec_arraysetenummteph_wf(),\n            ensures\n                self@ == old(self)@.remove(x),\n                self@.finite(),\n                self.spec_arraysetenummteph_wf(),\n                self.spec_universe_size() == old(self).spec_universe_size();"
+    "snippet": "        fn filter<F: Fn(usize) -> bool + Send + Sync + 'static + Clone>(&self, f: F) -> (filtered: Self)\n            requires\n                self.spec_arraysetenummteph_wf(),\n                forall|i: usize| i < self.spec_universe_size() ==> #[trigger] f.requires((i,)),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_arraysetenummteph_wf(),\n                filtered.spec_universe_size() == self.spec_universe_size();"
   },
   {
     "id": 109,
-    "function": "insert",
+    "function": "intersection",
     "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "292-299",
+    "lines": "258-266",
     "spec_strength": "unknown",
-    "snippet": "        fn insert(&mut self, x: usize)\n            requires old(self).spec_arraysetenummteph_wf(),\n            ensures\n                (x < old(self).spec_universe_size() ==> self@ == old(self)@.insert(x)),\n                (x >= old(self).spec_universe_size() ==> self@ == old(self)@),\n                self@.finite(),\n                self.spec_arraysetenummteph_wf(),\n                self.spec_universe_size() == old(self).spec_universe_size();"
+    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_arraysetenummteph_wf(),\n                other.spec_arraysetenummteph_wf(),\n                self.spec_universe_size() == other.spec_universe_size(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_arraysetenummteph_wf(),\n                common.spec_universe_size() == self.spec_universe_size();"
   },
   {
     "id": 110,
-    "function": "eq",
+    "function": "difference",
     "file": "Chap41/ArraySetEnumMtEph.rs",
-    "lines": "946-947",
-    "spec_strength": "hole",
-    "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
+    "lines": "271-279",
+    "spec_strength": "unknown",
+    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_arraysetenummteph_wf(),\n                other.spec_arraysetenummteph_wf(),\n                self.spec_universe_size() == other.spec_universe_size(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_arraysetenummteph_wf(),\n                remaining.spec_universe_size() == self.spec_universe_size();"
   },
   {
     "id": 111,
+    "function": "union",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "284-292",
+    "spec_strength": "unknown",
+    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_arraysetenummteph_wf(),\n                other.spec_arraysetenummteph_wf(),\n                self.spec_universe_size() == other.spec_universe_size(),\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_arraysetenummteph_wf(),\n                combined.spec_universe_size() == self.spec_universe_size();"
+  },
+  {
+    "id": 112,
+    "function": "find",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "297-299",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, x: usize) -> (found: bool)\n            requires self.spec_arraysetenummteph_wf(),\n            ensures found == self@.contains(x);"
+  },
+  {
+    "id": 113,
+    "function": "delete",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "304-309",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(&mut self, x: usize)\n            requires old(self).spec_arraysetenummteph_wf(),\n            ensures\n                self@ == old(self)@.remove(x),\n                self.spec_arraysetenummteph_wf(),\n                self.spec_universe_size() == old(self).spec_universe_size();"
+  },
+  {
+    "id": 114,
+    "function": "insert",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "314-320",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, x: usize)\n            requires old(self).spec_arraysetenummteph_wf(),\n            ensures\n                (x < old(self).spec_universe_size() ==> self@ == old(self)@.insert(x)),\n                (x >= old(self).spec_universe_size() ==> self@ == old(self)@),\n                self.spec_arraysetenummteph_wf(),\n                self.spec_universe_size() == old(self).spec_universe_size();"
+  },
+  {
+    "id": 115,
+    "function": "eq",
+    "file": "Chap41/ArraySetEnumMtEph.rs",
+    "lines": "946-947",
+    "spec_strength": "unknown",
+    "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
+  },
+  {
+    "id": 116,
     "function": "lemma_filter_remove",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "77-80",
+    "lines": "94-97",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_filter_remove<V>(s: Seq<V>, v: V)\n        requires s.no_duplicates()\n        ensures s.filter(|e: V| e != v).to_set() =~= s.to_set().remove(v)\n        decreases s.len()"
   },
   {
-    "id": 112,
+    "id": 117,
     "function": "lemma_push_preserves_no_dups",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "116-121",
+    "lines": "117-122",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_push_preserves_no_dups<V>(s: Seq<V>, x: V)\n        requires\n            s.no_duplicates(),\n            !s.contains(x),\n        ensures\n            s.push(x).no_duplicates()"
   },
   {
-    "id": 113,
+    "id": 118,
     "function": "lemma_filter_in_original",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "141-143",
+    "lines": "128-130",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_filter_in_original<V>(s: Seq<V>, pred: spec_fn(V) -> bool)\n        ensures forall|v: V| s.filter(pred).contains(v) ==> #[trigger] s.contains(v)\n        decreases s.len()"
   },
   {
-    "id": 114,
+    "id": 119,
     "function": "lemma_filter_preserves_no_dups",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "177-180",
+    "lines": "143-146",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_filter_preserves_no_dups<V>(s: Seq<V>, pred: spec_fn(V) -> bool)\n        requires s.no_duplicates()\n        ensures s.filter(pred).no_duplicates()\n        decreases s.len()"
   },
   {
-    "id": 115,
+    "id": 120,
     "function": "lemma_filter_to_set_intersect",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "211-214",
+    "lines": "161-164",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_filter_to_set_intersect<V>(s: Seq<V>, set: Set<V>)\n        requires s.no_duplicates()\n        ensures s.filter(|e: V| set.contains(e)).to_set() =~= s.to_set().intersect(set)\n        decreases s.len()"
   },
   {
-    "id": 116,
+    "id": 121,
     "function": "lemma_filter_to_set_difference",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "246-249",
+    "lines": "185-188",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_filter_to_set_difference<V>(s: Seq<V>, set: Set<V>)\n        requires s.no_duplicates()\n        ensures s.filter(|e: V| !set.contains(e)).to_set() =~= s.to_set().difference(set)\n        decreases s.len()"
   },
   {
-    "id": 117,
+    "id": 122,
     "function": "lemma_subseq_no_dups_subset",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "282-288",
+    "lines": "210-216",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_subseq_no_dups_subset<V>(orig: Seq<V>, sub: Seq<V>)\n        requires\n            orig.no_duplicates(),\n            forall|i: int| #![trigger sub[i]] 0 <= i < sub.len() ==> orig.contains(sub[i]),\n            sub.no_duplicates(),\n        ensures\n            sub.to_set().subset_of(orig.to_set())"
   },
   {
-    "id": 118,
+    "id": 123,
     "function": "size",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "307-309",
+    "lines": "229-231",
     "spec_strength": "unknown",
-    "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_arraysetsteph_wf()\n            ensures count == self@.len(), self@.finite();"
+    "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_arraysetsteph_wf()\n            ensures count == self@.len();"
   },
   {
-    "id": 119,
+    "id": 124,
     "function": "to_seq",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "313-318",
+    "lines": "236-240",
     "spec_strength": "unknown",
-    "snippet": "        fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)\n            requires self.spec_arraysetsteph_wf(),\n            ensures\n                self@.finite(),\n                seq@.no_duplicates(),\n                seq@.to_set() =~= self@;"
+    "snippet": "        fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)\n            requires self.spec_arraysetsteph_wf(),\n            ensures\n                seq@.no_duplicates(),\n                seq@.to_set() =~= self@;"
   },
   {
-    "id": 120,
+    "id": 125,
     "function": "empty",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "322-323",
+    "lines": "243-244",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty: Self)\n            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_arraysetsteph_wf();"
   },
   {
-    "id": 121,
+    "id": 126,
     "function": "singleton",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "327-328",
+    "lines": "249-250",
     "spec_strength": "unknown",
-    "snippet": "        fn singleton(x: T) -> (tree: Self)\n            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_arraysetsteph_wf();"
-  },
-  {
-    "id": 122,
-    "function": "from_seq",
-    "file": "Chap41/ArraySetStEph.rs",
-    "lines": "332-336",
-    "spec_strength": "unknown",
-    "snippet": "        fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)\n            ensures\n                constructed@ =~= seq@.to_set(),\n                constructed@.finite(),\n                constructed.spec_arraysetsteph_wf();"
-  },
-  {
-    "id": 123,
-    "function": "filter",
-    "file": "Chap41/ArraySetStEph.rs",
-    "lines": "340-358",
-    "spec_strength": "unknown",
-    "snippet": "        fn filter<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                self@.finite(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.finite(),\n                filtered@.subset_of(self@),\n                filtered.spec_arraysetsteph_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
-  },
-  {
-    "id": 124,
-    "function": "intersection",
-    "file": "Chap41/ArraySetStEph.rs",
-    "lines": "362-371",
-    "spec_strength": "unknown",
-    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                other.spec_arraysetsteph_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                common@ == self@.intersect(other@),\n                common@.finite(),\n                common.spec_arraysetsteph_wf();"
-  },
-  {
-    "id": 125,
-    "function": "difference",
-    "file": "Chap41/ArraySetStEph.rs",
-    "lines": "375-384",
-    "spec_strength": "unknown",
-    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                other.spec_arraysetsteph_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining@.finite(),\n                remaining.spec_arraysetsteph_wf();"
-  },
-  {
-    "id": 126,
-    "function": "union",
-    "file": "Chap41/ArraySetStEph.rs",
-    "lines": "388-397",
-    "spec_strength": "unknown",
-    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                other.spec_arraysetsteph_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                combined@ == self@.union(other@),\n                combined@.finite(),\n                combined.spec_arraysetsteph_wf();"
+    "snippet": "        fn singleton(x: T) -> (tree: Self)\n            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_arraysetsteph_wf();"
   },
   {
     "id": 127,
-    "function": "find",
+    "function": "from_seq",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "401-403",
+    "lines": "255-258",
     "spec_strength": "unknown",
-    "snippet": "        fn find(&self, x: &T) -> (found: B)\n            requires self@.finite(),\n            ensures found == self@.contains(x@);"
+    "snippet": "        fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)\n            ensures\n                constructed@ =~= seq@.to_set(),\n                constructed.spec_arraysetsteph_wf();"
   },
   {
     "id": 128,
-    "function": "delete",
+    "function": "filter",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "407-414",
+    "lines": "263-279",
     "spec_strength": "unknown",
-    "snippet": "        fn delete(&mut self, x: &T)\n            requires\n                old(self).spec_arraysetsteph_wf(),\n                old(self)@.finite(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self@.finite(),\n                self.spec_arraysetsteph_wf();"
+    "snippet": "        fn filter<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_arraysetsteph_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
   },
   {
     "id": 129,
-    "function": "insert",
+    "function": "intersection",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "418-425",
+    "lines": "284-290",
     "spec_strength": "unknown",
-    "snippet": "        fn insert(&mut self, x: T)\n            requires\n                old(self).spec_arraysetsteph_wf(),\n                old(self)@.finite(),\n            ensures\n                self@ == old(self)@.insert(x@),\n                self@.finite(),\n                self.spec_arraysetsteph_wf();"
+    "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                other.spec_arraysetsteph_wf(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_arraysetsteph_wf();"
   },
   {
     "id": 130,
+    "function": "difference",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "295-301",
+    "spec_strength": "unknown",
+    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                other.spec_arraysetsteph_wf(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_arraysetsteph_wf();"
+  },
+  {
+    "id": 131,
+    "function": "union",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "306-312",
+    "spec_strength": "unknown",
+    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                other.spec_arraysetsteph_wf(),\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_arraysetsteph_wf();"
+  },
+  {
+    "id": 132,
+    "function": "find",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "317-318",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, x: &T) -> (found: bool)\n            ensures found == self@.contains(x@);"
+  },
+  {
+    "id": 133,
+    "function": "delete",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "323-328",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(&mut self, x: &T)\n            requires\n                old(self).spec_arraysetsteph_wf(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self.spec_arraysetsteph_wf();"
+  },
+  {
+    "id": 134,
+    "function": "insert",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "333-338",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, x: T)\n            requires\n                old(self).spec_arraysetsteph_wf(),\n            ensures\n                self@ == old(self)@.insert(x@),\n                self.spec_arraysetsteph_wf();"
+  },
+  {
+    "id": 135,
+    "function": "iter",
+    "file": "Chap41/ArraySetStEph.rs",
+    "lines": "352-357",
+    "spec_strength": "unknown",
+    "snippet": "        pub fn iter<'a>(&'a self) -> (it: std::slice::Iter<'a, T>)\n            requires self.spec_arraysetsteph_wf()\n            ensures\n                IteratorSpec::remaining(&it) == self.elements.seq@.as_ref(),\n                vstd::std_specs::slice::into_iter_elts(it) == self.elements.seq@,\n                IteratorSpec::decrease(&it) is Some,"
+  },
+  {
+    "id": 136,
     "function": "default",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "1219",
+    "lines": "1064",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::empty() }"
   },
   {
-    "id": 131,
+    "id": 137,
     "function": "eq",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "1231-1232",
-    "spec_strength": "hole",
+    "lines": "1076-1077",
+    "spec_strength": "unknown",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
   {
-    "id": 132,
+    "id": 138,
     "function": "example_41_1_array_set",
     "file": "Chap41/Example41_3.rs",
-    "lines": "18",
+    "lines": "23",
     "spec_strength": "",
     "snippet": "        fn example_41_1_array_set();"
   },
   {
-    "id": 133,
+    "id": 139,
     "function": "example_41_1_avl_set",
     "file": "Chap41/Example41_3.rs",
-    "lines": "21",
+    "lines": "26",
     "spec_strength": "",
     "snippet": "        fn example_41_1_avl_set();"
   },
   {
-    "id": 134,
+    "id": 140,
     "function": "demonstrate_set_operations",
     "file": "Chap41/Example41_3.rs",
-    "lines": "24",
+    "lines": "29",
     "spec_strength": "",
     "snippet": "        fn demonstrate_set_operations();"
   },
   {
-    "id": 135,
+    "id": 141,
     "function": "example_41_1_array_set_impl",
     "file": "Chap41/Example41_3.rs",
-    "lines": "27",
+    "lines": "32",
     "spec_strength": "",
     "snippet": "    fn example_41_1_array_set_impl()"
   },
   {
-    "id": 136,
+    "id": 142,
     "function": "example_41_1_avl_set_impl",
     "file": "Chap41/Example41_3.rs",
     "lines": "70",
-    "spec_strength": "",
+    "spec_strength": "hole",
     "snippet": "    fn example_41_1_avl_set_impl()"
   },
   {
-    "id": 137,
+    "id": 143,
     "function": "example_41_3_from_seq_demonstration_impl",
     "file": "Chap41/Example41_3.rs",
-    "lines": "113",
+    "lines": "115",
     "spec_strength": "",
     "snippet": "    fn example_41_3_from_seq_demonstration_impl()"
   },
   {
-    "id": 138,
+    "id": 144,
     "function": "additional_set_operations_impl",
     "file": "Chap41/Example41_3.rs",
     "lines": "141",
@@ -1104,19 +1152,507 @@
     "snippet": "    fn additional_set_operations_impl()"
   },
   {
-    "id": 139,
+    "id": 145,
     "function": "example_41_3_from_seq_demonstration",
     "file": "Chap41/Example41_3.rs",
-    "lines": "191",
+    "lines": "187",
     "spec_strength": "",
     "snippet": "    pub fn example_41_3_from_seq_demonstration()"
   },
   {
-    "id": 140,
+    "id": 146,
     "function": "additional_set_operations",
     "file": "Chap41/Example41_3.rs",
-    "lines": "193",
+    "lines": "189",
     "spec_strength": "",
     "snippet": "    pub fn additional_set_operations()"
+  },
+  {
+    "id": 147,
+    "function": "lemma_view_gen_subset",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "118-126",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_view_gen_subset<K: View, V: View>(\n        sub: Set<(K::V, V::V)>,\n        sup: Set<(K::V, V::V)>,\n    )\n        requires\n            sub.subset_of(sup),\n            spec_set_pair_view_generated::<K, V>(sup),\n        ensures\n            spec_set_pair_view_generated::<K, V>(sub),"
+  },
+  {
+    "id": 148,
+    "function": "lemma_view_gen_insert",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "131-138",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_view_gen_insert<K: View, V: View>(\n        s: Set<(K::V, V::V)>,\n        pair: Pair<K, V>,\n    )\n        requires\n            spec_set_pair_view_generated::<K, V>(s),\n        ensures\n            spec_set_pair_view_generated::<K, V>(s.insert(pair@)),"
+  },
+  {
+    "id": 149,
+    "function": "lemma_view_gen_union",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "143-151",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_view_gen_union<K: View, V: View>(\n        a: Set<(K::V, V::V)>,\n        b: Set<(K::V, V::V)>,\n    )\n        requires\n            spec_set_pair_view_generated::<K, V>(a),\n            spec_set_pair_view_generated::<K, V>(b),\n        ensures\n            spec_set_pair_view_generated::<K, V>(a.union(b)),"
+  },
+  {
+    "id": 150,
+    "function": "lemma_pair_set_to_map_len",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "179-181",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_pair_set_to_map_len<KV, VV>(s: Set<(KV, VV)>)\n        requires spec_key_unique_pairs_set(s)\n        ensures spec_pair_set_to_map(s).dom().len() == s.len()"
+  },
+  {
+    "id": 151,
+    "function": "lemma_pair_in_set_map_contains",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "219-225",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_pair_in_set_map_contains<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)\n        requires\n            s.contains((k, v)),\n            spec_key_unique_pairs_set(s),\n        ensures\n            spec_pair_set_to_map(s).contains_key(k),\n            spec_pair_set_to_map(s)[k] == v,"
+  },
+  {
+    "id": 152,
+    "function": "lemma_pair_set_to_map_dom_contains",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "237-239",
+    "spec_strength": "unknown",
+    "snippet": "    pub broadcast proof fn lemma_pair_set_to_map_dom_contains<KV, VV>(s: Set<(KV, VV)>, k: KV)\n        ensures\n            #[trigger] spec_pair_set_to_map(s).dom().contains(k) <==> exists|v: VV| s.contains((k, v)),"
+  },
+  {
+    "id": 153,
+    "function": "lemma_map_contains_pair_in_set",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "253-255",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)\n        requires spec_pair_set_to_map(s).contains_key(k)\n        ensures exists|v: VV| s.contains((k, v))"
+  },
+  {
+    "id": 154,
+    "function": "lemma_key_unique_insert",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "261-266",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_key_unique_insert<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)\n        requires\n            spec_key_unique_pairs_set(s),\n            !spec_pair_set_to_map(s).dom().contains(k),\n        ensures\n            spec_key_unique_pairs_set(s.insert((k, v)))"
+  },
+  {
+    "id": 155,
+    "function": "lemma_cmp_equal_congruent",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "286-292",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)\n        requires\n            vstd::laws_cmp::obeys_cmp::<T>(),\n            view_ord_consistent::<T>(),\n            a.cmp_spec(&b) == Equal,\n        ensures\n            a.cmp_spec(&c) == b.cmp_spec(&c),"
+  },
+  {
+    "id": 156,
+    "function": "lemma_sorted_keys_pairwise_distinct",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "300-312",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_sorted_keys_pairwise_distinct<KV, VV>(\n        tree: Set<(KV, VV)>,\n        sorted: Seq<(KV, VV)>,\n    )\n        requires\n            spec_key_unique_pairs_set(tree),\n            forall|v: (KV, VV)| tree.contains(v) <==> #[trigger] sorted.contains(v),\n            sorted.len() == tree.len(),\n        ensures\n            sorted.no_duplicates(),\n            forall|i: int, j: int|\n                0 <= i < sorted.len() && 0 <= j < sorted.len() && i != j\n                ==> (#[trigger] sorted[i]).0 != (#[trigger] sorted[j]).0,"
+  },
+  {
+    "id": 157,
+    "function": "lemma_key_unique_remove",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "340-342",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_key_unique_remove<KV, VV>(s: Set<(KV, VV)>, pair: (KV, VV))\n        requires spec_key_unique_pairs_set(s)\n        ensures spec_key_unique_pairs_set(s.remove(pair))"
+  },
+  {
+    "id": 158,
+    "function": "lemma_key_unique_subset",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "347-352",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_key_unique_subset<KV, VV>(s: Set<(KV, VV)>, sub: Set<(KV, VV)>)\n        requires\n            spec_key_unique_pairs_set(s),\n            sub.subset_of(s),\n        ensures\n            spec_key_unique_pairs_set(sub)"
+  },
+  {
+    "id": 159,
+    "function": "lemma_key_unique_empty",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "357-358",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_key_unique_empty<KV, VV>()\n        ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())"
+  },
+  {
+    "id": 160,
+    "function": "lemma_key_unique_disjoint_union",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "363-378",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_key_unique_disjoint_union<KV, VV>(\n        s1: Set<(KV, VV)>, s2: Set<(KV, VV)>, root: (KV, VV),\n    )\n        requires\n            spec_key_unique_pairs_set(s1),\n            spec_key_unique_pairs_set(s2),\n            s1.disjoint(s2),\n            !s1.contains(root),\n            !s2.contains(root),\n            // No key in s1 equals a key in s2 or the root key.\n            forall|p1: (KV, VV), p2: (KV, VV)|\n                #[trigger] s1.contains(p1) && #[trigger] s2.contains(p2) ==> p1.0 != p2.0,\n            forall|p: (KV, VV)| #[trigger] s1.contains(p) ==> p.0 != root.0,\n            forall|p: (KV, VV)| #[trigger] s2.contains(p) ==> p.0 != root.0,\n        ensures\n            spec_key_unique_pairs_set(s1.union(s2).insert(root))"
+  },
+  {
+    "id": 161,
+    "function": "lemma_set_to_map_insert",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "410-416",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_set_to_map_insert<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)\n        requires\n            spec_key_unique_pairs_set(s),\n            !spec_pair_set_to_map(s).dom().contains(k),\n        ensures\n            spec_pair_set_to_map(s.insert((k, v)))\n                =~= spec_pair_set_to_map(s).insert(k, v),"
+  },
+  {
+    "id": 162,
+    "function": "lemma_set_to_map_remove_pair",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "460-466",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_set_to_map_remove_pair<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)\n        requires\n            spec_key_unique_pairs_set(s),\n            s.contains((k, v)),\n        ensures\n            spec_pair_set_to_map(s.remove((k, v)))\n                =~= spec_pair_set_to_map(s).remove(k),"
+  },
+  {
+    "id": 163,
+    "function": "lemma_set_to_map_union_root",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "494-519",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_set_to_map_union_root<KV, VV>(\n        left: Set<(KV, VV)>, right: Set<(KV, VV)>, root_k: KV, root_v: VV,\n    )\n        requires\n            spec_key_unique_pairs_set(left),\n            spec_key_unique_pairs_set(right),\n            left.disjoint(right),\n            !left.contains((root_k, root_v)),\n            !right.contains((root_k, root_v)),\n            forall|p: (KV, VV)| #[trigger] left.contains(p) ==> p.0 != root_k,\n            forall|p: (KV, VV)| #[trigger] right.contains(p) ==> p.0 != root_k,\n            forall|p1: (KV, VV), p2: (KV, VV)|\n                #[trigger] left.contains(p1) && #[trigger] right.contains(p2) ==> p1.0 != p2.0,\n        ensures\n            ({\n                let combined = left.union(right).insert((root_k, root_v));\n                let combined_map = spec_pair_set_to_map(combined);\n                let left_map = spec_pair_set_to_map(left);\n                let right_map = spec_pair_set_to_map(right);\n                &&& combined_map.dom() =~= left_map.dom().union(right_map.dom()).insert(root_k)\n                &&& forall|k: KV| left_map.dom().contains(k) ==>\n                    #[trigger] combined_map[k] == left_map[k]\n                &&& forall|k: KV| right_map.dom().contains(k) ==>\n                    #[trigger] combined_map[k] == right_map[k]\n                &&& combined_map.contains_key(root_k) && combined_map[root_k] == root_v\n            })"
+  },
+  {
+    "id": 164,
+    "function": "lemma_set_to_map_empty",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "581-582",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_set_to_map_empty<KV, VV>()\n        ensures spec_pair_set_to_map(Set::<(KV, VV)>::empty()) =~= Map::<KV, VV>::empty()"
+  },
+  {
+    "id": 165,
+    "function": "lemma_view_gen_empty",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "587-588",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_view_gen_empty<K: View, V: View>()\n        ensures spec_set_pair_view_generated::<K, V>(Set::<(K::V, V::V)>::empty())"
+  },
+  {
+    "id": 166,
+    "function": "lemma_freshness_from_sorted",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "594-607",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_freshness_from_sorted<KV, VV>(\n        accum: Set<(KV, VV)>,\n        sorted: Seq<(KV, VV)>,\n        i: int,\n    )\n        requires\n            0 <= i < sorted.len(),\n            forall|p: (KV, VV)| #[trigger] accum.contains(p) ==>\n                exists|j: int| 0 <= j < i && p.0 == (#[trigger] sorted[j]).0,\n            forall|ii: int, jj: int|\n                0 <= ii < sorted.len() && 0 <= jj < sorted.len() && ii != jj\n                ==> (#[trigger] sorted[ii]).0 != (#[trigger] sorted[jj]).0,\n        ensures\n            !spec_pair_set_to_map(accum).dom().contains(sorted[i].0)"
+  },
+  {
+    "id": 167,
+    "function": "lemma_map_dom_preserved_by_superset",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "617-623",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_map_dom_preserved_by_superset<KV, VV>(\n        sub: Set<(KV, VV)>,\n        sup: Set<(KV, VV)>,\n    )\n        requires sub.subset_of(sup)\n        ensures forall|k: KV| spec_pair_set_to_map(sub).dom().contains(k) ==>\n            #[trigger] spec_pair_set_to_map(sup).dom().contains(k)"
+  },
+  {
+    "id": 168,
+    "function": "lemma_cmp_antisymmetry",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "634-640",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)\n        requires\n            vstd::laws_cmp::obeys_cmp::<T>(),\n            view_ord_consistent::<T>(),\n            a.cmp_spec(&b) == Less,\n        ensures\n            b.cmp_spec(&a) == Greater,"
+  },
+  {
+    "id": 169,
+    "function": "lemma_post_insert_invariants",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "649-663",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_post_insert_invariants<K: View, V: View>(\n        old_set: Set<(K::V, V::V)>,\n        pair: Pair<K, V>,\n    )\n        requires\n            spec_key_unique_pairs_set(old_set),\n            !spec_pair_set_to_map(old_set).dom().contains(pair@.0),\n            spec_set_pair_view_generated::<K, V>(old_set),\n        ensures\n            spec_set_pair_view_generated::<K, V>(old_set.insert(pair@)),\n            spec_key_unique_pairs_set(old_set.insert(pair@)),\n            spec_pair_set_to_map(old_set.insert(pair@)).dom().contains(pair@.0),\n            spec_pair_set_to_map(old_set.insert(pair@))[pair@.0] == pair@.1,\n            forall|k: K::V| spec_pair_set_to_map(old_set).dom().contains(k) ==>\n                #[trigger] spec_pair_set_to_map(old_set.insert(pair@)).dom().contains(k),"
+  },
+  {
+    "id": 170,
+    "function": "lemma_ordkeymap_wf_type_axioms",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "674-683",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_ordkeymap_wf_type_axioms<K: StT + Ord, V: StT + Ord>(m: &OrdKeyMap<K, V>)\n        requires m.spec_ordkeymap_wf()\n        ensures\n            spec_pair_key_determines_order::<K, V>(),\n            vstd::laws_cmp::obeys_cmp::<K>(),\n            view_ord_consistent::<K>(),\n            obeys_feq_fulls::<K, V>(),\n            obeys_feq_full::<Pair<K, V>>(),\n            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),\n            view_ord_consistent::<Pair<K, V>>(),"
+  },
+  {
+    "id": 171,
+    "function": "lemma_values_preserved_from_subset",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "689-699",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_values_preserved_from_subset<KV, VV>(\n        sub: Set<(KV, VV)>,\n        sup: Set<(KV, VV)>,\n    )\n        requires\n            sub.subset_of(sup),\n            spec_key_unique_pairs_set(sub),\n            spec_key_unique_pairs_set(sup),\n        ensures\n            forall|k: KV| #[trigger] spec_pair_set_to_map(sub).contains_key(k) ==>\n                spec_pair_set_to_map(sub)[k] == spec_pair_set_to_map(sup)[k]"
+  },
+  {
+    "id": 172,
+    "function": "lemma_loop_init_sorted",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "714-727",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_loop_init_sorted<K: View, V: View>(\n        tree: Set<(K::V, V::V)>,\n        sorted: Seq<(K::V, V::V)>,\n    )\n        requires\n            spec_key_unique_pairs_set(tree),\n            forall|v: (K::V, V::V)| tree.contains(v) <==> #[trigger] sorted.contains(v),\n            sorted.len() == tree.len(),\n        ensures\n            forall|ii: int, jj: int|\n                0 <= ii < sorted.len() && 0 <= jj < sorted.len() && ii != jj\n                ==> (#[trigger] sorted[ii]).0 != (#[trigger] sorted[jj]).0,\n            spec_key_unique_pairs_set::<K::V, V::V>(Set::empty()),\n            spec_set_pair_view_generated::<K, V>(Set::empty()),"
+  },
+  {
+    "id": 173,
+    "function": "new",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "742-753",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (empty: Self)\n            requires\n                obeys_feq_fulls::<K, V>(),\n                obeys_feq_full::<Pair<K, V>>(),\n                vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),\n                view_ord_consistent::<Pair<K, V>>(),\n                spec_pair_key_determines_order::<K, V>(),\n                vstd::laws_cmp::obeys_cmp::<K>(),\n                view_ord_consistent::<K>(),\n            ensures\n                empty.spec_ordkeymap_wf(),\n                empty@ == Map::<K::V, V::V>::empty();"
+  },
+  {
+    "id": 174,
+    "function": "size",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "756-758",
+    "spec_strength": "unknown",
+    "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_ordkeymap_wf(),\n            ensures count == self@.dom().len();"
+  },
+  {
+    "id": 175,
+    "function": "is_empty",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "761-763",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (is_empty: bool)\n            requires self.spec_ordkeymap_wf(),\n            ensures is_empty == self@.dom().is_empty();"
+  },
+  {
+    "id": 176,
+    "function": "find",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "766-772",
+    "spec_strength": "unknown",
+    "snippet": "        fn find(&self, k: &K) -> (found: Option<V>)\n            requires self.spec_ordkeymap_wf(), obeys_view_eq::<K>()\n            ensures\n                match found {\n                    Some(v) => self@.contains_key(k@) && v@ == self@[k@],\n                    None => !self@.contains_key(k@),\n                };"
+  },
+  {
+    "id": 177,
+    "function": "insert",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "775-785",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(&mut self, k: K, v: V)\n            requires\n                old(self).spec_ordkeymap_wf(),\n                obeys_view_eq::<K>(),\n                !old(self)@.contains_key(k@) ==> old(self)@.dom().len() + 1 < usize::MAX as nat,\n            ensures\n                self@.contains_key(k@),\n                self@[k@] == v@,\n                self@.dom() =~= old(self)@.dom().insert(k@),\n                forall|key: K::V| key != k@ && #[trigger] old(self)@.contains_key(key) ==> self@[key] == old(self)@[key],\n                self.spec_ordkeymap_wf();"
+  },
+  {
+    "id": 178,
+    "function": "delete",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "788-795",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(&mut self, k: &K)\n            requires\n                old(self).spec_ordkeymap_wf(),\n                obeys_view_eq::<K>(),\n                obeys_feq_clone::<Pair<K, V>>(),\n            ensures\n                self@ == old(self)@.remove(k@),\n                self.spec_ordkeymap_wf();"
+  },
+  {
+    "id": 179,
+    "function": "split",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "798-814",
+    "spec_strength": "unknown",
+    "snippet": "        fn split(&self, k: &K) -> (parts: (Self, Option<V>, Self))\n            requires\n                self.spec_ordkeymap_wf(),\n            ensures\n                parts.0.spec_ordkeymap_wf(),\n                parts.2.spec_ordkeymap_wf(),\n                parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],\n                parts.1 matches None ==> !self@.contains_key(k@),\n                // Left has all keys < k in the pair-view sense.\n                forall|key: K::V| #[trigger] parts.0@.contains_key(key) ==> self@.contains_key(key) && parts.0@[key] == self@[key],\n                forall|key: K::V| #[trigger] parts.2@.contains_key(key) ==> self@.contains_key(key) && parts.2@[key] == self@[key],\n                // Completeness: every key in self is in left, right, or equals k.\n                forall|key: K::V| self@.contains_key(key) ==>\n                    #[trigger] parts.0@.contains_key(key) || parts.2@.contains_key(key) || key == k@,\n                !parts.0@.contains_key(k@),\n                !parts.2@.contains_key(k@),\n                parts.0@.dom().disjoint(parts.2@.dom());"
+  },
+  {
+    "id": 180,
+    "function": "union",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "817-828",
+    "spec_strength": "unknown",
+    "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_ordkeymap_wf(),\n                other.spec_ordkeymap_wf(),\n                self@.dom().len() + other@.dom().len() < usize::MAX as nat,\n            ensures\n                combined.spec_ordkeymap_wf(),\n                combined@.dom() =~= self@.dom().union(other@.dom()),\n                forall|k: K::V| self@.contains_key(k) && !other@.contains_key(k)\n                    ==> #[trigger] combined@[k] == self@[k],\n                forall|k: K::V| other@.contains_key(k)\n                    ==> #[trigger] combined@[k] == other@[k];"
+  },
+  {
+    "id": 181,
+    "function": "intersect",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "831-838",
+    "spec_strength": "unknown",
+    "snippet": "        fn intersect(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_ordkeymap_wf(),\n                other.spec_ordkeymap_wf(),\n            ensures\n                common.spec_ordkeymap_wf(),\n                common@.dom() =~= self@.dom().intersect(other@.dom()),\n                forall|k: K::V| #[trigger] common@.contains_key(k) ==> common@[k] == self@[k];"
+  },
+  {
+    "id": 182,
+    "function": "union_with",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "841-858",
+    "spec_strength": "unknown",
+    "snippet": "        fn union_with<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: &F) -> (combined: Self)\n            requires\n                self.spec_ordkeymap_wf(),\n                other.spec_ordkeymap_wf(),\n                forall|v1: &V, v2: &V| #[trigger] combine.requires((v1, v2)),\n                self@.dom().len() + other@.dom().len() < usize::MAX as nat,\n            ensures\n                combined.spec_ordkeymap_wf(),\n                combined@.dom() =~= self@.dom().union(other@.dom()),\n                forall|k: K::V| self@.contains_key(k) && !other@.contains_key(k)\n                    ==> #[trigger] combined@[k] == self@[k],\n                forall|k: K::V| !self@.contains_key(k) && other@.contains_key(k)\n                    ==> #[trigger] combined@[k] == other@[k],\n                forall|k: K::V| self@.contains_key(k) && other@.contains_key(k)\n                    ==> (exists|v1: V, v2: V, r: V|\n                        v1@ == self@[k] && v2@ == other@[k]\n                        && combine.ensures((&v1, &v2), r)\n                        && #[trigger] combined@[k] == r@);"
+  },
+  {
+    "id": 183,
+    "function": "intersect_with",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "861-873",
+    "spec_strength": "unknown",
+    "snippet": "        fn intersect_with<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: &F) -> (common: Self)\n            requires\n                self.spec_ordkeymap_wf(),\n                other.spec_ordkeymap_wf(),\n                forall|v1: &V, v2: &V| #[trigger] combine.requires((v1, v2)),\n            ensures\n                common.spec_ordkeymap_wf(),\n                common@.dom() =~= self@.dom().intersect(other@.dom()),\n                forall|k: K::V| #[trigger] common@.contains_key(k) ==>\n                    (exists|v1: V, v2: V, r: V|\n                        v1@ == self@[k] && v2@ == other@[k]\n                        && combine.ensures((&v1, &v2), r)\n                        && common@[k] == r@);"
+  },
+  {
+    "id": 184,
+    "function": "difference",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "876-883",
+    "spec_strength": "unknown",
+    "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_ordkeymap_wf(),\n                other.spec_ordkeymap_wf(),\n            ensures\n                remaining.spec_ordkeymap_wf(),\n                remaining@.dom() =~= self@.dom().difference(other@.dom()),\n                forall|k: K::V| #[trigger] remaining@.contains_key(k) ==> remaining@[k] == self@[k];"
+  },
+  {
+    "id": 185,
+    "function": "next_key",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "886-897",
+    "spec_strength": "unknown",
+    "snippet": "        fn next_key(&self, k: &K) -> (successor: Option<K>)\n            where K: TotalOrder\n            requires self.spec_ordkeymap_wf()\n            ensures\n                successor matches Some(nk) ==> self@.dom().contains(nk@),\n                successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,\n                successor matches Some(v) ==> forall|t: K| #![trigger t@]\n                    self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@\n                    ==> TotalOrder::le(v, t),\n                successor is None ==> forall|t: K| #![trigger t@]\n                    self@.dom().contains(t@)\n                    ==> !(TotalOrder::le(*k, t) && t@ != k@);"
+  },
+  {
+    "id": 186,
+    "function": "prev_key",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "900-908",
+    "spec_strength": "unknown",
+    "snippet": "        fn prev_key(&self, k: &K) -> (predecessor: Option<K>)\n            where K: TotalOrder\n            requires self.spec_ordkeymap_wf()\n            ensures\n                predecessor matches Some(pk) ==> self@.dom().contains(pk@),\n                predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,\n                predecessor matches Some(v) ==> forall|t: K| #![trigger t@]\n                    self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@\n                    ==> TotalOrder::le(t, v);"
+  },
+  {
+    "id": 187,
+    "function": "rank_key",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "911-920",
+    "spec_strength": "unknown",
+    "snippet": "        fn rank_key(&self, k: &K) -> (rank: usize)\n            where K: TotalOrder\n            requires\n                self.spec_ordkeymap_wf(),\n                obeys_view_eq::<K>(),\n            ensures\n                rank <= self@.dom().len(),\n                rank as int == self@.dom().filter(\n                    |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@\n                ).len();"
+  },
+  {
+    "id": 188,
+    "function": "select_key",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "923-933",
+    "spec_strength": "unknown",
+    "snippet": "        fn select_key(&self, i: usize) -> (selected: Option<K>)\n            where K: TotalOrder\n            requires\n                self.spec_ordkeymap_wf(),\n                obeys_view_eq::<K>(),\n            ensures\n                i >= self@.dom().len() ==> selected matches None,\n                selected matches Some(k) ==> self@.dom().contains(k@),\n                selected matches Some(v) ==> self@.dom().filter(\n                    |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@\n                ).len() == i as int;"
+  },
+  {
+    "id": 189,
+    "function": "first_key",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "936-942",
+    "spec_strength": "unknown",
+    "snippet": "        fn first_key(&self) -> (first: Option<K>)\n            where K: TotalOrder\n            requires self.spec_ordkeymap_wf()\n            ensures\n                self@.dom().len() == 0 <==> first matches None,\n                first matches Some(k) ==> self@.dom().contains(k@),\n                first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);"
+  },
+  {
+    "id": 190,
+    "function": "last_key",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "945-951",
+    "spec_strength": "unknown",
+    "snippet": "        fn last_key(&self) -> (last: Option<K>)\n            where K: TotalOrder\n            requires self.spec_ordkeymap_wf()\n            ensures\n                self@.dom().len() == 0 <==> last matches None,\n                last matches Some(k) ==> self@.dom().contains(k@),\n                last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);"
+  },
+  {
+    "id": 191,
+    "function": "get_key_range",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "954-959",
+    "spec_strength": "unknown",
+    "snippet": "        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)\n            requires self.spec_ordkeymap_wf()\n            ensures\n                range@.dom().subset_of(self@.dom()),\n                forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],\n                range.spec_ordkeymap_wf();"
+  },
+  {
+    "id": 192,
+    "function": "split_rank_key",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "962-971",
+    "spec_strength": "unknown",
+    "snippet": "        fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))\n            requires\n                old(self).spec_ordkeymap_wf(),\n            ensures\n                split.0@.dom().subset_of(old(self)@.dom()),\n                split.1@.dom().subset_of(old(self)@.dom()),\n                split.0@.dom().disjoint(split.1@.dom()),\n                forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),\n                split.0.spec_ordkeymap_wf(),\n                split.1.spec_ordkeymap_wf();"
+  },
+  {
+    "id": 193,
+    "function": "collect",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "974-977",
+    "spec_strength": "unknown",
+    "snippet": "        fn collect(&self) -> (entries: Vec<Pair<K, V>>)\n            requires self.spec_ordkeymap_wf(),\n            ensures\n                entries@.len() == self@.dom().len();"
+  },
+  {
+    "id": 194,
+    "function": "filter",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "980-995",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter<F: Fn(&K, &V) -> bool>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_ordkeymap_wf(),\n                forall|k: &K, v: &V| #[trigger] f.requires((k, v)),\n                forall|k: K, v: V, keep: bool|\n                    f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),\n            ensures\n                filtered@.dom().subset_of(self@.dom()),\n                forall|k: K::V| #[trigger] filtered@.contains_key(k) ==> filtered@[k] == self@[k],\n                forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])\n                    ==> #[trigger] filtered@.dom().contains(k),\n                filtered.spec_ordkeymap_wf();"
+  },
+  {
+    "id": 195,
+    "function": "map_values",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "998-1005",
+    "spec_strength": "unknown",
+    "snippet": "        fn map_values<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)\n            requires\n                self.spec_ordkeymap_wf(),\n                forall|k: &K, v: &V| #[trigger] f.requires((k, v)),\n                obeys_feq_clone::<Pair<K, V>>(),\n            ensures\n                mapped@.dom() =~= self@.dom(),\n                mapped.spec_ordkeymap_wf();"
+  },
+  {
+    "id": 196,
+    "function": "reduce",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "1008-1011",
+    "spec_strength": "unknown",
+    "snippet": "        fn reduce<F: Fn(&V, &V) -> V>(&self, f: F, id: &V) -> (reduced: V)\n            requires\n                self.spec_ordkeymap_wf(),\n                forall|v1: &V, v2: &V| #[trigger] f.requires((v1, v2));"
+  },
+  {
+    "id": 197,
+    "function": "domain",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "1014-1016",
+    "spec_strength": "unknown",
+    "snippet": "        fn domain(&self) -> (keys: ArraySetStEph<K>)\n            requires self.spec_ordkeymap_wf()\n            ensures keys@ =~= self@.dom(), keys.spec_arraysetsteph_wf();"
+  },
+  {
+    "id": 198,
+    "function": "tabulate",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "1019-1037",
+    "spec_strength": "unknown",
+    "snippet": "        fn tabulate<F: Fn(&K) -> V>(keys: &ArraySetStEph<K>, f: &F) -> (table: Self)\n            requires\n                keys.spec_arraysetsteph_wf(),\n                forall|k: &K| #[trigger] f.requires((k,)),\n                obeys_feq_fulls::<K, V>(),\n                obeys_feq_full::<Pair<K, V>>(),\n                keys@.len() < usize::MAX as nat,\n                vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),\n                view_ord_consistent::<Pair<K, V>>(),\n                spec_pair_key_determines_order::<K, V>(),\n                vstd::laws_cmp::obeys_cmp::<K>(),\n                view_ord_consistent::<K>(),\n            ensures\n                table.spec_ordkeymap_wf(),\n                table@.dom() =~= keys@,\n                forall|k: K::V| #[trigger] table@.contains_key(k) ==>\n                    (exists|key_arg: K, result: V|\n                        key_arg@ == k && f.ensures((&key_arg,), result)\n                        && table@[k] == result@);"
+  },
+  {
+    "id": 199,
+    "function": "restrict",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "1040-1045",
+    "spec_strength": "unknown",
+    "snippet": "        fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)\n            requires self.spec_ordkeymap_wf(), keys.spec_arraysetsteph_wf()\n            ensures\n                restricted.spec_ordkeymap_wf(),\n                restricted@.dom() =~= self@.dom().intersect(keys@),\n                forall|k: K::V| #[trigger] restricted@.contains_key(k) ==> restricted@[k] == self@[k];"
+  },
+  {
+    "id": 200,
+    "function": "subtract",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "1048-1053",
+    "spec_strength": "unknown",
+    "snippet": "        fn subtract(&self, keys: &ArraySetStEph<K>) -> (remaining: Self)\n            requires self.spec_ordkeymap_wf(), keys.spec_arraysetsteph_wf()\n            ensures\n                remaining.spec_ordkeymap_wf(),\n                remaining@.dom() =~= self@.dom().difference(keys@),\n                forall|k: K::V| #[trigger] remaining@.contains_key(k) ==> remaining@[k] == self@[k];"
+  },
+  {
+    "id": 201,
+    "function": "iter",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "1055-1059",
+    "spec_strength": "unknown",
+    "snippet": "        fn iter(&self) -> (it: std::vec::IntoIter<Pair<K, V>>)\n            requires self.spec_ordkeymap_wf()\n            ensures\n                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),\n                IteratorSpec::decrease(&it) is Some;"
+  },
+  {
+    "id": 202,
+    "function": "ordkeymap_find",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "1066-1086",
+    "spec_strength": "unknown",
+    "snippet": "    fn ordkeymap_find<K: StT + Ord, V: StT + Ord>(\n        tree: &ParamBST<Pair<K, V>>,\n        k: &K,\n    ) -> (found: Option<V>)\n        requires\n            tree.spec_bstparasteph_wf(),\n            spec_key_unique_pairs_set(tree@),\n            spec_set_pair_view_generated::<K, V>(tree@),\n            view_ord_consistent::<K>(),\n            obeys_feq_fulls::<K, V>(),\n            vstd::laws_cmp::obeys_cmp::<K>(),\n            spec_pair_key_determines_order::<K, V>(),\n            view_ord_consistent::<Pair<K, V>>(),\n            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),\n        ensures\n            match found {\n                Some(v) => spec_pair_set_to_map(tree@).contains_key(k@)\n                    && v@ == spec_pair_set_to_map(tree@)[k@],\n                None => !spec_pair_set_to_map(tree@).contains_key(k@),\n            }\n        decreases tree@.len(),"
+  },
+  {
+    "id": 203,
+    "function": "ordkeymap_split",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "1165-1199",
+    "spec_strength": "unknown",
+    "snippet": "    fn ordkeymap_split<K: StT + Ord, V: StT + Ord>(\n        tree: &ParamBST<Pair<K, V>>,\n        k: &K,\n    ) -> (parts: (ParamBST<Pair<K, V>>, Option<V>, ParamBST<Pair<K, V>>))\n        requires\n            tree.spec_bstparasteph_wf(),\n            spec_key_unique_pairs_set(tree@),\n            spec_set_pair_view_generated::<K, V>(tree@),\n            view_ord_consistent::<K>(),\n            obeys_feq_fulls::<K, V>(),\n            vstd::laws_cmp::obeys_cmp::<K>(),\n            spec_pair_key_determines_order::<K, V>(),\n            view_ord_consistent::<Pair<K, V>>(),\n            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),\n            obeys_feq_full::<Pair<K, V>>(),\n        ensures\n            parts.1 matches Some(v) ==> spec_pair_set_to_map(tree@).contains_key(k@) && v@ == spec_pair_set_to_map(tree@)[k@],\n            parts.1 matches None ==> !spec_pair_set_to_map(tree@).contains_key(k@),\n            forall|p: Pair<K, V>| (#[trigger] parts.0@.contains(p@)) ==> p.0.cmp_spec(k) == Less,\n            forall|p: Pair<K, V>| (#[trigger] parts.2@.contains(p@)) ==> p.0.cmp_spec(k) == Greater,\n            parts.0@.subset_of(tree@),\n            parts.2@.subset_of(tree@),\n            parts.0@.disjoint(parts.2@),\n            !spec_pair_set_to_map(parts.0@).dom().contains(k@),\n            !spec_pair_set_to_map(parts.2@).dom().contains(k@),\n            forall|kv: <K as View>::V, vv: <V as View>::V| #[trigger] tree@.contains((kv, vv))\n                ==> parts.0@.contains((kv, vv)) || parts.2@.contains((kv, vv)) || kv == k@,\n            spec_key_unique_pairs_set(parts.0@),\n            spec_key_unique_pairs_set(parts.2@),\n            spec_set_pair_view_generated::<K, V>(parts.0@),\n            spec_set_pair_view_generated::<K, V>(parts.2@),\n            parts.0.spec_bstparasteph_wf(),\n            parts.2.spec_bstparasteph_wf(),\n            parts.0@.len() + parts.2@.len() <= tree@.len(),\n        decreases tree@.len(),"
+  },
+  {
+    "id": 204,
+    "function": "ordkeymap_next",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "1322-1345",
+    "spec_strength": "unknown",
+    "snippet": "    fn ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord>(\n        tree: &ParamBST<Pair<K, V>>,\n        k: &K,\n    ) -> (successor: Option<K>)\n        requires\n            tree.spec_bstparasteph_wf(),\n            spec_key_unique_pairs_set(tree@),\n            spec_set_pair_view_generated::<K, V>(tree@),\n            view_ord_consistent::<K>(),\n            obeys_feq_fulls::<K, V>(),\n            vstd::laws_cmp::obeys_cmp::<K>(),\n            spec_pair_key_determines_order::<K, V>(),\n            view_ord_consistent::<Pair<K, V>>(),\n            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),\n        ensures\n            successor matches Some(nk) ==> spec_pair_set_to_map(tree@).dom().contains(nk@),\n            successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,\n            successor matches Some(v) ==> forall|t: K| #![trigger t@]\n                spec_pair_set_to_map(tree@).dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@\n                ==> TotalOrder::le(v, t),\n            successor is None ==> forall|t: K| #![trigger t@]\n                spec_pair_set_to_map(tree@).dom().contains(t@)\n                ==> !(TotalOrder::le(*k, t) && t@ != k@),\n        decreases tree@.len(),"
+  },
+  {
+    "id": 205,
+    "function": "ordkeymap_prev",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "1575-1598",
+    "spec_strength": "unknown",
+    "snippet": "    fn ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord>(\n        tree: &ParamBST<Pair<K, V>>,\n        k: &K,\n    ) -> (predecessor: Option<K>)\n        requires\n            tree.spec_bstparasteph_wf(),\n            spec_key_unique_pairs_set(tree@),\n            spec_set_pair_view_generated::<K, V>(tree@),\n            view_ord_consistent::<K>(),\n            obeys_feq_fulls::<K, V>(),\n            vstd::laws_cmp::obeys_cmp::<K>(),\n            spec_pair_key_determines_order::<K, V>(),\n            view_ord_consistent::<Pair<K, V>>(),\n            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),\n        ensures\n            predecessor matches Some(pk) ==> spec_pair_set_to_map(tree@).dom().contains(pk@),\n            predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,\n            predecessor matches Some(v) ==> forall|t: K| #![trigger t@]\n                spec_pair_set_to_map(tree@).dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@\n                ==> TotalOrder::le(t, v),\n            predecessor is None ==> forall|t: K| #![trigger t@]\n                spec_pair_set_to_map(tree@).dom().contains(t@)\n                ==> !(TotalOrder::le(t, *k) && t@ != k@),\n        decreases tree@.len(),"
+  },
+  {
+    "id": 206,
+    "function": "ordkeymap_rank",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "1837-1857",
+    "spec_strength": "unknown",
+    "snippet": "    fn ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord>(\n        tree: &ParamBST<Pair<K, V>>,\n        k: &K,\n    ) -> (rank: usize)\n        requires\n            tree.spec_bstparasteph_wf(),\n            spec_key_unique_pairs_set(tree@),\n            spec_set_pair_view_generated::<K, V>(tree@),\n            view_ord_consistent::<K>(),\n            obeys_feq_fulls::<K, V>(),\n            obeys_view_eq::<K>(),\n            vstd::laws_cmp::obeys_cmp::<K>(),\n            spec_pair_key_determines_order::<K, V>(),\n            view_ord_consistent::<Pair<K, V>>(),\n            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),\n        ensures\n            rank <= spec_pair_set_to_map(tree@).dom().len(),\n            rank as int == spec_pair_set_to_map(tree@).dom().filter(\n                |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@\n            ).len(),\n        decreases tree@.len(),"
+  },
+  {
+    "id": 207,
+    "function": "ordkeymap_select",
+    "file": "Chap41/OrdKeyMap.rs",
+    "lines": "2067-2088",
+    "spec_strength": "unknown",
+    "snippet": "    fn ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord>(\n        tree: &ParamBST<Pair<K, V>>,\n        i: usize,\n    ) -> (selected: Option<K>)\n        requires\n            tree.spec_bstparasteph_wf(),\n            spec_key_unique_pairs_set(tree@),\n            spec_set_pair_view_generated::<K, V>(tree@),\n            view_ord_consistent::<K>(),\n            obeys_feq_fulls::<K, V>(),\n            obeys_view_eq::<K>(),\n            vstd::laws_cmp::obeys_cmp::<K>(),\n            spec_pair_key_determines_order::<K, V>(),\n            view_ord_consistent::<Pair<K, V>>(),\n            vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),\n        ensures\n            i >= spec_pair_set_to_map(tree@).dom().len() ==> selected matches None,\n            selected matches Some(k) ==> spec_pair_set_to_map(tree@).dom().contains(k@),\n            selected matches Some(v) ==> spec_pair_set_to_map(tree@).dom().filter(\n                |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@\n            ).len() == i as int,\n        decreases tree@.len(),"
   }
 ]

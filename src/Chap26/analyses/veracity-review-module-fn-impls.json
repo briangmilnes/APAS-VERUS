@@ -3,424 +3,480 @@
     "id": 1,
     "function": "lemma_fold_left_step",
     "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "84-88",
+    "lines": "78-82",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_step(s: Seq<N>, acc: N)\n        requires s.len() > 0,\n        ensures s.fold_left(acc, spec_max_fn())\n            == s.subrange(1, s.len() as int).fold_left(\n                spec_max_fn()(acc, s[0]), spec_max_fn()),"
+    "snippet": "    proof fn lemma_fold_left_step(s: Seq<usize>, acc: usize)\n        requires s.len() > 0,\n        ensures s.fold_left(acc, spec_max_fn())\n            == s.subrange(1, s.len() as int).fold_left(\n                spec_max_fn()(acc, s[0]), spec_max_fn()),"
   },
   {
     "id": 2,
     "function": "lemma_max_fold_left_bound",
     "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "97-102",
+    "lines": "92-97",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_max_fold_left_bound(s: Seq<N>, acc: N)\n        ensures\n            s.fold_left(acc, spec_max_fn()) >= acc,\n            forall|i: int| #![trigger s[i]] 0 <= i < s.len()\n                ==> s[i] <= s.fold_left(acc, spec_max_fn()),\n        decreases s.len(),"
+    "snippet": "    proof fn lemma_max_fold_left_bound(s: Seq<usize>, acc: usize)\n        ensures\n            s.fold_left(acc, spec_max_fn()) >= acc,\n            forall|i: int| #![trigger s[i]] 0 <= i < s.len()\n                ==> s[i] <= s.fold_left(acc, spec_max_fn()),\n        decreases s.len(),"
   },
   {
     "id": 3,
     "function": "lemma_max_fold_left_achievable",
     "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "122-127",
+    "lines": "119-124",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_max_fold_left_achievable(s: Seq<N>, acc: N)\n        ensures\n            s.fold_left(acc, spec_max_fn()) == acc\n            || exists|i: int| #![trigger s[i]] 0 <= i < s.len()\n                && s[i] == s.fold_left(acc, spec_max_fn()),\n        decreases s.len(),"
+    "snippet": "    proof fn lemma_max_fold_left_achievable(s: Seq<usize>, acc: usize)\n        ensures\n            s.fold_left(acc, spec_max_fn()) == acc\n            || exists|i: int| #![trigger s[i]] 0 <= i < s.len()\n                && s[i] == s.fold_left(acc, spec_max_fn()),\n        decreases s.len(),"
   },
   {
     "id": 4,
     "function": "max_element_parallel",
     "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "159-163",
+    "lines": "157-161",
     "spec_strength": "unknown",
-    "snippet": "        fn max_element_parallel(a: &ArraySeqMtPerS<N>) -> (max: Option<N>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                a.spec_len() == 0 ==> max is None,\n                a.spec_len() > 0 ==> {"
+    "snippet": "        fn max_element_parallel(a: &ArraySeqMtPerS<usize>) -> (max: Option<usize>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                a.spec_len() == 0 ==> max is None,\n                a.spec_len() > 0 ==> {"
   },
   {
     "id": 5,
     "function": "sum_parallel",
     "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "175-181",
+    "lines": "173-179",
     "spec_strength": "unknown",
-    "snippet": "        fn sum_parallel(a: &ArraySeqMtPerS<N>) -> (total: N)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_sum_fn(), 0),\n            ensures\n                total == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_sum_fn(), 0);"
+    "snippet": "        fn sum_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_sum_fn(), 0),\n            ensures\n                total == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_sum_fn(), 0);"
   },
   {
     "id": 6,
     "function": "product_parallel",
     "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "187-193",
+    "lines": "185-191",
     "spec_strength": "unknown",
-    "snippet": "        fn product_parallel(a: &ArraySeqMtPerS<N>) -> (total: N)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_product_fn(), 1),\n            ensures\n                total == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_product_fn(), 1);"
+    "snippet": "        fn product_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_product_fn(), 1),\n            ensures\n                total == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_product_fn(), 1);"
   },
   {
     "id": 7,
     "function": "any_parallel",
     "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "199-205",
+    "lines": "197-203",
     "spec_strength": "unknown",
-    "snippet": "        fn any_parallel(a: &ArraySeqMtPerS<B>) -> (found: B)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_or_fn(), false),\n            ensures\n                found == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_or_fn(), false);"
+    "snippet": "        fn any_parallel(a: &ArraySeqMtPerS<bool>) -> (found: bool)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_or_fn(), false),\n            ensures\n                found == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_or_fn(), false);"
   },
   {
     "id": 8,
     "function": "all_parallel",
     "file": "Chap26/DivConReduceMtPer.rs",
-    "lines": "211-217",
+    "lines": "209-215",
     "spec_strength": "unknown",
-    "snippet": "        fn all_parallel(a: &ArraySeqMtPerS<B>) -> (all_true: B)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_and_fn(), true),\n            ensures\n                all_true == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true);"
+    "snippet": "        fn all_parallel(a: &ArraySeqMtPerS<bool>) -> (all_true: bool)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_and_fn(), true),\n            ensures\n                all_true == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true);"
   },
   {
     "id": 9,
-    "function": "max_element",
-    "file": "Chap26/DivConReduceStPer.rs",
-    "lines": "63-67",
+    "function": "call_reduce_max",
+    "file": "Chap26/DivConReduceMtPer.rs",
+    "lines": "224-227",
     "spec_strength": "unknown",
-    "snippet": "        fn max_element(a: &ArraySeqStPerS<N>) -> (max: Option<N>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                a.spec_len() == 0 ==> max is None,\n                a.spec_len() > 0 ==> {"
+    "snippet": "    fn call_reduce_max(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)\n        requires spec_monoid(spec_max_fn(), 0usize)\n        ensures reduced == spec_iterate(\n            Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_max_fn(), 0usize)"
   },
   {
     "id": 10,
-    "function": "sum",
-    "file": "Chap26/DivConReduceStPer.rs",
-    "lines": "79-85",
+    "function": "call_reduce_sum",
+    "file": "Chap26/DivConReduceMtPer.rs",
+    "lines": "236-239",
     "spec_strength": "unknown",
-    "snippet": "        fn sum(a: &ArraySeqStPerS<N>) -> (total: N)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_sum_fn(), 0),\n            ensures\n                total == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_sum_fn(), 0);"
+    "snippet": "    fn call_reduce_sum(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)\n        requires spec_monoid(spec_sum_fn(), 0usize)\n        ensures reduced == spec_iterate(\n            Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_sum_fn(), 0usize)"
   },
   {
     "id": 11,
-    "function": "product",
-    "file": "Chap26/DivConReduceStPer.rs",
-    "lines": "91-97",
+    "function": "call_reduce_product",
+    "file": "Chap26/DivConReduceMtPer.rs",
+    "lines": "248-251",
     "spec_strength": "unknown",
-    "snippet": "        fn product(a: &ArraySeqStPerS<N>) -> (total: N)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_product_fn(), 1),\n            ensures\n                total == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_product_fn(), 1);"
+    "snippet": "    fn call_reduce_product(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)\n        requires spec_monoid(spec_product_fn(), 1usize)\n        ensures reduced == spec_iterate(\n            Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_product_fn(), 1usize)"
   },
   {
     "id": 12,
-    "function": "any",
-    "file": "Chap26/DivConReduceStPer.rs",
-    "lines": "103-109",
+    "function": "call_reduce_or",
+    "file": "Chap26/DivConReduceMtPer.rs",
+    "lines": "260-263",
     "spec_strength": "unknown",
-    "snippet": "        fn any(a: &ArraySeqStPerS<B>) -> (found: B)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_or_fn(), false),\n            ensures\n                found == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_or_fn(), false);"
+    "snippet": "    fn call_reduce_or(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)\n        requires spec_monoid(spec_or_fn(), false)\n        ensures reduced == spec_iterate(\n            Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_or_fn(), false)"
   },
   {
     "id": 13,
-    "function": "all",
-    "file": "Chap26/DivConReduceStPer.rs",
-    "lines": "115-121",
+    "function": "call_reduce_and",
+    "file": "Chap26/DivConReduceMtPer.rs",
+    "lines": "272-275",
     "spec_strength": "unknown",
-    "snippet": "        fn all(a: &ArraySeqStPerS<B>) -> (all_true: B)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_and_fn(), true),\n            ensures\n                all_true == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true);"
+    "snippet": "    fn call_reduce_and(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)\n        requires spec_monoid(spec_and_fn(), true)\n        ensures reduced == spec_iterate(\n            Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true)"
   },
   {
     "id": 14,
+    "function": "max_element",
+    "file": "Chap26/DivConReduceStPer.rs",
+    "lines": "71-75",
+    "spec_strength": "unknown",
+    "snippet": "        fn max_element(a: &ArraySeqStPerS<usize>) -> (max: Option<usize>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                a.spec_len() == 0 ==> max is None,\n                a.spec_len() > 0 ==> {"
+  },
+  {
+    "id": 15,
+    "function": "sum",
+    "file": "Chap26/DivConReduceStPer.rs",
+    "lines": "87-93",
+    "spec_strength": "unknown",
+    "snippet": "        fn sum(a: &ArraySeqStPerS<usize>) -> (total: usize)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_sum_fn(), 0),\n            ensures\n                total == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_sum_fn(), 0);"
+  },
+  {
+    "id": 16,
+    "function": "product",
+    "file": "Chap26/DivConReduceStPer.rs",
+    "lines": "99-105",
+    "spec_strength": "unknown",
+    "snippet": "        fn product(a: &ArraySeqStPerS<usize>) -> (total: usize)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_product_fn(), 1),\n            ensures\n                total == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_product_fn(), 1);"
+  },
+  {
+    "id": 17,
+    "function": "any",
+    "file": "Chap26/DivConReduceStPer.rs",
+    "lines": "111-117",
+    "spec_strength": "unknown",
+    "snippet": "        fn any(a: &ArraySeqStPerS<bool>) -> (found: bool)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_or_fn(), false),\n            ensures\n                found == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_or_fn(), false);"
+  },
+  {
+    "id": 18,
+    "function": "all",
+    "file": "Chap26/DivConReduceStPer.rs",
+    "lines": "123-129",
+    "spec_strength": "unknown",
+    "snippet": "        fn all(a: &ArraySeqStPerS<bool>) -> (all_true: bool)\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_and_fn(), true),\n            ensures\n                all_true == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true);"
+  },
+  {
+    "id": 19,
+    "function": "distance",
+    "file": "Chap26/ETSPMtEph.rs",
+    "lines": "337",
+    "spec_strength": "",
+    "snippet": "        fn distance(&self, other: &Point) -> (d: f64);"
+  },
+  {
+    "id": 20,
+    "function": "lemma_next_edge_from_eq",
+    "file": "Chap26/ETSPMtEph.rs",
+    "lines": "169-174",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_next_edge_from_eq(tour: Seq<Edge>, i: int)\n        requires\n            tour.len() > 0,\n            0 <= i < tour.len(),\n        ensures\n            spec_next_edge_from(tour, i) == tour[((i + 1) % (tour.len() as int))].from,"
+  },
+  {
+    "id": 21,
     "function": "lemma_point_in_seq_transitive",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "143-149",
+    "lines": "180-186",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_point_in_seq_transitive(p: Point, sub: Seq<Point>, sup: Seq<Point>)\n        requires\n            spec_point_in_seq(p, sub),\n            forall|i: int| #![trigger sub[i]] 0 <= i < sub.len() ==>\n                spec_point_in_seq(sub[i], sup),\n        ensures\n            spec_point_in_seq(p, sup),"
   },
   {
-    "id": 15,
+    "id": 22,
     "function": "lemma_edge_valid_transitive",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "159-171",
+    "lines": "195-207",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_edge_valid_transitive(\n        edge: Edge,\n        sub_points: Seq<Point>,\n        points: Seq<Point>,\n    )\n        requires\n            spec_point_in_seq(edge.from, sub_points),\n            spec_point_in_seq(edge.to, sub_points),\n            forall|i: int| #![trigger sub_points[i]] 0 <= i < sub_points.len() ==>\n                spec_point_in_seq(sub_points[i], points),\n        ensures\n            spec_point_in_seq(edge.from, points),\n            spec_point_in_seq(edge.to, points),"
   },
   {
-    "id": 16,
+    "id": 23,
     "function": "lemma_mod_successor",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "178-180",
+    "lines": "214-216",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_mod_successor(a: int, n: int)\n        requires n > 0,\n        ensures ((a % n) + 1) % n == (a + 1) % n,"
   },
   {
-    "id": 17,
+    "id": 24,
     "function": "lemma_combined_cycle",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "188-212",
+    "lines": "225-249",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_combined_cycle(\n        combined: Seq<Edge>, lt: Seq<Edge>, rt: Seq<Edge>,\n        ln_i: int, rn_i: int, best_li: int, best_ri: int,\n        el_from: Point, el_to: Point, er_from: Point, er_to: Point,\n    )\n        requires\n            combined.len() == ln_i + rn_i,\n            ln_i >= 2, rn_i >= 2,\n            0 <= best_li < ln_i,\n            0 <= best_ri < rn_i,\n            lt.len() == ln_i, rt.len() == rn_i,\n            spec_edges_form_cycle(lt),\n            spec_edges_form_cycle(rt),\n            el_from == lt[best_li].from,\n            el_to == lt[best_li].to,\n            er_from == rt[best_ri].from,\n            er_to == rt[best_ri].to,\n            forall|k: int| #![trigger combined[k]] 0 <= k < ln_i - 1 ==>\n                combined[k] == lt[((best_li + 1 + k) % ln_i)],\n            combined[ln_i - 1] == (Edge { from: el_from, to: er_to }),\n            forall|m: int| #![trigger combined[(ln_i + m)]] 0 <= m < rn_i - 1 ==>\n                combined[(ln_i + m)] == rt[((best_ri + 1 + m) % rn_i)],\n            combined[ln_i + rn_i - 1] == (Edge { from: er_from, to: el_to }),\n        ensures\n            spec_edges_form_cycle(combined),"
   },
   {
-    "id": 18,
+    "id": 25,
     "function": "etsp_parallel",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "322-326",
+    "lines": "328-332",
     "spec_strength": "unknown",
     "snippet": "        fn etsp_parallel(points: &Vec<Point>) -> (tour: Vec<Edge>)\n            requires\n                points@.len() >= 2,\n                points@.len() < usize::MAX / 2,\n            ensures spec_etsp(tour@, points@);"
   },
   {
-    "id": 19,
+    "id": 26,
     "function": "etsp_parallel_inner",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "341-346",
+    "lines": "349-354",
     "spec_strength": "unknown",
     "snippet": "    fn etsp_parallel_inner(points: &Vec<Point>) -> (tour: Vec<Edge>)\n        requires\n            points@.len() >= 2,\n            points@.len() < usize::MAX / 2,\n        ensures spec_etsp(tour@, points@),\n        decreases points@.len(),"
   },
   {
-    "id": 20,
+    "id": 27,
     "function": "sort_and_split",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "527-538",
+    "lines": "530-541",
     "spec_strength": "unknown",
     "snippet": "    pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))\n        requires points@.len() >= 4,\n        ensures\n            halves.0@.len() >= 2,\n            halves.1@.len() >= 2,\n            halves.0@.len() + halves.1@.len() == points@.len(),\n            halves.0@.len() < points@.len(),\n            halves.1@.len() < points@.len(),\n            forall|i: int| #![trigger halves.0@[i]] 0 <= i < halves.0@.len() ==>\n                spec_point_in_seq(halves.0@[i], points@),\n            forall|i: int| #![trigger halves.1@[i]] 0 <= i < halves.1@.len() ==>\n                spec_point_in_seq(halves.1@[i], points@),"
   },
   {
-    "id": 21,
+    "id": 28,
     "function": "find_best_swap",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "590-596",
+    "lines": "591-597",
     "spec_strength": "unknown",
     "snippet": "    pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))\n        requires\n            left_tour@.len() >= 2,\n            right_tour@.len() >= 2,\n        ensures\n            (swap_indices.0 as int) < left_tour@.len(),\n            (swap_indices.1 as int) < right_tour@.len(),"
   },
   {
-    "id": 22,
-    "function": "distance",
-    "file": "Chap26/ETSPMtEph.rs",
-    "lines": "619-620",
-    "spec_strength": "unknown",
-    "snippet": "        fn distance(&self, other: &Point) -> (d: f64)\n            ensures d == spec_point_distance(*self, *other);"
-  },
-  {
-    "id": 23,
+    "id": 29,
     "function": "point_distance",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "623-624",
+    "lines": "604-605",
     "spec_strength": "unknown",
     "snippet": "    fn point_distance(a: &Point, b: &Point) -> (d: f64)\n        ensures d == spec_point_distance(*a, *b),"
   },
   {
-    "id": 24,
+    "id": 30,
     "function": "sort_and_split_impl",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "642",
+    "lines": "618",
     "spec_strength": "hole",
     "snippet": "    pub fn sort_and_split_impl(points: &Vec<Point>) -> (Vec<Point>, Vec<Point>) {"
   },
   {
-    "id": 25,
+    "id": 31,
     "function": "find_best_swap_impl",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "668-674",
+    "lines": "645-651",
     "spec_strength": "unknown",
-    "snippet": "    pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))\n        requires\n            left_tour@.len() >= 1,\n            right_tour@.len() >= 1,\n        ensures\n            result.0 < left_tour@.len(),\n            result.1 < right_tour@.len(),"
+    "snippet": "    pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (best_swap: (usize, usize))\n        requires\n            left_tour@.len() >= 1,\n            right_tour@.len() >= 1,\n        ensures\n            best_swap.0 < left_tour@.len(),\n            best_swap.1 < right_tour@.len(),"
   },
   {
-    "id": 26,
+    "id": 32,
     "function": "find_best_swap_par",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "684-694",
+    "lines": "662-672",
     "spec_strength": "unknown",
-    "snippet": "    fn find_best_swap_par(\n        left_tour: Arc<Vec<Edge>>, right_tour: Arc<Vec<Edge>>, lo: usize, hi: usize,\n    ) -> (result: (usize, usize, f64))\n        requires\n            (*left_tour)@.len() >= 1,\n            (*right_tour)@.len() >= 1,\n            hi <= (*left_tour)@.len(),\n        ensures\n            result.0 < (*left_tour)@.len(),\n            result.1 < (*right_tour)@.len(),\n        decreases hi - lo,"
+    "snippet": "    fn find_best_swap_par(\n        left_tour: Arc<Vec<Edge>>, right_tour: Arc<Vec<Edge>>, lo: usize, hi: usize,\n    ) -> (best_swap: (usize, usize, f64))\n        requires\n            (*left_tour)@.len() >= 1,\n            (*right_tour)@.len() >= 1,\n            hi <= (*left_tour)@.len(),\n        ensures\n            best_swap.0 < (*left_tour)@.len(),\n            best_swap.1 < (*right_tour)@.len(),\n        decreases hi - lo,"
   },
   {
-    "id": 27,
+    "id": 33,
+    "function": "lemma_next_edge_from_eq",
+    "file": "Chap26/ETSPStEph.rs",
+    "lines": "140-145",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_next_edge_from_eq(tour: Seq<Edge>, i: int)\n        requires\n            tour.len() > 0,\n            0 <= i < tour.len(),\n        ensures\n            spec_next_edge_from(tour, i) == tour[((i + 1) % (tour.len() as int))].from,"
+  },
+  {
+    "id": 34,
     "function": "lemma_point_in_seq_transitive",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "121-127",
+    "lines": "151-157",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_point_in_seq_transitive(p: Point, sub: Seq<Point>, sup: Seq<Point>)\n        requires\n            spec_point_in_seq(p, sub),\n            forall|i: int| #![trigger sub[i]] 0 <= i < sub.len() ==>\n                spec_point_in_seq(sub[i], sup),\n        ensures\n            spec_point_in_seq(p, sup),"
   },
   {
-    "id": 28,
+    "id": 35,
     "function": "lemma_edge_valid_transitive",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "137-149",
+    "lines": "167-179",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_edge_valid_transitive(\n        edge: Edge,\n        sub_points: Seq<Point>,\n        points: Seq<Point>,\n    )\n        requires\n            spec_point_in_seq(edge.from, sub_points),\n            spec_point_in_seq(edge.to, sub_points),\n            forall|i: int| #![trigger sub_points[i]] 0 <= i < sub_points.len() ==>\n                spec_point_in_seq(sub_points[i], points),\n        ensures\n            spec_point_in_seq(edge.from, points),\n            spec_point_in_seq(edge.to, points),"
   },
   {
-    "id": 29,
+    "id": 36,
     "function": "lemma_combined_cycle",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "156-180",
+    "lines": "186-210",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_combined_cycle(\n        combined: Seq<Edge>, lt: Seq<Edge>, rt: Seq<Edge>,\n        ln_i: int, rn_i: int, best_li: int, best_ri: int,\n        el_from: Point, el_to: Point, er_from: Point, er_to: Point,\n    )\n        requires\n            combined.len() == ln_i + rn_i,\n            ln_i >= 2, rn_i >= 2,\n            0 <= best_li < ln_i,\n            0 <= best_ri < rn_i,\n            lt.len() == ln_i, rt.len() == rn_i,\n            spec_edges_form_cycle(lt),\n            spec_edges_form_cycle(rt),\n            el_from == lt[best_li].from,\n            el_to == lt[best_li].to,\n            er_from == rt[best_ri].from,\n            er_to == rt[best_ri].to,\n            forall|k: int| #![trigger combined[k]] 0 <= k < ln_i - 1 ==>\n                combined[k] == lt[((best_li + 1 + k) % ln_i)],\n            combined[ln_i - 1] == (Edge { from: el_from, to: er_to }),\n            forall|m: int| #![trigger combined[(ln_i + m)]] 0 <= m < rn_i - 1 ==>\n                combined[(ln_i + m)] == rt[((best_ri + 1 + m) % rn_i)],\n            combined[ln_i + rn_i - 1] == (Edge { from: er_from, to: el_to }),\n        ensures\n            spec_edges_form_cycle(combined),"
   },
   {
-    "id": 30,
+    "id": 37,
     "function": "etsp",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "295-299",
+    "lines": "294-298",
     "spec_strength": "unknown",
     "snippet": "        fn etsp(points: &Vec<Point>) -> (tour: Vec<Edge>)\n            requires\n                points@.len() >= 2,\n                points@.len() < usize::MAX / 2,\n            ensures spec_etsp(tour@, points@);"
   },
   {
-    "id": 31,
+    "id": 38,
     "function": "etsp_inner",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "314-319",
+    "lines": "312-317",
     "spec_strength": "unknown",
     "snippet": "    fn etsp_inner(points: &Vec<Point>) -> (tour: Vec<Edge>)\n        requires\n            points@.len() >= 2,\n            points@.len() < usize::MAX / 2,\n        ensures spec_etsp(tour@, points@),\n        decreases points@.len(),"
   },
   {
-    "id": 32,
+    "id": 39,
     "function": "sort_and_split",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "486-497",
+    "lines": "506-517",
     "spec_strength": "unknown",
     "snippet": "    pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))\n        requires points@.len() >= 4,\n        ensures\n            halves.0@.len() >= 2,\n            halves.1@.len() >= 2,\n            halves.0@.len() + halves.1@.len() == points@.len(),\n            halves.0@.len() < points@.len(),\n            halves.1@.len() < points@.len(),\n            forall|i: int| #![trigger halves.0@[i]] 0 <= i < halves.0@.len() ==>\n                spec_point_in_seq(halves.0@[i], points@),\n            forall|i: int| #![trigger halves.1@[i]] 0 <= i < halves.1@.len() ==>\n                spec_point_in_seq(halves.1@[i], points@),"
   },
   {
-    "id": 33,
+    "id": 40,
     "function": "find_best_swap",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "549-555",
+    "lines": "571-577",
     "spec_strength": "unknown",
     "snippet": "    pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))\n        requires\n            left_tour@.len() >= 2,\n            right_tour@.len() >= 2,\n        ensures\n            (swap_indices.0 as int) < left_tour@.len(),\n            (swap_indices.1 as int) < right_tour@.len(),"
   },
   {
-    "id": 34,
+    "id": 41,
     "function": "distance",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "578",
+    "lines": "606",
     "spec_strength": "",
     "snippet": "        fn distance(&self, other: &Point) -> f64;"
   },
   {
-    "id": 35,
+    "id": 42,
     "function": "sort_and_split_impl",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "589-611",
+    "lines": "609-631",
     "spec_strength": "",
     "snippet": "    /// Sort points by longest-spread dimension and split at median. (f64 arithmetic.)\n    pub fn sort_and_split_impl(points: &Vec<Point>) -> (Vec<Point>, Vec<Point>) {\n        let n = points.len();\n        let (mut min_x, mut max_x, mut min_y, mut max_y) =\n            (points[0].x, points[0].x, points[0].y, points[0].y);\n        for i in 1..n {\n            if points[i].x < min_x { min_x = points[i].x; }\n            if points[i].x > max_x { max_x = points[i].x; }\n            if points[i].y < min_y { min_y = points[i].y; }\n            if points[i].y > max_y { max_y = points[i].y; }\n        }\n        let split_on_x = (max_x - min_x) >= (max_y - min_y);\n        let mut sorted_points = points.clone();\n        if split_on_x {\n            sorted_points.sort_by(|a, b| a.x.partial_cmp(&b.x).unwrap_or(std::cmp::Ordering::Equal));\n        } else {\n            sorted_points.sort_by(|a, b| a.y.partial_cmp(&b.y).unwrap_or(std::cmp::Ordering::Equal));\n        }\n        let mid = (n / 2).max(2);\n        let left: Vec<Point> = sorted_points[..mid].to_vec();\n        let right: Vec<Point> = sorted_points[mid..].to_vec();\n        (left, right)\n    }"
   },
   {
-    "id": 36,
+    "id": 43,
     "function": "find_best_swap_impl",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "613-632",
+    "lines": "633-652",
     "spec_strength": "",
     "snippet": "    /// Find best swap indices by exhaustive O(n²) search. (f64 arithmetic.)\n    pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (usize, usize) {\n        let mut best_cost = f64::MAX;\n        let mut best_li = 0usize;\n        let mut best_ri = 0usize;\n        for li in 0..left_tour.len() {\n            for ri in 0..right_tour.len() {\n                let el = &left_tour[li];\n                let er = &right_tour[ri];\n                let cost = el.from.distance(&er.to) + er.from.distance(&el.to)\n                         - el.from.distance(&el.to) - er.from.distance(&er.to);\n                if cost < best_cost {\n                    best_cost = cost;\n                    best_li = li;\n                    best_ri = ri;\n                }\n            }\n        }\n        (best_li, best_ri)\n    }"
   },
   {
-    "id": 37,
+    "id": 44,
     "function": "lemma_multiset_count_positive_implies_exists",
     "file": "Chap26/MergeSortMtPer.rs",
-    "lines": "89-92",
+    "lines": "83-86",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_multiset_count_positive_implies_exists(s: Seq<N>, x: N)\n        requires s.to_multiset().count(x) > 0,\n        ensures exists|j: int| #![trigger s[j]] 0 <= j < s.len() && s[j] == x,\n        decreases s.len(),"
-  },
-  {
-    "id": 38,
-    "function": "lemma_all_le_preserved_by_permutation",
-    "file": "Chap26/MergeSortMtPer.rs",
-    "lines": "108-113",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_all_le_preserved_by_permutation(a: Seq<N>, b: Seq<N>, bound: N)\n        requires\n            a.to_multiset() =~= b.to_multiset(),\n            forall|i: int| #![trigger b[i]] 0 <= i < b.len() ==> b[i] <= bound,\n        ensures\n            forall|i: int| #![trigger a[i]] 0 <= i < a.len() ==> a[i] <= bound,"
-  },
-  {
-    "id": 39,
-    "function": "lemma_all_ge_preserved_by_permutation",
-    "file": "Chap26/MergeSortMtPer.rs",
-    "lines": "125-130",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_all_ge_preserved_by_permutation(a: Seq<N>, b: Seq<N>, bound: N)\n        requires\n            a.to_multiset() =~= b.to_multiset(),\n            forall|i: int| #![trigger b[i]] 0 <= i < b.len() ==> b[i] >= bound,\n        ensures\n            forall|i: int| #![trigger a[i]] 0 <= i < a.len() ==> a[i] >= bound,"
-  },
-  {
-    "id": 40,
-    "function": "lemma_sorted_concat_pivot",
-    "file": "Chap26/MergeSortMtPer.rs",
-    "lines": "143-150",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_sorted_concat_pivot(a: Seq<N>, pivot: N, c: Seq<N>)\n        requires\n            spec_sorted(a),\n            spec_sorted(c),\n            forall|i: int| #![trigger a[i]] 0 <= i < a.len() ==> a[i] <= pivot,\n            forall|i: int| #![trigger c[i]] 0 <= i < c.len() ==> c[i] >= pivot,\n        ensures\n            spec_sorted(a.push(pivot) + c),"
-  },
-  {
-    "id": 41,
-    "function": "merge_parallel",
-    "file": "Chap26/MergeSortMtPer.rs",
-    "lines": "179-188",
-    "spec_strength": "unknown",
-    "snippet": "        fn merge_parallel(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (merged: ArraySeqMtPerS<N>)\n            requires\n                spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),\n                spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),\n                left.spec_len() + right.spec_len() <= usize::MAX,\n            ensures\n                spec_merge_post(\n                    Seq::new(left.spec_len(), |i: int| left.spec_index(i)),\n                    Seq::new(right.spec_len(), |i: int| right.spec_index(i)),\n                    Seq::new(merged.spec_len(), |i: int| merged.spec_index(i)));"
-  },
-  {
-    "id": 42,
-    "function": "merge_sort_parallel",
-    "file": "Chap26/MergeSortMtPer.rs",
-    "lines": "193-198",
-    "spec_strength": "unknown",
-    "snippet": "        fn merge_sort_parallel(a: &ArraySeqMtPerS<N>) -> (sorted: ArraySeqMtPerS<N>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_sort_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    Seq::new(sorted.spec_len(), |i: int| sorted.spec_index(i)));"
-  },
-  {
-    "id": 43,
-    "function": "binary_search_upper_bound",
-    "file": "Chap26/MergeSortMtPer.rs",
-    "lines": "209-216",
-    "spec_strength": "unknown",
-    "snippet": "    fn binary_search_upper_bound(arr: &ArraySeqMtPerS<N>, pivot: N) -> (pos: usize)\n        requires spec_sorted(Seq::new(arr.spec_len(), |i: int| arr.spec_index(i))),\n        ensures\n            pos as int <= arr.spec_len(),\n            forall|j: int| #![trigger arr.spec_index(j)]\n                0 <= j < pos as int ==> arr.spec_index(j) <= pivot,\n            forall|j: int| #![trigger arr.spec_index(j)]\n                pos as int <= j < arr.spec_len() ==> arr.spec_index(j) > pivot,"
-  },
-  {
-    "id": 44,
-    "function": "merge_dc",
-    "file": "Chap26/MergeSortMtPer.rs",
-    "lines": "268-278",
-    "spec_strength": "unknown",
-    "snippet": "    fn merge_dc(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (merged: ArraySeqMtPerS<N>)\n        requires\n            spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),\n            spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),\n            left.spec_len() + right.spec_len() <= usize::MAX,\n        ensures\n            spec_merge_post(\n                Seq::new(left.spec_len(), |i: int| left.spec_index(i)),\n                Seq::new(right.spec_len(), |i: int| right.spec_index(i)),\n                Seq::new(merged.spec_len(), |i: int| merged.spec_index(i))),\n        decreases left.spec_len() + right.spec_len(),"
+    "snippet": "    proof fn lemma_multiset_count_positive_implies_exists(s: Seq<usize>, x: usize)\n        requires s.to_multiset().count(x) > 0,\n        ensures exists|j: int| #![trigger s[j]] 0 <= j < s.len() && s[j] == x,\n        decreases s.len(),"
   },
   {
     "id": 45,
-    "function": "lemma_push_sorted",
-    "file": "Chap26/MergeSortStPer.rs",
-    "lines": "85-90",
+    "function": "lemma_all_le_preserved_by_permutation",
+    "file": "Chap26/MergeSortMtPer.rs",
+    "lines": "106-111",
     "spec_strength": "unknown",
-    "snippet": "    pub proof fn lemma_push_sorted(s: Seq<N>, v: N)\n        requires\n            spec_sorted(s),\n            s.len() > 0 ==> s.last() <= v,\n        ensures\n            spec_sorted(s.push(v)),"
+    "snippet": "    proof fn lemma_all_le_preserved_by_permutation(a: Seq<usize>, b: Seq<usize>, bound: usize)\n        requires\n            a.to_multiset() =~= b.to_multiset(),\n            forall|i: int| #![trigger b[i]] 0 <= i < b.len() ==> b[i] <= bound,\n        ensures\n            forall|i: int| #![trigger a[i]] 0 <= i < a.len() ==> a[i] <= bound,"
   },
   {
     "id": 46,
-    "function": "merge",
-    "file": "Chap26/MergeSortStPer.rs",
-    "lines": "116-125",
+    "function": "lemma_all_ge_preserved_by_permutation",
+    "file": "Chap26/MergeSortMtPer.rs",
+    "lines": "126-131",
     "spec_strength": "unknown",
-    "snippet": "        fn merge(left: &ArraySeqStPerS<N>, right: &ArraySeqStPerS<N>) -> (merged: ArraySeqStPerS<N>)\n            requires\n                spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),\n                spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),\n                left.spec_len() + right.spec_len() <= usize::MAX,\n            ensures\n                spec_merge_post(\n                    Seq::new(left.spec_len(), |i: int| left.spec_index(i)),\n                    Seq::new(right.spec_len(), |i: int| right.spec_index(i)),\n                    Seq::new(merged.spec_len(), |i: int| merged.spec_index(i)));"
+    "snippet": "    proof fn lemma_all_ge_preserved_by_permutation(a: Seq<usize>, b: Seq<usize>, bound: usize)\n        requires\n            a.to_multiset() =~= b.to_multiset(),\n            forall|i: int| #![trigger b[i]] 0 <= i < b.len() ==> b[i] >= bound,\n        ensures\n            forall|i: int| #![trigger a[i]] 0 <= i < a.len() ==> a[i] >= bound,"
   },
   {
     "id": 47,
-    "function": "merge_sort",
-    "file": "Chap26/MergeSortStPer.rs",
-    "lines": "130-135",
+    "function": "lemma_sorted_concat_pivot",
+    "file": "Chap26/MergeSortMtPer.rs",
+    "lines": "147-154",
     "spec_strength": "unknown",
-    "snippet": "        fn merge_sort(a: &ArraySeqStPerS<N>) -> (sorted: ArraySeqStPerS<N>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_sort_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    Seq::new(sorted.spec_len(), |i: int| sorted.spec_index(i)));"
+    "snippet": "    proof fn lemma_sorted_concat_pivot(a: Seq<usize>, pivot: usize, c: Seq<usize>)\n        requires\n            spec_sorted(a),\n            spec_sorted(c),\n            forall|i: int| #![trigger a[i]] 0 <= i < a.len() ==> a[i] <= pivot,\n            forall|i: int| #![trigger c[i]] 0 <= i < c.len() ==> c[i] >= pivot,\n        ensures\n            spec_sorted(a.push(pivot) + c),"
   },
   {
     "id": 48,
-    "function": "lemma_fold_left_monoid",
-    "file": "Chap26/ScanDCMtPer.rs",
-    "lines": "75-78",
+    "function": "merge_parallel",
+    "file": "Chap26/MergeSortMtPer.rs",
+    "lines": "185-194",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_fold_left_monoid(s: Seq<N>, x: N, f: spec_fn(N, N) -> N, id: N)\n        requires spec_monoid(f, id),\n        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),\n        decreases s.len(),"
+    "snippet": "        fn merge_parallel(left: &ArraySeqMtPerS<usize>, right: &ArraySeqMtPerS<usize>) -> (merged: ArraySeqMtPerS<usize>)\n            requires\n                spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),\n                spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),\n                left.spec_len() + right.spec_len() <= usize::MAX,\n            ensures\n                spec_merge_post(\n                    Seq::new(left.spec_len(), |i: int| left.spec_index(i)),\n                    Seq::new(right.spec_len(), |i: int| right.spec_index(i)),\n                    Seq::new(merged.spec_len(), |i: int| merged.spec_index(i)));"
   },
   {
     "id": 49,
-    "function": "prefix_sums_dc_parallel",
-    "file": "Chap26/ScanDCMtPer.rs",
-    "lines": "95-102",
+    "function": "merge_sort_parallel",
+    "file": "Chap26/MergeSortMtPer.rs",
+    "lines": "199-204",
     "spec_strength": "unknown",
-    "snippet": "        fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<N>) -> (sums: (ArraySeqMtPerS<N>, N))\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_scan_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    spec_sum_fn(), 0,\n                    Seq::new(sums.0.spec_len(), |i: int| sums.0.spec_index(i)),\n                    sums.1);"
+    "snippet": "        fn merge_sort_parallel(a: &ArraySeqMtPerS<usize>) -> (sorted: ArraySeqMtPerS<usize>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_sort_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    Seq::new(sorted.spec_len(), |i: int| sorted.spec_index(i)));"
   },
   {
     "id": 50,
-    "function": "prefix_sums_dc_inner",
-    "file": "Chap26/ScanDCMtPer.rs",
-    "lines": "110-118",
+    "function": "binary_search_upper_bound",
+    "file": "Chap26/MergeSortMtPer.rs",
+    "lines": "213-220",
     "spec_strength": "unknown",
-    "snippet": "    fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<N>) -> (sums: (ArraySeqMtPerS<N>, N))\n        requires a.spec_len() <= usize::MAX,\n        ensures\n            spec_scan_post(\n                Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                spec_sum_fn(), 0,\n                Seq::new(sums.0.spec_len(), |i: int| sums.0.spec_index(i)),\n                sums.1),\n        decreases a.spec_len(),"
+    "snippet": "    fn binary_search_upper_bound(arr: &ArraySeqMtPerS<usize>, pivot: usize) -> (pos: usize)\n        requires spec_sorted(Seq::new(arr.spec_len(), |i: int| arr.spec_index(i))),\n        ensures\n            pos as int <= arr.spec_len(),\n            forall|j: int| #![trigger arr.spec_index(j)]\n                0 <= j < pos as int ==> arr.spec_index(j) <= pivot,\n            forall|j: int| #![trigger arr.spec_index(j)]\n                pos as int <= j < arr.spec_len() ==> arr.spec_index(j) > pivot,"
   },
   {
     "id": 51,
-    "function": "lemma_fold_left_monoid",
-    "file": "Chap26/ScanDCStPer.rs",
-    "lines": "80-83",
+    "function": "merge_dc",
+    "file": "Chap26/MergeSortMtPer.rs",
+    "lines": "278-288",
     "spec_strength": "unknown",
-    "snippet": "    pub proof fn lemma_fold_left_monoid(s: Seq<N>, x: N, f: spec_fn(N, N) -> N, id: N)\n        requires spec_monoid(f, id),\n        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),\n        decreases s.len(),"
+    "snippet": "    fn merge_dc(left: &ArraySeqMtPerS<usize>, right: &ArraySeqMtPerS<usize>) -> (merged: ArraySeqMtPerS<usize>)\n        requires\n            spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),\n            spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),\n            left.spec_len() + right.spec_len() <= usize::MAX,\n        ensures\n            spec_merge_post(\n                Seq::new(left.spec_len(), |i: int| left.spec_index(i)),\n                Seq::new(right.spec_len(), |i: int| right.spec_index(i)),\n                Seq::new(merged.spec_len(), |i: int| merged.spec_index(i))),\n        decreases left.spec_len() + right.spec_len(),"
   },
   {
     "id": 52,
-    "function": "scan_dc",
-    "file": "Chap26/ScanDCStPer.rs",
-    "lines": "103-114",
+    "function": "lemma_push_sorted",
+    "file": "Chap26/MergeSortStPer.rs",
+    "lines": "79-84",
     "spec_strength": "unknown",
-    "snippet": "        fn scan_dc<F: Fn(&N, &N) -> N>(a: &ArraySeqStPerS<N>, f: &F, Ghost(spec_f): Ghost<spec_fn(N, N) -> N>, id: N) -> (scanned: (ArraySeqStPerS<N>, N))\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_f, id),\n                forall|x: &N, y: &N| #[trigger] f.requires((x, y)),\n                forall|x: N, y: N, ret: N| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                spec_scan_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    spec_f, id,\n                    Seq::new(scanned.0.spec_len(), |i: int| scanned.0.spec_index(i)),\n                    scanned.1);"
+    "snippet": "    pub proof fn lemma_push_sorted(s: Seq<usize>, v: usize)\n        requires\n            spec_sorted(s),\n            s.len() > 0 ==> s.last() <= v,\n        ensures\n            spec_sorted(s.push(v)),"
   },
   {
     "id": 53,
+    "function": "merge",
+    "file": "Chap26/MergeSortStPer.rs",
+    "lines": "109-118",
+    "spec_strength": "unknown",
+    "snippet": "        fn merge(left: &ArraySeqStPerS<usize>, right: &ArraySeqStPerS<usize>) -> (merged: ArraySeqStPerS<usize>)\n            requires\n                spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),\n                spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),\n                left.spec_len() + right.spec_len() <= usize::MAX,\n            ensures\n                spec_merge_post(\n                    Seq::new(left.spec_len(), |i: int| left.spec_index(i)),\n                    Seq::new(right.spec_len(), |i: int| right.spec_index(i)),\n                    Seq::new(merged.spec_len(), |i: int| merged.spec_index(i)));"
+  },
+  {
+    "id": 54,
+    "function": "merge_sort",
+    "file": "Chap26/MergeSortStPer.rs",
+    "lines": "123-128",
+    "spec_strength": "unknown",
+    "snippet": "        fn merge_sort(a: &ArraySeqStPerS<usize>) -> (sorted: ArraySeqStPerS<usize>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_sort_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    Seq::new(sorted.spec_len(), |i: int| sorted.spec_index(i)));"
+  },
+  {
+    "id": 55,
+    "function": "lemma_fold_left_monoid",
+    "file": "Chap26/ScanDCMtPer.rs",
+    "lines": "82-85",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_fold_left_monoid(s: Seq<usize>, x: usize, f: spec_fn(usize, usize) -> usize, id: usize)\n        requires spec_monoid(f, id),\n        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),\n        decreases s.len(),"
+  },
+  {
+    "id": 56,
+    "function": "prefix_sums_dc_parallel",
+    "file": "Chap26/ScanDCMtPer.rs",
+    "lines": "103-110",
+    "spec_strength": "unknown",
+    "snippet": "        fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<usize>) -> (sums: (ArraySeqMtPerS<usize>, usize))\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_scan_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    spec_sum_fn(), 0,\n                    Seq::new(sums.0.spec_len(), |i: int| sums.0.spec_index(i)),\n                    sums.1);"
+  },
+  {
+    "id": 57,
+    "function": "prefix_sums_dc_inner",
+    "file": "Chap26/ScanDCMtPer.rs",
+    "lines": "119-127",
+    "spec_strength": "unknown",
+    "snippet": "    fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<usize>) -> (sums: (ArraySeqMtPerS<usize>, usize))\n        requires a.spec_len() <= usize::MAX,\n        ensures\n            spec_scan_post(\n                Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                spec_sum_fn(), 0,\n                Seq::new(sums.0.spec_len(), |i: int| sums.0.spec_index(i)),\n                sums.1),\n        decreases a.spec_len(),"
+  },
+  {
+    "id": 58,
+    "function": "lemma_fold_left_monoid",
+    "file": "Chap26/ScanDCStPer.rs",
+    "lines": "74-77",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_fold_left_monoid(s: Seq<usize>, x: usize, f: spec_fn(usize, usize) -> usize, id: usize)\n        requires spec_monoid(f, id),\n        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),\n        decreases s.len(),"
+  },
+  {
+    "id": 59,
+    "function": "scan_dc",
+    "file": "Chap26/ScanDCStPer.rs",
+    "lines": "95-106",
+    "spec_strength": "unknown",
+    "snippet": "        fn scan_dc<F: Fn(&usize, &usize) -> usize>(a: &ArraySeqStPerS<usize>, f: &F, Ghost(spec_f): Ghost<spec_fn(usize, usize) -> usize>, id: usize) -> (scanned: (ArraySeqStPerS<usize>, usize))\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_f, id),\n                forall|x: &usize, y: &usize| #[trigger] f.requires((x, y)),\n                forall|x: usize, y: usize, ret: usize| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                spec_scan_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    spec_f, id,\n                    Seq::new(scanned.0.spec_len(), |i: int| scanned.0.spec_index(i)),\n                    scanned.1);"
+  },
+  {
+    "id": 60,
     "function": "prefix_sums_dc",
     "file": "Chap26/ScanDCStPer.rs",
-    "lines": "120-127",
+    "lines": "112-119",
     "spec_strength": "unknown",
-    "snippet": "        fn prefix_sums_dc(a: &ArraySeqStPerS<N>) -> (sums: (ArraySeqStPerS<N>, N))\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_scan_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    spec_sum_fn(), 0,\n                    Seq::new(sums.0.spec_len(), |i: int| sums.0.spec_index(i)),\n                    sums.1);"
+    "snippet": "        fn prefix_sums_dc(a: &ArraySeqStPerS<usize>) -> (sums: (ArraySeqStPerS<usize>, usize))\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_scan_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    spec_sum_fn(), 0,\n                    Seq::new(sums.0.spec_len(), |i: int| sums.0.spec_index(i)),\n                    sums.1);"
   }
 ]

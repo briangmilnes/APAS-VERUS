@@ -22,32 +22,58 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap59 | JohnsonMtEphI64 | 1 | 0 | 0 | 5 | 5 | 0 | 5 | 0 | 0 |
-| 2 | Chap59 | JohnsonStEphI64 | 1 | 0 | 0 | 7 | 7 | 0 | 7 | 0 | 0 |
+| 1 | Chap59 | JohnsonMtEphF64 | 1 | 0 | 0 | 6 | 6 | 0 | 6 | 0 | 0 |
+| 2 | Chap59 | JohnsonMtEphI64 | 1 | 0 | 0 | 6 | 6 | 0 | 6 | 0 | 0 |
+| 3 | Chap59 | JohnsonStEphF64 | 1 | 0 | 0 | 7 | 7 | 0 | 7 | 0 | 0 |
+| 4 | Chap59 | JohnsonStEphI64 | 1 | 0 | 0 | 7 | 7 | 0 | 7 | 0 | 0 |
 
 ## Function-by-Function Detail
+
+### Chap59/JohnsonMtEphF64.rs
+
+| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
+|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
+| 1 | `johnson_apsp` | Y |  |  | Y | Y |  |  | unknown | 75&#8209;86 |
+| 2 | `adjust_distance` |  |  |  | Y | Y |  |  | unknown | 97&#8209;99 |
+| 3 | `parallel_dijkstra_all` |  |  |  | Y | Y |  |  | unknown | 162&#8209;188 |
+| 4 | `add_dummy_source` |  |  |  | Y | Y |  |  | unknown | 279&#8209;291 |
+| 5 | `reweight_graph` |  |  |  | Y | Y |  |  | unknown | 371&#8209;390 |
+| 6 | `create_negative_cycle_result` |  |  |  | Y | Y |  |  | unknown | 470&#8209;476 |
 
 ### Chap59/JohnsonMtEphI64.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `johnson_apsp` | Y |  |  | Y | Y |  |  | unknown | 33 |
-| 2 | `parallel_dijkstra_all` |  |  |  | Y | Y |  |  | unknown | 93&#8209;117 |
-| 3 | `add_dummy_source` |  |  |  | Y | Y |  |  | unknown | 204&#8209;216 |
-| 4 | `reweight_graph` |  |  |  | Y | Y |  |  | unknown | 296&#8209;314 |
-| 5 | `create_negative_cycle_result` |  |  |  | Y | Y |  |  | unknown | 410&#8209;416 |
+| 7 | `johnson_apsp` | Y |  |  | Y | Y |  |  | unknown | 63&#8209;74 |
+| 8 | `adjust_distance` |  |  |  | Y | Y |  |  | unknown | 85&#8209;87 |
+| 9 | `parallel_dijkstra_all` |  |  |  | Y | Y |  |  | unknown | 151&#8209;177 |
+| 10 | `add_dummy_source` |  |  |  | Y | Y |  |  | unknown | 269&#8209;281 |
+| 11 | `reweight_graph` |  |  |  | Y | Y |  |  | unknown | 360&#8209;379 |
+| 12 | `create_negative_cycle_result` |  |  |  | Y | Y |  |  | unknown | 467&#8209;473 |
+
+### Chap59/JohnsonStEphF64.rs
+
+| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
+|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
+| 13 | `johnson_apsp` | Y |  |  | Y | Y |  |  | unknown | 69&#8209;79 |
+| 14 | `adjust_distance` |  |  |  | Y | Y |  |  | unknown | 89&#8209;91 |
+| 15 | `reweight_edge` |  |  |  | Y | Y |  |  | unknown | 102&#8209;103 |
+| 16 | `build_vertex_set` |  |  |  | Y | Y |  |  | unknown | 110&#8209;117 |
+| 17 | `add_dummy_source` |  |  |  | Y | Y |  |  | unknown | 147&#8209;161 |
+| 18 | `reweight_graph` |  |  |  | Y | Y |  |  | unknown | 245&#8209;264 |
+| 19 | `create_negative_cycle_result` |  |  |  | Y | Y |  |  | unknown | 338&#8209;341 |
 
 ### Chap59/JohnsonStEphI64.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 6 | `johnson_apsp` | Y |  |  | Y | Y |  |  | unknown | 54&#8209;64 |
-| 7 | `adjust_distance` |  |  |  | Y | Y |  |  | unknown | 74&#8209;76 |
-| 8 | `reweight_edge` |  |  |  | Y | Y |  |  | unknown | 91&#8209;92 |
-| 9 | `build_vertex_set` |  |  |  | Y | Y |  |  | unknown | 105&#8209;112 |
-| 10 | `add_dummy_source` |  |  |  | Y | Y |  |  | unknown | 147&#8209;161 |
-| 11 | `reweight_graph` |  |  |  | Y | Y |  |  | unknown | 242&#8209;260 |
-| 12 | `create_negative_cycle_result` |  |  |  | Y | Y |  |  | unknown | 342&#8209;347 |
+| 20 | `johnson_apsp` | Y |  |  | Y | Y |  |  | unknown | 66&#8209;76 |
+| 21 | `adjust_distance` |  |  |  | Y | Y |  |  | unknown | 86&#8209;88 |
+| 22 | `reweight_edge` |  |  |  | Y | Y |  |  | unknown | 102&#8209;103 |
+| 23 | `build_vertex_set` |  |  |  | Y | Y |  |  | unknown | 115&#8209;122 |
+| 24 | `add_dummy_source` |  |  |  | Y | Y |  |  | unknown | 151&#8209;165 |
+| 25 | `reweight_graph` |  |  |  | Y | Y |  |  | unknown | 248&#8209;266 |
+| 26 | `create_negative_cycle_result` |  |  |  | Y | Y |  |  | unknown | 351&#8209;356 |
 
 
 ### Legend

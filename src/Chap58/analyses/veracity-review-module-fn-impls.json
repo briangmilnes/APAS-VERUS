@@ -2,32 +2,48 @@
   {
     "id": 1,
     "function": "bellman_ford",
+    "file": "Chap58/BellmanFordStEphF64.rs",
+    "lines": "64-72",
+    "spec_strength": "unknown",
+    "snippet": "        fn bellman_ford(graph: &WeightedDirGraphStEphF64<usize>, source: usize)\n            -> (sssp: Result<SSSPResultStEphF64, BellmanFordError>)\n            requires\n                source < graph@.V.len(),\n                spec_labgraphview_wf(graph@),\n                valid_key_type_WeightedEdge::<usize, WrappedF64>(),\n            ensures\n                sssp is Ok ==> sssp->Ok_0.spec_distances().len() == graph@.V.len(),\n                sssp is Ok ==> sssp->Ok_0.spec_source() == source;"
+  },
+  {
+    "id": 2,
+    "function": "reconstruct_predecessors",
+    "file": "Chap58/BellmanFordStEphF64.rs",
+    "lines": "80-102",
+    "spec_strength": "unknown",
+    "snippet": "    fn reconstruct_predecessors(\n        graph: &WeightedDirGraphStEphF64<usize>,\n        distances: &Vec<WrappedF64>,\n        sssp: &mut SSSPResultStEphF64,\n        n: usize,\n        source: usize,\n    )\n        requires\n            n > 0,\n            source < n,\n            distances@.len() == n as int,\n            old(sssp).spec_ssspresultstephf64_wf(),\n            old(sssp).spec_distances().len() == n as int,\n            old(sssp).spec_predecessors().len() == n as int,\n            old(sssp).spec_source() == source,\n            spec_labgraphview_wf(graph@),\n            valid_key_type_WeightedEdge::<usize, WrappedF64>(),\n        ensures\n            sssp.spec_ssspresultstephf64_wf(),\n            sssp.spec_distances().len() == n as int,\n            sssp.spec_predecessors().len() == n as int,\n            sssp.spec_source() == source,\n            sssp.spec_distances() == old(sssp).spec_distances(),"
+  },
+  {
+    "id": 3,
+    "function": "bellman_ford",
     "file": "Chap58/BellmanFordStEphI64.rs",
-    "lines": "47-55",
+    "lines": "61-69",
     "spec_strength": "unknown",
     "snippet": "        fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize)\n            -> (sssp: Result<SSSPResultStEphI64, BellmanFordError>)\n            requires\n                source < graph@.V.len(),\n                spec_labgraphview_wf(graph@),\n                valid_key_type_WeightedEdge::<usize, i128>(),\n            ensures\n                sssp is Ok ==> sssp->Ok_0.spec_distances().len() == graph@.V.len(),\n                sssp is Ok ==> sssp->Ok_0.spec_source() == source;"
   },
   {
-    "id": 2,
+    "id": 4,
     "function": "clamp_weight",
     "file": "Chap58/BellmanFordStEphI64.rs",
-    "lines": "64-68",
+    "lines": "78-82",
     "spec_strength": "unknown",
-    "snippet": "    fn clamp_weight(w: i128) -> (result: i64)\n        ensures\n            w >= i64::MIN as i128 && w <= i64::MAX as i128 ==> result == w as i64,\n            w < i64::MIN as i128 ==> result == i64::MIN,\n            w > i64::MAX as i128 ==> result == i64::MAX,"
+    "snippet": "    fn clamp_weight(w: i128) -> (clamped: i64)\n        ensures\n            w >= i64::MIN as i128 && w <= i64::MAX as i128 ==> clamped == w as i64,\n            w < i64::MIN as i128 ==> clamped == i64::MIN,\n            w > i64::MAX as i128 ==> clamped == i64::MAX,"
   },
   {
-    "id": 3,
+    "id": 5,
     "function": "add_distance",
     "file": "Chap58/BellmanFordStEphI64.rs",
-    "lines": "79-85",
+    "lines": "92-98",
     "spec_strength": "unknown",
-    "snippet": "    fn add_distance(d: i64, w: i64) -> (result: i64)\n        requires d != UNREACHABLE,\n        ensures\n            (d as i128) + (w as i128) >= UNREACHABLE as i128 ==> result == UNREACHABLE,\n            (d as i128) + (w as i128) < i64::MIN as i128 ==> result == i64::MIN,\n            (d as i128) + (w as i128) >= i64::MIN as i128 && (d as i128) + (w as i128) < UNREACHABLE as i128\n                ==> result == ((d as i128) + (w as i128)) as i64,"
+    "snippet": "    fn add_distance(d: i64, w: i64) -> (sum: i64)\n        requires d != UNREACHABLE,\n        ensures\n            (d as i128) + (w as i128) >= UNREACHABLE as i128 ==> sum == UNREACHABLE,\n            (d as i128) + (w as i128) < i64::MIN as i128 ==> sum == i64::MIN,\n            (d as i128) + (w as i128) >= i64::MIN as i128 && (d as i128) + (w as i128) < UNREACHABLE as i128\n                ==> sum == ((d as i128) + (w as i128)) as i64,"
   },
   {
-    "id": 4,
+    "id": 6,
     "function": "reconstruct_predecessors",
     "file": "Chap58/BellmanFordStEphI64.rs",
-    "lines": "96-116",
+    "lines": "108-128",
     "spec_strength": "unknown",
     "snippet": "    fn reconstruct_predecessors(\n        graph: &WeightedDirGraphStEphI128<usize>,\n        distances: &Vec<i64>,\n        sssp: &mut SSSPResultStEphI64,\n        n: usize,\n        source: usize,\n    )\n        requires\n            n > 0,\n            source < n,\n            distances@.len() == n as int,\n            old(sssp).spec_distances().len() == n as int,\n            old(sssp).spec_predecessors().len() == n as int,\n            old(sssp).spec_source() == source,\n            spec_labgraphview_wf(graph@),\n            valid_key_type_WeightedEdge::<usize, i128>(),\n        ensures\n            sssp.spec_distances().len() == n as int,\n            sssp.spec_predecessors().len() == n as int,\n            sssp.spec_source() == source,\n            sssp.spec_distances() == old(sssp).spec_distances(),"
   }

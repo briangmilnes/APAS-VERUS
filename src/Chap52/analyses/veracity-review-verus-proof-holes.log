@@ -39,18 +39,18 @@ Table of Contents:
 ✓ AdjTableGraphStPer.rs
    3 clean proof functions
 ℹ EdgeSetGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtEph.rs:439: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtEph.rs:440: info: accept()
    Info: 1 total
    1 clean proof function
 ✓ EdgeSetGraphMtPer.rs
    1 clean proof function
 ℹ EdgeSetGraphStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:479: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:480: info: accept()
    Info: 1 total
    1 clean proof function
 ℹ EdgeSetGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:457: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:474: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:458: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:475: info: accept()
    Info: 2 total
    1 clean proof function
 
@@ -134,11 +134,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-18 04:58:01 -07:00
-Ended:     2026-04-18 04:58:01 -07:00
-Duration:  91ms
+Started:   2026-09-22 11:25:12 -07:00
+Ended:     2026-09-22 11:25:13 -07:00
+Duration:  69ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-Duration:  91ms
 
-Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log

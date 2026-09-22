@@ -3,7 +3,7 @@
     "id": 1,
     "function": "lemma_deep_view_len",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "161-163",
+    "lines": "160-162",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_deep_view_len<T: DeepView>(v: &Vec<T>)\n        ensures\n            v.deep_view().len() == v@.len(),"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "function": "lemma_deep_view_key",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "168-173",
+    "lines": "167-172",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_deep_view_key<K: DeepView, V: DeepView>(s: &Vec<(K, ArraySeqS<V>)>, i: int)\n        requires\n            0 <= i < s@.len(),\n        ensures\n            s.deep_view()[i].0 == s@[i].0.deep_view(),\n            s.deep_view().len() == s@.len(),"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "function": "lemma_find_key_index_bounds",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "178-183",
+    "lines": "177-182",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_find_key_index_bounds<K, V>(groups: Seq<(K, Seq<V>)>, k: K, idx: int)\n        requires\n            spec_find_key_index(groups, k) == Some(idx),\n        ensures\n            0 <= idx < groups.len(),\n        decreases groups.len(),"
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "function": "lemma_find_key_index_found",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "193-204",
+    "lines": "192-203",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_find_key_index_found<K, V>(\n        groups: Seq<(K, Seq<V>)>,\n        k: K,\n        idx: int,\n    )\n        requires\n            0 <= idx < groups.len(),\n            groups[idx].0 == k,\n            forall|m: int| #![trigger groups[m]] 0 <= m < idx ==> groups[m].0 != k,\n        ensures\n            spec_find_key_index(groups, k) == Some(idx),\n        decreases groups.len(),"
   },
@@ -35,7 +35,7 @@
     "id": 5,
     "function": "lemma_find_key_index_not_found",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "213-221",
+    "lines": "212-220",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_find_key_index_not_found<K, V>(\n        groups: Seq<(K, Seq<V>)>,\n        k: K,\n    )\n        requires\n            forall|m: int| #![trigger groups[m]] 0 <= m < groups.len() ==> groups[m].0 != k,\n        ensures\n            spec_find_key_index(groups, k) == None::<int>,\n        decreases groups.len(),"
   },
@@ -43,7 +43,7 @@
     "id": 6,
     "function": "lemma_spec_collect_step_some",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "230-242",
+    "lines": "229-241",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_spec_collect_step_some<K, V>(\n        old_dv: Seq<(K, Seq<V>)>,\n        pairs_prefix: Seq<(K, V)>,\n        k: K,\n        v: V,\n        idx: int,\n    )\n        requires\n            old_dv =~= spec_collect(pairs_prefix),\n            spec_find_key_index(old_dv, k) == Some(idx),\n        ensures\n            spec_collect(pairs_prefix.push((k, v)))\n                =~= old_dv.remove(idx).insert(idx, (k, old_dv[idx].1.push(v))),"
   },
@@ -51,7 +51,7 @@
     "id": 7,
     "function": "lemma_spec_collect_step_none",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "253-264",
+    "lines": "251-262",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_spec_collect_step_none<K, V>(\n        old_dv: Seq<(K, Seq<V>)>,\n        pairs_prefix: Seq<(K, V)>,\n        k: K,\n        v: V,\n    )\n        requires\n            old_dv =~= spec_collect(pairs_prefix),\n            spec_find_key_index(old_dv, k) == None::<int>,\n        ensures\n            spec_collect(pairs_prefix.push((k, v)))\n                =~= old_dv.push((k, seq![v])),"
   },
@@ -59,7 +59,7 @@
     "id": 8,
     "function": "lemma_find_key_some",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "274-281",
+    "lines": "271-278",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_find_key_some<K: DeepView<V = K>, V: DeepView>(s: &Vec<(K, ArraySeqS<V>)>, k: K, idx: usize)\n        requires\n            obeys_generic_deep_eq::<K>(),\n            idx < s@.len(),\n            s@[idx as int].0 == k,\n            forall|m: int| #![trigger s@[m]] 0 <= m < idx as int ==> s@[m].0 != k,\n        ensures\n            spec_find_key_index(s.deep_view(), k.deep_view()) == Some(idx as int),"
   },
@@ -67,7 +67,7 @@
     "id": 9,
     "function": "lemma_find_key_none",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "292-297",
+    "lines": "290-295",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_find_key_none<K: DeepView<V = K>, V: DeepView>(s: &Vec<(K, ArraySeqS<V>)>, k: K)\n        requires\n            obeys_generic_deep_eq::<K>(),\n            forall|m: int| #![trigger s@[m]] 0 <= m < s@.len() ==> s@[m].0 != k,\n        ensures\n            spec_find_key_index(s.deep_view(), k.deep_view()) == None::<int>,"
   },
@@ -75,7 +75,7 @@
     "id": 10,
     "function": "new",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "319-326",
+    "lines": "318-325",
     "spec_strength": "unknown",
     "snippet": "        fn new(length: usize, init_value: T) -> (new_seq: Self)\n            where T: Clone + Eq\n            requires\n              obeys_feq_full::<T>(),\n              length <= usize::MAX,\n            ensures \n              new_seq.spec_len() == length as int,\n              forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value; "
   },
@@ -83,7 +83,7 @@
     "id": 11,
     "function": "set",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "331-336",
+    "lines": "329-334",
     "spec_strength": "unknown",
     "snippet": "        fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)\n            requires index < old(self).spec_len()\n            ensures\n                success.is_ok() ==> self.spec_len() == old(self).spec_len(),\n                success.is_ok() ==> self.spec_index(index as int) == item,\n                success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);"
   },
@@ -91,7 +91,7 @@
     "id": 12,
     "function": "length",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "341-342",
+    "lines": "339-340",
     "spec_strength": "unknown",
     "snippet": "        fn length(&self) -> (len: usize)\n            ensures len as int == self.spec_len();"
   },
@@ -99,7 +99,7 @@
     "id": 13,
     "function": "nth",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "347-349",
+    "lines": "346-348",
     "spec_strength": "unknown",
     "snippet": "        fn nth(&self, index: usize) -> (nth_elem: &T)\n            requires index < self.spec_len()\n            ensures *nth_elem == self.spec_index(index as int);"
   },
@@ -107,7 +107,7 @@
     "id": 14,
     "function": "empty",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "354-355",
+    "lines": "353-354",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty_seq: Self)\n            ensures empty_seq.spec_len() == 0;"
   },
@@ -115,7 +115,7 @@
     "id": 15,
     "function": "singleton",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "360-363",
+    "lines": "359-362",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(item: T) -> (singleton: Self)\n            ensures\n                singleton.spec_len() == 1,\n                singleton.spec_index(0) == item;"
   },
@@ -123,7 +123,7 @@
     "id": 16,
     "function": "subseq",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "368-376",
+    "lines": "367-375",
     "spec_strength": "unknown",
     "snippet": "        fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_full::<T>(),\n                start + length <= usize::MAX,\n                start + length <= a.spec_len(),\n            ensures\n                subseq.spec_len() == length as int,\n                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);"
   },
@@ -131,7 +131,7 @@
     "id": 17,
     "function": "append",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "381-389",
+    "lines": "380-388",
     "spec_strength": "unknown",
     "snippet": "        fn append(a: &Self, b: &Self) -> (appended: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_full::<T>(),\n                a.spec_len() + b.spec_len() <= usize::MAX as int,\n            ensures\n                appended.spec_len() == a.spec_len() + b.spec_len(),\n                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.spec_len() ==> appended.spec_index(i) == a.spec_index(i),\n                forall|i: int| #![trigger b.spec_index(i)] 0 <= i < b.spec_len() ==> appended.spec_index(a.spec_len() + i) == b.spec_index(i);"
   },
@@ -139,7 +139,7 @@
     "id": 18,
     "function": "filter",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "396-411",
+    "lines": "395-410",
     "spec_strength": "unknown",
     "snippet": "        fn filter<F: Fn(&T) -> bool>(a: &Self, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)\n            where T: Clone + Eq\n            requires \n              obeys_feq_full::<T>(),\n              forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] pred.requires((&a.spec_index(i),)),\n              // The forward bridge ties the exec closure to the spec predicate.\n              forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered.spec_len() <= a.spec_len(),\n                // The result length equals the spec_filter_len count.\n                filtered.spec_len() == spec_filter_len(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_pred),\n                // The result multiset equals the input multiset filtered by the spec predicate.\n                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()\n                    =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)).to_multiset().filter(spec_pred),\n                // Every element of the filtered result satisfies the predicate.\n                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);"
   },
@@ -195,7 +195,7 @@
     "id": 25,
     "function": "inject",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "487-496",
+    "lines": "488-497",
     "spec_strength": "unknown",
     "snippet": "        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_full::<T>(),\n            ensures\n                injected.spec_len() == a.spec_len(),\n                Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))\n                    =~= spec_inject(\n                        Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                        updates@);"
   },
@@ -211,7 +211,7 @@
     "id": 27,
     "function": "subseq_copy",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "517-525",
+    "lines": "516-524",
     "spec_strength": "unknown",
     "snippet": "        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_full::<T>(),\n                start + length <= usize::MAX,\n                start + length <= self.spec_len(),\n            ensures\n                subseq.spec_len() == length as int,\n                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);"
   },
@@ -219,7 +219,7 @@
     "id": 28,
     "function": "remove",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "530-537",
+    "lines": "528-535",
     "spec_strength": "unknown",
     "snippet": "        fn remove(&mut self, index: usize) -> (element: T)\n            requires\n                index < old(self).spec_len(),\n            ensures\n                element == old(self).spec_index(index as int),\n                self.spec_len() == old(self).spec_len() - 1,\n                forall|j: int| #![trigger self.spec_index(j)] 0 <= j < index ==> self.spec_index(j) == old(self).spec_index(j),\n                forall|j: int| #![trigger self.spec_index(j)] index <= j < self.spec_len() ==> self.spec_index(j) == old(self).spec_index(j + 1);"
   },
@@ -227,7 +227,7 @@
     "id": 29,
     "function": "insert",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "542-549",
+    "lines": "539-546",
     "spec_strength": "unknown",
     "snippet": "        fn insert(&mut self, index: usize, element: T)\n            requires\n                index <= old(self).spec_len(),\n            ensures\n                self.spec_len() == old(self).spec_len() + 1,\n                self.spec_index(index as int) == element,\n                forall|j: int| #![trigger self.spec_index(j)] 0 <= j < index ==> self.spec_index(j) == old(self).spec_index(j),\n                forall|j: int| #![trigger self.spec_index(j)] index < j < self.spec_len() ==> self.spec_index(j) == old(self).spec_index(j - 1);"
   },
@@ -235,7 +235,7 @@
     "id": 30,
     "function": "from_vec",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "554-557",
+    "lines": "550-553",
     "spec_strength": "unknown",
     "snippet": "        fn from_vec(elts: Vec<T>) -> (seq: Self)\n            ensures\n                seq.spec_len() == elts@.len(),\n                forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];"
   },
@@ -243,7 +243,7 @@
     "id": 31,
     "function": "find_key",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "560-572",
+    "lines": "557-569",
     "spec_strength": "unknown",
     "snippet": "        fn find_key<K: View + Eq + PartialEq, V: View>(\n            groups: &ArraySeqS<(K, ArraySeqS<V>)>,\n            needle: &K,\n        ) -> (found: Option<usize>)\n            requires\n              obeys_concrete_eq::<K>(),\n            ensures\n               match found {\n                   Some(idx) => idx < groups.seq@.len()\n                        && groups.seq@[idx as int].0 == *needle\n                        && forall|m: int| #![trigger groups.seq@[m]] 0 <= m < idx as int ==> groups.seq@[m].0 != *needle,\n                   None => forall|m: int| #![trigger groups.seq@[m]] 0 <= m < groups.seq@.len() ==> groups.seq@[m].0 != *needle,\n               };"
   },
@@ -251,7 +251,7 @@
     "id": 32,
     "function": "collect",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "578-590",
+    "lines": "577-589",
     "spec_strength": "unknown",
     "snippet": "    fn collect<K: DeepView<V = K> + View + Clone + Eq + PartialEq, V: DeepView<V = V> + View + Clone + Eq>(\n        pairs: &ArraySeqS<(K, V)>,\n    ) -> (collected: ArraySeqS<(K, ArraySeqS<V>)>)\n        requires\n            obeys_feq_full::<K>(),\n            obeys_feq_full::<V>(),\n            obeys_concrete_eq::<K>(),\n            obeys_deep_eq::<K>(),\n            obeys_deep_eq::<V>(),\n            obeys_generic_deep_eq::<K>(),\n            obeys_generic_deep_eq::<V>(),\n        ensures\n           collected.seq.deep_view() =~= spec_collect(pairs.seq@);"
   },
@@ -259,7 +259,7 @@
     "id": 33,
     "function": "map",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "1253-1257",
+    "lines": "1301-1305",
     "spec_strength": "unknown",
     "snippet": "    pub fn map<T: View, U: Clone + View, F: Fn(&T) -> U>(a: &ArraySeqS<T>, f: &F) -> (mapped: ArraySeqS<U>)\n        requires forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.spec_index(i),))\n        ensures\n            mapped.spec_len() == a.spec_len(),\n            forall|i: int| #![trigger mapped.spec_index(i)] 0 <= i < a.spec_len() ==> f.ensures((&a.spec_index(i),), mapped.spec_index(i)),"
   },
@@ -267,7 +267,7 @@
     "id": 34,
     "function": "tabulate",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "1284-1290",
+    "lines": "1332-1338",
     "spec_strength": "unknown",
     "snippet": "    pub fn tabulate<T: View, F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqS<T>)\n        requires\n            length <= usize::MAX,\n            forall|i: usize| i < length ==> #[trigger] f.requires((i,)),\n        ensures\n            tab_seq.spec_len() == length as int,\n            forall|i: int| #![trigger tab_seq.spec_index(i)] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.spec_index(i)),"
   },
@@ -275,7 +275,7 @@
     "id": 35,
     "function": "flatten",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "1311-1315",
+    "lines": "1363-1367",
     "spec_strength": "unknown",
     "snippet": "    pub fn flatten<T: View + Clone + Eq>(a: &ArraySeqS<ArraySeqS<T>>) -> (flattened: ArraySeqS<T>)\n        requires\n            obeys_feq_full::<T>(),\n        ensures\n            flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqS<T>| inner.seq@).flatten(),"
   },
@@ -283,15 +283,15 @@
     "id": 36,
     "function": "iterate_prefixes",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "1369-1384",
+    "lines": "1423-1442",
     "spec_strength": "unknown",
-    "snippet": "    pub fn iterate_prefixes<T: View, A: View + Clone + Eq, F: Fn(&A, &T) -> A>(\n        a: &ArraySeqS<T>, f: &F,\n        Ghost(spec_f): Ghost<spec_fn(A, T) -> A>,\n        start_x: A,\n    ) -> (prefixes: (ArraySeqS<A>, A))\n        requires\n            obeys_feq_full::<A>(),\n            forall|x: &A, y: &T| #[trigger] f.requires((x, y)),\n            forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),\n        ensures\n            prefixes.0.spec_len() == a.spec_len(),\n            forall|i: int| #![trigger prefixes.0.spec_index(i)] 0 <= i < a.spec_len() ==>\n                prefixes.0.spec_index(i) == spec_iterate_prefixes(\n                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, start_x).0[i],\n            prefixes.1 == spec_iterate(\n                Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, start_x),"
+    "snippet": "    pub fn iterate_prefixes<T: View, A: View + Clone + Eq, F: Fn(&A, &T) -> A>(\n        // Veracity: NEEDED proof block\n        a: &ArraySeqS<T>, f: &F,\n        Ghost(spec_f): Ghost<spec_fn(A, T) -> A>,\n        start_x: A,\n    // Veracity: NEEDED proof block\n    ) -> (prefixes: (ArraySeqS<A>, A))\n        requires\n            obeys_feq_full::<A>(),\n            forall|x: &A, y: &T| #[trigger] f.requires((x, y)),\n            forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),\n        ensures\n            prefixes.0.spec_len() == a.spec_len(),\n            forall|i: int| #![trigger prefixes.0.spec_index(i)] 0 <= i < a.spec_len() ==>\n                // Veracity: NEEDED proof block\n                prefixes.0.spec_index(i) == spec_iterate_prefixes(\n                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, start_x).0[i],\n            prefixes.1 == spec_iterate(\n                // Veracity: NEEDED proof block\n                Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, start_x),"
   },
   {
     "id": 37,
     "function": "lemma_spec_index",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "1446-1448",
+    "lines": "1505-1507",
     "spec_strength": "unknown",
     "snippet": "        broadcast proof fn lemma_spec_index(&self, i: int)\n            requires 0 <= i < self.spec_len()\n            ensures #[trigger] self.seq@[i] == self.spec_index(i)"
   },
@@ -299,1272 +299,1584 @@
     "id": 38,
     "function": "iter",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "1452-1456",
+    "lines": "1511-1515",
     "spec_strength": "unknown",
-    "snippet": "        pub fn iter(&self) -> (it: ArraySeqIter<'_, T>)\n            ensures\n                it@.0 == 0,\n                it@.1 == self.seq@,\n                iter_invariant(&it),"
+    "snippet": "        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)\n            ensures\n                IteratorSpec::remaining(&it) == self.seq@.as_ref(),\n                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,\n                IteratorSpec::decrease(&it) is Some,"
   },
   {
     "id": 39,
     "function": "iter_mut",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "1464",
+    "lines": "1523",
     "spec_strength": "",
     "snippet": "        pub fn iter_mut(&mut self) -> IterMut<'_, T> { self.seq.iter_mut() }"
   },
   {
     "id": 40,
-    "function": "next",
-    "file": "Chap18/ArraySeq.rs",
-    "lines": "1513-1529",
-    "spec_strength": "unknown",
-    "snippet": "        fn next(&mut self) -> (next: Option<&'a T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
-  },
-  {
-    "id": 41,
     "function": "eq",
     "file": "Chap18/ArraySeq.rs",
-    "lines": "1617-1618",
-    "spec_strength": "hole",
+    "lines": "1586-1587",
+    "spec_strength": "unknown",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
   {
-    "id": 42,
-    "function": "lemma_spec_inject_element",
-    "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "122-131",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_spec_inject_element<T>(s: Seq<T>, u: Seq<(usize, T)>, i: int)\n        requires 0 <= i < s.len(),\n        ensures ({\n            let r = spec_inject(s, u);\n            r.len() == s.len()\n            && (r[i] == s[i]\n                || exists|j: int| #![trigger u[j]] 0 <= j < u.len()\n                    && u[j].0 == i as usize && r[i] == u[j].1)\n        }),\n        decreases u.len(),"
-  },
-  {
-    "id": 43,
-    "function": "lemma_spec_inject_len",
-    "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "162-164",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_spec_inject_len<T>(s: Seq<T>, u: Seq<(usize, T)>)\n        ensures spec_inject(s, u).len() == s.len(),\n        decreases u.len(),"
-  },
-  {
-    "id": 44,
-    "function": "apply_ninject_updates",
-    "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "196-204",
-    "spec_strength": "unknown",
-    "snippet": "    fn apply_ninject_updates<T: Clone + Eq + Send + Sync + 'static>(\n        lock: Arc<RwLock<Vec<T>, ArraySeqMtEphInv<T>>>,\n        updates: Vec<(usize, T)>,\n        Ghost(pred): Ghost<ArraySeqMtEphInv<T>>,\n    )\n        requires\n            obeys_feq_clone::<T>(),\n            lock.pred() == pred,\n            forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==> {"
-  },
-  {
-    "id": 45,
+    "id": 41,
     "function": "new",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "270-278",
+    "lines": "1476-1484",
     "spec_strength": "unknown",
     "snippet": "        fn new(length: usize, init_value: T) -> (new_seq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                length <= usize::MAX,\n            ensures\n                new_seq.spec_arrayseqmteph_wf(),\n                new_seq.spec_len() == length as int,\n                forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;"
   },
   {
-    "id": 46,
+    "id": 42,
     "function": "set",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "283-288",
+    "lines": "1488-1493",
     "spec_strength": "unknown",
     "snippet": "        fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)\n            requires index < old(self).spec_len()\n            ensures\n                success.is_ok() ==> self.spec_len() == old(self).spec_len(),\n                success.is_ok() ==> self.spec_index(index as int) == item,\n                success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);"
   },
   {
-    "id": 47,
+    "id": 43,
     "function": "length",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "293-294",
+    "lines": "1498-1499",
     "spec_strength": "unknown",
     "snippet": "        fn length(&self) -> (len: usize)\n            ensures len as int == self.spec_len();"
   },
   {
-    "id": 48,
+    "id": 44,
     "function": "nth",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "299-301",
+    "lines": "1505-1507",
     "spec_strength": "unknown",
     "snippet": "        fn nth(&self, index: usize) -> (nth_elem: &T)\n            requires index < self.spec_len()\n            ensures *nth_elem == self.spec_index(index as int);"
   },
   {
-    "id": 49,
+    "id": 45,
     "function": "subseq_copy",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "306-315",
+    "lines": "1511-1520",
     "spec_strength": "unknown",
     "snippet": "        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                start + length <= usize::MAX,\n                start + length <= self.spec_len(),\n            ensures\n                subseq.spec_arrayseqmteph_wf(),\n                subseq.spec_len() == length as int,\n                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);"
   },
   {
-    "id": 50,
+    "id": 46,
     "function": "subseq",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "320-329",
+    "lines": "1525-1534",
     "spec_strength": "unknown",
     "snippet": "        fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                start + length <= usize::MAX,\n                start + length <= a.spec_len(),\n            ensures\n                subseq.spec_arrayseqmteph_wf(),\n                subseq.spec_len() == length as int,\n                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);"
   },
   {
-    "id": 51,
+    "id": 47,
     "function": "from_vec",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "334-338",
+    "lines": "1538-1542",
     "spec_strength": "unknown",
     "snippet": "        fn from_vec(elts: Vec<T>) -> (seq: Self)\n            ensures\n                seq.spec_arrayseqmteph_wf(),\n                seq.spec_len() == elts@.len(),\n                forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];"
   },
   {
-    "id": 52,
+    "id": 48,
     "function": "empty",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "347-348",
+    "lines": "1551-1552",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty_seq: Self)\n            ensures empty_seq.spec_arrayseqmteph_wf(), empty_seq.spec_len() == 0;"
   },
   {
-    "id": 53,
+    "id": 49,
     "function": "singleton",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "353-357",
+    "lines": "1557-1561",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(item: T) -> (singleton: Self)\n            ensures\n                singleton.spec_arrayseqmteph_wf(),\n                singleton.spec_len() == 1,\n                singleton.spec_index(0) == item;"
   },
   {
-    "id": 54,
+    "id": 50,
     "function": "append",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "362-371",
+    "lines": "1566-1575",
     "spec_strength": "unknown",
     "snippet": "        fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (appended: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                a.seq@.len() + b.seq@.len() <= usize::MAX as int,\n            ensures\n                appended.spec_arrayseqmteph_wf(),\n                appended.spec_len() == a.seq@.len() + b.seq@.len(),\n                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],\n                forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];"
   },
   {
-    "id": 55,
+    "id": 51,
     "function": "filter",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "378-393",
+    "lines": "1582-1597",
     "spec_strength": "unknown",
-    "snippet": "        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n                // The biconditional bridge ties the exec closure to the spec predicate.\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered.spec_arrayseqmteph_wf(),\n                filtered.spec_len() <= a.seq@.len(),\n                filtered.spec_len() == spec_filter_len(\n                    Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),\n                // The result multiset equals the input multiset filtered by the spec predicate.\n                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()\n                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),\n                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);"
+    "snippet": "        fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)\n            where T: Clone + Eq + Send + Sync + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n                // The biconditional bridge ties the exec closure to the spec predicate.\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered.spec_arrayseqmteph_wf(),\n                filtered.spec_len() <= a.seq@.len(),\n                filtered.spec_len() == spec_filter_len(\n                    Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),\n                // The result multiset equals the input multiset filtered by the spec predicate.\n                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()\n                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),\n                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);"
   },
   {
-    "id": 56,
+    "id": 52,
     "function": "update",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "398-407",
+    "lines": "1603-1612",
     "spec_strength": "unknown",
     "snippet": "        fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (updated: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                index < a.seq@.len(),\n            ensures\n                updated.spec_arrayseqmteph_wf(),\n                updated.spec_len() == a.seq@.len(),\n                updated.spec_index(index as int) == item,\n                forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];"
   },
   {
-    "id": 57,
+    "id": 53,
     "function": "inject",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "413-423",
+    "lines": "1619-1629",
     "spec_strength": "unknown",
     "snippet": "        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                injected.spec_arrayseqmteph_wf(),\n                injected.spec_len() == a.spec_len(),\n                Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))\n                    =~= spec_inject(\n                        Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                        updates@);"
   },
   {
-    "id": 58,
+    "id": 54,
     "function": "ninject",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "429-438",
+    "lines": "1635-1644",
     "spec_strength": "unknown",
     "snippet": "        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                injected.spec_arrayseqmteph_wf(),\n                spec_ninject(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    updates@,\n                    Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)));"
   },
   {
-    "id": 59,
+    "id": 55,
     "function": "is_empty",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "443-444",
+    "lines": "1649-1650",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self) -> (empty: bool)\n            ensures empty <==> self.spec_len() == 0;"
   },
   {
-    "id": 60,
+    "id": 56,
     "function": "is_singleton",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "449-450",
+    "lines": "1655-1656",
     "spec_strength": "unknown",
     "snippet": "        fn is_singleton(&self) -> (single: bool)\n            ensures single <==> self.spec_len() == 1;"
   },
   {
-    "id": 61,
+    "id": 57,
     "function": "iterate",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "455-460",
+    "lines": "1661-1666",
     "spec_strength": "unknown",
     "snippet": "        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (acc: A)\n            requires\n                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),\n                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),\n            ensures\n                acc == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);"
   },
   {
-    "id": 62,
+    "id": 58,
     "function": "reduce",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "465-473",
+    "lines": "1671-1680",
     "spec_strength": "unknown",
-    "snippet": "        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)\n            where T: Clone\n            requires\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);"
+    "snippet": "        fn reduce<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)\n            where T: Clone + Eq + Send + Sync + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);"
   },
   {
-    "id": 63,
+    "id": 59,
     "function": "scan",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "478-490",
+    "lines": "1685-1697",
     "spec_strength": "unknown",
     "snippet": "        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtEphS<T>, T))\n            where T: Clone + Eq\n            requires\n                spec_monoid(spec_f, id),\n                obeys_feq_clone::<T>(),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                scanned.0.spec_len() == a.spec_len(),\n                forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < a.spec_len() ==>\n                    scanned.0.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f),\n                scanned.1 == spec_iterate(\n                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);"
   },
   {
-    "id": 64,
+    "id": 60,
     "function": "map",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "495-500",
+    "lines": "1702-1710",
     "spec_strength": "unknown",
-    "snippet": "        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)\n            requires\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),\n            ensures\n                mapped.seq@.len() == a.seq@.len(),\n                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);"
+    "snippet": "        fn map<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)\n            where T: Clone + Eq + Send + Sync + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                obeys_feq_clone::<U>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),\n            ensures\n                mapped.seq@.len() == a.seq@.len(),\n                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);"
   },
   {
-    "id": 65,
+    "id": 61,
     "function": "tabulate",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "505-511",
+    "lines": "1715-1722",
     "spec_strength": "unknown",
-    "snippet": "        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtEphS<T>)\n            requires\n                length <= usize::MAX,\n                forall|i: usize| i < length ==> #[trigger] f.requires((i,)),\n            ensures\n                tab_seq.seq@.len() == length,\n                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);"
+    "snippet": "        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtEphS<T>)\n            requires\n                length <= usize::MAX,\n                forall|i: usize| i < length ==> #[trigger] f.requires((i,)),\n            ensures\n                tab_seq.seq@.len() == length,\n                // Veracity: NEEDED proof block\n                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);"
   },
   {
-    "id": 66,
+    "id": 62,
     "function": "flatten",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "516-521",
+    "lines": "1728-1733",
     "spec_strength": "unknown",
     "snippet": "        fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqMtEphS<T>| inner.seq@).flatten();"
   },
   {
-    "id": 67,
+    "id": 63,
     "function": "lemma_spec_index",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "1086-1088",
+    "lines": "637-639",
     "spec_strength": "unknown",
     "snippet": "        broadcast proof fn lemma_spec_index(&self, i: int)\n            requires 0 <= i < self.spec_len()\n            ensures #[trigger] self.seq@[i] == self.spec_index(i)"
   },
   {
-    "id": 68,
+    "id": 64,
     "function": "iter",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "1092-1096",
+    "lines": "643-647",
     "spec_strength": "unknown",
-    "snippet": "        pub fn iter(&self) -> (it: ArraySeqMtEphIter<'_, T>)\n            ensures\n                it@.0 == 0,\n                it@.1 == self.seq@,\n                iter_invariant(&it),"
+    "snippet": "        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)\n            ensures\n                IteratorSpec::remaining(&it) == self.seq@.as_ref(),\n                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,\n                IteratorSpec::decrease(&it) is Some,"
   },
   {
-    "id": 69,
+    "id": 65,
     "function": "map_par",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "1103-1114",
+    "lines": "653-666",
     "spec_strength": "unknown",
-    "snippet": "        pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(\n            a: &ArraySeqMtEphS<T>,\n            f: F,\n        ) -> (mapped: ArraySeqMtEphS<U>)\n            where T: Clone + Send + Sync + Eq + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                obeys_feq_clone::<U>(),\n                a.seq@.len() <= usize::MAX as int,\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),\n            ensures mapped.seq@.len() == a.seq@.len()\n            decreases a.seq@.len()"
+    "snippet": "        pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(\n            a: &ArraySeqMtEphS<T>,\n            // Veracity: NEEDED proof block\n            f: F,\n        ) -> (mapped: ArraySeqMtEphS<U>)\n            where T: Clone + Send + Sync + Eq + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                obeys_feq_clone::<U>(),\n                a.seq@.len() <= usize::MAX as int,\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),\n            ensures mapped.seq@.len() == a.seq@.len()\n            // Veracity: NEEDED proof block\n            decreases a.seq@.len()"
   },
   {
-    "id": 70,
+    "id": 66,
     "function": "filter_par",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "1155-1165",
+    "lines": "708-719",
     "spec_strength": "unknown",
-    "snippet": "        pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(\n            a: &ArraySeqMtEphS<T>,\n            pred: F,\n        ) -> (filtered: ArraySeqMtEphS<T>)\n            where T: Clone + Send + Sync + Eq + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                a.seq@.len() <= usize::MAX as int,\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n            ensures filtered.seq@.len() <= a.seq@.len()\n            decreases a.seq@.len()"
+    "snippet": "        pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(\n            a: &ArraySeqMtEphS<T>,\n            pred: F,\n        ) -> (filtered: ArraySeqMtEphS<T>)\n            // Veracity: NEEDED proof block\n            where T: Clone + Send + Sync + Eq + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                a.seq@.len() <= usize::MAX as int,\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n            ensures filtered.seq@.len() <= a.seq@.len()\n            decreases a.seq@.len()"
   },
   {
-    "id": 71,
+    "id": 67,
     "function": "lemma_monoid_fold_left",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "1209-1212",
+    "lines": "766-769",
     "spec_strength": "unknown",
     "snippet": "        proof fn lemma_monoid_fold_left(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)\n            requires spec_monoid(f, id)\n            ensures f(x, s.fold_left(id, f)) == s.fold_left(x, f)\n            decreases s.len()"
   },
   {
-    "id": 72,
+    "id": 68,
     "function": "reduce_par",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "1237-1252",
+    "lines": "793-811",
     "spec_strength": "unknown",
-    "snippet": "        pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(\n            a: &ArraySeqMtEphS<T>,\n            f: F,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: T,\n        ) -> (reduced: T)\n            where T: Clone + Send + Sync + Eq + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                spec_monoid(spec_f, id),\n                a.seq@.len() > 0,\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id),\n            decreases a.seq@.len()"
+    "snippet": "        pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(\n            a: &ArraySeqMtEphS<T>,\n            f: F,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            // Veracity: NEEDED proof block\n            id: T,\n        ) -> (reduced: T)\n            where T: Clone + Send + Sync + Eq + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                // Veracity: NEEDED proof block\n                spec_monoid(spec_f, id),\n                // Veracity: NEEDED proof block\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                // Veracity: NEEDED proof block\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id),\n            decreases a.seq@.len()"
+  },
+  {
+    "id": 69,
+    "function": "reduce_dc",
+    "file": "Chap18/ArraySeqMtEph.rs",
+    "lines": "890-906",
+    "spec_strength": "unknown",
+    "snippet": "        fn reduce_dc<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(\n            a: &ArraySeqMtEphS<T>,\n            f: &F,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: T,\n        // Veracity: NEEDED proof block\n        ) -> (reduced: T)\n            // Veracity: NEEDED proof block\n            where T: Clone + Eq + Send + Sync + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id),\n            decreases a.seq@.len()"
+  },
+  {
+    "id": 70,
+    "function": "map_dc",
+    "file": "Chap18/ArraySeqMtEph.rs",
+    "lines": "983-996",
+    "spec_strength": "unknown",
+    "snippet": "        fn map_dc<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(\n            a: &ArraySeqMtEphS<T>,\n            f: &F,\n        ) -> (mapped: ArraySeqMtEphS<U>)\n            where T: Clone + Eq + Send + Sync + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                obeys_feq_clone::<U>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),\n            ensures\n                // Veracity: NEEDED proof block\n                mapped.seq@.len() == a.seq@.len(),\n                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]),\n            decreases a.seq@.len()"
+  },
+  {
+    "id": 71,
+    "function": "filter_dc",
+    "file": "Chap18/ArraySeqMtEph.rs",
+    "lines": "1110-1129",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter_dc<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(\n            a: &ArraySeqMtEphS<T>,\n            pred: &F,\n            Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,\n        // Veracity: NEEDED proof block\n        ) -> (filtered: ArraySeqMtEphS<T>)\n            where T: Clone + Eq + Send + Sync + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered.spec_arrayseqmteph_wf(),\n                // Veracity: NEEDED proof block\n                filtered.spec_len() <= a.seq@.len(),\n                filtered.spec_len() == spec_filter_len(a.seq@, spec_pred),\n                filtered.seq@.to_multiset() =~= a.seq@.to_multiset().filter(spec_pred),\n                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len()\n                    ==> pred.ensures((&filtered.spec_index(i),), true),\n            decreases a.seq@.len()"
+  },
+  {
+    "id": 72,
+    "function": "ninject_par",
+    "file": "Chap18/ArraySeqMtEph.rs",
+    "lines": "1312-1322",
+    "spec_strength": "unknown",
+    "snippet": "        pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)\n            where T: StTInMtT\n            requires\n                obeys_feq_clone::<T>(),\n                forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==>\n                    0 <= updates@[k].0 < a.seq@.len(),\n            ensures\n                spec_ninject(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    updates@,\n                    Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))),"
   },
   {
     "id": 73,
-    "function": "ninject_par",
+    "function": "apply_ninject_updates",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "1325-1335",
+    "lines": "1742-1751",
     "spec_strength": "unknown",
-    "snippet": "        pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)\n            where T: Clone + Send + Sync + Eq + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==>\n                    0 <= updates@[k].0 < a.seq@.len(),\n            ensures\n                spec_ninject(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    updates@,\n                    Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))),"
+    "snippet": "    fn apply_ninject_updates<T: StTInMtT>(\n        lock: Arc<RwLock<Vec<T>, ArraySeqMtEphInv<T>>>,\n        // Veracity: NEEDED proof block\n        updates: Vec<(usize, T)>,\n        Ghost(pred): Ghost<ArraySeqMtEphInv<T>>,\n    )\n        requires\n            obeys_feq_clone::<T>(),\n            lock.pred() == pred,\n            forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==> {"
   },
   {
     "id": 74,
-    "function": "next",
-    "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "1462-1478",
-    "spec_strength": "unknown",
-    "snippet": "        fn next(&mut self) -> (next: Option<&'a T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
-  },
-  {
-    "id": 75,
     "function": "eq",
     "file": "Chap18/ArraySeqMtEph.rs",
-    "lines": "1581-1582",
-    "spec_strength": "hole",
+    "lines": "1841-1842",
+    "spec_strength": "unknown",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
   {
+    "id": 75,
+    "function": "lemma_monoid_fold_left",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "138-141",
+    "spec_strength": "unknown",
+    "snippet": "    pub(crate) proof fn lemma_monoid_fold_left<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)\n            requires spec_monoid(f, id)\n            ensures f(x, s.fold_left(id, f)) == s.fold_left(x, f)\n            decreases s.len()"
+  },
+  {
     "id": 76,
+    "function": "lemma_prefix_fold_matching",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "161-170",
+    "spec_strength": "unknown",
+    "snippet": "    pub(crate) proof fn lemma_prefix_fold_matching<T>(\n        f1: spec_fn(int) -> T, f2: spec_fn(int) -> T,\n        spec_f: spec_fn(T, T) -> T, id: T, n: int,\n    )\n            requires\n                0 <= n,\n                forall|k: int| 0 <= k < n ==> #[trigger] f1(k) == f2(k),\n            ensures\n                spec_prefix_fold(f1, spec_f, id, n) == spec_prefix_fold(f2, spec_f, id, n),\n            decreases n,"
+  },
+  {
+    "id": 77,
+    "function": "lemma_prefix_fold_split",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "178-190",
+    "spec_strength": "unknown",
+    "snippet": "    pub(crate) proof fn lemma_prefix_fold_split<T>(\n        a_fn: spec_fn(int) -> T, spec_f: spec_fn(T, T) -> T, id: T, m: int, k: int,\n    )\n            requires\n                spec_monoid(spec_f, id),\n                m >= 0, k >= 0,\n            ensures\n                spec_prefix_fold(a_fn, spec_f, id, m + k)\n                    == spec_f(\n                        spec_prefix_fold(a_fn, spec_f, id, m),\n                        spec_prefix_fold(|j: int| a_fn(m + j), spec_f, id, k),\n                    ),\n            decreases k,"
+  },
+  {
+    "id": 78,
+    "function": "lemma_prefix_fold_eq_fold_left",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "210-218",
+    "spec_strength": "unknown",
+    "snippet": "    pub(crate) proof fn lemma_prefix_fold_eq_fold_left<T>(\n        s: Seq<T>, seq_fn: spec_fn(int) -> T, spec_f: spec_fn(T, T) -> T, id: T, n: int,\n    )\n            requires\n                0 <= n <= s.len(),\n                forall|k: int| 0 <= k < s.len() ==> #[trigger] seq_fn(k) == s[k],\n            ensures\n                spec_prefix_fold(seq_fn, spec_f, id, n) == s.take(n).fold_left(id, spec_f),\n            decreases n,"
+  },
+  {
+    "id": 79,
+    "function": "lemma_sum_inner_lens_split",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "231-248",
+    "spec_strength": "unknown",
+    "snippet": "    pub(crate) proof fn lemma_sum_inner_lens_split<T>(\n        a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,\n        mid: usize,\n    )\n        requires\n            mid <= a.len,\n            a.start + a.len <= (*a.data)@.len(),\n            a.start + a.len <= usize::MAX,\n        ensures ({\n            let left = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {\n                data: a.data, start: a.start, len: mid,\n            };\n            let right = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {\n                data: a.data, start: (a.start + mid) as usize, len: (a.len - mid) as usize,\n            };\n            spec_sum_inner_lens(a) == spec_sum_inner_lens(&left) + spec_sum_inner_lens(&right)\n        }),\n        decreases mid,"
+  },
+  {
+    "id": 80,
+    "function": "length",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "275-277",
+    "spec_strength": "unknown",
+    "snippet": "        fn length(&self) -> (len: usize)\n            requires self.spec_arrayseqmtephslice_wf(),\n            ensures len as int == self.spec_len();"
+  },
+  {
+    "id": 81,
+    "function": "nth_cloned",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "280-285",
+    "spec_strength": "unknown",
+    "snippet": "        fn nth_cloned(&self, index: usize) -> (elem: T)\n            requires\n                self.spec_arrayseqmtephslice_wf(),\n                index < self.spec_len(),\n                obeys_feq_clone::<T>(),\n            ensures elem == self.spec_index(index as int);"
+  },
+  {
+    "id": 82,
+    "function": "slice",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "289-298",
+    "spec_strength": "unknown",
+    "snippet": "        fn slice(&self, start: usize, length: usize) -> (sliced: Self)\n            requires\n                self.spec_arrayseqmtephslice_wf(),\n                start + length <= usize::MAX,\n                start + length <= self.spec_len(),\n            ensures\n                sliced.spec_arrayseqmtephslice_wf(),\n                sliced.spec_len() == length as int,\n                forall|i: int| #![trigger sliced.spec_index(i)]\n                    0 <= i < length ==> sliced.spec_index(i) == self.spec_index(start as int + i);"
+  },
+  {
+    "id": 83,
+    "function": "from_vec",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "301-306",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_vec(data: Vec<T>) -> (seq: Self)\n            ensures\n                seq.spec_arrayseqmtephslice_wf(),\n                seq.spec_len() == data@.len(),\n                forall|i: int| #![trigger seq.spec_index(i)]\n                    0 <= i < data@.len() ==> seq.spec_index(i) == data@[i];"
+  },
+  {
+    "id": 84,
+    "function": "empty",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "310-313",
+    "spec_strength": "unknown",
+    "snippet": "        fn empty() -> (empty_seq: Self)\n            ensures\n                empty_seq.spec_arrayseqmtephslice_wf(),\n                empty_seq.spec_len() == 0;"
+  },
+  {
+    "id": 85,
+    "function": "singleton",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "317-322",
+    "spec_strength": "unknown",
+    "snippet": "        fn singleton(item: T) -> (s: Self)\n            requires obeys_feq_clone::<T>(),\n            ensures\n                s.spec_arrayseqmtephslice_wf(),\n                s.spec_len() == 1,\n                s.spec_index(0) == item;"
+  },
+  {
+    "id": 86,
+    "function": "new",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "325-333",
+    "spec_strength": "unknown",
+    "snippet": "        fn new(length: usize, init_value: T) -> (new_seq: Self)\n            requires\n                length <= usize::MAX,\n                obeys_feq_clone::<T>(),\n            ensures\n                new_seq.spec_arrayseqmtephslice_wf(),\n                new_seq.spec_len() == length as int,\n                forall|i: int| #![trigger new_seq.spec_index(i)]\n                    0 <= i < length ==> new_seq.spec_index(i) == init_value;"
+  },
+  {
+    "id": 87,
+    "function": "to_vec",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "337-344",
+    "spec_strength": "unknown",
+    "snippet": "        fn to_vec(&self) -> (v: Vec<T>)\n            requires\n                self.spec_arrayseqmtephslice_wf(),\n                obeys_feq_clone::<T>(),\n            ensures\n                v@.len() == self.spec_len(),\n                forall|i: int| #![trigger v@[i]]\n                    0 <= i < self.spec_len() ==> v@[i] == self.spec_index(i);"
+  },
+  {
+    "id": 88,
+    "function": "iter",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "346-351",
+    "spec_strength": "unknown",
+    "snippet": "        fn iter(&self) -> (it: std::slice::Iter<'_, T>)\n            requires self.spec_arrayseqmtephslice_wf(),\n            ensures\n                IteratorSpec::remaining(&it) == self.spec_backing_seq().as_ref(),\n                vstd::std_specs::slice::into_iter_elts(it) == self.spec_backing_seq(),\n                IteratorSpec::decrease(&it) is Some;"
+  },
+  {
+    "id": 89,
+    "function": "reduce",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "355-365",
+    "spec_strength": "unknown",
+    "snippet": "        fn reduce<F: MtReduceFn<T>>(\n            &self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,\n        ) -> (reduced: T)\n            requires\n                self.spec_arrayseqmtephslice_wf(),\n                obeys_feq_clone::<T>(),\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                reduced == self.spec_backing_seq().fold_left(id, spec_f);"
+  },
+  {
+    "id": 90,
+    "function": "map",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "369-380",
+    "spec_strength": "unknown",
+    "snippet": "        fn map<U: StTInMtT, F: MtMapFn<T, U>>(\n            &self, f: &F,\n        ) -> (mapped: ArraySeqMtEphSliceS<U>)\n            requires\n                self.spec_arrayseqmtephslice_wf(),\n                obeys_feq_clone::<T>(),\n                obeys_feq_clone::<U>(),\n                forall|x: &T| #[trigger] f.requires((x,)),\n            ensures\n                mapped.len as nat == self.spec_len(),\n                mapped.start + mapped.len <= (*mapped.data)@.len(),\n                mapped.start + mapped.len <= usize::MAX;"
+  },
+  {
+    "id": 91,
+    "function": "filter",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "384-394",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter<F: MtPred<T>>(\n            &self, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_arrayseqmtephslice_wf(),\n                obeys_feq_clone::<T>(),\n                forall|x: &T| #[trigger] pred.requires((x,)),\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered.spec_arrayseqmtephslice_wf(),\n                filtered.spec_len() <= self.spec_len();"
+  },
+  {
+    "id": 92,
+    "function": "tabulate",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "399-407",
+    "spec_strength": "unknown",
+    "snippet": "        fn tabulate<F: MtTabulateFn<T>>(f: &F, length: usize) -> (tab: Self)\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: usize| i < length ==> #[trigger] f.requires((i,)),\n            ensures\n                tab.spec_arrayseqmtephslice_wf(),\n                tab.spec_len() == length as nat,\n                forall|i: int| #![trigger tab.spec_index(i)]\n                    0 <= i < length ==> f.ensures((i as usize,), tab.spec_index(i));"
+  },
+  {
+    "id": 93,
+    "function": "scan",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "412-426",
+    "spec_strength": "unknown",
+    "snippet": "        fn scan<F: MtReduceFn<T>>(\n            &self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,\n        ) -> (scanned: (Self, T))\n            requires\n                self.spec_arrayseqmtephslice_wf(),\n                obeys_feq_clone::<T>(),\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                scanned.0.spec_arrayseqmtephslice_wf(),\n                scanned.0.spec_len() == self.spec_len(),\n                forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < self.spec_len() ==>\n                    scanned.0.spec_index(i) == self.spec_backing_seq().take(i + 1).fold_left(id, spec_f),\n                scanned.1 == self.spec_backing_seq().fold_left(id, spec_f);"
+  },
+  {
+    "id": 94,
+    "function": "is_empty",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "430-432",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (empty: bool)\n            requires self.spec_arrayseqmtephslice_wf(),\n            ensures empty <==> self.spec_len() == 0;"
+  },
+  {
+    "id": 95,
+    "function": "is_singleton",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "436-438",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_singleton(&self) -> (single: bool)\n            requires self.spec_arrayseqmtephslice_wf(),\n            ensures single <==> self.spec_len() == 1;"
+  },
+  {
+    "id": 96,
+    "function": "append",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "442-454",
+    "spec_strength": "unknown",
+    "snippet": "        fn append(a: &Self, b: &Self) -> (appended: Self)\n            requires\n                a.spec_arrayseqmtephslice_wf(),\n                b.spec_arrayseqmtephslice_wf(),\n                obeys_feq_clone::<T>(),\n                a.spec_len() + b.spec_len() <= usize::MAX as int,\n            ensures\n                appended.spec_arrayseqmtephslice_wf(),\n                appended.spec_len() == a.spec_len() + b.spec_len(),\n                forall|i: int| #![trigger appended.spec_index(i)]\n                    0 <= i < a.spec_len() ==> appended.spec_index(i) == a.spec_index(i),\n                forall|i: int| #![trigger appended.spec_index(a.spec_len() as int + i)]\n                    0 <= i < b.spec_len() ==> appended.spec_index(a.spec_len() as int + i) == b.spec_index(i);"
+  },
+  {
+    "id": 97,
+    "function": "update",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "458-468",
+    "spec_strength": "unknown",
+    "snippet": "        fn update(&self, index: usize, item: T) -> (updated: Self)\n            requires\n                self.spec_arrayseqmtephslice_wf(),\n                obeys_feq_clone::<T>(),\n                index < self.spec_len(),\n            ensures\n                updated.spec_arrayseqmtephslice_wf(),\n                updated.spec_len() == self.spec_len(),\n                updated.spec_index(index as int) == item,\n                forall|i: int| #![trigger updated.spec_index(i)]\n                    0 <= i < self.spec_len() && i != index as int ==> updated.spec_index(i) == self.spec_index(i);"
+  },
+  {
+    "id": 98,
+    "function": "inject",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "472-482",
+    "spec_strength": "unknown",
+    "snippet": "        fn inject(&self, updates: &Vec<(usize, T)>) -> (injected: Self)\n            requires\n                self.spec_arrayseqmtephslice_wf(),\n                obeys_feq_clone::<T>(),\n            ensures\n                injected.spec_arrayseqmtephslice_wf(),\n                injected.spec_len() == self.spec_len(),\n                Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))\n                    =~= spec_inject(\n                        Seq::new(self.spec_len(), |i: int| self.spec_index(i)),\n                        updates@);"
+  },
+  {
+    "id": 99,
+    "function": "ninject",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "486-495",
+    "spec_strength": "unknown",
+    "snippet": "        fn ninject(&self, updates: &Vec<(usize, T)>) -> (injected: Self)\n            requires\n                self.spec_arrayseqmtephslice_wf(),\n                obeys_feq_clone::<T>(),\n            ensures\n                injected.spec_arrayseqmtephslice_wf(),\n                spec_ninject(\n                    Seq::new(self.spec_len(), |i: int| self.spec_index(i)),\n                    updates@,\n                    Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)));"
+  },
+  {
+    "id": 100,
+    "function": "reduce_dc",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "867-882",
+    "spec_strength": "unknown",
+    "snippet": "    pub(crate) fn reduce_dc<T: StTInMtT, F: MtReduceFn<T>>(\n        a: &ArraySeqMtEphSliceS<T>, f: &F,\n        Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,\n    ) -> (reduced: T)\n        requires\n                a.spec_arrayseqmtephslice_wf(),\n                a.spec_len() > 0,\n                // Veracity: NEEDED proof block\n                obeys_feq_clone::<T>(),\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                // Veracity: NEEDED proof block\n                reduced == a.spec_backing_seq().fold_left(id, spec_f),\n            decreases a.spec_len(),"
+  },
+  {
+    "id": 101,
+    "function": "map_dc_vec",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "979-989",
+    "spec_strength": "unknown",
+    "snippet": "    pub(crate) fn map_dc_vec<T: StTInMtT, U: StTInMtT, F: MtMapFn<T, U>>(\n        a: &ArraySeqMtEphSliceS<T>, f: &F,\n    ) -> (mapped: Vec<U>)\n        requires\n                a.spec_arrayseqmtephslice_wf(),\n                obeys_feq_clone::<T>(),\n                obeys_feq_clone::<U>(),\n                forall|x: &T| #[trigger] f.requires((x,)),\n            ensures\n                mapped@.len() == a.spec_len(),\n            decreases a.spec_len(),"
+  },
+  {
+    "id": 102,
+    "function": "filter_dc_vec",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "1052-1063",
+    "spec_strength": "unknown",
+    "snippet": "    pub(crate) fn filter_dc_vec<T: StTInMtT, F: MtPred<T>>(\n        a: &ArraySeqMtEphSliceS<T>, pred: &F,\n        Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,\n    ) -> (filtered: Vec<T>)\n        requires\n                a.spec_arrayseqmtephslice_wf(),\n                obeys_feq_clone::<T>(),\n                forall|x: &T| #[trigger] pred.requires((x,)),\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered@.len() <= a.spec_len(),\n            decreases a.spec_len(),"
+  },
+  {
+    "id": 103,
+    "function": "tabulate_dc_vec",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "1129-1140",
+    "spec_strength": "unknown",
+    "snippet": "    pub(crate) fn tabulate_dc_vec<T: StTInMtT, F: MtTabulateFn<T>>(\n        f: &F, start: usize, count: usize,\n    ) -> (tabulated: Vec<T>)\n        requires\n                start + count <= usize::MAX,\n                obeys_feq_clone::<T>(),\n                forall|i: usize| start <= i < start + count ==> #[trigger] f.requires((i,)),\n            ensures\n                tabulated@.len() == count as int,\n                forall|i: int| #![trigger tabulated@[i]]\n                    0 <= i < count ==> f.ensures(((start as int + i) as usize,), tabulated@[i]),\n            decreases count,"
+  },
+  {
+    "id": 104,
+    "function": "scan_dc_vec",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "1228-1248",
+    "spec_strength": "unknown",
+    "snippet": "    pub(crate) fn scan_dc_vec<T: StTInMtT, F: MtReduceFn<T>>(\n        a: &ArraySeqMtEphSliceS<T>, f: &F,\n        Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,\n    ) -> (scanned: (Vec<T>, T))\n        requires\n                a.spec_arrayseqmtephslice_wf(),\n                a.spec_len() > 0,\n                obeys_feq_clone::<T>(),\n                // Veracity: NEEDED proof block\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures ({\n                let a_fn = |i: int| a.spec_index(i);\n                &&& scanned.0@.len() == a.spec_len()\n                // Veracity: NEEDED proof block\n                &&& forall|i: int| #![trigger scanned.0@[i]] 0 <= i < a.spec_len() ==>\n                        scanned.0@[i] == spec_prefix_fold(a_fn, spec_f, id, i + 1)\n                &&& scanned.1 == spec_prefix_fold(a_fn, spec_f, id, a.spec_len() as int)\n            }),\n            decreases a.spec_len(),"
+  },
+  {
+    "id": 105,
+    "function": "flatten",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "1418-1426",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn flatten<T: StTInMtT>(\n        a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,\n    ) -> (flattened: ArraySeqMtEphSliceS<T>)\n        requires\n            spec_nested_wf(a),\n            obeys_feq_clone::<T>(),\n        ensures\n            flattened.spec_arrayseqmtephslice_wf(),\n            flattened.spec_len() == spec_sum_inner_lens(a),"
+  },
+  {
+    "id": 106,
+    "function": "flatten_dc_vec",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "1435-1444",
+    "spec_strength": "unknown",
+    "snippet": "    fn flatten_dc_vec<T: StTInMtT>(\n        a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,\n    ) -> (flattened: Vec<T>)\n        // Veracity: NEEDED proof block\n        requires\n            spec_nested_wf(a),\n            obeys_feq_clone::<T>(),\n        ensures\n            flattened@.len() == spec_sum_inner_lens(a),\n        decreases a.len,"
+  },
+  {
+    "id": 107,
+    "function": "eq",
+    "file": "Chap18/ArraySeqMtEphSlice.rs",
+    "lines": "1608-1609",
+    "spec_strength": "unknown",
+    "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
+  },
+  {
+    "id": 108,
     "function": "new",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "105-113",
+    "lines": "108-116",
     "spec_strength": "unknown",
     "snippet": "        fn new(length: usize, init_value: T) -> (new_seq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                length <= usize::MAX,\n            ensures\n                new_seq.spec_arrayseqmtper_wf(),\n                new_seq.spec_len() == length as int,\n                forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;"
   },
   {
-    "id": 77,
+    "id": 109,
     "function": "length",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "118-119",
+    "lines": "121-122",
     "spec_strength": "unknown",
     "snippet": "        fn length(&self) -> (len: usize)\n            ensures len as int == self.spec_len();"
   },
   {
-    "id": 78,
+    "id": 110,
     "function": "nth",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "124-126",
+    "lines": "128-130",
     "spec_strength": "unknown",
     "snippet": "        fn nth(&self, index: usize) -> (nth_elem: &T)\n            requires index < self.spec_len()\n            ensures *nth_elem == self.spec_index(index as int);"
   },
   {
-    "id": 79,
+    "id": 111,
     "function": "subseq_copy",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "131-140",
+    "lines": "134-143",
     "spec_strength": "unknown",
     "snippet": "        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                start + length <= usize::MAX,\n                start + length <= self.spec_len(),\n            ensures\n                subseq.spec_arrayseqmtper_wf(),\n                subseq.spec_len() == length as int,\n                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);"
   },
   {
-    "id": 80,
+    "id": 112,
     "function": "subseq",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "145-154",
+    "lines": "148-157",
     "spec_strength": "unknown",
     "snippet": "        fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                start + length <= usize::MAX,\n                start + length <= a.spec_len(),\n            ensures\n                subseq.spec_arrayseqmtper_wf(),\n                subseq.spec_len() == length as int,\n                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);"
   },
   {
-    "id": 81,
+    "id": 113,
     "function": "from_vec",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "159-163",
+    "lines": "161-165",
     "spec_strength": "unknown",
     "snippet": "        fn from_vec(elts: Vec<T>) -> (seq: Self)\n            ensures\n                seq.spec_arrayseqmtper_wf(),\n                seq.spec_len() == elts@.len(),\n                forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];"
   },
   {
-    "id": 82,
+    "id": 114,
     "function": "empty",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "172-173",
+    "lines": "174-175",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty_seq: Self)\n            ensures empty_seq.spec_arrayseqmtper_wf(), empty_seq.spec_len() == 0;"
   },
   {
-    "id": 83,
+    "id": 115,
     "function": "singleton",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "178-182",
+    "lines": "180-184",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(item: T) -> (singleton: Self)\n            ensures\n                singleton.spec_arrayseqmtper_wf(),\n                singleton.spec_len() == 1,\n                singleton.spec_index(0) == item;"
   },
   {
-    "id": 84,
+    "id": 116,
     "function": "append",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "187-196",
+    "lines": "189-198",
     "spec_strength": "unknown",
     "snippet": "        fn append(a: &ArraySeqMtPerS<T>, b: &ArraySeqMtPerS<T>) -> (appended: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                a.seq@.len() + b.seq@.len() <= usize::MAX as int,\n            ensures\n                appended.spec_arrayseqmtper_wf(),\n                appended.spec_len() == a.seq@.len() + b.seq@.len(),\n                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],\n                forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];"
   },
   {
-    "id": 85,
+    "id": 117,
     "function": "filter",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "203-218",
+    "lines": "205-220",
     "spec_strength": "unknown",
-    "snippet": "        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n                // The biconditional bridge ties the exec closure to the spec predicate.\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered.spec_arrayseqmtper_wf(),\n                filtered.spec_len() <= a.seq@.len(),\n                filtered.spec_len() == spec_filter_len(\n                    Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),\n                // The result multiset equals the input multiset filtered by the spec predicate.\n                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()\n                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),\n                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);"
+    "snippet": "        fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)\n            where T: Clone + Eq + Send + Sync + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n                // The biconditional bridge ties the exec closure to the spec predicate.\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered.spec_arrayseqmtper_wf(),\n                filtered.spec_len() <= a.seq@.len(),\n                filtered.spec_len() == spec_filter_len(\n                    Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),\n                // The result multiset equals the input multiset filtered by the spec predicate.\n                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()\n                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),\n                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);"
   },
   {
-    "id": 86,
+    "id": 118,
     "function": "update",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "223-232",
+    "lines": "226-235",
     "spec_strength": "unknown",
     "snippet": "        fn update(a: &ArraySeqMtPerS<T>, index: usize, item: T) -> (updated: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                index < a.seq@.len(),\n            ensures\n                updated.spec_arrayseqmtper_wf(),\n                updated.spec_len() == a.seq@.len(),\n                updated.spec_index(index as int) == item,\n                forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];"
   },
   {
-    "id": 87,
+    "id": 119,
+    "function": "inject",
+    "file": "Chap18/ArraySeqMtPer.rs",
+    "lines": "242-252",
+    "spec_strength": "unknown",
+    "snippet": "        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                injected.spec_arrayseqmtper_wf(),\n                injected.spec_len() == a.spec_len(),\n                Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))\n                    =~= spec_inject(\n                        Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                        updates@);"
+  },
+  {
+    "id": 120,
     "function": "is_empty",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "237-238",
+    "lines": "257-258",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self) -> (empty: bool)\n            ensures empty <==> self.spec_len() == 0;"
   },
   {
-    "id": 88,
+    "id": 121,
     "function": "is_singleton",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "243-244",
+    "lines": "263-264",
     "spec_strength": "unknown",
     "snippet": "        fn is_singleton(&self) -> (single: bool)\n            ensures single <==> self.spec_len() == 1;"
   },
   {
-    "id": 89,
+    "id": 122,
     "function": "iterate",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "249-254",
+    "lines": "269-274",
     "spec_strength": "unknown",
     "snippet": "        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)\n            requires\n                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),\n                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),\n            ensures\n                accumulated == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);"
   },
   {
-    "id": 90,
+    "id": 123,
     "function": "reduce",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "259-267",
+    "lines": "279-287",
     "spec_strength": "unknown",
     "snippet": "        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)\n            where T: Clone\n            requires\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);"
   },
   {
-    "id": 91,
+    "id": 124,
     "function": "scan",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "272-284",
+    "lines": "292-304",
     "spec_strength": "unknown",
     "snippet": "        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtPerS<T>, T))\n            where T: Clone + Eq\n            requires\n                spec_monoid(spec_f, id),\n                obeys_feq_clone::<T>(),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                scanned.0.spec_len() == a.spec_len(),\n                forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < a.spec_len() ==>\n                    scanned.0.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f),\n                scanned.1 == spec_iterate(\n                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);"
   },
   {
-    "id": 92,
+    "id": 125,
     "function": "map",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "289-294",
+    "lines": "309-314",
     "spec_strength": "unknown",
     "snippet": "        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtPerS<T>, f: &F) -> (mapped: ArraySeqMtPerS<U>)\n            requires\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),\n            ensures\n                mapped.seq@.len() == a.seq@.len(),\n                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);"
   },
   {
-    "id": 93,
+    "id": 126,
     "function": "tabulate",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "299-305",
+    "lines": "319-325",
     "spec_strength": "unknown",
     "snippet": "        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtPerS<T>)\n            requires\n                length <= usize::MAX,\n                forall|i: usize| i < length ==> #[trigger] f.requires((i,)),\n            ensures\n                tab_seq.seq@.len() == length,\n                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);"
   },
   {
-    "id": 94,
+    "id": 127,
     "function": "flatten",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "310-315",
+    "lines": "330-335",
     "spec_strength": "unknown",
     "snippet": "        fn flatten(a: &ArraySeqMtPerS<ArraySeqMtPerS<T>>) -> (flattened: ArraySeqMtPerS<T>)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqMtPerS<T>| inner.seq@).flatten();"
   },
   {
-    "id": 95,
+    "id": 128,
     "function": "lemma_spec_index",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "775-777",
+    "lines": "886-888",
     "spec_strength": "unknown",
     "snippet": "        broadcast proof fn lemma_spec_index(&self, i: int)\n            requires 0 <= i < self.spec_len()\n            ensures #[trigger] self.seq@[i] == self.spec_index(i)"
   },
   {
-    "id": 96,
+    "id": 129,
     "function": "iter",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "781-785",
+    "lines": "892-896",
     "spec_strength": "unknown",
-    "snippet": "        pub fn iter(&self) -> (it: ArraySeqMtPerIter<'_, T>)\n            ensures\n                it@.0 == 0,\n                it@.1 == self.seq@,\n                iter_invariant(&it),"
+    "snippet": "        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)\n            ensures\n                IteratorSpec::remaining(&it) == self.seq@.as_ref(),\n                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,\n                IteratorSpec::decrease(&it) is Some,"
   },
   {
-    "id": 97,
+    "id": 130,
     "function": "map_par",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "793-803",
+    "lines": "904-915",
     "spec_strength": "unknown",
-    "snippet": "        pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(\n            a: &ArraySeqMtPerS<T>,\n            f: F,\n        ) -> (mapped: ArraySeqMtPerS<U>)\n            where T: Clone + Send + Sync + Eq + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                obeys_feq_clone::<U>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),\n            ensures mapped.seq@.len() == a.seq@.len()\n            decreases a.seq@.len()"
+    "snippet": "        pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(\n            a: &ArraySeqMtPerS<T>,\n            f: F,\n        ) -> (mapped: ArraySeqMtPerS<U>)\n            where T: Clone + Send + Sync + Eq + 'static\n            requires\n                // Veracity: NEEDED proof block\n                obeys_feq_clone::<T>(),\n                obeys_feq_clone::<U>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),\n            ensures mapped.seq@.len() == a.seq@.len()\n            decreases a.seq@.len()"
   },
   {
-    "id": 98,
+    "id": 131,
+    "function": "filter_dc",
+    "file": "Chap18/ArraySeqMtPer.rs",
+    "lines": "965-986",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter_dc<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(\n            a: &ArraySeqMtPerS<T>,\n            // Veracity: NEEDED proof block\n            pred: &F,\n            Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,\n        ) -> (filtered: ArraySeqMtPerS<T>)\n            where T: Clone + Eq + Send + Sync + 'static\n            // Veracity: NEEDED proof block\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            // Veracity: NEEDED proof block\n            ensures\n                filtered.spec_arrayseqmtper_wf(),\n                filtered.spec_len() <= a.seq@.len(),\n                filtered.spec_len() == spec_filter_len(a.seq@, spec_pred),\n                filtered.seq@.to_multiset() =~= a.seq@.to_multiset().filter(spec_pred),\n                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len()\n                    ==> pred.ensures((&filtered.spec_index(i),), true),\n            // Veracity: NEEDED proof block\n            decreases a.seq@.len()"
+  },
+  {
+    "id": 132,
     "function": "filter_par",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "851-860",
+    "lines": "1147-1157",
     "spec_strength": "unknown",
-    "snippet": "        pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(\n            a: &ArraySeqMtPerS<T>,\n            pred: F,\n        ) -> (filtered: ArraySeqMtPerS<T>)\n            where T: Clone + Send + Sync + Eq + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n            ensures filtered.seq@.len() <= a.seq@.len()\n            decreases a.seq@.len()"
+    "snippet": "        pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(\n            a: &ArraySeqMtPerS<T>,\n            pred: F,\n        // Veracity: NEEDED proof block\n        ) -> (filtered: ArraySeqMtPerS<T>)\n            where T: Clone + Send + Sync + Eq + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n            ensures filtered.seq@.len() <= a.seq@.len()\n            decreases a.seq@.len()"
   },
   {
-    "id": 99,
+    "id": 133,
     "function": "lemma_monoid_fold_left",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "908-911",
+    "lines": "1207-1210",
     "spec_strength": "unknown",
     "snippet": "        proof fn lemma_monoid_fold_left(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)\n            requires spec_monoid(f, id)\n            ensures f(x, s.fold_left(id, f)) == s.fold_left(x, f)\n            decreases s.len()"
   },
   {
-    "id": 100,
+    "id": 134,
     "function": "reduce_par",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "948-963",
+    "lines": "1246-1262",
     "spec_strength": "unknown",
-    "snippet": "        pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(\n            a: &ArraySeqMtPerS<T>,\n            f: F,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: T,\n        ) -> (reduced: T)\n            where T: Clone + Send + Sync + Eq + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                spec_monoid(spec_f, id),\n                a.seq@.len() > 0,\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id),\n            decreases a.seq@.len()"
+    "snippet": "        pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(\n            a: &ArraySeqMtPerS<T>,\n            // Veracity: NEEDED proof block\n            f: F,\n            // Veracity: NEEDED proof block\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: T,\n        ) -> (reduced: T)\n            where T: Clone + Send + Sync + Eq + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id),\n            decreases a.seq@.len()"
   },
   {
-    "id": 101,
-    "function": "next",
+    "id": 135,
+    "function": "map_inner",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "1067-1083",
+    "lines": "1347-1360",
     "spec_strength": "unknown",
-    "snippet": "        fn next(&mut self) -> (next: Option<&'a T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
+    "snippet": "        pub fn map_inner<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(\n            // Veracity: NEEDED proof block\n            a: &ArraySeqMtPerS<T>,\n            f: &F,\n        ) -> (mapped: ArraySeqMtPerS<U>)\n            where T: Clone + Eq + Send + Sync + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                obeys_feq_clone::<U>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),\n            ensures\n                mapped.seq@.len() == a.seq@.len(),\n                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]),\n            decreases a.seq@.len(),"
   },
   {
-    "id": 102,
+    "id": 136,
+    "function": "filter_inner",
+    "file": "Chap18/ArraySeqMtPer.rs",
+    "lines": "1452-1468",
+    "spec_strength": "unknown",
+    "snippet": "        pub fn filter_inner<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(\n            a: &ArraySeqMtPerS<T>,\n            pred: &F,\n            Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,\n        ) -> (filtered: ArraySeqMtPerS<T>)\n            where T: Clone + Eq + Send + Sync + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                // Veracity: NEEDED proof block\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered.spec_arrayseqmtper_wf(),\n                filtered.spec_len() <= a.seq@.len(),\n                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len()\n                    ==> pred.ensures((&filtered.spec_index(i),), true),\n            decreases a.seq@.len(),"
+  },
+  {
+    "id": 137,
+    "function": "reduce_inner",
+    "file": "Chap18/ArraySeqMtPer.rs",
+    "lines": "1563-1578",
+    "spec_strength": "unknown",
+    "snippet": "        pub fn reduce_inner<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(\n            a: &ArraySeqMtPerS<T>,\n            f: &F,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: T,\n        ) -> (reduced: T)\n            where T: Clone + Eq + Send + Sync + 'static\n            requires\n                // Veracity: NEEDED proof block\n                obeys_feq_clone::<T>(),\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id),\n            decreases a.seq@.len(),"
+  },
+  {
+    "id": 138,
+    "function": "tabulate_inner",
+    "file": "Chap18/ArraySeqMtPer.rs",
+    "lines": "1653-1668",
+    "spec_strength": "unknown",
+    "snippet": "        pub fn tabulate_inner<F: Fn(usize) -> T + Clone + Send + Sync + 'static>(\n            f: &F,\n            offset: usize,\n            length: usize,\n        ) -> (tab_seq: ArraySeqMtPerS<T>)\n            where T: Clone + Eq + Send + Sync + 'static\n            requires\n                obeys_feq_clone::<T>(),\n                // Veracity: NEEDED proof block\n                offset + length <= usize::MAX,\n                forall|i: usize| offset <= i < offset + length ==> #[trigger] f.requires((i,)),\n            ensures\n                tab_seq.seq@.len() == length,\n                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length\n                    ==> f.ensures(((offset + i) as usize,), tab_seq.seq@[i]),\n            decreases length,"
+  },
+  {
+    "id": 139,
     "function": "eq",
     "file": "Chap18/ArraySeqMtPer.rs",
-    "lines": "1186-1187",
-    "spec_strength": "hole",
+    "lines": "1788-1789",
+    "spec_strength": "unknown",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
   {
-    "id": 103,
+    "id": 140,
+    "function": "lemma_spec_inject_len",
+    "file": "Chap18/ArraySeqSpecsAndLemmas.rs",
+    "lines": "64-66",
+    "spec_strength": "unknown",
+    "snippet": "    pub(crate) proof fn lemma_spec_inject_len<T>(s: Seq<T>, u: Seq<(usize, T)>)\n        ensures spec_inject(s, u).len() == s.len(),\n        decreases u.len(),"
+  },
+  {
+    "id": 141,
+    "function": "lemma_spec_inject_element",
+    "file": "Chap18/ArraySeqSpecsAndLemmas.rs",
+    "lines": "75-84",
+    "spec_strength": "unknown",
+    "snippet": "    pub(crate) proof fn lemma_spec_inject_element<T>(s: Seq<T>, u: Seq<(usize, T)>, i: int)\n        requires 0 <= i < s.len(),\n        ensures ({\n            let r = spec_inject(s, u);\n            r.len() == s.len()\n            && (r[i] == s[i]\n                || exists|j: int| #![trigger u[j]] 0 <= j < u.len()\n                    && u[j].0 == i as usize && r[i] == u[j].1)\n        }),\n        decreases u.len(),"
+  },
+  {
+    "id": 142,
     "function": "new",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "114-122",
+    "lines": "102-110",
     "spec_strength": "unknown",
     "snippet": "        fn new(length: usize, init_value: T) -> (new_seq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                length <= usize::MAX,\n            ensures\n                new_seq.spec_arrayseqsteph_wf(),\n                new_seq.spec_len() == length as int,\n                forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;"
   },
   {
-    "id": 104,
+    "id": 143,
     "function": "set",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "127-132",
+    "lines": "114-119",
     "spec_strength": "unknown",
     "snippet": "        fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)\n            requires index < old(self).spec_len()\n            ensures\n                success.is_ok() ==> self.spec_len() == old(self).spec_len(),\n                success.is_ok() ==> self.spec_index(index as int) == item,\n                success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);"
   },
   {
-    "id": 105,
+    "id": 144,
     "function": "length",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "137-138",
+    "lines": "124-125",
     "spec_strength": "unknown",
     "snippet": "        fn length(&self) -> (len: usize)\n            ensures len as int == self.spec_len();"
   },
   {
-    "id": 106,
+    "id": 145,
     "function": "nth",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "143-145",
+    "lines": "131-133",
     "spec_strength": "unknown",
     "snippet": "        fn nth(&self, index: usize) -> (nth_elem: &T)\n            requires index < self.spec_len()\n            ensures *nth_elem == self.spec_index(index as int);"
   },
   {
-    "id": 107,
+    "id": 146,
     "function": "subseq_copy",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "150-159",
+    "lines": "137-146",
     "spec_strength": "unknown",
     "snippet": "        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                start + length <= usize::MAX,\n                start + length <= self.spec_len(),\n            ensures\n                subseq.spec_arrayseqsteph_wf(),\n                subseq.spec_len() == length as int,\n                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);"
   },
   {
-    "id": 108,
+    "id": 147,
     "function": "subseq",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "164-173",
+    "lines": "151-160",
     "spec_strength": "unknown",
     "snippet": "        fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                start + length <= usize::MAX,\n                start + length <= a.spec_len(),\n            ensures\n                subseq.spec_arrayseqsteph_wf(),\n                subseq.spec_len() == length as int,\n                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);"
   },
   {
-    "id": 109,
+    "id": 148,
     "function": "from_vec",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "178-182",
+    "lines": "164-168",
     "spec_strength": "unknown",
     "snippet": "        fn from_vec(elts: Vec<T>) -> (seq: Self)\n            ensures\n                seq.spec_arrayseqsteph_wf(),\n                seq.spec_len() == elts@.len(),\n                forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];"
   },
   {
-    "id": 110,
+    "id": 149,
     "function": "empty",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "191-192",
+    "lines": "177-178",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty_seq: Self)\n            ensures empty_seq.spec_arrayseqsteph_wf(), empty_seq.spec_len() == 0;"
   },
   {
-    "id": 111,
+    "id": 150,
     "function": "singleton",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "197-201",
+    "lines": "183-187",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(item: T) -> (singleton: Self)\n            ensures\n                singleton.spec_arrayseqsteph_wf(),\n                singleton.spec_len() == 1,\n                singleton.spec_index(0) == item;"
   },
   {
-    "id": 112,
+    "id": 151,
     "function": "append",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "206-214",
+    "lines": "192-201",
     "spec_strength": "unknown",
-    "snippet": "        fn append(a: &ArraySeqStEphS<T>, b: &ArraySeqStEphS<T>) -> (appended: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                a.seq@.len() + b.seq@.len() <= usize::MAX as int,\n            ensures\n                appended.spec_len() == a.seq@.len() + b.seq@.len(),\n                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],\n                forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];"
+    "snippet": "        fn append(a: &ArraySeqStEphS<T>, b: &ArraySeqStEphS<T>) -> (appended: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                a.seq@.len() + b.seq@.len() <= usize::MAX as int,\n            ensures\n                appended.spec_arrayseqsteph_wf(),\n                appended.spec_len() == a.seq@.len() + b.seq@.len(),\n                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],\n                forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];"
   },
   {
-    "id": 113,
+    "id": 152,
     "function": "filter",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "221-235",
+    "lines": "208-223",
     "spec_strength": "unknown",
-    "snippet": "        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n                // The biconditional bridge ties the exec closure to the spec predicate.\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered.spec_len() <= a.seq@.len(),\n                filtered.spec_len() == spec_filter_len(\n                    Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),\n                // The result multiset equals the input multiset filtered by the spec predicate.\n                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()\n                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),\n                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);"
+    "snippet": "        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n                // The biconditional bridge ties the exec closure to the spec predicate.\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered.spec_arrayseqsteph_wf(),\n                filtered.spec_len() <= a.seq@.len(),\n                filtered.spec_len() == spec_filter_len(\n                    Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),\n                // The result multiset equals the input multiset filtered by the spec predicate.\n                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()\n                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),\n                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);"
   },
   {
-    "id": 114,
+    "id": 153,
     "function": "update",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "240-248",
+    "lines": "229-238",
     "spec_strength": "unknown",
-    "snippet": "        fn update(a: &ArraySeqStEphS<T>, index: usize, item: T) -> (updated: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                index < a.seq@.len(),\n            ensures\n                updated.spec_len() == a.seq@.len(),\n                updated.spec_index(index as int) == item,\n                forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];"
+    "snippet": "        fn update(a: &ArraySeqStEphS<T>, index: usize, item: T) -> (updated: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                index < a.seq@.len(),\n            ensures\n                updated.spec_arrayseqsteph_wf(),\n                updated.spec_len() == a.seq@.len(),\n                updated.spec_index(index as int) == item,\n                forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];"
   },
   {
-    "id": 115,
+    "id": 154,
     "function": "inject",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "254-263",
+    "lines": "245-255",
     "spec_strength": "unknown",
-    "snippet": "        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                injected.spec_len() == a.spec_len(),\n                Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))\n                    =~= spec_inject(\n                        Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                        updates@);"
+    "snippet": "        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                injected.spec_arrayseqsteph_wf(),\n                injected.spec_len() == a.spec_len(),\n                Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))\n                    =~= spec_inject(\n                        Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                        updates@);"
   },
   {
-    "id": 116,
+    "id": 155,
     "function": "is_empty",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "268-269",
+    "lines": "260-261",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self) -> (empty: bool)\n            ensures empty <==> self.spec_len() == 0;"
   },
   {
-    "id": 117,
+    "id": 156,
     "function": "is_singleton",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "274-275",
+    "lines": "266-267",
     "spec_strength": "unknown",
     "snippet": "        fn is_singleton(&self) -> (single: bool)\n            ensures single <==> self.spec_len() == 1;"
   },
   {
-    "id": 118,
+    "id": 157,
     "function": "iterate",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "280-285",
+    "lines": "272-277",
     "spec_strength": "unknown",
     "snippet": "        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)\n            requires\n                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),\n                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),\n            ensures\n                accumulated == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);"
   },
   {
-    "id": 119,
+    "id": 158,
     "function": "reduce",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "290-298",
+    "lines": "282-290",
     "spec_strength": "unknown",
     "snippet": "        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)\n            where T: Clone\n            requires\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);"
   },
   {
-    "id": 120,
+    "id": 159,
     "function": "scan",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "303-315",
+    "lines": "295-307",
     "spec_strength": "unknown",
     "snippet": "        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqStEphS<T>, T))\n            where T: Clone + Eq\n            requires\n                spec_monoid(spec_f, id),\n                obeys_feq_clone::<T>(),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                scanned.0.spec_len() == a.spec_len(),\n                forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < a.spec_len() ==>\n                    scanned.0.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f),\n                scanned.1 == spec_iterate(\n                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);"
   },
   {
-    "id": 121,
+    "id": 160,
     "function": "map",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "320-325",
+    "lines": "312-317",
     "spec_strength": "unknown",
     "snippet": "        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqStEphS<T>, f: &F) -> (mapped: ArraySeqStEphS<U>)\n            requires\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),\n            ensures\n                mapped.seq@.len() == a.seq@.len(),\n                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);"
   },
   {
-    "id": 122,
+    "id": 161,
     "function": "tabulate",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "330-336",
+    "lines": "322-328",
     "spec_strength": "unknown",
     "snippet": "        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqStEphS<T>)\n            requires\n                length <= usize::MAX,\n                forall|i: usize| i < length ==> #[trigger] f.requires((i,)),\n            ensures\n                tab_seq.seq@.len() == length,\n                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);"
   },
   {
-    "id": 123,
+    "id": 162,
     "function": "flatten",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "341-346",
+    "lines": "333-338",
     "spec_strength": "unknown",
     "snippet": "        fn flatten(a: &ArraySeqStEphS<ArraySeqStEphS<T>>) -> (flattened: ArraySeqStEphS<T>)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqStEphS<T>| inner.seq@).flatten();"
   },
   {
-    "id": 124,
+    "id": 163,
+    "function": "lemma_take_fold_left_step",
+    "file": "Chap18/ArraySeqStEph.rs",
+    "lines": "938-940",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_take_fold_left_step<T>(s: Seq<T>, i: int, id: T, f: spec_fn(T, T) -> T)\n        requires 0 <= i < s.len(),\n        ensures s.take(i + 1).fold_left(id, f) == f(s.take(i).fold_left(id, f), s[i]),"
+  },
+  {
+    "id": 164,
     "function": "lemma_spec_index",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "887-889",
+    "lines": "948-950",
     "spec_strength": "unknown",
     "snippet": "        broadcast proof fn lemma_spec_index(&self, i: int)\n            requires 0 <= i < self.spec_len()\n            ensures #[trigger] self.seq@[i] == self.spec_index(i)"
   },
   {
-    "id": 125,
+    "id": 165,
     "function": "iter",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "893-897",
+    "lines": "954-958",
     "spec_strength": "unknown",
-    "snippet": "        pub fn iter(&self) -> (it: ArraySeqStEphIter<'_, T>)\n            ensures\n                it@.0 == 0,\n                it@.1 == self.seq@,\n                iter_invariant(&it),"
+    "snippet": "        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)\n            ensures\n                IteratorSpec::remaining(&it) == self.seq@.as_ref(),\n                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,\n                IteratorSpec::decrease(&it) is Some,"
   },
   {
-    "id": 126,
-    "function": "next",
-    "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "944-960",
-    "spec_strength": "unknown",
-    "snippet": "        fn next(&mut self) -> (next: Option<&'a T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
-  },
-  {
-    "id": 127,
+    "id": 166,
     "function": "eq",
     "file": "Chap18/ArraySeqStEph.rs",
-    "lines": "1050-1051",
-    "spec_strength": "hole",
+    "lines": "1017-1018",
+    "spec_strength": "unknown",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
   {
-    "id": 128,
+    "id": 167,
     "function": "new",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "114-122",
+    "lines": "102-110",
     "spec_strength": "unknown",
     "snippet": "        fn new(length: usize, init_value: T) -> (new_seq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                length <= usize::MAX,\n            ensures\n                new_seq.spec_arrayseqstper_wf(),\n                new_seq.spec_len() == length as int,\n                forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;"
   },
   {
-    "id": 129,
+    "id": 168,
     "function": "length",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "127-128",
+    "lines": "115-116",
     "spec_strength": "unknown",
     "snippet": "        fn length(&self) -> (len: usize)\n            ensures len as int == self.spec_len();"
   },
   {
-    "id": 130,
+    "id": 169,
     "function": "nth",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "133-135",
+    "lines": "122-124",
     "spec_strength": "unknown",
     "snippet": "        fn nth(&self, index: usize) -> (nth_elem: &T)\n            requires index < self.spec_len()\n            ensures *nth_elem == self.spec_index(index as int);"
   },
   {
-    "id": 131,
+    "id": 170,
     "function": "subseq_copy",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "140-149",
+    "lines": "128-137",
     "spec_strength": "unknown",
     "snippet": "        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                start + length <= usize::MAX,\n                start + length <= self.spec_len(),\n            ensures\n                subseq.spec_arrayseqstper_wf(),\n                subseq.spec_len() == length as int,\n                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);"
   },
   {
-    "id": 132,
+    "id": 171,
     "function": "subseq",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "154-163",
+    "lines": "142-151",
     "spec_strength": "unknown",
     "snippet": "        fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                start + length <= usize::MAX,\n                start + length <= a.spec_len(),\n            ensures\n                subseq.spec_arrayseqstper_wf(),\n                subseq.spec_len() == length as int,\n                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);"
   },
   {
-    "id": 133,
+    "id": 172,
     "function": "from_vec",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "168-172",
+    "lines": "155-159",
     "spec_strength": "unknown",
     "snippet": "        fn from_vec(elts: Vec<T>) -> (seq: Self)\n            ensures\n                seq.spec_arrayseqstper_wf(),\n                seq.spec_len() == elts@.len(),\n                forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];"
   },
   {
-    "id": 134,
+    "id": 173,
     "function": "empty",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "181-182",
+    "lines": "168-169",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty_seq: Self)\n            ensures empty_seq.spec_arrayseqstper_wf(), empty_seq.spec_len() == 0;"
   },
   {
-    "id": 135,
+    "id": 174,
     "function": "singleton",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "187-191",
+    "lines": "174-178",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(item: T) -> (singleton: Self)\n            ensures\n                singleton.spec_arrayseqstper_wf(),\n                singleton.spec_len() == 1,\n                singleton.spec_index(0) == item;"
   },
   {
-    "id": 136,
+    "id": 175,
     "function": "append",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "196-205",
+    "lines": "183-192",
     "spec_strength": "unknown",
     "snippet": "        fn append(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> (appended: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                a.seq@.len() + b.seq@.len() <= usize::MAX as int,\n            ensures\n                appended.spec_arrayseqstper_wf(),\n                appended.spec_len() == a.seq@.len() + b.seq@.len(),\n                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],\n                forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];"
   },
   {
-    "id": 137,
+    "id": 176,
     "function": "filter",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "212-227",
+    "lines": "199-214",
     "spec_strength": "unknown",
     "snippet": "        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n                // The biconditional bridge ties the exec closure to the spec predicate.\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered.spec_arrayseqstper_wf(),\n                filtered.spec_len() <= a.seq@.len(),\n                filtered.spec_len() == spec_filter_len(\n                    Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),\n                // The result multiset equals the input multiset filtered by the spec predicate.\n                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()\n                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),\n                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);"
   },
   {
-    "id": 138,
+    "id": 177,
     "function": "update",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "232-241",
+    "lines": "220-229",
     "spec_strength": "unknown",
     "snippet": "        fn update(a: &ArraySeqStPerS<T>, index: usize, item: T) -> (updated: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                index < a.seq@.len(),\n            ensures\n                updated.spec_arrayseqstper_wf(),\n                updated.spec_len() == a.seq@.len(),\n                updated.spec_index(index as int) == item,\n                forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];"
   },
   {
-    "id": 139,
+    "id": 178,
     "function": "inject",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "247-257",
+    "lines": "236-246",
     "spec_strength": "unknown",
     "snippet": "        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                injected.spec_arrayseqstper_wf(),\n                injected.spec_len() == a.spec_len(),\n                Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))\n                    =~= spec_inject(\n                        Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                        updates@);"
   },
   {
-    "id": 140,
+    "id": 179,
     "function": "is_empty",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "262-263",
+    "lines": "251-252",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self) -> (empty: bool)\n            ensures empty <==> self.spec_len() == 0;"
   },
   {
-    "id": 141,
+    "id": 180,
     "function": "is_singleton",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "268-269",
+    "lines": "257-258",
     "spec_strength": "unknown",
     "snippet": "        fn is_singleton(&self) -> (single: bool)\n            ensures single <==> self.spec_len() == 1;"
   },
   {
-    "id": 142,
+    "id": 181,
     "function": "iterate",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "274-279",
+    "lines": "263-268",
     "spec_strength": "unknown",
     "snippet": "        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)\n            requires\n                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),\n                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) ==> ret == spec_f(a, t),\n            ensures\n                accumulated == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);"
   },
   {
-    "id": 143,
+    "id": 182,
     "function": "reduce",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "284-292",
+    "lines": "273-281",
     "spec_strength": "unknown",
     "snippet": "        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)\n            where T: Clone\n            requires\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);"
   },
   {
-    "id": 144,
+    "id": 183,
     "function": "scan",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "297-309",
+    "lines": "286-298",
     "spec_strength": "unknown",
     "snippet": "        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqStPerS<T>, T))\n            where T: Clone + Eq\n            requires\n                spec_monoid(spec_f, id),\n                obeys_feq_clone::<T>(),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                scanned.0.spec_len() == a.spec_len(),\n                forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < a.spec_len() ==>\n                    scanned.0.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f),\n                scanned.1 == spec_iterate(\n                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);"
   },
   {
-    "id": 145,
+    "id": 184,
     "function": "map",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "314-319",
+    "lines": "303-308",
     "spec_strength": "unknown",
     "snippet": "        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> (mapped: ArraySeqStPerS<U>)\n            requires\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),\n            ensures\n                mapped.seq@.len() == a.seq@.len(),\n                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);"
   },
   {
-    "id": 146,
+    "id": 185,
     "function": "tabulate",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "324-330",
+    "lines": "313-319",
     "spec_strength": "unknown",
     "snippet": "        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqStPerS<T>)\n            requires\n                length <= usize::MAX,\n                forall|i: usize| i < length ==> #[trigger] f.requires((i,)),\n            ensures\n                tab_seq.seq@.len() == length,\n                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);"
   },
   {
-    "id": 147,
+    "id": 186,
     "function": "flatten",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "335-340",
+    "lines": "324-329",
     "spec_strength": "unknown",
     "snippet": "        fn flatten(a: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (flattened: ArraySeqStPerS<T>)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqStPerS<T>| inner.seq@).flatten();"
   },
   {
-    "id": 148,
+    "id": 187,
+    "function": "lemma_take_fold_left_step",
+    "file": "Chap18/ArraySeqStPer.rs",
+    "lines": "915-917",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_take_fold_left_step<T>(s: Seq<T>, i: int, id: T, f: spec_fn(T, T) -> T)\n        requires 0 <= i < s.len(),\n        ensures s.take(i + 1).fold_left(id, f) == f(s.take(i).fold_left(id, f), s[i]),"
+  },
+  {
+    "id": 188,
     "function": "lemma_spec_index",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "872-874",
+    "lines": "925-927",
     "spec_strength": "unknown",
     "snippet": "        broadcast proof fn lemma_spec_index(&self, i: int)\n            requires 0 <= i < self.spec_len()\n            ensures #[trigger] self.seq@[i] == self.spec_index(i)"
   },
   {
-    "id": 149,
+    "id": 189,
     "function": "iter",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "878-882",
+    "lines": "931-935",
     "spec_strength": "unknown",
-    "snippet": "        pub fn iter(&self) -> (it: ArraySeqStPerIter<'_, T>)\n            ensures\n                it@.0 == 0,\n                it@.1 == self.seq@,\n                iter_invariant(&it),"
+    "snippet": "        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)\n            ensures\n                IteratorSpec::remaining(&it) == self.seq@.as_ref(),\n                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,\n                IteratorSpec::decrease(&it) is Some,"
   },
   {
-    "id": 150,
-    "function": "next",
-    "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "916-932",
-    "spec_strength": "unknown",
-    "snippet": "        fn next(&mut self) -> (next: Option<&'a T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
-  },
-  {
-    "id": 151,
+    "id": 190,
     "function": "eq",
     "file": "Chap18/ArraySeqStPer.rs",
-    "lines": "1016-1017",
-    "spec_strength": "hole",
+    "lines": "995-996",
+    "spec_strength": "unknown",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
   {
-    "id": 152,
+    "id": 191,
     "function": "new",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "101-109",
+    "lines": "100-108",
     "spec_strength": "unknown",
     "snippet": "        fn new(length: usize, init_value: T) -> (new_seq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                length <= usize::MAX,\n            ensures\n                new_seq.spec_linkedliststeph_wf(),\n                new_seq.spec_len() == length as int,\n                forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;"
   },
   {
-    "id": 153,
+    "id": 192,
     "function": "set",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "113-118",
+    "lines": "111-116",
     "spec_strength": "unknown",
     "snippet": "        fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)\n            requires index < old(self).spec_len()\n            ensures\n                success.is_ok() ==> self.spec_len() == old(self).spec_len(),\n                success.is_ok() ==> self.spec_index(index as int) == item,\n                success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);"
   },
   {
-    "id": 154,
+    "id": 193,
     "function": "length",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "122-123",
+    "lines": "119-120",
     "spec_strength": "unknown",
     "snippet": "        fn length(&self) -> (len: usize)\n            ensures len as int == self.spec_len();"
   },
   {
-    "id": 155,
+    "id": 194,
     "function": "nth",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "127-129",
+    "lines": "125-127",
     "spec_strength": "unknown",
     "snippet": "        fn nth(&self, index: usize) -> (nth_elem: &T)\n            requires index < self.spec_len()\n            ensures *nth_elem == self.spec_index(index as int);"
   },
   {
-    "id": 156,
+    "id": 195,
     "function": "subseq_copy",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "133-142",
+    "lines": "131-140",
     "spec_strength": "unknown",
     "snippet": "        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                start + length <= usize::MAX,\n                start + length <= self.spec_len(),\n            ensures\n                subseq.spec_linkedliststeph_wf(),\n                subseq.spec_len() == length as int,\n                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);"
   },
   {
-    "id": 157,
+    "id": 196,
     "function": "from_vec",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "146-150",
+    "lines": "143-147",
     "spec_strength": "unknown",
     "snippet": "        fn from_vec(elts: Vec<T>) -> (seq: Self)\n            ensures\n                seq.spec_linkedliststeph_wf(),\n                seq.spec_len() == elts@.len(),\n                forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];"
   },
   {
-    "id": 158,
+    "id": 197,
     "function": "empty",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "158-159",
+    "lines": "154-155",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty_seq: Self)\n            ensures empty_seq.spec_linkedliststeph_wf(), empty_seq.spec_len() == 0;"
   },
   {
-    "id": 159,
+    "id": 198,
     "function": "singleton",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "163-167",
+    "lines": "158-162",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(item: T) -> (singleton: Self)\n            ensures\n                singleton.spec_linkedliststeph_wf(),\n                singleton.spec_len() == 1,\n                singleton.spec_index(0) == item;"
   },
   {
-    "id": 160,
+    "id": 199,
     "function": "tabulate",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "171-177",
+    "lines": "166-172",
     "spec_strength": "unknown",
     "snippet": "        fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> (tab_seq: LinkedListStEphS<T>)\n            requires\n                n <= usize::MAX,\n                forall|i: usize| i < n ==> #[trigger] f.requires((i,)),\n            ensures\n                tab_seq.seq@.len() == n,\n                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < n ==> f.ensures((i as usize,), tab_seq.seq@[i]);"
   },
   {
-    "id": 161,
+    "id": 200,
     "function": "map",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "181-186",
+    "lines": "176-181",
     "spec_strength": "unknown",
     "snippet": "        fn map<U: Clone, F: Fn(&T) -> U>(a: &LinkedListStEphS<T>, f: &F) -> (mapped: LinkedListStEphS<U>)\n            requires\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),\n            ensures\n                mapped.seq@.len() == a.seq@.len(),\n                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);"
   },
   {
-    "id": 162,
+    "id": 201,
     "function": "append",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "190-199",
+    "lines": "185-194",
     "spec_strength": "unknown",
     "snippet": "        fn append(a: &LinkedListStEphS<T>, b: &LinkedListStEphS<T>) -> (appended: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                a.seq@.len() + b.seq@.len() <= usize::MAX as int,\n            ensures\n                appended.spec_linkedliststeph_wf(),\n                appended.spec_len() == a.seq@.len() + b.seq@.len(),\n                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],\n                forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];"
   },
   {
-    "id": 163,
+    "id": 202,
     "function": "filter",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "205-220",
+    "lines": "200-215",
     "spec_strength": "unknown",
     "snippet": "        fn filter<F: Fn(&T) -> bool>(a: &LinkedListStEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n                // The biconditional bridge ties the exec closure to the spec predicate.\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered.spec_linkedliststeph_wf(),\n                filtered.spec_len() <= a.seq@.len(),\n                filtered.spec_len() == spec_filter_len(\n                    Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),\n                // The result multiset equals the input multiset filtered by the spec predicate.\n                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()\n                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),\n                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);"
   },
   {
-    "id": 164,
+    "id": 203,
     "function": "flatten",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "224-229",
+    "lines": "218-223",
     "spec_strength": "unknown",
     "snippet": "        fn flatten(a: &LinkedListStEphS<LinkedListStEphS<T>>) -> (flattened: LinkedListStEphS<T>)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                flattened.seq@ =~= a.seq@.map_values(|inner: LinkedListStEphS<T>| inner.seq@).flatten();"
   },
   {
-    "id": 165,
+    "id": 204,
     "function": "update",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "233-242",
+    "lines": "227-236",
     "spec_strength": "unknown",
     "snippet": "        fn update(a: &LinkedListStEphS<T>, index: usize, item: T) -> (updated: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                index < a.seq@.len(),\n            ensures\n                updated.spec_linkedliststeph_wf(),\n                updated.spec_len() == a.seq@.len(),\n                updated.spec_index(index as int) == item,\n                forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];"
   },
   {
-    "id": 166,
+    "id": 205,
     "function": "is_empty",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "246-247",
+    "lines": "239-240",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self) -> (empty: bool)\n            ensures empty <==> self.spec_len() == 0;"
   },
   {
-    "id": 167,
+    "id": 206,
     "function": "is_singleton",
     "file": "Chap18/LinkedListStEph.rs",
-    "lines": "251-252",
-    "spec_strength": "unknown",
-    "snippet": "        fn is_singleton(&self) -> (single: bool)\n            ensures single <==> self.spec_len() == 1;"
-  },
-  {
-    "id": 168,
-    "function": "iterate",
-    "file": "Chap18/LinkedListStEph.rs",
-    "lines": "256-261",
-    "spec_strength": "unknown",
-    "snippet": "        fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)\n            requires\n                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),\n                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),\n            ensures\n                accumulated == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);"
-  },
-  {
-    "id": 169,
-    "function": "reduce",
-    "file": "Chap18/LinkedListStEph.rs",
-    "lines": "265-273",
-    "spec_strength": "unknown",
-    "snippet": "        fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)\n            where T: Clone\n            requires\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);"
-  },
-  {
-    "id": 170,
-    "function": "scan",
-    "file": "Chap18/LinkedListStEph.rs",
-    "lines": "277-289",
-    "spec_strength": "unknown",
-    "snippet": "        fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (LinkedListStEphS<T>, T))\n            where T: Clone + Eq\n            requires\n                spec_monoid(spec_f, id),\n                obeys_feq_clone::<T>(),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                scanned.0.spec_len() == a.spec_len(),\n                forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < a.spec_len() ==>\n                    scanned.0.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f),\n                scanned.1 == spec_iterate(\n                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);"
-  },
-  {
-    "id": 171,
-    "function": "lemma_spec_index",
-    "file": "Chap18/LinkedListStEph.rs",
-    "lines": "731-733",
-    "spec_strength": "unknown",
-    "snippet": "        broadcast proof fn lemma_spec_index(&self, i: int)\n            requires 0 <= i < self.spec_len()\n            ensures #[trigger] self.seq@[i] == self.spec_index(i)"
-  },
-  {
-    "id": 172,
-    "function": "iter",
-    "file": "Chap18/LinkedListStEph.rs",
-    "lines": "739-743",
-    "spec_strength": "unknown",
-    "snippet": "        pub fn iter(&self) -> (it: LinkedListStEphIter<'_, T>)\n            ensures\n                it@.0 == 0,\n                it@.1 == self.seq@,\n                iter_invariant(&it),"
-  },
-  {
-    "id": 173,
-    "function": "next",
-    "file": "Chap18/LinkedListStEph.rs",
-    "lines": "779-795",
-    "spec_strength": "unknown",
-    "snippet": "        fn next(&mut self) -> (next: Option<&'a T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
-  },
-  {
-    "id": 174,
-    "function": "eq",
-    "file": "Chap18/LinkedListStEph.rs",
-    "lines": "887-888",
-    "spec_strength": "hole",
-    "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
-  },
-  {
-    "id": 175,
-    "function": "new",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "102-110",
-    "spec_strength": "unknown",
-    "snippet": "        fn new(length: usize, init_value: T) -> (new_seq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                length <= usize::MAX,\n            ensures\n                new_seq.spec_linkedliststper_wf(),\n                new_seq.spec_len() == length as int,\n                forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;"
-  },
-  {
-    "id": 176,
-    "function": "length",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "114-115",
-    "spec_strength": "unknown",
-    "snippet": "        fn length(&self) -> (len: usize)\n            ensures len as int == self.spec_len();"
-  },
-  {
-    "id": 177,
-    "function": "nth",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "119-121",
-    "spec_strength": "unknown",
-    "snippet": "        fn nth(&self, index: usize) -> (nth_elem: &T)\n            requires index < self.spec_len()\n            ensures *nth_elem == self.spec_index(index as int);"
-  },
-  {
-    "id": 178,
-    "function": "subseq_copy",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "125-134",
-    "spec_strength": "unknown",
-    "snippet": "        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                start + length <= usize::MAX,\n                start + length <= self.spec_len(),\n            ensures\n                subseq.spec_linkedliststper_wf(),\n                subseq.spec_len() == length as int,\n                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);"
-  },
-  {
-    "id": 179,
-    "function": "from_vec",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "138-142",
-    "spec_strength": "unknown",
-    "snippet": "        fn from_vec(elts: Vec<T>) -> (seq: Self)\n            ensures\n                seq.spec_linkedliststper_wf(),\n                seq.spec_len() == elts@.len(),\n                forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];"
-  },
-  {
-    "id": 180,
-    "function": "empty",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "150-151",
-    "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (empty_seq: Self)\n            ensures empty_seq.spec_linkedliststper_wf(), empty_seq.spec_len() == 0;"
-  },
-  {
-    "id": 181,
-    "function": "singleton",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "155-159",
-    "spec_strength": "unknown",
-    "snippet": "        fn singleton(item: T) -> (singleton: Self)\n            ensures\n                singleton.spec_linkedliststper_wf(),\n                singleton.spec_len() == 1,\n                singleton.spec_index(0) == item;"
-  },
-  {
-    "id": 182,
-    "function": "tabulate",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "163-169",
-    "spec_strength": "unknown",
-    "snippet": "        fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> (tab_seq: LinkedListStPerS<T>)\n            requires\n                n <= usize::MAX,\n                forall|i: usize| i < n ==> #[trigger] f.requires((i,)),\n            ensures\n                tab_seq.seq@.len() == n,\n                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < n ==> f.ensures((i as usize,), tab_seq.seq@[i]);"
-  },
-  {
-    "id": 183,
-    "function": "map",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "173-178",
-    "spec_strength": "unknown",
-    "snippet": "        fn map<U: Clone, F: Fn(&T) -> U>(a: &LinkedListStPerS<T>, f: &F) -> (mapped: LinkedListStPerS<U>)\n            requires\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),\n            ensures\n                mapped.seq@.len() == a.seq@.len(),\n                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);"
-  },
-  {
-    "id": 184,
-    "function": "append",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "182-191",
-    "spec_strength": "unknown",
-    "snippet": "        fn append(a: &LinkedListStPerS<T>, b: &LinkedListStPerS<T>) -> (appended: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                a.seq@.len() + b.seq@.len() <= usize::MAX as int,\n            ensures\n                appended.spec_linkedliststper_wf(),\n                appended.spec_len() == a.seq@.len() + b.seq@.len(),\n                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],\n                forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];"
-  },
-  {
-    "id": 185,
-    "function": "filter",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "197-212",
-    "spec_strength": "unknown",
-    "snippet": "        fn filter<F: Fn(&T) -> bool>(a: &LinkedListStPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n                // The biconditional bridge ties the exec closure to the spec predicate.\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered.spec_linkedliststper_wf(),\n                filtered.spec_len() <= a.seq@.len(),\n                filtered.spec_len() == spec_filter_len(\n                    Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),\n                // The result multiset equals the input multiset filtered by the spec predicate.\n                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()\n                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),\n                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);"
-  },
-  {
-    "id": 186,
-    "function": "flatten",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "216-221",
-    "spec_strength": "unknown",
-    "snippet": "        fn flatten(a: &LinkedListStPerS<LinkedListStPerS<T>>) -> (flattened: LinkedListStPerS<T>)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                flattened.seq@ =~= a.seq@.map_values(|inner: LinkedListStPerS<T>| inner.seq@).flatten();"
-  },
-  {
-    "id": 187,
-    "function": "update",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "225-234",
-    "spec_strength": "unknown",
-    "snippet": "        fn update(a: &LinkedListStPerS<T>, index: usize, item: T) -> (updated: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                index < a.seq@.len(),\n            ensures\n                updated.spec_linkedliststper_wf(),\n                updated.spec_len() == a.seq@.len(),\n                updated.spec_index(index as int) == item,\n                forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];"
-  },
-  {
-    "id": 188,
-    "function": "is_empty",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "238-239",
-    "spec_strength": "unknown",
-    "snippet": "        fn is_empty(&self) -> (empty: bool)\n            ensures empty <==> self.spec_len() == 0;"
-  },
-  {
-    "id": 189,
-    "function": "is_singleton",
-    "file": "Chap18/LinkedListStPer.rs",
     "lines": "243-244",
     "spec_strength": "unknown",
     "snippet": "        fn is_singleton(&self) -> (single: bool)\n            ensures single <==> self.spec_len() == 1;"
   },
   {
-    "id": 190,
+    "id": 207,
     "function": "iterate",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "248-253",
+    "file": "Chap18/LinkedListStEph.rs",
+    "lines": "247-252",
     "spec_strength": "unknown",
-    "snippet": "        fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)\n            requires\n                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),\n                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),\n            ensures\n                accumulated == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);"
+    "snippet": "        fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)\n            requires\n                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),\n                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),\n            ensures\n                accumulated == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);"
   },
   {
-    "id": 191,
+    "id": 208,
     "function": "reduce",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "257-265",
+    "file": "Chap18/LinkedListStEph.rs",
+    "lines": "256-264",
     "spec_strength": "unknown",
-    "snippet": "        fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)\n            where T: Clone\n            requires\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);"
+    "snippet": "        fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)\n            where T: Clone\n            requires\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);"
   },
   {
-    "id": 192,
+    "id": 209,
     "function": "scan",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "269-281",
+    "file": "Chap18/LinkedListStEph.rs",
+    "lines": "268-280",
     "spec_strength": "unknown",
-    "snippet": "        fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (LinkedListStPerS<T>, T))\n            where T: Clone + Eq\n            requires\n                spec_monoid(spec_f, id),\n                obeys_feq_clone::<T>(),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                scanned.0.spec_len() == a.spec_len(),\n                forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < a.spec_len() ==>\n                    scanned.0.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f),\n                scanned.1 == spec_iterate(\n                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);"
+    "snippet": "        fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (LinkedListStEphS<T>, T))\n            where T: Clone + Eq\n            requires\n                spec_monoid(spec_f, id),\n                obeys_feq_clone::<T>(),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                scanned.0.spec_len() == a.spec_len(),\n                forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < a.spec_len() ==>\n                    scanned.0.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f),\n                scanned.1 == spec_iterate(\n                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);"
   },
   {
-    "id": 193,
+    "id": 210,
+    "function": "lemma_take_fold_left_step",
+    "file": "Chap18/LinkedListStEph.rs",
+    "lines": "763-765",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_take_fold_left_step<T>(s: Seq<T>, i: int, id: T, f: spec_fn(T, T) -> T)\n        requires 0 <= i < s.len(),\n        ensures s.take(i + 1).fold_left(id, f) == f(s.take(i).fold_left(id, f), s[i]),"
+  },
+  {
+    "id": 211,
     "function": "lemma_spec_index",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "714-716",
+    "file": "Chap18/LinkedListStEph.rs",
+    "lines": "773-775",
     "spec_strength": "unknown",
     "snippet": "        broadcast proof fn lemma_spec_index(&self, i: int)\n            requires 0 <= i < self.spec_len()\n            ensures #[trigger] self.seq@[i] == self.spec_index(i)"
   },
   {
-    "id": 194,
+    "id": 212,
+    "function": "iter",
+    "file": "Chap18/LinkedListStEph.rs",
+    "lines": "780-784",
+    "spec_strength": "unknown",
+    "snippet": "        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)\n            ensures\n                IteratorSpec::remaining(&it) == self.seq@.as_ref(),\n                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,\n                IteratorSpec::decrease(&it) is Some,"
+  },
+  {
+    "id": 213,
+    "function": "eq",
+    "file": "Chap18/LinkedListStEph.rs",
+    "lines": "847-848",
+    "spec_strength": "unknown",
+    "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
+  },
+  {
+    "id": 214,
+    "function": "new",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "100-108",
+    "spec_strength": "unknown",
+    "snippet": "        fn new(length: usize, init_value: T) -> (new_seq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                length <= usize::MAX,\n            ensures\n                new_seq.spec_linkedliststper_wf(),\n                new_seq.spec_len() == length as int,\n                forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;"
+  },
+  {
+    "id": 215,
+    "function": "length",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "111-112",
+    "spec_strength": "unknown",
+    "snippet": "        fn length(&self) -> (len: usize)\n            ensures len as int == self.spec_len();"
+  },
+  {
+    "id": 216,
+    "function": "nth",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "117-119",
+    "spec_strength": "unknown",
+    "snippet": "        fn nth(&self, index: usize) -> (nth_elem: &T)\n            requires index < self.spec_len()\n            ensures *nth_elem == self.spec_index(index as int);"
+  },
+  {
+    "id": 217,
+    "function": "subseq_copy",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "123-132",
+    "spec_strength": "unknown",
+    "snippet": "        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                start + length <= usize::MAX,\n                start + length <= self.spec_len(),\n            ensures\n                subseq.spec_linkedliststper_wf(),\n                subseq.spec_len() == length as int,\n                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);"
+  },
+  {
+    "id": 218,
+    "function": "from_vec",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "135-139",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_vec(elts: Vec<T>) -> (seq: Self)\n            ensures\n                seq.spec_linkedliststper_wf(),\n                seq.spec_len() == elts@.len(),\n                forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];"
+  },
+  {
+    "id": 219,
+    "function": "empty",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "146-147",
+    "spec_strength": "unknown",
+    "snippet": "        fn empty() -> (empty_seq: Self)\n            ensures empty_seq.spec_linkedliststper_wf(), empty_seq.spec_len() == 0;"
+  },
+  {
+    "id": 220,
+    "function": "singleton",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "150-154",
+    "spec_strength": "unknown",
+    "snippet": "        fn singleton(item: T) -> (singleton: Self)\n            ensures\n                singleton.spec_linkedliststper_wf(),\n                singleton.spec_len() == 1,\n                singleton.spec_index(0) == item;"
+  },
+  {
+    "id": 221,
+    "function": "tabulate",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "158-164",
+    "spec_strength": "unknown",
+    "snippet": "        fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> (tab_seq: LinkedListStPerS<T>)\n            requires\n                n <= usize::MAX,\n                forall|i: usize| i < n ==> #[trigger] f.requires((i,)),\n            ensures\n                tab_seq.seq@.len() == n,\n                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < n ==> f.ensures((i as usize,), tab_seq.seq@[i]);"
+  },
+  {
+    "id": 222,
+    "function": "map",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "168-173",
+    "spec_strength": "unknown",
+    "snippet": "        fn map<U: Clone, F: Fn(&T) -> U>(a: &LinkedListStPerS<T>, f: &F) -> (mapped: LinkedListStPerS<U>)\n            requires\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),\n            ensures\n                mapped.seq@.len() == a.seq@.len(),\n                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);"
+  },
+  {
+    "id": 223,
+    "function": "append",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "177-186",
+    "spec_strength": "unknown",
+    "snippet": "        fn append(a: &LinkedListStPerS<T>, b: &LinkedListStPerS<T>) -> (appended: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                a.seq@.len() + b.seq@.len() <= usize::MAX as int,\n            ensures\n                appended.spec_linkedliststper_wf(),\n                appended.spec_len() == a.seq@.len() + b.seq@.len(),\n                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],\n                forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];"
+  },
+  {
+    "id": 224,
+    "function": "filter",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "192-207",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter<F: Fn(&T) -> bool>(a: &LinkedListStPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),\n                // The biconditional bridge ties the exec closure to the spec predicate.\n                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,\n            ensures\n                filtered.spec_linkedliststper_wf(),\n                filtered.spec_len() <= a.seq@.len(),\n                filtered.spec_len() == spec_filter_len(\n                    Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),\n                // The result multiset equals the input multiset filtered by the spec predicate.\n                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()\n                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),\n                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);"
+  },
+  {
+    "id": 225,
+    "function": "flatten",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "210-215",
+    "spec_strength": "unknown",
+    "snippet": "        fn flatten(a: &LinkedListStPerS<LinkedListStPerS<T>>) -> (flattened: LinkedListStPerS<T>)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n            ensures\n                flattened.seq@ =~= a.seq@.map_values(|inner: LinkedListStPerS<T>| inner.seq@).flatten();"
+  },
+  {
+    "id": 226,
+    "function": "update",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "219-228",
+    "spec_strength": "unknown",
+    "snippet": "        fn update(a: &LinkedListStPerS<T>, index: usize, item: T) -> (updated: Self)\n            where T: Clone + Eq\n            requires\n                obeys_feq_clone::<T>(),\n                index < a.seq@.len(),\n            ensures\n                updated.spec_linkedliststper_wf(),\n                updated.spec_len() == a.seq@.len(),\n                updated.spec_index(index as int) == item,\n                forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];"
+  },
+  {
+    "id": 227,
+    "function": "is_empty",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "231-232",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_empty(&self) -> (empty: bool)\n            ensures empty <==> self.spec_len() == 0;"
+  },
+  {
+    "id": 228,
+    "function": "is_singleton",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "235-236",
+    "spec_strength": "unknown",
+    "snippet": "        fn is_singleton(&self) -> (single: bool)\n            ensures single <==> self.spec_len() == 1;"
+  },
+  {
+    "id": 229,
+    "function": "iterate",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "239-244",
+    "spec_strength": "unknown",
+    "snippet": "        fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)\n            requires\n                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),\n                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),\n            ensures\n                accumulated == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);"
+  },
+  {
+    "id": 230,
+    "function": "reduce",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "248-256",
+    "spec_strength": "unknown",
+    "snippet": "        fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)\n            where T: Clone\n            requires\n                spec_monoid(spec_f, id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                reduced == spec_iterate(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);"
+  },
+  {
+    "id": 231,
+    "function": "scan",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "260-272",
+    "spec_strength": "unknown",
+    "snippet": "        fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (LinkedListStPerS<T>, T))\n            where T: Clone + Eq\n            requires\n                spec_monoid(spec_f, id),\n                obeys_feq_clone::<T>(),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),\n            ensures\n                scanned.0.spec_len() == a.spec_len(),\n                forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < a.spec_len() ==>\n                    scanned.0.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f),\n                scanned.1 == spec_iterate(\n                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);"
+  },
+  {
+    "id": 232,
+    "function": "lemma_take_fold_left_step",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "744-746",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_take_fold_left_step<T>(s: Seq<T>, i: int, id: T, f: spec_fn(T, T) -> T)\n        requires 0 <= i < s.len(),\n        ensures s.take(i + 1).fold_left(id, f) == f(s.take(i).fold_left(id, f), s[i]),"
+  },
+  {
+    "id": 233,
+    "function": "lemma_spec_index",
+    "file": "Chap18/LinkedListStPer.rs",
+    "lines": "754-756",
+    "spec_strength": "unknown",
+    "snippet": "        broadcast proof fn lemma_spec_index(&self, i: int)\n            requires 0 <= i < self.spec_len()\n            ensures #[trigger] self.seq@[i] == self.spec_index(i)"
+  },
+  {
+    "id": 234,
     "function": "iter",
     "file": "Chap18/LinkedListStPer.rs",
-    "lines": "722-726",
+    "lines": "761-765",
     "spec_strength": "unknown",
-    "snippet": "        pub fn iter(&self) -> (it: LinkedListStPerIter<'_, T>)\n            ensures\n                it@.0 == 0,\n                it@.1 == self.seq@,\n                iter_invariant(&it),"
+    "snippet": "        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)\n            ensures\n                IteratorSpec::remaining(&it) == self.seq@.as_ref(),\n                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,\n                IteratorSpec::decrease(&it) is Some,"
   },
   {
-    "id": 195,
-    "function": "next",
-    "file": "Chap18/LinkedListStPer.rs",
-    "lines": "762-778",
-    "spec_strength": "unknown",
-    "snippet": "        fn next(&mut self) -> (next: Option<&'a T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
-  },
-  {
-    "id": 196,
+    "id": 235,
     "function": "eq",
     "file": "Chap18/LinkedListStPer.rs",
-    "lines": "870-871",
-    "spec_strength": "hole",
+    "lines": "828-829",
+    "spec_strength": "unknown",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   }
 ]

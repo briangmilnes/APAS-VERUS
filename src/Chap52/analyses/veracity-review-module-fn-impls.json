@@ -1,1306 +1,1522 @@
 [
   {
     "id": 1,
-    "function": "lemma_count_true_monotone",
+    "function": "new",
     "file": "Chap52/AdjMatrixGraphMtEph.rs",
-    "lines": "72-75",
+    "lines": "88-93",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_count_true_monotone(f: spec_fn(int) -> bool, i: int, n: int)\n        requires 0 <= i <= n\n        ensures spec_count_true(f, i) <= spec_count_true(f, n)\n        decreases n - i"
+    "snippet": "        fn new(n: usize) -> (empty: Self)\n            ensures\n                empty.spec_adjmatrixgraphmteph_wf(),\n                empty.spec_n() == n,\n                forall|u: int, v: int|\n                    0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);"
   },
   {
     "id": 2,
-    "function": "lemma_sum_of_monotone",
+    "function": "from_matrix",
     "file": "Chap52/AdjMatrixGraphMtEph.rs",
-    "lines": "82-85",
+    "lines": "96-109",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_sum_of_monotone(i: int, n: int, f: spec_fn(int) -> nat)\n        requires 0 <= i <= n\n        ensures spec_sum_of(i, f) <= spec_sum_of(n, f)\n        decreases n - i"
+    "snippet": "        fn from_matrix(matrix: ArraySeqMtEphS<ArraySeqMtEphS<bool>>) -> (constructed: Self)\n            requires\n                forall|i: int| 0 <= i < matrix.spec_len() ==>\n                    #[trigger] matrix.spec_index(i).spec_len() == matrix.spec_len(),\n                spec_sum_of(\n                    matrix.spec_len() as int,\n                    |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), matrix.spec_len() as int),\n                ) <= usize::MAX as nat,\n            ensures\n                constructed.spec_adjmatrixgraphmteph_wf(),\n                constructed.spec_n() == matrix.spec_len(),\n                forall|u: int, v: int|\n                    0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()\n                    ==> #[trigger] constructed.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);"
   },
   {
     "id": 3,
-    "function": "lemma_count_true_bound",
+    "function": "num_vertices",
     "file": "Chap52/AdjMatrixGraphMtEph.rs",
-    "lines": "92-95",
+    "lines": "114-116",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_count_true_bound(f: spec_fn(int) -> bool, n: int)\n        requires n >= 0\n        ensures spec_count_true(f, n) <= n as nat\n        decreases n"
+    "snippet": "        fn num_vertices(&self) -> (n: usize)\n            requires self.spec_adjmatrixgraphmteph_wf()\n            ensures n as nat == self.spec_n();"
   },
   {
     "id": 4,
-    "function": "new",
+    "function": "num_edges",
     "file": "Chap52/AdjMatrixGraphMtEph.rs",
-    "lines": "111-116",
+    "lines": "121-127",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_adjmatrixgraphmteph_wf(),\n                empty.spec_n() == n,\n                forall|u: int, v: int|\n                    0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);"
+    "snippet": "        fn num_edges(&self) -> (m: usize)\n            requires self.spec_adjmatrixgraphmteph_wf()\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_n() as int,\n                    |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),\n                );"
   },
   {
     "id": 5,
-    "function": "from_matrix",
+    "function": "has_edge",
     "file": "Chap52/AdjMatrixGraphMtEph.rs",
-    "lines": "119-128",
+    "lines": "132-136",
     "spec_strength": "unknown",
-    "snippet": "        fn from_matrix(matrix: ArraySeqMtEphS<ArraySeqMtEphS<bool>>) -> (constructed: Self)\n            requires\n                forall|i: int| 0 <= i < matrix.spec_len() ==>\n                    #[trigger] matrix.spec_index(i).spec_len() == matrix.spec_len()\n            ensures\n                constructed.spec_adjmatrixgraphmteph_wf(),\n                constructed.spec_n() == matrix.spec_len(),\n                forall|u: int, v: int|\n                    0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()\n                    ==> #[trigger] constructed.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);"
+    "snippet": "        fn has_edge(&self, u: usize, v: usize) -> (found: bool)\n            requires self.spec_adjmatrixgraphmteph_wf()\n            ensures\n                u < self.spec_n() && v < self.spec_n() ==> found == self.spec_edge(u as int, v as int),\n                (u >= self.spec_n() || v >= self.spec_n()) ==> !found;"
   },
   {
     "id": 6,
-    "function": "num_vertices",
+    "function": "out_neighbors",
     "file": "Chap52/AdjMatrixGraphMtEph.rs",
-    "lines": "131-133",
+    "lines": "141-149",
     "spec_strength": "unknown",
-    "snippet": "        fn num_vertices(&self) -> (n: N)\n            requires self.spec_adjmatrixgraphmteph_wf()\n            ensures n as nat == self.spec_n();"
+    "snippet": "        fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqMtEphS<usize>)\n            requires self.spec_adjmatrixgraphmteph_wf(), u < self.spec_n()\n            ensures\n                forall|k: int| 0 <= k < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(k) < self.spec_n()\n                        && self.spec_edge(u as int, neighbors.spec_index(k) as int),\n                forall|v: int| 0 <= v < self.spec_n() && #[trigger] self.spec_edge(u as int, v)\n                    ==> exists|k: int|\n                        0 <= k < neighbors.spec_len() && #[trigger] neighbors.spec_index(k) == v as usize;"
   },
   {
     "id": 7,
-    "function": "num_edges",
+    "function": "out_degree",
     "file": "Chap52/AdjMatrixGraphMtEph.rs",
-    "lines": "136-147",
+    "lines": "154-161",
     "spec_strength": "unknown",
-    "snippet": "        fn num_edges(&self) -> (m: N)\n            requires\n                self.spec_adjmatrixgraphmteph_wf(),\n                spec_sum_of(\n                    self.spec_n() as int,\n                    |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),\n                ) <= usize::MAX as nat\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_n() as int,\n                    |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),\n                );"
+    "snippet": "        fn out_degree(&self, u: usize) -> (d: usize)\n            requires self.spec_adjmatrixgraphmteph_wf()\n            ensures\n                u < self.spec_n() ==> d as nat == spec_count_true(\n                    |v: int| self.spec_edge(u as int, v),\n                    self.spec_n() as int,\n                ),\n                u >= self.spec_n() ==> d == 0;"
   },
   {
     "id": 8,
-    "function": "has_edge",
+    "function": "set_edge",
     "file": "Chap52/AdjMatrixGraphMtEph.rs",
-    "lines": "150-152",
+    "lines": "166-179",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, u: N, v: N) -> (found: B)\n            requires self.spec_adjmatrixgraphmteph_wf(), u < self.spec_n(), v < self.spec_n()\n            ensures found == self.spec_edge(u as int, v as int);"
+    "snippet": "        fn set_edge(&mut self, u: usize, v: usize, exists: bool)\n            requires\n                old(self).spec_adjmatrixgraphmteph_wf(),\n                u < old(self).spec_n(),\n                v < old(self).spec_n(),\n                old(self).spec_n() * old(self).spec_n() < usize::MAX as nat,\n            ensures\n                self.spec_adjmatrixgraphmteph_wf(),\n                self.spec_n() == old(self).spec_n(),\n                self.spec_edge(u as int, v as int) == exists,\n                forall|i: int, j: int|\n                    0 <= i < old(self).spec_n() && 0 <= j < old(self).spec_n()\n                    && !(i == u as int && j == v as int)\n                    ==> #[trigger] self.spec_edge(i, j) == old(self).spec_edge(i, j);"
   },
   {
     "id": 9,
-    "function": "out_neighbors",
+    "function": "complement",
     "file": "Chap52/AdjMatrixGraphMtEph.rs",
-    "lines": "155-163",
+    "lines": "184-193",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtEphS<N>)\n            requires self.spec_adjmatrixgraphmteph_wf(), u < self.spec_n()\n            ensures\n                forall|k: int| 0 <= k < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(k) < self.spec_n()\n                        && self.spec_edge(u as int, neighbors.spec_index(k) as int),\n                forall|v: int| 0 <= v < self.spec_n() && #[trigger] self.spec_edge(u as int, v)\n                    ==> exists|k: int|\n                        0 <= k < neighbors.spec_len() && #[trigger] neighbors.spec_index(k) == v as N;"
+    "snippet": "        fn complement(&self) -> (complemented: Self)\n            requires\n                self.spec_adjmatrixgraphmteph_wf(),\n                self.spec_n() * self.spec_n() <= usize::MAX as nat,\n            ensures\n                complemented.spec_adjmatrixgraphmteph_wf(),\n                complemented.spec_n() == self.spec_n(),\n                forall|i: int, j: int|\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> #[trigger] complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
   },
   {
     "id": 10,
-    "function": "out_degree",
-    "file": "Chap52/AdjMatrixGraphMtEph.rs",
-    "lines": "166-171",
+    "function": "new",
+    "file": "Chap52/AdjMatrixGraphMtPer.rs",
+    "lines": "93-98",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, u: N) -> (d: N)\n            requires self.spec_adjmatrixgraphmteph_wf(), u < self.spec_n()\n            ensures d as nat == spec_count_true(\n                |v: int| self.spec_edge(u as int, v),\n                self.spec_n() as int,\n            );"
+    "snippet": "        fn new(n: usize) -> (empty: Self)\n            ensures\n                empty.spec_adjmatrixgraphmtper_wf(),\n                empty.spec_n() == n,\n                forall|u: int, v: int|\n                    0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);"
   },
   {
     "id": 11,
-    "function": "set_edge",
-    "file": "Chap52/AdjMatrixGraphMtEph.rs",
-    "lines": "174-186",
+    "function": "from_matrix",
+    "file": "Chap52/AdjMatrixGraphMtPer.rs",
+    "lines": "102-115",
     "spec_strength": "unknown",
-    "snippet": "        fn set_edge(&mut self, u: N, v: N, exists: B)\n            requires\n                old(self).spec_adjmatrixgraphmteph_wf(),\n                u < old(self).spec_n(),\n                v < old(self).spec_n(),\n            ensures\n                self.spec_adjmatrixgraphmteph_wf(),\n                self.spec_n() == old(self).spec_n(),\n                self.spec_edge(u as int, v as int) == exists,\n                forall|i: int, j: int|\n                    0 <= i < old(self).spec_n() && 0 <= j < old(self).spec_n()\n                    && !(i == u as int && j == v as int)\n                    ==> #[trigger] self.spec_edge(i, j) == old(self).spec_edge(i, j);"
+    "snippet": "        fn from_matrix(matrix: ArraySeqMtPerS<ArraySeqMtPerS<bool>>) -> (constructed: Self)\n            requires\n                forall|i: int| 0 <= i < matrix.spec_len() ==>\n                    #[trigger] matrix.spec_index(i).spec_len() == matrix.spec_len(),\n                spec_sum_of(\n                    matrix.spec_len() as int,\n                    |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), matrix.spec_len() as int),\n                ) <= usize::MAX as nat,\n            ensures\n                constructed.spec_adjmatrixgraphmtper_wf(),\n                constructed.spec_n() == matrix.spec_len(),\n                forall|u: int, v: int|\n                    0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()\n                    ==> #[trigger] constructed.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);"
   },
   {
     "id": 12,
-    "function": "complement",
-    "file": "Chap52/AdjMatrixGraphMtEph.rs",
-    "lines": "189-196",
-    "spec_strength": "unknown",
-    "snippet": "        fn complement(&self) -> (complemented: Self)\n            requires self.spec_adjmatrixgraphmteph_wf()\n            ensures\n                complemented.spec_adjmatrixgraphmteph_wf(),\n                complemented.spec_n() == self.spec_n(),\n                forall|i: int, j: int|\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> #[trigger] complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
-  },
-  {
-    "id": 13,
-    "function": "lemma_count_true_monotone",
-    "file": "Chap52/AdjMatrixGraphMtPer.rs",
-    "lines": "73-76",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_count_true_monotone(f: spec_fn(int) -> bool, i: int, n: int)\n        requires 0 <= i <= n\n        ensures spec_count_true(f, i) <= spec_count_true(f, n)\n        decreases n - i"
-  },
-  {
-    "id": 14,
-    "function": "lemma_sum_of_monotone",
-    "file": "Chap52/AdjMatrixGraphMtPer.rs",
-    "lines": "83-86",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_sum_of_monotone(i: int, n: int, f: spec_fn(int) -> nat)\n        requires 0 <= i <= n\n        ensures spec_sum_of(i, f) <= spec_sum_of(n, f)\n        decreases n - i"
-  },
-  {
-    "id": 15,
-    "function": "lemma_count_true_bound",
-    "file": "Chap52/AdjMatrixGraphMtPer.rs",
-    "lines": "93-96",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_count_true_bound(f: spec_fn(int) -> bool, n: int)\n        requires n >= 0\n        ensures spec_count_true(f, n) <= n as nat\n        decreases n"
-  },
-  {
-    "id": 16,
-    "function": "new",
-    "file": "Chap52/AdjMatrixGraphMtPer.rs",
-    "lines": "112-117",
-    "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_adjmatrixgraphmtper_wf(),\n                empty.spec_n() == n,\n                forall|u: int, v: int|\n                    0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);"
-  },
-  {
-    "id": 17,
     "function": "num_vertices",
     "file": "Chap52/AdjMatrixGraphMtPer.rs",
     "lines": "120-122",
     "spec_strength": "unknown",
-    "snippet": "        fn num_vertices(&self) -> (n: N)\n            requires self.spec_adjmatrixgraphmtper_wf()\n            ensures n as nat == self.spec_n();"
+    "snippet": "        fn num_vertices(&self) -> (n: usize)\n            requires self.spec_adjmatrixgraphmtper_wf()\n            ensures n as nat == self.spec_n();"
+  },
+  {
+    "id": 13,
+    "function": "num_edges",
+    "file": "Chap52/AdjMatrixGraphMtPer.rs",
+    "lines": "127-133",
+    "spec_strength": "unknown",
+    "snippet": "        fn num_edges(&self) -> (m: usize)\n            requires self.spec_adjmatrixgraphmtper_wf()\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_n() as int,\n                    |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),\n                );"
+  },
+  {
+    "id": 14,
+    "function": "has_edge",
+    "file": "Chap52/AdjMatrixGraphMtPer.rs",
+    "lines": "138-142",
+    "spec_strength": "unknown",
+    "snippet": "        fn has_edge(&self, u: usize, v: usize) -> (found: bool)\n            requires self.spec_adjmatrixgraphmtper_wf()\n            ensures\n                u < self.spec_n() && v < self.spec_n() ==> found == self.spec_edge(u as int, v as int),\n                (u >= self.spec_n() || v >= self.spec_n()) ==> !found;"
+  },
+  {
+    "id": 15,
+    "function": "out_neighbors",
+    "file": "Chap52/AdjMatrixGraphMtPer.rs",
+    "lines": "147-158",
+    "spec_strength": "unknown",
+    "snippet": "        fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqMtPerS<usize>)\n            requires self.spec_adjmatrixgraphmtper_wf()\n            ensures\n                u < self.spec_n() ==> (\n                    (forall|k: int| 0 <= k < neighbors.spec_len()\n                        ==> #[trigger] neighbors.spec_index(k) < self.spec_n()\n                            && self.spec_edge(u as int, neighbors.spec_index(k) as int))\n                    && (forall|v: int| 0 <= v < self.spec_n() && #[trigger] self.spec_edge(u as int, v)\n                        ==> exists|k: int|\n                            0 <= k < neighbors.spec_len() && #[trigger] neighbors.spec_index(k) == v as usize)\n                ),\n                u >= self.spec_n() ==> neighbors.spec_len() == 0;"
+  },
+  {
+    "id": 16,
+    "function": "out_degree",
+    "file": "Chap52/AdjMatrixGraphMtPer.rs",
+    "lines": "163-170",
+    "spec_strength": "unknown",
+    "snippet": "        fn out_degree(&self, u: usize) -> (d: usize)\n            requires self.spec_adjmatrixgraphmtper_wf()\n            ensures\n                u < self.spec_n() ==> d as nat == spec_count_true(\n                    |v: int| self.spec_edge(u as int, v),\n                    self.spec_n() as int,\n                ),\n                u >= self.spec_n() ==> d == 0;"
+  },
+  {
+    "id": 17,
+    "function": "set_edge",
+    "file": "Chap52/AdjMatrixGraphMtPer.rs",
+    "lines": "175-188",
+    "spec_strength": "unknown",
+    "snippet": "        fn set_edge(&self, u: usize, v: usize, exists: bool) -> (updated: Self)\n            requires\n                self.spec_adjmatrixgraphmtper_wf(),\n                u < self.spec_n(),\n                v < self.spec_n(),\n                self.spec_n() * self.spec_n() < usize::MAX as nat,\n            ensures\n                updated.spec_adjmatrixgraphmtper_wf(),\n                updated.spec_n() == self.spec_n(),\n                updated.spec_edge(u as int, v as int) == exists,\n                forall|i: int, j: int|\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    && !(i == u as int && j == v as int)\n                    ==> #[trigger] updated.spec_edge(i, j) == self.spec_edge(i, j);"
   },
   {
     "id": 18,
-    "function": "num_edges",
+    "function": "complement",
     "file": "Chap52/AdjMatrixGraphMtPer.rs",
-    "lines": "125-136",
+    "lines": "193-202",
     "spec_strength": "unknown",
-    "snippet": "        fn num_edges(&self) -> (m: N)\n            requires\n                self.spec_adjmatrixgraphmtper_wf(),\n                spec_sum_of(\n                    self.spec_n() as int,\n                    |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),\n                ) <= usize::MAX as nat\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_n() as int,\n                    |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),\n                );"
+    "snippet": "        fn complement(&self) -> (complemented: Self)\n            requires\n                self.spec_adjmatrixgraphmtper_wf(),\n                self.spec_n() * self.spec_n() <= usize::MAX as nat,\n            ensures\n                complemented.spec_adjmatrixgraphmtper_wf(),\n                complemented.spec_n() == self.spec_n(),\n                forall|i: int, j: int|\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> #[trigger] complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
   },
   {
     "id": 19,
-    "function": "has_edge",
-    "file": "Chap52/AdjMatrixGraphMtPer.rs",
-    "lines": "139-143",
+    "function": "new",
+    "file": "Chap52/AdjMatrixGraphStEph.rs",
+    "lines": "85-90",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, u: N, v: N) -> (found: B)\n            requires self.spec_adjmatrixgraphmtper_wf()\n            ensures\n                u < self.spec_n() && v < self.spec_n() ==> found == self.spec_edge(u as int, v as int),\n                (u >= self.spec_n() || v >= self.spec_n()) ==> !found;"
+    "snippet": "        fn new(n: usize) -> (empty: Self)\n            ensures\n                empty.spec_adjmatrixgraphsteph_wf(),\n                empty.spec_n() == n,\n                forall|u: int, v: int|\n                    0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);"
   },
   {
     "id": 20,
-    "function": "out_neighbors",
-    "file": "Chap52/AdjMatrixGraphMtPer.rs",
-    "lines": "146-157",
+    "function": "from_matrix",
+    "file": "Chap52/AdjMatrixGraphStEph.rs",
+    "lines": "93-106",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtPerS<N>)\n            requires self.spec_adjmatrixgraphmtper_wf()\n            ensures\n                u < self.spec_n() ==> (\n                    (forall|k: int| 0 <= k < neighbors.spec_len()\n                        ==> #[trigger] neighbors.spec_index(k) < self.spec_n()\n                            && self.spec_edge(u as int, neighbors.spec_index(k) as int))\n                    && (forall|v: int| 0 <= v < self.spec_n() && #[trigger] self.spec_edge(u as int, v)\n                        ==> exists|k: int|\n                            0 <= k < neighbors.spec_len() && #[trigger] neighbors.spec_index(k) == v as N)\n                ),\n                u >= self.spec_n() ==> neighbors.spec_len() == 0;"
+    "snippet": "        fn from_matrix(matrix: ArraySeqStEphS<ArraySeqStEphS<bool>>) -> (constructed: Self)\n            requires\n                forall|i: int| 0 <= i < matrix.spec_len() ==>\n                    #[trigger] matrix.spec_index(i).spec_len() == matrix.spec_len(),\n                spec_sum_of(\n                    matrix.spec_len() as int,\n                    |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), matrix.spec_len() as int),\n                ) <= usize::MAX as nat,\n            ensures\n                constructed.spec_adjmatrixgraphsteph_wf(),\n                constructed.spec_n() == matrix.spec_len(),\n                forall|u: int, v: int|\n                    0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()\n                    ==> #[trigger] constructed.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);"
   },
   {
     "id": 21,
-    "function": "out_degree",
-    "file": "Chap52/AdjMatrixGraphMtPer.rs",
-    "lines": "160-167",
+    "function": "num_vertices",
+    "file": "Chap52/AdjMatrixGraphStEph.rs",
+    "lines": "110-112",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, u: N) -> (d: N)\n            requires self.spec_adjmatrixgraphmtper_wf()\n            ensures\n                u < self.spec_n() ==> d as nat == spec_count_true(\n                    |v: int| self.spec_edge(u as int, v),\n                    self.spec_n() as int,\n                ),\n                u >= self.spec_n() ==> d == 0;"
+    "snippet": "        fn num_vertices(&self) -> (n: usize)\n            requires self.spec_adjmatrixgraphsteph_wf()\n            ensures n as nat == self.spec_n();"
   },
   {
     "id": 22,
-    "function": "complement",
-    "file": "Chap52/AdjMatrixGraphMtPer.rs",
-    "lines": "170-177",
+    "function": "num_edges",
+    "file": "Chap52/AdjMatrixGraphStEph.rs",
+    "lines": "116-122",
     "spec_strength": "unknown",
-    "snippet": "        fn complement(&self) -> (complemented: Self)\n            requires self.spec_adjmatrixgraphmtper_wf()\n            ensures\n                complemented.spec_adjmatrixgraphmtper_wf(),\n                complemented.spec_n() == self.spec_n(),\n                forall|i: int, j: int|\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> #[trigger] complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
+    "snippet": "        fn num_edges(&self) -> (m: usize)\n            requires self.spec_adjmatrixgraphsteph_wf()\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_n() as int,\n                    |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),\n                );"
   },
   {
     "id": 23,
-    "function": "lemma_count_true_monotone",
+    "function": "has_edge",
     "file": "Chap52/AdjMatrixGraphStEph.rs",
-    "lines": "72-75",
+    "lines": "126-128",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_count_true_monotone(f: spec_fn(int) -> bool, i: int, n: int)\n        requires 0 <= i <= n\n        ensures spec_count_true(f, i) <= spec_count_true(f, n)\n        decreases n - i"
+    "snippet": "        fn has_edge(&self, u: usize, v: usize) -> (found: bool)\n            requires self.spec_adjmatrixgraphsteph_wf(), u < self.spec_n(), v < self.spec_n()\n            ensures found == self.spec_edge(u as int, v as int);"
   },
   {
     "id": 24,
-    "function": "lemma_sum_of_monotone",
+    "function": "out_neighbors",
     "file": "Chap52/AdjMatrixGraphStEph.rs",
-    "lines": "82-85",
+    "lines": "132-140",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_sum_of_monotone(i: int, n: int, f: spec_fn(int) -> nat)\n        requires 0 <= i <= n\n        ensures spec_sum_of(i, f) <= spec_sum_of(n, f)\n        decreases n - i"
+    "snippet": "        fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqStEphS<usize>)\n            requires self.spec_adjmatrixgraphsteph_wf(), u < self.spec_n()\n            ensures\n                forall|k: int| 0 <= k < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(k) < self.spec_n()\n                        && self.spec_edge(u as int, neighbors.spec_index(k) as int),\n                forall|v: int| 0 <= v < self.spec_n() && #[trigger] self.spec_edge(u as int, v)\n                    ==> exists|k: int|\n                        0 <= k < neighbors.spec_len() && #[trigger] neighbors.spec_index(k) == v as usize;"
   },
   {
     "id": 25,
-    "function": "lemma_count_true_bound",
+    "function": "out_degree",
     "file": "Chap52/AdjMatrixGraphStEph.rs",
-    "lines": "92-95",
+    "lines": "144-149",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_count_true_bound(f: spec_fn(int) -> bool, n: int)\n        requires n >= 0\n        ensures spec_count_true(f, n) <= n as nat\n        decreases n"
+    "snippet": "        fn out_degree(&self, u: usize) -> (d: usize)\n            requires self.spec_adjmatrixgraphsteph_wf(), u < self.spec_n()\n            ensures d as nat == spec_count_true(\n                |v: int| self.spec_edge(u as int, v),\n                self.spec_n() as int,\n            );"
   },
   {
     "id": 26,
-    "function": "new",
+    "function": "set_edge",
     "file": "Chap52/AdjMatrixGraphStEph.rs",
-    "lines": "112-117",
+    "lines": "153-166",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_adjmatrixgraphsteph_wf(),\n                empty.spec_n() == n,\n                forall|u: int, v: int|\n                    0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);"
+    "snippet": "        fn set_edge(&mut self, u: usize, v: usize, exists: bool)\n            requires\n                old(self).spec_adjmatrixgraphsteph_wf(),\n                u < old(self).spec_n(),\n                v < old(self).spec_n(),\n                old(self).spec_n() * old(self).spec_n() < usize::MAX as nat,\n            ensures\n                self.spec_adjmatrixgraphsteph_wf(),\n                self.spec_n() == old(self).spec_n(),\n                self.spec_edge(u as int, v as int) == exists,\n                forall|i: int, j: int|\n                    0 <= i < old(self).spec_n() && 0 <= j < old(self).spec_n()\n                    && !(i == u as int && j == v as int)\n                    ==> #[trigger] self.spec_edge(i, j) == old(self).spec_edge(i, j);"
   },
   {
     "id": 27,
-    "function": "from_matrix",
+    "function": "complement",
     "file": "Chap52/AdjMatrixGraphStEph.rs",
-    "lines": "121-130",
+    "lines": "170-179",
     "spec_strength": "unknown",
-    "snippet": "        fn from_matrix(matrix: ArraySeqStEphS<ArraySeqStEphS<bool>>) -> (constructed: Self)\n            requires\n                forall|i: int| 0 <= i < matrix.spec_len() ==>\n                    #[trigger] matrix.spec_index(i).spec_len() == matrix.spec_len()\n            ensures\n                constructed.spec_adjmatrixgraphsteph_wf(),\n                constructed.spec_n() == matrix.spec_len(),\n                forall|u: int, v: int|\n                    0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()\n                    ==> #[trigger] constructed.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);"
+    "snippet": "        fn complement(&self) -> (complemented: Self)\n            requires\n                self.spec_adjmatrixgraphsteph_wf(),\n                self.spec_n() * self.spec_n() <= usize::MAX as nat,\n            ensures\n                complemented.spec_adjmatrixgraphsteph_wf(),\n                complemented.spec_n() == self.spec_n(),\n                forall|i: int, j: int|\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> #[trigger] complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
   },
   {
     "id": 28,
-    "function": "num_vertices",
-    "file": "Chap52/AdjMatrixGraphStEph.rs",
-    "lines": "134-136",
+    "function": "new",
+    "file": "Chap52/AdjMatrixGraphStPer.rs",
+    "lines": "96-101",
     "spec_strength": "unknown",
-    "snippet": "        fn num_vertices(&self) -> (n: N)\n            requires self.spec_adjmatrixgraphsteph_wf()\n            ensures n as nat == self.spec_n();"
+    "snippet": "        fn new(n: usize) -> (empty: Self)\n            ensures\n                empty.spec_adjmatrixgraphstper_wf(),\n                empty.spec_n() == n,\n                forall|u: int, v: int|\n                    0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);"
   },
   {
     "id": 29,
-    "function": "num_edges",
-    "file": "Chap52/AdjMatrixGraphStEph.rs",
-    "lines": "140-151",
+    "function": "from_matrix",
+    "file": "Chap52/AdjMatrixGraphStPer.rs",
+    "lines": "105-118",
     "spec_strength": "unknown",
-    "snippet": "        fn num_edges(&self) -> (m: N)\n            requires\n                self.spec_adjmatrixgraphsteph_wf(),\n                spec_sum_of(\n                    self.spec_n() as int,\n                    |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),\n                ) <= usize::MAX as nat\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_n() as int,\n                    |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),\n                );"
+    "snippet": "        fn from_matrix(matrix: ArraySeqStPerS<ArraySeqStPerS<bool>>) -> (constructed: Self)\n            requires\n                forall|i: int| 0 <= i < matrix.spec_len() ==>\n                    #[trigger] matrix.spec_index(i).spec_len() == matrix.spec_len(),\n                spec_sum_of(\n                    matrix.spec_len() as int,\n                    |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), matrix.spec_len() as int),\n                ) <= usize::MAX as nat,\n            ensures\n                constructed.spec_adjmatrixgraphstper_wf(),\n                constructed.spec_n() == matrix.spec_len(),\n                forall|u: int, v: int|\n                    0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()\n                    ==> #[trigger] constructed.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);"
   },
   {
     "id": 30,
-    "function": "has_edge",
-    "file": "Chap52/AdjMatrixGraphStEph.rs",
-    "lines": "155-157",
+    "function": "num_vertices",
+    "file": "Chap52/AdjMatrixGraphStPer.rs",
+    "lines": "123-125",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, u: N, v: N) -> (found: B)\n            requires self.spec_adjmatrixgraphsteph_wf(), u < self.spec_n(), v < self.spec_n()\n            ensures found == self.spec_edge(u as int, v as int);"
+    "snippet": "        fn num_vertices(&self) -> (n: usize)\n            requires self.spec_adjmatrixgraphstper_wf()\n            ensures n as nat == self.spec_n();"
   },
   {
     "id": 31,
-    "function": "out_neighbors",
-    "file": "Chap52/AdjMatrixGraphStEph.rs",
-    "lines": "161-169",
+    "function": "num_edges",
+    "file": "Chap52/AdjMatrixGraphStPer.rs",
+    "lines": "130-136",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqStEphS<N>)\n            requires self.spec_adjmatrixgraphsteph_wf(), u < self.spec_n()\n            ensures\n                forall|k: int| 0 <= k < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(k) < self.spec_n()\n                        && self.spec_edge(u as int, neighbors.spec_index(k) as int),\n                forall|v: int| 0 <= v < self.spec_n() && #[trigger] self.spec_edge(u as int, v)\n                    ==> exists|k: int|\n                        0 <= k < neighbors.spec_len() && #[trigger] neighbors.spec_index(k) == v as N;"
+    "snippet": "        fn num_edges(&self) -> (m: usize)\n            requires self.spec_adjmatrixgraphstper_wf()\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_n() as int,\n                    |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),\n                );"
   },
   {
     "id": 32,
-    "function": "out_degree",
-    "file": "Chap52/AdjMatrixGraphStEph.rs",
-    "lines": "173-178",
+    "function": "has_edge",
+    "file": "Chap52/AdjMatrixGraphStPer.rs",
+    "lines": "141-143",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, u: N) -> (d: N)\n            requires self.spec_adjmatrixgraphsteph_wf(), u < self.spec_n()\n            ensures d as nat == spec_count_true(\n                |v: int| self.spec_edge(u as int, v),\n                self.spec_n() as int,\n            );"
+    "snippet": "        fn has_edge(&self, u: usize, v: usize) -> (found: bool)\n            requires self.spec_adjmatrixgraphstper_wf(), u < self.spec_n(), v < self.spec_n()\n            ensures found == self.spec_edge(u as int, v as int);"
   },
   {
     "id": 33,
-    "function": "set_edge",
-    "file": "Chap52/AdjMatrixGraphStEph.rs",
-    "lines": "182-194",
+    "function": "out_neighbors",
+    "file": "Chap52/AdjMatrixGraphStPer.rs",
+    "lines": "148-156",
     "spec_strength": "unknown",
-    "snippet": "        fn set_edge(&mut self, u: N, v: N, exists: B)\n            requires\n                old(self).spec_adjmatrixgraphsteph_wf(),\n                u < old(self).spec_n(),\n                v < old(self).spec_n(),\n            ensures\n                self.spec_adjmatrixgraphsteph_wf(),\n                self.spec_n() == old(self).spec_n(),\n                self.spec_edge(u as int, v as int) == exists,\n                forall|i: int, j: int|\n                    0 <= i < old(self).spec_n() && 0 <= j < old(self).spec_n()\n                    && !(i == u as int && j == v as int)\n                    ==> #[trigger] self.spec_edge(i, j) == old(self).spec_edge(i, j);"
+    "snippet": "        fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqStPerS<usize>)\n            requires self.spec_adjmatrixgraphstper_wf(), u < self.spec_n()\n            ensures\n                forall|k: int| 0 <= k < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(k) < self.spec_n()\n                        && self.spec_edge(u as int, neighbors.spec_index(k) as int),\n                forall|v: int| 0 <= v < self.spec_n() && #[trigger] self.spec_edge(u as int, v)\n                    ==> exists|k: int|\n                        0 <= k < neighbors.spec_len() && #[trigger] neighbors.spec_index(k) == v as usize;"
   },
   {
     "id": 34,
-    "function": "complement",
-    "file": "Chap52/AdjMatrixGraphStEph.rs",
-    "lines": "198-205",
+    "function": "out_degree",
+    "file": "Chap52/AdjMatrixGraphStPer.rs",
+    "lines": "161-166",
     "spec_strength": "unknown",
-    "snippet": "        fn complement(&self) -> (complemented: Self)\n            requires self.spec_adjmatrixgraphsteph_wf()\n            ensures\n                complemented.spec_adjmatrixgraphsteph_wf(),\n                complemented.spec_n() == self.spec_n(),\n                forall|i: int, j: int|\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> #[trigger] complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
+    "snippet": "        fn out_degree(&self, u: usize) -> (d: usize)\n            requires self.spec_adjmatrixgraphstper_wf(), u < self.spec_n()\n            ensures d as nat == spec_count_true(\n                |v: int| self.spec_edge(u as int, v),\n                self.spec_n() as int,\n            );"
   },
   {
     "id": 35,
-    "function": "lemma_count_true_monotone",
+    "function": "set_edge",
     "file": "Chap52/AdjMatrixGraphStPer.rs",
-    "lines": "77-80",
+    "lines": "171-184",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_count_true_monotone(f: spec_fn(int) -> bool, i: int, n: int)\n        requires 0 <= i <= n\n        ensures spec_count_true(f, i) <= spec_count_true(f, n)\n        decreases n - i"
+    "snippet": "        fn set_edge(&self, u: usize, v: usize, exists: bool) -> (updated: Self)\n            requires\n                self.spec_adjmatrixgraphstper_wf(),\n                u < self.spec_n(),\n                v < self.spec_n(),\n                self.spec_n() * self.spec_n() < usize::MAX as nat,\n            ensures\n                updated.spec_adjmatrixgraphstper_wf(),\n                updated.spec_n() == self.spec_n(),\n                updated.spec_edge(u as int, v as int) == exists,\n                forall|i: int, j: int|\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    && !(i == u as int && j == v as int)\n                    ==> #[trigger] updated.spec_edge(i, j) == self.spec_edge(i, j);"
   },
   {
     "id": 36,
-    "function": "lemma_sum_of_monotone",
+    "function": "complement",
     "file": "Chap52/AdjMatrixGraphStPer.rs",
-    "lines": "87-90",
+    "lines": "189-198",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_sum_of_monotone(i: int, n: int, f: spec_fn(int) -> nat)\n        requires 0 <= i <= n\n        ensures spec_sum_of(i, f) <= spec_sum_of(n, f)\n        decreases n - i"
+    "snippet": "        fn complement(&self) -> (complemented: Self)\n            requires\n                self.spec_adjmatrixgraphstper_wf(),\n                self.spec_n() * self.spec_n() <= usize::MAX as nat,\n            ensures\n                complemented.spec_adjmatrixgraphstper_wf(),\n                complemented.spec_n() == self.spec_n(),\n                forall|i: int, j: int|\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> #[trigger] complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
   },
   {
     "id": 37,
-    "function": "lemma_count_true_bound",
+    "function": "eq",
     "file": "Chap52/AdjMatrixGraphStPer.rs",
-    "lines": "97-100",
+    "lines": "662-663",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_count_true_bound(f: spec_fn(int) -> bool, n: int)\n        requires n >= 0\n        ensures spec_count_true(f, n) <= n as nat\n        decreases n"
+    "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
   {
     "id": 38,
     "function": "new",
-    "file": "Chap52/AdjMatrixGraphStPer.rs",
-    "lines": "116-121",
+    "file": "Chap52/AdjSeqGraphMtEph.rs",
+    "lines": "88-92",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_adjmatrixgraphstper_wf(),\n                empty.spec_n() == n,\n                forall|u: int, v: int|\n                    0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);"
+    "snippet": "        fn new(n: usize) -> (empty: Self)\n            ensures\n                empty.spec_adjseqgraphmteph_wf(),\n                empty.spec_num_vertices() == n,\n                forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;"
   },
   {
     "id": 39,
-    "function": "from_matrix",
-    "file": "Chap52/AdjMatrixGraphStPer.rs",
-    "lines": "124-133",
+    "function": "from_seq",
+    "file": "Chap52/AdjSeqGraphMtEph.rs",
+    "lines": "96-110",
     "spec_strength": "unknown",
-    "snippet": "        fn from_matrix(matrix: ArraySeqStPerS<ArraySeqStPerS<bool>>) -> (constructed: Self)\n            requires\n                forall|i: int| 0 <= i < matrix.spec_len() ==>\n                    #[trigger] matrix.spec_index(i).spec_len() == matrix.spec_len()\n            ensures\n                constructed.spec_adjmatrixgraphstper_wf(),\n                constructed.spec_n() == matrix.spec_len(),\n                forall|u: int, v: int|\n                    0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()\n                    ==> #[trigger] constructed.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);"
+    "snippet": "        fn from_seq(adj: ArraySeqMtEphS<ArraySeqMtEphS<usize>>) -> (constructed: Self)\n            requires\n                forall|u: int, j: int|\n                    0 <= u < adj.spec_len()\n                    && 0 <= j < adj.spec_index(u).spec_len()\n                    ==> #[trigger] adj.spec_index(u).spec_index(j) < adj.spec_len(),\n                spec_sum_of(adj.spec_len() as int, |i: int| adj.spec_index(i).spec_len()) <= usize::MAX as nat,\n            ensures\n                constructed.spec_adjseqgraphmteph_wf(),\n                constructed.spec_num_vertices() == adj.spec_len(),\n                forall|i: int| 0 <= i < adj.spec_len() ==>\n                    #[trigger] constructed.spec_degree(i) == adj.spec_index(i).spec_len(),\n                forall|i: int, j: int| 0 <= i < adj.spec_len()\n                    && 0 <= j < adj.spec_index(i).spec_len()\n                    ==> #[trigger] constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);"
   },
   {
     "id": 40,
     "function": "num_vertices",
-    "file": "Chap52/AdjMatrixGraphStPer.rs",
-    "lines": "136-138",
+    "file": "Chap52/AdjSeqGraphMtEph.rs",
+    "lines": "115-117",
     "spec_strength": "unknown",
-    "snippet": "        fn num_vertices(&self) -> (n: N)\n            requires self.spec_adjmatrixgraphstper_wf()\n            ensures n as nat == self.spec_n();"
+    "snippet": "        fn num_vertices(&self) -> (n: usize)\n            requires self.spec_adjseqgraphmteph_wf()\n            ensures n as nat == self.spec_num_vertices();"
   },
   {
     "id": 41,
     "function": "num_edges",
-    "file": "Chap52/AdjMatrixGraphStPer.rs",
-    "lines": "141-152",
+    "file": "Chap52/AdjSeqGraphMtEph.rs",
+    "lines": "122-129",
     "spec_strength": "unknown",
-    "snippet": "        fn num_edges(&self) -> (m: N)\n            requires\n                self.spec_adjmatrixgraphstper_wf(),\n                spec_sum_of(\n                    self.spec_n() as int,\n                    |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),\n                ) <= usize::MAX as nat\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_n() as int,\n                    |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),\n                );"
+    "snippet": "        fn num_edges(&self) -> (m: usize)\n            requires\n                self.spec_adjseqgraphmteph_wf()\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_num_vertices() as int,\n                    |i: int| self.spec_degree(i),\n                );"
   },
   {
     "id": 42,
     "function": "has_edge",
-    "file": "Chap52/AdjMatrixGraphStPer.rs",
-    "lines": "155-157",
+    "file": "Chap52/AdjSeqGraphMtEph.rs",
+    "lines": "134-138",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, u: N, v: N) -> (found: B)\n            requires self.spec_adjmatrixgraphstper_wf(), u < self.spec_n(), v < self.spec_n()\n            ensures found == self.spec_edge(u as int, v as int);"
+    "snippet": "        fn has_edge(&self, u: usize, v: usize) -> (found: bool)\n            requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()\n            ensures found == exists|j: int|\n                0 <= j < self.spec_degree(u as int)\n                && #[trigger] self.spec_neighbor(u as int, j) == v;"
   },
   {
     "id": 43,
     "function": "out_neighbors",
-    "file": "Chap52/AdjMatrixGraphStPer.rs",
-    "lines": "160-168",
+    "file": "Chap52/AdjSeqGraphMtEph.rs",
+    "lines": "143-148",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqStPerS<N>)\n            requires self.spec_adjmatrixgraphstper_wf(), u < self.spec_n()\n            ensures\n                forall|k: int| 0 <= k < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(k) < self.spec_n()\n                        && self.spec_edge(u as int, neighbors.spec_index(k) as int),\n                forall|v: int| 0 <= v < self.spec_n() && #[trigger] self.spec_edge(u as int, v)\n                    ==> exists|k: int|\n                        0 <= k < neighbors.spec_len() && #[trigger] neighbors.spec_index(k) == v as N;"
+    "snippet": "        fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqMtEphS<usize>)\n            requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()\n            ensures\n                neighbors.spec_len() == self.spec_degree(u as int),\n                forall|j: int| 0 <= j < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);"
   },
   {
     "id": 44,
     "function": "out_degree",
-    "file": "Chap52/AdjMatrixGraphStPer.rs",
-    "lines": "171-176",
+    "file": "Chap52/AdjSeqGraphMtEph.rs",
+    "lines": "153-155",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, u: N) -> (d: N)\n            requires self.spec_adjmatrixgraphstper_wf(), u < self.spec_n()\n            ensures d as nat == spec_count_true(\n                |v: int| self.spec_edge(u as int, v),\n                self.spec_n() as int,\n            );"
+    "snippet": "        fn out_degree(&self, u: usize) -> (d: usize)\n            requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()\n            ensures d as nat == self.spec_degree(u as int);"
   },
   {
     "id": 45,
-    "function": "set_edge",
-    "file": "Chap52/AdjMatrixGraphStPer.rs",
-    "lines": "179-191",
+    "function": "set_neighbors",
+    "file": "Chap52/AdjSeqGraphMtEph.rs",
+    "lines": "159-180",
     "spec_strength": "unknown",
-    "snippet": "        fn set_edge(&self, u: N, v: N, exists: B) -> (updated: Self)\n            requires\n                self.spec_adjmatrixgraphstper_wf(),\n                u < self.spec_n(),\n                v < self.spec_n(),\n            ensures\n                updated.spec_adjmatrixgraphstper_wf(),\n                updated.spec_n() == self.spec_n(),\n                updated.spec_edge(u as int, v as int) == exists,\n                forall|i: int, j: int|\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    && !(i == u as int && j == v as int)\n                    ==> #[trigger] updated.spec_edge(i, j) == self.spec_edge(i, j);"
+    "snippet": "        fn set_neighbors(&mut self, v: usize, neighbors: ArraySeqMtEphS<usize>)\n            requires\n                old(self).spec_adjseqgraphmteph_wf(),\n                v < old(self).spec_num_vertices(),\n                forall|j: int| 0 <= j < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(j) < old(self).spec_num_vertices(),\n                spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i)) < usize::MAX as nat,\n                spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i))\n                    - old(self).spec_degree(v as int)\n                    + neighbors.spec_len() <= usize::MAX as nat,\n            ensures\n                self.spec_adjseqgraphmteph_wf(),\n                self.spec_num_vertices() == old(self).spec_num_vertices(),\n                self.spec_degree(v as int) == neighbors.spec_len(),\n                forall|j: int| 0 <= j < neighbors.spec_len()\n                    ==> #[trigger] self.spec_neighbor(v as int, j) == neighbors.spec_index(j),\n                forall|i: int| 0 <= i < old(self).spec_num_vertices() && i != v as int\n                    ==> #[trigger] self.spec_degree(i) == old(self).spec_degree(i),\n                forall|i: int, j: int|\n                    0 <= i < old(self).spec_num_vertices() && i != v as int\n                    && 0 <= j < old(self).spec_degree(i)\n                    ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j);"
   },
   {
     "id": 46,
-    "function": "complement",
-    "file": "Chap52/AdjMatrixGraphStPer.rs",
-    "lines": "194-201",
+    "function": "set_edge",
+    "file": "Chap52/AdjSeqGraphMtEph.rs",
+    "lines": "185-205",
     "spec_strength": "unknown",
-    "snippet": "        fn complement(&self) -> (complemented: Self)\n            requires self.spec_adjmatrixgraphstper_wf()\n            ensures\n                complemented.spec_adjmatrixgraphstper_wf(),\n                complemented.spec_n() == self.spec_n(),\n                forall|i: int, j: int|\n                    0 <= i < self.spec_n() && 0 <= j < self.spec_n()\n                    ==> #[trigger] complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));"
+    "snippet": "        fn set_edge(&mut self, u: usize, v: usize, exists: bool)\n            requires\n                old(self).spec_adjseqgraphmteph_wf(),\n                u < old(self).spec_num_vertices(),\n                v < old(self).spec_num_vertices(),\n                spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i)) < usize::MAX as nat,\n            ensures\n                self.spec_adjseqgraphmteph_wf(),\n                self.spec_num_vertices() == old(self).spec_num_vertices(),\n                forall|i: int| 0 <= i < old(self).spec_num_vertices() && i != u as int\n                    ==> #[trigger] self.spec_degree(i) == old(self).spec_degree(i),\n                forall|i: int, j: int|\n                    0 <= i < old(self).spec_num_vertices() && i != u as int\n                    && 0 <= j < old(self).spec_degree(i)\n                    ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j),\n                exists ==> (exists|j: int|\n                    0 <= j < self.spec_degree(u as int)\n                    && #[trigger] self.spec_neighbor(u as int, j) == v),\n                !exists ==> forall|j: int|\n                    0 <= j < self.spec_degree(u as int)\n                    ==> #[trigger] self.spec_neighbor(u as int, j) != v;"
   },
   {
     "id": 47,
-    "function": "eq",
-    "file": "Chap52/AdjMatrixGraphStPer.rs",
-    "lines": "473-474",
-    "spec_strength": "hole",
-    "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
+    "function": "new",
+    "file": "Chap52/AdjSeqGraphMtPer.rs",
+    "lines": "86-90",
+    "spec_strength": "unknown",
+    "snippet": "        fn new(n: usize) -> (empty: Self)\n            ensures\n                empty.spec_adjseqgraphmtper_wf(),\n                empty.spec_num_vertices() == n,\n                forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;"
   },
   {
     "id": 48,
-    "function": "lemma_sum_of_monotone",
-    "file": "Chap52/AdjSeqGraphMtEph.rs",
-    "lines": "60-63",
+    "function": "from_seq",
+    "file": "Chap52/AdjSeqGraphMtPer.rs",
+    "lines": "94-111",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_sum_of_monotone(i: int, n: int, f: spec_fn(int) -> nat)\n        requires 0 <= i <= n\n        ensures spec_sum_of(i, f) <= spec_sum_of(n, f)\n        decreases n - i"
+    "snippet": "        fn from_seq(adj: ArraySeqMtPerS<ArraySeqMtPerS<usize>>) -> (constructed: Self)\n            requires\n                forall|u: int, j: int|\n                    0 <= u < adj.spec_len()\n                    && 0 <= j < adj.spec_index(u).spec_len()\n                    ==> #[trigger] adj.spec_index(u).spec_index(j) < adj.spec_len(),\n                spec_sum_of(\n                    adj.spec_len() as int,\n                    |i: int| adj.spec_index(i).spec_len(),\n                ) <= usize::MAX as nat,\n            ensures\n                constructed.spec_adjseqgraphmtper_wf(),\n                constructed.spec_num_vertices() == adj.spec_len(),\n                forall|i: int| 0 <= i < adj.spec_len() ==>\n                    #[trigger] constructed.spec_degree(i) == adj.spec_index(i).spec_len(),\n                forall|i: int, j: int| 0 <= i < adj.spec_len()\n                    && 0 <= j < adj.spec_index(i).spec_len()\n                    ==> #[trigger] constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);"
   },
   {
     "id": 49,
-    "function": "lemma_sum_of_unfold",
-    "file": "Chap52/AdjSeqGraphMtEph.rs",
-    "lines": "71-73",
+    "function": "num_vertices",
+    "file": "Chap52/AdjSeqGraphMtPer.rs",
+    "lines": "116-118",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_sum_of_unfold(i: int, f: spec_fn(int) -> nat)\n        requires i >= 0\n        ensures spec_sum_of(i + 1, f) == f(i) + spec_sum_of(i, f)"
+    "snippet": "        fn num_vertices(&self) -> (n: usize)\n            requires self.spec_adjseqgraphmtper_wf()\n            ensures n as nat == self.spec_num_vertices();"
   },
   {
     "id": 50,
-    "function": "new",
-    "file": "Chap52/AdjSeqGraphMtEph.rs",
-    "lines": "88-92",
+    "function": "num_edges",
+    "file": "Chap52/AdjSeqGraphMtPer.rs",
+    "lines": "123-129",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_adjseqgraphmteph_wf(),\n                empty.spec_num_vertices() == n,\n                forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;"
+    "snippet": "        fn num_edges(&self) -> (m: usize)\n            requires self.spec_adjseqgraphmtper_wf()\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_num_vertices() as int,\n                    |i: int| self.spec_degree(i),\n                );"
   },
   {
     "id": 51,
-    "function": "num_vertices",
-    "file": "Chap52/AdjSeqGraphMtEph.rs",
-    "lines": "95-97",
+    "function": "has_edge",
+    "file": "Chap52/AdjSeqGraphMtPer.rs",
+    "lines": "134-138",
     "spec_strength": "unknown",
-    "snippet": "        fn num_vertices(&self) -> (n: N)\n            requires self.spec_adjseqgraphmteph_wf()\n            ensures n as nat == self.spec_num_vertices();"
+    "snippet": "        fn has_edge(&self, u: usize, v: usize) -> (found: bool)\n            requires self.spec_adjseqgraphmtper_wf(), u < self.spec_num_vertices()\n            ensures found == exists|j: int|\n                0 <= j < self.spec_degree(u as int)\n                && #[trigger] self.spec_neighbor(u as int, j) == v;"
   },
   {
     "id": 52,
-    "function": "num_edges",
-    "file": "Chap52/AdjSeqGraphMtEph.rs",
-    "lines": "100-111",
+    "function": "out_neighbors",
+    "file": "Chap52/AdjSeqGraphMtPer.rs",
+    "lines": "143-148",
     "spec_strength": "unknown",
-    "snippet": "        fn num_edges(&self) -> (m: N)\n            requires\n                self.spec_adjseqgraphmteph_wf(),\n                spec_sum_of(\n                    self.spec_num_vertices() as int,\n                    |i: int| self.spec_degree(i),\n                ) <= usize::MAX as nat\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_num_vertices() as int,\n                    |i: int| self.spec_degree(i),\n                );"
+    "snippet": "        fn out_neighbors(&self, u: usize) -> (neighbors: &ArraySeqMtPerS<usize>)\n            requires self.spec_adjseqgraphmtper_wf(), u < self.spec_num_vertices()\n            ensures\n                neighbors.spec_len() == self.spec_degree(u as int),\n                forall|j: int| 0 <= j < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);"
   },
   {
     "id": 53,
-    "function": "has_edge",
-    "file": "Chap52/AdjSeqGraphMtEph.rs",
-    "lines": "114-118",
+    "function": "out_degree",
+    "file": "Chap52/AdjSeqGraphMtPer.rs",
+    "lines": "153-155",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, u: N, v: N) -> (found: B)\n            requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()\n            ensures found == exists|j: int|\n                0 <= j < self.spec_degree(u as int)\n                && #[trigger] self.spec_neighbor(u as int, j) == v;"
+    "snippet": "        fn out_degree(&self, u: usize) -> (d: usize)\n            requires self.spec_adjseqgraphmtper_wf(), u < self.spec_num_vertices()\n            ensures d as nat == self.spec_degree(u as int);"
   },
   {
     "id": 54,
-    "function": "out_neighbors",
-    "file": "Chap52/AdjSeqGraphMtEph.rs",
-    "lines": "121-126",
+    "function": "insert_edge",
+    "file": "Chap52/AdjSeqGraphMtPer.rs",
+    "lines": "159-176",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtEphS<N>)\n            requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()\n            ensures\n                neighbors.spec_len() == self.spec_degree(u as int),\n                forall|j: int| 0 <= j < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);"
+    "snippet": "        fn insert_edge(&self, u: usize, v: usize) -> (updated: Self)\n            requires\n                self.spec_adjseqgraphmtper_wf(),\n                u < self.spec_num_vertices(),\n                v < self.spec_num_vertices(),\n                spec_sum_of(self.spec_num_vertices() as int, |i: int| self.spec_degree(i)) < usize::MAX as nat,\n            ensures\n                updated.spec_adjseqgraphmtper_wf(),\n                updated.spec_num_vertices() == self.spec_num_vertices(),\n                forall|i: int| 0 <= i < self.spec_num_vertices() && i != u as int\n                    ==> #[trigger] updated.spec_degree(i) == self.spec_degree(i),\n                forall|i: int, j: int|\n                    0 <= i < self.spec_num_vertices() && i != u as int\n                    && 0 <= j < self.spec_degree(i)\n                    ==> #[trigger] updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),\n                exists|j: int|\n                    0 <= j < updated.spec_degree(u as int)\n                    && #[trigger] updated.spec_neighbor(u as int, j) == v;"
   },
   {
     "id": 55,
-    "function": "out_degree",
-    "file": "Chap52/AdjSeqGraphMtEph.rs",
-    "lines": "129-131",
+    "function": "delete_edge",
+    "file": "Chap52/AdjSeqGraphMtPer.rs",
+    "lines": "180-193",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, u: N) -> (d: N)\n            requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()\n            ensures d as nat == self.spec_degree(u as int);"
+    "snippet": "        fn delete_edge(&self, u: usize, v: usize) -> (updated: Self)\n            requires self.spec_adjseqgraphmtper_wf(), u < self.spec_num_vertices()\n            ensures\n                updated.spec_adjseqgraphmtper_wf(),\n                updated.spec_num_vertices() == self.spec_num_vertices(),\n                forall|i: int| 0 <= i < self.spec_num_vertices() && i != u as int\n                    ==> #[trigger] updated.spec_degree(i) == self.spec_degree(i),\n                forall|i: int, j: int|\n                    0 <= i < self.spec_num_vertices() && i != u as int\n                    && 0 <= j < self.spec_degree(i)\n                    ==> #[trigger] updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),\n                forall|j: int|\n                    0 <= j < updated.spec_degree(u as int)\n                    ==> #[trigger] updated.spec_neighbor(u as int, j) != v;"
   },
   {
     "id": 56,
-    "function": "set_edge",
-    "file": "Chap52/AdjSeqGraphMtEph.rs",
-    "lines": "134-153",
+    "function": "new",
+    "file": "Chap52/AdjSeqGraphStEph.rs",
+    "lines": "87-91",
     "spec_strength": "unknown",
-    "snippet": "        fn set_edge(&mut self, u: N, v: N, exists: B)\n            requires\n                old(self).spec_adjseqgraphmteph_wf(),\n                u < old(self).spec_num_vertices(),\n                v < old(self).spec_num_vertices(),\n            ensures\n                self.spec_adjseqgraphmteph_wf(),\n                self.spec_num_vertices() == old(self).spec_num_vertices(),\n                forall|i: int| 0 <= i < old(self).spec_num_vertices() && i != u as int\n                    ==> #[trigger] self.spec_degree(i) == old(self).spec_degree(i),\n                forall|i: int, j: int|\n                    0 <= i < old(self).spec_num_vertices() && i != u as int\n                    && 0 <= j < old(self).spec_degree(i)\n                    ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j),\n                exists ==> (exists|j: int|\n                    0 <= j < self.spec_degree(u as int)\n                    && #[trigger] self.spec_neighbor(u as int, j) == v),\n                !exists ==> forall|j: int|\n                    0 <= j < self.spec_degree(u as int)\n                    ==> #[trigger] self.spec_neighbor(u as int, j) != v;"
+    "snippet": "        fn new(n: usize) -> (empty: Self)\n            ensures\n                empty.spec_adjseqgraphsteph_wf(),\n                empty.spec_num_vertices() == n,\n                forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;"
   },
   {
     "id": 57,
-    "function": "lemma_sum_of_monotone",
-    "file": "Chap52/AdjSeqGraphMtPer.rs",
-    "lines": "58-61",
+    "function": "from_seq",
+    "file": "Chap52/AdjSeqGraphStEph.rs",
+    "lines": "96-110",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_sum_of_monotone(i: int, n: int, f: spec_fn(int) -> nat)\n        requires 0 <= i <= n\n        ensures spec_sum_of(i, f) <= spec_sum_of(n, f)\n        decreases n - i"
+    "snippet": "        fn from_seq(adj: ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (constructed: Self)\n            requires\n                forall|u: int, j: int|\n                    0 <= u < adj.spec_len()\n                    && 0 <= j < adj.spec_index(u).spec_len()\n                    ==> #[trigger] adj.spec_index(u).spec_index(j) < adj.spec_len(),\n                spec_sum_of(adj.spec_len() as int, |i: int| adj.spec_index(i).spec_len()) <= usize::MAX as nat,\n            ensures\n                constructed.spec_adjseqgraphsteph_wf(),\n                constructed.spec_num_vertices() == adj.spec_len(),\n                forall|i: int| 0 <= i < adj.spec_len() ==>\n                    #[trigger] constructed.spec_degree(i) == adj.spec_index(i).spec_len(),\n                forall|i: int, j: int| 0 <= i < adj.spec_len()\n                    && 0 <= j < adj.spec_index(i).spec_len()\n                    ==> #[trigger] constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);"
   },
   {
     "id": 58,
-    "function": "lemma_sum_of_unfold",
-    "file": "Chap52/AdjSeqGraphMtPer.rs",
-    "lines": "68-70",
+    "function": "num_vertices",
+    "file": "Chap52/AdjSeqGraphStEph.rs",
+    "lines": "114-116",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_sum_of_unfold(i: int, f: spec_fn(int) -> nat)\n        requires i >= 0\n        ensures spec_sum_of(i + 1, f) == f(i) + spec_sum_of(i, f)"
+    "snippet": "        fn num_vertices(&self) -> (n: usize)\n            requires self.spec_adjseqgraphsteph_wf()\n            ensures n as nat == self.spec_num_vertices();"
   },
   {
     "id": 59,
-    "function": "new",
-    "file": "Chap52/AdjSeqGraphMtPer.rs",
-    "lines": "85-89",
+    "function": "num_edges",
+    "file": "Chap52/AdjSeqGraphStEph.rs",
+    "lines": "120-127",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_adjseqgraphmtper_wf(),\n                empty.spec_num_vertices() == n,\n                forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;"
+    "snippet": "        fn num_edges(&self) -> (m: usize)\n            requires\n                self.spec_adjseqgraphsteph_wf()\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_num_vertices() as int,\n                    |i: int| self.spec_degree(i),\n                );"
   },
   {
     "id": 60,
-    "function": "num_vertices",
-    "file": "Chap52/AdjSeqGraphMtPer.rs",
-    "lines": "92-94",
+    "function": "has_edge",
+    "file": "Chap52/AdjSeqGraphStEph.rs",
+    "lines": "131-135",
     "spec_strength": "unknown",
-    "snippet": "        fn num_vertices(&self) -> (n: N)\n            requires self.spec_adjseqgraphmtper_wf()\n            ensures n as nat == self.spec_num_vertices();"
+    "snippet": "        fn has_edge(&self, u: usize, v: usize) -> (found: bool)\n            requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()\n            ensures found == exists|j: int|\n                0 <= j < self.spec_degree(u as int)\n                && #[trigger] self.spec_neighbor(u as int, j) == v;"
   },
   {
     "id": 61,
-    "function": "num_edges",
-    "file": "Chap52/AdjSeqGraphMtPer.rs",
-    "lines": "97-108",
+    "function": "out_neighbors",
+    "file": "Chap52/AdjSeqGraphStEph.rs",
+    "lines": "139-144",
     "spec_strength": "unknown",
-    "snippet": "        fn num_edges(&self) -> (m: N)\n            requires\n                self.spec_adjseqgraphmtper_wf(),\n                spec_sum_of(\n                    self.spec_num_vertices() as int,\n                    |i: int| self.spec_degree(i),\n                ) <= usize::MAX as nat\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_num_vertices() as int,\n                    |i: int| self.spec_degree(i),\n                );"
+    "snippet": "        fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqStEphS<usize>)\n            requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()\n            ensures\n                neighbors.spec_len() == self.spec_degree(u as int),\n                forall|j: int| 0 <= j < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);"
   },
   {
     "id": 62,
-    "function": "has_edge",
-    "file": "Chap52/AdjSeqGraphMtPer.rs",
-    "lines": "111-115",
+    "function": "out_degree",
+    "file": "Chap52/AdjSeqGraphStEph.rs",
+    "lines": "148-150",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, u: N, v: N) -> (found: B)\n            requires self.spec_adjseqgraphmtper_wf(), u < self.spec_num_vertices()\n            ensures found == exists|j: int|\n                0 <= j < self.spec_degree(u as int)\n                && #[trigger] self.spec_neighbor(u as int, j) == v;"
+    "snippet": "        fn out_degree(&self, u: usize) -> (d: usize)\n            requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()\n            ensures d as nat == self.spec_degree(u as int);"
   },
   {
     "id": 63,
-    "function": "out_neighbors",
-    "file": "Chap52/AdjSeqGraphMtPer.rs",
-    "lines": "118-123",
+    "function": "set_neighbors",
+    "file": "Chap52/AdjSeqGraphStEph.rs",
+    "lines": "155-176",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: N) -> (neighbors: &ArraySeqMtPerS<N>)\n            requires self.spec_adjseqgraphmtper_wf(), u < self.spec_num_vertices()\n            ensures\n                neighbors.spec_len() == self.spec_degree(u as int),\n                forall|j: int| 0 <= j < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);"
+    "snippet": "        fn set_neighbors(&mut self, v: usize, neighbors: ArraySeqStEphS<usize>)\n            requires\n                old(self).spec_adjseqgraphsteph_wf(),\n                v < old(self).spec_num_vertices(),\n                forall|j: int| 0 <= j < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(j) < old(self).spec_num_vertices(),\n                spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i)) < usize::MAX as nat,\n                spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i))\n                    - old(self).spec_degree(v as int)\n                    + neighbors.spec_len() <= usize::MAX as nat,\n            ensures\n                self.spec_adjseqgraphsteph_wf(),\n                self.spec_num_vertices() == old(self).spec_num_vertices(),\n                self.spec_degree(v as int) == neighbors.spec_len(),\n                forall|j: int| 0 <= j < neighbors.spec_len()\n                    ==> #[trigger] self.spec_neighbor(v as int, j) == neighbors.spec_index(j),\n                forall|i: int| 0 <= i < old(self).spec_num_vertices() && i != v as int\n                    ==> #[trigger] self.spec_degree(i) == old(self).spec_degree(i),\n                forall|i: int, j: int|\n                    0 <= i < old(self).spec_num_vertices() && i != v as int\n                    && 0 <= j < old(self).spec_degree(i)\n                    ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j);"
   },
   {
     "id": 64,
-    "function": "out_degree",
-    "file": "Chap52/AdjSeqGraphMtPer.rs",
-    "lines": "126-128",
+    "function": "insert_edge",
+    "file": "Chap52/AdjSeqGraphStEph.rs",
+    "lines": "181-198",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, u: N) -> (d: N)\n            requires self.spec_adjseqgraphmtper_wf(), u < self.spec_num_vertices()\n            ensures d as nat == self.spec_degree(u as int);"
+    "snippet": "        fn insert_edge(&mut self, u: usize, v: usize)\n            requires\n                old(self).spec_adjseqgraphsteph_wf(),\n                u < old(self).spec_num_vertices(),\n                v < old(self).spec_num_vertices(),\n                spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i)) < usize::MAX as nat,\n            ensures\n                self.spec_adjseqgraphsteph_wf(),\n                self.spec_num_vertices() == old(self).spec_num_vertices(),\n                forall|i: int| 0 <= i < old(self).spec_num_vertices() && i != u as int\n                    ==> #[trigger] self.spec_degree(i) == old(self).spec_degree(i),\n                forall|i: int, j: int|\n                    0 <= i < old(self).spec_num_vertices() && i != u as int\n                    && 0 <= j < old(self).spec_degree(i)\n                    ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j),\n                exists|j: int|\n                    0 <= j < self.spec_degree(u as int)\n                    && #[trigger] self.spec_neighbor(u as int, j) == v;"
   },
   {
     "id": 65,
-    "function": "lemma_sum_of_monotone",
+    "function": "delete_edge",
     "file": "Chap52/AdjSeqGraphStEph.rs",
-    "lines": "60-63",
+    "lines": "203-220",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_sum_of_monotone(i: int, n: int, f: spec_fn(int) -> nat)\n        requires 0 <= i <= n\n        ensures spec_sum_of(i, f) <= spec_sum_of(n, f)\n        decreases n - i"
+    "snippet": "        fn delete_edge(&mut self, u: usize, v: usize)\n            requires\n                old(self).spec_adjseqgraphsteph_wf(),\n                u < old(self).spec_num_vertices(),\n                v < old(self).spec_num_vertices(),\n                spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i)) < usize::MAX as nat,\n            ensures\n                self.spec_adjseqgraphsteph_wf(),\n                self.spec_num_vertices() == old(self).spec_num_vertices(),\n                forall|i: int| 0 <= i < old(self).spec_num_vertices() && i != u as int\n                    ==> #[trigger] self.spec_degree(i) == old(self).spec_degree(i),\n                forall|i: int, j: int|\n                    0 <= i < old(self).spec_num_vertices() && i != u as int\n                    && 0 <= j < old(self).spec_degree(i)\n                    ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j),\n                forall|j: int|\n                    0 <= j < self.spec_degree(u as int)\n                    ==> #[trigger] self.spec_neighbor(u as int, j) != v;"
   },
   {
     "id": 66,
-    "function": "lemma_sum_of_unfold",
+    "function": "set_edge",
     "file": "Chap52/AdjSeqGraphStEph.rs",
-    "lines": "71-73",
+    "lines": "224-244",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_sum_of_unfold(i: int, f: spec_fn(int) -> nat)\n        requires i >= 0\n        ensures spec_sum_of(i + 1, f) == f(i) + spec_sum_of(i, f)"
+    "snippet": "        fn set_edge(&mut self, u: usize, v: usize, exists: bool)\n            requires\n                old(self).spec_adjseqgraphsteph_wf(),\n                u < old(self).spec_num_vertices(),\n                v < old(self).spec_num_vertices(),\n                spec_sum_of(old(self).spec_num_vertices() as int, |i: int| old(self).spec_degree(i)) < usize::MAX as nat,\n            ensures\n                self.spec_adjseqgraphsteph_wf(),\n                self.spec_num_vertices() == old(self).spec_num_vertices(),\n                forall|i: int| 0 <= i < old(self).spec_num_vertices() && i != u as int\n                    ==> #[trigger] self.spec_degree(i) == old(self).spec_degree(i),\n                forall|i: int, j: int|\n                    0 <= i < old(self).spec_num_vertices() && i != u as int\n                    && 0 <= j < old(self).spec_degree(i)\n                    ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j),\n                exists ==> (exists|j: int|\n                    0 <= j < self.spec_degree(u as int)\n                    && #[trigger] self.spec_neighbor(u as int, j) == v),\n                !exists ==> forall|j: int|\n                    0 <= j < self.spec_degree(u as int)\n                    ==> #[trigger] self.spec_neighbor(u as int, j) != v;"
   },
   {
     "id": 67,
     "function": "new",
-    "file": "Chap52/AdjSeqGraphStEph.rs",
-    "lines": "89-93",
+    "file": "Chap52/AdjSeqGraphStPer.rs",
+    "lines": "92-96",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_adjseqgraphsteph_wf(),\n                empty.spec_num_vertices() == n,\n                forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;"
+    "snippet": "        fn new(n: usize) -> (empty: Self)\n            ensures\n                empty.spec_adjseqgraphstper_wf(),\n                empty.spec_num_vertices() == n,\n                forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;"
   },
   {
     "id": 68,
     "function": "from_seq",
-    "file": "Chap52/AdjSeqGraphStEph.rs",
-    "lines": "97-110",
+    "file": "Chap52/AdjSeqGraphStPer.rs",
+    "lines": "100-117",
     "spec_strength": "unknown",
-    "snippet": "        fn from_seq(adj: ArraySeqStEphS<ArraySeqStEphS<N>>) -> (constructed: Self)\n            requires\n                forall|u: int, j: int|\n                    0 <= u < adj.spec_len()\n                    && 0 <= j < adj.spec_index(u).spec_len()\n                    ==> #[trigger] adj.spec_index(u).spec_index(j) < adj.spec_len(),\n            ensures\n                constructed.spec_adjseqgraphsteph_wf(),\n                constructed.spec_num_vertices() == adj.spec_len(),\n                forall|i: int| 0 <= i < adj.spec_len() ==>\n                    #[trigger] constructed.spec_degree(i) == adj.spec_index(i).spec_len(),\n                forall|i: int, j: int| 0 <= i < adj.spec_len()\n                    && 0 <= j < adj.spec_index(i).spec_len()\n                    ==> #[trigger] constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);"
+    "snippet": "        fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (constructed: Self)\n            requires\n                forall|u: int, j: int|\n                    0 <= u < adj.spec_len()\n                    && 0 <= j < adj.spec_index(u).spec_len()\n                    ==> #[trigger] adj.spec_index(u).spec_index(j) < adj.spec_len(),\n                spec_sum_of(\n                    adj.spec_len() as int,\n                    |i: int| adj.spec_index(i).spec_len(),\n                ) <= usize::MAX as nat,\n            ensures\n                constructed.spec_adjseqgraphstper_wf(),\n                constructed.spec_num_vertices() == adj.spec_len(),\n                forall|i: int| 0 <= i < adj.spec_len() ==>\n                    #[trigger] constructed.spec_degree(i) == adj.spec_index(i).spec_len(),\n                forall|i: int, j: int| 0 <= i < adj.spec_len()\n                    && 0 <= j < adj.spec_index(i).spec_len()\n                    ==> #[trigger] constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);"
   },
   {
     "id": 69,
     "function": "num_vertices",
-    "file": "Chap52/AdjSeqGraphStEph.rs",
-    "lines": "114-116",
+    "file": "Chap52/AdjSeqGraphStPer.rs",
+    "lines": "122-124",
     "spec_strength": "unknown",
-    "snippet": "        fn num_vertices(&self) -> (n: N)\n            requires self.spec_adjseqgraphsteph_wf()\n            ensures n as nat == self.spec_num_vertices();"
+    "snippet": "        fn num_vertices(&self) -> (n: usize)\n            requires self.spec_adjseqgraphstper_wf()\n            ensures n as nat == self.spec_num_vertices();"
   },
   {
     "id": 70,
     "function": "num_edges",
-    "file": "Chap52/AdjSeqGraphStEph.rs",
-    "lines": "120-131",
+    "file": "Chap52/AdjSeqGraphStPer.rs",
+    "lines": "129-135",
     "spec_strength": "unknown",
-    "snippet": "        fn num_edges(&self) -> (m: N)\n            requires\n                self.spec_adjseqgraphsteph_wf(),\n                spec_sum_of(\n                    self.spec_num_vertices() as int,\n                    |i: int| self.spec_degree(i),\n                ) <= usize::MAX as nat\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_num_vertices() as int,\n                    |i: int| self.spec_degree(i),\n                );"
+    "snippet": "        fn num_edges(&self) -> (m: usize)\n            requires self.spec_adjseqgraphstper_wf()\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_num_vertices() as int,\n                    |i: int| self.spec_degree(i),\n                );"
   },
   {
     "id": 71,
     "function": "has_edge",
-    "file": "Chap52/AdjSeqGraphStEph.rs",
-    "lines": "135-139",
+    "file": "Chap52/AdjSeqGraphStPer.rs",
+    "lines": "140-144",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, u: N, v: N) -> (found: B)\n            requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()\n            ensures found == exists|j: int|\n                0 <= j < self.spec_degree(u as int)\n                && #[trigger] self.spec_neighbor(u as int, j) == v;"
+    "snippet": "        fn has_edge(&self, u: usize, v: usize) -> (found: bool)\n            requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()\n            ensures found == exists|j: int|\n                0 <= j < self.spec_degree(u as int)\n                && #[trigger] self.spec_neighbor(u as int, j) == v;"
   },
   {
     "id": 72,
     "function": "out_neighbors",
-    "file": "Chap52/AdjSeqGraphStEph.rs",
-    "lines": "143-148",
+    "file": "Chap52/AdjSeqGraphStPer.rs",
+    "lines": "149-154",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqStEphS<N>)\n            requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()\n            ensures\n                neighbors.spec_len() == self.spec_degree(u as int),\n                forall|j: int| 0 <= j < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);"
+    "snippet": "        fn out_neighbors(&self, u: usize) -> (neighbors: &ArraySeqStPerS<usize>)\n            requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()\n            ensures\n                neighbors.spec_len() == self.spec_degree(u as int),\n                forall|j: int| 0 <= j < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);"
   },
   {
     "id": 73,
     "function": "out_degree",
-    "file": "Chap52/AdjSeqGraphStEph.rs",
-    "lines": "152-154",
+    "file": "Chap52/AdjSeqGraphStPer.rs",
+    "lines": "159-161",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, u: N) -> (d: N)\n            requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()\n            ensures d as nat == self.spec_degree(u as int);"
+    "snippet": "        fn out_degree(&self, u: usize) -> (d: usize)\n            requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()\n            ensures d as nat == self.spec_degree(u as int);"
   },
   {
     "id": 74,
-    "function": "set_neighbors",
-    "file": "Chap52/AdjSeqGraphStEph.rs",
-    "lines": "158-175",
+    "function": "insert_edge",
+    "file": "Chap52/AdjSeqGraphStPer.rs",
+    "lines": "165-182",
     "spec_strength": "unknown",
-    "snippet": "        fn set_neighbors(&mut self, v: N, neighbors: ArraySeqStEphS<N>)\n            requires\n                old(self).spec_adjseqgraphsteph_wf(),\n                v < old(self).spec_num_vertices(),\n                forall|j: int| 0 <= j < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(j) < old(self).spec_num_vertices(),\n            ensures\n                self.spec_adjseqgraphsteph_wf(),\n                self.spec_num_vertices() == old(self).spec_num_vertices(),\n                self.spec_degree(v as int) == neighbors.spec_len(),\n                forall|j: int| 0 <= j < neighbors.spec_len()\n                    ==> #[trigger] self.spec_neighbor(v as int, j) == neighbors.spec_index(j),\n                forall|i: int| 0 <= i < old(self).spec_num_vertices() && i != v as int\n                    ==> #[trigger] self.spec_degree(i) == old(self).spec_degree(i),\n                forall|i: int, j: int|\n                    0 <= i < old(self).spec_num_vertices() && i != v as int\n                    && 0 <= j < old(self).spec_degree(i)\n                    ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j);"
+    "snippet": "        fn insert_edge(&self, u: usize, v: usize) -> (updated: Self)\n            requires\n                self.spec_adjseqgraphstper_wf(),\n                u < self.spec_num_vertices(),\n                v < self.spec_num_vertices(),\n                spec_sum_of(self.spec_num_vertices() as int, |i: int| self.spec_degree(i)) < usize::MAX as nat,\n            ensures\n                updated.spec_adjseqgraphstper_wf(),\n                updated.spec_num_vertices() == self.spec_num_vertices(),\n                forall|i: int| 0 <= i < self.spec_num_vertices() && i != u as int\n                    ==> #[trigger] updated.spec_degree(i) == self.spec_degree(i),\n                forall|i: int, j: int|\n                    0 <= i < self.spec_num_vertices() && i != u as int\n                    && 0 <= j < self.spec_degree(i)\n                    ==> #[trigger] updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),\n                exists|j: int|\n                    0 <= j < updated.spec_degree(u as int)\n                    && #[trigger] updated.spec_neighbor(u as int, j) == v;"
   },
   {
     "id": 75,
-    "function": "set_edge",
-    "file": "Chap52/AdjSeqGraphStEph.rs",
-    "lines": "179-198",
+    "function": "delete_edge",
+    "file": "Chap52/AdjSeqGraphStPer.rs",
+    "lines": "186-199",
     "spec_strength": "unknown",
-    "snippet": "        fn set_edge(&mut self, u: N, v: N, exists: B)\n            requires\n                old(self).spec_adjseqgraphsteph_wf(),\n                u < old(self).spec_num_vertices(),\n                v < old(self).spec_num_vertices(),\n            ensures\n                self.spec_adjseqgraphsteph_wf(),\n                self.spec_num_vertices() == old(self).spec_num_vertices(),\n                forall|i: int| 0 <= i < old(self).spec_num_vertices() && i != u as int\n                    ==> #[trigger] self.spec_degree(i) == old(self).spec_degree(i),\n                forall|i: int, j: int|\n                    0 <= i < old(self).spec_num_vertices() && i != u as int\n                    && 0 <= j < old(self).spec_degree(i)\n                    ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j),\n                exists ==> (exists|j: int|\n                    0 <= j < self.spec_degree(u as int)\n                    && #[trigger] self.spec_neighbor(u as int, j) == v),\n                !exists ==> forall|j: int|\n                    0 <= j < self.spec_degree(u as int)\n                    ==> #[trigger] self.spec_neighbor(u as int, j) != v;"
+    "snippet": "        fn delete_edge(&self, u: usize, v: usize) -> (updated: Self)\n            requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()\n            ensures\n                updated.spec_adjseqgraphstper_wf(),\n                updated.spec_num_vertices() == self.spec_num_vertices(),\n                forall|i: int| 0 <= i < self.spec_num_vertices() && i != u as int\n                    ==> #[trigger] updated.spec_degree(i) == self.spec_degree(i),\n                forall|i: int, j: int|\n                    0 <= i < self.spec_num_vertices() && i != u as int\n                    && 0 <= j < self.spec_degree(i)\n                    ==> #[trigger] updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),\n                forall|j: int|\n                    0 <= j < updated.spec_degree(u as int)\n                    ==> #[trigger] updated.spec_neighbor(u as int, j) != v;"
   },
   {
     "id": 76,
-    "function": "lemma_sum_of_monotone",
+    "function": "eq",
     "file": "Chap52/AdjSeqGraphStPer.rs",
-    "lines": "63-66",
+    "lines": "644-645",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_sum_of_monotone(i: int, n: int, f: spec_fn(int) -> nat)\n        requires 0 <= i <= n\n        ensures spec_sum_of(i, f) <= spec_sum_of(n, f)\n        decreases n - i"
+    "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
   {
     "id": 77,
-    "function": "lemma_sum_of_unfold",
-    "file": "Chap52/AdjSeqGraphStPer.rs",
-    "lines": "74-76",
+    "function": "empty",
+    "file": "Chap52/AdjTableGraphMtPer.rs",
+    "lines": "92-101",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_sum_of_unfold(i: int, f: spec_fn(int) -> nat)\n        requires i >= 0\n        ensures spec_sum_of(i + 1, f) == f(i) + spec_sum_of(i, f)"
+    "snippet": "        fn empty() -> (out: Self)\n            requires\n                vstd::laws_cmp::obeys_cmp::<Pair<V, AVLTreeSetMtPer<V>>>(),\n                view_ord_consistent::<Pair<V, AVLTreeSetMtPer<V>>>(),\n                spec_pair_key_determines_order::<V, AVLTreeSetMtPer<V>>(),\n                vstd::laws_cmp::obeys_cmp::<V>(),\n                view_ord_consistent::<V>(),\n            ensures\n                out.spec_adjtablegraphmtper_wf(),\n                out.spec_num_edges() == spec_sum_adj_sizes(out.spec_adj());"
   },
   {
     "id": 78,
-    "function": "new",
-    "file": "Chap52/AdjSeqGraphStPer.rs",
-    "lines": "91-95",
+    "function": "num_vertices",
+    "file": "Chap52/AdjTableGraphMtPer.rs",
+    "lines": "105-106",
     "spec_strength": "unknown",
-    "snippet": "        fn new(n: N) -> (empty: Self)\n            ensures\n                empty.spec_adjseqgraphstper_wf(),\n                empty.spec_num_vertices() == n,\n                forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;"
+    "snippet": "        fn num_vertices(&self) -> usize\n            requires self.spec_adjtablegraphmtper_wf();"
   },
   {
     "id": 79,
-    "function": "from_seq",
-    "file": "Chap52/AdjSeqGraphStPer.rs",
-    "lines": "98-111",
+    "function": "num_edges",
+    "file": "Chap52/AdjTableGraphMtPer.rs",
+    "lines": "110-113",
     "spec_strength": "unknown",
-    "snippet": "        fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<N>>) -> (constructed: Self)\n            requires\n                forall|u: int, j: int|\n                    0 <= u < adj.spec_len()\n                    && 0 <= j < adj.spec_index(u).spec_len()\n                    ==> #[trigger] adj.spec_index(u).spec_index(j) < adj.spec_len(),\n            ensures\n                constructed.spec_adjseqgraphstper_wf(),\n                constructed.spec_num_vertices() == adj.spec_len(),\n                forall|i: int| 0 <= i < adj.spec_len() ==>\n                    #[trigger] constructed.spec_degree(i) == adj.spec_index(i).spec_len(),\n                forall|i: int, j: int| 0 <= i < adj.spec_len()\n                    && 0 <= j < adj.spec_index(i).spec_len()\n                    ==> #[trigger] constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);"
+    "snippet": "        fn num_edges(&self) -> (m: usize)\n            where V: crate::vstdplus::total_order::total_order::TotalOrder\n            requires self.spec_adjtablegraphmtper_wf(), self.spec_num_edges() <= usize::MAX as nat\n            ensures m as nat == self.spec_num_edges();"
   },
   {
     "id": 80,
-    "function": "num_vertices",
-    "file": "Chap52/AdjSeqGraphStPer.rs",
-    "lines": "114-116",
+    "function": "has_edge",
+    "file": "Chap52/AdjTableGraphMtPer.rs",
+    "lines": "117-119",
     "spec_strength": "unknown",
-    "snippet": "        fn num_vertices(&self) -> (n: N)\n            requires self.spec_adjseqgraphstper_wf()\n            ensures n as nat == self.spec_num_vertices();"
+    "snippet": "        fn has_edge(&self, u: &V, v: &V) -> (found: bool)\n            requires self.spec_adjtablegraphmtper_wf()\n            ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));"
   },
   {
     "id": 81,
-    "function": "num_edges",
-    "file": "Chap52/AdjSeqGraphStPer.rs",
-    "lines": "119-130",
+    "function": "out_neighbors",
+    "file": "Chap52/AdjTableGraphMtPer.rs",
+    "lines": "123-128",
     "spec_strength": "unknown",
-    "snippet": "        fn num_edges(&self) -> (m: N)\n            requires\n                self.spec_adjseqgraphstper_wf(),\n                spec_sum_of(\n                    self.spec_num_vertices() as int,\n                    |i: int| self.spec_degree(i),\n                ) <= usize::MAX as nat\n            ensures\n                m as nat == spec_sum_of(\n                    self.spec_num_vertices() as int,\n                    |i: int| self.spec_degree(i),\n                );"
+    "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)\n            requires self.spec_adjtablegraphmtper_wf()\n            ensures\n                neighbors.spec_avltreesetmtper_wf(),\n                self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],\n                !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();"
   },
   {
     "id": 82,
-    "function": "has_edge",
-    "file": "Chap52/AdjSeqGraphStPer.rs",
-    "lines": "133-137",
+    "function": "out_degree",
+    "file": "Chap52/AdjTableGraphMtPer.rs",
+    "lines": "132-133",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, u: N, v: N) -> (found: B)\n            requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()\n            ensures found == exists|j: int|\n                0 <= j < self.spec_degree(u as int)\n                && #[trigger] self.spec_neighbor(u as int, j) == v;"
+    "snippet": "        fn out_degree(&self, u: &V) -> usize\n            requires self.spec_adjtablegraphmtper_wf();"
   },
   {
     "id": 83,
-    "function": "out_neighbors",
-    "file": "Chap52/AdjSeqGraphStPer.rs",
-    "lines": "140-145",
+    "function": "insert_vertex",
+    "file": "Chap52/AdjTableGraphMtPer.rs",
+    "lines": "136-144",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: N) -> (neighbors: &ArraySeqStPerS<N>)\n            requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()\n            ensures\n                neighbors.spec_len() == self.spec_degree(u as int),\n                forall|j: int| 0 <= j < neighbors.spec_len()\n                    ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);"
+    "snippet": "        fn insert_vertex(&self, v: V) -> (updated: Self)\n            requires\n                self.spec_adjtablegraphmtper_wf(),\n                self.spec_adj().dom().len() + 1 < usize::MAX as nat,\n                self.spec_num_edges() == spec_sum_adj_sizes(self.spec_adj()),\n            ensures\n                updated.spec_adjtablegraphmtper_wf(),\n                updated.spec_adj().dom().contains(v@),\n                updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());"
   },
   {
     "id": 84,
-    "function": "out_degree",
-    "file": "Chap52/AdjSeqGraphStPer.rs",
-    "lines": "148-150",
+    "function": "delete_vertex",
+    "file": "Chap52/AdjTableGraphMtPer.rs",
+    "lines": "147-154",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, u: N) -> (d: N)\n            requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()\n            ensures d as nat == self.spec_degree(u as int);"
+    "snippet": "        fn delete_vertex(&self, v: &V) -> (updated: Self)\n            requires\n                self.spec_adjtablegraphmtper_wf(),\n                self.spec_num_edges() == spec_sum_adj_sizes(self.spec_adj()),\n            ensures\n                updated.spec_adjtablegraphmtper_wf(),\n                !updated.spec_adj().dom().contains(v@),\n                updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());"
   },
   {
     "id": 85,
     "function": "insert_edge",
-    "file": "Chap52/AdjSeqGraphStPer.rs",
-    "lines": "153-169",
+    "file": "Chap52/AdjTableGraphMtPer.rs",
+    "lines": "157-168",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_edge(&self, u: N, v: N) -> (updated: Self)\n            requires\n                self.spec_adjseqgraphstper_wf(),\n                u < self.spec_num_vertices(),\n                v < self.spec_num_vertices(),\n            ensures\n                updated.spec_adjseqgraphstper_wf(),\n                updated.spec_num_vertices() == self.spec_num_vertices(),\n                forall|i: int| 0 <= i < self.spec_num_vertices() && i != u as int\n                    ==> #[trigger] updated.spec_degree(i) == self.spec_degree(i),\n                forall|i: int, j: int|\n                    0 <= i < self.spec_num_vertices() && i != u as int\n                    && 0 <= j < self.spec_degree(i)\n                    ==> #[trigger] updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),\n                exists|j: int|\n                    0 <= j < updated.spec_degree(u as int)\n                    && #[trigger] updated.spec_neighbor(u as int, j) == v;"
+    "snippet": "        fn insert_edge(&self, u: V, v: V) -> (updated: Self)\n            requires\n                self.spec_adjtablegraphmtper_wf(),\n                self.spec_adj().dom().len() + 3 < usize::MAX as nat,\n                self.spec_num_edges() < usize::MAX as nat,\n                self.spec_num_edges() == spec_sum_adj_sizes(self.spec_adj()),\n            ensures\n                updated.spec_adjtablegraphmtper_wf(),\n                updated.spec_adj().dom().contains(u@),\n                updated.spec_adj().dom().contains(v@),\n                updated.spec_adj()[u@].contains(v@),\n                updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());"
   },
   {
     "id": 86,
     "function": "delete_edge",
-    "file": "Chap52/AdjSeqGraphStPer.rs",
-    "lines": "172-185",
+    "file": "Chap52/AdjTableGraphMtPer.rs",
+    "lines": "171-180",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_edge(&self, u: N, v: N) -> (updated: Self)\n            requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()\n            ensures\n                updated.spec_adjseqgraphstper_wf(),\n                updated.spec_num_vertices() == self.spec_num_vertices(),\n                forall|i: int| 0 <= i < self.spec_num_vertices() && i != u as int\n                    ==> #[trigger] updated.spec_degree(i) == self.spec_degree(i),\n                forall|i: int, j: int|\n                    0 <= i < self.spec_num_vertices() && i != u as int\n                    && 0 <= j < self.spec_degree(i)\n                    ==> #[trigger] updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),\n                forall|j: int|\n                    0 <= j < updated.spec_degree(u as int)\n                    ==> #[trigger] updated.spec_neighbor(u as int, j) != v;"
+    "snippet": "        fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)\n            requires\n                self.spec_adjtablegraphmtper_wf(),\n                self.spec_adj().dom().len() + 1 < usize::MAX as nat,\n                self.spec_num_edges() == spec_sum_adj_sizes(self.spec_adj()),\n            ensures\n                updated.spec_adjtablegraphmtper_wf(),\n                !updated.spec_adj().dom().contains(u@)\n                    || !updated.spec_adj()[u@].contains(v@),\n                updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());"
   },
   {
     "id": 87,
-    "function": "eq",
-    "file": "Chap52/AdjSeqGraphStPer.rs",
-    "lines": "509-510",
-    "spec_strength": "hole",
-    "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
+    "function": "count_table_edges",
+    "file": "Chap52/AdjTableGraphMtPer.rs",
+    "lines": "188-199",
+    "spec_strength": "unknown",
+    "snippet": "    fn count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static>(\n        table: &OrderedTableMtPer<V, AVLTreeSetMtPer<V>>,\n    ) -> (count: usize)\n        where V: TotalOrder\n        requires\n            table.spec_orderedtablemtper_wf(),\n            forall|u: <V as View>::V, w: <V as View>::V|\n                table@.dom().contains(u) && #[trigger] table@.index(u).contains(w)\n                ==> table@.dom().contains(w),\n            spec_sum_adj_sizes(table@) <= usize::MAX as nat,\n        ensures\n            count as nat == spec_sum_adj_sizes(table@)"
   },
   {
     "id": 88,
-    "function": "empty",
-    "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "79-80",
+    "function": "lemma_count_true_monotone",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "89-92",
     "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (out: Self)\n            ensures out.spec_adjtablegraphmtper_wf();"
+    "snippet": "    pub proof fn lemma_count_true_monotone(f: spec_fn(int) -> bool, i: int, n: int)\n        requires 0 <= i <= n\n        ensures spec_count_true(f, i) <= spec_count_true(f, n)\n        decreases n - i"
   },
   {
     "id": 89,
-    "function": "num_vertices",
-    "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "82-83",
+    "function": "lemma_count_true_bound",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "99-102",
     "spec_strength": "unknown",
-    "snippet": "        fn num_vertices(&self) -> N\n            requires self.spec_adjtablegraphmtper_wf();"
+    "snippet": "    pub proof fn lemma_count_true_bound(f: spec_fn(int) -> bool, n: int)\n        requires n >= 0\n        ensures spec_count_true(f, n) <= n as nat\n        decreases n"
   },
   {
     "id": 90,
-    "function": "num_edges",
-    "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "85-87",
+    "function": "lemma_count_true_all_false",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "110-113",
     "spec_strength": "unknown",
-    "snippet": "        fn num_edges(&self) -> (m: N)\n            requires self.spec_adjtablegraphmtper_wf(), self.spec_num_edges() <= usize::MAX as nat\n            ensures m as nat == self.spec_num_edges();"
+    "snippet": "    pub proof fn lemma_count_true_all_false(f: spec_fn(int) -> bool, n: int)\n        requires forall|i: int| 0 <= i < n ==> !#[trigger] f(i)\n        ensures spec_count_true(f, n) == 0\n        decreases n"
   },
   {
     "id": 91,
-    "function": "has_edge",
-    "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "89-91",
+    "function": "lemma_count_true_ext",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "122-125",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, u: &V, v: &V) -> (found: B)\n            requires self.spec_adjtablegraphmtper_wf()\n            ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));"
+    "snippet": "    pub proof fn lemma_count_true_ext(f: spec_fn(int) -> bool, g: spec_fn(int) -> bool, n: int)\n        requires forall|i: int| 0 <= i < n ==> #[trigger] f(i) == g(i)\n        ensures spec_count_true(f, n) == spec_count_true(g, n)\n        decreases n"
   },
   {
     "id": 92,
-    "function": "out_neighbors",
-    "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "93-97",
+    "function": "lemma_count_true_set_true",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "134-140",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)\n            requires self.spec_adjtablegraphmtper_wf()\n            ensures\n                self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],\n                !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();"
+    "snippet": "    pub proof fn lemma_count_true_set_true(f: spec_fn(int) -> bool, g: spec_fn(int) -> bool, k: int, n: int)\n        requires\n            0 <= k < n,\n            !f(k) && g(k),\n            forall|i: int| 0 <= i < n && i != k ==> #[trigger] f(i) == g(i),\n        ensures spec_count_true(g, n) == spec_count_true(f, n) + 1\n        decreases n"
   },
   {
     "id": 93,
-    "function": "out_degree",
-    "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "99-100",
+    "function": "lemma_count_true_set_false",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "154-160",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, u: &V) -> N\n            requires self.spec_adjtablegraphmtper_wf();"
+    "snippet": "    pub proof fn lemma_count_true_set_false(f: spec_fn(int) -> bool, g: spec_fn(int) -> bool, k: int, n: int)\n        requires\n            0 <= k < n,\n            f(k) && !g(k),\n            forall|i: int| 0 <= i < n && i != k ==> #[trigger] f(i) == g(i),\n        ensures spec_count_true(f, n) == spec_count_true(g, n) + 1\n        decreases n"
   },
   {
     "id": 94,
-    "function": "insert_vertex",
-    "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "102-104",
+    "function": "lemma_count_true_at_least_one",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "174-177",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_vertex(&self, v: V) -> (updated: Self)\n            requires self.spec_adjtablegraphmtper_wf()\n            ensures updated.spec_adjtablegraphmtper_wf(), updated.spec_adj().dom().contains(v@);"
+    "snippet": "    pub proof fn lemma_count_true_at_least_one(f: spec_fn(int) -> bool, k: int, n: int)\n        requires 0 <= k < n, f(k)\n        ensures spec_count_true(f, n) >= 1\n        decreases n"
   },
   {
     "id": 95,
-    "function": "delete_vertex",
-    "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "106-108",
+    "function": "lemma_sum_of_monotone",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "187-190",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_vertex(&self, v: &V) -> (updated: Self)\n            requires self.spec_adjtablegraphmtper_wf()\n            ensures updated.spec_adjtablegraphmtper_wf(), !updated.spec_adj().dom().contains(v@);"
+    "snippet": "    pub proof fn lemma_sum_of_monotone(i: int, n: int, f: spec_fn(int) -> nat)\n        requires 0 <= i <= n\n        ensures spec_sum_of(i, f) <= spec_sum_of(n, f)\n        decreases n - i"
   },
   {
     "id": 96,
-    "function": "insert_edge",
-    "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "110-116",
+    "function": "lemma_sum_of_unfold",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "198-200",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_edge(&self, u: V, v: V) -> (updated: Self)\n            requires self.spec_adjtablegraphmtper_wf()\n            ensures\n                updated.spec_adjtablegraphmtper_wf(),\n                updated.spec_adj().dom().contains(u@),\n                updated.spec_adj().dom().contains(v@),\n                updated.spec_adj()[u@].contains(v@);"
+    "snippet": "    pub proof fn lemma_sum_of_unfold(i: int, f: spec_fn(int) -> nat)\n        requires i >= 0\n        ensures spec_sum_of(i + 1, f) == f(i) + spec_sum_of(i, f)"
   },
   {
     "id": 97,
-    "function": "delete_edge",
-    "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "118-123",
+    "function": "lemma_sum_of_all_zero",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "205-208",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)\n            requires self.spec_adjtablegraphmtper_wf()\n            ensures\n                updated.spec_adjtablegraphmtper_wf(),\n                !updated.spec_adj().dom().contains(u@)\n                    || !updated.spec_adj()[u@].contains(v@);"
+    "snippet": "    pub proof fn lemma_sum_of_all_zero(f: spec_fn(int) -> nat, n: int)\n        requires forall|i: int| 0 <= i < n ==> #[trigger] f(i) == 0nat\n        ensures spec_sum_of(n, f) == 0\n        decreases n"
   },
   {
     "id": 98,
-    "function": "default",
-    "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "263",
-    "spec_strength": "",
-    "snippet": "        fn default() -> Self { Self::empty() }"
+    "function": "lemma_sum_of_ext",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "217-220",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_sum_of_ext(f: spec_fn(int) -> nat, g: spec_fn(int) -> nat, n: int)\n        requires forall|i: int| 0 <= i < n ==> #[trigger] f(i) == g(i)\n        ensures spec_sum_of(n, f) == spec_sum_of(n, g)\n        decreases n"
   },
   {
     "id": 99,
-    "function": "lemma_sum_adj_sizes_monotone",
-    "file": "Chap52/AdjTableGraphStEph.rs",
-    "lines": "76-78",
+    "function": "lemma_sum_of_change_one",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "230-236",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_sum_adj_sizes_monotone<VV>(m: Map<VV, Set<VV>>, sub: Set<VV>)\n        requires m.dom().finite(), sub.finite(), sub.subset_of(m.dom())\n        ensures spec_sum_adj_sizes(m) >= 0"
+    "snippet": "    pub proof fn lemma_sum_of_change_one(n: int, old_f: spec_fn(int) -> nat, new_f: spec_fn(int) -> nat, k: int)\n        requires\n            0 <= k < n,\n            forall|i: int| 0 <= i < n && i != k ==> #[trigger] old_f(i) == new_f(i),\n        ensures\n            spec_sum_of(n, new_f) + old_f(k) == spec_sum_of(n, old_f) + new_f(k),\n        decreases n,"
   },
   {
     "id": 100,
-    "function": "empty",
-    "file": "Chap52/AdjTableGraphStEph.rs",
-    "lines": "91-92",
+    "function": "lemma_sum_of_lower_bound",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "250-253",
     "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (out: Self)\n            ensures out.spec_adjtablegraphsteph_wf();"
+    "snippet": "    pub proof fn lemma_sum_of_lower_bound(n: int, f: spec_fn(int) -> nat, k: int)\n        requires 0 <= k < n\n        ensures spec_sum_of(n, f) >= f(k)\n        decreases n"
   },
   {
     "id": 101,
-    "function": "from_table",
-    "file": "Chap52/AdjTableGraphStEph.rs",
-    "lines": "95-101",
+    "function": "lemma_sum_of_bounded",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "262-267",
     "spec_strength": "unknown",
-    "snippet": "        fn from_table(table: OrderedTableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self)\n            requires\n                forall|u: <V as View>::V, v: <V as View>::V|\n                    table@.dom().contains(u)\n                    && #[trigger] table@.index(u).contains(v)\n                    ==> table@.dom().contains(v),\n            ensures out.spec_adjtablegraphsteph_wf();"
+    "snippet": "    pub proof fn lemma_sum_of_bounded(n: int, f: spec_fn(int) -> nat, bound: nat)\n        requires\n            n >= 0,\n            forall|i: int| 0 <= i < n ==> #[trigger] f(i) <= bound,\n        ensures spec_sum_of(n, f) <= (n as nat) * bound\n        decreases n"
   },
   {
     "id": 102,
-    "function": "num_vertices",
-    "file": "Chap52/AdjTableGraphStEph.rs",
-    "lines": "104-105",
+    "function": "lemma_sum_adj_remove",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "283-286",
     "spec_strength": "unknown",
-    "snippet": "        fn num_vertices(&self) -> N\n            requires self.spec_adjtablegraphsteph_wf();"
+    "snippet": "    pub proof fn lemma_sum_adj_remove<VV>(m: Map<VV, Set<VV>>, k: VV)\n        requires m.dom().contains(k)\n        ensures spec_sum_adj_sizes(m) == m[k].len() + spec_sum_adj_sizes(m.remove(k))\n        decreases m.dom().len()"
   },
   {
     "id": 103,
-    "function": "num_edges",
-    "file": "Chap52/AdjTableGraphStEph.rs",
-    "lines": "108-110",
+    "function": "lemma_sum_adj_sizes_monotone",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "302-308",
     "spec_strength": "unknown",
-    "snippet": "        fn num_edges(&self) -> (m: N)\n            requires self.spec_adjtablegraphsteph_wf(), self.spec_num_edges() <= usize::MAX as nat\n            ensures m as nat == self.spec_num_edges();"
+    "snippet": "    pub proof fn lemma_sum_adj_sizes_monotone<VV>(m1: Map<VV, Set<VV>>, m2: Map<VV, Set<VV>>)\n        requires\n            m1.dom() =~= m2.dom(),\n            forall|k: VV| #[trigger] m1.dom().contains(k) ==> m1[k].len() <= m2[k].len(),\n        ensures\n            spec_sum_adj_sizes(m1) <= spec_sum_adj_sizes(m2)\n        decreases m1.dom().len()"
   },
   {
     "id": 104,
-    "function": "vertices",
-    "file": "Chap52/AdjTableGraphStEph.rs",
-    "lines": "113-114",
+    "function": "lemma_sum_entry_sizes_eq",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "331-338",
     "spec_strength": "unknown",
-    "snippet": "        fn vertices(&self) -> AVLTreeSetStEph<V>\n            requires self.spec_adjtablegraphsteph_wf();"
+    "snippet": "    pub proof fn lemma_sum_entry_sizes_eq<VV>(entries: Seq<(VV, Set<VV>)>, n: int)\n        requires\n            0 <= n <= entries.len(),\n            spec_keys_no_dups(entries),\n        ensures\n            spec_sum_entry_sizes(entries, n) == spec_sum_adj_sizes(\n                spec_entries_to_map(entries.subrange(0, n)))\n        decreases n"
   },
   {
     "id": 105,
-    "function": "has_edge",
-    "file": "Chap52/AdjTableGraphStEph.rs",
-    "lines": "117-118",
+    "function": "lemma_sum_entry_sizes_monotone",
+    "file": "Chap52/AdjTableGraphSpecsAndLemmas.rs",
+    "lines": "397-400",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, u: &V, v: &V) -> B\n            requires self.spec_adjtablegraphsteph_wf();"
+    "snippet": "    pub proof fn lemma_sum_entry_sizes_monotone<VV>(entries: Seq<(VV, Set<VV>)>, i: int, j: int)\n        requires 0 <= i <= j <= entries.len()\n        ensures spec_sum_entry_sizes(entries, i) <= spec_sum_entry_sizes(entries, j)\n        decreases j - i"
   },
   {
     "id": 106,
-    "function": "out_neighbors",
+    "function": "empty",
     "file": "Chap52/AdjTableGraphStEph.rs",
-    "lines": "121-122",
+    "lines": "86-90",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: &V) -> AVLTreeSetStEph<V>\n            requires self.spec_adjtablegraphsteph_wf();"
+    "snippet": "        fn empty() -> (out: Self)\n            requires\n                vstd::laws_cmp::obeys_cmp::<V>(),\n                view_ord_consistent::<V>(),\n            ensures out.spec_adjtablegraphsteph_wf();"
   },
   {
     "id": 107,
-    "function": "out_degree",
+    "function": "from_table",
     "file": "Chap52/AdjTableGraphStEph.rs",
-    "lines": "125-126",
+    "lines": "94-105",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, u: &V) -> N\n            requires self.spec_adjtablegraphsteph_wf();"
+    "snippet": "        fn from_table(table: TableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self)\n            requires\n                table.spec_tablesteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<V>(),\n                view_ord_consistent::<V>(),\n                forall|k: <V as View>::V| #[trigger] table@.dom().contains(k) ==>\n                    table.spec_stored_value(k).spec_avltreesetsteph_wf(),\n                forall|u: <V as View>::V, v: <V as View>::V|\n                    table@.dom().contains(u)\n                    && #[trigger] table@.index(u).contains(v)\n                    ==> table@.dom().contains(v),\n            ensures out.spec_adjtablegraphsteph_wf();"
   },
   {
     "id": 108,
+    "function": "num_vertices",
+    "file": "Chap52/AdjTableGraphStEph.rs",
+    "lines": "108-109",
+    "spec_strength": "unknown",
+    "snippet": "        fn num_vertices(&self) -> usize\n            requires self.spec_adjtablegraphsteph_wf();"
+  },
+  {
+    "id": 109,
+    "function": "num_edges",
+    "file": "Chap52/AdjTableGraphStEph.rs",
+    "lines": "112-114",
+    "spec_strength": "unknown",
+    "snippet": "        fn num_edges(&self) -> (m: usize)\n            requires self.spec_adjtablegraphsteph_wf(), self.spec_num_edges() <= usize::MAX as nat\n            ensures m as nat == self.spec_num_edges();"
+  },
+  {
+    "id": 110,
+    "function": "vertices",
+    "file": "Chap52/AdjTableGraphStEph.rs",
+    "lines": "118-122",
+    "spec_strength": "unknown",
+    "snippet": "        fn vertices(&self) -> (verts: AVLTreeSetStEph<V>)\n            requires\n                self.spec_adjtablegraphsteph_wf(),\n                self.spec_adj().dom().len() < usize::MAX as nat,\n            ensures verts@ == self.spec_adj().dom();"
+  },
+  {
+    "id": 111,
+    "function": "has_edge",
+    "file": "Chap52/AdjTableGraphStEph.rs",
+    "lines": "125-127",
+    "spec_strength": "unknown",
+    "snippet": "        fn has_edge(&self, u: &V, v: &V) -> (found: bool)\n            requires self.spec_adjtablegraphsteph_wf()\n            ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));"
+  },
+  {
+    "id": 112,
+    "function": "out_neighbors",
+    "file": "Chap52/AdjTableGraphStEph.rs",
+    "lines": "130-134",
+    "spec_strength": "unknown",
+    "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)\n            requires self.spec_adjtablegraphsteph_wf()\n            ensures\n                self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],\n                !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();"
+  },
+  {
+    "id": 113,
+    "function": "out_degree",
+    "file": "Chap52/AdjTableGraphStEph.rs",
+    "lines": "137-138",
+    "spec_strength": "unknown",
+    "snippet": "        fn out_degree(&self, u: &V) -> usize\n            requires self.spec_adjtablegraphsteph_wf();"
+  },
+  {
+    "id": 114,
     "function": "insert_vertex",
     "file": "Chap52/AdjTableGraphStEph.rs",
-    "lines": "129-131",
+    "lines": "142-144",
     "spec_strength": "unknown",
     "snippet": "        fn insert_vertex(&mut self, v: V)\n            requires old(self).spec_adjtablegraphsteph_wf()\n            ensures self.spec_adjtablegraphsteph_wf(), self.spec_adj().dom().contains(v@);"
   },
   {
-    "id": 109,
+    "id": 115,
     "function": "delete_vertex",
     "file": "Chap52/AdjTableGraphStEph.rs",
-    "lines": "134-136",
+    "lines": "148-150",
     "spec_strength": "unknown",
     "snippet": "        fn delete_vertex(&mut self, v: &V)\n            requires old(self).spec_adjtablegraphsteph_wf()\n            ensures self.spec_adjtablegraphsteph_wf(), !self.spec_adj().dom().contains(v@);"
   },
   {
-    "id": 110,
+    "id": 116,
     "function": "insert_edge",
     "file": "Chap52/AdjTableGraphStEph.rs",
-    "lines": "139-145",
+    "lines": "154-162",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_edge(&mut self, u: V, v: V)\n            requires old(self).spec_adjtablegraphsteph_wf()\n            ensures\n                self.spec_adjtablegraphsteph_wf(),\n                self.spec_adj().dom().contains(u@),\n                self.spec_adj().dom().contains(v@),\n                self.spec_adj()[u@].contains(v@);"
+    "snippet": "        fn insert_edge(&mut self, u: V, v: V)\n            requires\n                old(self).spec_adjtablegraphsteph_wf(),\n                old(self).spec_adj().dom().len() + 1 < usize::MAX as nat,\n            ensures\n                self.spec_adjtablegraphsteph_wf(),\n                self.spec_adj().dom().contains(u@),\n                self.spec_adj().dom().contains(v@),\n                self.spec_adj()[u@].contains(v@);"
   },
   {
-    "id": 111,
+    "id": 117,
     "function": "delete_edge",
     "file": "Chap52/AdjTableGraphStEph.rs",
-    "lines": "148-153",
+    "lines": "166-171",
     "spec_strength": "unknown",
     "snippet": "        fn delete_edge(&mut self, u: &V, v: &V)\n            requires old(self).spec_adjtablegraphsteph_wf()\n            ensures\n                self.spec_adjtablegraphsteph_wf(),\n                !self.spec_adj().dom().contains(u@)\n                    || !self.spec_adj()[u@].contains(v@);"
   },
   {
-    "id": 112,
+    "id": 118,
+    "function": "lemma_entries_to_map_eq",
+    "file": "Chap52/AdjTableGraphStPer.rs",
+    "lines": "83-85",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_entries_to_map_eq<KV, VV>(entries: Seq<(KV, VV)>)\n        ensures spec_entries_to_map(entries) == steph_entries_to_map(entries)\n        decreases entries.len()"
+  },
+  {
+    "id": 119,
+    "function": "lemma_keys_no_dups_eq",
+    "file": "Chap52/AdjTableGraphStPer.rs",
+    "lines": "93-96",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_keys_no_dups_eq<KV, VV>(entries: Seq<(KV, VV)>)\n        ensures\n            spec_keys_no_dups(entries)\n            == crate::Chap42::TableSpecsAndLemmas::TableSpecsAndLemmas::spec_keys_no_dups(entries)"
+  },
+  {
+    "id": 120,
+    "function": "lemma_sum_entry_sizes_eq_stper",
+    "file": "Chap52/AdjTableGraphStPer.rs",
+    "lines": "100-106",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_sum_entry_sizes_eq_stper<VV>(entries: Seq<(VV, Set<VV>)>, n: int)\n        requires\n            0 <= n <= entries.len(),\n            spec_keys_no_dups(entries),\n        ensures\n            spec_sum_entry_sizes(entries, n) == spec_sum_adj_sizes(\n                spec_entries_to_map(entries.subrange(0, n)))"
+  },
+  {
+    "id": 121,
     "function": "empty",
     "file": "Chap52/AdjTableGraphStPer.rs",
-    "lines": "59-60",
+    "lines": "123-127",
     "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (out: Self)\n            ensures out.spec_adjtablegraphstper_wf();"
+    "snippet": "        fn empty() -> (out: Self)\n            requires\n                vstd::laws_cmp::obeys_cmp::<V>(),\n                view_ord_consistent::<V>(),\n            ensures out.spec_adjtablegraphstper_wf();"
   },
   {
-    "id": 113,
+    "id": 122,
     "function": "from_table",
     "file": "Chap52/AdjTableGraphStPer.rs",
-    "lines": "62-68",
+    "lines": "130-141",
     "spec_strength": "unknown",
-    "snippet": "        fn from_table(table: OrderedTableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self)\n            requires\n                forall|u: <V as View>::V, v: <V as View>::V|\n                    table@.dom().contains(u)\n                    && #[trigger] table@.index(u).contains(v)\n                    ==> table@.dom().contains(v),\n            ensures out.spec_adjtablegraphstper_wf();"
+    "snippet": "        fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self)\n            requires\n                table.spec_tablestper_wf(),\n                vstd::laws_cmp::obeys_cmp::<V>(),\n                view_ord_consistent::<V>(),\n                forall|k: <V as View>::V| #[trigger] table@.dom().contains(k) ==>\n                    table.spec_stored_value(k).spec_avltreesetstper_wf(),\n                forall|u: <V as View>::V, v: <V as View>::V|\n                    table@.dom().contains(u)\n                    && #[trigger] table@.index(u).contains(v)\n                    ==> table@.dom().contains(v),\n            ensures out.spec_adjtablegraphstper_wf();"
   },
   {
-    "id": 114,
+    "id": 123,
     "function": "num_vertices",
     "file": "Chap52/AdjTableGraphStPer.rs",
-    "lines": "70-71",
+    "lines": "145-146",
     "spec_strength": "unknown",
-    "snippet": "        fn num_vertices(&self) -> N\n            requires self.spec_adjtablegraphstper_wf();"
+    "snippet": "        fn num_vertices(&self) -> usize\n            requires self.spec_adjtablegraphstper_wf();"
   },
   {
-    "id": 115,
+    "id": 124,
     "function": "num_edges",
     "file": "Chap52/AdjTableGraphStPer.rs",
-    "lines": "73-75",
+    "lines": "150-152",
     "spec_strength": "unknown",
-    "snippet": "        fn num_edges(&self) -> (m: N)\n            requires self.spec_adjtablegraphstper_wf(), self.spec_num_edges() <= usize::MAX as nat\n            ensures m as nat == self.spec_num_edges();"
+    "snippet": "        fn num_edges(&self) -> (m: usize)\n            requires self.spec_adjtablegraphstper_wf(), self.spec_num_edges() <= usize::MAX as nat\n            ensures m as nat == self.spec_num_edges();"
   },
   {
-    "id": 116,
+    "id": 125,
     "function": "vertices",
     "file": "Chap52/AdjTableGraphStPer.rs",
-    "lines": "77-79",
+    "lines": "155-159",
     "spec_strength": "unknown",
-    "snippet": "        fn vertices(&self) -> (verts: AVLTreeSetStPer<V>)\n            requires self.spec_adjtablegraphstper_wf()\n            ensures verts@ == self.spec_adj().dom();"
+    "snippet": "        fn vertices(&self) -> (verts: AVLTreeSetStPer<V>)\n            requires\n                self.spec_adjtablegraphstper_wf(),\n                self.spec_adj().dom().len() < usize::MAX as nat,\n            ensures verts@ == self.spec_adj().dom();"
   },
   {
-    "id": 117,
+    "id": 126,
     "function": "has_edge",
     "file": "Chap52/AdjTableGraphStPer.rs",
-    "lines": "81-83",
+    "lines": "163-165",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, u: &V, v: &V) -> (found: B)\n            requires self.spec_adjtablegraphstper_wf()\n            ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));"
+    "snippet": "        fn has_edge(&self, u: &V, v: &V) -> (found: bool)\n            requires self.spec_adjtablegraphstper_wf()\n            ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));"
   },
   {
-    "id": 118,
+    "id": 127,
     "function": "out_neighbors",
     "file": "Chap52/AdjTableGraphStPer.rs",
-    "lines": "85-89",
+    "lines": "169-173",
     "spec_strength": "unknown",
     "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)\n            requires self.spec_adjtablegraphstper_wf()\n            ensures\n                self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],\n                !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();"
   },
   {
-    "id": 119,
+    "id": 128,
     "function": "out_degree",
     "file": "Chap52/AdjTableGraphStPer.rs",
-    "lines": "91-92",
+    "lines": "177-178",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, u: &V) -> N\n            requires self.spec_adjtablegraphstper_wf();"
+    "snippet": "        fn out_degree(&self, u: &V) -> usize\n            requires self.spec_adjtablegraphstper_wf();"
   },
   {
-    "id": 120,
+    "id": 129,
     "function": "insert_vertex",
     "file": "Chap52/AdjTableGraphStPer.rs",
-    "lines": "94-96",
+    "lines": "181-183",
     "spec_strength": "unknown",
     "snippet": "        fn insert_vertex(&self, v: V) -> (updated: Self)\n            requires self.spec_adjtablegraphstper_wf()\n            ensures updated.spec_adjtablegraphstper_wf(), updated.spec_adj().dom().contains(v@);"
   },
   {
-    "id": 121,
+    "id": 130,
     "function": "delete_vertex",
     "file": "Chap52/AdjTableGraphStPer.rs",
-    "lines": "98-100",
+    "lines": "186-188",
     "spec_strength": "unknown",
     "snippet": "        fn delete_vertex(&self, v: &V) -> (updated: Self)\n            requires self.spec_adjtablegraphstper_wf()\n            ensures updated.spec_adjtablegraphstper_wf(), !updated.spec_adj().dom().contains(v@);"
   },
   {
-    "id": 122,
+    "id": 131,
     "function": "insert_edge",
     "file": "Chap52/AdjTableGraphStPer.rs",
-    "lines": "102-108",
+    "lines": "191-199",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_edge(&self, u: V, v: V) -> (updated: Self)\n            requires self.spec_adjtablegraphstper_wf()\n            ensures\n                updated.spec_adjtablegraphstper_wf(),\n                updated.spec_adj().dom().contains(u@),\n                updated.spec_adj().dom().contains(v@),\n                updated.spec_adj()[u@].contains(v@);"
+    "snippet": "        fn insert_edge(&self, u: V, v: V) -> (updated: Self)\n            requires\n                self.spec_adjtablegraphstper_wf(),\n                self.spec_adj().dom().len() + 1 < usize::MAX as nat,\n            ensures\n                updated.spec_adjtablegraphstper_wf(),\n                updated.spec_adj().dom().contains(u@),\n                updated.spec_adj().dom().contains(v@),\n                updated.spec_adj()[u@].contains(v@);"
   },
   {
-    "id": 123,
+    "id": 132,
     "function": "delete_edge",
     "file": "Chap52/AdjTableGraphStPer.rs",
-    "lines": "110-115",
+    "lines": "202-207",
     "spec_strength": "unknown",
     "snippet": "        fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)\n            requires self.spec_adjtablegraphstper_wf()\n            ensures\n                updated.spec_adjtablegraphstper_wf(),\n                !updated.spec_adj().dom().contains(u@)\n                    || !updated.spec_adj()[u@].contains(v@);"
   },
   {
-    "id": 124,
+    "id": 133,
+    "function": "lemma_eq_spec_iff_view_eq",
+    "file": "Chap52/EdgeSetGraphMtEph.rs",
+    "lines": "59-64",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_eq_spec_iff_view_eq<V: StTInMtT + Ord + TotalOrder>()\n        requires\n            vstd::laws_cmp::obeys_cmp::<V>(),\n            view_ord_consistent::<V>(),\n        ensures\n            forall|a: V, b: V| #[trigger] a.eq_spec(&b) <==> (a@ == b@),"
+  },
+  {
+    "id": 134,
+    "function": "empty",
+    "file": "Chap52/EdgeSetGraphMtEph.rs",
+    "lines": "98-104",
+    "spec_strength": "unknown",
+    "snippet": "        fn empty() -> (out: Self)\n            requires\n                vstd::laws_cmp::obeys_cmp::<V>(),\n                view_ord_consistent::<V>(),\n                vstd::laws_cmp::obeys_cmp::<Pair<V, V>>(),\n                view_ord_consistent::<Pair<V, V>>(),\n            ensures out.spec_edgesetgraphmteph_wf();"
+  },
+  {
+    "id": 135,
+    "function": "from_vertices_and_edges",
+    "file": "Chap52/EdgeSetGraphMtEph.rs",
+    "lines": "107-118",
+    "spec_strength": "unknown",
+    "snippet": "        fn from_vertices_and_edges(v: AVLTreeSetMtEph<V>, e: AVLTreeSetMtEph<Pair<V, V>>) -> (out: Self)\n            requires\n                v.spec_avltreesetmteph_wf(),\n                e.spec_avltreesetmteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<V>(),\n                view_ord_consistent::<V>(),\n                vstd::laws_cmp::obeys_cmp::<Pair<V, V>>(),\n                view_ord_consistent::<Pair<V, V>>(),\n                forall|u: <V as View>::V, w: <V as View>::V|\n                    #[trigger] e@.contains((u, w))\n                    ==> v@.contains(u) && v@.contains(w),\n            ensures out.spec_edgesetgraphmteph_wf();"
+  },
+  {
+    "id": 136,
+    "function": "num_vertices",
+    "file": "Chap52/EdgeSetGraphMtEph.rs",
+    "lines": "121-122",
+    "spec_strength": "unknown",
+    "snippet": "        fn num_vertices(&self) -> usize\n            requires self.spec_edgesetgraphmteph_wf();"
+  },
+  {
+    "id": 137,
+    "function": "num_edges",
+    "file": "Chap52/EdgeSetGraphMtEph.rs",
+    "lines": "125-126",
+    "spec_strength": "unknown",
+    "snippet": "        fn num_edges(&self) -> usize\n            requires self.spec_edgesetgraphmteph_wf();"
+  },
+  {
+    "id": 138,
+    "function": "vertices",
+    "file": "Chap52/EdgeSetGraphMtEph.rs",
+    "lines": "129-130",
+    "spec_strength": "unknown",
+    "snippet": "        fn vertices(&self) -> &AVLTreeSetMtEph<V>\n            requires self.spec_edgesetgraphmteph_wf();"
+  },
+  {
+    "id": 139,
+    "function": "edges",
+    "file": "Chap52/EdgeSetGraphMtEph.rs",
+    "lines": "133-134",
+    "spec_strength": "unknown",
+    "snippet": "        fn edges(&self) -> &AVLTreeSetMtEph<Pair<V, V>>\n            requires self.spec_edgesetgraphmteph_wf();"
+  },
+  {
+    "id": 140,
+    "function": "has_edge",
+    "file": "Chap52/EdgeSetGraphMtEph.rs",
+    "lines": "137-138",
+    "spec_strength": "unknown",
+    "snippet": "        fn has_edge(&self, u: &V, v: &V) -> bool\n            requires self.spec_edgesetgraphmteph_wf();"
+  },
+  {
+    "id": 141,
+    "function": "out_neighbors",
+    "file": "Chap52/EdgeSetGraphMtEph.rs",
+    "lines": "141-147",
+    "spec_strength": "unknown",
+    "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtEph<V>)\n            requires\n                self.spec_edgesetgraphmteph_wf(),\n                self.spec_edges().len() < usize::MAX as nat,\n            ensures\n                neighbors@ == self.spec_out_neighbors(u@),\n                neighbors.spec_avltreesetmteph_wf();"
+  },
+  {
+    "id": 142,
+    "function": "out_degree",
+    "file": "Chap52/EdgeSetGraphMtEph.rs",
+    "lines": "150-153",
+    "spec_strength": "unknown",
+    "snippet": "        fn out_degree(&self, u: &V) -> usize\n            requires\n                self.spec_edgesetgraphmteph_wf(),\n                self.spec_edges().len() < usize::MAX as nat;"
+  },
+  {
+    "id": 143,
+    "function": "insert_vertex",
+    "file": "Chap52/EdgeSetGraphMtEph.rs",
+    "lines": "156-160",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert_vertex(&mut self, v: V)\n            requires\n                old(self).spec_edgesetgraphmteph_wf(),\n                old(self).spec_vertices().len() + 1 < usize::MAX as nat,\n            ensures self.spec_edgesetgraphmteph_wf();"
+  },
+  {
+    "id": 144,
+    "function": "delete_vertex",
+    "file": "Chap52/EdgeSetGraphMtEph.rs",
+    "lines": "163-168",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete_vertex(&mut self, v: &V)\n            requires\n                old(self).spec_edgesetgraphmteph_wf(),\n                old(self).spec_vertices().len() < usize::MAX as nat,\n                old(self).spec_edges().len() < usize::MAX as nat,\n            ensures self.spec_edgesetgraphmteph_wf(), !self.spec_vertices().contains(v@);"
+  },
+  {
+    "id": 145,
+    "function": "insert_edge",
+    "file": "Chap52/EdgeSetGraphMtEph.rs",
+    "lines": "171-176",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert_edge(&mut self, u: V, v: V)\n            requires\n                old(self).spec_edgesetgraphmteph_wf(),\n                old(self).spec_vertices().len() + 2 < usize::MAX as nat,\n                old(self).spec_edges().len() + 1 < usize::MAX as nat,\n            ensures self.spec_edgesetgraphmteph_wf();"
+  },
+  {
+    "id": 146,
+    "function": "delete_edge",
+    "file": "Chap52/EdgeSetGraphMtEph.rs",
+    "lines": "179-183",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete_edge(&mut self, u: &V, v: &V)\n            requires\n                old(self).spec_edgesetgraphmteph_wf(),\n                old(self).spec_edges().len() < usize::MAX as nat,\n            ensures self.spec_edgesetgraphmteph_wf();"
+  },
+  {
+    "id": 147,
+    "function": "default",
+    "file": "Chap52/EdgeSetGraphMtEph.rs",
+    "lines": "424",
+    "spec_strength": "",
+    "snippet": "        fn default() -> Self {"
+  },
+  {
+    "id": 148,
+    "function": "lemma_eq_spec_iff_view_eq",
+    "file": "Chap52/EdgeSetGraphMtPer.rs",
+    "lines": "73-78",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_eq_spec_iff_view_eq<V: StTInMtT + Ord>()\n        requires\n            vstd::laws_cmp::obeys_cmp::<V>(),\n            view_ord_consistent::<V>(),\n        ensures\n            forall|a: V, b: V| #[trigger] a.eq_spec(&b) <==> (a@ == b@),"
+  },
+  {
+    "id": 149,
     "function": "empty",
     "file": "Chap52/EdgeSetGraphMtPer.rs",
-    "lines": "54-55",
+    "lines": "95-101",
     "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (out: Self)\n            ensures out.spec_edgesetgraphmtper_wf();"
+    "snippet": "        fn empty() -> (out: Self)\n            requires\n                vstd::laws_cmp::obeys_cmp::<V>(),\n                view_ord_consistent::<V>(),\n                vstd::laws_cmp::obeys_cmp::<Pair<V, V>>(),\n                view_ord_consistent::<Pair<V, V>>(),\n            ensures out.spec_edgesetgraphmtper_wf();"
   },
   {
-    "id": 125,
+    "id": 150,
     "function": "from_vertices_and_edges",
     "file": "Chap52/EdgeSetGraphMtPer.rs",
-    "lines": "57-64",
+    "lines": "104-115",
     "spec_strength": "unknown",
-    "snippet": "        fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self)\n            requires\n                v.spec_avltreesetmtper_wf(),\n                e.spec_avltreesetmtper_wf(),\n                forall|u: <V as View>::V, w: <V as View>::V|\n                    #[trigger] e@.contains((u, w))\n                    ==> v@.contains(u) && v@.contains(w),\n            ensures out.spec_edgesetgraphmtper_wf();"
+    "snippet": "        fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self)\n            requires\n                v.spec_avltreesetmtper_wf(),\n                e.spec_avltreesetmtper_wf(),\n                vstd::laws_cmp::obeys_cmp::<V>(),\n                view_ord_consistent::<V>(),\n                vstd::laws_cmp::obeys_cmp::<Pair<V, V>>(),\n                view_ord_consistent::<Pair<V, V>>(),\n                forall|u: <V as View>::V, w: <V as View>::V|\n                    #[trigger] e@.contains((u, w))\n                    ==> v@.contains(u) && v@.contains(w),\n            ensures out.spec_edgesetgraphmtper_wf();"
   },
   {
-    "id": 126,
+    "id": 151,
     "function": "num_vertices",
     "file": "Chap52/EdgeSetGraphMtPer.rs",
-    "lines": "66-67",
+    "lines": "119-120",
     "spec_strength": "unknown",
-    "snippet": "        fn num_vertices(&self) -> N\n            requires self.spec_edgesetgraphmtper_wf();"
+    "snippet": "        fn num_vertices(&self) -> usize\n            requires self.spec_edgesetgraphmtper_wf();"
   },
   {
-    "id": 127,
+    "id": 152,
     "function": "num_edges",
     "file": "Chap52/EdgeSetGraphMtPer.rs",
-    "lines": "69-70",
+    "lines": "124-125",
     "spec_strength": "unknown",
-    "snippet": "        fn num_edges(&self) -> N\n            requires self.spec_edgesetgraphmtper_wf();"
+    "snippet": "        fn num_edges(&self) -> usize\n            requires self.spec_edgesetgraphmtper_wf();"
   },
   {
-    "id": 128,
+    "id": 153,
     "function": "vertices",
     "file": "Chap52/EdgeSetGraphMtPer.rs",
-    "lines": "72-73",
+    "lines": "128-129",
     "spec_strength": "unknown",
     "snippet": "        fn vertices(&self) -> &AVLTreeSetMtPer<V>\n            requires self.spec_edgesetgraphmtper_wf();"
   },
   {
-    "id": 129,
+    "id": 154,
     "function": "edges",
     "file": "Chap52/EdgeSetGraphMtPer.rs",
-    "lines": "75-76",
+    "lines": "132-133",
     "spec_strength": "unknown",
     "snippet": "        fn edges(&self) -> &AVLTreeSetMtPer<Pair<V, V>>\n            requires self.spec_edgesetgraphmtper_wf();"
   },
   {
-    "id": 130,
+    "id": 155,
     "function": "has_edge",
     "file": "Chap52/EdgeSetGraphMtPer.rs",
-    "lines": "78-79",
+    "lines": "137-138",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, u: &V, v: &V) -> B\n            requires self.spec_edgesetgraphmtper_wf();"
+    "snippet": "        fn has_edge(&self, u: &V, v: &V) -> bool\n            requires self.spec_edgesetgraphmtper_wf();"
   },
   {
-    "id": 131,
+    "id": 156,
     "function": "out_neighbors",
     "file": "Chap52/EdgeSetGraphMtPer.rs",
-    "lines": "81-83",
+    "lines": "142-149",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)\n            requires self.spec_edgesetgraphmtper_wf()\n            ensures neighbors@ == Set::new(|v: <V as View>::V| self.edges@.contains((u@, v)));"
+    "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)\n            requires\n                self.spec_edgesetgraphmtper_wf(),\n                self.spec_edges().len() < usize::MAX as nat,\n            ensures\n                neighbors@ == self.spec_edges().filter(|p: (<V as View>::V, <V as View>::V)| p.0 == u@)\n                    .map_by(|p: (<V as View>::V, <V as View>::V)| p.1, |v: <V as View>::V| (u@, v)),\n                neighbors.spec_avltreesetmtper_wf();"
   },
   {
-    "id": 132,
+    "id": 157,
     "function": "out_degree",
     "file": "Chap52/EdgeSetGraphMtPer.rs",
-    "lines": "85-86",
+    "lines": "153-156",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, u: &V) -> N\n            requires self.spec_edgesetgraphmtper_wf();"
+    "snippet": "        fn out_degree(&self, u: &V) -> usize\n            requires\n                self.spec_edgesetgraphmtper_wf(),\n                self.spec_edges().len() < usize::MAX as nat;"
   },
   {
-    "id": 133,
+    "id": 158,
     "function": "insert_vertex",
     "file": "Chap52/EdgeSetGraphMtPer.rs",
-    "lines": "88-90",
+    "lines": "159-163",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_vertex(&self, v: V) -> (updated: Self)\n            requires self.spec_edgesetgraphmtper_wf()\n            ensures updated.spec_edgesetgraphmtper_wf();"
+    "snippet": "        fn insert_vertex(&self, v: V) -> (updated: Self)\n            requires\n                self.spec_edgesetgraphmtper_wf(),\n                self.spec_vertices().len() + 1 < usize::MAX as nat,\n            ensures updated.spec_edgesetgraphmtper_wf();"
   },
   {
-    "id": 134,
+    "id": 159,
     "function": "delete_vertex",
     "file": "Chap52/EdgeSetGraphMtPer.rs",
-    "lines": "92-94",
+    "lines": "166-171",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_vertex(&self, v: &V) -> (updated: Self)\n            requires self.spec_edgesetgraphmtper_wf()\n            ensures updated.spec_edgesetgraphmtper_wf(), !updated.vertices@.contains(v@);"
+    "snippet": "        fn delete_vertex(&self, v: &V) -> (updated: Self)\n            requires\n                self.spec_edgesetgraphmtper_wf(),\n                self.spec_vertices().len() < usize::MAX as nat,\n                self.spec_edges().len() < usize::MAX as nat,\n            ensures updated.spec_edgesetgraphmtper_wf(), !updated.spec_vertices().contains(v@);"
   },
   {
-    "id": 135,
+    "id": 160,
     "function": "insert_edge",
     "file": "Chap52/EdgeSetGraphMtPer.rs",
-    "lines": "96-98",
+    "lines": "174-179",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_edge(&self, u: V, v: V) -> (updated: Self)\n            requires self.spec_edgesetgraphmtper_wf()\n            ensures updated.spec_edgesetgraphmtper_wf();"
+    "snippet": "        fn insert_edge(&self, u: V, v: V) -> (updated: Self)\n            requires\n                self.spec_edgesetgraphmtper_wf(),\n                self.spec_vertices().len() + 2 < usize::MAX as nat,\n                self.spec_edges().len() + 1 < usize::MAX as nat,\n            ensures updated.spec_edgesetgraphmtper_wf();"
   },
   {
-    "id": 136,
+    "id": 161,
     "function": "delete_edge",
     "file": "Chap52/EdgeSetGraphMtPer.rs",
-    "lines": "100-102",
+    "lines": "182-186",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)\n            requires self.spec_edgesetgraphmtper_wf()\n            ensures updated.spec_edgesetgraphmtper_wf();"
+    "snippet": "        fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)\n            requires\n                self.spec_edgesetgraphmtper_wf(),\n                self.spec_edges().len() < usize::MAX as nat,\n            ensures updated.spec_edgesetgraphmtper_wf();"
   },
   {
-    "id": 137,
-    "function": "default",
-    "file": "Chap52/EdgeSetGraphMtPer.rs",
-    "lines": "265",
-    "spec_strength": "",
-    "snippet": "        fn default() -> Self { Self::empty() }"
+    "id": 162,
+    "function": "lemma_eq_spec_iff_view_eq",
+    "file": "Chap52/EdgeSetGraphStEph.rs",
+    "lines": "55-60",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_eq_spec_iff_view_eq<V: StT + Ord + TotalOrder>()\n        requires\n            vstd::laws_cmp::obeys_cmp::<V>(),\n            view_ord_consistent::<V>(),\n        ensures\n            forall|a: V, b: V| #[trigger] a.eq_spec(&b) <==> (a@ == b@),"
   },
   {
-    "id": 138,
+    "id": 163,
     "function": "empty",
     "file": "Chap52/EdgeSetGraphStEph.rs",
-    "lines": "56-57",
+    "lines": "95-101",
     "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (out: Self)\n            ensures out.spec_edgesetgraphsteph_wf();"
+    "snippet": "        fn empty() -> (out: Self)\n            requires\n                vstd::laws_cmp::obeys_cmp::<V>(),\n                view_ord_consistent::<V>(),\n                vstd::laws_cmp::obeys_cmp::<Pair<V, V>>(),\n                view_ord_consistent::<Pair<V, V>>(),\n            ensures out.spec_edgesetgraphsteph_wf();"
   },
   {
-    "id": 139,
+    "id": 164,
     "function": "from_vertices_and_edges",
     "file": "Chap52/EdgeSetGraphStEph.rs",
-    "lines": "60-67",
+    "lines": "105-116",
     "spec_strength": "unknown",
-    "snippet": "        fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self)\n            requires\n                v.spec_avltreesetsteph_wf(),\n                e.spec_avltreesetsteph_wf(),\n                forall|u: <V as View>::V, w: <V as View>::V|\n                    #[trigger] e@.contains((u, w))\n                    ==> v@.contains(u) && v@.contains(w),\n            ensures out.spec_edgesetgraphsteph_wf();"
+    "snippet": "        fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self)\n            requires\n                v.spec_avltreesetsteph_wf(),\n                e.spec_avltreesetsteph_wf(),\n                vstd::laws_cmp::obeys_cmp::<V>(),\n                view_ord_consistent::<V>(),\n                vstd::laws_cmp::obeys_cmp::<Pair<V, V>>(),\n                view_ord_consistent::<Pair<V, V>>(),\n                forall|u: <V as View>::V, w: <V as View>::V|\n                    #[trigger] e@.contains((u, w))\n                    ==> v@.contains(u) && v@.contains(w),\n            ensures out.spec_edgesetgraphsteph_wf();"
   },
   {
-    "id": 140,
+    "id": 165,
     "function": "num_vertices",
     "file": "Chap52/EdgeSetGraphStEph.rs",
-    "lines": "70-71",
+    "lines": "119-120",
     "spec_strength": "unknown",
-    "snippet": "        fn num_vertices(&self) -> N\n            requires self.spec_edgesetgraphsteph_wf();"
+    "snippet": "        fn num_vertices(&self) -> usize\n            requires self.spec_edgesetgraphsteph_wf();"
   },
   {
-    "id": 141,
+    "id": 166,
     "function": "num_edges",
     "file": "Chap52/EdgeSetGraphStEph.rs",
-    "lines": "74-75",
+    "lines": "123-124",
     "spec_strength": "unknown",
-    "snippet": "        fn num_edges(&self) -> N\n            requires self.spec_edgesetgraphsteph_wf();"
+    "snippet": "        fn num_edges(&self) -> usize\n            requires self.spec_edgesetgraphsteph_wf();"
   },
   {
-    "id": 142,
+    "id": 167,
     "function": "vertices",
     "file": "Chap52/EdgeSetGraphStEph.rs",
-    "lines": "78-79",
+    "lines": "128-129",
     "spec_strength": "unknown",
     "snippet": "        fn vertices(&self) -> &AVLTreeSetStEph<V>\n            requires self.spec_edgesetgraphsteph_wf();"
   },
   {
-    "id": 143,
+    "id": 168,
     "function": "edges",
     "file": "Chap52/EdgeSetGraphStEph.rs",
-    "lines": "82-83",
+    "lines": "133-134",
     "spec_strength": "unknown",
     "snippet": "        fn edges(&self) -> &AVLTreeSetStEph<Pair<V, V>>\n            requires self.spec_edgesetgraphsteph_wf();"
   },
   {
-    "id": 144,
+    "id": 169,
     "function": "has_edge",
     "file": "Chap52/EdgeSetGraphStEph.rs",
-    "lines": "86-87",
+    "lines": "137-138",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, u: &V, v: &V) -> B\n            requires self.spec_edgesetgraphsteph_wf();"
+    "snippet": "        fn has_edge(&self, u: &V, v: &V) -> bool\n            requires self.spec_edgesetgraphsteph_wf();"
   },
   {
-    "id": 145,
+    "id": 170,
     "function": "out_neighbors",
     "file": "Chap52/EdgeSetGraphStEph.rs",
-    "lines": "90-92",
+    "lines": "141-143",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)\n            requires self.spec_edgesetgraphsteph_wf()\n            ensures neighbors@ == self.spec_out_neighbors(u@);"
+    "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)\n            requires self.spec_edgesetgraphsteph_wf()\n            ensures neighbors@ == self.spec_out_neighbors(u@), neighbors.spec_avltreesetsteph_wf();"
   },
   {
-    "id": 146,
+    "id": 171,
     "function": "out_degree",
     "file": "Chap52/EdgeSetGraphStEph.rs",
-    "lines": "95-96",
+    "lines": "146-147",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, u: &V) -> N\n            requires self.spec_edgesetgraphsteph_wf();"
+    "snippet": "        fn out_degree(&self, u: &V) -> usize\n            requires self.spec_edgesetgraphsteph_wf();"
   },
   {
-    "id": 147,
+    "id": 172,
     "function": "insert_vertex",
     "file": "Chap52/EdgeSetGraphStEph.rs",
-    "lines": "99-101",
+    "lines": "151-155",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_vertex(&mut self, v: V)\n            requires old(self).spec_edgesetgraphsteph_wf()\n            ensures self.spec_edgesetgraphsteph_wf();"
+    "snippet": "        fn insert_vertex(&mut self, v: V)\n            requires\n                old(self).spec_edgesetgraphsteph_wf(),\n                old(self).spec_vertices().len() + 1 < usize::MAX as nat,\n            ensures self.spec_edgesetgraphsteph_wf();"
   },
   {
-    "id": 148,
+    "id": 173,
     "function": "delete_vertex",
     "file": "Chap52/EdgeSetGraphStEph.rs",
-    "lines": "104-106",
+    "lines": "159-161",
     "spec_strength": "unknown",
     "snippet": "        fn delete_vertex(&mut self, v: &V)\n            requires old(self).spec_edgesetgraphsteph_wf()\n            ensures self.spec_edgesetgraphsteph_wf(), !self.spec_vertices().contains(v@);"
   },
   {
-    "id": 149,
+    "id": 174,
     "function": "insert_edge",
     "file": "Chap52/EdgeSetGraphStEph.rs",
-    "lines": "109-111",
+    "lines": "165-170",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_edge(&mut self, u: V, v: V)\n            requires old(self).spec_edgesetgraphsteph_wf()\n            ensures self.spec_edgesetgraphsteph_wf();"
+    "snippet": "        fn insert_edge(&mut self, u: V, v: V)\n            requires\n                old(self).spec_edgesetgraphsteph_wf(),\n                old(self).spec_vertices().len() + 2 < usize::MAX as nat,\n                old(self).spec_edges().len() + 1 < usize::MAX as nat,\n            ensures self.spec_edgesetgraphsteph_wf();"
   },
   {
-    "id": 150,
+    "id": 175,
     "function": "delete_edge",
     "file": "Chap52/EdgeSetGraphStEph.rs",
-    "lines": "114-116",
+    "lines": "174-176",
     "spec_strength": "unknown",
     "snippet": "        fn delete_edge(&mut self, u: &V, v: &V)\n            requires old(self).spec_edgesetgraphsteph_wf()\n            ensures self.spec_edgesetgraphsteph_wf();"
   },
   {
-    "id": 151,
+    "id": 176,
+    "function": "lemma_eq_spec_iff_view_eq",
+    "file": "Chap52/EdgeSetGraphStPer.rs",
+    "lines": "60-65",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_eq_spec_iff_view_eq<V: StT + Ord + TotalOrder>()\n        requires\n            vstd::laws_cmp::obeys_cmp::<V>(),\n            view_ord_consistent::<V>(),\n        ensures\n            forall|a: V, b: V| #[trigger] a.eq_spec(&b) <==> (a@ == b@),"
+  },
+  {
+    "id": 177,
     "function": "empty",
     "file": "Chap52/EdgeSetGraphStPer.rs",
-    "lines": "57-58",
+    "lines": "99-105",
     "spec_strength": "unknown",
-    "snippet": "        fn empty() -> (out: Self)\n            ensures out.spec_edgesetgraphstper_wf();"
+    "snippet": "        fn empty() -> (out: Self)\n            requires\n                vstd::laws_cmp::obeys_cmp::<V>(),\n                view_ord_consistent::<V>(),\n                vstd::laws_cmp::obeys_cmp::<Pair<V, V>>(),\n                view_ord_consistent::<Pair<V, V>>(),\n            ensures out.spec_edgesetgraphstper_wf();"
   },
   {
-    "id": 152,
+    "id": 178,
     "function": "from_vertices_and_edges",
     "file": "Chap52/EdgeSetGraphStPer.rs",
-    "lines": "60-67",
+    "lines": "108-119",
     "spec_strength": "unknown",
-    "snippet": "        fn from_vertices_and_edges(v: AVLTreeSetStPer<V>, e: AVLTreeSetStPer<Pair<V, V>>) -> (out: Self)\n            requires\n                v.spec_avltreesetstper_wf(),\n                e.spec_avltreesetstper_wf(),\n                forall|u: <V as View>::V, w: <V as View>::V|\n                    #[trigger] e@.contains((u, w))\n                    ==> v@.contains(u) && v@.contains(w),\n            ensures out.spec_edgesetgraphstper_wf();"
+    "snippet": "        fn from_vertices_and_edges(v: AVLTreeSetStPer<V>, e: AVLTreeSetStPer<Pair<V, V>>) -> (out: Self)\n            requires\n                v.spec_avltreesetstper_wf(),\n                e.spec_avltreesetstper_wf(),\n                vstd::laws_cmp::obeys_cmp::<V>(),\n                view_ord_consistent::<V>(),\n                vstd::laws_cmp::obeys_cmp::<Pair<V, V>>(),\n                view_ord_consistent::<Pair<V, V>>(),\n                forall|u: <V as View>::V, w: <V as View>::V|\n                    #[trigger] e@.contains((u, w))\n                    ==> v@.contains(u) && v@.contains(w),\n            ensures out.spec_edgesetgraphstper_wf();"
   },
   {
-    "id": 153,
+    "id": 179,
     "function": "num_vertices",
     "file": "Chap52/EdgeSetGraphStPer.rs",
-    "lines": "69-70",
+    "lines": "123-124",
     "spec_strength": "unknown",
-    "snippet": "        fn num_vertices(&self) -> N\n            requires self.spec_edgesetgraphstper_wf();"
+    "snippet": "        fn num_vertices(&self) -> usize\n            requires self.spec_edgesetgraphstper_wf();"
   },
   {
-    "id": 154,
+    "id": 180,
     "function": "num_edges",
     "file": "Chap52/EdgeSetGraphStPer.rs",
-    "lines": "72-73",
+    "lines": "128-129",
     "spec_strength": "unknown",
-    "snippet": "        fn num_edges(&self) -> N\n            requires self.spec_edgesetgraphstper_wf();"
+    "snippet": "        fn num_edges(&self) -> usize\n            requires self.spec_edgesetgraphstper_wf();"
   },
   {
-    "id": 155,
+    "id": 181,
     "function": "vertices",
     "file": "Chap52/EdgeSetGraphStPer.rs",
-    "lines": "75-76",
+    "lines": "132-133",
     "spec_strength": "unknown",
     "snippet": "        fn vertices(&self) -> &AVLTreeSetStPer<V>\n            requires self.spec_edgesetgraphstper_wf();"
   },
   {
-    "id": 156,
+    "id": 182,
     "function": "edges",
     "file": "Chap52/EdgeSetGraphStPer.rs",
-    "lines": "78-79",
+    "lines": "136-137",
     "spec_strength": "unknown",
     "snippet": "        fn edges(&self) -> &AVLTreeSetStPer<Pair<V, V>>\n            requires self.spec_edgesetgraphstper_wf();"
   },
   {
-    "id": 157,
+    "id": 183,
     "function": "has_edge",
     "file": "Chap52/EdgeSetGraphStPer.rs",
-    "lines": "81-82",
+    "lines": "141-142",
     "spec_strength": "unknown",
-    "snippet": "        fn has_edge(&self, u: &V, v: &V) -> B\n            requires self.spec_edgesetgraphstper_wf();"
+    "snippet": "        fn has_edge(&self, u: &V, v: &V) -> bool\n            requires self.spec_edgesetgraphstper_wf();"
   },
   {
-    "id": 158,
+    "id": 184,
     "function": "out_neighbors",
     "file": "Chap52/EdgeSetGraphStPer.rs",
-    "lines": "84-86",
+    "lines": "146-148",
     "spec_strength": "unknown",
-    "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)\n            requires self.spec_edgesetgraphstper_wf()\n            ensures neighbors@ == self.spec_out_neighbors(u@);"
+    "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)\n            requires self.spec_edgesetgraphstper_wf()\n            ensures neighbors@ == self.spec_out_neighbors(u@), neighbors.spec_avltreesetstper_wf();"
   },
   {
-    "id": 159,
+    "id": 185,
     "function": "out_degree",
     "file": "Chap52/EdgeSetGraphStPer.rs",
-    "lines": "88-89",
+    "lines": "152-153",
     "spec_strength": "unknown",
-    "snippet": "        fn out_degree(&self, u: &V) -> N\n            requires self.spec_edgesetgraphstper_wf();"
+    "snippet": "        fn out_degree(&self, u: &V) -> usize\n            requires self.spec_edgesetgraphstper_wf();"
   },
   {
-    "id": 160,
+    "id": 186,
     "function": "insert_vertex",
     "file": "Chap52/EdgeSetGraphStPer.rs",
-    "lines": "91-93",
+    "lines": "156-160",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_vertex(&self, v: V) -> (updated: Self)\n            requires self.spec_edgesetgraphstper_wf()\n            ensures updated.spec_edgesetgraphstper_wf();"
+    "snippet": "        fn insert_vertex(&self, v: V) -> (updated: Self)\n            requires\n                self.spec_edgesetgraphstper_wf(),\n                self.spec_vertices().len() + 1 < usize::MAX as nat,\n            ensures updated.spec_edgesetgraphstper_wf();"
   },
   {
-    "id": 161,
+    "id": 187,
     "function": "delete_vertex",
     "file": "Chap52/EdgeSetGraphStPer.rs",
-    "lines": "95-97",
+    "lines": "163-165",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_vertex(&self, v: &V) -> (updated: Self)\n            requires self.spec_edgesetgraphstper_wf()\n            ensures updated.spec_edgesetgraphstper_wf(), !updated.vertices@.contains(v@);"
+    "snippet": "        fn delete_vertex(&self, v: &V) -> (updated: Self)\n            requires self.spec_edgesetgraphstper_wf()\n            ensures updated.spec_edgesetgraphstper_wf(), !updated.spec_vertices().contains(v@);"
   },
   {
-    "id": 162,
+    "id": 188,
     "function": "insert_edge",
     "file": "Chap52/EdgeSetGraphStPer.rs",
-    "lines": "99-101",
+    "lines": "168-173",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_edge(&self, u: V, v: V) -> (updated: Self)\n            requires self.spec_edgesetgraphstper_wf()\n            ensures updated.spec_edgesetgraphstper_wf();"
+    "snippet": "        fn insert_edge(&self, u: V, v: V) -> (updated: Self)\n            requires\n                self.spec_edgesetgraphstper_wf(),\n                self.spec_vertices().len() + 2 < usize::MAX as nat,\n                self.spec_edges().len() + 1 < usize::MAX as nat,\n            ensures updated.spec_edgesetgraphstper_wf();"
   },
   {
-    "id": 163,
+    "id": 189,
     "function": "delete_edge",
     "file": "Chap52/EdgeSetGraphStPer.rs",
-    "lines": "103-105",
+    "lines": "176-178",
     "spec_strength": "unknown",
     "snippet": "        fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)\n            requires self.spec_edgesetgraphstper_wf()\n            ensures updated.spec_edgesetgraphstper_wf();"
+  },
+  {
+    "id": 190,
+    "function": "eq",
+    "file": "Chap52/EdgeSetGraphStPer.rs",
+    "lines": "471-472",
+    "spec_strength": "unknown",
+    "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@),"
   }
 ]

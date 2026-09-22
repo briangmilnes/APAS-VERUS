@@ -24,7 +24,7 @@
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
 | 1 | Chap62 | StarContractionMtEph | 2 | 0 | 0 | 5 | 5 | 0 | 5 | 0 | 0 |
 | 2 | Chap62 | StarContractionStEph | 2 | 0 | 0 | 4 | 4 | 0 | 4 | 0 | 0 |
-| 3 | Chap62 | StarPartitionMtEph | 1 | 0 | 0 | 1 | 1 | 0 | 1 | 0 | 0 |
+| 3 | Chap62 | StarPartitionMtEph | 1 | 0 | 0 | 10 | 10 | 0 | 9 | 1 | 0 |
 | 4 | Chap62 | StarPartitionStEph | 1 | 0 | 0 | 1 | 1 | 0 | 1 | 0 | 0 |
 
 ## Function-by-Function Detail
@@ -33,32 +33,41 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `star_contract_mt` | Y |  |  | Y | Y |  |  | unknown | 45&#8209;55 |
-| 2 | `contract_to_vertices_mt` | Y |  |  | Y | Y |  |  | unknown | 59&#8209;62 |
-| 3 | `star_contract_mt_fuel` |  |  |  | Y | Y |  |  | unknown | 86&#8209;102 |
-| 4 | `build_quotient_graph_parallel` |  |  |  | Y | Y |  |  | unknown | 181&#8209;192 |
-| 5 | `route_edges_parallel` |  |  |  | Y | Y |  |  | unknown | 249&#8209;270 |
+| 1 | `star_contract_mt` | Y |  |  | Y | Y |  |  | unknown | 94&#8209;112 |
+| 2 | `contract_to_vertices_mt` | Y |  |  | Y | Y |  |  | unknown | 117&#8209;120 |
+| 3 | `star_contract_mt_fuel` |  |  |  | Y | Y |  |  | unknown | 128&#8209;150 |
+| 4 | `build_quotient_graph_parallel` |  |  |  | Y | Y |  |  | unknown | 261&#8209;272 |
+| 5 | `route_edges_parallel` |  |  |  | Y | Y |  |  | unknown | 329&#8209;350 |
 
 ### Chap62/StarContractionStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 6 | `star_contract` | Y |  |  | Y | Y |  |  | unknown | 44&#8209;54 |
-| 7 | `contract_to_vertices` | Y |  |  | Y | Y |  |  | unknown | 58&#8209;61 |
-| 8 | `star_contract_fuel` |  |  |  | Y | Y |  |  | unknown | 67&#8209;83 |
-| 9 | `build_quotient_graph` |  |  |  | Y | Y |  |  | unknown | 162&#8209;173 |
+| 6 | `star_contract` | Y |  |  | Y | Y |  |  | unknown | 74&#8209;92 |
+| 7 | `contract_to_vertices` | Y |  |  | Y | Y |  |  | unknown | 97&#8209;100 |
+| 8 | `star_contract_fuel` |  |  |  | Y | Y |  |  | unknown | 108&#8209;130 |
+| 9 | `build_quotient_graph` |  |  |  | Y | Y |  |  | unknown | 240&#8209;251 |
 
 ### Chap62/StarPartitionMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 10 | `parallel_star_partition` | Y |  |  | Y | Y |  |  | unknown | 43&#8209;47 |
+| 10 | `parallel_star_partition` | Y |  |  | Y | Y |  |  | unknown | 116&#8209;120 |
+| 11 | `hash_coin` |  |  |  | Y | Y |  |  | hole | 132 |
+| 12 | `hash_coin_flips_mt` |  |  |  | Y | Y |  |  | unknown | 145&#8209;159 |
+| 13 | `build_th_edges_mt` |  |  |  | Y | Y |  |  | unknown | 281&#8209;309 |
+| 14 | `build_p_vec_mt` |  |  |  | Y | Y |  |  | unknown | 470&#8209;482 |
+| 15 | `build_vertex_to_index_mt` |  |  |  | Y | Y |  |  | unknown | 577&#8209;593 |
+| 16 | `build_satellite_map_mt` |  |  |  | Y | Y |  |  | unknown | 758&#8209;790 |
+| 17 | `build_p_vec_with_inject_mt` |  |  |  | Y | Y |  |  | unknown | 977&#8209;1027 |
+| 18 | `build_partition_map_mt` |  |  |  | Y | Y |  |  | unknown | 1245&#8209;1265 |
+| 19 | `build_centers_mt` |  |  |  | Y | Y |  |  | unknown | 1453&#8209;1469 |
 
 ### Chap62/StarPartitionStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 11 | `sequential_star_partition` | Y |  |  | Y | Y |  |  | unknown | 41&#8209;42 |
+| 20 | `sequential_star_partition` | Y |  |  | Y | Y |  |  | unknown | 90&#8209;91 |
 
 
 ### Legend

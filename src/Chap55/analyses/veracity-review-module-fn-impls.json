@@ -1,250 +1,490 @@
 [
   {
     "id": 1,
-    "function": "has_cycle",
+    "function": "lemma_cycle_not_dag",
     "file": "Chap55/CycleDetectStEph.rs",
-    "lines": "33-38",
+    "lines": "100-116",
     "spec_strength": "unknown",
-    "snippet": "        fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (has_cycle: B)\n            requires\n                spec_toposortsteph_wf(graph),\n            ensures\n                has_cycle == !spec_is_dag(graph),\n            ;"
+    "snippet": "    proof fn lemma_cycle_not_dag(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        dfs_path: Seq<int>,\n        vertex: int,\n    )\n        requires\n            // dfs_path is a valid sequence of vertices with edges.\n            forall|k: int| 0 <= k < dfs_path.len()\n                ==> 0 <= #[trigger] dfs_path[k] < graph@.len(),\n            forall|k: int| 0 <= k < dfs_path.len() - 1\n                ==> #[trigger] spec_has_edge(graph, dfs_path[k], dfs_path[k + 1]),\n            dfs_path.len() > 0 ==> spec_has_edge(graph, dfs_path.last(), vertex as int),\n            // vertex appears in dfs_path (back edge).\n            spec_in_path(dfs_path, vertex),\n            0 <= vertex < graph@.len(),\n        ensures\n            !spec_is_dag(graph),"
   },
   {
     "id": 2,
-    "function": "dfs_check_cycle",
+    "function": "lemma_path_ord_decreases",
     "file": "Chap55/CycleDetectStEph.rs",
-    "lines": "45-63",
+    "lines": "158-171",
     "spec_strength": "unknown",
-    "snippet": "    fn dfs_check_cycle(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,\n        visited: &mut ArraySeqStEphS<B>,\n        ancestors: &mut ArraySeqStEphS<B>,\n        vertex: N,\n    ) -> (has_cycle: B)\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            old(ancestors)@.len() == graph@.len(),\n            spec_toposortsteph_wf(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            ancestors@.len() == old(ancestors)@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> #[trigger] visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+    "snippet": "    proof fn lemma_path_ord_decreases(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        ord: Map<int, nat>,\n        next_time: nat,\n        path: Seq<int>,\n    )\n        requires\n            spec_acyclic_ord(graph, ord, next_time),\n            spec_is_path(graph, path),\n            path.len() >= 2,\n            forall|k: int| 0 <= k < path.len() ==> #[trigger] ord.contains_key(path[k]),\n        ensures\n            ord[path[0]] > ord[path.last()],\n        decreases path.len(),"
   },
   {
     "id": 3,
-    "function": "has_cycle",
-    "file": "Chap55/CycleDetectStPer.rs",
-    "lines": "42-47",
+    "function": "lemma_extract_ord",
+    "file": "Chap55/CycleDetectStEph.rs",
+    "lines": "210-229",
     "spec_strength": "unknown",
-    "snippet": "        fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (has_cycle: B)\n            requires\n                spec_cycledetectstper_wf(graph),\n            ensures\n                has_cycle == !spec_is_dag_per(graph),\n            ;"
+    "snippet": "    proof fn lemma_extract_ord(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        visited: Seq<bool>,\n        ancestors: Seq<bool>,\n        prev_ord: Map<int, nat>,\n        prev_next: nat,\n    ) -> (dfs_state: (Map<int, nat>, nat))\n        requires\n            exists|o: Map<int, nat>|\n                #[trigger] spec_is_valid_ord(graph, visited, ancestors, prev_ord, prev_next, o),\n        ensures\n            spec_acyclic_ord(graph, dfs_state.0, dfs_state.1)\n            && (forall|v: int| 0 <= v < visited.len()\n                && #[trigger] visited[v] && !ancestors[v]\n                ==> dfs_state.0.contains_key(v))\n            && (forall|v: int| #[trigger] dfs_state.0.contains_key(v)\n                ==> visited[v] && !ancestors[v])\n            && (forall|v: int| #[trigger] prev_ord.contains_key(v)\n                ==> dfs_state.0.contains_key(v) && dfs_state.0[v] == prev_ord[v])\n            && dfs_state.1 >= prev_next,"
   },
   {
     "id": 4,
-    "function": "dfs_check_cycle",
-    "file": "Chap55/CycleDetectStPer.rs",
-    "lines": "54-72",
+    "function": "lemma_acyclic_ord_implies_dag",
+    "file": "Chap55/CycleDetectStEph.rs",
+    "lines": "247-256",
     "spec_strength": "unknown",
-    "snippet": "    fn dfs_check_cycle(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,\n        visited: &mut Vec<bool>,\n        ancestors: &mut Vec<bool>,\n        vertex: N,\n    ) -> (has_cycle: B)\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            old(ancestors)@.len() == graph@.len(),\n            spec_cycledetectstper_wf(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            ancestors@.len() == old(ancestors)@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> #[trigger] visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+    "snippet": "    proof fn lemma_acyclic_ord_implies_dag(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        ord: Map<int, nat>,\n        next_time: nat,\n    )\n        requires\n            spec_acyclic_ord(graph, ord, next_time),\n            forall|v: int| 0 <= v < graph@.len() ==> #[trigger] ord.contains_key(v),\n        ensures\n            spec_is_dag(graph),"
   },
   {
     "id": 5,
-    "function": "dfs",
-    "file": "Chap55/DFSStEph.rs",
-    "lines": "34-43",
+    "function": "has_cycle",
+    "file": "Chap55/CycleDetectStEph.rs",
+    "lines": "280-285",
     "spec_strength": "unknown",
-    "snippet": "        fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (reachable: AVLTreeSetStEph<N>)\n            requires\n                source < graph@.len(),\n                spec_toposortsteph_wf(graph),\n            ensures\n                reachable@.contains(source),\n                forall|v: usize| reachable@.contains(v) ==> (v as int) < graph@.len(),\n                forall|v: int| 0 <= v < graph@.len()\n                    ==> (reachable@.contains(v as usize) <==> #[trigger] spec_reachable(graph, source as int, v)),\n            ;"
+    "snippet": "        fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (has_cycle: bool)\n            requires\n                spec_toposortsteph_wf(graph),\n            ensures\n                has_cycle == !spec_is_dag(graph),\n            ;"
   },
   {
     "id": 6,
-    "function": "dfs_recursive",
-    "file": "Chap55/DFSStEph.rs",
-    "lines": "49-65",
+    "function": "dfs_check_cycle",
+    "file": "Chap55/CycleDetectStEph.rs",
+    "lines": "295-339",
     "spec_strength": "unknown",
-    "snippet": "    fn dfs_recursive(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,\n        visited: &mut ArraySeqStEphS<B>,\n        reachable: &mut AVLTreeSetStEph<N>,\n        vertex: N,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_toposortsteph_wf(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> #[trigger] visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+    "snippet": "    fn dfs_check_cycle(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        visited: &mut ArraySeqStEphS<bool>,\n        ancestors: &mut ArraySeqStEphS<bool>,\n        vertex: usize,\n        Ghost(dfs_path): Ghost<Seq<int>>,\n        Ghost(ord): Ghost<Map<int, nat>>,\n        Ghost(next_time): Ghost<nat>,\n    ) -> (has_cycle: bool)\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            old(ancestors)@.len() == graph@.len(),\n            spec_toposortsteph_wf(graph),\n            // Ghost DFS path structure:\n            forall|k: int| 0 <= k < dfs_path.len()\n                ==> 0 <= #[trigger] dfs_path[k] < graph@.len(),\n            forall|k: int| 0 <= k < dfs_path.len() - 1\n                ==> #[trigger] spec_has_edge(graph, dfs_path[k], dfs_path[k + 1]),\n            dfs_path.len() > 0 ==> spec_has_edge(graph, dfs_path.last(), vertex as int),\n            // Ancestors biconditional: true iff on the DFS path.\n            forall|v: int| 0 <= v < old(ancestors)@.len() ==> (\n                #[trigger] old(ancestors)@[v] == spec_in_path(dfs_path, v)\n            ),\n            // Completeness ordering: acyclic ordering of finished (visited non-ancestor) vertices.\n            spec_acyclic_ord(graph, ord, next_time),\n            forall|v: int| 0 <= v < old(visited)@.len()\n                && #[trigger] old(visited)@[v] && !old(ancestors)@[v]\n                ==> ord.contains_key(v),\n            forall|v: int| #[trigger] ord.contains_key(v)\n                ==> old(visited)@[v] && !old(ancestors)@[v],\n        ensures\n            visited@.len() == graph@.len(),\n            ancestors@.len() == graph@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && #[trigger] old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n            has_cycle ==> !spec_is_dag(graph),\n            !has_cycle ==> ancestors@ =~= old(ancestors)@,\n            !has_cycle ==> visited@[vertex as int],\n            !has_cycle ==> !old(ancestors)@[vertex as int],\n            !has_cycle ==> exists|ord_out: Map<int, nat>|\n                #[trigger] spec_is_valid_ord(graph, visited@, ancestors@, ord, next_time, ord_out),\n        decreases spec_num_false(old(visited)@),"
   },
   {
     "id": 7,
-    "function": "dfs",
-    "file": "Chap55/DFSStPer.rs",
-    "lines": "34-43",
+    "function": "lemma_cycle_not_dag_per",
+    "file": "Chap55/CycleDetectStPer.rs",
+    "lines": "101-115",
     "spec_strength": "unknown",
-    "snippet": "        fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> (reachable: AVLTreeSetStPer<N>)\n            requires\n                source < graph@.len(),\n                spec_toposortstper_wf(graph),\n            ensures\n                reachable@.contains(source),\n                forall|v: usize| reachable@.contains(v) ==> (v as int) < graph@.len(),\n                forall|v: int| 0 <= v < graph@.len()\n                    ==> (reachable@.contains(v as usize) <==> #[trigger] spec_reachable_per(graph, source as int, v)),\n            ;"
+    "snippet": "    proof fn lemma_cycle_not_dag_per(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        dfs_path: Seq<int>,\n        vertex: int,\n    )\n        requires\n            forall|k: int| 0 <= k < dfs_path.len()\n                ==> 0 <= #[trigger] dfs_path[k] < graph@.len(),\n            forall|k: int| 0 <= k < dfs_path.len() - 1\n                ==> #[trigger] spec_has_edge_per(graph, dfs_path[k], dfs_path[k + 1]),\n            dfs_path.len() > 0 ==> spec_has_edge_per(graph, dfs_path.last(), vertex as int),\n            spec_in_path(dfs_path, vertex),\n            0 <= vertex < graph@.len(),\n        ensures\n            !spec_is_dag_per(graph),"
   },
   {
     "id": 8,
-    "function": "dfs_recursive",
-    "file": "Chap55/DFSStPer.rs",
-    "lines": "50-66",
+    "function": "lemma_extract_ord_per",
+    "file": "Chap55/CycleDetectStPer.rs",
+    "lines": "152-171",
     "spec_strength": "unknown",
-    "snippet": "    fn dfs_recursive(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,\n        visited_bool: &mut Vec<bool>,\n        reachable: AVLTreeSetStPer<N>,\n        vertex: N,\n    ) -> (out: AVLTreeSetStPer<N>)\n        requires\n            vertex < old(visited_bool)@.len(),\n            old(visited_bool)@.len() == graph@.len(),\n            spec_toposortstper_wf(graph),\n        ensures\n            visited_bool@.len() == old(visited_bool)@.len(),\n            forall|j: int|\n                0 <= j < visited_bool@.len() && old(visited_bool)@[j]\n                ==> #[trigger] visited_bool@[j],\n            spec_num_false(visited_bool@) <= spec_num_false(old(visited_bool)@),\n        decreases spec_num_false(old(visited_bool)@),"
+    "snippet": "    proof fn lemma_extract_ord_per(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        visited: Seq<bool>,\n        ancestors: Seq<bool>,\n        prev_ord: Map<int, nat>,\n        prev_next: nat,\n    ) -> (dfs_state: (Map<int, nat>, nat))\n        requires\n            exists|o: Map<int, nat>|\n                #[trigger] spec_is_valid_ord_per(graph, visited, ancestors, prev_ord, prev_next, o),\n        ensures\n            spec_acyclic_ord_per(graph, dfs_state.0, dfs_state.1)\n            && (forall|v: int| 0 <= v < visited.len()\n                && #[trigger] visited[v] && !ancestors[v]\n                ==> dfs_state.0.contains_key(v))\n            && (forall|v: int| #[trigger] dfs_state.0.contains_key(v)\n                ==> visited[v] && !ancestors[v])\n            && (forall|v: int| #[trigger] prev_ord.contains_key(v)\n                ==> dfs_state.0.contains_key(v) && dfs_state.0[v] == prev_ord[v])\n            && dfs_state.1 >= prev_next,"
   },
   {
     "id": 9,
-    "function": "scc",
-    "file": "Chap55/SCCStEph.rs",
-    "lines": "38-43",
+    "function": "lemma_path_ord_decreases_per",
+    "file": "Chap55/CycleDetectStPer.rs",
+    "lines": "189-202",
     "spec_strength": "unknown",
-    "snippet": "        fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (components: AVLTreeSeqStEphS<AVLTreeSetStEph<N>>)\n            requires\n                spec_toposortsteph_wf(graph),\n            ensures\n                components@.len() >= 1 || graph@.len() == 0,\n            ;"
+    "snippet": "    proof fn lemma_path_ord_decreases_per(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        ord: Map<int, nat>,\n        next_time: nat,\n        path: Seq<int>,\n    )\n        requires\n            spec_acyclic_ord_per(graph, ord, next_time),\n            spec_is_path_per(graph, path),\n            path.len() >= 2,\n            forall|k: int| 0 <= k < path.len() ==> #[trigger] ord.contains_key(path[k]),\n        ensures\n            ord[path[0]] > ord[path.last()],\n        decreases path.len(),"
   },
   {
     "id": 10,
-    "function": "compute_finish_order",
-    "file": "Chap55/SCCStEph.rs",
-    "lines": "49-55",
+    "function": "lemma_acyclic_ord_implies_dag_per",
+    "file": "Chap55/CycleDetectStPer.rs",
+    "lines": "242-251",
     "spec_strength": "unknown",
-    "snippet": "    fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (result: AVLTreeSeqStEphS<N>)\n        requires spec_toposortsteph_wf(graph),\n        ensures\n            result.spec_avltreeseqsteph_wf(),\n            result@.len() == graph@.len(),\n            forall|i: int| 0 <= i < result@.len()\n                ==> (#[trigger] result@[i] as int) < graph@.len(),"
+    "snippet": "    proof fn lemma_acyclic_ord_implies_dag_per(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        ord: Map<int, nat>,\n        next_time: nat,\n    )\n        requires\n            spec_acyclic_ord_per(graph, ord, next_time),\n            forall|v: int| 0 <= v < graph@.len() ==> #[trigger] ord.contains_key(v),\n        ensures\n            spec_is_dag_per(graph),"
   },
   {
     "id": 11,
-    "function": "transpose_graph",
-    "file": "Chap55/SCCStEph.rs",
-    "lines": "108-110",
+    "function": "has_cycle",
+    "file": "Chap55/CycleDetectStPer.rs",
+    "lines": "274-279",
     "spec_strength": "unknown",
-    "snippet": "    fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<N>>)\n        requires spec_toposortsteph_wf(graph),\n        ensures transposed@.len() == graph@.len(),"
+    "snippet": "        fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (has_cycle: bool)\n            requires\n                spec_cycledetectstper_wf(graph),\n            ensures\n                has_cycle == !spec_is_dag_per(graph),\n            ;"
   },
   {
     "id": 12,
-    "function": "check_wf_adj_list_eph",
-    "file": "Chap55/SCCStEph.rs",
-    "lines": "171-172",
+    "function": "dfs_check_cycle",
+    "file": "Chap55/CycleDetectStPer.rs",
+    "lines": "288-329",
     "spec_strength": "unknown",
-    "snippet": "    fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (valid: bool)\n        ensures valid ==> spec_toposortsteph_wf(graph),"
+    "snippet": "    fn dfs_check_cycle(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        visited: &mut Vec<bool>,\n        ancestors: &mut Vec<bool>,\n        vertex: usize,\n        Ghost(dfs_path): Ghost<Seq<int>>,\n        Ghost(ord): Ghost<Map<int, nat>>,\n        Ghost(next_time): Ghost<nat>,\n    ) -> (has_cycle: bool)\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            old(ancestors)@.len() == graph@.len(),\n            spec_cycledetectstper_wf(graph),\n            forall|k: int| 0 <= k < dfs_path.len()\n                ==> 0 <= #[trigger] dfs_path[k] < graph@.len(),\n            forall|k: int| 0 <= k < dfs_path.len() - 1\n                ==> #[trigger] spec_has_edge_per(graph, dfs_path[k], dfs_path[k + 1]),\n            dfs_path.len() > 0 ==> spec_has_edge_per(graph, dfs_path.last(), vertex as int),\n            forall|v: int| 0 <= v < old(ancestors)@.len() ==> (\n                #[trigger] old(ancestors)@[v] == spec_in_path(dfs_path, v)\n            ),\n            spec_acyclic_ord_per(graph, ord, next_time),\n            forall|v: int| 0 <= v < old(visited)@.len()\n                && #[trigger] old(visited)@[v] && !old(ancestors)@[v]\n                ==> ord.contains_key(v),\n            forall|v: int| #[trigger] ord.contains_key(v)\n                ==> old(visited)@[v] && !old(ancestors)@[v],\n        ensures\n            visited@.len() == graph@.len(),\n            ancestors@.len() == graph@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && #[trigger] old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n            has_cycle ==> !spec_is_dag_per(graph),\n            !has_cycle ==> ancestors@ =~= old(ancestors)@,\n            !has_cycle ==> visited@[vertex as int],\n            !has_cycle ==> !old(ancestors)@[vertex as int],\n            !has_cycle ==> exists|ord_out: Map<int, nat>|\n                #[trigger] spec_is_valid_ord_per(graph, visited@, ancestors@, ord, next_time, ord_out),\n        decreases spec_num_false(old(visited)@),"
   },
   {
     "id": 13,
-    "function": "dfs_reach",
-    "file": "Chap55/SCCStEph.rs",
-    "lines": "252-268",
+    "function": "lemma_set_true_decreases_num_false",
+    "file": "Chap55/DFSSpecsAndLemmas.rs",
+    "lines": "44-50",
     "spec_strength": "unknown",
-    "snippet": "    fn dfs_reach(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,\n        visited: &mut ArraySeqStEphS<B>,\n        component: &mut AVLTreeSetStEph<N>,\n        vertex: N,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_toposortsteph_wf(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> #[trigger] visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+    "snippet": "    pub proof fn lemma_set_true_decreases_num_false(s: Seq<bool>, idx: int)\n        requires\n            0 <= idx < s.len(),\n            !s[idx],\n        ensures\n            spec_num_false(s.update(idx, true)) < spec_num_false(s),\n        decreases s.len(),"
   },
   {
     "id": 14,
-    "function": "scc",
-    "file": "Chap55/SCCStPer.rs",
-    "lines": "39-44",
-    "spec_strength": "unknown",
-    "snippet": "        fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (components: AVLTreeSeqStPerS<AVLTreeSetStPer<N>>)\n            requires\n                spec_toposortstper_wf(graph),\n            ensures\n                components@.len() >= 1 || graph@.len() == 0,\n            ;"
-  },
-  {
-    "id": 15,
-    "function": "dfs_finish_order",
-    "file": "Chap55/SCCStPer.rs",
-    "lines": "50-74",
-    "spec_strength": "unknown",
-    "snippet": "    fn dfs_finish_order(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,\n        visited: &mut Vec<bool>,\n        finish_order: &mut Vec<N>,\n        vertex: N,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_toposortstper_wf(graph),\n            forall|k: int| 0 <= k < old(finish_order)@.len()\n                ==> (#[trigger] old(finish_order)@[k] as int) < graph@.len(),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> #[trigger] visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n            finish_order@.len() >= old(finish_order)@.len(),\n            forall|k: int| 0 <= k < finish_order@.len()\n                ==> (#[trigger] finish_order@[k] as int) < graph@.len(),\n            visited@[vertex as int],\n            finish_order@.len() + spec_num_false(visited@)\n                == old(finish_order)@.len() + spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
-  },
-  {
-    "id": 16,
-    "function": "compute_finish_order",
-    "file": "Chap55/SCCStPer.rs",
-    "lines": "116-122",
-    "spec_strength": "unknown",
-    "snippet": "    fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: AVLTreeSeqStPerS<N>)\n        requires spec_toposortstper_wf(graph),\n        ensures\n            result.spec_avltreeseqstper_wf(),\n            result@.len() == graph@.len(),\n            forall|i: int| 0 <= i < result@.len()\n                ==> (#[trigger] result@[i] as int) < graph@.len(),"
-  },
-  {
-    "id": 17,
-    "function": "transpose_graph",
-    "file": "Chap55/SCCStPer.rs",
-    "lines": "186-188",
-    "spec_strength": "unknown",
-    "snippet": "    fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<N>>)\n        requires spec_toposortstper_wf(graph),\n        ensures transposed@.len() == graph@.len(),"
-  },
-  {
-    "id": 18,
-    "function": "check_wf_adj_list_per",
-    "file": "Chap55/SCCStPer.rs",
-    "lines": "247-248",
-    "spec_strength": "unknown",
-    "snippet": "    fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (valid: bool)\n        ensures valid ==> spec_toposortstper_wf(graph),"
-  },
-  {
-    "id": 19,
-    "function": "dfs_reach",
-    "file": "Chap55/SCCStPer.rs",
-    "lines": "291-307",
-    "spec_strength": "unknown",
-    "snippet": "    fn dfs_reach(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,\n        visited_bool: &mut Vec<bool>,\n        component: AVLTreeSetStPer<N>,\n        vertex: N,\n    ) -> (out: AVLTreeSetStPer<N>)\n        requires\n            vertex < old(visited_bool)@.len(),\n            old(visited_bool)@.len() == graph@.len(),\n            spec_toposortstper_wf(graph),\n        ensures\n            visited_bool@.len() == old(visited_bool)@.len(),\n            forall|j: int|\n                0 <= j < visited_bool@.len() && old(visited_bool)@[j]\n                ==> #[trigger] visited_bool@[j],\n            spec_num_false(visited_bool@) <= spec_num_false(old(visited_bool)@),\n        decreases spec_num_false(old(visited_bool)@),"
-  },
-  {
-    "id": 20,
-    "function": "lemma_set_true_decreases_num_false",
-    "file": "Chap55/TopoSortStEph.rs",
-    "lines": "119-125",
-    "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_set_true_decreases_num_false(s: Seq<bool>, idx: int)\n        requires\n            0 <= idx < s.len(),\n            !s[idx],\n        ensures\n            spec_num_false(s.update(idx, true)) < spec_num_false(s),\n        decreases s.len(),"
-  },
-  {
-    "id": 21,
     "function": "lemma_set_true_num_false_eq",
-    "file": "Chap55/TopoSortStEph.rs",
-    "lines": "137-143",
+    "file": "Chap55/DFSSpecsAndLemmas.rs",
+    "lines": "76-82",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_set_true_num_false_eq(s: Seq<bool>, idx: int)\n        requires\n            0 <= idx < s.len(),\n            !s[idx],\n        ensures\n            spec_num_false(s.update(idx, true)) == spec_num_false(s) - 1,\n        decreases s.len(),"
   },
   {
-    "id": 22,
+    "id": 15,
     "function": "lemma_all_true_num_false_zero",
-    "file": "Chap55/TopoSortStEph.rs",
-    "lines": "155-158",
+    "file": "Chap55/DFSSpecsAndLemmas.rs",
+    "lines": "105-108",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_all_true_num_false_zero(s: Seq<bool>)\n        requires forall|j: int| 0 <= j < s.len() ==> #[trigger] s[j],\n        ensures spec_num_false(s) == 0,\n        decreases s.len(),"
   },
   {
-    "id": 23,
+    "id": 16,
     "function": "lemma_all_false_num_false_eq_len",
-    "file": "Chap55/TopoSortStEph.rs",
-    "lines": "166-169",
+    "file": "Chap55/DFSSpecsAndLemmas.rs",
+    "lines": "116-119",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_all_false_num_false_eq_len(s: Seq<bool>)\n        requires forall|j: int| #![trigger s[j]] 0 <= j < s.len() ==> !s[j],\n        ensures spec_num_false(s) == s.len(),\n        decreases s.len(),"
   },
   {
-    "id": 24,
-    "function": "topo_sort",
-    "file": "Chap55/TopoSortStEph.rs",
-    "lines": "182-188",
+    "id": 17,
+    "function": "lemma_bool_view_eq_spec_index",
+    "file": "Chap55/DFSSpecsAndLemmas.rs",
+    "lines": "127-128",
     "spec_strength": "unknown",
-    "snippet": "        fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (order: AVLTreeSeqStEphS<N>)\n            requires\n                spec_toposortsteph_wf(graph),\n            ensures\n                order@.len() == graph@.len(),\n                spec_is_dag(graph) ==> spec_is_topo_order(graph, order@),\n            ;"
+    "snippet": "    pub proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<bool>)\n        ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),"
+  },
+  {
+    "id": 18,
+    "function": "lemma_bool_array_set_view",
+    "file": "Chap55/DFSSpecsAndLemmas.rs",
+    "lines": "136-149",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_bool_array_set_view(\n        a: &ArraySeqStEphS<bool>,\n        old_view: Seq<bool>,\n        vertex: int,\n        val: bool,\n    )\n        requires\n            a@.len() == old_view.len(),\n            0 <= vertex < a@.len(),\n            a.spec_index(vertex) == val,\n            forall|i: int| 0 <= i < old_view.len() && i != vertex\n                ==> #[trigger] a.spec_index(i) == old_view[i],\n        ensures\n            a@ =~= old_view.update(vertex, val),"
+  },
+  {
+    "id": 19,
+    "function": "lemma_usize_view_eq_spec_index",
+    "file": "Chap55/DFSSpecsAndLemmas.rs",
+    "lines": "160-161",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_usize_view_eq_spec_index(a: &ArraySeqStEphS<usize>)\n        ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),"
+  },
+  {
+    "id": 20,
+    "function": "lemma_graph_view_bridge",
+    "file": "Chap55/DFSSpecsAndLemmas.rs",
+    "lines": "168-177",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_graph_view_bridge(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        neighbors: &ArraySeqStEphS<usize>,\n        vertex: int,\n    )\n        requires\n            0 <= vertex < graph@.len(),\n            *neighbors == graph.spec_index(vertex),\n        ensures\n            neighbors@ =~= graph@[vertex],"
+  },
+  {
+    "id": 21,
+    "function": "lemma_usize_per_view_eq_spec_index",
+    "file": "Chap55/DFSSpecsAndLemmas.rs",
+    "lines": "182-183",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<usize>)\n        ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),"
+  },
+  {
+    "id": 22,
+    "function": "lemma_graph_per_view_bridge",
+    "file": "Chap55/DFSSpecsAndLemmas.rs",
+    "lines": "189-198",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_graph_per_view_bridge(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        neighbors: &ArraySeqStPerS<usize>,\n        vertex: int,\n    )\n        requires\n            0 <= vertex < graph@.len(),\n            *neighbors == graph.spec_index(vertex),\n        ensures\n            neighbors@ =~= graph@[vertex],"
+  },
+  {
+    "id": 23,
+    "function": "lemma_reachable_self",
+    "file": "Chap55/DFSStEph.rs",
+    "lines": "55-57",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_reachable_self(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, v: int)\n        requires 0 <= v < graph@.len(),\n        ensures spec_reachable(graph, v, v),"
+  },
+  {
+    "id": 24,
+    "function": "lemma_reachable_step",
+    "file": "Chap55/DFSStEph.rs",
+    "lines": "71-80",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_reachable_step(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        u: int, v: int, w: int,\n    )\n        requires\n            0 <= u < graph@.len(),\n            spec_has_edge(graph, u, v),\n            spec_reachable(graph, v, w),\n        ensures\n            spec_reachable(graph, u, w),"
   },
   {
     "id": 25,
-    "function": "dfs_finish_order",
-    "file": "Chap55/TopoSortStEph.rs",
-    "lines": "195-219",
+    "function": "lemma_neighbor_closed_path",
+    "file": "Chap55/DFSStEph.rs",
+    "lines": "119-135",
     "spec_strength": "unknown",
-    "snippet": "    pub fn dfs_finish_order(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,\n        visited: &mut ArraySeqStEphS<B>,\n        finish_order: &mut Vec<N>,\n        vertex: N,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_toposortsteph_wf(graph),\n            forall|k: int| 0 <= k < old(finish_order)@.len()\n                ==> (#[trigger] old(finish_order)@[k] as int) < graph@.len(),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> #[trigger] visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n            finish_order@.len() >= old(finish_order)@.len(),\n            forall|k: int| 0 <= k < finish_order@.len()\n                ==> (#[trigger] finish_order@[k] as int) < graph@.len(),\n            visited@[vertex as int],\n            finish_order@.len() + spec_num_false(visited@)\n                == old(finish_order)@.len() + spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+    "snippet": "    proof fn lemma_neighbor_closed_path(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        visited: Seq<bool>,\n        path: Seq<int>,\n    )\n        requires\n            spec_toposortsteph_wf(graph),\n            visited.len() == graph@.len(),\n            spec_is_path(graph, path),\n            visited[path[0]],\n            forall|u: int, j: int| #![trigger graph@[u][j]]\n                0 <= u < graph@.len() && 0 <= j < graph@[u].len()\n                && visited[u]\n                ==> visited[graph@[u][j] as int],\n        ensures\n            forall|k: int| 0 <= k < path.len() ==> visited[#[trigger] path[k]],\n        decreases path.len(),"
   },
   {
     "id": 26,
-    "function": "dfs_finish_order_cycle_detect",
-    "file": "Chap55/TopoSortStEph.rs",
-    "lines": "263-282",
+    "function": "lemma_neighbor_closed_implies_reachable",
+    "file": "Chap55/DFSStEph.rs",
+    "lines": "178-195",
     "spec_strength": "unknown",
-    "snippet": "    fn dfs_finish_order_cycle_detect(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,\n        visited: &mut ArraySeqStEphS<B>,\n        rec_stack: &mut ArraySeqStEphS<B>,\n        finish_order: &mut Vec<N>,\n        vertex: N,\n    ) -> (cycle_free: bool)\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            old(rec_stack)@.len() == graph@.len(),\n            spec_toposortsteph_wf(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            rec_stack@.len() == old(rec_stack)@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> #[trigger] visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+    "snippet": "    proof fn lemma_neighbor_closed_implies_reachable(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        visited: Seq<bool>,\n        source: int,\n        target: int,\n    )\n        requires\n            spec_toposortsteph_wf(graph),\n            visited.len() == graph@.len(),\n            0 <= source < graph@.len(),\n            0 <= target < graph@.len(),\n            visited[source],\n            spec_reachable(graph, source, target),\n            forall|u: int, j: int| #![trigger graph@[u][j]]\n                0 <= u < graph@.len() && 0 <= j < graph@[u].len()\n                && visited[u] ==> visited[graph@[u][j] as int],\n        ensures\n            visited[target],"
   },
   {
     "id": 27,
-    "function": "topological_sort_opt",
-    "file": "Chap55/TopoSortStEph.rs",
-    "lines": "331-335",
+    "function": "dfs",
+    "file": "Chap55/DFSStEph.rs",
+    "lines": "211-221",
     "spec_strength": "unknown",
-    "snippet": "    pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (topo_order: Option<AVLTreeSeqStEphS<N>>)\n        requires spec_toposortsteph_wf(graph),\n        ensures\n            topo_order.is_some() <==> spec_is_dag(graph),\n            topo_order.is_some() ==> spec_is_topo_order(graph, topo_order.unwrap()@),"
+    "snippet": "        fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (reachable: AVLTreeSetStEph<usize>)\n            requires\n                source < graph@.len(),\n                spec_toposortsteph_wf(graph),\n                graph@.len() < usize::MAX,\n            ensures\n                reachable@.contains(source),\n                forall|v: usize| reachable@.contains(v) ==> (v as int) < graph@.len(),\n                forall|v: int| 0 <= v < graph@.len()\n                    ==> (reachable@.contains(v as usize) <==> #[trigger] spec_reachable(graph, source as int, v)),\n            ;"
   },
   {
     "id": 28,
-    "function": "topo_sort",
-    "file": "Chap55/TopoSortStPer.rs",
-    "lines": "104-110",
+    "function": "dfs_recursive",
+    "file": "Chap55/DFSStEph.rs",
+    "lines": "232-282",
     "spec_strength": "unknown",
-    "snippet": "        fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (order: AVLTreeSeqStPerS<N>)\n            requires\n                spec_toposortstper_wf(graph),\n            ensures\n                order@.len() == graph@.len(),\n                spec_is_dag_per(graph) ==> spec_is_topo_order_per(graph, order@),\n            ;"
+    "snippet": "    fn dfs_recursive(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        visited: &mut ArraySeqStEphS<bool>,\n        reachable: &mut AVLTreeSetStEph<usize>,\n        vertex: usize,\n        Ghost(gray): Ghost<Set<int>>,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_toposortsteph_wf(graph),\n            old(reachable).spec_avltreesetsteph_wf(),\n            forall|v: usize| old(reachable)@.contains(v) ==> (v as int) < graph@.len(),\n            graph@.len() < usize::MAX,\n            old(reachable)@.len() + spec_num_false(old(visited)@) <= graph@.len(),\n            // Gray set: all gray vertices are valid and visited.\n            !gray.contains(vertex as int),\n            forall|u: int| (#[trigger] gray.contains(u)) ==> 0 <= u < graph@.len() && old(visited)@[u],\n            // Neighbor-closure except gray.\n            forall|u: int, j: int| #![trigger graph@[u][j]]\n                0 <= u < graph@.len() && 0 <= j < graph@[u].len()\n                && old(visited)@[u] && !gray.contains(u)\n                ==> old(visited)@[graph@[u][j] as int],\n            // Visited-reachable correspondence except gray.\n            forall|v: int| 0 <= v < old(visited)@.len() && (#[trigger] old(visited)@[v]) && !gray.contains(v)\n                ==> old(reachable)@.contains(v as usize),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && #[trigger] old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n            reachable.spec_avltreesetsteph_wf(),\n            forall|v: usize| old(reachable)@.contains(v) ==> (#[trigger] reachable@.contains(v)),\n            forall|v: usize| reachable@.contains(v) ==> (v as int) < graph@.len(),\n            reachable@.len() + spec_num_false(visited@) <= graph@.len(),\n            // vertex is visited and in reachable.\n            visited@[vertex as int],\n            reachable@.contains(vertex),\n            // Neighbor-closure except gray (vertex now included since it is not in gray).\n            forall|u: int, j: int| #![trigger graph@[u][j]]\n                0 <= u < graph@.len() && 0 <= j < graph@[u].len()\n                && visited@[u] && !gray.contains(u)\n                ==> visited@[graph@[u][j] as int],\n            // Visited-reachable correspondence except gray.\n            forall|v: int| 0 <= v < visited@.len() && (#[trigger] visited@[v]) && !gray.contains(v)\n                ==> reachable@.contains(v as usize),\n            // Soundness: new reachable entries are graph-reachable from vertex.\n            forall|v: usize| (#[trigger] reachable@.contains(v)) ==>\n                old(reachable)@.contains(v) || spec_reachable(graph, vertex as int, v as int),\n        decreases spec_num_false(old(visited)@),"
   },
   {
     "id": 29,
-    "function": "dfs_finish_order",
-    "file": "Chap55/TopoSortStPer.rs",
-    "lines": "116-132",
+    "function": "lemma_reachable_self_per",
+    "file": "Chap55/DFSStPer.rs",
+    "lines": "55-57",
     "spec_strength": "unknown",
-    "snippet": "    fn dfs_finish_order(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,\n        visited: &mut Vec<bool>,\n        finish_order: &mut Vec<N>,\n        vertex: N,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_toposortstper_wf(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> #[trigger] visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+    "snippet": "    proof fn lemma_reachable_self_per(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>, v: int)\n        requires 0 <= v < graph@.len(),\n        ensures spec_reachable_per(graph, v, v),"
   },
   {
     "id": 30,
-    "function": "dfs_finish_order_cycle_detect",
-    "file": "Chap55/TopoSortStPer.rs",
-    "lines": "168-187",
+    "function": "lemma_reachable_step_per",
+    "file": "Chap55/DFSStPer.rs",
+    "lines": "72-81",
     "spec_strength": "unknown",
-    "snippet": "    fn dfs_finish_order_cycle_detect(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,\n        visited: &mut Vec<bool>,\n        rec_stack: &mut Vec<bool>,\n        finish_order: &mut Vec<N>,\n        vertex: N,\n    ) -> (cycle_free: bool)\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            old(rec_stack)@.len() == graph@.len(),\n            spec_toposortstper_wf(graph),\n        ensures\n            visited@.len() == old(visited)@.len(),\n            rec_stack@.len() == old(rec_stack)@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && old(visited)@[j]\n                ==> #[trigger] visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+    "snippet": "    proof fn lemma_reachable_step_per(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        u: int, v: int, w: int,\n    )\n        requires\n            0 <= u < graph@.len(),\n            spec_has_edge_per(graph, u, v),\n            spec_reachable_per(graph, v, w),\n        ensures\n            spec_reachable_per(graph, u, w),"
   },
   {
     "id": 31,
+    "function": "lemma_neighbor_closed_path_per",
+    "file": "Chap55/DFSStPer.rs",
+    "lines": "120-136",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_neighbor_closed_path_per(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        visited: Seq<bool>,\n        path: Seq<int>,\n    )\n        requires\n            spec_toposortstper_wf(graph),\n            visited.len() == graph@.len(),\n            spec_is_path_per(graph, path),\n            visited[path[0]],\n            forall|u: int, j: int| #![trigger graph@[u][j]]\n                0 <= u < graph@.len() && 0 <= j < graph@[u].len()\n                && visited[u]\n                ==> visited[graph@[u][j] as int],\n        ensures\n            forall|k: int| 0 <= k < path.len() ==> visited[#[trigger] path[k]],\n        decreases path.len(),"
+  },
+  {
+    "id": 32,
+    "function": "lemma_neighbor_closed_implies_reachable_per",
+    "file": "Chap55/DFSStPer.rs",
+    "lines": "180-197",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_neighbor_closed_implies_reachable_per(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        visited: Seq<bool>,\n        source: int,\n        target: int,\n    )\n        requires\n            spec_toposortstper_wf(graph),\n            visited.len() == graph@.len(),\n            0 <= source < graph@.len(),\n            0 <= target < graph@.len(),\n            visited[source],\n            spec_reachable_per(graph, source, target),\n            forall|u: int, j: int| #![trigger graph@[u][j]]\n                0 <= u < graph@.len() && 0 <= j < graph@[u].len()\n                && visited[u] ==> visited[graph@[u][j] as int],\n        ensures\n            visited[target],"
+  },
+  {
+    "id": 33,
+    "function": "dfs",
+    "file": "Chap55/DFSStPer.rs",
+    "lines": "214-224",
+    "spec_strength": "unknown",
+    "snippet": "        fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>, source: usize) -> (reachable: AVLTreeSetStPer<usize>)\n            requires\n                source < graph@.len(),\n                spec_toposortstper_wf(graph),\n                graph@.len() < usize::MAX,\n            ensures\n                reachable@.contains(source),\n                forall|v: usize| reachable@.contains(v) ==> (v as int) < graph@.len(),\n                forall|v: int| 0 <= v < graph@.len()\n                    ==> (reachable@.contains(v as usize) <==> #[trigger] spec_reachable_per(graph, source as int, v)),\n            ;"
+  },
+  {
+    "id": 34,
+    "function": "dfs_recursive",
+    "file": "Chap55/DFSStPer.rs",
+    "lines": "234-284",
+    "spec_strength": "unknown",
+    "snippet": "    fn dfs_recursive(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        visited_bool: &mut Vec<bool>,\n        reachable: AVLTreeSetStPer<usize>,\n        vertex: usize,\n        Ghost(gray): Ghost<Set<int>>,\n    ) -> (out: AVLTreeSetStPer<usize>)\n        requires\n            vertex < old(visited_bool)@.len(),\n            old(visited_bool)@.len() == graph@.len(),\n            spec_toposortstper_wf(graph),\n            reachable.spec_avltreesetstper_wf(),\n            forall|v: usize| reachable@.contains(v) ==> (v as int) < graph@.len(),\n            graph@.len() < usize::MAX,\n            reachable@.len() + spec_num_false(old(visited_bool)@) <= graph@.len(),\n            // Gray set: all gray vertices are valid and visited.\n            !gray.contains(vertex as int),\n            forall|u: int| (#[trigger] gray.contains(u)) ==> 0 <= u < graph@.len() && old(visited_bool)@[u],\n            // Neighbor-closure except gray.\n            forall|u: int, j: int| #![trigger graph@[u][j]]\n                0 <= u < graph@.len() && 0 <= j < graph@[u].len()\n                && old(visited_bool)@[u] && !gray.contains(u)\n                ==> old(visited_bool)@[graph@[u][j] as int],\n            // Visited-reachable correspondence except gray.\n            forall|v: int| 0 <= v < old(visited_bool)@.len() && (#[trigger] old(visited_bool)@[v]) && !gray.contains(v)\n                ==> reachable@.contains(v as usize),\n        ensures\n            visited_bool@.len() == old(visited_bool)@.len(),\n            forall|j: int|\n                0 <= j < visited_bool@.len() && #[trigger] old(visited_bool)@[j]\n                ==> visited_bool@[j],\n            spec_num_false(visited_bool@) <= spec_num_false(old(visited_bool)@),\n            out.spec_avltreesetstper_wf(),\n            forall|v: usize| reachable@.contains(v) ==> (#[trigger] out@.contains(v)),\n            forall|v: usize| out@.contains(v) ==> (v as int) < graph@.len(),\n            out@.len() + spec_num_false(visited_bool@) <= graph@.len(),\n            // vertex is visited and in out.\n            visited_bool@[vertex as int],\n            out@.contains(vertex),\n            // Neighbor-closure except gray.\n            forall|u: int, j: int| #![trigger graph@[u][j]]\n                0 <= u < graph@.len() && 0 <= j < graph@[u].len()\n                && visited_bool@[u] && !gray.contains(u)\n                ==> visited_bool@[graph@[u][j] as int],\n            // Visited-reachable correspondence except gray.\n            forall|v: int| 0 <= v < visited_bool@.len() && (#[trigger] visited_bool@[v]) && !gray.contains(v)\n                ==> out@.contains(v as usize),\n            // Soundness: new entries are graph-reachable from vertex.\n            forall|v: usize| (#[trigger] out@.contains(v)) ==>\n                reachable@.contains(v) || spec_reachable_per(graph, vertex as int, v as int),\n        decreases spec_num_false(old(visited_bool)@),"
+  },
+  {
+    "id": 35,
+    "function": "scc",
+    "file": "Chap55/SCCStEph.rs",
+    "lines": "71-77",
+    "spec_strength": "unknown",
+    "snippet": "        fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (components: AVLTreeSeqStEphS<AVLTreeSetStEph<usize>>)\n            requires\n                spec_toposortsteph_wf(graph),\n                graph@.len() < usize::MAX,\n            ensures\n                components@.len() >= 1 || graph@.len() == 0,\n            ;"
+  },
+  {
+    "id": 36,
+    "function": "compute_finish_order",
+    "file": "Chap55/SCCStEph.rs",
+    "lines": "85-93",
+    "spec_strength": "unknown",
+    "snippet": "    fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (finish_order: AVLTreeSeqStEphS<usize>)\n        requires\n            spec_toposortsteph_wf(graph),\n            graph@.len() < usize::MAX,\n        ensures\n            finish_order.spec_avltreeseqsteph_wf(),\n            finish_order@.len() == graph@.len(),\n            forall|i: int| 0 <= i < finish_order@.len()\n                ==> (#[trigger] finish_order@[i] as int) < graph@.len(),"
+  },
+  {
+    "id": 37,
+    "function": "transpose_graph",
+    "file": "Chap55/SCCStEph.rs",
+    "lines": "191-195",
+    "spec_strength": "unknown",
+    "snippet": "    fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<usize>>)\n        requires spec_toposortsteph_wf(graph),\n        ensures\n            transposed@.len() == graph@.len(),\n            spec_toposortsteph_wf(&transposed),"
+  },
+  {
+    "id": 38,
+    "function": "check_wf_adj_list_eph",
+    "file": "Chap55/SCCStEph.rs",
+    "lines": "337-338",
+    "spec_strength": "unknown",
+    "snippet": "    fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (valid: bool)\n        ensures valid ==> spec_toposortsteph_wf(graph),"
+  },
+  {
+    "id": 39,
+    "function": "dfs_reach",
+    "file": "Chap55/SCCStEph.rs",
+    "lines": "394-416",
+    "spec_strength": "unknown",
+    "snippet": "    fn dfs_reach(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        visited: &mut ArraySeqStEphS<bool>,\n        component: &mut AVLTreeSetStEph<usize>,\n        vertex: usize,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_toposortsteph_wf(graph),\n            old(component).spec_avltreesetsteph_wf(),\n            old(component)@.len() + spec_num_false(old(visited)@) < usize::MAX as nat,\n        ensures\n            // Veracity: NEEDED proof block\n            visited@.len() == graph@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && #[trigger] old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n            component.spec_avltreesetsteph_wf(),\n            component@.len() + spec_num_false(visited@) <= old(component)@.len() + spec_num_false(old(visited)@),\n            visited@[vertex as int],\n        decreases spec_num_false(old(visited)@),"
+  },
+  {
+    "id": 40,
+    "function": "scc",
+    "file": "Chap55/SCCStPer.rs",
+    "lines": "68-74",
+    "spec_strength": "unknown",
+    "snippet": "        fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (components: AVLTreeSeqStPerS<AVLTreeSetStPer<usize>>)\n            requires\n                spec_toposortstper_wf(graph),\n                graph@.len() < usize::MAX,\n            ensures\n                components@.len() >= 1 || graph@.len() == 0,\n            ;"
+  },
+  {
+    "id": 41,
+    "function": "dfs_finish_order",
+    "file": "Chap55/SCCStPer.rs",
+    "lines": "82-106",
+    "spec_strength": "unknown",
+    "snippet": "    fn dfs_finish_order(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        visited: &mut Vec<bool>,\n        finish_order: &mut Vec<usize>,\n        vertex: usize,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_toposortstper_wf(graph),\n            forall|k: int| 0 <= k < old(finish_order)@.len()\n                ==> (#[trigger] old(finish_order)@[k] as int) < graph@.len(),\n        ensures\n            visited@.len() == graph@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && #[trigger] old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n            finish_order@.len() >= old(finish_order)@.len(),\n            forall|k: int| 0 <= k < finish_order@.len()\n                ==> (#[trigger] finish_order@[k] as int) < graph@.len(),\n            visited@[vertex as int],\n            finish_order@.len() + spec_num_false(visited@)\n                == old(finish_order)@.len() + spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+  },
+  {
+    "id": 42,
+    "function": "compute_finish_order",
+    "file": "Chap55/SCCStPer.rs",
+    "lines": "187-195",
+    "spec_strength": "unknown",
+    "snippet": "    fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (finish_order: AVLTreeSeqStPerS<usize>)\n        requires\n            spec_toposortstper_wf(graph),\n            graph@.len() < usize::MAX,\n        ensures\n            finish_order.spec_avltreeseqstper_wf(),\n            finish_order@.len() == graph@.len(),\n            forall|i: int| 0 <= i < finish_order@.len()\n                ==> (#[trigger] finish_order@[i] as int) < graph@.len(),"
+  },
+  {
+    "id": 43,
+    "function": "transpose_graph",
+    "file": "Chap55/SCCStPer.rs",
+    "lines": "282-286",
+    "spec_strength": "unknown",
+    "snippet": "    fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<usize>>)\n        requires spec_toposortstper_wf(graph),\n        ensures\n            transposed@.len() == graph@.len(),\n            spec_toposortstper_wf(&transposed),"
+  },
+  {
+    "id": 44,
+    "function": "check_wf_adj_list_per",
+    "file": "Chap55/SCCStPer.rs",
+    "lines": "427-428",
+    "spec_strength": "unknown",
+    "snippet": "    fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (valid: bool)\n        ensures valid ==> spec_toposortstper_wf(graph),"
+  },
+  {
+    "id": 45,
+    "function": "dfs_reach",
+    "file": "Chap55/SCCStPer.rs",
+    "lines": "488-509",
+    "spec_strength": "unknown",
+    "snippet": "    fn dfs_reach(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        visited_bool: &mut Vec<bool>,\n        component: AVLTreeSetStPer<usize>,\n        vertex: usize,\n    ) -> (out: AVLTreeSetStPer<usize>)\n        requires\n            vertex < old(visited_bool)@.len(),\n            old(visited_bool)@.len() == graph@.len(),\n            spec_toposortstper_wf(graph),\n            component.spec_avltreesetstper_wf(),\n            component@.len() + spec_num_false(old(visited_bool)@) < usize::MAX as nat,\n        ensures\n            visited_bool@.len() == graph@.len(),\n            forall|j: int|\n                0 <= j < visited_bool@.len() && old(visited_bool)@[j]\n                ==> #[trigger] visited_bool@[j],\n            spec_num_false(visited_bool@) <= spec_num_false(old(visited_bool)@),\n            out.spec_avltreesetstper_wf(),\n            out@.len() + spec_num_false(visited_bool@) <= component@.len() + spec_num_false(old(visited_bool)@),\n            visited_bool@[vertex as int],\n        decreases spec_num_false(old(visited_bool)@),"
+  },
+  {
+    "id": 46,
+    "function": "lemma_edge_implies_reachable",
+    "file": "Chap55/TopoSortStEph.rs",
+    "lines": "168-177",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_edge_implies_reachable(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        u: int,\n        v: int,\n    )\n        requires\n            spec_has_edge(graph, u, v),\n            spec_toposortsteph_wf(graph),\n        ensures\n            spec_reachable(graph, u, v),"
+  },
+  {
+    "id": 47,
+    "function": "lemma_self_reachable",
+    "file": "Chap55/TopoSortStEph.rs",
+    "lines": "200-205",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_self_reachable(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        u: int,\n    )\n        requires 0 <= u < graph@.len(),\n        ensures spec_reachable(graph, u, u),"
+  },
+  {
+    "id": 48,
+    "function": "lemma_reachable_via_edge",
+    "file": "Chap55/TopoSortStEph.rs",
+    "lines": "219-230",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_reachable_via_edge(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        u: int,\n        v: int,\n        w: int,\n    )\n        requires\n            spec_has_edge(graph, u, v),\n            spec_reachable(graph, v, w),\n            spec_toposortsteph_wf(graph),\n        ensures\n            spec_reachable(graph, u, w),"
+  },
+  {
+    "id": 49,
+    "function": "lemma_reachable_edge_contradicts_dag",
+    "file": "Chap55/TopoSortStEph.rs",
+    "lines": "269-279",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_reachable_edge_contradicts_dag(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        u: int,\n        v: int,\n    )\n        requires\n            spec_toposortsteph_wf(graph),\n            spec_reachable(graph, u, v),\n            spec_has_edge(graph, v, u),\n        ensures\n            !spec_is_dag(graph),"
+  },
+  {
+    "id": 50,
+    "function": "topo_sort",
+    "file": "Chap55/TopoSortStEph.rs",
+    "lines": "331-338",
+    "spec_strength": "unknown",
+    "snippet": "        fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (order: AVLTreeSeqStEphS<usize>)\n            requires\n                spec_toposortsteph_wf(graph),\n                graph@.len() < usize::MAX,\n            ensures\n                order@.len() == graph@.len(),\n                spec_is_dag(graph) ==> spec_is_topo_order(graph, order@),\n            ;"
+  },
+  {
+    "id": 51,
+    "function": "dfs_finish_order",
+    "file": "Chap55/TopoSortStEph.rs",
+    "lines": "347-410",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn dfs_finish_order(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        visited: &mut ArraySeqStEphS<bool>,\n        finish_order: &mut Vec<usize>,\n        vertex: usize,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_toposortsteph_wf(graph),\n            forall|k: int| 0 <= k < old(finish_order)@.len()\n                ==> (#[trigger] old(finish_order)@[k] as int) < graph@.len(),\n        ensures\n            visited@.len() == graph@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && #[trigger] old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n            finish_order@.len() >= old(finish_order)@.len(),\n            forall|k: int| 0 <= k < finish_order@.len()\n                ==> (#[trigger] finish_order@[k] as int) < graph@.len(),\n            visited@[vertex as int],\n            finish_order@.len() + spec_num_false(visited@)\n                == old(finish_order)@.len() + spec_num_false(old(visited)@),\n            // Prefix preservation.\n            forall|k: int| 0 <= k < old(finish_order)@.len()\n                ==> finish_order@[k] == old(finish_order)@[k],\n            // New elements were unvisited at call start.\n            forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()\n                ==> !old(visited)@[#[trigger] finish_order@[k] as int],\n            // Conditional: all elements in finish_order are visited.\n            (forall|k: int| 0 <= k < old(finish_order)@.len()\n                ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])\n                ==> (forall|k: int| 0 <= k < finish_order@.len()\n                    ==> visited@[#[trigger] finish_order@[k] as int]),\n            // Conditional: no duplicates.\n            (old(finish_order)@.no_duplicates()\n                && (forall|k: int| 0 <= k < old(finish_order)@.len()\n                    ==> old(visited)@[#[trigger] old(finish_order)@[k] as int]))\n                ==> finish_order@.no_duplicates(),\n            // Vertex is last when unvisited.\n            !old(visited)@[vertex as int]\n                ==> finish_order@[finish_order@.len() - 1] == vertex,\n            // If vertex was already visited, finish_order is unchanged.\n            old(visited)@[vertex as int]\n                ==> finish_order@.len() == old(finish_order)@.len(),\n            // Conditional: neighbors explored.\n            ((forall|k: int| 0 <= k < old(finish_order)@.len()\n                ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])\n                && spec_neighbors_explored(graph, old(visited)@, old(finish_order)@))\n                ==> spec_neighbors_explored(graph, visited@, finish_order@),\n            // Conditional: edge ordered (needs DAG).\n            (spec_is_dag(graph)\n                && old(finish_order)@.no_duplicates()\n                && (forall|k: int| 0 <= k < old(finish_order)@.len()\n                    ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])\n                && spec_neighbors_explored(graph, old(visited)@, old(finish_order)@)\n                && spec_edge_ordered(graph, old(finish_order)@))\n                ==> spec_edge_ordered(graph, finish_order@),\n            // New elements reachable from vertex.\n            !old(visited)@[vertex as int]\n                ==> (forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()\n                    ==> spec_reachable(graph, vertex as int, #[trigger] finish_order@[k] as int)),\n        decreases spec_num_false(old(visited)@),"
+  },
+  {
+    "id": 52,
+    "function": "dfs_finish_order_cycle_detect",
+    "file": "Chap55/TopoSortStEph.rs",
+    "lines": "691-713",
+    "spec_strength": "unknown",
+    "snippet": "    fn dfs_finish_order_cycle_detect(\n        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,\n        visited: &mut ArraySeqStEphS<bool>,\n        rec_stack: &mut ArraySeqStEphS<bool>,\n        finish_order: &mut Vec<usize>,\n        vertex: usize,\n    ) -> (cycle_free: bool)\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            old(rec_stack)@.len() == graph@.len(),\n            spec_toposortsteph_wf(graph),\n        ensures\n            visited@.len() == graph@.len(),\n            rec_stack@.len() == graph@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && #[trigger] old(visited)@[j]\n                // Veracity: NEEDED proof block\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n            finish_order@.len() + spec_num_false(visited@) <=\n                old(finish_order)@.len() + spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+  },
+  {
+    "id": 53,
+    "function": "topological_sort_opt",
+    "file": "Chap55/TopoSortStEph.rs",
+    "lines": "791-797",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (topo_order: Option<AVLTreeSeqStEphS<usize>>)\n        requires\n            spec_toposortsteph_wf(graph),\n            graph@.len() < usize::MAX,\n        ensures\n            topo_order.is_some() <==> spec_is_dag(graph),\n            topo_order.is_some() ==> spec_is_topo_order(graph, topo_order.unwrap()@),"
+  },
+  {
+    "id": 54,
+    "function": "lemma_edge_implies_reachable_per",
+    "file": "Chap55/TopoSortStPer.rs",
+    "lines": "159-164",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_edge_implies_reachable_per(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        u: int, v: int,\n    )\n        requires spec_has_edge_per(graph, u, v), spec_toposortstper_wf(graph),\n        ensures spec_reachable_per(graph, u, v),"
+  },
+  {
+    "id": 55,
+    "function": "lemma_self_reachable_per",
+    "file": "Chap55/TopoSortStPer.rs",
+    "lines": "184-189",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_self_reachable_per(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        u: int,\n    )\n        requires 0 <= u < graph@.len(),\n        ensures spec_reachable_per(graph, u, u),"
+  },
+  {
+    "id": 56,
+    "function": "lemma_reachable_via_edge_per",
+    "file": "Chap55/TopoSortStPer.rs",
+    "lines": "203-211",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_reachable_via_edge_per(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        u: int, v: int, w: int,\n    )\n        requires\n            spec_has_edge_per(graph, u, v),\n            spec_reachable_per(graph, v, w),\n            spec_toposortstper_wf(graph),\n        ensures spec_reachable_per(graph, u, w),"
+  },
+  {
+    "id": 57,
+    "function": "lemma_reachable_edge_contradicts_dag_per",
+    "file": "Chap55/TopoSortStPer.rs",
+    "lines": "242-250",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_reachable_edge_contradicts_dag_per(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        u: int, v: int,\n    )\n        requires\n            spec_toposortstper_wf(graph),\n            spec_reachable_per(graph, u, v),\n            spec_has_edge_per(graph, v, u),\n        ensures !spec_is_dag_per(graph),"
+  },
+  {
+    "id": 58,
+    "function": "topo_sort",
+    "file": "Chap55/TopoSortStPer.rs",
+    "lines": "290-297",
+    "spec_strength": "unknown",
+    "snippet": "        fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (order: AVLTreeSeqStPerS<usize>)\n            requires\n                spec_toposortstper_wf(graph),\n                graph@.len() < usize::MAX,\n            ensures\n                order@.len() == graph@.len(),\n                spec_is_dag_per(graph) ==> spec_is_topo_order_per(graph, order@),\n            ;"
+  },
+  {
+    "id": 59,
+    "function": "dfs_finish_order",
+    "file": "Chap55/TopoSortStPer.rs",
+    "lines": "305-368",
+    "spec_strength": "unknown",
+    "snippet": "    fn dfs_finish_order(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        visited: &mut Vec<bool>,\n        finish_order: &mut Vec<usize>,\n        vertex: usize,\n    )\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            spec_toposortstper_wf(graph),\n            forall|k: int| 0 <= k < old(finish_order)@.len()\n                ==> (#[trigger] old(finish_order)@[k] as int) < graph@.len(),\n        ensures\n            visited@.len() == graph@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && #[trigger] old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n            finish_order@.len() + spec_num_false(visited@)\n                == old(finish_order)@.len() + spec_num_false(old(visited)@),\n            visited@[vertex as int],\n            forall|k: int| 0 <= k < finish_order@.len()\n                ==> (#[trigger] finish_order@[k] as int) < graph@.len(),\n            finish_order@.len() >= old(finish_order)@.len(),\n            // Prefix preservation.\n            forall|k: int| 0 <= k < old(finish_order)@.len()\n                ==> finish_order@[k] == old(finish_order)@[k],\n            // New elements were unvisited at call start.\n            forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()\n                ==> !old(visited)@[#[trigger] finish_order@[k] as int],\n            // Conditional: all elements in finish_order are visited.\n            (forall|k: int| 0 <= k < old(finish_order)@.len()\n                ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])\n                ==> (forall|k: int| 0 <= k < finish_order@.len()\n                    ==> visited@[#[trigger] finish_order@[k] as int]),\n            // Conditional: no duplicates.\n            (old(finish_order)@.no_duplicates()\n                && (forall|k: int| 0 <= k < old(finish_order)@.len()\n                    ==> old(visited)@[#[trigger] old(finish_order)@[k] as int]))\n                ==> finish_order@.no_duplicates(),\n            // Vertex is last when unvisited.\n            !old(visited)@[vertex as int]\n                ==> finish_order@[finish_order@.len() - 1] == vertex,\n            // If vertex was already visited, finish_order is unchanged.\n            old(visited)@[vertex as int]\n                ==> finish_order@.len() == old(finish_order)@.len(),\n            // Conditional: neighbors explored.\n            ((forall|k: int| 0 <= k < old(finish_order)@.len()\n                ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])\n                && spec_neighbors_explored_per(graph, old(visited)@, old(finish_order)@))\n                ==> spec_neighbors_explored_per(graph, visited@, finish_order@),\n            // Conditional: edge ordered (needs DAG).\n            (spec_is_dag_per(graph)\n                && old(finish_order)@.no_duplicates()\n                && (forall|k: int| 0 <= k < old(finish_order)@.len()\n                    ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])\n                && spec_neighbors_explored_per(graph, old(visited)@, old(finish_order)@)\n                && spec_edge_ordered_per(graph, old(finish_order)@))\n                ==> spec_edge_ordered_per(graph, finish_order@),\n            // New elements reachable from vertex.\n            !old(visited)@[vertex as int]\n                ==> (forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()\n                    ==> spec_reachable_per(graph, vertex as int, #[trigger] finish_order@[k] as int)),\n        decreases spec_num_false(old(visited)@),"
+  },
+  {
+    "id": 60,
+    "function": "dfs_finish_order_cycle_detect",
+    "file": "Chap55/TopoSortStPer.rs",
+    "lines": "641-662",
+    "spec_strength": "unknown",
+    "snippet": "    fn dfs_finish_order_cycle_detect(\n        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,\n        visited: &mut Vec<bool>,\n        rec_stack: &mut Vec<bool>,\n        finish_order: &mut Vec<usize>,\n        vertex: usize,\n    ) -> (cycle_free: bool)\n        requires\n            vertex < old(visited)@.len(),\n            old(visited)@.len() == graph@.len(),\n            old(rec_stack)@.len() == graph@.len(),\n            spec_toposortstper_wf(graph),\n        ensures\n            visited@.len() == graph@.len(),\n            rec_stack@.len() == graph@.len(),\n            forall|j: int|\n                0 <= j < visited@.len() && #[trigger] old(visited)@[j]\n                ==> visited@[j],\n            spec_num_false(visited@) <= spec_num_false(old(visited)@),\n            finish_order@.len() + spec_num_false(visited@) <=\n                old(finish_order)@.len() + spec_num_false(old(visited)@),\n        decreases spec_num_false(old(visited)@),"
+  },
+  {
+    "id": 61,
     "function": "topological_sort_opt",
     "file": "Chap55/TopoSortStPer.rs",
-    "lines": "233-237",
+    "lines": "738-745",
     "spec_strength": "unknown",
-    "snippet": "    pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (topo_order: Option<AVLTreeSeqStPerS<N>>)\n        requires spec_toposortstper_wf(graph),\n        ensures\n            topo_order.is_some() <==> spec_is_dag_per(graph),\n            topo_order.is_some() ==> spec_is_topo_order_per(graph, topo_order.unwrap()@),"
+    "snippet": "    pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (topo_order: Option<AVLTreeSeqStPerS<usize>>)\n        // Veracity: NEEDED proof block\n        requires\n            spec_toposortstper_wf(graph),\n            graph@.len() < usize::MAX,\n        ensures\n            topo_order.is_some() <==> spec_is_dag_per(graph),\n            topo_order.is_some() ==> spec_is_topo_order_per(graph, topo_order.unwrap()@),"
   }
 ]

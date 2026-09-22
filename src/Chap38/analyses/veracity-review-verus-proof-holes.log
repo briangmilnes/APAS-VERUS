@@ -21,12 +21,13 @@ Table of Contents:
 =================================================================
 
 ℹ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:119: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1726: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1745: info: accept()
-   Info: 3 total
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1831: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1832: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:798: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1586: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1689: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1708: info: accept()
+   Info: 4 total
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1794: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1795: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
    Info: 2 × structural_false_positive
 ✓ BSTParaSpecsAndLemmas.rs
    6 clean proof functions
@@ -69,18 +70,18 @@ Proof Functions:
    6 total
 
 Function Specs:
-   111 exec fns with complete spec (requires+ensures) (75%)
-   3 exec fns missing spec (2%)
-   33 proof/spec fns clean (22%)
+   107 exec fns with complete spec (requires+ensures) (79%)
+   4 exec fns missing spec (2%)
+   23 proof/spec fns clean (17%)
    0 proof/spec fns with holes (0%)
-   147 total fns
+   134 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Accepted (reviewed): 4 total
-   2 × fn_missing_requires
+Accepted (reviewed): 5 total
+   3 × fn_missing_requires
    2 × accept()
 
 Structural (info only): 2
@@ -92,11 +93,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-18 04:58:00 -07:00
-Ended:     2026-04-18 04:58:00 -07:00
-Duration:  36ms
+Started:   2026-09-22 11:25:12 -07:00
+Ended:     2026-09-22 11:25:12 -07:00
+Duration:  29ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
-Duration:  36ms
-
-Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
+: src/Chap38/analyses/veracity-review-verus-proof-holes.log

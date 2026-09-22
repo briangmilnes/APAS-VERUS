@@ -23,9 +23,10 @@
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
 | 1 | Chap42 | Example42_1 | 2 | 0 | 0 | 3 | 1 | 3 | 0 | 0 | 4 |
-| 2 | Chap42 | TableMtEph | 16 | 17 | 0 | 12 | 29 | 0 | 28 | 1 | 0 |
-| 3 | Chap42 | TableStEph | 16 | 18 | 0 | 9 | 27 | 0 | 25 | 1 | 1 |
-| 4 | Chap42 | TableStPer | 16 | 17 | 0 | 14 | 31 | 0 | 30 | 1 | 0 |
+| 2 | Chap42 | TableMtEph | 17 | 18 | 0 | 3 | 21 | 0 | 20 | 0 | 1 |
+| 3 | Chap42 | TableSpecsAndLemmas | 0 | 0 | 0 | 14 | 14 | 0 | 14 | 0 | 0 |
+| 4 | Chap42 | TableStEph | 19 | 21 | 2 | 1 | 24 | 0 | 22 | 0 | 2 |
+| 5 | Chap42 | TableStPer | 19 | 20 | 2 | 6 | 28 | 0 | 27 | 0 | 1 |
 
 ## Function-by-Function Detail
 
@@ -33,112 +34,117 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `_example_42_1_verified` |  |  |  | Y | Y |  | Y |  | 11 |
-| 2 | `example_42_1` | Y |  |  | Y |  | Y | Y |  | 21&#8209;23 |
-| 3 | `demonstrate_table_operations` | Y |  |  |  |  | Y | Y |  | 25&#8209;27 |
-| 4 | `performance_comparison` |  |  |  | Y |  | Y | Y |  | 151&#8209;202 |
+| 1 | `_example_42_1_verified` |  |  |  | Y | Y |  | Y |  | 12 |
+| 2 | `example_42_1` | Y |  |  | Y |  | Y | Y |  | 22&#8209;24 |
+| 3 | `demonstrate_table_operations` | Y |  |  |  |  | Y | Y |  | 26&#8209;28 |
+| 4 | `performance_comparison` |  |  |  | Y |  | Y | Y |  | 152&#8209;203 |
 
 ### Chap42/TableMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 5 | `lemma_entries_to_map_finite` |  |  |  | Y | Y |  |  | unknown | 116&#8209;118 |
-| 6 | `lemma_entries_to_map_key_in_seq` |  |  |  | Y | Y |  |  | unknown | 126&#8209;129 |
-| 7 | `lemma_entries_to_map_contains_key` |  |  |  | Y | Y |  |  | unknown | 145&#8209;148 |
-| 8 | `lemma_entries_to_map_len` |  |  |  | Y | Y |  |  | unknown | 159&#8209;162 |
-| 9 | `lemma_entries_to_map_no_key` |  |  |  | Y | Y |  |  | unknown | 198&#8209;200 |
-| 10 | `lemma_entries_to_map_get` |  |  |  | Y | Y |  |  | unknown | 208&#8209;215 |
-| 11 | `lemma_entries_to_map_subseq_value` |  |  |  | Y | Y |  |  | unknown | 248&#8209;267 |
-| 12 | `lemma_entries_to_map_skip_prefix` |  |  |  | Y | Y |  |  | unknown | 392&#8209;403 |
-| 13 | `lemma_entries_to_map_ignore_suffix` |  |  |  | Y | Y |  |  | unknown | 445&#8209;455 |
-| 14 | `lemma_entries_to_map_dom_same_keys` |  |  |  | Y | Y |  |  | unknown | 475&#8209;484 |
-| 15 | `lemma_entries_to_map_agree_on_key` |  |  |  | Y | Y |  |  | unknown | 494&#8209;507 |
-| 16 | `size` | Y | Y |  |  | Y |  |  | unknown | 546&#8209;548 |
-| 17 | `empty` | Y | Y |  |  | Y |  |  | unknown | 551&#8209;552 |
-| 18 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 555&#8209;556 |
-| 19 | `domain` | Y | Y |  |  | Y |  |  | unknown | 559&#8209;560 |
-| 20 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 563&#8209;570 |
-| 21 | `map` | Y | Y |  |  | Y |  |  | unknown | 573&#8209;579 |
-| 22 | `filter` | Y | Y |  |  | Y |  |  | unknown | 582&#8209;596 |
-| 23 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 599&#8209;602 |
-| 24 | `union` | Y | Y |  |  | Y |  |  | unknown | 605&#8209;613 |
-| 25 | `difference` | Y | Y |  |  | Y |  |  | unknown | 616&#8209;619 |
-| 26 | `find` | Y | Y |  |  | Y |  |  | unknown | 622&#8209;628 |
-| 27 | `delete` | Y | Y |  |  | Y |  |  | unknown | 631&#8209;632 |
-| 28 | `insert` | Y | Y |  |  | Y |  |  | unknown | 635&#8209;645 |
-| 29 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 648&#8209;652 |
-| 30 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 655&#8209;659 |
-| 31 | `entries` | Y | Y |  |  | Y |  |  | unknown | 661&#8209;662 |
-| 32 | `from_sorted_entries` |  |  |  | Y | Y |  |  | unknown | 2176&#8209;2177 |
-| 33 | `eq` |  | Y |  |  | Y |  |  | hole | 2197&#8209;2198 |
+| 5 | `size` | Y | Y |  |  | Y |  |  | unknown | 102&#8209;104 |
+| 6 | `empty` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;109 |
+| 7 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 112&#8209;114 |
+| 8 | `domain` | Y | Y |  |  | Y |  |  | unknown | 117&#8209;119 |
+| 9 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 122&#8209;133 |
+| 10 | `map` | Y | Y |  |  | Y |  |  | unknown | 136&#8209;148 |
+| 11 | `filter` | Y | Y |  |  | Y |  |  | unknown | 151&#8209;166 |
+| 12 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 169&#8209;183 |
+| 13 | `union` | Y | Y |  |  | Y |  |  | unknown | 186&#8209;204 |
+| 14 | `difference` | Y | Y |  |  | Y |  |  | unknown | 207&#8209;214 |
+| 15 | `find` | Y | Y |  |  | Y |  |  | unknown | 217&#8209;223 |
+| 16 | `delete` | Y | Y |  |  | Y |  |  | unknown | 226&#8209;228 |
+| 17 | `insert` | Y | Y |  |  | Y |  |  | unknown | 231&#8209;245 |
+| 18 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 248&#8209;254 |
+| 19 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 257&#8209;263 |
+| 20 | `entries` | Y | Y |  |  | Y |  |  | unknown | 266&#8209;267 |
+| 21 | `iter` | Y | Y |  |  | Y |  |  | unknown | 269&#8209;274 |
+| 22 | `map_table_dc` |  |  |  | Y | Y |  |  | unknown | 284&#8209;298 |
+| 23 | `tabulate_table_dc` |  |  |  | Y | Y |  |  | unknown | 423&#8209;437 |
+| 24 | `from_sorted_entries` |  |  |  | Y | Y |  | Y |  | 2423 |
+| 25 | `eq` |  | Y |  |  | Y |  |  | unknown | 2460&#8209;2461 |
+
+### Chap42/TableSpecsAndLemmas.rs
+
+| # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
+|---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
+| 26 | `lemma_entries_to_map_key_in_seq` |  |  |  | Y | Y |  |  | unknown | 64&#8209;67 |
+| 27 | `lemma_entries_to_map_contains_key` |  |  |  | Y | Y |  |  | unknown | 81&#8209;84 |
+| 28 | `lemma_entries_to_map_len` |  |  |  | Y | Y |  |  | unknown | 95&#8209;98 |
+| 29 | `lemma_entries_to_map_no_key` |  |  |  | Y | Y |  |  | unknown | 117&#8209;119 |
+| 30 | `lemma_entries_to_map_get` |  |  |  | Y | Y |  |  | unknown | 127&#8209;134 |
+| 31 | `lemma_entries_to_map_dom_subset` |  |  |  | Y | Y |  |  | unknown | 149&#8209;155 |
+| 32 | `lemma_entries_to_map_dom_same_keys` |  |  |  | Y | Y |  |  | unknown | 169&#8209;178 |
+| 33 | `lemma_entries_to_map_subseq_value` |  |  |  | Y | Y |  |  | unknown | 190&#8209;209 |
+| 34 | `lemma_entries_to_map_skip_prefix` |  |  |  | Y | Y |  |  | unknown | 340&#8209;351 |
+| 35 | `lemma_entries_to_map_ignore_suffix` |  |  |  | Y | Y |  |  | unknown | 396&#8209;406 |
+| 36 | `lemma_entries_to_map_agree_on_key` |  |  |  | Y | Y |  |  | unknown | 430&#8209;443 |
+| 37 | `lemma_subseq_no_dups` |  |  |  | Y | Y |  |  | unknown | 479&#8209;492 |
+| 38 | `lemma_subseq_dom_forward` |  |  |  | Y | Y |  |  | unknown | 509&#8209;520 |
+| 39 | `lemma_subseq_value_agrees` |  |  |  | Y | Y |  |  | unknown | 537&#8209;555 |
 
 ### Chap42/TableStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 34 | `lemma_entries_to_map_key_in_seq` |  |  |  | Y | Y |  |  | unknown | 117&#8209;120 |
-| 35 | `lemma_entries_to_map_contains_key` |  |  |  | Y | Y |  |  | unknown | 136&#8209;139 |
-| 36 | `lemma_entries_to_map_len` |  |  |  | Y | Y |  |  | unknown | 150&#8209;153 |
-| 37 | `lemma_entries_to_map_no_key` |  |  |  | Y | Y |  |  | unknown | 189&#8209;191 |
-| 38 | `lemma_entries_to_map_get` |  |  |  | Y | Y |  |  | unknown | 199&#8209;206 |
-| 39 | `lemma_entries_to_map_dom_subset` |  |  |  | Y | Y |  |  | unknown | 237&#8209;243 |
-| 40 | `lemma_entries_to_map_dom_same_keys` |  |  |  | Y | Y |  |  | unknown | 256&#8209;265 |
-| 41 | `lemma_entries_to_map_finite` |  |  |  | Y | Y |  |  | unknown | 274&#8209;276 |
-| 42 | `size` | Y | Y |  |  | Y |  |  | unknown | 293&#8209;295 |
-| 43 | `empty` | Y | Y |  |  | Y |  |  | unknown | 298&#8209;299 |
-| 44 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 302&#8209;304 |
-| 45 | `domain` | Y | Y |  |  | Y |  |  | unknown | 307&#8209;309 |
-| 46 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 312&#8209;320 |
-| 47 | `map` | Y | Y |  |  | Y |  |  | unknown | 323&#8209;334 |
-| 48 | `filter` | Y | Y |  |  | Y |  |  | unknown | 337&#8209;351 |
-| 49 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 354&#8209;367 |
-| 50 | `union` | Y | Y |  |  | Y |  |  | unknown | 370&#8209;387 |
-| 51 | `difference` | Y | Y |  |  | Y |  |  | unknown | 390&#8209;396 |
-| 52 | `find` | Y | Y |  |  | Y |  |  | unknown | 399&#8209;405 |
-| 53 | `delete` | Y | Y |  |  | Y |  |  | unknown | 408&#8209;410 |
-| 54 | `insert` | Y | Y |  |  | Y |  |  | unknown | 413&#8209;426 |
-| 55 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 429&#8209;435 |
-| 56 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 438&#8209;444 |
-| 57 | `entries` | Y | Y |  |  | Y |  |  | unknown | 447&#8209;448 |
-| 58 | `from_sorted_entries` |  |  |  | Y | Y |  |  | unknown | 2073&#8209;2076 |
-| 59 | `default` |  | Y |  |  | Y |  | Y |  | 2088 |
-| 60 | `eq` |  | Y |  |  | Y |  |  | hole | 2102&#8209;2103 |
+| 40 | `size` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;100 |
+| 41 | `empty` | Y | Y |  |  | Y |  |  | unknown | 104&#8209;105 |
+| 42 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;110 |
+| 43 | `domain` | Y | Y |  |  | Y |  |  | unknown | 113&#8209;115 |
+| 44 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 118&#8209;126 |
+| 45 | `map` | Y | Y |  |  | Y |  |  | unknown | 129&#8209;141 |
+| 46 | `filter` | Y | Y |  |  | Y |  |  | unknown | 144&#8209;160 |
+| 47 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 163&#8209;177 |
+| 48 | `union` | Y | Y |  |  | Y |  |  | unknown | 180&#8209;198 |
+| 49 | `difference` | Y | Y |  |  | Y |  |  | unknown | 201&#8209;209 |
+| 50 | `find` | Y | Y |  |  | Y |  |  | unknown | 212&#8209;218 |
+| 51 | `find_ref` | Y | Y |  |  | Y |  |  | unknown | 223&#8209;230 |
+| 52 | `delete` | Y | Y |  |  | Y |  |  | unknown | 233&#8209;239 |
+| 53 | `insert` | Y | Y |  |  | Y |  |  | unknown | 242&#8209;260 |
+| 54 | `insert_wf` | Y | Y |  |  | Y |  |  | unknown | 264&#8209;291 |
+| 55 | `delete_wf` | Y | Y |  |  | Y |  |  | unknown | 295&#8209;307 |
+| 56 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 310&#8209;317 |
+| 57 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 320&#8209;327 |
+| 58 | `entries` | Y | Y |  |  | Y |  |  | unknown | 331&#8209;332 |
+| 59 | `lemma_spec_stored_value_view` |  |  | Y |  | Y |  |  | unknown | 348&#8209;350 |
+| 60 | `iter` |  |  | Y |  | Y |  |  | unknown | 376&#8209;380 |
+| 61 | `from_sorted_entries` |  |  |  | Y | Y |  | Y |  | 2533&#8209;2535 |
+| 62 | `default` |  | Y |  |  | Y |  | Y |  | 2558 |
+| 63 | `eq` |  | Y |  |  | Y |  |  | unknown | 2572&#8209;2573 |
 
 ### Chap42/TableStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 61 | `lemma_entries_to_map_finite` |  |  |  | Y | Y |  |  | unknown | 149&#8209;151 |
-| 62 | `lemma_entries_to_map_get` |  |  |  | Y | Y |  |  | unknown | 162&#8209;169 |
-| 63 | `lemma_entries_to_map_dom_subset` |  |  |  | Y | Y |  |  | unknown | 203&#8209;209 |
-| 64 | `lemma_entries_to_map_contains_key` |  |  |  | Y | Y |  |  | unknown | 222&#8209;225 |
-| 65 | `lemma_entries_to_map_no_key` |  |  |  | Y | Y |  |  | unknown | 238&#8209;240 |
-| 66 | `lemma_entries_to_map_key_in_seq` |  |  |  | Y | Y |  |  | unknown | 248&#8209;251 |
-| 67 | `lemma_entries_to_map_len` |  |  |  | Y | Y |  |  | unknown | 267&#8209;270 |
-| 68 | `lemma_entries_to_map_dom_same_keys` |  |  |  | Y | Y |  |  | unknown | 312&#8209;321 |
-| 69 | `lemma_spec_collect_domain_step` |  |  |  | Y | Y |  |  | unknown | 331&#8209;334 |
-| 70 | `lemma_spec_collect_key_step` |  |  |  | Y | Y |  |  | unknown | 340&#8209;347 |
-| 71 | `lemma_spec_collect_key_not_in_domain` |  |  |  | Y | Y |  |  | unknown | 353&#8209;356 |
-| 72 | `lemma_spec_collect_key_len_bound` |  |  |  | Y | Y |  |  | unknown | 364&#8209;366 |
-| 73 | `size` | Y | Y |  |  | Y |  |  | unknown | 384&#8209;386 |
-| 74 | `empty` | Y | Y |  |  | Y |  |  | unknown | 390&#8209;391 |
-| 75 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 395&#8209;397 |
-| 76 | `domain` | Y | Y |  |  | Y |  |  | unknown | 401&#8209;403 |
-| 77 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 407&#8209;415 |
-| 78 | `map` | Y | Y |  |  | Y |  |  | unknown | 419&#8209;431 |
-| 79 | `filter` | Y | Y |  |  | Y |  |  | unknown | 435&#8209;451 |
-| 80 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 455&#8209;469 |
-| 81 | `union` | Y | Y |  |  | Y |  |  | unknown | 473&#8209;491 |
-| 82 | `difference` | Y | Y |  |  | Y |  |  | unknown | 495&#8209;500 |
-| 83 | `find` | Y | Y |  |  | Y |  |  | unknown | 504&#8209;510 |
-| 84 | `delete` | Y | Y |  |  | Y |  |  | unknown | 514&#8209;520 |
-| 85 | `insert` | Y | Y |  |  | Y |  |  | unknown | 524&#8209;538 |
-| 86 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 542&#8209;547 |
-| 87 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 551&#8209;556 |
-| 88 | `collect` | Y | Y |  |  | Y |  |  | unknown | 560&#8209;561 |
-| 89 | `from_sorted_entries` |  |  |  | Y | Y |  |  | unknown | 2018&#8209;2021 |
-| 90 | `collect_by_key` |  |  |  | Y | Y |  |  | unknown | 2035&#8209;2050 |
-| 91 | `eq` |  | Y |  |  | Y |  |  | hole | 2190&#8209;2191 |
+| 64 | `lemma_spec_collect_domain_step` |  |  |  | Y | Y |  |  | unknown | 118&#8209;121 |
+| 65 | `lemma_spec_collect_key_step` |  |  |  | Y | Y |  |  | unknown | 128&#8209;135 |
+| 66 | `lemma_spec_collect_key_not_in_domain` |  |  |  | Y | Y |  |  | unknown | 142&#8209;145 |
+| 67 | `lemma_spec_collect_key_len_bound` |  |  |  | Y | Y |  |  | unknown | 153&#8209;155 |
+| 68 | `size` | Y | Y |  |  | Y |  |  | unknown | 173&#8209;175 |
+| 69 | `empty` | Y | Y |  |  | Y |  |  | unknown | 180&#8209;181 |
+| 70 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 185&#8209;187 |
+| 71 | `domain` | Y | Y |  |  | Y |  |  | unknown | 191&#8209;193 |
+| 72 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 197&#8209;205 |
+| 73 | `map` | Y | Y |  |  | Y |  |  | unknown | 209&#8209;221 |
+| 74 | `filter` | Y | Y |  |  | Y |  |  | unknown | 225&#8209;241 |
+| 75 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 245&#8209;259 |
+| 76 | `union` | Y | Y |  |  | Y |  |  | unknown | 263&#8209;281 |
+| 77 | `difference` | Y | Y |  |  | Y |  |  | unknown | 285&#8209;290 |
+| 78 | `find` | Y | Y |  |  | Y |  |  | unknown | 294&#8209;300 |
+| 79 | `find_ref` | Y | Y |  |  | Y |  |  | unknown | 306&#8209;313 |
+| 80 | `delete` | Y | Y |  |  | Y |  |  | unknown | 317&#8209;323 |
+| 81 | `insert` | Y | Y |  |  | Y |  |  | unknown | 327&#8209;344 |
+| 82 | `insert_wf` | Y | Y |  |  | Y |  |  | unknown | 348&#8209;374 |
+| 83 | `delete_wf` | Y | Y |  |  | Y |  |  | unknown | 379&#8209;391 |
+| 84 | `restrict` | Y | Y |  |  | Y |  |  | unknown | 395&#8209;400 |
+| 85 | `subtract` | Y | Y |  |  | Y |  |  | unknown | 404&#8209;409 |
+| 86 | `collect` | Y | Y |  |  | Y |  |  | unknown | 413&#8209;414 |
+| 87 | `lemma_spec_stored_value_view` |  |  | Y |  | Y |  |  | unknown | 430&#8209;432 |
+| 88 | `iter` |  |  | Y |  | Y |  |  | unknown | 450&#8209;454 |
+| 89 | `from_sorted_entries` |  |  |  | Y | Y |  | Y |  | 2586&#8209;2588 |
+| 90 | `collect_by_key` |  |  |  | Y | Y |  |  | unknown | 2597&#8209;2613 |
+| 91 | `eq` |  | Y |  |  | Y |  |  | unknown | 2782&#8209;2783 |
 
 
 ### Legend

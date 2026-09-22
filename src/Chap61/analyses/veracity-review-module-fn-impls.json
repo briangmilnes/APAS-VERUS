@@ -3,7 +3,7 @@
     "id": 1,
     "function": "edge_contract_mt",
     "file": "Chap61/EdgeContractionMtEph.rs",
-    "lines": "40-44",
+    "lines": "60-64",
     "spec_strength": "hole",
     "snippet": "        fn edge_contract_mt<V: StT + MtT + Hash + Ord + 'static>(\n            graph: &UnDirGraphMtEph<V>,\n            matching: &SetStEph<Edge<V>>,\n        ) -> UnDirGraphMtEph<V>\n            requires Self::spec_edgecontractionmteph_wf(graph);"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "function": "contract_round_mt",
     "file": "Chap61/EdgeContractionMtEph.rs",
-    "lines": "48-52",
+    "lines": "69-73",
     "spec_strength": "unknown",
     "snippet": "        fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(\n            graph: &UnDirGraphMtEph<V>,\n            seed: u64,\n        ) -> UnDirGraphMtEph<V>\n            requires Self::spec_edgecontractionmteph_wf(graph);"
   },
@@ -19,15 +19,15 @@
     "id": 3,
     "function": "build_edges_parallel",
     "file": "Chap61/EdgeContractionMtEph.rs",
-    "lines": "122-134",
+    "lines": "149-161",
     "spec_strength": "unknown",
-    "snippet": "    fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(\n        edges: Arc<ArraySeqStEphS<Edge<V>>>,\n        vertex_map: Arc<HashMapWithViewPlus<V, V>>,\n        start: usize,\n        end: usize,\n    ) -> (result: SetStEph<Edge<V>>)\n        requires\n            start <= end,\n            end as nat <= (*edges)@.len(),\n            valid_key_type_Edge::<V>(),\n        ensures\n            result.spec_setsteph_wf(),\n        decreases end - start,"
+    "snippet": "    fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(\n        edges: Arc<ArraySeqStEphS<Edge<V>>>,\n        vertex_map: Arc<HashMap<V, V>>,\n        start: usize,\n        end: usize,\n    ) -> (contracted: SetStEph<Edge<V>>)\n        requires\n            start <= end,\n            end as nat <= (*edges)@.len(),\n            valid_key_type_Edge::<V>(),\n        ensures\n            contracted.spec_setsteph_wf(),\n        decreases end - start,"
   },
   {
     "id": 4,
     "function": "edge_contract",
     "file": "Chap61/EdgeContractionStEph.rs",
-    "lines": "39-43",
+    "lines": "70-74",
     "spec_strength": "unknown",
     "snippet": "        fn edge_contract<V: HashOrd>(\n            graph: &UnDirGraphStEph<V>,\n            matching: &SetStEph<Edge<V>>,\n        ) -> UnDirGraphStEph<V>\n            requires Self::spec_edgecontractionsteph_wf(graph);"
   },
@@ -35,7 +35,7 @@
     "id": 5,
     "function": "contract_round",
     "file": "Chap61/EdgeContractionStEph.rs",
-    "lines": "47-48",
+    "lines": "79-80",
     "spec_strength": "unknown",
     "snippet": "        fn contract_round<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V>\n            requires Self::spec_edgecontractionsteph_wf(graph);"
   },
@@ -43,7 +43,7 @@
     "id": 6,
     "function": "parallel_matching_mt",
     "file": "Chap61/VertexMatchingMtEph.rs",
-    "lines": "40-41",
+    "lines": "60-61",
     "spec_strength": "unknown",
     "snippet": "        fn parallel_matching_mt<V: StT + MtT + Hash + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<Edge<V>>\n            requires Self::spec_vertexmatchingmteph_wf(graph);"
   },
@@ -51,39 +51,39 @@
     "id": 7,
     "function": "flip_coins_parallel",
     "file": "Chap61/VertexMatchingMtEph.rs",
-    "lines": "88-93",
+    "lines": "115-120",
     "spec_strength": "unknown",
-    "snippet": "    fn flip_coins_parallel<V: StT + MtT + 'static>(\n        edges: &ArraySeqStEphS<Edge<V>>,\n        seed: u64,\n    ) -> (result: ArraySeqStEphS<B>)\n        requires valid_key_type_Edge::<V>(),\n        ensures true,"
+    "snippet": "    fn flip_coins_parallel<V: StT + MtT + Hash + 'static>(\n        edges: &ArraySeqStEphS<Edge<V>>,\n        seed: u64,\n    ) -> (coins: ArraySeqStEphS<bool>)\n        requires valid_key_type_Edge::<V>(),\n        ensures true,"
   },
   {
     "id": 8,
     "function": "select_edges_parallel",
     "file": "Chap61/VertexMatchingMtEph.rs",
-    "lines": "120-124",
+    "lines": "149-153",
     "spec_strength": "hole",
-    "snippet": "    fn select_edges_parallel<V: StT + MtT + Hash + 'static>(\n        graph: &UnDirGraphMtEph<V>,\n        edges: &ArraySeqStEphS<Edge<V>>,\n        coins: &ArraySeqStEphS<B>,\n    ) -> SetStEph<Edge<V>> {"
+    "snippet": "    fn select_edges_parallel<V: StT + MtT + Hash + 'static>(\n        graph: &UnDirGraphMtEph<V>,\n        edges: &ArraySeqStEphS<Edge<V>>,\n        coins: &ArraySeqStEphS<bool>,\n    ) -> SetStEph<Edge<V>> {"
   },
   {
     "id": 9,
     "function": "select_edges_recursive",
     "file": "Chap61/VertexMatchingMtEph.rs",
-    "lines": "154-160",
+    "lines": "182-188",
     "spec_strength": "hole",
-    "snippet": "    fn select_edges_recursive<V: StT + MtT + Hash + 'static>(\n        graph: Arc<UnDirGraphMtEph<V>>,\n        edges: Arc<ArraySeqStEphS<Edge<V>>>,\n        edge_coins: Arc<HashMapWithViewPlus<Edge<V>, bool>>,\n        start: usize,\n        end: usize,\n    ) -> ArraySeqStEphS<Edge<V>> {"
+    "snippet": "    fn select_edges_recursive<V: StT + MtT + Hash + 'static>(\n        graph: Arc<UnDirGraphMtEph<V>>,\n        edges: Arc<ArraySeqStEphS<Edge<V>>>,\n        edge_coins: Arc<HashMap<Edge<V>, bool>>,\n        start: usize,\n        end: usize,\n    ) -> ArraySeqStEphS<Edge<V>> {"
   },
   {
     "id": 10,
     "function": "should_select_edge",
     "file": "Chap61/VertexMatchingMtEph.rs",
-    "lines": "202-208",
+    "lines": "231-239",
     "spec_strength": "unknown",
-    "snippet": "    fn should_select_edge<V: StT + MtT + Hash + 'static>(\n        graph: &UnDirGraphMtEph<V>,\n        edge: &Edge<V>,\n        edge_coins: &HashMapWithViewPlus<Edge<V>, bool>,\n    ) -> (selected: bool)\n        requires valid_key_type_Edge::<V>(),\n        ensures true,"
+    "snippet": "    fn should_select_edge<V: StT + MtT + Hash + 'static>(\n        graph: &UnDirGraphMtEph<V>,\n        edge: &Edge<V>,\n        edge_coins: &HashMap<Edge<V>, bool>,\n    ) -> (selected: bool)\n        requires\n            valid_key_type_Edge::<V>(),\n            graph.E.spec_setsteph_wf(),\n        ensures true,"
   },
   {
     "id": 11,
     "function": "greedy_matching",
     "file": "Chap61/VertexMatchingStEph.rs",
-    "lines": "38-39",
+    "lines": "58-59",
     "spec_strength": "unknown",
     "snippet": "        fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>\n            requires Self::spec_vertexmatchingsteph_wf(graph);"
   },
@@ -91,7 +91,7 @@
     "id": 12,
     "function": "parallel_matching_st",
     "file": "Chap61/VertexMatchingStEph.rs",
-    "lines": "43-44",
+    "lines": "64-65",
     "spec_strength": "unknown",
     "snippet": "        fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>>\n            requires Self::spec_vertexmatchingsteph_wf(graph);"
   }

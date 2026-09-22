@@ -22,8 +22,8 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap23 | BalBinTreeStEph | 8 | 10 | 3 | 3 | 16 | 0 | 14 | 2 | 0 |
-| 2 | Chap23 | PrimTreeSeqStPer | 17 | 19 | 1 | 0 | 20 | 0 | 19 | 1 | 0 |
+| 1 | Chap23 | BalBinTreeStEph | 8 | 9 | 3 | 3 | 15 | 0 | 15 | 0 | 0 |
+| 2 | Chap23 | PrimTreeSeqStPer | 17 | 18 | 1 | 0 | 19 | 0 | 19 | 0 | 0 |
 
 ## Function-by-Function Detail
 
@@ -31,47 +31,45 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `lemma_in_order_pre_order_permutation` |  |  |  | Y | Y |  |  | unknown | 95&#8209;97 |
-| 2 | `lemma_pre_order_post_order_permutation` |  |  |  | Y | Y |  |  | unknown | 140&#8209;142 |
-| 3 | `leaf` | Y | Y |  |  | Y |  |  | unknown | 193&#8209;199 |
-| 4 | `node` | Y | Y |  |  | Y |  |  | unknown | 203&#8209;210 |
-| 5 | `is_leaf` | Y | Y |  |  | Y |  |  | unknown | 214&#8209;216 |
-| 6 | `size` | Y | Y |  |  | Y |  |  | unknown | 220&#8209;223 |
-| 7 | `height` | Y | Y |  |  | Y |  |  | unknown | 227&#8209;230 |
-| 8 | `in_order` | Y | Y |  |  | Y |  |  | unknown | 235&#8209;240 |
-| 9 | `pre_order` | Y | Y |  |  | Y |  |  | unknown | 245&#8209;250 |
-| 10 | `post_order` | Y | Y |  |  | Y |  |  | unknown | 255&#8209;260 |
-| 11 | `iter_in_order` |  |  | Y |  | Y |  |  | unknown | 444&#8209;450 |
-| 12 | `iter_pre_order` |  |  | Y |  | Y |  |  | unknown | 458&#8209;464 |
-| 13 | `iter_post_order` |  |  | Y |  | Y |  |  | unknown | 472&#8209;478 |
-| 14 | `next` x3 |  | Y |  |  | Y |  |  | unknown | 564&#8209;580 |
-| 15 | `eq` x2 |  | Y |  |  | Y |  |  | hole | 785&#8209;787 |
-| 16 | `clone_tree` |  |  |  | Y | Y |  |  | hole | 819&#8209;821 |
+| 1 | `leaf` | Y | Y |  |  | Y |  |  | unknown | 87&#8209;93 |
+| 2 | `node` | Y | Y |  |  | Y |  |  | unknown | 97&#8209;104 |
+| 3 | `is_leaf` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;110 |
+| 4 | `size` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;117 |
+| 5 | `height` | Y | Y |  |  | Y |  |  | unknown | 121&#8209;124 |
+| 6 | `in_order` | Y | Y |  |  | Y |  |  | unknown | 129&#8209;134 |
+| 7 | `pre_order` | Y | Y |  |  | Y |  |  | unknown | 139&#8209;144 |
+| 8 | `post_order` | Y | Y |  |  | Y |  |  | unknown | 149&#8209;154 |
+| 9 | `iter_in_order` |  |  | Y |  | Y |  |  | unknown | 345&#8209;351 |
+| 10 | `iter_pre_order` |  |  | Y |  | Y |  |  | unknown | 359&#8209;365 |
+| 11 | `iter_post_order` |  |  | Y |  | Y |  |  | unknown | 373&#8209;379 |
+| 12 | `lemma_in_order_pre_order_permutation` |  |  |  | Y | Y |  |  | unknown | 406&#8209;408 |
+| 13 | `lemma_pre_order_post_order_permutation` |  |  |  | Y | Y |  |  | unknown | 442&#8209;444 |
+| 14 | `clone_tree` |  |  |  | Y | Y |  |  | unknown | 479&#8209;481 |
+| 15 | `eq` x2 |  | Y |  |  | Y |  |  | unknown | 512&#8209;514 |
 
 ### Chap23/PrimTreeSeqStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 17 | `empty` | Y | Y |  |  | Y |  |  | unknown | 133&#8209;135 |
-| 18 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 140&#8209;144 |
-| 19 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 149&#8209;153 |
-| 20 | `length` | Y | Y |  |  | Y |  |  | unknown | 158&#8209;160 |
-| 21 | `nth` | Y | Y |  |  | Y |  |  | unknown | 165&#8209;168 |
-| 22 | `expose` | Y | Y |  |  | Y |  |  | unknown | 173&#8209;181 |
-| 23 | `join` | Y | Y |  |  | Y |  |  | unknown | 196&#8209;201 |
-| 24 | `append` | Y | Y |  |  | Y |  |  | unknown | 206&#8209;217 |
-| 25 | `subseq` | Y | Y |  |  | Y |  |  | unknown | 222&#8209;232 |
-| 26 | `update` | Y | Y |  |  | Y |  |  | unknown | 237&#8209;247 |
-| 27 | `map` | Y | Y |  |  | Y |  |  | unknown | 252&#8209;257 |
-| 28 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 262&#8209;269 |
-| 29 | `filter` | Y | Y |  |  | Y |  |  | unknown | 274&#8209;286 |
-| 30 | `drop` | Y | Y |  |  | Y |  |  | unknown | 291&#8209;301 |
-| 31 | `flatten` | Y | Y |  |  | Y |  |  | unknown | 306&#8209;311 |
-| 32 | `as_slice` | Y | Y |  |  | Y |  |  | unknown | 316&#8209;318 |
-| 33 | `into_vec` | Y | Y |  |  | Y |  |  | unknown | 323&#8209;325 |
-| 34 | `iter` |  |  | Y |  | Y |  |  | unknown | 335&#8209;339 |
-| 35 | `next` |  | Y |  |  | Y |  |  | unknown | 784&#8209;800 |
-| 36 | `eq` x2 |  | Y |  |  | Y |  |  | hole | 894&#8209;895 |
+| 16 | `iter` |  |  | Y |  | Y |  |  | unknown | 114&#8209;118 |
+| 17 | `empty` | Y | Y |  |  | Y |  |  | unknown | 655&#8209;657 |
+| 18 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 662&#8209;666 |
+| 19 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 670&#8209;674 |
+| 20 | `length` | Y | Y |  |  | Y |  |  | unknown | 679&#8209;681 |
+| 21 | `nth` | Y | Y |  |  | Y |  |  | unknown | 687&#8209;690 |
+| 22 | `expose` | Y | Y |  |  | Y |  |  | unknown | 695&#8209;703 |
+| 23 | `join` | Y | Y |  |  | Y |  |  | unknown | 718&#8209;723 |
+| 24 | `append` | Y | Y |  |  | Y |  |  | unknown | 728&#8209;739 |
+| 25 | `subseq` | Y | Y |  |  | Y |  |  | unknown | 744&#8209;754 |
+| 26 | `update` | Y | Y |  |  | Y |  |  | unknown | 760&#8209;770 |
+| 27 | `map` | Y | Y |  |  | Y |  |  | unknown | 775&#8209;780 |
+| 28 | `tabulate` | Y | Y |  |  | Y |  |  | unknown | 785&#8209;792 |
+| 29 | `filter` | Y | Y |  |  | Y |  |  | unknown | 797&#8209;809 |
+| 30 | `drop` | Y | Y |  |  | Y |  |  | unknown | 814&#8209;824 |
+| 31 | `flatten` | Y | Y |  |  | Y |  |  | unknown | 829&#8209;834 |
+| 32 | `as_slice` | Y | Y |  |  | Y |  |  | unknown | 838&#8209;840 |
+| 33 | `into_vec` | Y | Y |  |  | Y |  |  | unknown | 844&#8209;846 |
+| 34 | `eq` x2 |  | Y |  |  | Y |  |  | unknown | 875&#8209;876 |
 
 
 ### Legend

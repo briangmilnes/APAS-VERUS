@@ -23,22 +23,27 @@ Table of Contents:
 ✓ KleeneStPer.rs
    9 clean proof functions
 ℹ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:660: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:626: info: accept()
    Info: 1 total
+   2 clean proof functions
 ✓ RelationStEph.rs
 ℹ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1146: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1157: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1180: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1224: info: accept()
-   Info: 4 total
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1167: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
-   Info: 1 × structural_false_positive
-   1 clean proof function
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1136: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1161: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1172: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1195: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1255: info: accept()
+   Info: 5 total
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1182: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1235: info: structural_false_positive STD_TRAIT_IMPL hash — #[verifier::external_body] [high]
+   Info: 2 × structural_false_positive
+   7 clean proof functions
 ℹ SetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:951: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:988: info: accept()
    Info: 1 total
-   1 clean proof function
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:967: info: structural_false_positive STD_TRAIT_IMPL hash — #[verifier::external_body] [high]
+   Info: 1 × structural_false_positive
+   7 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -74,25 +79,27 @@ Modules:
    5 total
 
 Proof Functions:
-   11 clean (100%)
+   25 clean (100%)
    0 holed (0%)
-   11 total
+   25 total
 
 Function Specs:
-   154 exec fns with complete spec (requires+ensures) (59%)
+   150 exec fns with complete spec (requires+ensures) (66%)
    0 exec fns missing spec (0%)
-   105 proof/spec fns clean (40%)
+   76 proof/spec fns clean (33%)
    0 proof/spec fns with holes (0%)
-   259 total fns
+   226 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Accepted (reviewed): 6 total
+Accepted (reviewed): 7 total
    6 × accept()
+   1 × trivial_spec_wf
 
-Structural (info only): 1
+Structural (info only): 3
+   2 × STD_TRAIT_IMPL
    1 × RWLOCK_GHOST
 
 No proof holes or warnings found! All proofs are complete.
@@ -101,9 +108,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-18 04:57:59 -07:00
-Ended:     2026-04-18 04:57:59 -07:00
-Duration:  35ms
+Started:   2026-09-22 11:25:11 -07:00
+Ended:     2026-09-22 11:25:11 -07:00
+Duration:  31ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap05/analyses/veracity-review-verus-proof-holes.log

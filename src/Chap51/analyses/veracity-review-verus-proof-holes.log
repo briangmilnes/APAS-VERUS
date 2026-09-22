@@ -43,21 +43,21 @@ Table of Contents:
 ✓ SeqSpecsAndLemmas.rs
    1 clean proof function
 ℹ TopDownDPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:82: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:81: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:510: info: accept()
    Info: 2 total
    2 clean proof functions
 ℹ TopDownDPMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:82: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:81: info: trivial_spec_wf
 /home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:470: info: accept()
    Info: 2 total
    2 clean proof functions
 ℹ TopDownDPStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:396: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:406: info: accept()
    Info: 1 total
    2 clean proof functions
 ℹ TopDownDPStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:360: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:369: info: accept()
    Info: 1 total
    2 clean proof functions
 
@@ -128,12 +128,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-18 04:58:01 -07:00
-Ended:     2026-04-18 04:58:01 -07:00
-Duration:  35ms
+Started:   2026-09-22 11:25:12 -07:00
+Ended:     2026-09-22 11:25:12 -07:00
+Duration:  21ms
 
 Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
-0
-Duration:  35ms
-
-Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap51/analyses/veracity-review-verus-proof-holes.log

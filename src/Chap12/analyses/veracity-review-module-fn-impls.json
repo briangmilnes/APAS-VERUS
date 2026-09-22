@@ -3,7 +3,7 @@
     "id": 1,
     "function": "new",
     "file": "Chap12/Exercise12_1.rs",
-    "lines": "33-34",
+    "lines": "56-57",
     "spec_strength": "hole",
     "snippet": "        fn new() -> (lock: Self)\n            ensures !lock.spec_locked();"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "function": "lock",
     "file": "Chap12/Exercise12_1.rs",
-    "lines": "39-40",
+    "lines": "61-62",
     "spec_strength": "hole",
     "snippet": "        fn lock(&self)\n            ensures self.spec_locked();"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "function": "unlock",
     "file": "Chap12/Exercise12_1.rs",
-    "lines": "45-47",
+    "lines": "66-68",
     "spec_strength": "hole",
     "snippet": "        fn unlock(&self)\n            requires self.spec_locked()\n            ensures !self.spec_locked();"
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "function": "with_lock",
     "file": "Chap12/Exercise12_1.rs",
-    "lines": "54",
+    "lines": "74",
     "spec_strength": "hole",
     "snippet": "        fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T;"
   },
@@ -35,7 +35,7 @@
     "id": 5,
     "function": "parallel_increment",
     "file": "Chap12/Exercise12_1.rs",
-    "lines": "94-95",
+    "lines": "120-121",
     "spec_strength": "hole",
     "snippet": "    pub fn parallel_increment(iterations: usize) -> (incremented: usize)\n        ensures incremented == 4 * iterations"
   },
@@ -43,7 +43,7 @@
     "id": 6,
     "function": "default",
     "file": "Chap12/Exercise12_1.rs",
-    "lines": "121",
+    "lines": "150",
     "spec_strength": "",
     "snippet": "    fn default() -> Self { SpinLock::new() }"
   },
@@ -51,7 +51,7 @@
     "id": 7,
     "function": "fetch_add_cas",
     "file": "Chap12/Exercise12_2.rs",
-    "lines": "22",
+    "lines": "39",
     "spec_strength": "",
     "snippet": "    fn fetch_add_cas(&self, delta: usize) -> (previous: usize);"
   },
@@ -59,7 +59,7 @@
     "id": 8,
     "function": "new",
     "file": "Chap12/Exercise12_5.rs",
-    "lines": "58-59",
+    "lines": "72-73",
     "spec_strength": "hole",
     "snippet": "    fn new() -> (stack: Self)\n        ensures stack.wf();"
   },
@@ -67,7 +67,7 @@
     "id": 9,
     "function": "push",
     "file": "Chap12/Exercise12_5.rs",
-    "lines": "64-65",
+    "lines": "77-78",
     "spec_strength": "hole",
     "snippet": "    fn push(&self, value: T)\n        requires self.wf();"
   },
@@ -75,7 +75,7 @@
     "id": 10,
     "function": "pop",
     "file": "Chap12/Exercise12_5.rs",
-    "lines": "72-73",
+    "lines": "84-85",
     "spec_strength": "hole",
     "snippet": "    fn pop(&self) -> (possible_top: Option<T>)\n        requires self.wf();"
   },
@@ -83,7 +83,7 @@
     "id": 11,
     "function": "is_empty",
     "file": "Chap12/Exercise12_5.rs",
-    "lines": "79-80",
+    "lines": "90-91",
     "spec_strength": "hole",
     "snippet": "    fn is_empty(&self) -> (empty: bool)\n        requires self.wf();"
   },
@@ -91,24 +91,24 @@
     "id": 12,
     "function": "drain",
     "file": "Chap12/Exercise12_5.rs",
-    "lines": "87-88",
+    "lines": "97-98",
     "spec_strength": "hole",
     "snippet": "    fn drain(&self) -> (items: Vec<T>)\n        requires self.wf();"
   },
   {
     "id": 13,
-    "function": "default",
+    "function": "drop",
     "file": "Chap12/Exercise12_5.rs",
-    "lines": "148",
-    "spec_strength": "",
-    "snippet": "    fn default() -> Self { "
+    "lines": "164-166",
+    "spec_strength": "hole",
+    "snippet": "    fn drop(&mut self)\n        opens_invariants none\n        no_unwind"
   },
   {
     "id": 14,
-    "function": "drop",
+    "function": "default",
     "file": "Chap12/Exercise12_5.rs",
-    "lines": "155-157",
-    "spec_strength": "hole",
-    "snippet": "    fn drop(&mut self)\n        opens_invariants none\n        no_unwind"
+    "lines": "182",
+    "spec_strength": "",
+    "snippet": "    fn default() -> Self { "
   }
 ]

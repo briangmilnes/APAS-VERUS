@@ -21,24 +21,24 @@ Table of Contents:
 =================================================================
 
 ℹ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:434: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1729: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:436: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:1639: info: accept()
    Info: 2 total
    4 clean proof functions
 ℹ ArraySeqMtEphSlice.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEphSlice.rs:1723: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEphSlice.rs:1639: info: accept()
    Info: 1 total
    5 clean proof functions
 ✓ ArraySeqSpecsAndLemmas.rs
    2 clean proof functions
 ℹ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:414: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1178: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:416: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1088: info: accept()
    Info: 2 total
    4 clean proof functions
 ℹ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:402: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:1179: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:404: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStPer.rs:1083: info: accept()
    Info: 2 total
    4 clean proof functions
 
@@ -81,11 +81,11 @@ Proof Functions:
    19 total
 
 Function Specs:
-   223 exec fns with complete spec (requires+ensures) (68%)
+   219 exec fns with complete spec (requires+ensures) (77%)
    0 exec fns missing spec (0%)
-   103 proof/spec fns clean (31%)
+   63 proof/spec fns clean (22%)
    0 proof/spec fns with holes (0%)
-   326 total fns
+   282 total fns
 
 
 Holes Found: 0 (actionable)
@@ -101,9 +101,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-18 04:58:00 -07:00
-Ended:     2026-04-18 04:58:00 -07:00
-Duration:  58ms
+Started:   2026-09-22 11:25:12 -07:00
+Ended:     2026-09-22 11:25:12 -07:00
+Duration:  60ms
 
 Full output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap19/analyses/veracity-review-verus-proof-holes.log

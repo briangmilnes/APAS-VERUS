@@ -27,7 +27,7 @@
 | 3 | Chap49 | MinEditDistStEph | 11 | 11 | 0 | 1 | 10 | 2 | 9 | 0 | 3 |
 | 4 | Chap49 | MinEditDistStPer | 6 | 7 | 0 | 1 | 7 | 1 | 6 | 0 | 2 |
 | 5 | Chap49 | SubsetSumMtEph | 8 | 9 | 0 | 3 | 10 | 2 | 9 | 0 | 3 |
-| 6 | Chap49 | SubsetSumMtPer | 5 | 6 | 0 | 3 | 8 | 1 | 6 | 0 | 3 |
+| 6 | Chap49 | SubsetSumMtPer | 5 | 6 | 0 | 3 | 8 | 1 | 7 | 0 | 2 |
 | 7 | Chap49 | SubsetSumStEph | 8 | 8 | 0 | 1 | 8 | 1 | 7 | 0 | 2 |
 | 8 | Chap49 | SubsetSumStPer | 5 | 6 | 0 | 1 | 6 | 1 | 4 | 0 | 3 |
 
@@ -37,123 +37,123 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `new` | Y | Y |  |  | Y |  |  | unknown | 92&#8209;96 |
-| 2 | `from_sequences` | Y | Y |  |  | Y |  |  | unknown | 100&#8209;103 |
-| 3 | `min_edit_distance` | Y | Y |  |  | Y |  |  | unknown | 107&#8209;113 |
-| 4 | `source` | Y | Y |  |  | Y |  |  | unknown | 117&#8209;118 |
-| 5 | `target` | Y | Y |  |  | Y |  |  | unknown | 122&#8209;123 |
-| 6 | `set_source` | Y | Y |  |  | Y |  |  | unknown | 127&#8209;131 |
-| 7 | `set_target` | Y | Y |  |  | Y |  |  | unknown | 135&#8209;139 |
-| 8 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 143&#8209;146 |
-| 9 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 150 |
-| 10 | `new_arc_memo` |  |  |  | Y | Y |  |  | unknown | 156&#8209;160 |
-| 11 | `clone_arc_memo` |  |  |  | Y | Y |  |  | unknown | 166&#8209;170 |
-| 12 | `min_edit_distance_rec` |  |  |  | Y | Y |  |  | unknown | 177&#8209;191 |
-| 13 | `source_mut` | Y | Y |  |  |  | Y | Y |  | 363&#8209;365 |
-| 14 | `target_mut` | Y | Y |  |  |  | Y | Y |  | 367&#8209;369 |
-| 15 | `eq` |  | Y |  |  |  | Y | Y |  | 380 |
+| 1 | `new` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;110 |
+| 2 | `from_sequences` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;118 |
+| 3 | `min_edit_distance` | Y | Y |  |  | Y |  |  | unknown | 123&#8209;129 |
+| 4 | `source` | Y | Y |  |  | Y |  |  | unknown | 133&#8209;134 |
+| 5 | `target` | Y | Y |  |  | Y |  |  | unknown | 138&#8209;139 |
+| 6 | `set_source` | Y | Y |  |  | Y |  |  | unknown | 143&#8209;149 |
+| 7 | `set_target` | Y | Y |  |  | Y |  |  | unknown | 153&#8209;159 |
+| 8 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 163&#8209;167 |
+| 9 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 171 |
+| 10 | `new_arc_memo` |  |  |  | Y | Y |  |  | unknown | 179&#8209;183 |
+| 11 | `clone_arc_memo` |  |  |  | Y | Y |  |  | unknown | 190&#8209;194 |
+| 12 | `min_edit_distance_rec` |  |  |  | Y | Y |  |  | unknown | 202&#8209;216 |
+| 13 | `source_mut` | Y | Y |  |  |  | Y | Y |  | 429&#8209;431 |
+| 14 | `target_mut` | Y | Y |  |  |  | Y | Y |  | 433&#8209;435 |
+| 15 | `eq` |  | Y |  |  |  | Y | Y |  | 460 |
 
 ### Chap49/MinEditDistMtPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 16 | `new` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;95 |
-| 17 | `from_sequences` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;102 |
-| 18 | `min_edit_distance` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;109 |
-| 19 | `source` | Y | Y |  |  | Y |  |  | unknown | 113&#8209;114 |
-| 20 | `target` | Y | Y |  |  | Y |  |  | unknown | 118&#8209;119 |
-| 21 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 123 |
-| 22 | `new_arc_memo` |  |  |  | Y | Y |  |  | unknown | 129&#8209;133 |
-| 23 | `clone_arc_memo` |  |  |  | Y | Y |  |  | unknown | 139&#8209;143 |
-| 24 | `min_edit_distance_rec` |  |  |  | Y | Y |  |  | unknown | 150&#8209;164 |
-| 25 | `eq` |  | Y |  |  |  | Y | Y |  | 313 |
+| 16 | `new` | Y | Y |  |  | Y |  |  | unknown | 101&#8209;108 |
+| 17 | `from_sequences` | Y | Y |  |  | Y |  |  | unknown | 112&#8209;116 |
+| 18 | `min_edit_distance` | Y | Y |  |  | Y |  |  | unknown | 121&#8209;124 |
+| 19 | `source` | Y | Y |  |  | Y |  |  | unknown | 128&#8209;129 |
+| 20 | `target` | Y | Y |  |  | Y |  |  | unknown | 133&#8209;134 |
+| 21 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 138 |
+| 22 | `new_arc_memo` |  |  |  | Y | Y |  |  | unknown | 146&#8209;150 |
+| 23 | `clone_arc_memo` |  |  |  | Y | Y |  |  | unknown | 157&#8209;161 |
+| 24 | `min_edit_distance_rec` |  |  |  | Y | Y |  |  | unknown | 169&#8209;183 |
+| 25 | `eq` |  | Y |  |  |  | Y | Y |  | 382 |
 
 ### Chap49/MinEditDistStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 26 | `new` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;93 |
-| 27 | `from_sequences` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;101 |
-| 28 | `min_edit_distance` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;110 |
-| 29 | `source` | Y | Y |  |  | Y |  |  | unknown | 115&#8209;116 |
-| 30 | `target` | Y | Y |  |  | Y |  |  | unknown | 121&#8209;122 |
-| 31 | `set_source` | Y | Y |  |  | Y |  |  | unknown | 127&#8209;131 |
-| 32 | `set_target` | Y | Y |  |  | Y |  |  | unknown | 136&#8209;140 |
-| 33 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 145&#8209;148 |
-| 34 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 153 |
-| 35 | `min_edit_distance_rec` |  |  |  | Y | Y |  |  | unknown | 161&#8209;176 |
-| 36 | `source_mut` | Y | Y |  |  |  | Y | Y |  | 280&#8209;283 |
-| 37 | `target_mut` | Y | Y |  |  |  | Y | Y |  | 285&#8209;288 |
+| 26 | `new` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;102 |
+| 27 | `from_sequences` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;109 |
+| 28 | `min_edit_distance` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;118 |
+| 29 | `source` | Y | Y |  |  | Y |  |  | unknown | 122&#8209;123 |
+| 30 | `target` | Y | Y |  |  | Y |  |  | unknown | 127&#8209;128 |
+| 31 | `set_source` | Y | Y |  |  | Y |  |  | unknown | 132&#8209;136 |
+| 32 | `set_target` | Y | Y |  |  | Y |  |  | unknown | 140&#8209;144 |
+| 33 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 148&#8209;151 |
+| 34 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 155 |
+| 35 | `min_edit_distance_rec` |  |  |  | Y | Y |  |  | unknown | 164&#8209;179 |
+| 36 | `source_mut` | Y | Y |  |  |  | Y | Y |  | 300&#8209;302 |
+| 37 | `target_mut` | Y | Y |  |  |  | Y | Y |  | 304&#8209;306 |
 
 ### Chap49/MinEditDistStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 38 | `new` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;92 |
-| 39 | `from_sequences` | Y | Y |  |  | Y |  |  | unknown | 96&#8209;99 |
-| 40 | `min_edit_distance` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;104 |
-| 41 | `source` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;109 |
-| 42 | `target` | Y | Y |  |  | Y |  |  | unknown | 113&#8209;114 |
-| 43 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 118 |
-| 44 | `min_edit_distance_rec` |  |  |  | Y | Y |  |  | unknown | 125&#8209;140 |
-| 45 | `eq` |  | Y |  |  |  | Y | Y |  | 236&#8209;240 |
+| 38 | `new` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;102 |
+| 39 | `from_sequences` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;109 |
+| 40 | `min_edit_distance` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;115 |
+| 41 | `source` | Y | Y |  |  | Y |  |  | unknown | 119&#8209;120 |
+| 42 | `target` | Y | Y |  |  | Y |  |  | unknown | 124&#8209;125 |
+| 43 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 129 |
+| 44 | `min_edit_distance_rec` |  |  |  | Y | Y |  |  | unknown | 138&#8209;153 |
+| 45 | `eq` |  | Y |  |  |  | Y | Y |  | 262&#8209;266 |
 
 ### Chap49/SubsetSumMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 46 | `new` | Y | Y |  |  | Y |  |  | unknown | 90&#8209;94 |
-| 47 | `from_multiset` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;99 |
-| 48 | `subset_sum` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;106 |
-| 49 | `multiset` | Y | Y |  |  | Y |  |  | unknown | 110&#8209;111 |
-| 50 | `set` | Y | Y |  |  | Y |  |  | unknown | 115&#8209;117 |
-| 51 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 121&#8209;122 |
-| 52 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 126 |
-| 53 | `new_arc_memo` |  |  |  | Y | Y |  |  | unknown | 132&#8209;136 |
-| 54 | `clone_arc_memo` |  |  |  | Y | Y |  |  | unknown | 142&#8209;146 |
-| 55 | `subset_sum_rec` |  |  |  | Y | Y |  |  | unknown | 153&#8209;163 |
-| 56 | `multiset_mut` | Y | Y |  |  |  | Y | Y |  | 305&#8209;307 |
-| 57 | `eq` |  | Y |  |  |  | Y | Y |  | 317 |
+| 46 | `new` | Y | Y |  |  | Y |  |  | unknown | 96&#8209;102 |
+| 47 | `from_multiset` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;109 |
+| 48 | `subset_sum` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;117 |
+| 49 | `multiset` | Y | Y |  |  | Y |  |  | unknown | 121&#8209;122 |
+| 50 | `set` | Y | Y |  |  | Y |  |  | unknown | 126&#8209;130 |
+| 51 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 134&#8209;136 |
+| 52 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 140 |
+| 53 | `new_arc_memo` |  |  |  | Y | Y |  |  | unknown | 148&#8209;151 |
+| 54 | `clone_arc_memo` |  |  |  | Y | Y |  |  | unknown | 158&#8209;162 |
+| 55 | `subset_sum_rec` |  |  |  | Y | Y |  |  | unknown | 170&#8209;180 |
+| 56 | `multiset_mut` | Y | Y |  |  |  | Y | Y |  | 362&#8209;364 |
+| 57 | `eq` |  | Y |  |  |  | Y | Y |  | 388 |
 
 ### Chap49/SubsetSumMtPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 58 | `new` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;93 |
-| 59 | `from_multiset` | Y | Y |  |  | Y |  |  | unknown | 97&#8209;98 |
-| 60 | `subset_sum` | Y | Y |  |  | Y |  | Y |  | 102&#8209;104 |
-| 61 | `multiset` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;109 |
-| 62 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 113 |
-| 63 | `new_arc_memo` |  |  |  | Y | Y |  |  | unknown | 119&#8209;123 |
-| 64 | `clone_arc_memo` |  |  |  | Y | Y |  |  | unknown | 129&#8209;133 |
-| 65 | `subset_sum_rec` |  |  |  | Y | Y |  |  | unknown | 140&#8209;150 |
-| 66 | `eq` |  | Y |  |  |  | Y | Y |  | 278 |
+| 58 | `new` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;100 |
+| 59 | `from_multiset` | Y | Y |  |  | Y |  |  | unknown | 104&#8209;107 |
+| 60 | `subset_sum` | Y | Y |  |  | Y |  |  | unknown | 112&#8209;114 |
+| 61 | `multiset` | Y | Y |  |  | Y |  |  | unknown | 118&#8209;119 |
+| 62 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 123 |
+| 63 | `new_arc_memo` |  |  |  | Y | Y |  |  | unknown | 131&#8209;134 |
+| 64 | `clone_arc_memo` |  |  |  | Y | Y |  |  | unknown | 141&#8209;145 |
+| 65 | `subset_sum_rec` |  |  |  | Y | Y |  |  | unknown | 153&#8209;163 |
+| 66 | `eq` |  | Y |  |  |  | Y | Y |  | 341 |
 
 ### Chap49/SubsetSumStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 67 | `new` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;83 |
-| 68 | `from_multiset` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;89 |
-| 69 | `subset_sum` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;97 |
-| 70 | `multiset` | Y | Y |  |  | Y |  |  | unknown | 102&#8209;103 |
-| 71 | `set` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;110 |
-| 72 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 115&#8209;116 |
-| 73 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 121 |
-| 74 | `subset_sum_rec` |  |  |  | Y | Y |  |  | unknown | 129&#8209;138 |
-| 75 | `multiset_mut` | Y | Y |  |  |  | Y | Y |  | 228&#8209;231 |
+| 67 | `new` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;92 |
+| 68 | `from_multiset` | Y | Y |  |  | Y |  |  | unknown | 96&#8209;97 |
+| 69 | `subset_sum` | Y | Y |  |  | Y |  |  | unknown | 102&#8209;105 |
+| 70 | `multiset` | Y | Y |  |  | Y |  |  | unknown | 109&#8209;110 |
+| 71 | `set` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;116 |
+| 72 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 120&#8209;121 |
+| 73 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 125 |
+| 74 | `subset_sum_rec` |  |  |  | Y | Y |  |  | unknown | 134&#8209;143 |
+| 75 | `multiset_mut` | Y | Y |  |  |  | Y | Y |  | 246&#8209;248 |
 
 ### Chap49/SubsetSumStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 76 | `new` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;82 |
-| 77 | `from_multiset` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;87 |
-| 78 | `subset_sum` | Y | Y |  |  | Y |  | Y |  | 91&#8209;93 |
-| 79 | `multiset` | Y | Y |  |  | Y |  |  | unknown | 97&#8209;98 |
-| 80 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 102 |
-| 81 | `subset_sum_rec` |  |  |  | Y | Y |  |  | unknown | 109&#8209;118 |
-| 82 | `eq` |  | Y |  |  |  | Y | Y |  | 204&#8209;206 |
+| 76 | `new` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;92 |
+| 77 | `from_multiset` | Y | Y |  |  | Y |  |  | unknown | 96&#8209;97 |
+| 78 | `subset_sum` | Y | Y |  |  | Y |  | Y |  | 102&#8209;104 |
+| 79 | `multiset` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;109 |
+| 80 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 113 |
+| 81 | `subset_sum_rec` |  |  |  | Y | Y |  |  | unknown | 122&#8209;131 |
+| 82 | `eq` |  | Y |  |  |  | Y | Y |  | 227&#8209;229 |
 
 
 ### Legend
