@@ -296,8 +296,6 @@ pub mod PrimStEph {
 
         // Veracity: NEEDED proof block
         proof {
-            graph@.A.lemma_map_finite(|e: (V::V, V::V, u64)| (e.0, e.1));
-            graph@.A.lemma_map_finite(|e: (V::V, V::V, u64)| (e.1, e.0));
             vstd::set_lib::lemma_map_size_bound(graph@.A, DA_fwd, |e: (V::V, V::V, u64)| (e.0, e.1));
             vstd::set_lib::lemma_map_size_bound(graph@.A, DA_rev, |e: (V::V, V::V, u64)| (e.1, e.0));
             vstd::set_lib::lemma_len_union(DA_fwd, DA_rev);
@@ -325,13 +323,11 @@ pub mod PrimStEph {
                 DA == DA_fwd.union(DA_rev),
                 DA_fwd == graph@.A.map(|e: (V::V, V::V, u64)| (e.0, e.1)),
                 DA_rev == graph@.A.map(|e: (V::V, V::V, u64)| (e.1, e.0)),
-                DA.finite(),
                 DA.len() <= 2 * m as int,
                 remaining_budget >= 0,
                 pq@.len() + remaining_budget <= 2 * m as int + 1,
                 BinaryHeapPQ::<PQEntry<V>>::spec_is_exec_heap(pq.spec_seq()),
                 used_pairs.subset_of(DA),
-                used_pairs.finite(),
                 used_pairs.len() as int == 2 * m as int - remaining_budget,
                 mst_edges.spec_setsteph_wf(),
                 forall |e: (V::V, V::V)| #[trigger] used_pairs.contains(e) ==>
@@ -404,13 +400,11 @@ pub mod PrimStEph {
                         obeys_feq_clone::<PQEntry<V>>(),
                         m as int == graph@.A.len(),
                         graph@.A.len() * 4 + 4 <= usize::MAX as int,
-                        DA.finite(),
                         DA.len() <= 2 * m as int,
                         remaining_budget >= 0,
                         pq@.len() + remaining_budget <= 2 * m as int,
                         BinaryHeapPQ::<PQEntry<V>>::spec_is_exec_heap(pq.spec_seq()),
                         used_pairs.subset_of(DA),
-                        used_pairs.finite(),
                         used_pairs.len() as int == 2 * m as int - remaining_budget,
                         vit.seq().unref() == ng_seq,
                         ng_seq.no_duplicates(),

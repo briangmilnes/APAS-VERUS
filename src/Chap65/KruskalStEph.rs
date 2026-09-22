@@ -75,7 +75,7 @@ pub mod KruskalStEph {
             forall|k: int| 0 <= k < pre_sort.len() ==> #[trigger] pre_sort[k]@ == edge_seq[k]@,
             mapped_es == edge_seq.map(|_i: int, e: LabEdge<V, u64>| e@),
             forall|x: (<V as View>::V, <V as View>::V, u64)|
-                labeled_view.contains(x) <==> mapped_es.contains(x),
+                labeled_view.contains(x) <==> #[trigger] mapped_es.contains(x),
             labeled_view =~= graph_A,
             spec_labgraphview_wf(LabGraphView { V: graph_V, A: graph_A }),
         ensures
@@ -91,6 +91,8 @@ pub mod KruskalStEph {
         assert(labeled_view.contains(edge_seq[j]@));
         assert(graph_A.contains(edge_seq[j]@));
         assert(graph_A.contains((edge_seq[j]@.0, edge_seq[j]@.1, edge_seq[j]@.2)));
+        let gv = LabGraphView { V: graph_V, A: graph_A };
+        assert(gv.A.contains((edge_seq[j]@.0, edge_seq[j]@.1, edge_seq[j]@.2)));
         assert(graph_V.contains(edge_seq[j]@.0));
         assert(graph_V.contains(edge_seq[j]@.1));
     }
@@ -175,7 +177,7 @@ pub mod KruskalStEph {
                 #[trigger] pre_sort[k]@ == edge_seq[k]@,
             mapped_es == edge_seq.map(|_i: int, e: LabEdge<V, u64>| e@),
             forall|x: (<V as View>::V, <V as View>::V, u64)|
-                labeled_view.contains(x) <==> mapped_es.contains(x),
+                labeled_view.contains(x) <==> #[trigger] mapped_es.contains(x),
             labeled_view =~= graph_A,
             spec_labgraphview_wf(LabGraphView { V: graph_V, A: graph_A }),
         ensures
@@ -196,7 +198,7 @@ pub mod KruskalStEph {
                     #[trigger] pre_sort[k]@ == edge_seq[k]@,
                 mapped_es =~= edge_seq.map(|_i: int, e: LabEdge<V, u64>| e@),
                 forall|x: (<V as View>::V, <V as View>::V, u64)|
-                    labeled_view.contains(x) <==> mapped_es.contains(x),
+                    labeled_view.contains(x) <==> #[trigger] mapped_es.contains(x),
                 labeled_view =~= graph_A,
                 spec_labgraphview_wf(LabGraphView { V: graph_V, A: graph_A }),
             decreases edges_vec@.len() - i,
@@ -327,7 +329,7 @@ pub mod KruskalStEph {
         proof {
             crate::vstdplus::feq::feq::lemma_reveal_view_injective::<V>();
             reveal(crate::Chap65::UnionFindPCStEph::UnionFindPCStEph::spec_light_wf);
-            assert(uf.parent@.dom().finite());
+            crate::vstdplus::hash_specs_plus::hash_specs_plus::lemma_key_view_len(uf.parent@);
             assert(uf.parent@.dom().len() == 0);
             uf.parent@.dom().lemma_len0_is_empty();
         }
@@ -390,7 +392,7 @@ pub mod KruskalStEph {
                     #[trigger] edges_vec@[j]@ == edge_seq@[j]@,
                 mapped_es == edge_seq@.map(|_i: int, e: LabEdge<V, u64>| e@),
                 forall|x: (<V as View>::V, <V as View>::V, u64)|
-                    labeled_view.contains(x) <==> mapped_es.contains(x),
+                    labeled_view.contains(x) <==> #[trigger] mapped_es.contains(x),
                 labeled_view =~= graph@.A,
             decreases edge_seq@.len() - ei,
         {
@@ -427,13 +429,12 @@ pub mod KruskalStEph {
         }
         let mut total: u64 = 0;
         let mut it = mst_edges.iter();
-        let ghost le_seq = it@.1;
         loop
             invariant
-                it@.0 <= le_seq.len(),
-                it@.1 == le_seq,
+                vstd::std_specs::iter::IteratorSpec::obeys_prophetic_iter_laws(&it),
+                vstd::std_specs::iter::IteratorSpec::decrease(&it) is Some,
                 mst_edges@.len() > 0,
-            decreases le_seq.len() - it@.0,
+            decreases vstd::std_specs::iter::IteratorSpec::decrease(&it)->0,
         {
             match it.next() {
                 None => return total,

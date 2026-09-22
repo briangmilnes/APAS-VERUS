@@ -87,7 +87,7 @@ calls, removed chapter by chapter as each is migrated.
 | 40 | 62 | 05, 06, 19 | 0 | r213: 1256 verified, 0 err, 0 warn; RTT 39 pass | `validate.20260922-063225.log` |
 | 41 | 63 | 05, 06, 62 | 0 | r213: 1271 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-063307.log` |
 | 42 | 64 | 05, 06, 62 | 0 | r213: 1271 verified, 0 err, 0 warn; RTT 24 pass | `validate.20260922-063333.log` |
-| 43 | 65 | 05, 06, 45 | 6 | `KruskalStEph.rs` 4, `PrimStEph.rs` 2; blocked on 45 | full log |
+| 43 | 65 | 05, 06, 45 | 4 | r213: 2522 verified, 4 rlimit err (see log) | `validate.20260922-064919.log` |
 | 44 | 66 | 05 | 0 | verifies: 795, 0 errors | `validate.20260921-084327.log` |
 
 Chapters 07–10, 13–16, 20, 22, 24, 25, 29, 31–34, 46, 48, 60 have no directory.

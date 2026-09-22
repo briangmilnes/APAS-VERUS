@@ -1,0 +1,32 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+error[E0599]: no method named `view` found for struct `std::collections::hash_set::Iter<'a, K>` in the current scope
+   --> src/Chap65/KruskalStEph.rs:429:30
+    |
+429 |         let ghost le_seq = it@.1;
+    |                              ^ method not found in `std::collections::hash_set::Iter<'_, Types::Types::LabEdge<V, u64>>`
+
+error[E0599]: no method named `view` found for struct `std::collections::hash_set::Iter<'a, K>` in the current scope
+   --> src/Chap65/KruskalStEph.rs:432:19
+    |
+432 |                 it@.0 <= le_seq.len(),
+    |                   ^ method not found in `std::collections::hash_set::Iter<'_, Types::Types::LabEdge<V, u64>>`
+
+error[E0599]: no method named `view` found for struct `std::collections::hash_set::Iter<'a, K>` in the current scope
+   --> src/Chap65/KruskalStEph.rs:433:19
+    |
+433 |                 it@.1 == le_seq,
+    |                   ^ method not found in `std::collections::hash_set::Iter<'_, Types::Types::LabEdge<V, u64>>`
+
+error[E0599]: no method named `view` found for struct `std::collections::hash_set::Iter<'a, K>` in the current scope
+   --> src/Chap65/KruskalStEph.rs:435:40
+    |
+435 |             decreases le_seq.len() - it@.0,
+    |                                        ^ method not found in `std::collections::hash_set::Iter<'_, Types::Types::LabEdge<V, u64>>`
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 693MB, peak z3 RSS: 0MB, min free: 25777MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

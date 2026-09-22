@@ -64,6 +64,7 @@ file, or listed at the end.
 | 40 | 62 | 1256 | 0 | 0 | 39 pass | none | r213 Chap62 |
 | 41 | 63 | 1271 | 0 | 0 | 40 pass | none | r213 Chap63 |
 | 42 | 64 | 1271 | 0 | 0 | 24 pass | none | r213 Chap64 |
+| 43 | 65 | 2522 | 4 | 0 | 0 run (gated) | none | r213 Chap65 (not clean) |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -727,4 +728,63 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
 - Start and end: 1271 verified, 0 errors, 0 warnings, 0 trigger notes
   (`logs/validate.20260922-063333.log`). No edit.
 - RTT: 3 targets, 24 tests pass (`logs/rtt.20260922-063354.log`).
+- PTT: none registered.
+
+### Chap65 (not clean: 4 functions left failing)
+
+- Start: did not compile (`logs/validate.20260922-063518.log`, after the
+  `finite()` edits): `KruskalStEph::mst_weight` used the old-model `it@` on
+  `hash_set::Iter`; before the edits, `PrimStEph` also called the removed
+  `Set::lemma_map_finite` and there were 43 deprecated `finite()` sites.
+  Chap65 had not verified on 09.13 before this round.
+- Edit class 1 and 2, `finite()` removal: the `.finite()` conjunct of
+  `spec_size_rank_inv_map` (both union-find files) and of its seven
+  `assert forall` restatements; `parent.dom().finite()` / `po.dom().finite()`
+  / `pn.dom().finite()` requires and ensures conjuncts; `&&&
+  parent.dom().finite()` in `spec_light_wf` (`UnionFindPCStEph.rs`); the
+  finite-only asserts (`st_old*.finite()`, `po.dom().finite()`,
+  `(su + sv).finite()` with its `by`, `su.finite() && ..` reduced to the
+  length part); `DA.finite()`, `used_pairs.finite()` invariants and the two
+  `lemma_map_finite` calls in `PrimStEph.rs`; one assert in
+  `KruskalStEph.rs`.
+- Edit class 3: the `mst_weight` loop now uses the prophetic model
+  (`obeys_prophetic_iter_laws`, `decrease(&it) is Some`, `decreases
+  decrease(&it)->0`).
+- Edit class 5, proof repair in `KruskalStEph.rs`:
+  `lemma_sorted_edge_in_graph_v` names the `LabGraphView` literal and asserts
+  its `A` contains the edge triple, so the graph wf quantifier fires; the
+  empty-union-find base case calls `lemma_key_view_len(uf.parent@)`; four
+  `forall|x| labeled_view.contains(x) <==> mapped_es.contains(x)` quantifiers
+  get an explicit `#[trigger]` on `mapped_es.contains(x)` (the trigger Verus
+  had picked). Kruskal's three assertion failures and four trigger notes are
+  gone.
+- Left failing (all `function body check: Resource limit (rlimit)
+  exceeded`, `logs/validate.20260922-064919.log`, 2522 verified, 4 errors):
+  1. `UnionFindArrayStEph.rs:403` `UnionFindArray::union` (default rlimit).
+     Profile (`logs/validate.20260922-063901.log`): 38,231 instantiations, no
+     matching loop (top: a vstd `seq.rs` axiom, 17,815). Raised to 30 and to
+     60, it still failed (`logs/validate.20260922-064407.log`,
+     `logs/validate.20260922-064632.log`), so the attribute was taken out
+     again: not an rlimit problem to be solved by raising it.
+  2. `UnionFindNoPCStEph.rs:549` `UnionFind::union_sets` (existing
+     `rlimit(30)`). Profile: 706,251 instantiations; the costliest quantifier
+     is the domain-closure conjunct of `spec_uf_wf`,
+     `forall|k| #[trigger] key_view(parent).dom().contains(k) ==>
+     key_view(parent).dom().contains(pv(parent, k))`, whose conclusion
+     re-matches its own trigger (a matching loop), with
+     `lemma_key_view_contains` second (179,194). By rule, no rlimit raise.
+     The same conjunct occurs in seven places across both union-find files;
+     re-triggering it on `pv::<V>(parent, k)` is the likely fix, a
+     cross-file proof change not attempted here.
+  3. `UnionFindPCStEph.rs:509` `lemma_build_final_wf` (existing
+     `rlimit(80)`). Its profile rerun ran the machine to 1.1 GB free (Z3
+     19 GB) and the analysis did not finish, so no profile; not raised.
+  4. `UnionFindPCStEph.rs:1096` `UnionFindPC::union` (existing `rlimit(40)`):
+     passed in the profile run's first pass and failed in the other three
+     runs; not profiled, not raised.
+- Memory: every Chap65 run peaks near 14 GB of Z3 RSS.
+- Exec cost: none changed.
+- RTT: 5 targets build; they run 0 tests, because every file in
+  `tests/Chap65/` starts with `#![cfg(feature = "all_chapters")]`
+  (`logs/rtt.20260922-064856.log`).
 - PTT: none registered.

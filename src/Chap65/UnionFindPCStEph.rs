@@ -97,8 +97,7 @@ pub mod UnionFindPCStEph {
         parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat,
     ) -> bool {
         forall|r: V::V| parent.dom().contains(r) && pv::<V>(parent, r) == r ==>
-            spec_subtree::<V>(parent, rank, n, r).finite()
-            && spec_subtree::<V>(parent, rank, n, r).len() >= (#[trigger] rank[r] as nat) + 1
+            spec_subtree::<V>(parent, rank, n, r).len() >= (#[trigger] rank[r] as nat) + 1
     }
 
     /// Well-formedness. Built from closed light_wf + size_rank_inv so callers
@@ -118,7 +117,6 @@ pub mod UnionFindPCStEph {
     pub open spec fn spec_light_wf<V: View>(
         parent: Map<V::V, V>, rank: Map<V::V, usize>, n: nat,
     ) -> bool {
-        &&& parent.dom().finite()
         &&& n == parent.dom().len()
         &&& forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k)
         &&& forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
@@ -268,7 +266,6 @@ pub mod UnionFindPCStEph {
     )
         requires
             // po is a valid forest.
-            po.dom().finite(),
             po.dom().contains(v), po.dom().contains(z),
             forall|k: V::V| #[trigger] po.dom().contains(k) <==> rank.dom().contains(k),
             forall|k: V::V| #[trigger] po.dom().contains(k) ==>
@@ -335,7 +332,6 @@ pub mod UnionFindPCStEph {
         v: V::V, root: V::V,
     )
         requires
-            po.dom().finite(),
             po.dom().contains(v),
             forall|k: V::V| #[trigger] po.dom().contains(k) <==> rank.dom().contains(k),
             forall|k: V::V| #[trigger] po.dom().contains(k) ==>
@@ -377,7 +373,6 @@ pub mod UnionFindPCStEph {
         curr: V::V, root: V::V,
     )
         requires
-            po.dom().finite(),
             forall|k: V::V| #[trigger] po.dom().contains(k) <==> rank.dom().contains(k),
             n == po.dom().len(),
             po.dom().contains(root), spec_is_root_map::<V>(po, root), root != curr,
@@ -387,7 +382,6 @@ pub mod UnionFindPCStEph {
             forall|k: V::V| po.dom().contains(k) ==>
                 (#[trigger] rank[k] as int) < n as int,
         ensures
-            pn.dom().finite(),
             n == pn.dom().len(),
             forall|k: V::V| #[trigger] pn.dom().contains(k) <==> rank.dom().contains(k),
             forall|k: V::V| pn.dom().contains(k) ==>
@@ -538,8 +532,7 @@ pub mod UnionFindPCStEph {
         assert(spec_size_rank_inv_map::<V>(key_view(uf.parent@), key_view(uf.rank@), orig_n)) by {
             assert forall|r: V::V| key_view(uf.parent@).dom().contains(r)
                 && pv::<V>(key_view(uf.parent@), r) == r implies
-                spec_subtree::<V>(key_view(uf.parent@), key_view(uf.rank@), orig_n, r).finite()
-                && spec_subtree::<V>(key_view(uf.parent@), key_view(uf.rank@), orig_n, r).len()
+                spec_subtree::<V>(key_view(uf.parent@), key_view(uf.rank@), orig_n, r).len()
                     >= (#[trigger] key_view(uf.rank@)[r] as nat) + 1
             by {
                 assert(orig_parent.dom().contains(r));
@@ -557,7 +550,6 @@ pub mod UnionFindPCStEph {
                         #[trigger] st_new.contains(k)
                     by { if orig_parent.dom().contains(k) { assert(key_view(uf.parent@).dom().contains(k)); } }
                 }
-                assert(st_old.finite());
                 lemma_len_subset::<V::V>(st_new, st_old);
                 lemma_len_subset::<V::V>(st_old, st_new);
             }
@@ -609,7 +601,6 @@ pub mod UnionFindPCStEph {
     )
         requires
             // po wf.
-            po.dom().finite(),
             po.dom().contains(curr), po.dom().contains(root),
             forall|k: V::V| #[trigger] po.dom().contains(k) <==> rank.dom().contains(k),
             forall|k: V::V| #[trigger] po.dom().contains(k) ==>
@@ -754,7 +745,6 @@ pub mod UnionFindPCStEph {
         ru: V::V, rv: V::V,
     )
         requires
-            parent.dom().finite(),
             parent.dom().contains(ru), parent.dom().contains(rv),
             ru != rv,
             pv::<V>(parent, ru) == ru, pv::<V>(parent, rv) == rv,
@@ -766,8 +756,8 @@ pub mod UnionFindPCStEph {
         let r = rank[ru];
         let su = spec_subtree::<V>(parent, rank, n, ru);
         let sv = spec_subtree::<V>(parent, rank, n, rv);
-        assert(su.finite() && su.len() >= r as nat + 1);
-        assert(sv.finite() && sv.len() >= r as nat + 1);
+        assert(su.len() >= r as nat + 1);
+        assert(sv.len() >= r as nat + 1);
         assert(su.disjoint(sv)) by {
             assert forall|k: V::V| !(su.contains(k) && sv.contains(k)) by {}
         }
@@ -782,9 +772,6 @@ pub mod UnionFindPCStEph {
         }
         lemma_set_disjoint_lens(su, sv);
         assert((su + sv).len() == su.len() + sv.len());
-        assert((su + sv).finite()) by {
-            lemma_len_subset::<V::V>(su + sv, parent.dom());
-        }
         lemma_len_subset::<V::V>(su + sv, parent.dom());
         assert((su + sv).len() <= n);
     }
@@ -909,8 +896,7 @@ pub mod UnionFindPCStEph {
                 }
                 assert(spec_size_rank_inv_map::<V>(pn, rn, n_new)) by {
                     assert forall|r: V::V| pn.dom().contains(r) && pv::<V>(pn, r) == r implies
-                        spec_subtree::<V>(pn, rn, n_new, r).finite()
-                        && spec_subtree::<V>(pn, rn, n_new, r).len() >= (#[trigger] rn[r] as nat) + 1
+                        spec_subtree::<V>(pn, rn, n_new, r).len() >= (#[trigger] rn[r] as nat) + 1
                     by {
                         if r == vv {
                             let st = spec_subtree::<V>(pn, rn, n_new, vv);
@@ -1164,8 +1150,7 @@ pub mod UnionFindPCStEph {
                     }
                     assert(spec_size_rank_inv_map::<V>(pn, rn, n)) by {
                         assert forall|r: V::V| pn.dom().contains(r) && pv::<V>(pn, r) == r implies
-                            spec_subtree::<V>(pn, rn, n, r).finite()
-                            && spec_subtree::<V>(pn, rn, n, r).len() >= (#[trigger] rn[r] as nat) + 1
+                            spec_subtree::<V>(pn, rn, n, r).len() >= (#[trigger] rn[r] as nat) + 1
                         by {
                             assert(r != root_u@);
                             let st_new = spec_subtree::<V>(pn, rn, n, r);
@@ -1184,7 +1169,6 @@ pub mod UnionFindPCStEph {
                                         }
                                     }
                                 }
-                                assert(st_old_u.finite()); assert(st_old_v.finite());
                                 assert(st_old_u.disjoint(st_old_v)) by {
                                     assert forall|k: V::V| !(st_old_u.contains(k) && st_old_v.contains(k)) by {}
                                 }
@@ -1237,8 +1221,7 @@ pub mod UnionFindPCStEph {
                     }
                     assert(spec_size_rank_inv_map::<V>(pn, rn, n)) by {
                         assert forall|r: V::V| pn.dom().contains(r) && pv::<V>(pn, r) == r implies
-                            spec_subtree::<V>(pn, rn, n, r).finite()
-                            && spec_subtree::<V>(pn, rn, n, r).len() >= (#[trigger] rn[r] as nat) + 1
+                            spec_subtree::<V>(pn, rn, n, r).len() >= (#[trigger] rn[r] as nat) + 1
                         by {
                             assert(r != root_v@);
                             let st_new = spec_subtree::<V>(pn, rn, n, r);
@@ -1255,7 +1238,6 @@ pub mod UnionFindPCStEph {
                                         }
                                     }
                                 }
-                                assert(st_old_v.finite()); assert(st_old_u.finite());
                                 assert(st_old_v.disjoint(st_old_u)) by {
                                     assert forall|k: V::V| !(st_old_v.contains(k) && st_old_u.contains(k)) by {}
                                 }
@@ -1294,7 +1276,6 @@ pub mod UnionFindPCStEph {
                 let n_len = self.parent.len();
                 proof {
                     reveal(spec_light_wf);
-                    assert(po.dom().finite());
                     assert(po.dom().contains(root_u@)); assert(po.dom().contains(root_v@));
                     assert(ro.dom().contains(root_u@)); assert(ro.dom().contains(root_v@));
                     lemma_rank_lt_n_minus_1::<V>(po, ro, n, root_u@, root_v@);
@@ -1339,8 +1320,7 @@ pub mod UnionFindPCStEph {
                     }
                     assert(spec_size_rank_inv_map::<V>(pn, rn, n)) by {
                         assert forall|r: V::V| pn.dom().contains(r) && pv::<V>(pn, r) == r implies
-                            spec_subtree::<V>(pn, rn, n, r).finite()
-                            && spec_subtree::<V>(pn, rn, n, r).len() >= (#[trigger] rn[r] as nat) + 1
+                            spec_subtree::<V>(pn, rn, n, r).len() >= (#[trigger] rn[r] as nat) + 1
                         by {
                             assert(r != root_v@);
                             let st_new = spec_subtree::<V>(pn, rn, n, r);
@@ -1357,7 +1337,6 @@ pub mod UnionFindPCStEph {
                                         }
                                     }
                                 }
-                                assert(st_old_v.finite()); assert(st_old_u.finite());
                                 assert(st_old_v.disjoint(st_old_u)) by {
                                     assert forall|k: V::V| !(st_old_v.contains(k) && st_old_u.contains(k)) by {}
                                 }

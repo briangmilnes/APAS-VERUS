@@ -1,0 +1,136 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+error: assertion failed
+  --> src/Chap65/KruskalStEph.rs:94:16
+   |
+94 |         assert(graph_V.contains(edge_seq[j]@.0));
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+  --> src/Chap65/KruskalStEph.rs:95:16
+   |
+95 |         assert(graph_V.contains(edge_seq[j]@.1));
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+graph_V.to_iset().contains(edge_seq.index(j).view().0) 
+    function is uninterpreted
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:330:20
+    |
+330 |             assert(uf.parent@.dom().len() == 0);
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+uf.parent.view().dom().len() == 0 
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindArrayStEph.rs:403:9
+    |
+403 |         fn union(&mut self, x: usize, y: usize) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindNoPCStEph.rs:549:9
+    |
+549 |         fn union_sets(&mut self, u: &V, v: &V) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindPCStEph.rs:509:11
+    |
+509 |       proof fn lemma_build_final_wf<V: StT + Hash + ClonePreservesView>(
+    |  ___________^
+510 | |         uf: &UnionFindPC<V>,
+511 | |         orig_parent: Map<V::V, V>, orig_rank: Map<V::V, usize>, orig_n: nat,
+512 | |     )
+    | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap65/UnionFindPCStEph.rs:1096:9
+     |
+1096 |         fn union(&mut self, u: &V, v: &V) {
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+  --> src/Chap65/KruskalStEph.rs:77:13
+   |
+77 | /             forall|x: (<V as View>::V, <V as View>::V, u64)|
+78 | |                 labeled_view.contains(x) <==> mapped_es.contains(x),
+   | |___________________________________________________________________^
+
+note:   trigger 1 of 1:
+  --> src/Chap65/KruskalStEph.rs:78:47
+   |
+78 |                 labeled_view.contains(x) <==> mapped_es.contains(x),
+   |                                               ^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap65/KruskalStEph.rs:177:13
+    |
+177 | /             forall|x: (<V as View>::V, <V as View>::V, u64)|
+178 | |                 labeled_view.contains(x) <==> mapped_es.contains(x),
+    | |___________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap65/KruskalStEph.rs:178:47
+    |
+178 |                 labeled_view.contains(x) <==> mapped_es.contains(x),
+    |                                               ^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap65/KruskalStEph.rs:198:17
+    |
+198 | /                 forall|x: (<V as View>::V, <V as View>::V, u64)|
+199 | |                     labeled_view.contains(x) <==> mapped_es.contains(x),
+    | |_______________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap65/KruskalStEph.rs:199:51
+    |
+199 |                     labeled_view.contains(x) <==> mapped_es.contains(x),
+    |                                                   ^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap65/KruskalStEph.rs:391:17
+    |
+391 | /                 forall|x: (<V as View>::V, <V as View>::V, u64)|
+392 | |                     labeled_view.contains(x) <==> mapped_es.contains(x),
+    | |_______________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap65/KruskalStEph.rs:392:51
+    |
+392 |                     labeled_view.contains(x) <==> mapped_es.contains(x),
+    |                                                   ^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap65/KruskalStEph.rs:391:17
+    |
+391 | /                 forall|x: (<V as View>::V, <V as View>::V, u64)|
+392 | |                     labeled_view.contains(x) <==> mapped_es.contains(x),
+    | |_______________________________________________________________________^
+
+verification results:: 2520 verified, 6 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 138s
+Sampled Memory Usage: peak rust_verify RSS: 2965MB, peak z3 RSS: 13869MB, min free: 9821MB
+Sampled CPU Usage: rust_verify: 42s, z3 children: 72s
