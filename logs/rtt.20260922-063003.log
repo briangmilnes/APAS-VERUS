@@ -1,0 +1,106 @@
+r212 RTT for Chap61: cargo test --release on 4 targets: TestEdgeContractionMtEph TestEdgeContractionStEph TestVertexMatchingMtEph TestVertexMatchingStEph
+Starting RTT at 06:30:03
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.23s
+     Running tests/Chap61/TestEdgeContractionMtEph.rs (target/release/deps/TestEdgeContractionMtEph-7ca25846212e0a5a)
+
+running 7 tests
+test test_edge_contract_mt_single_edge ... ok
+test test_edge_contract_mt_cycle ... ok
+test test_edge_contract_mt_star ... ok
+test test_edge_contract_mt_empty_matching ... ok
+test test_contract_round_mt_reduces_vertices ... ok
+test test_contract_round_mt_complete_graph ... ok
+test test_contract_round_mt_correctness ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap61/TestEdgeContractionStEph.rs (target/release/deps/TestEdgeContractionStEph-26d8a38ce79193f7)
+
+running 12 tests
+test test_contract_round_cycle ... ok
+test test_contract_round_large_cycle ... ok
+test test_contract_round_small_complete ... ok
+test test_edge_contract_cycle ... ok
+test test_contract_round_star ... ok
+test test_edge_contract_disconnected ... ok
+test test_edge_contract_empty_matching ... ok
+test test_edge_contract_path_graph ... ok
+test test_edge_contract_preserves_unmatched ... ok
+test test_edge_contract_single_edge_graph ... ok
+test test_edge_contract_star ... ok
+test test_edge_contract_triangle ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap61/TestVertexMatchingMtEph.rs (target/release/deps/TestVertexMatchingMtEph-ca97ca483a9ceca1)
+
+running 6 tests
+test test_parallel_matching_mt_empty ... ok
+test test_parallel_matching_mt_single_edge ... ok
+test test_parallel_matching_mt_star ... ok
+test test_parallel_matching_mt_correctness ... ok
+test test_parallel_matching_mt_cycle ... ok
+test test_parallel_matching_mt_different_seeds ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap61/TestVertexMatchingStEph.rs (target/release/deps/TestVertexMatchingStEph-1e4087f998c3818d)
+
+running 15 tests
+test test_greedy_matching_complete_graph ... ok
+test test_greedy_matching_cycle ... ok
+test test_greedy_matching_empty_graph ... ok
+test test_greedy_matching_path ... ok
+test test_greedy_matching_isolated_vertices ... ok
+test test_greedy_matching_single_edge ... ok
+test test_greedy_matching_star ... ok
+test test_greedy_matching_two_edges_share_vertex ... ok
+test test_matching_properties ... ok
+test test_parallel_matching_st_cycle ... ok
+test test_parallel_matching_st_determinism ... ok
+test test_parallel_matching_st_empty ... ok
+test test_parallel_matching_st_large_cycle ... ok
+test test_parallel_matching_st_single_edge ... ok
+test test_parallel_matching_st_star ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 0s

@@ -83,7 +83,7 @@ calls, removed chapter by chapter as each is migrated.
 | 36 | 57 | 05, 06, 45, 56 | 0 | r213: 2583 verified, 0 err, 0 warn; RTT 48 pass | `validate.20260922-062519.log` |
 | 37 | 58 | 05, 06, 56 | 0 | r213: 1370 verified, 0 err, 0 warn; RTT 41 pass | `validate.20260922-062822.log` |
 | 38 | 59 | 05, 06, 19, 56, 57, 58 | 0 | r213: 2632 verified, 0 err, 0 warn; RTT 41 pass | `validate.20260922-062907.log` |
-| 39 | 61 | 05, 06, 19 | 0 | type-checked in r209; blocked on 19 | `validate.20260921-091115.log` |
+| 39 | 61 | 05, 06, 19 | 0 | r213: 1243 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-062947.log` |
 | 40 | 62 | 05, 06, 19 | 0 | type-checked in r209; blocked on 19 | `validate.20260921-091932.log` |
 | 41 | 63 | 05, 06, 62 | 0 | type-checked in r209; blocked on 19 | `validate.20260921-092508.log` |
 | 42 | 64 | 05, 06, 62 | 0 | type-checked in r209; blocked on 19 | `validate.20260921-092658.log` |
