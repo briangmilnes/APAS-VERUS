@@ -1,0 +1,108 @@
+r212 RTT for Chap64: cargo test --release on 3 targets: TestSpanTreeMtEph TestSpanTreeStEph TestTSPApproxStEph
+Starting RTT at 06:33:54
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap64/TestSpanTreeMtEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap64/TestTSPApproxStEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestTSPApproxStEph") generated 1 warning
+warning: `apas-verus` (test "TestSpanTreeMtEph") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 0.17s
+     Running tests/Chap64/TestSpanTreeMtEph.rs (target/release/deps/TestSpanTreeMtEph-79848d62c5d5e055)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap64/TestSpanTreeStEph.rs (target/release/deps/TestSpanTreeStEph-479c56bd8258f294)
+
+running 24 tests
+test test_spanning_tree_barbell ... ok
+test test_spanning_tree_binary_tree_topology ... ok
+test test_spanning_tree_complete_5 ... ok
+test test_spanning_tree_cycle ... ok
+test test_spanning_tree_complete_graph_4 ... ok
+test test_spanning_tree_empty ... ok
+test test_spanning_tree_double_cycle ... ok
+test test_spanning_tree_grid_2x3 ... ok
+test test_spanning_tree_connected ... ok
+test test_spanning_tree_disconnected_pair ... ok
+test test_spanning_tree_path_graph ... ok
+test test_spanning_tree_single_vertex ... ok
+test test_spanning_tree_petersen_like ... ok
+test test_spanning_tree_large_path ... ok
+test test_spanning_tree_large_cycle ... ok
+test test_spanning_tree_star_graph ... ok
+test test_spanning_tree_three_isolated ... ok
+test test_spanning_tree_triangle ... ok
+test test_spanning_tree_two_vertices ... ok
+test test_spanning_tree_wheel_graph ... ok
+test test_verify_spanning_tree ... ok
+test test_verify_spanning_tree_empty_tree_on_connected ... ok
+test test_verify_spanning_tree_too_many_edges ... ok
+test test_verify_spanning_tree_wrong_edge ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap64/TestTSPApproxStEph.rs (target/release/deps/TestTSPApproxStEph-d7c0cf739f9de9bd)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 1s
