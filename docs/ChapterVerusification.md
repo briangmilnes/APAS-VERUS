@@ -58,7 +58,7 @@ calls, removed chapter by chapter as each is migrated.
 | 11 | 23 | — | 0 | r213: 679 verified, 0 err, 0 warn; RTT 92, PTT 17 pass | `validate.20260922-051126.log` |
 | 12 | 26 | 02, 18 | 0 | r213: 1098 verified, 0 err, 0 warn; RTT 59 pass | `validate.20260922-051314.log` |
 | 13 | 27 | 02, 19 | 0 | r213: 846 verified, 0 err, 0 warn; RTT 48 pass | `validate.20260922-051353.log` |
-| 14 | 28 | 19 | 0 | blocked on 19 | full log |
+| 14 | 28 | 19 | 0 | r213: 883 verified, 0 err, 0 warn; RTT 68 pass | `validate.20260922-051419.log` |
 | 15 | 30 | — | 0 | not run; no deps | — |
 | 16 | 35 | 02, 18, 19 | 0 | blocked on 18, 19 | full log |
 | 17 | 36 | 19 | 0 | blocked on 19 | full log |
