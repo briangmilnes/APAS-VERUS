@@ -1365,8 +1365,8 @@ pub mod ArraySeqMtEph {
                     axiom_cloned_implies_eq_owned::<T>(updates@[k as int].1, val);
                 }
                 if k < mid {
-// Veracity: UNNEEDED proof block                     left.push((pos, val));
-// Veracity: UNNEEDED proof block                 } else {
+                    left.push((pos, val));
+                } else {
                     right.push((pos, val));
                 }
                 k += 1;

@@ -27,7 +27,9 @@ file, or listed at the end.
 | 3 | 05 | 760 | 0 | 0 | 89 pass | 5 of 21 (1) | 7680a0ea8 |
 | 4 | 06 | 1037 | 0 | 0 | 275 pass | not registered | 8c5300b01 |
 | 5 | 11 | 651 | 0 | 0 | 40 pass | none | 58e3ecf69 |
-| 6 | 12 | 635 | 0 | 0 | 40 pass | none | r213 Chap12 |
+| 6 | 12 | 635 | 0 | 0 | 40 pass | none | 571ed7e81 |
+| 7 | 17 | 645 | 0 | 0 | 40 pass | 2 of 9 (1) | 8c46d30bd |
+| 8 | 18 | 1003 | 0 | 0 | 170 pass | 38 pass | r213 Chap18 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -96,3 +98,28 @@ and do not compile; see the chapter section.
   failures are the old iterator model (`MathSeqIter`, `iter_invariant`,
   `it@` on `vec::IntoIter`, `.pos`/`.elements`/`.cur` on the for-loop
   wrapper). Hand rewrite needed; not done in this pass.
+
+### Chap18
+
+- Start: 1003 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-050849.log`); the cargo build reported one rustc
+  warning in this chapter, `variable does not need to be mutable` for `left`
+  at `ArraySeqMtEph.rs:1340`.
+- Cause of the warning: in `ninject` of `src/Chap18/ArraySeqMtEph.rs`, the
+  split loop read `if k < mid { right.push((pos, val)); }`, because a
+  proof-minimisation run (commit `5f90be4bd`, R170, "veracity-minimize-proofs")
+  had commented out the exec lines `left.push((pos, val));` and `} else {`
+  under `// Veracity: UNNEEDED proof block` markers. The effect was that the
+  first half of the updates went to the right-hand worker and the second half
+  was dropped, and the left-hand worker received no updates. The weak
+  `ninject` postcondition still verified, so nothing flagged it.
+- Exec edit (one, restoring the r1xx text of commit `ce91629fc`):
+  `if k < mid { left.push((pos, val)); } else { right.push((pos, val)); }`.
+  Cost: the loop is Θ(|updates|) work and span before and after (one push per
+  update); the parallel apply is unchanged. It restores the algorithm the
+  `Alg Analysis` lines describe.
+- End: 1003 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-050912.log`).
+- RTT: 8 targets, 170 tests pass (`logs/rtt.20260922-050921.log`); the
+  unused-`mut` warning is gone from the build.
+- PTT: 8 files, 38 tests pass (`logs/ptt-Chap18.20260922-050932.log`).

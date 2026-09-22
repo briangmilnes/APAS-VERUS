@@ -1,0 +1,260 @@
+r212 RTT for Chap18: cargo test --release on 8 targets: TestArraySeq TestArraySeqMtPer TestArraySeqMtEph TestChap18ArraySeqMtEphSlice TestArraySeqStEph TestArraySeqStPer TestLinkedListStEph TestLinkedListStPer
+Starting RTT at 05:09:21
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 6.05s
+     Running tests/Chap18/TestArraySeq.rs (target/release/deps/TestArraySeq-abb3bf1a153c5f3e)
+
+running 21 tests
+test test_clone ... ok
+test test_debug ... ok
+test test_display ... ok
+test test_empty ... ok
+test test_from_vec ... ok
+test test_into_iterator_mut ... ok
+test test_into_iterator_owned ... ok
+test test_into_iterator ... ok
+test test_is_empty ... ok
+test test_is_singleton ... ok
+test test_iter ... ok
+test test_iter_mut ... ok
+test test_length ... ok
+test test_map ... ok
+test test_new ... ok
+test test_nth ... ok
+test test_partial_eq ... ok
+test test_set ... ok
+test test_set_out_of_bounds ... ok
+test test_singleton ... ok
+test test_tabulate ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap18/TestArraySeqMtEph.rs (target/release/deps/TestArraySeqMtEph-1b21f8c1008cf584)
+
+running 27 tests
+test test_basic_operations ... ok
+test test_filter_par_empty ... ok
+test test_filter_par_singleton_drop ... ok
+test test_map_par_medium ... ok
+test test_map_par_odd_size ... ok
+test test_map_par_singleton ... ok
+test test_filter_par_singleton_keep ... ok
+test test_map_sequential ... ok
+test test_reduce_par ... ok
+test test_reduce_par_empty ... ok
+test test_reduce_par_odd_size ... ok
+test test_reduce_par_singleton ... ok
+test test_set_mutation ... ok
+test test_map_par_empty ... ok
+test test_filter_par_all_pass ... ok
+test test_map_par_small ... ok
+test test_map_par ... ok
+test test_reduce_sequential ... ok
+test test_filter_par_none_pass ... ok
+test test_reduce_par_small ... ok
+test test_reduce_par_medium ... ok
+test test_filter_par_small ... ok
+test test_filter_par_medium ... ok
+test test_filter_par ... ok
+test test_map_par_large ... ok
+test test_filter_par_large ... ok
+test test_reduce_par_large ... ok
+
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/Chap18/TestArraySeqMtPer.rs (target/release/deps/TestArraySeqMtPer-7e774c9fd5ef0e7f)
+
+running 27 tests
+test test_basic_operations ... ok
+test test_filter_par_empty ... ok
+test test_filter_par_singleton_drop ... ok
+test test_filter_par_singleton_keep ... ok
+test test_map_par ... ok
+test test_map_par_odd_size ... ok
+test test_map_par_singleton ... ok
+test test_map_sequential ... ok
+test test_filter_par_small ... ok
+test test_map_par_small ... ok
+test test_filter_par_all_pass ... ok
+test test_filter_par ... ok
+test test_reduce_par_empty ... ok
+test test_reduce_par ... ok
+test test_map_par_empty ... ok
+test test_filter_par_none_pass ... ok
+test test_filter_par_medium ... ok
+test test_reduce_par_odd_size ... ok
+test test_reduce_sequential ... ok
+test test_subseq_copy ... ok
+test test_reduce_par_small ... ok
+test test_reduce_par_singleton ... ok
+test test_map_par_medium ... ok
+test test_reduce_par_medium ... ok
+test test_filter_par_large ... ok
+test test_reduce_par_large ... ok
+test test_map_par_large ... ok
+
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/Chap18/TestArraySeqStEph.rs (target/release/deps/TestArraySeqStEph-df32b83825ebe2c3)
+
+running 15 tests
+test test_append ... ok
+test test_clone ... ok
+test test_debug ... ok
+test test_empty ... ok
+test test_display ... ok
+test test_iter ... ok
+test test_from_vec ... ok
+test test_map ... ok
+test test_new ... ok
+test test_partial_eq ... ok
+test test_set ... ok
+test test_singleton ... ok
+test test_subseq ... ok
+test test_update ... ok
+test test_tabulate ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap18/TestArraySeqStPer.rs (target/release/deps/TestArraySeqStPer-0fc689f231843413)
+
+running 14 tests
+test test_append ... ok
+test test_clone ... ok
+test test_empty ... ok
+test test_debug ... ok
+test test_display ... ok
+test test_from_vec ... ok
+test test_iter ... ok
+test test_map ... ok
+test test_new ... ok
+test test_partial_eq ... ok
+test test_singleton ... ok
+test test_subseq ... ok
+test test_tabulate ... ok
+test test_update ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap18/TestArraySeqMtEphSlice.rs (target/release/deps/TestChap18ArraySeqMtEphSlice-dadc9b2000f6709a)
+
+running 37 tests
+test test_append_basic ... ok
+test test_append_empty_left ... ok
+test test_append_empty_right ... ok
+test test_debug ... ok
+test test_display ... ok
+test test_from_vec ... ok
+test test_empty ... ok
+test test_inject_basic ... ok
+test test_is_empty_false ... ok
+test test_is_empty_true ... ok
+test test_inject_empty_updates ... ok
+test test_iter ... ok
+test test_is_singleton_false_empty ... ok
+test test_iter_for_loop ... ok
+test test_is_singleton_false_many ... ok
+test test_flatten_multiple ... ok
+test test_new ... ok
+test test_large_sequence ... ok
+test test_ninject_basic ... ok
+test test_slice_basic ... ok
+test test_is_singleton_true ... ok
+test test_reduce_empty ... ok
+test test_slice_empty ... ok
+test test_filter_some_pass ... ok
+test test_to_vec ... ok
+test test_map_small ... ok
+test test_update_first ... ok
+test test_singleton ... ok
+test test_slice_then_reduce ... ok
+test test_update_basic ... ok
+test test_slice_full ... ok
+test test_tabulate_small ... ok
+test test_slice_then_iter ... ok
+test test_scan_small ... ok
+test test_reduce_small ... ok
+test test_update_last ... ok
+test test_reduce_large ... ok
+
+test result: ok. 37 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/Chap18/TestLinkedListStEph.rs (target/release/deps/TestLinkedListStEph-54ce65009de9b1e9)
+
+running 15 tests
+test test_append ... ok
+test test_debug ... ok
+test test_clone ... ok
+test test_empty ... ok
+test test_display ... ok
+test test_iter ... ok
+test test_from_vec ... ok
+test test_map ... ok
+test test_new ... ok
+test test_partial_eq ... ok
+test test_set ... ok
+test test_singleton ... ok
+test test_subseq ... ok
+test test_tabulate ... ok
+test test_update ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap18/TestLinkedListStPer.rs (target/release/deps/TestLinkedListStPer-b9b36d9e92703721)
+
+running 14 tests
+test test_append ... ok
+test test_debug ... ok
+test test_from_vec ... ok
+test test_clone ... ok
+test test_display ... ok
+test test_new ... ok
+test test_map ... ok
+test test_singleton ... ok
+test test_partial_eq ... ok
+test test_empty ... ok
+test test_subseq ... ok
+test test_tabulate ... ok
+test test_iter ... ok
+test test_update ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 7s

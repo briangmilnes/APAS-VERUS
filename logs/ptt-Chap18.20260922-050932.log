@@ -1,0 +1,93 @@
+r212 PTT for Chap18 (isolate: Chap18 Chap02); tests: ProveArraySeq ProveArraySeqStEph ProveArraySeqStPer ProveArraySeqMtPer ProveArraySeqMtEph ProveLinkedListStEph ProveLinkedListStPer ProveChap18ArraySeqMtEphSlice
+Starting PTT at 05:09:32
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 1.15s
+     Running tests/Chap18/ProveArraySeq.rs (target/release/build/rust_verify_test/cffce8acc091d738/out/ProveArraySeq-cffce8acc091d738)
+
+running 10 tests
+test arrayseq_tabulate ... ok
+test arrayseq_map ... ok
+test arrayseq_filter ... ok
+test arrayseq_iterate ... ok
+test arrayseq_for_iter ... ok
+test arrayseq_iterate_prefixes ... ok
+test arrayseq_reduce ... ok
+test arrayseq_scan ... ok
+test arrayseq_loop_loop ... ok
+test arrayseq_scan_inclusive ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.71s
+
+     Running tests/Chap18/ProveArraySeqMtEph.rs (target/release/build/rust_verify_test/4b79e0c27ca921e2/out/ProveArraySeqMtEph-4b79e0c27ca921e2)
+
+running 6 tests
+test arrayseqmteph_loop_borrow_into ... ok
+test arrayseqmteph_loop_consume ... ok
+test arrayseqmteph_for_borrow_into ... ok
+test arrayseqmteph_for_iter ... ok
+test arrayseqmteph_loop_loop ... ok
+test arrayseqmteph_for_consume ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.67s
+
+     Running tests/Chap18/ProveArraySeqMtPer.rs (target/release/build/rust_verify_test/0ef5bd69f608a476/out/ProveArraySeqMtPer-0ef5bd69f608a476)
+
+running 6 tests
+test arrayseqmtper_loop_borrow_into ... ok
+test arrayseqmtper_loop_consume ... ok
+test arrayseqmtper_for_iter ... ok
+test arrayseqmtper_loop_loop ... ok
+test arrayseqmtper_for_borrow_into ... ok
+test arrayseqmtper_for_consume ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.63s
+
+     Running tests/Chap18/ProveArraySeqStEph.rs (target/release/build/rust_verify_test/fd398372d108f8d1/out/ProveArraySeqStEph-fd398372d108f8d1)
+
+running 6 tests
+test arrayseqsteph_loop_borrow_iter ... ok
+test arrayseqsteph_for_borrow_iter ... ok
+test arrayseqsteph_for_consume ... ok
+test arrayseqsteph_loop_borrow_into ... ok
+test arrayseqsteph_loop_consume ... ok
+test arrayseqsteph_for_borrow_into ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.68s
+
+     Running tests/Chap18/ProveArraySeqStPer.rs (target/release/build/rust_verify_test/f5d9c36818b3ad0f/out/ProveArraySeqStPer-f5d9c36818b3ad0f)
+
+running 2 tests
+test arrayseqstper_loop_loop ... ok
+test arrayseqstper_for_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.51s
+
+     Running tests/Chap18/ProveArraySeqMtEphSlice.rs (target/release/build/rust_verify_test/9c4ecac2fd4b7987/out/ProveChap18ArraySeqMtEphSlice-9c4ecac2fd4b7987)
+
+running 4 tests
+test chap18_arrayseqmtephslice_loop_borrow_into ... ok
+test chap18_arrayseqmtephslice_loop_borrow_iter ... ok
+test chap18_arrayseqmtephslice_for_borrow_into ... ok
+test chap18_arrayseqmtephslice_for_borrow_iter ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.56s
+
+     Running tests/Chap18/ProveLinkedListStEph.rs (target/release/build/rust_verify_test/e80f51de5d80d8ab/out/ProveLinkedListStEph-e80f51de5d80d8ab)
+
+running 2 tests
+test linkedliststeph_loop_loop ... ok
+test linkedliststeph_for_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.52s
+
+     Running tests/Chap18/ProveLinkedListStPer.rs (target/release/build/rust_verify_test/d3d5f712d5837f3b/out/ProveLinkedListStPer-d3d5f712d5837f3b)
+
+running 2 tests
+test linkedliststper_loop_loop ... ok
+test linkedliststper_for_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.54s
+
+cargo test rc: 0
+Elapsed: 10s
