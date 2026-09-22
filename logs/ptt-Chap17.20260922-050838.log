@@ -1,0 +1,279 @@
+r212 PTT for Chap17 (isolate: Chap17); tests: ProveMathSeq prove_MathSeq_iters
+Starting PTT at 05:08:38
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 0.65s
+     Running tests/Chap17/ProveMathSeq.rs (target/release/build/rust_verify_test/4978df2c61c0bad4/out/ProveMathSeq-4978df2c61c0bad4)
+
+running 6 tests
+test mathseq_loop_borrow_into ... FAILED
+test mathseq_for_borrow_iter ... FAILED
+test mathseq_for_borrow_into ... FAILED
+test mathseq_loop_borrow_iter ... FAILED
+test mathseq_for_consume ... FAILED
+test mathseq_loop_consume ... FAILED
+
+failures:
+
+---- mathseq_loop_borrow_into stdout ----
+error[E0425]: cannot find type `MathSeqIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_borrow_into/test.rs:20:17
+   |
+20 |     let mut it: MathSeqIter<u64> = (&a).into_iter();
+   |                 ^^^^^^^^^^^ not found in this scope
+
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_borrow_into/test.rs:28:13
+   |
+28 |             iter_invariant(&it),
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_borrow_into
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_borrow_into/test.rs
+
+
+thread 'mathseq_loop_borrow_into' (1922265) panicked at tests/Chap17/ProveMathSeq.rs:53:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- mathseq_for_borrow_iter stdout ----
+error[E0425]: cannot find type `MathSeqIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_for_borrow_iter/test.rs:20:13
+   |
+20 |     let it: MathSeqIter<u64> = a.iter();
+   |             ^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_for_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_for_borrow_iter/test.rs
+
+
+thread 'mathseq_for_borrow_iter' (1922263) panicked at tests/Chap17/ProveMathSeq.rs:128:1:
+Err(_) does not match $result
+
+---- mathseq_for_borrow_into stdout ----
+error[E0425]: cannot find type `MathSeqIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_for_borrow_into/test.rs:20:13
+   |
+20 |     let it: MathSeqIter<u64> = (&a).into_iter();
+   |             ^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_for_borrow_into
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_for_borrow_into/test.rs
+
+
+thread 'mathseq_for_borrow_into' (1922262) panicked at tests/Chap17/ProveMathSeq.rs:156:1:
+Err(_) does not match $result
+
+---- mathseq_loop_borrow_iter stdout ----
+error[E0425]: cannot find type `MathSeqIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_borrow_iter/test.rs:20:17
+   |
+20 |     let mut it: MathSeqIter<u64> = a.iter();
+   |                 ^^^^^^^^^^^ not found in this scope
+
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_borrow_iter/test.rs:28:13
+   |
+28 |             iter_invariant(&it),
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_borrow_iter/test.rs
+
+
+thread 'mathseq_loop_borrow_iter' (1922266) panicked at tests/Chap17/ProveMathSeq.rs:17:1:
+Err(_) does not match $result
+
+---- mathseq_for_consume stdout ----
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_for_consume/test.rs:23:38
+   |
+23 |     let ghost iter_seq: Seq<u64> = it@.1;
+   |                                      ^ method not found in `std::vec::IntoIter<u64>`
+
+
+error[E0609]: no field `elements` on type `vstd::std_specs::iter::VerusForLoopWrapper<std::vec::IntoIter<u64>>`
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_for_consume/test.rs:30:18
+   |
+30 |             iter.elements == iter_seq,
+   |                  ^^^^^^^^ unknown field
+   |
+   = note: available fields are: `index`, `snapshot`, `iter`, `history`
+
+
+error[E0609]: no field `pos` on type `vstd::std_specs::iter::VerusForLoopWrapper<std::vec::IntoIter<u64>>`
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_for_consume/test.rs:31:42
+   |
+31 |             items =~= iter_seq.take(iter.pos),
+   |                                          ^^^ unknown field
+   |
+   = note: available fields are: `index`, `snapshot`, `iter`, `history`
+
+
+error[E0609]: no field `pos` on type `vstd::std_specs::iter::VerusForLoopWrapper<std::vec::IntoIter<u64>>`
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_for_consume/test.rs:32:18
+   |
+32 |             iter.pos <= iter_seq.len(),
+   |                  ^^^ unknown field
+   |
+   = note: available fields are: `index`, `snapshot`, `iter`, `history`
+
+
+error: aborting due to 4 previous errors
+
+
+Some errors have detailed explanations: E0599, E0609.
+
+For more information about an error, try `rustc --explain E0599`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_for_consume
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_for_consume/test.rs
+
+
+thread 'mathseq_for_consume' (1922264) panicked at tests/Chap17/ProveMathSeq.rs:184:1:
+Err(_) does not match $result
+
+---- mathseq_loop_consume stdout ----
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_consume/test.rs:23:38
+   |
+23 |     let ghost iter_seq: Seq<u64> = it@.1;
+   |                                      ^ method not found in `std::vec::IntoIter<u64>`
+
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_consume/test.rs:31:39
+   |
+31 |             items =~= iter_seq.take(it@.0 as int),
+   |                                       ^ method not found in `std::vec::IntoIter<u64>`
+
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_consume/test.rs:32:27
+   |
+32 |             iter_seq == it@.1,
+   |                           ^ method not found in `std::vec::IntoIter<u64>`
+
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_consume/test.rs:33:20
+   |
+33 |             0 <= it@.0 <= iter_seq.len(),
+   |                    ^ method not found in `std::vec::IntoIter<u64>`
+
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_consume/test.rs:34:38
+   |
+34 |         decreases iter_seq.len() - it@.0,
+   |                                      ^ method not found in `std::vec::IntoIter<u64>`
+
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_consume/test.rs:45:14
+   |
+45 |     assert(it@.0 == iter_seq.len());
+   |              ^ method not found in `std::vec::IntoIter<u64>`
+
+
+error: aborting due to 6 previous errors
+
+
+For more information about this error, try `rustc --explain E0599`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_consume
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/4978df2c61c0bad4/test_inputs/ProveMathSeq-4978df2c61c0bad4-mathseq_loop_consume/test.rs
+
+
+thread 'mathseq_loop_consume' (1922267) panicked at tests/Chap17/ProveMathSeq.rs:89:1:
+Err(_) does not match $result
+
+
+failures:
+    mathseq_for_borrow_into
+    mathseq_for_borrow_iter
+    mathseq_for_consume
+    mathseq_loop_borrow_into
+    mathseq_loop_borrow_iter
+    mathseq_loop_consume
+
+test result: FAILED. 0 passed; 6 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.29s
+
+error: test failed, to rerun pass `--test ProveMathSeq`
+     Running tests/Chap17/prove_MathSeq_iters.rs (target/release/build/rust_verify_test/885506e4c2290e80/out/prove_MathSeq_iters-885506e4c2290e80)
+
+running 3 tests
+test mathseq_iter_range ... FAILED
+test mathseq_iter_consuming ... ok
+test mathseq_iter_nested ... ok
+
+failures:
+
+---- mathseq_iter_range stdout ----
+error[E0609]: no field `cur` on type `vstd::std_specs::iter::VerusForLoopWrapper<std::ops::Range<usize>>`
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/885506e4c2290e80/test_inputs/prove_MathSeq_iters-885506e4c2290e80-mathseq_iter_range/test.rs:22:18
+   |
+22 |             iter.cur <= len,
+   |                  ^^^ unknown field
+   |
+   = note: available fields are: `index`, `snapshot`, `iter`, `history`
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0609`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/885506e4c2290e80/test_inputs/prove_MathSeq_iters-885506e4c2290e80-mathseq_iter_range
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/885506e4c2290e80/test_inputs/prove_MathSeq_iters-885506e4c2290e80-mathseq_iter_range/test.rs
+
+
+thread 'mathseq_iter_range' (1922391) panicked at tests/Chap17/prove_MathSeq_iters.rs:27:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    mathseq_iter_range
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.52s
+
+error: test failed, to rerun pass `--test prove_MathSeq_iters`
+error: 2 targets failed:
+    `--test ProveMathSeq`
+    `--test prove_MathSeq_iters`
+cargo test rc: 101
+Elapsed: 3s

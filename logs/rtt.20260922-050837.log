@@ -1,0 +1,98 @@
+r212 RTT for Chap17: cargo test --release on 1 targets: TestMathSeq
+Starting RTT at 05:08:37
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1340:17
+     |
+1340 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 4 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.19s
+     Running tests/Chap17/TestMathSeq.rs (target/release/deps/TestMathSeq-0d4803b0a206339d)
+
+running 40 tests
+test test_add_last ... ok
+test test_add_last_then_delete_last_roundtrip ... ok
+test test_clone ... ok
+test test_debug ... ok
+test test_display ... ok
+test test_domain ... ok
+test test_empty ... ok
+test test_domain_empty ... ok
+test test_delete_last ... ok
+test test_for_loop_borrow ... ok
+test test_from_vec ... ok
+test test_into_iterator_by_mut_ref ... ok
+test test_into_iterator_by_ref ... ok
+test test_into_iterator_by_value ... ok
+test test_is_empty ... ok
+test test_is_singleton ... ok
+test test_iter ... ok
+test test_iter_mut ... ok
+test test_large_sequence ... ok
+test test_length ... ok
+test test_macro_empty ... ok
+test test_macro_list ... ok
+test test_macro_repeat ... ok
+test test_multiset_range ... ok
+test test_new ... ok
+test test_nth ... ok
+test test_partial_eq ... ok
+test test_partial_eq_different_lengths ... ok
+test test_partial_eq_empty ... ok
+test test_range ... ok
+test test_range_all_same ... ok
+test test_range_empty ... ok
+test test_set ... ok
+test test_set_all_elements ... ok
+test test_set_out_of_bounds ... ok
+test test_singleton ... ok
+test test_subseq ... ok
+test test_subseq_copy ... ok
+test test_subseq_edge_cases ... ok
+test test_with_len ... ok
+
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 0s

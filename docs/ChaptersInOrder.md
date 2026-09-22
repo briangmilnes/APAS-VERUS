@@ -86,3 +86,13 @@ and do not compile; see the chapter section.
   (`logs/validate.20260922-050809.log`). No edit.
 - RTT: 3 targets, 40 tests pass (`logs/rtt.20260922-050812.log`).
 - PTT: none registered.
+
+### Chap17
+
+- Start and end: 645 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-050830.log`). No edit.
+- RTT: 1 target, 40 tests pass (`logs/rtt.20260922-050837.log`).
+- PTT (`logs/ptt-Chap17.20260922-050838.log`): 2 of 9 tests pass; the 7
+  failures are the old iterator model (`MathSeqIter`, `iter_invariant`,
+  `it@` on `vec::IntoIter`, `.pos`/`.elements`/`.cur` on the for-loop
+  wrapper). Hand rewrite needed; not done in this pass.
