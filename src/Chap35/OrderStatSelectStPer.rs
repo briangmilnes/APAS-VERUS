@@ -208,8 +208,21 @@ pub mod OrderStatSelectStPer {
                 core::cmp::Ordering::Less => {
                     // Veracity: NEEDED proof block
                     proof {
+                        assert(T::le(elem, pivot));
+                        assert(elem != pivot);
                     }
+                    let ghost old_left = left@;
                     left.push(elem);
+                    proof {
+                        assert forall|j: int| 0 <= j < left@.len() implies
+                            (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot by {
+                            if j < old_left.len() {
+                                assert(left@[j] == old_left[j]);
+                            } else {
+                                assert(left@[j] == elem);
+                            }
+                        }
+                    }
                 // Veracity: NEEDED proof block
                 },
                 core::cmp::Ordering::Greater => {
@@ -223,7 +236,18 @@ pub mod OrderStatSelectStPer {
                         assert(elem != pivot);
                     }
                     // Veracity: NEEDED proof block
+                    let ghost old_right = right@;
                     right.push(elem);
+                    proof {
+                        assert forall|j: int| 0 <= j < right@.len() implies
+                            (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot by {
+                            if j < old_right.len() {
+                                assert(right@[j] == old_right[j]);
+                            } else {
+                                assert(right@[j] == elem);
+                            }
+                        }
+                    }
                 },
                 core::cmp::Ordering::Equal => {
                     // Veracity: NEEDED proof block

@@ -37,6 +37,7 @@ file, or listed at the end.
 | 13 | 27 | 846 | 0 | 0 | 48 pass | none | r213 Chap27 |
 | 14 | 28 | 883 | 0 | 0 | 68 pass | none | r213 Chap28 |
 | 15 | 30 | 626 | 0 | 0 | none | none | r213 Chap30 |
+| 16 | 35 | 1224 | 0 | 0 | 58 pass | none | r213 Chap35 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -211,4 +212,24 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   are the pre-existing doc-test blocks of
   `src/standards/partial_eq_eq_clone_standard.rs` and `spec_wf_standard.rs`
   (Verus text compiled by rustdoc), as in r211 and r212.
+- PTT: none registered.
+
+### Chap35
+
+- Start (first run on 09.13): 1222 verified, 2 errors
+  (`logs/validate.20260922-051537.log`): `invariant not satisfied at end of
+  loop body` for the `left` partition invariant
+  (`forall j. T::le(left@[j], pivot) && left@[j] != pivot`) in the partition
+  loop of `select` in `OrderStatSelectStEph.rs:180` and
+  `OrderStatSelectStPer.rs:180`. The `Less` arm's proof block was empty (a
+  proof-minimisation leftover); after filling it the same failure moved to the
+  `right` invariant (`logs/validate.20260922-051622.log`).
+- Edit class: proof only, in both files. In the `Less` arm, the two facts from
+  `TotalOrder::cmp`'s `ensures` (`T::le(elem, pivot)`, `elem != pivot`); in the
+  `Less` and `Greater` arms, a ghost snapshot of the vector before `push` and
+  an `assert forall` that re-establishes the partition invariant index by
+  index (old prefix, then the pushed element).
+- End: 1224 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-051639.log`).
+- RTT: 4 targets, 58 tests pass (`logs/rtt.20260922-051650.log`).
 - PTT: none registered.

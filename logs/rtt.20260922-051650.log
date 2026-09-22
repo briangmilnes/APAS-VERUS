@@ -1,0 +1,124 @@
+r212 RTT for Chap35: cargo test --release on 4 targets: TestOrderStatSelectMtEph TestOrderStatSelectMtPer TestOrderStatSelectStEph TestOrderStatSelectStPer
+Starting RTT at 05:16:50
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 5.27s
+     Running tests/Chap35/TestOrderStatSelectMtEph.rs (target/release/deps/TestOrderStatSelectMtEph-a6d306cd3dd0788b)
+
+running 15 tests
+test test_empty ... ok
+test test_already_sorted ... ok
+test test_reverse_sorted ... ok
+test test_negative ... ok
+test test_duplicates ... ok
+test test_out_of_bounds ... ok
+test test_select_median ... ok
+test test_two_elements ... ok
+test test_alternating_values ... ok
+test test_min_max_values ... ok
+test test_single ... ok
+test test_mixed ... ok
+test test_small ... ok
+test test_concurrent_select ... ok
+test test_large ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/Chap35/TestOrderStatSelectMtPer.rs (target/release/deps/TestOrderStatSelectMtPer-b5a9866ce6e8d118)
+
+running 14 tests
+test test_empty ... ok
+test test_out_of_bounds ... ok
+test test_duplicates ... ok
+test test_two_elements ... ok
+test test_reverse_sorted ... ok
+test test_already_sorted ... ok
+test test_min_max_values ... ok
+test test_negative ... ok
+test test_mixed ... ok
+test test_single ... ok
+test test_select_median ... ok
+test test_alternating_values ... ok
+test test_small ... ok
+test test_large ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/Chap35/TestOrderStatSelectStEph.rs (target/release/deps/TestOrderStatSelectStEph-a6819bad640e6c65)
+
+running 15 tests
+test test_all_same_select_minimum ... ok
+test test_already_sorted ... ok
+test test_duplicates ... ok
+test test_alternating_two_values ... ok
+test test_empty ... ok
+test test_min_max_values ... ok
+test test_mixed ... ok
+test test_negative ... ok
+test test_large ... ok
+test test_out_of_bounds_various_sizes ... ok
+test test_reverse_sorted ... ok
+test test_select_median ... ok
+test test_single ... ok
+test test_small ... ok
+test test_two_elements ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap35/TestOrderStatSelectStPer.rs (target/release/deps/TestOrderStatSelectStPer-60e0760d2bcf3bc7)
+
+running 14 tests
+test test_already_sorted ... ok
+test test_alternating_values ... ok
+test test_duplicates ... ok
+test test_empty ... ok
+test test_min_max_values ... ok
+test test_mixed ... ok
+test test_negative ... ok
+test test_out_of_bounds ... ok
+test test_large ... ok
+test test_reverse_sorted ... ok
+test test_select_median ... ok
+test test_single ... ok
+test test_small ... ok
+test test_two_elements ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 5s

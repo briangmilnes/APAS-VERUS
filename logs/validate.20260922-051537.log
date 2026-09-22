@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap35 Chap18 Chap19 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap35/OrderStatSelectStPer.rs:180:17
+    |
+180 | /                 forall|j: int| 0 <= j < left@.len() ==>
+181 | |                     (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
+    | |____________________________________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap35/OrderStatSelectStEph.rs:180:17
+    |
+180 | /                 forall|j: int| 0 <= j < left@.len() ==>
+181 | |                     (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
+    | |____________________________________________________________________________^
+
+verification results:: 1222 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 1077MB, peak z3 RSS: 102MB, min free: 24966MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 8s
