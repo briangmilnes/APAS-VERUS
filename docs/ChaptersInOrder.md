@@ -22,7 +22,8 @@ file, or listed at the end.
 
 | # | Chap | Verified | Err | Warn | RTT | PTT | Commit |
 |---|------|---------:|----:|-----:|-----|-----|--------|
-| 1 | 02 | 631 | 0 | 0 | 41 pass | none | r213 Chap02 |
+| 1 | 02 | 631 | 0 | 0 | 41 pass | none | 1afd25de1 |
+| 2 | 03 | 622 | 0 | 0 | 40 pass | none | r213 Chap03 |
 
 ## Chapter sections
 
@@ -31,4 +32,11 @@ file, or listed at the end.
 - Start and end: 631 verified, 0 errors, 0 warnings, 0 trigger notes
   (`logs/validate.20260922-050445.log`). No edit.
 - RTT: 3 targets, 41 tests pass (`logs/rtt.20260922-050502.log`).
+- PTT: none registered.
+
+### Chap03
+
+- Start and end: 622 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-050550.log`). No edit.
+- RTT: 1 target, 40 tests pass (`logs/rtt.20260922-050553.log`).
 - PTT: none registered.

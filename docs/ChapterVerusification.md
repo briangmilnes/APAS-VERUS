@@ -46,7 +46,7 @@ calls, removed chapter by chapter as each is migrated.
 | # | Chap | Deps | Own errors | State | Evidence |
 |---|------|------|-----------:|-------|----------|
 | 1 | 02 | — | 0 | r213: 631 verified, 0 err, 0 warn; RTT 41 pass | `validate.20260922-050445.log` |
-| 2 | 03 | — | 0 | verifies: 611, 0 errors | `validate.20260920-185838.log` |
+| 2 | 03 | — | 0 | r213: 622 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-050550.log` |
 | 3 | 05 | 02 | 0 | verifies: 760, 0 errors | `validate.20260921-093012.log` |
 | 4 | 06 | 05 | 0 | verifies: 1024, 0 own errors; rerun pending since Chap05's 2 errors were fixed after | `validate.20260920-194725.log` |
 | 5 | 11 | 02 | 0 | not run; deps have 0 errors | — |
