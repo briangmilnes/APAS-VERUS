@@ -24,7 +24,8 @@ file, or listed at the end.
 |---|------|---------:|----:|-----:|-----|-----|--------|
 | 1 | 02 | 631 | 0 | 0 | 41 pass | none | 1afd25de1 |
 | 2 | 03 | 622 | 0 | 0 | 40 pass | none | 9da5c4aba |
-| 3 | 05 | 760 | 0 | 0 | 89 pass | 5 of 21 (1) | r213 Chap05 |
+| 3 | 05 | 760 | 0 | 0 | 89 pass | 5 of 21 (1) | 7680a0ea8 |
+| 4 | 06 | 1037 | 0 | 0 | 275 pass | not registered | r213 Chap06 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -59,3 +60,13 @@ and do not compile; see the chapter section.
   iterator tool reports them as `ptt-no-definer` (the definers were migrated
   by hand in r208), so they need a hand rewrite to the templates of
   `src/standards/iterator_ptt_standard.rs`. Not done in this pass.
+
+### Chap06
+
+- Start and end: 1037 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-050731.log`). No edit; no `finite()` left in
+  source.
+- RTT: 20 targets, 275 tests pass (`logs/rtt.20260922-050744.log`).
+- PTT: the 20 files in `rust_verify_test/tests/Chap06/` are not registered
+  in `rust_verify_test/Cargo.toml`, so the harness cannot run them; they are
+  on the pre-09.13 iterator model. Not run.

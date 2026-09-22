@@ -1,0 +1,447 @@
+r212 RTT for Chap06: cargo test --release on 20 targets: TestDirGraphStEph TestDirGraphMtEph TestUnDirGraphStEph TestLabDirGraphStEph TestLabUnDirGraphStEph TestUnDirGraphMtEph TestWeightedDirGraphStEphU32 TestWeightedDirGraphStEphU8 TestWeightedDirGraphStEphI8 TestWeightedDirGraphStEphI16 TestWeightedDirGraphStEphI32 TestWeightedDirGraphStEphI64 TestWeightedDirGraphStEphI128 TestWeightedDirGraphStEphIsize TestWeightedDirGraphStEphU16 TestWeightedDirGraphStEphU64 TestWeightedDirGraphStEphU128 TestWeightedDirGraphStEphUsize TestLabDirGraphMtEph TestLabUnDirGraphMtEph
+Starting RTT at 05:07:44
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1340:17
+     |
+1340 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 4 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.41s
+     Running tests/Chap06/TestDirGraphMtEph.rs (target/release/deps/TestDirGraphMtEph-e3f4e2bcbc772880)
+
+running 41 tests
+test test_clone ... ok
+test test_dirgraphmteph_basic_operations ... ok
+test test_debug_trait ... ok
+test test_dirgraphmteph_incident ... ok
+test test_dirgraphmteph_empty ... ok
+test test_dirgraphmteph_neighbor ... ok
+test test_dirgraphmteph_nplus ... ok
+test test_display_trait ... ok
+test test_empty_graph_operations ... ok
+test test_equality ... ok
+test test_inequality ... ok
+test test_dirgraphmteph_nminus ... ok
+test test_nminusofvertices_empty_query ... ok
+test test_nplus_empty_arcs ... ok
+test test_nplusofvertices_empty_query ... ok
+test test_minimal_parallel_nminusofvertices ... ok
+test test_isolated_vertex ... ok
+test test_minimal_parallel_nminus ... ok
+test test_dirgraphmteph_indegree ... ok
+test test_nminus_large_parallel ... ok
+test test_dirgraphmteph_nplusofvertices ... ok
+test test_dirgraphmteph_ng ... ok
+test test_dirgraphmteph_ngofvertices ... ok
+test test_dirgraphmtephlit_macro_functionality ... ok
+test test_ngofvertices_empty_query ... ok
+test test_nminus_empty_arcs ... ok
+test test_minimal_parallel_nplus ... ok
+test test_dirgraphmteph_degree ... ok
+test test_nplus_large_parallel ... ok
+test test_dirgraphmteph_outdegree ... ok
+test test_minimal_parallel_nplusofvertices ... ok
+test test_nplusofvertices_large_parallel ... ok
+test test_minimal_parallel_ngofvertices ... ok
+test test_dirgraphmteph_nminusofvertices ... ok
+test test_nminusofvertices_large_parallel ... ok
+test test_dirgraphmteph_concurrent_access ... ok
+test test_race_condition_verification_mixed_graph_operations ... ok
+test test_dirgraphmteph_thread_safety ... ok
+test test_ngofvertices_large_parallel ... ok
+test test_race_condition_verification_concurrent_graph_reads ... ok
+test test_deadlock_prevention_concurrent_graph_operations ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.00s
+
+     Running tests/Chap06/TestDirGraphStEph.rs (target/release/deps/TestDirGraphStEph-10e8bdac1737c137)
+
+running 23 tests
+test test_digraph_vertices_and_arcs ... ok
+test test_dirgraph_degree ... ok
+test test_dirgraph_debug_display ... ok
+test test_dirgraph_clone ... ok
+test test_dirgraph_empty ... ok
+test test_dirgraph_empty_graph_edge_cases ... ok
+test test_dirgraph_extreme_vertex_references_graceful ... ok
+test test_dirgraph_equality ... ok
+test test_dirgraph_incident ... ok
+test test_dirgraph_indegree ... ok
+test test_dirgraph_neighbor ... ok
+test test_dirgraph_ng ... ok
+test test_dirgraph_ngofvertices ... ok
+test test_dirgraph_nminus ... ok
+test test_dirgraph_nminusofvertices ... ok
+test test_dirgraph_nonexistent_vertex_edge_cases ... ok
+test test_dirgraph_nplus ... ok
+test test_dirgraph_nplusofvertices ... ok
+test test_dirgraph_outdegree ... ok
+test test_dirgraph_selfloop_edge_cases ... ok
+test test_dirgraph_single_vertex_edge_cases ... ok
+test test_dirgraph_large_graph_stress ... ok
+test test_dirgraphstephlit_macro_functionality ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestLabDirGraphMtEph.rs (target/release/deps/TestLabDirGraphMtEph-6c235d9652f64613)
+
+running 15 tests
+test test_labdirgraphmteph_arcs_conversion ... ok
+test test_labdirgraphmteph_clone ... ok
+test test_labdirgraphmteph_display_trait ... ok
+test test_labdirgraphmteph_debug_trait ... ok
+test test_labdirgraphmteph_empty ... ok
+test test_labdirgraphmteph_edge_cases ... ok
+test test_labdirgraphmteph_mutable_operations ... ok
+test test_labdirgraphmteph_nonexistent_vertex ... ok
+test test_labdirgraphmtephlit_macro_functionality ... ok
+test test_labdirgraphmteph_parallel_n_plus ... ok
+test test_labdirgraphmteph_neighbors ... ok
+test test_labdirgraphmteph_basic_operations ... ok
+test test_labdirgraphmteph_parallel_n_minus ... ok
+test test_labdirgraphmteph_parallel_mixed ... ok
+test test_labdirgraphmteph_concurrent_access ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestLabDirGraphStEph.rs (target/release/deps/TestLabDirGraphStEph-bd25b278a12bba83)
+
+running 12 tests
+test test_labdirgraphstephlit_macro_functionality ... ok
+test test_labelled_dir_graph_add_labeled_arc ... ok
+test test_labelled_dir_graph_add_vertex ... ok
+test test_labelled_dir_graph_debug ... ok
+test test_labelled_dir_graph_different_label_types ... ok
+test test_labelled_dir_graph_arcs ... ok
+test test_labelled_dir_graph_empty ... ok
+test test_labelled_dir_graph_display ... ok
+test test_labelled_dir_graph_macro_empty ... ok
+test test_labelled_dir_graph_macro_with_data ... ok
+test test_labelled_dir_graph_neighbors ... ok
+test test_labelled_dir_graph_self_loop ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestLabUnDirGraphMtEph.rs (target/release/deps/TestLabUnDirGraphMtEph-fd56401535f3402f)
+
+running 12 tests
+test test_add_labeled_edge ... ok
+test test_add_vertex ... ok
+test test_edges ... ok
+test test_empty_graph_operations ... ok
+test test_from_vertices_and_labeled_edges ... ok
+test test_empty ... ok
+test test_get_edge_label ... ok
+test test_labeled_edges ... ok
+test test_has_edge ... ok
+test test_multiple_edges ... ok
+test test_vertices ... ok
+test test_neighbors ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestLabUnDirGraphStEph.rs (target/release/deps/TestLabUnDirGraphStEph-805bb64f4e63a342)
+
+running 15 tests
+test test_add_labeled_edge ... ok
+test test_add_vertex ... ok
+test test_clone ... ok
+test test_edges ... ok
+test test_display_fmt ... ok
+test test_debug_fmt ... ok
+test test_empty ... ok
+test test_empty_graph_operations ... ok
+test test_from_vertices_and_labeled_edges ... ok
+test test_get_edge_label ... ok
+test test_has_edge ... ok
+test test_labeled_edges ... ok
+test test_multiple_edges ... ok
+test test_neighbors ... ok
+test test_vertices ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestUnDirGraphMtEph.rs (target/release/deps/TestUnDirGraphMtEph-2c7c3e390ce512c9)
+
+running 39 tests
+test test_arcs ... ok
+test test_clone_graph ... ok
+test test_clone ... ok
+test test_debug_format ... ok
+test test_display_format ... ok
+test test_edge_order_symmetry ... ok
+test test_empty_graph_all_operations ... ok
+test test_equality ... ok
+test test_incident ... ok
+test test_multiple_self_loops ... ok
+test test_disconnected_components ... ok
+test test_isolated_vertices ... ok
+test test_ng_of_vertices_empty_set ... ok
+test test_ngofvertices_empty_subset ... ok
+test test_nminus ... ok
+test test_nplus ... ok
+test test_outdegree ... ok
+test test_sizea ... ok
+test test_indegree ... ok
+test test_undirgraphmteph_complete_graph ... ok
+test test_star_graph ... ok
+test test_nminusofvertices ... ok
+test test_undirgraphmteph_ngofvertices ... ok
+test test_undirgraphmteph_nplusminusofvertices ... ok
+test test_undirgraphmtephlit_macro_functionality ... ok
+test test_ng_single_edge ... ok
+test test_ng_of_vertices_parallel ... ok
+test test_undirgraphmteph_edge_cases ... ok
+test test_undirgraphmteph_empty ... ok
+test test_undirgraphmteph_incident_operations ... ok
+test test_undirgraphmteph_nonexistent_vertex ... ok
+test test_path_graph ... ok
+test test_ng_parallel_with_many_edges ... ok
+test test_cycle_graph ... ok
+test test_nplusofvertices ... ok
+test test_ng_of_vertices_large_set ... ok
+test test_large_parallel_graph ... ok
+test test_undirgraphmteph_concurrent_access ... ok
+test test_undirgraphmteph_basic_operations ... ok
+
+test result: ok. 39 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestUnDirGraphStEph.rs (target/release/deps/TestUnDirGraphStEph-61b10df65ca53e93)
+
+running 27 tests
+test test_arcs ... ok
+test test_clone ... ok
+test test_complete_graph ... ok
+test test_debug ... ok
+test test_cycle_graph ... ok
+test test_degree ... ok
+test test_disconnected_graph ... ok
+test test_display ... ok
+test test_empty ... ok
+test test_equality ... ok
+test test_incident ... ok
+test test_indegree ... ok
+test test_isolated_vertex ... ok
+test test_neighbor ... ok
+test test_ng ... ok
+test test_ngofvertices ... ok
+test test_nminus ... ok
+test test_nminusofvertices ... ok
+test test_nplus ... ok
+test test_nplusofvertices ... ok
+test test_outdegree ... ok
+test test_path_graph ... ok
+test test_self_loop ... ok
+test test_sizea ... ok
+test test_star_graph ... ok
+test test_undigraph_vertices_and_edges ... ok
+test test_undirgraphstephlit_macro_functionality ... ok
+
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestWeightedDirGraphStEphI128.rs (target/release/deps/TestWeightedDirGraphStEphI128-b126ef92235cae24)
+
+running 7 tests
+test test_add_weighed_edge ... ok
+test test_clone ... ok
+test test_empty_graph ... ok
+test test_max_weight ... ok
+test test_from_weighed_edges ... ok
+test test_multiple_edges_same_source ... ok
+test test_self_loop ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestWeightedDirGraphStEphI16.rs (target/release/deps/TestWeightedDirGraphStEphI16-3534d1bdb6f9b71d)
+
+running 7 tests
+test test_add_weighed_edge ... ok
+test test_clone ... ok
+test test_empty_graph ... ok
+test test_from_weighed_edges ... ok
+test test_max_weight ... ok
+test test_multiple_edges_same_source ... ok
+test test_self_loop ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestWeightedDirGraphStEphI32.rs (target/release/deps/TestWeightedDirGraphStEphI32-9fb36859f7c22981)
+
+running 7 tests
+test test_add_weighed_edge ... ok
+test test_clone ... ok
+test test_from_weighed_edges ... ok
+test test_empty_graph ... ok
+test test_max_weight ... ok
+test test_multiple_edges_same_source ... ok
+test test_self_loop ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestWeightedDirGraphStEphI64.rs (target/release/deps/TestWeightedDirGraphStEphI64-6d06109345e480b4)
+
+running 7 tests
+test test_add_weighed_edge ... ok
+test test_clone ... ok
+test test_empty_graph ... ok
+test test_max_weight ... ok
+test test_from_weighed_edges ... ok
+test test_multiple_edges_same_source ... ok
+test test_self_loop ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestWeightedDirGraphStEphI8.rs (target/release/deps/TestWeightedDirGraphStEphI8-34c624f47f051bb8)
+
+running 7 tests
+test test_add_weighed_edge ... ok
+test test_clone ... ok
+test test_empty_graph ... ok
+test test_from_weighed_edges ... ok
+test test_max_weight ... ok
+test test_multiple_edges_same_source ... ok
+test test_self_loop ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestWeightedDirGraphStEphIsize.rs (target/release/deps/TestWeightedDirGraphStEphIsize-b4b386ac6bc113ba)
+
+running 7 tests
+test test_add_weighed_edge ... ok
+test test_clone ... ok
+test test_empty_graph ... ok
+test test_from_weighed_edges ... ok
+test test_max_weight ... ok
+test test_multiple_edges_same_source ... ok
+test test_self_loop ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestWeightedDirGraphStEphU128.rs (target/release/deps/TestWeightedDirGraphStEphU128-cd5eab5bb473e9ff)
+
+running 7 tests
+test test_add_weighed_edge ... ok
+test test_clone ... ok
+test test_empty_graph ... ok
+test test_from_weighed_edges ... ok
+test test_max_weight ... ok
+test test_multiple_edges_same_source ... ok
+test test_self_loop ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestWeightedDirGraphStEphU16.rs (target/release/deps/TestWeightedDirGraphStEphU16-d4fe1b6728a64cf1)
+
+running 7 tests
+test test_add_weighed_edge ... ok
+test test_clone ... ok
+test test_from_weighed_edges ... ok
+test test_empty_graph ... ok
+test test_max_weight ... ok
+test test_multiple_edges_same_source ... ok
+test test_self_loop ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestWeightedDirGraphStEphU32.rs (target/release/deps/TestWeightedDirGraphStEphU32-d9b21ec266f31c67)
+
+running 14 tests
+test test_add_weighed_edge ... ok
+test test_complete_graph_weighted ... ok
+test test_empty_graph ... ok
+test test_from_weighed_edges ... ok
+test test_get_edge_weight ... ok
+test test_in_neighbors_weighed ... ok
+test test_isolated_vertex ... ok
+test test_out_neighbors_weighed ... ok
+test test_no_edges_graph ... ok
+test test_self_loop ... ok
+test test_weighed_edges ... ok
+test test_weighted_path ... ok
+test test_weighted_star ... ok
+test test_zero_weight ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestWeightedDirGraphStEphU64.rs (target/release/deps/TestWeightedDirGraphStEphU64-acd4538ecc671ab3)
+
+running 7 tests
+test test_add_weighed_edge ... ok
+test test_clone ... ok
+test test_empty_graph ... ok
+test test_from_weighed_edges ... ok
+test test_max_weight ... ok
+test test_multiple_edges_same_source ... ok
+test test_self_loop ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestWeightedDirGraphStEphU8.rs (target/release/deps/TestWeightedDirGraphStEphU8-647b5e50e63bad82)
+
+running 7 tests
+test test_add_weighed_edge ... ok
+test test_clone ... ok
+test test_empty_graph ... ok
+test test_max_weight ... ok
+test test_from_weighed_edges ... ok
+test test_multiple_edges_same_source ... ok
+test test_self_loop ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap06/TestWeightedDirGraphStEphUsize.rs (target/release/deps/TestWeightedDirGraphStEphUsize-3b10ba90b725ec1f)
+
+running 7 tests
+test test_add_weighed_edge ... ok
+test test_clone ... ok
+test test_empty_graph ... ok
+test test_from_weighed_edges ... ok
+test test_max_weight ... ok
+test test_multiple_edges_same_source ... ok
+test test_self_loop ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 3s
