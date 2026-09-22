@@ -49,8 +49,8 @@ calls, removed chapter by chapter as each is migrated.
 | 2 | 03 | — | 0 | r213: 622 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-050550.log` |
 | 3 | 05 | 02 | 0 | r213: 760 verified, 0 err, 0 warn; RTT 89 pass; PTT 5/21 | `validate.20260922-050624.log` |
 | 4 | 06 | 05 | 0 | r213: 1037 verified, 0 err, 0 warn; RTT 275 pass | `validate.20260922-050731.log` |
-| 5 | 11 | 02 | 0 | not run; deps have 0 errors | — |
-| 6 | 12 | 02 | 0 | not run; deps have 0 errors | — |
+| 5 | 11 | 02 | 0 | r213: 651 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-050801.log` |
+| 6 | 12 | 02 | 0 | r213: 635 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-050809.log` |
 | 7 | 17 | — | 0 | verifies: 635, 0 errors | `validate.20260921-083557.log` |
 | 8 | 18 | 02 | 22 | old iterator model in 8 files | full log |
 | 9 | 19 | 02 | 12 | old iterator model in 4 files | full log |

@@ -25,7 +25,9 @@ file, or listed at the end.
 | 1 | 02 | 631 | 0 | 0 | 41 pass | none | 1afd25de1 |
 | 2 | 03 | 622 | 0 | 0 | 40 pass | none | 9da5c4aba |
 | 3 | 05 | 760 | 0 | 0 | 89 pass | 5 of 21 (1) | 7680a0ea8 |
-| 4 | 06 | 1037 | 0 | 0 | 275 pass | not registered | r213 Chap06 |
+| 4 | 06 | 1037 | 0 | 0 | 275 pass | not registered | 8c5300b01 |
+| 5 | 11 | 651 | 0 | 0 | 40 pass | none | 58e3ecf69 |
+| 6 | 12 | 635 | 0 | 0 | 40 pass | none | r213 Chap12 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -76,4 +78,11 @@ and do not compile; see the chapter section.
 - First run on 09.13: 651 verified, 0 errors, 0 warnings, 0 trigger notes
   (`logs/validate.20260922-050801.log`). No edit.
 - RTT: 2 targets, 40 tests pass (`logs/rtt.20260922-050809.log`).
+- PTT: none registered.
+
+### Chap12
+
+- First run on 09.13: 635 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-050809.log`). No edit.
+- RTT: 3 targets, 40 tests pass (`logs/rtt.20260922-050812.log`).
 - PTT: none registered.
