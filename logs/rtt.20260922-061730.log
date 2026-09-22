@@ -1,0 +1,226 @@
+r212 RTT for Chap49: cargo test --release on 8 targets: TestMinEditDistMtEph TestMinEditDistMtPer TestMinEditDistStEph TestMinEditDistStPer TestSubsetSumMtEph TestSubsetSumMtPer TestSubsetSumStEph TestSubsetSumStPer
+Starting RTT at 06:17:30
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.19s
+     Running tests/Chap49/TestMinEditDistMtEph.rs (target/release/deps/TestMinEditDistMtEph-ad35839c9e8eb562)
+
+running 22 tests
+test test_constructors ... ok
+test test_display_trait ... ok
+test test_getters ... ok
+test test_identical_sequences ... ok
+test test_min_edit_distance_mt_eph_empty ... ok
+test test_mutable_getters ... ok
+test test_macro_usage ... ok
+test test_set_methods ... ok
+test test_single_insert ... ok
+test test_single_delete ... ok
+test test_clear_memo ... ok
+test test_min_edit_distance_mt_eph_mutation ... ok
+test test_min_edit_distance_mt_eph_basic ... ok
+test test_kitten_to_sitting ... ok
+test test_suffix_match ... ok
+test test_completely_different ... ok
+test test_prefix_match ... ok
+test test_memo_size ... ok
+test test_single_substitute ... ok
+test test_mutation_clears_cache ... ok
+test test_with_integers ... ok
+test test_multiple_calls ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap49/TestMinEditDistMtPer.rs (target/release/deps/TestMinEditDistMtPer-4a220a18a4cae13e)
+
+running 13 tests
+test test_min_edit_distance_mt_per_display ... ok
+test test_min_edit_distance_mt_per_empty ... ok
+test test_min_edit_distance_mt_per_identical ... ok
+test test_min_edit_distance_mt_per_partial_eq ... ok
+test test_min_edit_distance_mt_per_target_getter ... ok
+test test_min_edit_distance_mt_per_new ... ok
+test test_min_edit_distance_mt_per_from_sequences ... ok
+test test_min_edit_distance_mt_per_single_char ... ok
+test test_min_edit_distance_mt_per_memo_size ... ok
+test test_min_edit_distance_mt_per_source_getter ... ok
+test test_min_edit_distance_mt_per_clone ... ok
+test test_min_edit_distance_mt_per_completely_different ... ok
+test test_min_edit_distance_mt_per_basic ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap49/TestMinEditDistStEph.rs (target/release/deps/TestMinEditDistStEph-665d2142e55a3d40)
+
+running 20 tests
+test test_completely_different ... ok
+test test_display ... ok
+test test_empty_sequences ... ok
+test test_empty_target ... ok
+test test_empty_source ... ok
+test test_from_sequences ... ok
+test test_into_iterator ... ok
+test test_identical_sequences ... ok
+test test_into_iterator_mut_ref ... ok
+test test_into_iterator_ref ... ok
+test test_longer_sequences ... ok
+test test_macro_empty ... ok
+test test_memoization ... ok
+test test_min_edit_distance_eph_mutation ... ok
+test test_min_edit_distance_st_eph_basic ... ok
+test test_new ... ok
+test test_set_source_clears_memo ... ok
+test test_set_target_clears_memo ... ok
+test test_source_target_getters ... ok
+test test_source_target_mut ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap49/TestMinEditDistStPer.rs (target/release/deps/TestMinEditDistStPer-d871ab1b1fde90ea)
+
+running 19 tests
+test test_completely_different ... ok
+test test_display ... ok
+test test_from_sequences ... ok
+test test_identical_sequences ... ok
+test test_into_iterator ... ok
+test test_into_iterator_ref ... ok
+test test_longer_sequences ... ok
+test test_memo_size ... ok
+test test_macro_empty ... ok
+test test_min_edit_distance_st_per_basic ... ok
+test test_min_edit_distance_st_per_example_49_3 ... ok
+test test_min_edit_distance_st_per_single_operations ... ok
+test test_multiple_calls ... ok
+test test_new ... ok
+test test_persistent_immutability ... ok
+test test_prefix_suffix ... ok
+test test_single_char_difference ... ok
+test test_source_target_getters ... ok
+test test_with_integers ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap49/TestSubsetSumMtEph.rs (target/release/deps/TestSubsetSumMtEph-eb491c45d7000c49)
+
+running 12 tests
+test test_subset_sum_mt_eph_display ... ok
+test test_subset_sum_mt_eph_empty ... ok
+test test_subset_sum_mt_eph_multiset_getter ... ok
+test test_subset_sum_mt_eph_new ... ok
+test test_subset_sum_mt_eph_multiset_mut ... ok
+test test_subset_sum_mt_eph_set_mutation ... ok
+test test_subset_sum_mt_eph_memo_size ... ok
+test test_subset_sum_mt_eph_clone ... ok
+test test_subset_sum_mt_eph_from_multiset ... ok
+test test_subset_sum_mt_eph_clear_memo ... ok
+test test_subset_sum_mt_eph_basic ... ok
+test test_subset_sum_mt_eph_mutation ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap49/TestSubsetSumMtPer.rs (target/release/deps/TestSubsetSumMtPer-cc3bbc2ce8f8cb0b)
+
+running 10 tests
+test test_subset_sum_mt_per_display ... ok
+test test_subset_sum_mt_per_empty ... ok
+test test_subset_sum_mt_per_partial_eq ... ok
+test test_subset_sum_mt_per_multiset_getter ... ok
+test test_subset_sum_mt_per_memo_size ... ok
+test test_subset_sum_mt_per_clone ... ok
+test test_subset_sum_mt_per_new ... ok
+test test_subset_sum_mt_per_basic ... ok
+test test_subset_sum_mt_per_example ... ok
+test test_subset_sum_mt_per_from_multiset ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap49/TestSubsetSumStEph.rs (target/release/deps/TestSubsetSumStEph-c50ac295a5ac2806)
+
+running 24 tests
+test test_all_same_value ... ok
+test test_clear_memo ... ok
+test test_into_iterator ... ok
+test test_from_multiset ... ok
+test test_display ... ok
+test test_into_iterator_mut ... ok
+test test_into_iterator_ref ... ok
+test test_macro_empty ... ok
+test test_larger_multiset ... ok
+test test_memo_size ... ok
+test test_multiset_getter ... ok
+test test_multiset_mut_getter ... ok
+test test_mutation_preserves_functionality ... ok
+test test_new ... ok
+test test_set_clears_memo ... ok
+test test_single_element ... ok
+test test_subset_sum_exact_match ... ok
+test test_subset_sum_impossible ... ok
+test test_subset_sum_multiple_solutions ... ok
+test test_subset_sum_negative_target ... ok
+test test_subset_sum_st_eph_basic ... ok
+test test_subset_sum_st_eph_empty ... ok
+test test_subset_sum_st_eph_mutation ... ok
+test test_subset_sum_zero_target ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap49/TestSubsetSumStPer.rs (target/release/deps/TestSubsetSumStPer-9290f1226be6891c)
+
+running 16 tests
+test test_subset_sum_st_per_all_combinations ... ok
+test test_subset_sum_st_per_clone ... ok
+test test_subset_sum_st_per_basic ... ok
+test test_subset_sum_st_per_display ... ok
+test test_subset_sum_st_per_duplicates ... ok
+test test_subset_sum_st_per_empty ... ok
+test test_subset_sum_st_per_example_49_2 ... ok
+test test_subset_sum_st_per_from_multiset ... ok
+test test_subset_sum_st_per_into_iter_owned ... ok
+test test_subset_sum_st_per_into_iter_ref ... ok
+test test_subset_sum_st_per_large_values ... ok
+test test_subset_sum_st_per_memo_size ... ok
+test test_subset_sum_st_per_multiset_getter ... ok
+test test_subset_sum_st_per_negative_target ... ok
+test test_subset_sum_st_per_new ... ok
+test test_subset_sum_st_per_singleton ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 0s
