@@ -43,6 +43,7 @@ pub mod VertexMatchingMtEph {
 
 
     /// Namespace struct for trait impl.
+    #[derive(Debug)]
     pub struct VertexMatchingMtEph;
 
     //		Section 8. traits
@@ -277,11 +278,6 @@ pub mod VertexMatchingMtEph {
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for VertexMatchingMtEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "VertexMatchingMtEph")
-        }
-    }
 
     impl std::fmt::Display for VertexMatchingMtEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

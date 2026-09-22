@@ -108,6 +108,7 @@ pub mod BoruvkaStEph {
 
 
     /// Namespace struct for trait impl.
+    #[derive(Debug)]
     pub struct BoruvkaStEph;
 
     //		Section 8b. traits
@@ -541,11 +542,6 @@ pub mod BoruvkaStEph {
 
     //		Section 14b. derive impls outside verus!
 
-    impl std::fmt::Debug for BoruvkaStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "BoruvkaStEph")
-        }
-    }
 
     impl std::fmt::Display for BoruvkaStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

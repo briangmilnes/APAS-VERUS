@@ -52,6 +52,7 @@ pub mod StarPartitionStEph {
 
 
     /// Namespace struct for trait impl.
+    #[derive(Debug)]
     pub struct StarPartitionStEph;
 
     pub type T<V> = UnDirGraphStEph<V>;
@@ -267,11 +268,6 @@ pub mod StarPartitionStEph {
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for StarPartitionStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "StarPartitionStEph")
-        }
-    }
 
     impl std::fmt::Display for StarPartitionStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

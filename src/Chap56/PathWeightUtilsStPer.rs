@@ -41,6 +41,7 @@ pub mod PathWeightUtilsStPer {
     //		Section 4. type definitions
 
 
+    #[derive(Debug)]
     pub struct PathWeightUtilsStPerS;
 
     //		Section 8. traits
@@ -327,11 +328,6 @@ pub mod PathWeightUtilsStPer {
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for PathWeightUtilsStPerS {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "PathWeightUtilsStPerS")
-        }
-    }
 
     impl std::fmt::Display for PathWeightUtilsStPerS {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

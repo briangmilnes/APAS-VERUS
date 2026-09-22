@@ -106,6 +106,7 @@ pub mod BFSStEph {
     //		Section 4b. type definitions
 
 
+    #[derive(Debug)]
     pub struct BFSStEph;
 
     //		Section 6b. spec fns
@@ -533,11 +534,6 @@ pub mod BFSStEph {
 
     //		Section 14b. derive impls outside verus!
 
-    impl std::fmt::Debug for BFSStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "BFSStEph")
-        }
-    }
 
     impl std::fmt::Display for BFSStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

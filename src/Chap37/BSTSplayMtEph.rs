@@ -1739,6 +1739,7 @@ pub mod BSTSplayMtEph {
 
 
     /// Lock predicate: link size fits in usize.
+    #[derive(Debug)]
     pub struct BSTSplayMtEphInv;
 
     pub type BSTreeSplay<T> = BSTSplayMtEph<T>;
@@ -2145,11 +2146,6 @@ pub mod BSTSplayMtEph {
 
     //		Section 14b. derive impls outside verus!
 
-    impl std::fmt::Debug for BSTSplayMtEphInv {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            f.debug_struct("BSTSplayMtEphInv").finish()
-        }
-    }
 
     impl std::fmt::Display for BSTSplayMtEphInv {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

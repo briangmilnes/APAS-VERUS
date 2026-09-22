@@ -81,6 +81,7 @@ pub mod BFSMtPer {
     //		Section 4b. type definitions
 
 
+    #[derive(Debug)]
     pub struct BFSMtPer;
 
     //		Section 6b. spec fns
@@ -996,11 +997,6 @@ pub mod BFSMtPer {
 
     //		Section 14b. derive impls outside verus!
 
-    impl std::fmt::Debug for BFSMtPer {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "BFSMtPer")
-        }
-    }
 
     impl std::fmt::Display for BFSMtPer {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

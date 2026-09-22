@@ -54,6 +54,7 @@ pub mod ConnectivityStEph {
 
 
     /// Namespace struct for trait impl.
+    #[derive(Debug)]
     pub struct ConnectivityStEph;
 
     pub type T<V> = UnDirGraphStEph<V>;
@@ -281,11 +282,6 @@ pub mod ConnectivityStEph {
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for ConnectivityStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "ConnectivityStEph")
-        }
-    }
 
     impl std::fmt::Display for ConnectivityStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

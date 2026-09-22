@@ -55,6 +55,7 @@ pub mod SubsetSumMtPer {
     //		Section 4a. type definitions
 
 
+    #[derive(Debug)]
     pub struct SubsetSumMtPerMemoInv;
 
     //		Section 6a. spec fns
@@ -322,12 +323,6 @@ pub mod SubsetSumMtPer {
 
     //		Section 14a. derive impls outside verus!
 
-
-    impl Debug for SubsetSumMtPerMemoInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "SubsetSumMtPerMemoInv")
-        }
-    }
 
     impl Display for SubsetSumMtPerMemoInv {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

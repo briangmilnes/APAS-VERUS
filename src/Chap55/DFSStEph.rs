@@ -46,6 +46,7 @@ broadcast use vstd::seq::group_seq_axioms;
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
 
 
+    #[derive(Debug)]
     pub struct DFSStEph;
 
     //		Section 7. proof fns/broadcast groups
@@ -570,11 +571,6 @@ broadcast use vstd::seq::group_seq_axioms;
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for DFSStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "DFSStEph")
-        }
-    }
 
     impl std::fmt::Display for DFSStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

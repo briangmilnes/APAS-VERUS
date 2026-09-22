@@ -21,35 +21,35 @@ Table of Contents:
 =================================================================
 
 ℹ BSTKeyValueStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1396: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1515: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1515: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1543: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1564: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1564: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1567: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1397: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1516: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1516: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1544: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1565: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1565: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1568: info: accept()
    Info: 7 total
    14 clean proof functions
 ℹ BSTReducedStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:171: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:174: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:197: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1568: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1646: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1646: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1705: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1705: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1708: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1569: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1647: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1647: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1706: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1706: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1709: info: accept()
    Info: 9 total
    8 clean proof functions
 ℹ BSTSizeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1449: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1505: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1505: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1533: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1551: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1551: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1554: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1450: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1506: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1506: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1534: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1552: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1552: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1555: info: accept()
    Info: 7 total
    8 clean proof functions
 
@@ -108,9 +108,8 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-09-22 11:25:12 -07:00
-Ended:     2026-09-22 11:25:12 -07:00
-Duration:  31ms
+Started:   2026-09-22 14:32:21 -07:00
+Ended:     2026-09-22 14:32:21 -07:00
+Duration:  53ms
 
 Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log
-view-verus-proof-holes.log

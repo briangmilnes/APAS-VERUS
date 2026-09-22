@@ -75,6 +75,7 @@ pub mod PrimStEph {
 
 
     /// Namespace struct for trait impl.
+    #[derive(Debug)]
     pub struct PrimStEph;
 
     //		Section 8a. traits
@@ -499,11 +500,6 @@ pub mod PrimStEph {
     //		Section 14a. derive impls outside verus!
 
 
-    impl std::fmt::Debug for PrimStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "PrimStEph")
-        }
-    }
 
     impl Display for PrimStEph {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

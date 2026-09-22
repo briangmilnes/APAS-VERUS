@@ -51,6 +51,7 @@ broadcast use {
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
 
 
+    #[derive(Debug)]
     pub struct TopoSortStEph;
 
     //		Section 6. spec fns
@@ -994,11 +995,6 @@ broadcast use {
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for TopoSortStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "TopoSortStEph")
-        }
-    }
 
     impl std::fmt::Display for TopoSortStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

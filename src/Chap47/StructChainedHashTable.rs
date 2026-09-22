@@ -304,6 +304,7 @@ pub mod StructChainedHashTable {
 
 
         /// Struct Chained Hash Table implementation.
+        #[derive(Debug)]
         pub struct StructChainedHashTableStEph;
 
     //		Section 6c. spec fns
@@ -988,12 +989,6 @@ pub mod StructChainedHashTable {
     }
 
     //		Section 14c. derive impls outside verus!
-
-    impl std::fmt::Debug for StructChainedHashTableStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "StructChainedHashTableStEph")
-        }
-    }
 
     impl std::fmt::Display for StructChainedHashTableStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

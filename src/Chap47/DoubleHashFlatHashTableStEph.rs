@@ -45,6 +45,7 @@ pub mod DoubleHashFlatHashTableStEph {
     /// Double Hashing Flat Hash Table implementation.
     /// Probe sequence: h_i(k) = (h(k) + i·hh(k)) mod m
     /// Uses two hash functions to avoid both primary and secondary clustering.
+    #[derive(Debug)]
     pub struct DoubleHashFlatHashTableStEph;
 
     //		Section 6. spec fns
@@ -858,12 +859,6 @@ pub mod DoubleHashFlatHashTableStEph {
 
     //		Section 14. derive impls outside verus!
 
-
-    impl std::fmt::Debug for DoubleHashFlatHashTableStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "DoubleHashFlatHashTableStEph")
-        }
-    }
 
     impl std::fmt::Display for DoubleHashFlatHashTableStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

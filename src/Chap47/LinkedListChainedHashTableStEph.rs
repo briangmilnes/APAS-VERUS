@@ -42,6 +42,7 @@ pub mod LinkedListChainedHashTableStEph {
 
 
         /// LinkedList Chained Hash Table implementation.
+        #[derive(Debug)]
         pub struct LinkedListChainedHashTableStEph;
 
     //		Section 7. proof fns/broadcast groups
@@ -673,12 +674,6 @@ pub mod LinkedListChainedHashTableStEph {
 
     //		Section 14. derive impls outside verus!
 
-
-    impl std::fmt::Debug for LinkedListChainedHashTableStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "LinkedListChainedHashTableStEph")
-        }
-    }
 
     impl std::fmt::Display for LinkedListChainedHashTableStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

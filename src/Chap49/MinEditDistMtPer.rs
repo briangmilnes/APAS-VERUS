@@ -55,6 +55,7 @@ pub mod MinEditDistMtPer {
     //		Section 4a. type definitions
 
 
+    #[derive(Debug)]
     pub struct MinEditDistMtPerMemoInv;
 
     //		Section 6a. spec fns
@@ -363,12 +364,6 @@ pub mod MinEditDistMtPer {
 
     //		Section 14a. derive impls outside verus!
 
-
-    impl Debug for MinEditDistMtPerMemoInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "MinEditDistMtPerMemoInv")
-        }
-    }
 
     impl Display for MinEditDistMtPerMemoInv {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

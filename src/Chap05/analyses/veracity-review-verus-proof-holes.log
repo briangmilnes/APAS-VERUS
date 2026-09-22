@@ -28,14 +28,14 @@ Table of Contents:
    2 clean proof functions
 ✓ RelationStEph.rs
 ℹ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1136: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1161: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1172: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1195: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1255: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1137: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1162: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1173: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1196: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1256: info: accept()
    Info: 5 total
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1182: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1235: info: structural_false_positive STD_TRAIT_IMPL hash — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1183: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1236: info: structural_false_positive STD_TRAIT_IMPL hash — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
    7 clean proof functions
 ℹ SetStEph.rs
@@ -108,9 +108,8 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-09-22 11:25:11 -07:00
-Ended:     2026-09-22 11:25:11 -07:00
-Duration:  31ms
+Started:   2026-09-22 14:32:20 -07:00
+Ended:     2026-09-22 14:32:20 -07:00
+Duration:  42ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap05/analyses/veracity-review-verus-proof-holes.log

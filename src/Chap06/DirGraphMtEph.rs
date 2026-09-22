@@ -772,6 +772,7 @@ pub mod DirGraphMtEph {
     //		Section 4b. type definitions
 
 
+    #[derive(Debug)]
     pub struct DirGraphMtEphInv;
 
     //		Section 4c. type definitions
@@ -1166,10 +1167,6 @@ pub mod DirGraphMtEph {
     }
 
     //		Section 14b. derive impls outside verus!
-
-    impl Debug for DirGraphMtEphInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphMtEphInv") }
-    }
 
     impl Display for DirGraphMtEphInv {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphMtEphInv") }

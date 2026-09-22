@@ -48,6 +48,7 @@ broadcast use vstd::seq::group_seq_axioms;
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
 
 
+    #[derive(Debug)]
     pub struct CycleDetectStPer;
 
     //		Section 6. spec fns
@@ -787,11 +788,6 @@ broadcast use vstd::seq::group_seq_axioms;
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for CycleDetectStPer {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "CycleDetectStPer")
-        }
-    }
 
     impl std::fmt::Display for CycleDetectStPer {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

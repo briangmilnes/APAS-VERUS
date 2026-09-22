@@ -54,6 +54,7 @@ pub mod StarContractionStEph {
 
 
     /// Namespace struct for trait impl.
+    #[derive(Debug)]
     pub struct StarContractionStEph;
 
     pub type T<V> = UnDirGraphStEph<V>;
@@ -363,11 +364,6 @@ pub mod StarContractionStEph {
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for StarContractionStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "StarContractionStEph")
-        }
-    }
 
     impl std::fmt::Display for StarContractionStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

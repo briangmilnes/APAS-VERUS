@@ -480,6 +480,7 @@ pub mod UnDirGraphMtEph {
     //		Section 4b. type definitions
 
 
+    #[derive(Debug)]
     pub struct UnDirGraphMtEphInv;
 
     //		Section 4c. type definitions
@@ -771,10 +772,6 @@ pub mod UnDirGraphMtEph {
     }
 
     //		Section 14b. derive impls outside verus!
-
-    impl Debug for UnDirGraphMtEphInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphMtEphInv") }
-    }
 
     impl Display for UnDirGraphMtEphInv {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphMtEphInv") }

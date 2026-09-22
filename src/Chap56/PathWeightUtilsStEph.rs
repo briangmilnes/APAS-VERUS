@@ -45,6 +45,7 @@ pub mod PathWeightUtilsStEph {
     pub type T = ArraySeqStPerS<usize>;
 
 
+    #[derive(Debug)]
     pub struct PathWeightUtilsStEphS;
 
     //		Section 8. traits
@@ -327,11 +328,6 @@ pub mod PathWeightUtilsStEph {
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for PathWeightUtilsStEphS {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "PathWeightUtilsStEphS")
-        }
-    }
 
     impl std::fmt::Display for PathWeightUtilsStEphS {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

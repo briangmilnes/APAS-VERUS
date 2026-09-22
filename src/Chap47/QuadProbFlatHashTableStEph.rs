@@ -50,6 +50,7 @@ pub mod QuadProbFlatHashTableStEph {
     /// Quadratic Probing Flat Hash Table implementation.
     /// Uses triangular-number probe sequence h_i(k) = (h(k) + i*(i+1)/2) mod m
     /// with m a power of two, guaranteeing a complete permutation of all slots.
+    #[derive(Debug)]
     pub struct QuadProbFlatHashTableStEph;
 
     //		Section 6. spec fns
@@ -1155,12 +1156,6 @@ pub mod QuadProbFlatHashTableStEph {
 
     //		Section 14. derive impls outside verus!
 
-
-    impl std::fmt::Debug for QuadProbFlatHashTableStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "QuadProbFlatHashTableStEph")
-        }
-    }
 
     impl std::fmt::Display for QuadProbFlatHashTableStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

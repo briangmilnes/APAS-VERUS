@@ -1094,6 +1094,7 @@ pub mod BSTKeyValueStEph {
     //		Section 4c. type definitions
 
 
+    #[derive(Debug)]
     pub struct Lnk;
 
     //		Section 6c. spec fns
@@ -1630,12 +1631,6 @@ pub mod BSTKeyValueStEph {
     }
 
     //		Section 14c. derive impls outside verus!
-
-    impl fmt::Debug for Lnk {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "Lnk")
-        }
-    }
 
     impl fmt::Display for Lnk {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

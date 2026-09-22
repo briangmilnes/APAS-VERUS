@@ -46,6 +46,7 @@ pub mod experiments {
 //    pub mod derive_0913_clone_copy_struct;                // SUCCEEDS: r216, derived Clone on a Copy struct ensures ret == self
 //    pub mod derive_0913_copy_struct;                      // SUCCEEDS: r216, Copy accepted in verus!, copy equals source
 //    pub mod derive_0913_debug_in_verus;                   // SUCCEEDS: r216, derived Debug lives inside verus!
+//    pub mod derive_0913_debug_unit_struct;                // SUCCEEDS: r217, derived Debug on a unit struct prints the type name
 //    pub mod derive_0913_ord_totalorder_bridge;            // SUCCEEDS: r216, TotalOrder from OrdSpecImpl, no assuming defaults
 //    pub mod derive_0913_ord_with_ordspecimpl;             // SUCCEEDS: r216, hand OrdSpecImpl specifies a derived Ord, but is trusted
 //    pub mod derive_0913_structural_eq_enum;               // SUCCEEDS: r216, StructuralEq specifies == on a non-generic enum

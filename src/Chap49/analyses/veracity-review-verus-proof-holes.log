@@ -25,24 +25,24 @@ Table of Contents:
 ✓ MinEditDistStEph.rs
 ✓ MinEditDistStPer.rs
 ⚠ SubsetSumMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:336: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-       321 |         fn memo_size(&self) -> (count: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:337: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+       322 |         fn memo_size(&self) -> (count: usize) {
             ...
-       334 |         // (`Set` is finite by type); a real invariant needs the multiset length as a
-       335 |         // ghost field of this predicate (docs/HashMigration.md, Needs discussion).
-       337 |             true
-       338 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:148: info: fn_missing_requires
+       335 |         // (`Set` is finite by type); a real invariant needs the multiset length as a
+       336 |         // ghost field of this predicate (docs/HashMigration.md, Needs discussion).
+       338 |             true
+       339 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtEph.rs:149: info: fn_missing_requires
    Info: 1 total
 ⚠ SubsetSumMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:304: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-       289 |         fn memo_size(&self) -> (count: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:305: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+       290 |         fn memo_size(&self) -> (count: usize) {
             ...
-       302 |         // (`Set` is finite by type); a real invariant needs the multiset length as a
-       303 |         // ghost field of this predicate (docs/HashMigration.md, Needs discussion).
-       305 |             true
-       306 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:131: info: fn_missing_requires
+       303 |         // (`Set` is finite by type); a real invariant needs the multiset length as a
+       304 |         // ghost field of this predicate (docs/HashMigration.md, Needs discussion).
+       306 |             true
+       307 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap49/SubsetSumMtPer.rs:132: info: fn_missing_requires
    Info: 1 total
 ✓ SubsetSumStEph.rs
 ✓ SubsetSumStPer.rs
@@ -111,9 +111,8 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-09-22 11:25:12 -07:00
-Ended:     2026-09-22 11:25:12 -07:00
-Duration:  15ms
+Started:   2026-09-22 14:32:21 -07:00
+Ended:     2026-09-22 14:32:21 -07:00
+Duration:  22ms
 
 Full output: src/Chap49/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap49/analyses/veracity-review-verus-proof-holes.log

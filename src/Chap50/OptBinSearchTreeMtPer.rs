@@ -79,6 +79,7 @@ broadcast use {
     //		Section 4b. type definitions
 
 
+        #[derive(Debug)]
         pub struct OptBSTMtPerMemoInv;
 
     //		Section 8b. traits
@@ -465,10 +466,6 @@ broadcast use {
     }
 
     //		Section 14b. derive impls outside verus!
-
-    impl Debug for OptBSTMtPerMemoInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtPerMemoInv") }
-    }
 
     impl Display for OptBSTMtPerMemoInv {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtPerMemoInv") }

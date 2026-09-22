@@ -63,6 +63,7 @@ pub mod OrderedSetMtEph {
     //		Section 4a. type definitions
 
 
+    #[derive(Debug)]
     pub struct OrderedSetMtEphInv;
 
     pub type OrderedSetMt<T> = OrderedSetMtEph<T>;
@@ -724,12 +725,6 @@ pub mod OrderedSetMtEph {
     use std::fmt;
 
     //		Section 14a. derive impls outside verus!
-
-    impl fmt::Debug for OrderedSetMtEphInv {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedSetMtEphInv")
-        }
-    }
 
     impl fmt::Display for OrderedSetMtEphInv {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

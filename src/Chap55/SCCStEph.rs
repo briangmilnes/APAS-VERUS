@@ -58,6 +58,7 @@ pub mod SCCStEph {
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
 
 
+    #[derive(Debug)]
     pub struct SCCStEph;
 
     //		Section 8. traits
@@ -638,11 +639,6 @@ pub mod SCCStEph {
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for SCCStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "SCCStEph")
-        }
-    }
 
     impl std::fmt::Display for SCCStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

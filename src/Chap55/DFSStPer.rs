@@ -46,6 +46,7 @@ broadcast use vstd::seq::group_seq_axioms;
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
 
 
+    #[derive(Debug)]
     pub struct DFSStPer;
 
     //		Section 7. proof fns/broadcast groups
@@ -517,11 +518,6 @@ broadcast use vstd::seq::group_seq_axioms;
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for DFSStPer {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "DFSStPer")
-        }
-    }
 
     impl std::fmt::Display for DFSStPer {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

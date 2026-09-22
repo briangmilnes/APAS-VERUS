@@ -64,6 +64,7 @@ broadcast use {
     //		Section 4a. type definitions
 
 
+    #[derive(Debug)]
     pub struct OrderedTableMtEphInv;
 
     pub type OrderedTableMt<K, V> = OrderedTableMtEph<K, V>;
@@ -927,12 +928,6 @@ broadcast use {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
 
     //		Section 14a. derive impls outside verus!
-
-    impl fmt::Debug for OrderedTableMtEphInv {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedTableMtEphInv")
-        }
-    }
 
     impl fmt::Display for OrderedTableMtEphInv {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

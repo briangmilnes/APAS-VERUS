@@ -37,28 +37,28 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:434: info: accept()
    Info: 2 total
 ⚠ OptBinSearchTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:496: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-       487 |             open spec fn inv(self, v: Vec<KeyProb<T>>) -> bool {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:497: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+       488 |             open spec fn inv(self, v: Vec<KeyProb<T>>) -> bool {
             ...
-       494 | 
-       495 |         impl RwLockPredicate<HashMap<Pair<usize, usize>, Probability>> for OptBSTMtEphMemoInv {
-       497 |                 // The previous body, `v@.dom().finite()`, is identically true at vstd
-       498 |                 // 0.2026.09.13 (`Set` is finite by type); a real invariant needs the
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:513: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:533: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:556: info: accept()
+       495 | 
+       496 |         impl RwLockPredicate<HashMap<Pair<usize, usize>, Probability>> for OptBSTMtEphMemoInv {
+       498 |                 // The previous body, `v@.dom().finite()`, is identically true at vstd
+       499 |                 // 0.2026.09.13 (`Set` is finite by type); a real invariant needs the
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:514: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:534: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:557: info: accept()
    Info: 3 total
 ⚠ OptBinSearchTreeMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:375: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
-       354 |         fn memo_size(&self) -> (count: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:376: error: dummy_rwlock_predicate - RwLockPredicate inv returning true is grossly underspecified.
+       355 |         fn memo_size(&self) -> (count: usize) {
             ...
-       373 | 
-       374 |         impl RwLockPredicate<HashMap<Pair<usize, usize>, Probability>> for OptBSTMtPerMemoInv {
-       376 |                 // The previous body, `v@.dom().finite()`, is identically true at vstd
-       377 |                 // 0.2026.09.13 (`Set` is finite by type); a real invariant needs the
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:392: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:411: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:429: info: accept()
+       374 | 
+       375 |         impl RwLockPredicate<HashMap<Pair<usize, usize>, Probability>> for OptBSTMtPerMemoInv {
+       377 |                 // The previous body, `v@.dom().finite()`, is identically true at vstd
+       378 |                 // 0.2026.09.13 (`Set` is finite by type); a real invariant needs the
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:393: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:412: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:430: info: accept()
    Info: 3 total
 ℹ OptBinSearchTreeStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:326: info: accept()
@@ -133,8 +133,8 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-09-22 13:15:07 -07:00
-Ended:     2026-09-22 13:15:07 -07:00
-Duration:  38ms
+Started:   2026-09-22 14:32:21 -07:00
+Ended:     2026-09-22 14:32:21 -07:00
+Duration:  32ms
 
 Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log

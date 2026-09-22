@@ -16,6 +16,18 @@ and the `isolate` runs of rounds r208 and r209. A chapter reaches Z3 only when i
 and its transitive dependencies have 0 type errors. "Own errors" counts errors
 whose `-->` names a file in that chapter.
 
+r217 ran the first whole-crate `scripts/validate.sh` since the type errors were
+cleared: 5,607 verified, 8 errors, no type errors and no warnings
+(`logs/validate.20260922-141938.log`). All eight are proofs that discharge
+under `isolate` and not in the full-crate context — six `rlimit exceeded`, two
+flaky assertions — in Chap26 (`ScanDCMtPer.rs`, `ETSPMtEph.rs` ×2), Chap35
+(`OrderStatSelectMtEph.rs`, `OrderStatSelectMtPer.rs`), Chap39
+(`BSTTreapStEph.rs`) and Chap65 (`UnionFindArrayStEph.rs` ×2). Seven of the
+eight are identical at `15a289dec`, before r217 began, so they are inherited
+and not this round's (`docs/DerivesApplied.md` §4). The "Own errors" column
+below still reports the old type-error measurement and is due a refresh
+against this run.
+
 ## Totals
 
 | # | State | Chapters | Count |
@@ -47,8 +59,8 @@ calls, removed chapter by chapter as each is migrated.
 |---|------|------|-----------:|-------|----------|
 | 1 | 02 | — | 0 | r213: 631 verified, 0 err, 0 warn; RTT 41 pass | `validate.20260922-050445.log` |
 | 2 | 03 | — | 0 | r213: 622 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-050550.log` |
-| 3 | 05 | 02 | 0 | r213: 760 verified, 0 err, 0 warn; RTT 89 pass; r214 PTT 29 pass | `validate.20260922-050624.log` |
-| 4 | 06 | 05 | 0 | r213: 1037 verified, 0 err, 0 warn; RTT 275 pass; r214 PTT 80 pass | `validate.20260922-050731.log` |
+| 3 | 05 | 02 | 0 | r217: 760 verified, 0 err, 0 warn; RTT 89 pass; r214 PTT 29 pass | `validate.20260922-141645.log` |
+| 4 | 06 | 05 | 0 | r217: 1037 verified, 0 err, 0 warn; RTT 275 pass; r214 PTT 80 pass | `validate.20260922-141650.log` |
 | 5 | 11 | 02 | 0 | r213: 651 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-050801.log` |
 | 6 | 12 | 02 | 0 | r213: 635 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-050809.log` |
 | 7 | 17 | — | 0 | r213: 645 verified, 0 err, 0 warn; RTT 40 pass; r214 PTT 9 pass | `validate.20260922-050830.log` |
@@ -62,33 +74,33 @@ calls, removed chapter by chapter as each is migrated.
 | 15 | 30 | — | 0 | r213: 626 verified, 0 err, 0 warn; no RTT | `validate.20260922-051446.log` |
 | 16 | 35 | 02, 18, 19 | 0 | r213: 1224 verified, 0 err, 0 warn; RTT 58 pass | `validate.20260922-051905.log` |
 | 17 | 36 | 19 | 0 | r213: 867 verified, 0 err, 0 warn; RTT 24 pass | `validate.20260922-051831.log` |
-| 18 | 37 | 02, 18, 19, 23 | 0 | r217: 1863 verified, 0 err, 0 warn; RTT 544 pass | `validate.20260922-131112.log` |
+| 18 | 37 | 02, 18, 19, 23 | 0 | r217: 1863 verified, 0 err, 0 warn; RTT 544 pass | `validate.20260922-141536.log` |
 | 19 | 38 | 18 | 0 | r213: 1078 verified, 0 err, 0 warn; RTT 53, PTT 2 pass | `validate.20260922-052403.log` |
-| 20 | 39 | 18 | 0 | r213: 1218 verified, 0 err, 0 warn; RTT 148, PTT 8 pass | `validate.20260922-053007.log` |
-| 21 | 40 | 18 | 0 | r213: 1180 verified, 0 err, 0 warn; RTT 54 pass | `validate.20260922-053048.log` |
+| 20 | 39 | 18 | 0 | r217: 1219 verified, 0 err, 0 warn; RTT 148, PTT 8 pass | `validate.20260922-141600.log` |
+| 21 | 40 | 18 | 0 | r217: 1181 verified, 0 err, 0 warn; RTT 54 pass | `validate.20260922-141609.log` |
 | 22 | 41 | 18, 19, 37, 38 | 0 | r213: 2188 verified, 0 err, 0 warn; RTT 250 pass | `validate.20260922-054937.log` |
 | 23 | 42 | 02, 19, 41 | 0 | r213: 2312 verified, 0 err, 0 warn; RTT 66 pass | `validate.20260922-055734.log` |
-| 24 | 43 | 18, 19, 37, 38, 41, 42 | 0 | r217: 2687 verified, 0 err, 0 warn; RTT 279 pass | `validate.20260922-131127.log` |
+| 24 | 43 | 18, 19, 37, 38, 41, 42 | 0 | r217: 2687 verified, 0 err, 0 warn; RTT 279 pass | `validate.20260922-141617.log` |
 | 25 | 44 | 19, 37, 41, 42 | 0 | r213: 2336 verified, 0 err, 0 warn; RTT 45 pass | `validate.20260922-061449.log` |
 | 26 | 45 | 19, 37 | 0 | r213: 2034 verified, 0 err, 0 warn; RTT 210 pass | `validate.20260922-061545.log` |
-| 27 | 47 | 18 | 0 | r217: 1161 verified, 0 err, 0 warn; RTT 102 pass | `validate.20260922-131154.log` |
-| 28 | 49 | 02, 18, 19 | 0 | r213: 1283 verified, 0 err, 0 warn; RTT 136 pass | `validate.20260922-061718.log` |
-| 29 | 50 | 02, 30 | 0 | r217: 766 verified, 0 err, 0 warn; RTT 167 pass | `validate.20260922-131202.log` |
+| 27 | 47 | 18 | 0 | r217: 1161 verified, 0 err, 0 warn; RTT 102 pass | `validate.20260922-141659.log` |
+| 28 | 49 | 02, 18, 19 | 0 | r217: 1283 verified, 0 err, 0 warn; RTT 136 pass | `validate.20260922-141707.log` |
+| 29 | 50 | 02, 30 | 0 | r217: 766 verified, 0 err, 0 warn; RTT 167 pass | `validate.20260922-141714.log` |
 | 30 | 51 | 02, 18, 19 | 0 | r213: 1333 verified, 0 err, 0 warn; RTT 109 pass | `validate.20260922-061753.log` |
 | 31 | 52 | 18, 19, 37, 38, 41, 43 | 0 | r213: 2943 verified, 0 err, 0 warn; RTT 148 pass | `validate.20260922-061938.log` |
-| 32 | 53 | 37, 38, 41 | 0 | r213: 2246 verified, 0 err, 0 warn; RTT 46 pass | `validate.20260922-062132.log` |
-| 33 | 54 | 02, 18, 19 | 0 | r213: 1277 verified, 0 err, 0 warn; RTT 53 pass | `validate.20260922-062218.log` |
-| 34 | 55 | 19, 37, 41 | 0 | r213: 2290 verified, 0 err, 0 warn; RTT 58 pass | `validate.20260922-062417.log` |
-| 35 | 56 | 19 | 0 | r213: 948 verified, 0 err, 0 warn; RTT 54 pass | `validate.20260922-062449.log` |
+| 32 | 53 | 37, 38, 41 | 0 | r217: 2246 verified, 0 err, 0 warn; RTT 46 pass | `validate.20260922-141722.log` |
+| 33 | 54 | 02, 18, 19 | 0 | r217: 1277 verified, 0 err, 0 warn; RTT 53 pass | `validate.20260922-141741.log` |
+| 34 | 55 | 19, 37, 41 | 0 | r217: 2290 verified, 0 err, 0 warn; RTT 58 pass | `validate.20260922-141749.log` |
+| 35 | 56 | 19 | 0 | r217: 948 verified, 0 err, 0 warn; RTT 54 pass | `validate.20260922-141809.log` |
 | 36 | 57 | 05, 06, 45, 56 | 0 | r217: 2583 verified, 0 err, 0 warn; RTT 48 pass | `validate.20260922-130403.log` |
 | 37 | 58 | 05, 06, 56 | 0 | r213: 1370 verified, 0 err, 0 warn; RTT 41 pass | `validate.20260922-062822.log` |
 | 38 | 59 | 05, 06, 19, 56, 57, 58 | 0 | r213: 2632 verified, 0 err, 0 warn; RTT 41 pass | `validate.20260922-062907.log` |
-| 39 | 61 | 05, 06, 19 | 0 | r213: 1243 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-062947.log` |
-| 40 | 62 | 05, 06, 19 | 0 | r213: 1256 verified, 0 err, 0 warn; RTT 39 pass | `validate.20260922-063225.log` |
-| 41 | 63 | 05, 06, 62 | 0 | r213: 1271 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-063307.log` |
-| 42 | 64 | 05, 06, 62 | 0 | r213: 1271 verified, 0 err, 0 warn; RTT 24 pass | `validate.20260922-063333.log` |
-| 43 | 65 | 05, 06, 45 | 0 | r214: 2531 verified, 0 err, 0 warn; RTT 55 pass | `validate.20260922-071941.log` |
-| 44 | 66 | 05 | 0 | r213: 805 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-065209.log` |
+| 39 | 61 | 05, 06, 19 | 0 | r217: 1243 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-141817.log` |
+| 40 | 62 | 05, 06, 19 | 0 | r217: 1256 verified, 0 err, 0 warn; RTT 39 pass | `validate.20260922-141828.log` |
+| 41 | 63 | 05, 06, 62 | 0 | r217: 1271 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-141841.log` |
+| 42 | 64 | 05, 06, 62 | 0 | r217: 1271 verified, 0 err, 0 warn; RTT 24 pass | `validate.20260922-141853.log` |
+| 43 | 65 | 05, 06, 45 | 0 | r217: 2531 verified, 0 err, 0 warn; RTT 55 pass | `validate.20260922-141905.log` |
+| 44 | 66 | 05 | 0 | r217: 805 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-141930.log` |
 
 Chapters 07–10, 13–16, 20, 22, 24, 25, 29, 31–34, 46, 48, 60 have no directory.
 

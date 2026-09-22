@@ -50,6 +50,7 @@ pub mod EdgeContractionStEph {
 
 
     /// Namespace struct for trait impl.
+    #[derive(Debug)]
     pub struct EdgeContractionStEph;
 
     pub type T<V> = UnDirGraphStEph<V>;
@@ -199,11 +200,6 @@ pub mod EdgeContractionStEph {
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for EdgeContractionStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "EdgeContractionStEph")
-        }
-    }
 
     impl std::fmt::Display for EdgeContractionStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

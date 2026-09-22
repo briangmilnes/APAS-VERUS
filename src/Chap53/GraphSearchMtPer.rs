@@ -84,6 +84,7 @@ pub mod GraphSearchMtPer {
     //		Section 4b. type definitions
 
 
+    #[derive(Debug)]
     pub struct SelectAll;
 
     //		Section 9b. impls
@@ -97,6 +98,7 @@ pub mod GraphSearchMtPer {
     //		Section 4c. type definitions
 
 
+    #[derive(Debug)]
     pub struct SelectOne;
 
     //		Section 8c. traits
@@ -390,12 +392,6 @@ pub mod GraphSearchMtPer {
 
     //		Section 14b. derive impls outside verus!
 
-    impl std::fmt::Debug for SelectAll {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "SelectAll")
-        }
-    }
-
     impl std::fmt::Display for SelectAll {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "SelectAll")
@@ -403,12 +399,6 @@ pub mod GraphSearchMtPer {
     }
 
     //		Section 14c. derive impls outside verus!
-
-    impl std::fmt::Debug for SelectOne {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "SelectOne")
-        }
-    }
 
     impl std::fmt::Display for SelectOne {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

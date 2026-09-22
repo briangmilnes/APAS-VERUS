@@ -1146,6 +1146,7 @@ pub mod BSTRBMtEph {
 
 
     /// Lock predicate: link size fits in usize.
+    #[derive(Debug)]
     pub struct BSTRBMtEphInv;
 
     pub type BSTreeRB<T> = BSTRBMtEph<T>;
@@ -1612,11 +1613,6 @@ pub mod BSTRBMtEph {
 
     //		Section 14c. derive impls outside verus!
 
-    impl std::fmt::Debug for BSTRBMtEphInv {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            f.debug_struct("BSTRBMtEphInv").finish()
-        }
-    }
 
     impl std::fmt::Display for BSTRBMtEphInv {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

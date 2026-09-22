@@ -709,6 +709,7 @@ pub mod LabDirGraphMtEph {
     //		Section 4b. type definitions
 
 
+    #[derive(Debug)]
     pub struct LabDirGraphMtEphInv;
 
     //		Section 4c. type definitions
@@ -934,10 +935,6 @@ pub mod LabDirGraphMtEph {
     }
 
     //		Section 14b. derive impls outside verus!
-
-    impl Debug for LabDirGraphMtEphInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabDirGraphMtEphInv") }
-    }
 
     impl Display for LabDirGraphMtEphInv {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabDirGraphMtEphInv") }

@@ -41,6 +41,7 @@ pub mod VecChainedHashTableStEph {
 
 
         /// Vec Chained Hash Table implementation.
+        #[derive(Debug)]
         pub struct VecChainedHashTableStEph;
 
     //		Section 7. proof fns/broadcast groups
@@ -681,12 +682,6 @@ pub mod VecChainedHashTableStEph {
 
     //		Section 14. derive impls outside verus!
 
-
-    impl std::fmt::Debug for VecChainedHashTableStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "VecChainedHashTableStEph")
-        }
-    }
 
     impl std::fmt::Display for VecChainedHashTableStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

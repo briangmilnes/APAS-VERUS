@@ -23,7 +23,7 @@ Table of Contents:
 ✓ ChainedHashTable.rs
    5 clean proof functions
 ℹ DoubleHashFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:105: info: structural_false_positive OPAQUE_EXTERNAL second_hash — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:106: info: structural_false_positive OPAQUE_EXTERNAL second_hash — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
    1 clean proof function
 ℹ FlatHashTable.rs
@@ -38,10 +38,10 @@ Table of Contents:
 ✓ QuadProbFlatHashTableStEph.rs
    6 clean proof functions
 ℹ StructChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:881: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:899: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:932: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:947: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:882: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:900: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:933: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:948: info: accept()
    Info: 4 total
    1 clean proof function
 ✓ VecChainedHashTableStEph.rs
@@ -116,8 +116,8 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-09-22 13:15:07 -07:00
-Ended:     2026-09-22 13:15:07 -07:00
-Duration:  53ms
+Started:   2026-09-22 14:32:21 -07:00
+Ended:     2026-09-22 14:32:21 -07:00
+Duration:  54ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log

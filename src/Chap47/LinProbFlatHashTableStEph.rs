@@ -42,6 +42,7 @@ pub mod LinProbFlatHashTableStEph {
 
 
     /// Linear Probing Flat Hash Table implementation.
+    #[derive(Debug)]
     pub struct LinProbFlatHashTableStEph;
 
     //		Section 6. spec fns
@@ -821,12 +822,6 @@ pub mod LinProbFlatHashTableStEph {
 
     //		Section 14. derive impls outside verus!
 
-
-    impl std::fmt::Debug for LinProbFlatHashTableStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "LinProbFlatHashTableStEph")
-        }
-    }
 
     impl std::fmt::Display for LinProbFlatHashTableStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

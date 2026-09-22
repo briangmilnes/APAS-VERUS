@@ -56,6 +56,7 @@ pub mod SCCStPer {
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
 
 
+    #[derive(Debug)]
     pub struct SCCStPer;
 
     //		Section 8. traits
@@ -699,11 +700,6 @@ pub mod SCCStPer {
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for SCCStPer {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "SCCStPer")
-        }
-    }
 
     impl std::fmt::Display for SCCStPer {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

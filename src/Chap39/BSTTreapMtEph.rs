@@ -79,6 +79,7 @@ pub mod BSTTreapMtEph {
     //		Section 4b. type definitions
 
 
+    #[derive(Debug)]
     pub struct BSTTreapMtEphInv;
 
     //		Section 9b. impls
@@ -1348,6 +1349,7 @@ pub mod BSTTreapMtEph {
     //		Section 4d. type definitions
 
 
+    #[derive(Debug)]
     pub struct Lnk;
 
     //		Section 9d. impls
@@ -1613,11 +1615,6 @@ pub mod BSTTreapMtEph {
 
     //		Section 14b. derive impls outside verus!
 
-    impl std::fmt::Debug for BSTTreapMtEphInv {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            f.debug_struct("BSTTreapMtEphInv").finish()
-        }
-    }
 
     impl std::fmt::Display for BSTTreapMtEphInv {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -1641,11 +1638,6 @@ pub mod BSTTreapMtEph {
 
     //		Section 14d. derive impls outside verus!
 
-    impl std::fmt::Debug for Lnk {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            f.debug_struct("Lnk").finish()
-        }
-    }
 
     impl std::fmt::Display for Lnk {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

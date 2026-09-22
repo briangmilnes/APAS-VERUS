@@ -48,8 +48,8 @@ file, or listed at the end.
 | 17 | 36 | 867 | 0 | 0 | 24 | 24 | 0 | 0 | 0 | 0 |
 | 18 | 37 | 1863 | 0 | 0 | 544 | 544 | 0 | 24 | 24 | 0 |
 | 19 | 38 | 1078 | 0 | 0 | 53 | 53 | 0 | 2 | 2 | 0 |
-| 20 | 39 | 1218 | 0 | 0 | 148 | 148 | 0 | 8 | 8 | 0 |
-| 21 | 40 | 1180 | 0 | 0 | 54 | 54 | 0 | 6 | 6 | 0 |
+| 20 | 39 | 1219 | 0 | 0 | 148 | 148 | 0 | 8 | 8 | 0 |
+| 21 | 40 | 1181 | 0 | 0 | 54 | 54 | 0 | 6 | 6 | 0 |
 | 22 | 41 | 2188 | 0 | 0 | 250 | 250 | 0 | 10 | 10 | 0 |
 | 23 | 42 | 2312 | 0 | 0 | 66 | 66 | 0 | 10 | 10 | 0 |
 | 24 | 43 | 2687 | 0 | 0 | 279 | 279 | 0 | 14 | 14 | 0 |
@@ -73,15 +73,57 @@ file, or listed at the end.
 | 42 | 64 | 1271 | 0 | 0 | 24 | 24 | 0 | 0 | 0 | 0 |
 | 43 | 65 | 2531 | 0 | 0 | 55 | 55 | 0 | 0 | 0 | 0 |
 | 44 | 66 | 805 | 0 | 0 | 40 | 40 | 0 | 0 | 0 | 0 |
-| 45 | totals | 60396 | 0 | 0 | 4176 | 4176 | 0 | 278 | 278 | 0 |
+| 45 | totals | 60401 | 0 | 0 | 4176 | 4176 | 0 | 278 | 278 | 0 |
 
 Row 45 sums each column. The verified total counts a dependency once per
 chapter that includes it, so it is a column sum, not the crate's function
-count. The run-time total is the sum of the per-chapter filtered runs; a
-single whole-crate `cargo test --release` reports 4198 passing tests. A
-`#ptt` of 0 means the chapter has no registered proof-time tests, not that
-its tests failed. Chap30 has no registered run-time tests. Commit hashes are
-in each chapter's own section below.
+count. It read 60396 before r217 and was three short of its own column: r217
+parts A and B raised the Chap37 and Chap43 rows without refreshing it, and it
+was already one short of that. The run-time total is the sum of the
+per-chapter filtered runs; a single whole-crate
+`cargo test --release --no-fail-fast` reports 265 targets and 4254 passing
+tests (`logs/rtt.20260922-142710.log`), plus 12 failing doctests in
+`src/standards/` that are Verus syntax in `//!` code fences and predate r217
+(`docs/DerivesApplied.md` §3.7). A `#ptt` of 0 means the chapter has no
+registered proof-time tests, not that its tests failed. Chap30 has no
+registered run-time tests. Commit hashes are in each chapter's own section
+below.
+
+### r217 part C — derived `Debug` on 62 unit structs, 19 chapters
+
+`docs/DerivesApplied.md` §3 replaces 62 hand-written `Debug` impls, each on a
+unit struct with a body printing only the type name, with `#[derive(Debug)]`
+inside `verus!`. `Debug` is `Ignore` in `automatic_derive.rs`, so no chapter's
+verified count moves and no proof hole moves; the printed text is identical,
+measured in `scratch/r217-unit-struct-debug.rs` and
+`scratch/r217-debug-struct-finish.rs`, so no test expectation moves either.
+
+| # | Chap | Impls | Verified | Err | Warn | Trigger notes | Log |
+|---|------|------:|---------:|----:|-----:|--------------:|-----|
+| 1 | 05 | 1 | 760 | 0 | 0 | 0 | `validate.20260922-141645.log` |
+| 2 | 06 | 4 | 1037 | 0 | 0 | 0 | `validate.20260922-141650.log` |
+| 3 | 37 | 2 | 1863 | 0 | 0 | 0 | `validate.20260922-141536.log` |
+| 4 | 39 | 2 | 1219 | 0 | 0 | 0 | `validate.20260922-141600.log` |
+| 5 | 40 | 3 | 1181 | 0 | 0 | 0 | `validate.20260922-141609.log` |
+| 6 | 43 | 2 | 2687 | 0 | 0 | 0 | `validate.20260922-141617.log` |
+| 7 | 47 | 6 | 1161 | 0 | 0 | 0 | `validate.20260922-141659.log` |
+| 8 | 49 | 4 | 1283 | 0 | 0 | 0 | `validate.20260922-141707.log` |
+| 9 | 50 | 2 | 766 | 0 | 0 | 0 | `validate.20260922-141714.log` |
+| 10 | 53 | 6 | 2246 | 0 | 0 | 0 | `validate.20260922-141722.log` |
+| 11 | 54 | 4 | 1277 | 0 | 0 | 0 | `validate.20260922-141741.log` |
+| 12 | 55 | 8 | 2290 | 0 | 0 | 0 | `validate.20260922-141749.log` |
+| 13 | 56 | 2 | 948 | 0 | 0 | 0 | `validate.20260922-141809.log` |
+| 14 | 61 | 4 | 1243 | 0 | 0 | 0 | `validate.20260922-141817.log` |
+| 15 | 62 | 4 | 1256 | 0 | 0 | 0 | `validate.20260922-141828.log` |
+| 16 | 63 | 2 | 1271 | 0 | 0 | 0 | `validate.20260922-141841.log` |
+| 17 | 64 | 3 | 1271 | 0 | 0 | 0 | `validate.20260922-141853.log` |
+| 18 | 65 | 1 | 2531 | 0 | 0 | 0 | `validate.20260922-141905.log` |
+| 19 | 66 | 2 | 805 | 0 | 0 | 0 | `validate.20260922-141930.log` |
+
+Rows 4 and 5 raise the Chap39 and Chap40 summary rows from 1218 and 1180.
+That difference is not part C's: the same `isolate` command on `e2f528707`,
+with part C absent, also reports 1219 and 1181
+(`logs/r217-controls/`), so the two summary rows had been stale since r213.
 
 Notes: the r213 PTT failures (Chap05, Chap17) and the unregistered Chap06
 PTTs were on the pre-09.13 iterator model; r214 migrated them (see

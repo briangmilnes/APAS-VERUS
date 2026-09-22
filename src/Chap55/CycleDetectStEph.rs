@@ -46,6 +46,7 @@ broadcast use vstd::seq::group_seq_axioms;
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
 
 
+    #[derive(Debug)]
     pub struct CycleDetectStEph;
 
     //		Section 6. spec fns
@@ -959,11 +960,6 @@ broadcast use vstd::seq::group_seq_axioms;
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for CycleDetectStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "CycleDetectStEph")
-        }
-    }
 
     impl std::fmt::Display for CycleDetectStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -23,7 +23,7 @@ Table of Contents:
 ✓ KruskalStEph.rs
    1 clean proof function
 ℹ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:492: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:493: info: accept()
    Info: 1 total
    4 clean proof functions
 ✓ UnionFindArrayStEph.rs
@@ -96,9 +96,8 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-09-22 11:25:13 -07:00
-Ended:     2026-09-22 11:25:13 -07:00
-Duration:  39ms
+Started:   2026-09-22 14:32:21 -07:00
+Ended:     2026-09-22 14:32:21 -07:00
+Duration:  52ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-iew-verus-proof-holes.log

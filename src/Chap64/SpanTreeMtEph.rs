@@ -50,6 +50,7 @@ pub mod SpanTreeMtEph {
 
 
     /// Namespace struct for trait impl.
+    #[derive(Debug)]
     pub struct SpanTreeMtEph;
 
     //		Section 8. traits
@@ -226,11 +227,6 @@ pub mod SpanTreeMtEph {
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for SpanTreeMtEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "SpanTreeMtEph")
-        }
-    }
 
     impl std::fmt::Display for SpanTreeMtEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -1074,6 +1074,7 @@ verus!
     //		Section 4b. type definitions
 
 
+    #[derive(Debug)]
     pub struct SetMtEphInv;
 
     //		Section 4c. type definitions
@@ -1289,12 +1290,6 @@ verus!
     }
 
     //		Section 14b. derive impls outside verus!
-
-    impl std::fmt::Debug for SetMtEphInv {
-        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-            write!(f, "SetMtEphInv")
-        }
-    }
 
     impl std::fmt::Display for SetMtEphInv {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {

@@ -1,0 +1,82 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap26/ScanDCMtPer.rs:119:5
+    |
+119 |     fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<usize>) -> (sums: (ArraySeqMtPerS<usize>, usize))
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap35/OrderStatSelectMtEph.rs:553:17
+    |
+553 |                 T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+sorted_left.index(j).le(pivot) ✔
+!(sorted_left.index(j) == pivot) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: assertion failed
+   --> src/Chap35/OrderStatSelectMtPer.rs:551:17
+    |
+551 |                 T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted_left.index(j).le(pivot) ✔
+!(sorted_left.index(j) == pivot) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap26/ETSPMtEph.rs:225:11
+    |
+225 |       proof fn lemma_combined_cycle(
+    |  ___________^
+226 | |         combined: Seq<Edge>, lt: Seq<Edge>, rt: Seq<Edge>,
+227 | |         ln_i: int, rn_i: int, best_li: int, best_ri: int,
+228 | |         el_from: Point, el_to: Point, er_from: Point, er_to: Point,
+229 | |     )
+    | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap26/ETSPMtEph.rs:349:5
+    |
+349 |     fn etsp_parallel_inner(points: &Vec<Point>) -> (tour: Vec<Edge>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap45/BalancedTreePQ.rs:712:13
+    |
+712 |             fn split(&self, element: &T) -> (Self, bool, Self) {
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindArrayStEph.rs:163:11
+    |
+163 |       proof fn lemma_find_after_link(
+    |  ___________^
+164 | |         po: Seq<int>, ro: Seq<int>, pn: Seq<int>, rn: Seq<int>,
+165 | |         n: nat, ra: int, rb: int, z: int,
+166 | |     )
+    | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindArrayStEph.rs:326:11
+    |
+326 |     proof fn lemma_link_preserves_wf(po: Seq<int>, ro: Seq<int>, n: nat, ra: int, rb: int, rn: Seq<int>)
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 5606 verified, 8 errors
+error: aborting due to 8 previous errors
+

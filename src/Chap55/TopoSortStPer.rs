@@ -42,6 +42,7 @@ pub mod TopoSortStPer {
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
 
 
+    #[derive(Debug)]
     pub struct TopoSortStPer;
 
     //		Section 6. spec fns
@@ -924,11 +925,6 @@ pub mod TopoSortStPer {
     //		Section 14. derive impls outside verus!
 
 
-    impl std::fmt::Debug for TopoSortStPer {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "TopoSortStPer")
-        }
-    }
 
     impl std::fmt::Display for TopoSortStPer {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
