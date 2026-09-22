@@ -32,7 +32,8 @@ file, or listed at the end.
 | 8 | 18 | 1003 | 0 | 0 | 170 pass | 38 pass | 99d1a9fa7 |
 | 9 | 19 | 824 | 0 | 0 | 156 pass | 23 pass | 7ac57e5c8 |
 | 10 | 21 | 1262 | 0 | 0 | 46 pass | none | 0a048df27 |
-| 11 | 23 | 679 | 0 | 0 | 92 pass | 17 pass | r213 Chap23 |
+| 11 | 23 | 679 | 0 | 0 | 92 pass | 17 pass | 8d3afb083 |
+| 12 | 26 | 1098 | 0 | 0 | 59 pass | none | r213 Chap26 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -165,3 +166,20 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
 1037 (`051155`), Chap11 651 (`051205`), Chap12 635 (`051207`), Chap17 645
 (`051210`), Chap18 1003 (`051213`), Chap19 824 (`051218`), Chap21 1262
 (`051222`); logs `logs/validate.20260922-<time>.log`.
+
+### Chap26
+
+- Start (first run on 09.13): 1097 verified, 1 error
+  (`logs/validate.20260922-051243.log`): in `etsp_parallel_inner` of
+  `src/Chap26/ETSPMtEph.rs`, `assert(c4)` (the cycle conjunct) failed in the
+  `n == 3` base case, and the function body exceeded its rlimit. The base
+  case used `reveal(spec_next_edge_from)`, which the spec's own comment names
+  as a matching-loop risk.
+- Edit class: proof only. The `n == 3` proof block now has the shape the
+  StEph twin (`ETSPStEph.rs`) already verifies with: three element asserts,
+  `lemma_next_edge_from_eq(tour@, i)` for i = 0, 1, 2, and the three
+  `spec_point_eq` asserts, in place of the `reveal`. No rlimit change.
+- End: 1098 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-051314.log`).
+- RTT: 8 targets, 59 tests pass (`logs/rtt.20260922-051335.log`).
+- PTT: none registered.

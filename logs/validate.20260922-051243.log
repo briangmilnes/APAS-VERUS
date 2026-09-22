@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap18 Chap26 Chap02
+error: assertion failed
+   --> src/Chap26/ETSPMtEph.rs:383:24
+    |
+383 |                 assert(c4);
+    |                        ^^ assertion failed
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap26/ETSPMtEph.rs:349:5
+    |
+349 |     fn etsp_parallel_inner(points: &Vec<Point>) -> (tour: Vec<Edge>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+c4 
+
+verification results:: 1097 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 1097MB, peak z3 RSS: 355MB, min free: 25086MB
+Sampled CPU Usage: rust_verify: 9s, z3 children: 15s
