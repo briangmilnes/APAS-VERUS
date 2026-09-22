@@ -1,0 +1,94 @@
+r212 RTT for Chap66: cargo test --release on 2 targets: TestBoruvkaMtEph TestBoruvkaStEph
+Starting RTT at 06:52:19
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.21s
+     Running tests/Chap66/TestBoruvkaMtEph.rs (target/release/deps/TestBoruvkaMtEph-b7fceca7516fdc74)
+
+running 17 tests
+test test_boruvka_mst_mt_empty ... ok
+test test_bridge_star_partition_mt ... ok
+test test_boruvka_mt_square ... ok
+test test_vertex_bridges_mt_empty ... ok
+test test_boruvka_mt_single_vertex ... ok
+test test_boruvka_mt_two_vertices ... ok
+test test_boruvka_mt_cycle_5 ... ok
+test test_boruvka_mst_mt_direct ... ok
+test test_boruvka_mt_complete_4 ... ok
+test test_boruvka_mt_triangle ... ok
+test test_vertex_bridges_mt_triangle ... ok
+test test_boruvka_mt_star ... ok
+test test_boruvka_mt_path ... ok
+test test_boruvka_mt_equal_weights ... ok
+test test_boruvka_mt_k5_complete ... ok
+test test_boruvka_mt_deterministic_across_seeds ... ok
+test test_boruvka_mt_larger_graph ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/Chap66/TestBoruvkaStEph.rs (target/release/deps/TestBoruvkaStEph-df57ba0f0e2777d9)
+
+running 23 tests
+test test_boruvka_complete_4 ... ok
+test test_boruvka_equal_weights ... ok
+test test_boruvka_mst_direct ... ok
+test test_boruvka_larger_8v ... ok
+test test_boruvka_mst_weight_empty ... ok
+test test_boruvka_deterministic_across_seeds ... ok
+test test_boruvka_cycle_5 ... ok
+test test_boruvka_k5_complete ... ok
+test test_boruvka_path ... ok
+test test_boruvka_mst_direct_empty ... ok
+test test_boruvka_parallel_edges_different_weights ... ok
+test test_boruvka_single_vertex ... ok
+test test_boruvka_larger_graph ... ok
+test test_boruvka_square ... ok
+test test_boruvka_star ... ok
+test test_boruvka_triangle ... ok
+test test_boruvka_two_vertices ... ok
+test test_bridge_star_partition ... ok
+test test_bridge_star_partition_single_vertex ... ok
+test test_vertex_bridges_empty ... ok
+test test_vertex_bridges_single_edge ... ok
+test test_vertex_bridges_star ... ok
+test test_vertex_bridges_triangle ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 1s

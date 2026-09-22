@@ -88,7 +88,7 @@ calls, removed chapter by chapter as each is migrated.
 | 41 | 63 | 05, 06, 62 | 0 | r213: 1271 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-063307.log` |
 | 42 | 64 | 05, 06, 62 | 0 | r213: 1271 verified, 0 err, 0 warn; RTT 24 pass | `validate.20260922-063333.log` |
 | 43 | 65 | 05, 06, 45 | 4 | r213: 2522 verified, 4 rlimit err (see log) | `validate.20260922-064919.log` |
-| 44 | 66 | 05 | 0 | verifies: 795, 0 errors | `validate.20260921-084327.log` |
+| 44 | 66 | 05 | 0 | r213: 805 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-065209.log` |
 
 Chapters 07–10, 13–16, 20, 22, 24, 25, 29, 31–34, 46, 48, 60 have no directory.
 

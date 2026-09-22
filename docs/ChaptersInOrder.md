@@ -65,6 +65,7 @@ file, or listed at the end.
 | 41 | 63 | 1271 | 0 | 0 | 40 pass | none | r213 Chap63 |
 | 42 | 64 | 1271 | 0 | 0 | 24 pass | none | r213 Chap64 |
 | 43 | 65 | 2522 | 4 | 0 | 0 run (gated) | none | r213 Chap65 (not clean) |
+| 44 | 66 | 805 | 0 | 0 | 40 pass | none | r213 Chap66 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -787,4 +788,11 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
 - RTT: 5 targets build; they run 0 tests, because every file in
   `tests/Chap65/` starts with `#![cfg(feature = "all_chapters")]`
   (`logs/rtt.20260922-064856.log`).
+- PTT: none registered.
+
+### Chap66
+
+- Start and end: 805 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-065209.log`). No edit.
+- RTT: 2 targets, 40 tests pass (`logs/rtt.20260922-065219.log`).
 - PTT: none registered.
