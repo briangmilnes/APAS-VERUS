@@ -1,3 +1,10 @@
+<style>
+body { max-width: 95% !important; width: 95% !important; margin: 0 auto !important; padding: 1em !important; }
+.markdown-body { max-width: 95% !important; width: 95% !important; }
+.container, .container-lg, .container-xl, main, article { max-width: 95% !important; width: 95% !important; }
+table { width: 95% !important; table-layout: auto; }
+</style>
+
 # Chapters in order (r213)
 
 Plan: `plans/r213-chapters-in-order.md`. Start: `main` at `9f9485a2f`.
@@ -20,52 +27,61 @@ file, or listed at the end.
 
 ## Summary
 
-| # | Chap | Verified | Err | Warn | RTT | PTT | Commit |
-|---|------|---------:|----:|-----:|-----|-----|--------|
-| 1 | 02 | 631 | 0 | 0 | 41 pass | none | 1afd25de1 |
-| 2 | 03 | 622 | 0 | 0 | 40 pass | none | 9da5c4aba |
-| 3 | 05 | 760 | 0 | 0 | 89 pass | 29 pass (r214) | 7680a0ea8 |
-| 4 | 06 | 1037 | 0 | 0 | 275 pass | 80 pass (r214) | 8c5300b01 |
-| 5 | 11 | 651 | 0 | 0 | 40 pass | none | 58e3ecf69 |
-| 6 | 12 | 635 | 0 | 0 | 40 pass | none | 571ed7e81 |
-| 7 | 17 | 645 | 0 | 0 | 40 pass | 9 pass (r214) | 8c46d30bd |
-| 8 | 18 | 1003 | 0 | 0 | 170 pass | 38 pass | 99d1a9fa7 |
-| 9 | 19 | 824 | 0 | 0 | 156 pass | 23 pass | 7ac57e5c8 |
-| 10 | 21 | 1262 | 0 | 0 | 46 pass | none | 0a048df27 |
-| 11 | 23 | 679 | 0 | 0 | 92 pass | 17 pass | 8d3afb083 |
-| 12 | 26 | 1098 | 0 | 0 | 59 pass | none | 3d9aac18c |
-| 13 | 27 | 846 | 0 | 0 | 48 pass | none | 5369c431f |
-| 14 | 28 | 883 | 0 | 0 | 68 pass | none | ba9524671 |
-| 15 | 30 | 626 | 0 | 0 | none | none | a452bde90 |
-| 16 | 35 | 1224 | 0 | 0 | 58 pass | none | 9a73d13bb |
-| 17 | 36 | 867 | 0 | 0 | 24 pass | none | c54289512 |
-| 18 | 37 | 1862 | 0 | 0 | 544 pass | 24 pass | 5c0513151 |
-| 19 | 38 | 1078 | 0 | 0 | 53 pass | 2 pass | e1bc1eb32 |
-| 20 | 39 | 1218 | 0 | 0 | 148 pass | 8 pass | ccd391de0 |
-| 21 | 40 | 1180 | 0 | 0 | 54 pass | 6 pass | 9473aa308 |
-| 22 | 41 | 2188 | 0 | 0 | 250 pass | 10 pass | 469798319 |
-| 23 | 42 | 2312 | 0 | 0 | 66 pass | 10 pass | 6a0ee50c9 |
-| 24 | 43 | 2686 | 0 | 0 | 279 pass | 14 pass | f7931d2de |
-| 25 | 44 | 2336 | 0 | 0 | 45 pass | none | ff3727eeb |
-| 26 | 45 | 2034 | 0 | 0 | 210 pass | none | 9cc03f02d |
-| 27 | 47 | 1161 | 0 | 0 | 102 pass | none | 7521218a2 |
-| 28 | 49 | 1283 | 0 | 0 | 136 pass | none | 52b78e66c |
-| 29 | 50 | 766 | 0 | 0 | 167 pass | none | f55ba47bb |
-| 30 | 51 | 1333 | 0 | 0 | 109 pass | none | 3d5951b8c |
-| 31 | 52 | 2943 | 0 | 0 | 148 pass | none | 3c0a192b0 |
-| 32 | 53 | 2246 | 0 | 0 | 46 pass | none | 09fcbc85c |
-| 33 | 54 | 1277 | 0 | 0 | 53 pass | 8 pass | 4f592130b |
-| 34 | 55 | 2290 | 0 | 0 | 58 pass | none | 41e46fbdb |
-| 35 | 56 | 948 | 0 | 0 | 54 pass | none | 8b23fbabd |
-| 36 | 57 | 2583 | 0 | 0 | 48 pass | none | d169e1d95 |
-| 37 | 58 | 1370 | 0 | 0 | 41 pass | none | 936939b04 |
-| 38 | 59 | 2632 | 0 | 0 | 41 pass | none | 4fd1c3ac8 |
-| 39 | 61 | 1243 | 0 | 0 | 40 pass | none | a77dee8f1 |
-| 40 | 62 | 1256 | 0 | 0 | 39 pass | none | b9b94c621 |
-| 41 | 63 | 1271 | 0 | 0 | 40 pass | none | 09dea009a |
-| 42 | 64 | 1271 | 0 | 0 | 24 pass | none | dee93dcbe |
-| 43 | 65 | 2531 | 0 | 0 | 55 pass | none | ae84b55ac |
-| 44 | 66 | 805 | 0 | 0 | 40 pass | none | 4aeec3055 |
+| # | Chap | Verified | Err | Warn | #rtt | rtt pass | rtt fail | #ptt | ptt pass | ptt fail |
+|---|------|---------:|----:|-----:|-----:|---------:|---------:|-----:|---------:|---------:|
+| 1 | 02 | 631 | 0 | 0 | 41 | 41 | 0 | 0 | 0 | 0 |
+| 2 | 03 | 622 | 0 | 0 | 40 | 40 | 0 | 0 | 0 | 0 |
+| 3 | 05 | 760 | 0 | 0 | 89 | 89 | 0 | 29 | 29 | 0 |
+| 4 | 06 | 1037 | 0 | 0 | 275 | 275 | 0 | 80 | 80 | 0 |
+| 5 | 11 | 651 | 0 | 0 | 40 | 40 | 0 | 0 | 0 | 0 |
+| 6 | 12 | 635 | 0 | 0 | 40 | 40 | 0 | 0 | 0 | 0 |
+| 7 | 17 | 645 | 0 | 0 | 40 | 40 | 0 | 9 | 9 | 0 |
+| 8 | 18 | 1003 | 0 | 0 | 170 | 170 | 0 | 38 | 38 | 0 |
+| 9 | 19 | 824 | 0 | 0 | 156 | 156 | 0 | 23 | 23 | 0 |
+| 10 | 21 | 1262 | 0 | 0 | 46 | 46 | 0 | 0 | 0 | 0 |
+| 11 | 23 | 679 | 0 | 0 | 92 | 92 | 0 | 17 | 17 | 0 |
+| 12 | 26 | 1098 | 0 | 0 | 59 | 59 | 0 | 0 | 0 | 0 |
+| 13 | 27 | 846 | 0 | 0 | 48 | 48 | 0 | 0 | 0 | 0 |
+| 14 | 28 | 883 | 0 | 0 | 68 | 68 | 0 | 0 | 0 | 0 |
+| 15 | 30 | 626 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 16 | 35 | 1224 | 0 | 0 | 58 | 58 | 0 | 0 | 0 | 0 |
+| 17 | 36 | 867 | 0 | 0 | 24 | 24 | 0 | 0 | 0 | 0 |
+| 18 | 37 | 1862 | 0 | 0 | 544 | 544 | 0 | 24 | 24 | 0 |
+| 19 | 38 | 1078 | 0 | 0 | 53 | 53 | 0 | 2 | 2 | 0 |
+| 20 | 39 | 1218 | 0 | 0 | 148 | 148 | 0 | 8 | 8 | 0 |
+| 21 | 40 | 1180 | 0 | 0 | 54 | 54 | 0 | 6 | 6 | 0 |
+| 22 | 41 | 2188 | 0 | 0 | 250 | 250 | 0 | 10 | 10 | 0 |
+| 23 | 42 | 2312 | 0 | 0 | 66 | 66 | 0 | 10 | 10 | 0 |
+| 24 | 43 | 2686 | 0 | 0 | 279 | 279 | 0 | 14 | 14 | 0 |
+| 25 | 44 | 2336 | 0 | 0 | 45 | 45 | 0 | 0 | 0 | 0 |
+| 26 | 45 | 2034 | 0 | 0 | 210 | 210 | 0 | 0 | 0 | 0 |
+| 27 | 47 | 1161 | 0 | 0 | 102 | 102 | 0 | 0 | 0 | 0 |
+| 28 | 49 | 1283 | 0 | 0 | 136 | 136 | 0 | 0 | 0 | 0 |
+| 29 | 50 | 766 | 0 | 0 | 167 | 167 | 0 | 0 | 0 | 0 |
+| 30 | 51 | 1333 | 0 | 0 | 109 | 109 | 0 | 0 | 0 | 0 |
+| 31 | 52 | 2943 | 0 | 0 | 148 | 148 | 0 | 0 | 0 | 0 |
+| 32 | 53 | 2246 | 0 | 0 | 46 | 46 | 0 | 0 | 0 | 0 |
+| 33 | 54 | 1277 | 0 | 0 | 53 | 53 | 0 | 8 | 8 | 0 |
+| 34 | 55 | 2290 | 0 | 0 | 58 | 58 | 0 | 0 | 0 | 0 |
+| 35 | 56 | 948 | 0 | 0 | 54 | 54 | 0 | 0 | 0 | 0 |
+| 36 | 57 | 2583 | 0 | 0 | 48 | 48 | 0 | 0 | 0 | 0 |
+| 37 | 58 | 1370 | 0 | 0 | 41 | 41 | 0 | 0 | 0 | 0 |
+| 38 | 59 | 2632 | 0 | 0 | 41 | 41 | 0 | 0 | 0 | 0 |
+| 39 | 61 | 1243 | 0 | 0 | 40 | 40 | 0 | 0 | 0 | 0 |
+| 40 | 62 | 1256 | 0 | 0 | 39 | 39 | 0 | 0 | 0 | 0 |
+| 41 | 63 | 1271 | 0 | 0 | 40 | 40 | 0 | 0 | 0 | 0 |
+| 42 | 64 | 1271 | 0 | 0 | 24 | 24 | 0 | 0 | 0 | 0 |
+| 43 | 65 | 2531 | 0 | 0 | 55 | 55 | 0 | 0 | 0 | 0 |
+| 44 | 66 | 805 | 0 | 0 | 40 | 40 | 0 | 0 | 0 | 0 |
+| 45 | totals | 60396 | 0 | 0 | 4176 | 4176 | 0 | 278 | 278 | 0 |
+
+Row 45 sums each column. The verified total counts a dependency once per
+chapter that includes it, so it is a column sum, not the crate's function
+count. The run-time total is the sum of the per-chapter filtered runs; a
+single whole-crate `cargo test --release` reports 4198 passing tests. A
+`#ptt` of 0 means the chapter has no registered proof-time tests, not that
+its tests failed. Chap30 has no registered run-time tests. Commit hashes are
+in each chapter's own section below.
 
 Notes: the r213 PTT failures (Chap05, Chap17) and the unregistered Chap06
 PTTs were on the pre-09.13 iterator model; r214 migrated them (see
