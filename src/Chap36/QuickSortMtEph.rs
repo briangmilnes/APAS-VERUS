@@ -441,9 +441,9 @@ pub mod QuickSortMtEph {
                     pivot_idx < n, pivot == s[pivot_idx as int], s == a.seq@,
                     leq == spec_leq::<T>(),
                     forall|j: int| 0 <= j < left@.len() ==>
-                        (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
+                        T::le(#[trigger] left@[j], pivot) && left@[j] != pivot,
                     forall|j: int| 0 <= j < right@.len() ==>
-                        (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+                        T::le(pivot, #[trigger] right@[j]) && right@[j] != pivot,
                     forall|j: int| 0 <= j < equals@.len() ==>
                         (#[trigger] equals@[j]) == pivot,
                     left@.len() + right@.len() + equals@.len() == i,
@@ -556,9 +556,9 @@ pub mod QuickSortMtEph {
                     pivot_idx < n, pivot == s[pivot_idx as int], s == a.seq@,
                     leq == spec_leq::<T>(),
                     forall|j: int| 0 <= j < left@.len() ==>
-                        (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
+                        T::le(#[trigger] left@[j], pivot) && left@[j] != pivot,
                     forall|j: int| 0 <= j < right@.len() ==>
-                        (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+                        T::le(pivot, #[trigger] right@[j]) && right@[j] != pivot,
                     forall|j: int| 0 <= j < equals@.len() ==>
                         (#[trigger] equals@[j]) == pivot,
                     left@.len() + right@.len() + equals@.len() == i,
@@ -679,9 +679,9 @@ pub mod QuickSortMtEph {
                     pivot_idx < n, pivot == s[pivot_idx as int], s == a.seq@,
                     leq == spec_leq::<T>(),
                     forall|j: int| 0 <= j < left@.len() ==>
-                        (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
+                        T::le(#[trigger] left@[j], pivot) && left@[j] != pivot,
                     forall|j: int| 0 <= j < right@.len() ==>
-                        (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+                        T::le(pivot, #[trigger] right@[j]) && right@[j] != pivot,
                     forall|j: int| 0 <= j < equals@.len() ==>
                         (#[trigger] equals@[j]) == pivot,
                     left@.len() + right@.len() + equals@.len() == i,

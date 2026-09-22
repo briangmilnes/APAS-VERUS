@@ -38,6 +38,7 @@ file, or listed at the end.
 | 14 | 28 | 883 | 0 | 0 | 68 pass | none | r213 Chap28 |
 | 15 | 30 | 626 | 0 | 0 | none | none | r213 Chap30 |
 | 16 | 35 | 1224 | 0 | 0 | 58 pass | none | r213 Chap35 |
+| 17 | 36 | 867 | 0 | 0 | 24 pass | none | r213 Chap36 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -221,15 +222,38 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   loop body` for the `left` partition invariant
   (`forall j. T::le(left@[j], pivot) && left@[j] != pivot`) in the partition
   loop of `select` in `OrderStatSelectStEph.rs:180` and
-  `OrderStatSelectStPer.rs:180`. The `Less` arm's proof block was empty (a
-  proof-minimisation leftover); after filling it the same failure moved to the
-  `right` invariant (`logs/validate.20260922-051622.log`).
-- Edit class: proof only, in both files. In the `Less` arm, the two facts from
-  `TotalOrder::cmp`'s `ensures` (`T::le(elem, pivot)`, `elem != pivot`); in the
-  `Less` and `Greater` arms, a ghost snapshot of the vector before `push` and
-  an `assert forall` that re-establishes the partition invariant index by
-  index (old prefix, then the pushed element).
-- End: 1224 verified, 0 errors, 0 warnings, 0 trigger notes
-  (`logs/validate.20260922-051639.log`).
-- RTT: 4 targets, 58 tests pass (`logs/rtt.20260922-051650.log`).
+  `OrderStatSelectStPer.rs:180`.
+- First fix (commit `9a73d13bb`, `logs/validate.20260922-051639.log`, 1224
+  verified, 0 errors): the two `cmp` facts in the `Less` arm plus a ghost
+  snapshot and an `assert forall` after each `push` (26 proof lines per
+  file).
+- Final fix, replacing the first (committed with Chap36): the two partition
+  invariants' trigger moved from the `T::le(..)` application to the vector
+  index, `T::le(#[trigger] left@[j], pivot)` and
+  `T::le(pivot, #[trigger] right@[j])`, the form `QuickSortStEph.rs` already
+  verifies with. The quantified formula is unchanged; only its trigger
+  differs. With the `T::le` trigger, a `push` introduces no `T::le` term for
+  the new index, so Z3 had nothing to instantiate on. 4 lines changed per
+  file, no added proof. 1224 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-051905.log`).
+- RTT: 4 targets, 58 tests pass (`logs/rtt.20260922-051650.log`, rerun
+  `logs/rtt.20260922-051922.log` after the final fix).
+- PTT: none registered.
+
+### Chap36
+
+- Start (first run on 09.13): 864 verified, 3 errors
+  (`logs/validate.20260922-051709.log`): `invariant not satisfied at end of
+  loop body` for the `left` and `right` partition invariants in the three
+  partition loops of `QuickSortMtEph.rs` (`quick_sort_first`,
+  `quick_sort_median3`, `quick_sort_random`); the `recommendation not met`
+  notes on `sort_by` accompany those errors and disappear with them.
+- Edit class: trigger choice, as in Chap35. The six invariants now read
+  `T::le(#[trigger] left@[j], pivot)` and `T::le(pivot, #[trigger] right@[j])`,
+  the form `QuickSortStEph.rs` verifies with. An intermediate attempt with
+  per-push `assert forall` blocks (`logs/validate.20260922-051733.log`) still
+  failed and was removed.
+- End: 867 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-051831.log`).
+- RTT: 4 targets, 24 tests pass (`logs/rtt.20260922-051917.log`).
 - PTT: none registered.

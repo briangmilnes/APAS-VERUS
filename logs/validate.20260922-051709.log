@@ -1,0 +1,96 @@
+Mode: isolate
+Isolate: including Chap36 Chap19 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap36/QuickSortMtEph.rs:443:21
+    |
+443 | /                     forall|j: int| 0 <= j < left@.len() ==>
+444 | |                         (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
+    | |________________________________________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap36/QuickSortMtEph.rs:445:21
+    |
+445 | /                     forall|j: int| 0 <= j < right@.len() ==>
+446 | |                         (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+    | |__________________________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEph.rs:488:32
+    |
+488 |                 ensures r@ =~= left_view.sort_by(spec_leq::<T>()), r@.len() == left_view.len()
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> seq_lib.rs:98:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEph.rs:495:32
+    |
+495 |                 ensures r@ =~= right_view.sort_by(spec_leq::<T>()), r@.len() == right_view.len()
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> seq_lib.rs:98:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap36/QuickSortMtEph.rs:558:21
+    |
+558 | /                     forall|j: int| 0 <= j < left@.len() ==>
+559 | |                         (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
+    | |________________________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEph.rs:611:32
+    |
+611 |                 ensures r@ =~= left_view.sort_by(spec_leq::<T>()), r@.len() == left_view.len()
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> seq_lib.rs:98:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEph.rs:618:32
+    |
+618 |                 ensures r@ =~= right_view.sort_by(spec_leq::<T>()), r@.len() == right_view.len()
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> seq_lib.rs:98:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap36/QuickSortMtEph.rs:681:21
+    |
+681 | /                     forall|j: int| 0 <= j < left@.len() ==>
+682 | |                         (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
+    | |________________________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEph.rs:734:32
+    |
+734 |                 ensures r@ =~= left_view.sort_by(spec_leq::<T>()), r@.len() == left_view.len()
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> seq_lib.rs:98:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEph.rs:741:32
+    |
+741 |                 ensures r@ =~= right_view.sort_by(spec_leq::<T>()), r@.len() == right_view.len()
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> seq_lib.rs:98:12
+    |
+    = note: recommendation not met
+
+verification results:: 864 verified, 3 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 812MB, peak z3 RSS: 0MB, min free: 25748MB
+Sampled CPU Usage: rust_verify: 2s, z3 children: 0s

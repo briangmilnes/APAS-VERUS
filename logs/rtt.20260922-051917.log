@@ -1,0 +1,102 @@
+r212 RTT for Chap36: cargo test --release on 4 targets: TestQuickSortMtEph TestQuickSortMtEphSlice TestQuickSortStEph BenchQuickSort
+Starting RTT at 05:19:17
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap36/TestQuickSortMtEphSlice.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestQuickSortMtEphSlice") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 5.34s
+     Running tests/Chap36/BenchQuickSort.rs (target/release/deps/BenchQuickSort-2ac975e31eba87b0)
+
+running 1 test
+test bench_quicksort_st_vs_mt ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/Chap36/TestQuickSortMtEph.rs (target/release/deps/TestQuickSortMtEph-28bf99f8b0f8ea7e)
+
+running 8 tests
+test quick_sort_mt_all_same ... ok
+test quick_sort_mt_variants_produce_sorted_output ... ok
+test quick_sort_mt_negative_values ... ok
+test quick_sort_mt_preserves_multiset ... ok
+test quick_sort_mt_three_elements_all_permutations ... ok
+test quick_sort_mt_edge_cases ... ok
+test quick_sort_mt_concurrent_execution ... ok
+test quick_sort_mt_large_inputs ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap36/TestQuickSortMtEphSlice.rs (target/release/deps/TestQuickSortMtEphSlice-3011ef253fdea534)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap36/TestQuickSortStEph.rs (target/release/deps/TestQuickSortStEph-af834b9c41457b67)
+
+running 15 tests
+test quick_sort_all_same_elements ... ok
+test quick_sort_all_same_large ... ok
+test quick_sort_alternating_high_low ... ok
+test quick_sort_handles_edge_cases ... ok
+test quick_sort_negative_values ... ok
+test quick_sort_organ_pipe ... ok
+test quick_sort_min_max_values ... ok
+test quick_sort_plateau ... ok
+test quick_sort_large_ascending ... ok
+test quick_sort_sorted_then_one_wrong ... ok
+test quick_sort_three_elements_all_permutations ... ok
+test quick_sort_preserves_multiset ... ok
+test quick_sort_two_elements_all_variants ... ok
+test quick_sort_variants_produce_sorted_output ... ok
+test quick_sort_large_descending ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 5s
