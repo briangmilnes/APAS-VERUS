@@ -1,0 +1,111 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+note: verifying module Chap65::UnionFindPCStEph::UnionFindPCStEph (selected functions)
+
+error: function body check: Resource limit (rlimit) exceeded
+    --> src/Chap65/UnionFindPCStEph.rs:1096:9
+     |
+1096 |         fn union(&mut self, u: &V, v: &V) {
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Z3 4.16.0
+note: Analyzing prover log for (profile rerun) lib::Chap65::UnionFindPCStEph::UnionFindPCStEph::UnionFindPC::union ...
+
+note: Log analysis complete for (profile rerun) lib::Chap65::UnionFindPCStEph::UnionFindPCStEph::UnionFindPC::union
+
+note: Profile statistics for lib::Chap65::UnionFindPCStEph::UnionFindPCStEph::UnionFindPC::union
+
+note: Observed 955,681 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 133792100442 (Instantiated 292,617 times - 30% of the total, cost 457226) top 1 of 35 user-level quantifiers.
+      
+   --> src/vstdplus/hash_specs_plus.rs:111:24
+    |
+107 |     pub broadcast proof fn lemma_key_view_contains<K: Eq + View, V>(m: Map<K, V>, k: K)
+    |     ----------------------------------------------------------------------------------- Triggers selected for this quantifier
+...
+111 |             #![trigger key_view(m), m.contains_key(k)]
+    |                        ^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^
+112 |             #![trigger key_view(m).contains_key(k@)]
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+113 |             #![trigger key_view(m)[k@]]
+    |                        ^^^^^^^^^^^^^^^
+
+note: Cost * Instantiations: 44568381312 (Instantiated 207,627 times - 21% of the total, cost 214656) top 2 of 35 user-level quantifiers.
+      
+   --> src/vstdplus/hash_specs_plus.rs:217:24
+    |
+213 |     pub broadcast proof fn lemma_set_key_view_contains<K: Eq + View>(s: Set<K>, k: K)
+    |     --------------------------------------------------------------------------------- Triggers selected for this quantifier
+...
+217 |             #![trigger set_key_view(s), s.contains(k)]
+    |                        ^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^
+218 |             #![trigger set_key_view(s).contains(k@)]
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Cost * Instantiations: 11900469696 (Instantiated 108,692 times - 11% of the total, cost 109488) top 3 of 35 user-level quantifiers.
+      
+ --> map.rs:286:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 9291831189 (Instantiated 95,989 times - 10% of the total, cost 96801) top 4 of 35 user-level quantifiers.
+      
+ --> set.rs:369:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 6216930871 (Instantiated 41,339 times - 4% of the total, cost 150389) top 5 of 35 user-level quantifiers.
+      
+ --> map.rs:248:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 5582795520 (Instantiated 44,160 times - 4% of the total, cost 126422) top 6 of 35 user-level quantifiers.
+      
+ --> set_lib.rs:32:4
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 5401464393 (Instantiated 44,161 times - 4% of the total, cost 122313) top 7 of 35 user-level quantifiers.
+      
+   --> src/vstdplus/hash_specs_plus.rs:185:13
+    |
+183 |     pub broadcast proof fn lemma_key_view_key<K: View, V>(m: Map<K, V>, kv: K::V)
+    |     ----------------------------------------------------------------------------- Triggers selected for this quantifier
+184 |         ensures
+185 |             #[trigger] key_view(m).contains_key(kv)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Cost * Instantiations: 4555381628 (Instantiated 18,094 times - 1% of the total, cost 251762) top 8 of 35 user-level quantifiers.
+      
+    --> src/Chap65/UnionFindPCStEph.rs:1147:26
+     |
+1146 |                     assert forall|k: V::V| pn.dom().contains(k) && pv::<V>(pn, k) != k implies
+     |                     ------ Triggers selected for this quantifier
+1147 |                         (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int)
+     |                          ^^^^^^^^^^^^^^^^
+
+note: Cost * Instantiations: 3772867752 (Instantiated 11,948 times - 1% of the total, cost 315774) top 9 of 35 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindPCStEph.rs:125:18
+    |
+124 |           &&& forall|k: V::V| parent.dom().contains(k) && pv::<V>(parent, k) != k ==>
+    |  _____________-
+125 | |                 (#[trigger] rank[k] as int) < (rank[pv::<V>(parent, k)] as int)
+    | |__________________^^^^^^^^^^^^^^^^^^___________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 599177227 (Instantiated 11,957 times - 1% of the total, cost 50111) top 10 of 35 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindPCStEph.rs:100:61
+    |
+ 99 | /         forall|r: V::V| parent.dom().contains(r) && pv::<V>(parent, r) == r ==>
+100 | |             spec_subtree::<V>(parent, rank, n, r).len() >= (#[trigger] rank[r] as nat) + 1
+    | |_____________________________________________________________^^^^^^^^^^^^^^^^^^___________- Triggers selected for this quantifier
+
+verification results:: 0 verified, 1 errors (partial verification with `--verify-*`)
+error: aborting due to 1 previous error
+
+Elapsed: 158s
+Sampled Memory Usage: peak rust_verify RSS: 6611MB, peak z3 RSS: 3180MB, min free: 18131MB
+Sampled CPU Usage: rust_verify: 32s, z3 children: 68s

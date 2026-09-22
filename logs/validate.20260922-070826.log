@@ -1,0 +1,16 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+note: verifying module Chap65::UnionFindNoPCStEph::UnionFindNoPCStEph
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindNoPCStEph.rs:744:9
+    |
+744 |         fn union_sets(&mut self, u: &V, v: &V) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 14 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 117s
+Sampled Memory Usage: peak rust_verify RSS: 1816MB, peak z3 RSS: 1190MB, min free: 25126MB
+Sampled CPU Usage: rust_verify: 11s, z3 children: 0s

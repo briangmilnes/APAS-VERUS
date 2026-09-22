@@ -1,4 +1,3 @@
-#![cfg(feature = "all_chapters")]
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Chapter 65: Union-Find (no path compression, HashMap-backed, generic) Tests

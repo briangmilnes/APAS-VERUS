@@ -1,0 +1,8 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+note: verifying module Chap65::UnionFindNoPCStEph::UnionFindNoPCStEph
+
+verification results:: 15 verified, 0 errors
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 1818MB, peak z3 RSS: 0MB, min free: 26382MB
+Sampled CPU Usage: rust_verify: 13s, z3 children: 0s

@@ -1,0 +1,34 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+note: verifying module Chap65::UnionFindNoPCStEph::UnionFindNoPCStEph (selected functions)
+
+error: assertion failed
+   --> src/Chap65/UnionFindNoPCStEph.rs:395:16
+    |
+395 |         assert(rn[rb] as int >= ro[rb] as int);
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/UnionFindNoPCStEph.rs:397:13
+    |
+397 |             (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+rn.index(rb) >= ro.index(rb) 
+
+note: recommendation not met: value may be out of range of the target type (use `#[verifier::truncate]` on the cast to silence this warning)
+   --> src/Chap65/UnionFindNoPCStEph.rs:358:44
+    |
+358 |                     && rn == ro.insert(rb, (ro[rb] + 1) as usize)),
+    |                                            ^^^^^^^^^^^^
+
+verification results:: 0 verified, 1 errors (partial verification with `--verify-*`)
+error: aborting due to 2 previous errors
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 1819MB, peak z3 RSS: 0MB, min free: 26354MB
+Sampled CPU Usage: rust_verify: 12s, z3 children: 0s

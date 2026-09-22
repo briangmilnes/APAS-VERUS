@@ -64,7 +64,7 @@ file, or listed at the end.
 | 40 | 62 | 1256 | 0 | 0 | 39 pass | none | b9b94c621 |
 | 41 | 63 | 1271 | 0 | 0 | 40 pass | none | 09dea009a |
 | 42 | 64 | 1271 | 0 | 0 | 24 pass | none | dee93dcbe |
-| 43 | 65 | 2522 | 4 | 0 | 0 run (gated) | none | 7e36a17c2 (not clean) |
+| 43 | 65 | 2531 | 0 | 0 | 55 pass | none | r214 Chap65 |
 | 44 | 66 | 805 | 0 | 0 | 40 pass | none | 4aeec3055 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
@@ -815,3 +815,53 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   rlimit (with Chap44), Chap38 bypassed-lemma callers in Chap41.
 - PTTs still on the old iterator model: Chap05 (16 tests) and Chap17 (7);
   Chap06's are not registered.
+
+## Follow-up (r214)
+
+### Chap65 (now clean)
+
+- Trigger change (both union-find files, 34 quantifiers): every
+  domain-closure quantifier `forall k. #[trigger] dom.contains(k) ==>
+  dom.contains(pv(parent, k))` now also marks `pv(parent, k)` as a trigger,
+  so the multi-pattern needs both terms and the conclusion no longer
+  re-matches its own trigger. The specs are unchanged. With only this change
+  (`logs/validate.20260922-065457.log`): `lemma_build_final_wf` verifies at
+  its existing `rlimit(80)`, and the chapter's Z3 peak falls from about
+  14 GB to 4.2 GB; three functions still fail.
+- `UnionFindNoPCStEph::union_sets`:
+  - Profile after the trigger change
+    (`logs/validate.20260922-065634.log`): 520K instantiations, no loop.
+  - New pure-map lemmas: `lemma_link_size_rank_inv` (size-rank invariant
+    after linking root `ra` under root `rb`) and `lemma_link_preserves_inv`
+    (every map-level invariant plus the find result for every element, with
+    `pn = po.insert(ra, x)`; the ranks are either unchanged with
+    `ro[ra] < ro[rb]`, or equal with `rb`'s rank growing by one). Each of
+    the three branches now calls the lemma; the old inline proofs are kept
+    as `/* r214: ... */` comments.
+  - It still failed (profile `logs/validate.20260922-070523.log`: 955K
+    instantiations, led by the `hash_specs_plus` key-view bridge lemmas,
+    whose multi-triggers fire over every raw key). `group_key_view_lemmas`
+    moved from the module's `broadcast use` to function-level `broadcast
+    use` in `new`, `insert`, `find`, `equals` and `size`. `union_sets` calls
+    `lemma_key_view_contains` (two rank reads), `lemma_key_view_insert`
+    (three inserts) and `lemma_key_view_len` directly; `find`'s loop calls
+    `lemma_key_view_contains(self.parent@, curr)` (the function-level
+    `broadcast use` did not reach the loop body).
+  - It now verifies at its existing `rlimit(30)`. A trial `rlimit(60)`
+    was not needed and was taken out.
+- `UnionFindPCStEph::union`: the same two lemmas, adapted to
+  `spec_light_wf`, and the same branch rewrite. It verifies at its existing
+  `rlimit(40)` with the module-level key-view group left in place.
+- `UnionFindArrayStEph::union`: a `Seq<int>` version,
+  `lemma_link_preserves_wf`, and the same branch rewrite. Default rlimit.
+- Exec changes (none alter the cost): the inserted clones are bound to
+  names (`ku`, `kv`, `root_u3`) before `insert`, so the proofs can name the
+  value.
+- Rlimits raised: none.
+- End: 2531 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-071941.log`, 25 s, Z3 peak 358 MB).
+- RTT: `#![cfg(feature = "all_chapters")]` was added to the Chap65 test
+  files by `c1d126e82` ("Comment out Chap65 ... Z3 matching loop on union
+  wf"), when Chap65 was dropped from the build. That reason no longer holds,
+  so the gate is removed from all five files. 5 targets, 55 tests pass
+  (`logs/rtt.20260922-072032.log`).

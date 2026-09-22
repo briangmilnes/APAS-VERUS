@@ -1,0 +1,127 @@
+r212 RTT for Chap65: cargo test --release on 5 targets: TestKruskalStEph TestPrimStEph TestUnionFindArrayStEph TestUnionFindNoPCStEph TestUnionFindPCStEph
+Starting RTT at 07:20:32
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 5.45s
+     Running tests/Chap65/TestKruskalStEph.rs (target/release/deps/TestKruskalStEph-541983915a15f292)
+
+running 7 tests
+test test_kruskal_all_equal_weights ... ok
+test test_kruskal_complete_graph ... ok
+test test_kruskal_single_vertex ... ok
+test test_kruskal_star_graph ... ok
+test test_kruskal_triangle ... ok
+test test_kruskal_square ... ok
+test test_kruskal_verify_size ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap65/TestPrimStEph.rs (target/release/deps/TestPrimStEph-bd68e2e18614e8da)
+
+running 6 tests
+test test_prim_complete_graph ... ok
+test test_prim_single_vertex ... ok
+test test_prim_different_start ... ok
+test test_prim_star_graph ... ok
+test test_prim_triangle ... ok
+test test_prim_square ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap65/TestUnionFindArrayStEph.rs (target/release/deps/TestUnionFindArrayStEph-af83a20af8ae7b4e)
+
+running 10 tests
+test test_find_self ... ok
+test test_find_single ... ok
+test test_new ... ok
+test test_new_zero ... ok
+test test_size ... ok
+test test_union_basic ... ok
+test test_union_by_rank_large ... ok
+test test_union_chain ... ok
+test test_union_idempotent ... ok
+test test_union_merge_sets ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap65/TestUnionFindNoPCStEph.rs (target/release/deps/TestUnionFindNoPCStEph-56130ffee2c3f527)
+
+running 11 tests
+test test_equals_different_sets ... ok
+test test_equals_same_element ... ok
+test test_find_self ... ok
+test test_insert_and_size ... ok
+test test_multiple_disjoint_sets ... ok
+test test_new_empty ... ok
+test test_size_unchanged_after_union ... ok
+test test_union_basic ... ok
+test test_union_chain ... ok
+test test_union_idempotent ... ok
+test test_union_transitivity ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap65/TestUnionFindPCStEph.rs (target/release/deps/TestUnionFindPCStEph-fe904c23ab6dceef)
+
+running 21 tests
+test test_default_trait ... ok
+test test_find_root ... ok
+test test_multiple_components ... ok
+test test_rank_based_union_smaller_to_larger ... ok
+test test_large_union_find ... ok
+test test_star_pattern ... ok
+test test_trait_find ... ok
+test test_trait_equals ... ok
+test test_trait_insert ... ok
+test test_trait_new ... ok
+test test_trait_size ... ok
+test test_trait_union ... ok
+test test_union_find_already_unioned ... ok
+test test_union_find_basic ... ok
+test test_union_find_empty ... ok
+test test_union_find_path_compression ... ok
+test test_union_find_reflexive ... ok
+test test_union_find_single ... ok
+test test_union_find_string_vertices ... ok
+test test_union_find_symmetric ... ok
+test test_union_find_transitive ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 6s

@@ -1,0 +1,85 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+error[E0425]: cannot find function `lemma_key_view_contains` in this scope
+   --> src/Chap65/UnionFindNoPCStEph.rs:770:17
+    |
+770 |                 lemma_key_view_contains(self.rank@, root_u);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::vstdplus::hash_specs_plus::hash_specs_plus::lemma_key_view_contains;
+    |
+
+error[E0425]: cannot find function `lemma_key_view_contains` in this scope
+   --> src/Chap65/UnionFindNoPCStEph.rs:771:17
+    |
+771 |                 lemma_key_view_contains(self.rank@, root_v);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::vstdplus::hash_specs_plus::hash_specs_plus::lemma_key_view_contains;
+    |
+
+error[E0425]: cannot find function `lemma_key_view_insert` in this scope
+   --> src/Chap65/UnionFindNoPCStEph.rs:785:21
+    |
+785 |                     lemma_key_view_insert(praw, ku, root_v);
+    |                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::vstdplus::hash_specs_plus::hash_specs_plus::lemma_key_view_insert;
+    |
+
+error[E0425]: cannot find function `lemma_key_view_insert` in this scope
+   --> src/Chap65/UnionFindNoPCStEph.rs:896:21
+    |
+896 |                     lemma_key_view_insert(praw, kv, root_u);
+    |                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::vstdplus::hash_specs_plus::hash_specs_plus::lemma_key_view_insert;
+    |
+
+error[E0425]: cannot find function `lemma_key_view_insert` in this scope
+    --> src/Chap65/UnionFindNoPCStEph.rs:1001:21
+     |
+1001 |                     lemma_key_view_insert(praw, kv, root_u3);
+     |                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  26 +     use crate::vstdplus::hash_specs_plus::hash_specs_plus::lemma_key_view_insert;
+     |
+
+error[E0425]: cannot find function `lemma_key_view_len` in this scope
+    --> src/Chap65/UnionFindNoPCStEph.rs:1002:21
+     |
+1002 |                     lemma_key_view_len(self.parent@);
+     |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  26 +     use crate::vstdplus::hash_specs_plus::hash_specs_plus::lemma_key_view_len;
+     |
+
+error[E0425]: cannot find function `lemma_key_view_insert` in this scope
+    --> src/Chap65/UnionFindNoPCStEph.rs:1016:21
+     |
+1016 |                     lemma_key_view_insert(rraw, root_u2, (rank_u + 1) as usize);
+     |                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  26 +     use crate::vstdplus::hash_specs_plus::hash_specs_plus::lemma_key_view_insert;
+     |
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 230MB, peak z3 RSS: 0MB, min free: 27894MB
+Sampled CPU Usage: rust_verify: 2s, z3 children: 0s

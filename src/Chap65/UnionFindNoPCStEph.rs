@@ -37,14 +37,20 @@ pub mod UnionFindNoPCStEph {
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::hash_specs_plus::hash_specs_plus::key_view;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::hash_specs_plus::hash_specs_plus::{
+        lemma_key_view_contains, lemma_key_view_insert, lemma_key_view_len,
+    };
 
     verus! {
 
 	//		Section 3. broadcast use
 
+    // r214: group_key_view_lemmas is used per function (new, insert, find, equals,
+    // size), not module-wide: in union_sets its multi-trigger bridge lemmas fired
+    // quadratically over the raw maps' keys, so union_sets calls the few it needs.
     broadcast use {
         vstd::std_specs::hash::group_hash_axioms,
-        crate::vstdplus::hash_specs_plus::hash_specs_plus::group_key_view_lemmas,
     };
 
 	//		Section 4. type definitions — struct UnionFind
@@ -71,7 +77,7 @@ pub mod UnionFindNoPCStEph {
             && rank.dom().contains(v)
             && (forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k))
             && (forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
-                    parent.dom().contains(pv::<V>(parent, k)))
+                    parent.dom().contains(#[trigger] pv::<V>(parent, k)))
             && (forall|k: V::V| parent.dom().contains(k) && pv::<V>(parent, k) != k ==>
                     (#[trigger] rank[k] as int) < (rank[pv::<V>(parent, k)] as int))
             && (forall|k: V::V| parent.dom().contains(k) ==>
@@ -108,7 +114,7 @@ pub mod UnionFindNoPCStEph {
         &&& obeys_feq_full::<V>()
         &&& forall|k: V::V| #[trigger] key_view(uf.parent@).dom().contains(k) <==> key_view(uf.rank@).dom().contains(k)
         &&& forall|k: V::V| #[trigger] key_view(uf.parent@).dom().contains(k) ==>
-                key_view(uf.parent@).dom().contains(pv::<V>(key_view(uf.parent@), k))
+                key_view(uf.parent@).dom().contains(#[trigger] pv::<V>(key_view(uf.parent@), k))
         // Rank invariant.
         &&& forall|k: V::V| key_view(uf.parent@).dom().contains(k) && pv::<V>(key_view(uf.parent@), k) != k ==>
                 (#[trigger] key_view(uf.rank@)[k] as int) < (key_view(uf.rank@)[pv::<V>(key_view(uf.parent@), k)] as int)
@@ -129,7 +135,7 @@ pub mod UnionFindNoPCStEph {
             parent.dom().contains(v),
             forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k),
             forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
-                parent.dom().contains(pv::<V>(parent, k)),
+                parent.dom().contains(#[trigger] pv::<V>(parent, k)),
             forall|k: V::V| parent.dom().contains(k) && pv::<V>(parent, k) != k ==>
                 (#[trigger] rank[k] as int) < (rank[pv::<V>(parent, k)] as int),
             forall|k: V::V| parent.dom().contains(k) ==>
@@ -153,7 +159,7 @@ pub mod UnionFindNoPCStEph {
             parent.dom().contains(v),
             forall|k: V::V| #[trigger] parent.dom().contains(k) <==> rank.dom().contains(k),
             forall|k: V::V| #[trigger] parent.dom().contains(k) ==>
-                parent.dom().contains(pv::<V>(parent, k)),
+                parent.dom().contains(#[trigger] pv::<V>(parent, k)),
             forall|k: V::V| parent.dom().contains(k) && pv::<V>(parent, k) != k ==>
                 (#[trigger] rank[k] as int) < (rank[pv::<V>(parent, k)] as int),
             forall|k: V::V| parent.dom().contains(k) ==>
@@ -186,13 +192,13 @@ pub mod UnionFindNoPCStEph {
             forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k),
             // Old invariants.
             forall|k: V::V| #[trigger] po.dom().contains(k) <==> ro.dom().contains(k),
-            forall|k: V::V| #[trigger] po.dom().contains(k) ==> po.dom().contains(pv::<V>(po, k)),
+            forall|k: V::V| #[trigger] po.dom().contains(k) ==> po.dom().contains(#[trigger] pv::<V>(po, k)),
             forall|k: V::V| po.dom().contains(k) && pv::<V>(po, k) != k ==>
                 (#[trigger] ro[k] as int) < (ro[pv::<V>(po, k)] as int),
             forall|k: V::V| po.dom().contains(k) ==> (#[trigger] ro[k] as int) < n as int,
             // New invariants.
             forall|k: V::V| #[trigger] pn.dom().contains(k) <==> rn.dom().contains(k),
-            forall|k: V::V| #[trigger] pn.dom().contains(k) ==> pn.dom().contains(pv::<V>(pn, k)),
+            forall|k: V::V| #[trigger] pn.dom().contains(k) ==> pn.dom().contains(#[trigger] pv::<V>(pn, k)),
             forall|k: V::V| pn.dom().contains(k) && pv::<V>(pn, k) != k ==>
                 (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int),
             forall|k: V::V| pn.dom().contains(k) ==> (#[trigger] rn[k] as int) < n as int,
@@ -241,6 +247,198 @@ pub mod UnionFindNoPCStEph {
         }
     }
 
+    /// Size-rank invariant after linking root `ra` under root `rb`: `rb`'s new
+    /// subtree is the disjoint union of both old subtrees, every other root's
+    /// subtree is unchanged, and only `rb`'s rank may grow (by at most `ro[ra] + 1`).
+    /// Factored out of `union_sets` (r214) to keep the subtree reasoning out of
+    /// that function's context.
+    proof fn lemma_link_size_rank_inv<V: View>(
+        po: Map<V::V, V>, ro: Map<V::V, usize>,
+        pn: Map<V::V, V>, rn: Map<V::V, usize>,
+        n: nat, ra: V::V, rb: V::V,
+    )
+        requires
+            po.dom().contains(ra), po.dom().contains(rb),
+            ra != rb,
+            pv::<V>(po, ra) == ra, pv::<V>(po, rb) == rb,
+            pv::<V>(pn, ra) == rb, pv::<V>(pn, rb) == rb,
+            forall|k: V::V| po.dom().contains(k) && k != ra ==> #[trigger] pv::<V>(pn, k) == pv::<V>(po, k),
+            forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k),
+            // Old invariants.
+            forall|k: V::V| #[trigger] po.dom().contains(k) <==> ro.dom().contains(k),
+            forall|k: V::V| #[trigger] po.dom().contains(k) ==> po.dom().contains(#[trigger] pv::<V>(po, k)),
+            forall|k: V::V| po.dom().contains(k) && pv::<V>(po, k) != k ==>
+                (#[trigger] ro[k] as int) < (ro[pv::<V>(po, k)] as int),
+            forall|k: V::V| po.dom().contains(k) ==> (#[trigger] ro[k] as int) < n as int,
+            spec_size_rank_inv_map::<V>(po, ro, n),
+            // New invariants.
+            forall|k: V::V| #[trigger] pn.dom().contains(k) <==> rn.dom().contains(k),
+            forall|k: V::V| #[trigger] pn.dom().contains(k) ==> pn.dom().contains(#[trigger] pv::<V>(pn, k)),
+            forall|k: V::V| pn.dom().contains(k) && pv::<V>(pn, k) != k ==>
+                (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int),
+            forall|k: V::V| pn.dom().contains(k) ==> (#[trigger] rn[k] as int) < n as int,
+            // Only rb's rank may change, and by a bounded amount.
+            forall|k: V::V| rn.dom().contains(k) && k != rb ==> #[trigger] rn[k] == ro[k],
+            rn[rb] as int <= ro[ra] as int + ro[rb] as int + 1,
+        ensures
+            spec_size_rank_inv_map::<V>(pn, rn, n),
+    {
+        assert forall|r: V::V| pn.dom().contains(r) && pv::<V>(pn, r) == r implies
+            spec_subtree::<V>(pn, rn, n, r).len() >= (#[trigger] rn[r] as nat) + 1
+        by {
+            assert(r != ra);
+            let st_new = spec_subtree::<V>(pn, rn, n, r);
+            if r == rb {
+                // Winner: subtree = old subtree(ra) + old subtree(rb).
+                let st_old_a = spec_subtree::<V>(po, ro, n, ra);
+                let st_old_b = spec_subtree::<V>(po, ro, n, rb);
+                assert(st_new =~= st_old_a + st_old_b) by {
+                    assert forall|k: V::V|
+                        #[trigger] st_new.contains(k) == (st_old_a + st_old_b).contains(k)
+                    by {
+                        if po.dom().contains(k) {
+                            assert(pn.dom().contains(k));
+                            assert(rn.dom().contains(k));
+                            assert(ro.dom().contains(k));
+                            lemma_find_after_link::<V>(po, ro, pn, rn, n, ra, rb, k);
+                        }
+                    }
+                }
+                // Disjoint: find maps to a unique root.
+                assert(st_old_a.disjoint(st_old_b)) by {
+                    assert forall|k: V::V| !(st_old_a.contains(k) && st_old_b.contains(k)) by {}
+                }
+                lemma_set_disjoint_lens(st_old_a, st_old_b);
+                assert(ro.dom().contains(ra));
+                assert(ro.dom().contains(rb));
+                assert(st_old_a.len() >= (ro[ra] as nat) + 1);
+                assert(st_old_b.len() >= (ro[rb] as nat) + 1);
+            } else {
+                // Other root: subtree unchanged.
+                let st_old = spec_subtree::<V>(po, ro, n, r);
+                assert(st_new =~= st_old) by {
+                    assert forall|k: V::V|
+                        st_new.contains(k) == st_old.contains(k)
+                    by {
+                        if po.dom().contains(k) {
+                            assert(pn.dom().contains(k));
+                            assert(rn.dom().contains(k));
+                            assert(ro.dom().contains(k));
+                            lemma_find_after_link::<V>(po, ro, pn, rn, n, ra, rb, k);
+                        }
+                    }
+                }
+                assert(po.dom().contains(r));
+                assert(pv::<V>(po, r) == r);
+                assert(rn.dom().contains(r));
+                assert(ro.dom().contains(r));
+                assert(rn[r] == ro[r]);
+            }
+        }
+    }
+
+    /// Linking root `ra` under root `rb` (`pn = po.insert(ra, x)` with `x@ == rb`)
+    /// preserves every map-level union-find invariant, and after it every element
+    /// whose old root was `ra` or `rb` has root `rb`; other roots are unchanged.
+    /// Either the ranks are unchanged and `ro[ra] < ro[rb]`, or the ranks were equal
+    /// and `rb`'s rank grows by one. Pure-map statement of the three `union_sets`
+    /// branches, factored out in r214 so `union_sets` carries no subtree or
+    /// rank reasoning in its own context.
+    proof fn lemma_link_preserves_inv<V: View>(
+        po: Map<V::V, V>, ro: Map<V::V, usize>, n: nat,
+        ra: V::V, rb: V::V, x: V, rn: Map<V::V, usize>,
+    )
+        requires
+            n == po.dom().len(),
+            po.dom().contains(ra), po.dom().contains(rb), ra != rb,
+            pv::<V>(po, ra) == ra, pv::<V>(po, rb) == rb,
+            x@ == rb,
+            forall|k: V::V| #[trigger] po.dom().contains(k) <==> ro.dom().contains(k),
+            forall|k: V::V| #[trigger] po.dom().contains(k) ==> po.dom().contains(#[trigger] pv::<V>(po, k)),
+            forall|k: V::V| po.dom().contains(k) && pv::<V>(po, k) != k ==>
+                (#[trigger] ro[k] as int) < (ro[pv::<V>(po, k)] as int),
+            forall|k: V::V| po.dom().contains(k) ==> (#[trigger] ro[k] as int) < n as int,
+            spec_size_rank_inv_map::<V>(po, ro, n),
+            (rn == ro && ro[ra] < ro[rb])
+                || (ro[ra] == ro[rb] && (ro[rb] as int) + 1 < n as int
+                    && rn == ro.insert(rb, rn[rb]) && rn[rb] as int == ro[rb] as int + 1),
+        ensures
+            po.insert(ra, x).dom() == po.dom(),
+            forall|k: V::V| #[trigger] po.insert(ra, x).dom().contains(k) <==> rn.dom().contains(k),
+            forall|k: V::V| #[trigger] po.insert(ra, x).dom().contains(k) ==>
+                po.insert(ra, x).dom().contains(#[trigger] pv::<V>(po.insert(ra, x), k)),
+            forall|k: V::V| po.insert(ra, x).dom().contains(k) && pv::<V>(po.insert(ra, x), k) != k ==>
+                (#[trigger] rn[k] as int) < (rn[pv::<V>(po.insert(ra, x), k)] as int),
+            forall|k: V::V| po.insert(ra, x).dom().contains(k) ==> (#[trigger] rn[k] as int) < n as int,
+            spec_size_rank_inv_map::<V>(po.insert(ra, x), rn, n),
+            forall|z: V::V| po.dom().contains(z) ==>
+                #[trigger] spec_pure_find::<V>(po.insert(ra, x), rn, n, z) ==
+                    (if spec_pure_find::<V>(po, ro, n, z) == ra || spec_pure_find::<V>(po, ro, n, z) == rb {
+                        rb
+                    } else {
+                        spec_pure_find::<V>(po, ro, n, z)
+                    }),
+    {
+        let pn = po.insert(ra, x);
+        assert(pn.dom() =~= po.dom());
+        assert(pv::<V>(pn, ra) == rb);
+        assert(pv::<V>(pn, rb) == rb);
+        assert(ro.dom().contains(ra));
+        assert(ro.dom().contains(rb));
+        assert forall|k: V::V| po.dom().contains(k) && k != ra implies
+            #[trigger] pv::<V>(pn, k) == pv::<V>(po, k) by {}
+        assert forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k) by {}
+        assert forall|k: V::V| #[trigger] pn.dom().contains(k) <==> rn.dom().contains(k) by {
+            assert(po.dom().contains(k) <==> ro.dom().contains(k));
+        }
+        assert forall|k: V::V| #[trigger] pn.dom().contains(k) implies
+            pn.dom().contains(#[trigger] pv::<V>(pn, k))
+        by {
+            if k != ra { assert(pv::<V>(pn, k) == pv::<V>(po, k)); }
+        }
+        assert forall|k: V::V| rn.dom().contains(k) && k != rb implies #[trigger] rn[k] == ro[k] by {}
+        assert(rn.dom().contains(rb));
+        assert(rn[rb] as int >= ro[rb] as int);
+        assert forall|k: V::V| pn.dom().contains(k) && pv::<V>(pn, k) != k implies
+            (#[trigger] rn[k] as int) < (rn[pv::<V>(pn, k)] as int)
+        by {
+            assert(ro.dom().contains(k));
+            if k == ra {
+                assert(pv::<V>(pn, k) == rb);
+                assert(rn[ra] == ro[ra]);
+            } else {
+                assert(pv::<V>(pn, k) == pv::<V>(po, k));
+                let p = pv::<V>(po, k);
+                assert(po.dom().contains(p));
+                assert(ro.dom().contains(p));
+                assert(rn.dom().contains(p));
+                assert(k != rb);
+                assert(rn[k] == ro[k]);
+                assert((ro[k] as int) < (ro[p] as int));
+                if p != rb { assert(rn[p] == ro[p]); }
+            }
+        }
+        assert forall|k: V::V| pn.dom().contains(k) implies (#[trigger] rn[k] as int) < n as int by {
+            assert(ro.dom().contains(k));
+            if k != rb { assert(rn[k] == ro[k]); }
+        }
+        assert(rn[rb] as int <= ro[ra] as int + ro[rb] as int + 1);
+        lemma_link_size_rank_inv::<V>(po, ro, pn, rn, n, ra, rb);
+        assert forall|z: V::V| po.dom().contains(z) implies
+            #[trigger] spec_pure_find::<V>(pn, rn, n, z) ==
+                (if spec_pure_find::<V>(po, ro, n, z) == ra || spec_pure_find::<V>(po, ro, n, z) == rb {
+                    rb
+                } else {
+                    spec_pure_find::<V>(po, ro, n, z)
+                })
+        by {
+            assert(pn.dom().contains(z));
+            assert(rn.dom().contains(z));
+            assert(ro.dom().contains(z));
+            lemma_find_after_link::<V>(po, ro, pn, rn, n, ra, rb, z);
+        }
+    }
+
     /// After insert of new element v, find is unchanged for old elements.
     proof fn lemma_find_insert_unchanged<V: View>(
         po: Map<V::V, V>, ro: Map<V::V, usize>, n_old: nat,
@@ -254,13 +452,13 @@ pub mod UnionFindNoPCStEph {
             pv::<V>(pn, v) == v,
             // Old invariants.
             forall|j: V::V| #[trigger] po.dom().contains(j) <==> ro.dom().contains(j),
-            forall|j: V::V| #[trigger] po.dom().contains(j) ==> po.dom().contains(pv::<V>(po, j)),
+            forall|j: V::V| #[trigger] po.dom().contains(j) ==> po.dom().contains(#[trigger] pv::<V>(po, j)),
             forall|j: V::V| po.dom().contains(j) && pv::<V>(po, j) != j ==>
                 (#[trigger] ro[j] as int) < (ro[pv::<V>(po, j)] as int),
             forall|j: V::V| po.dom().contains(j) ==> (#[trigger] ro[j] as int) < n_old as int,
             // New invariants.
             forall|j: V::V| #[trigger] pn.dom().contains(j) <==> rn.dom().contains(j),
-            forall|j: V::V| #[trigger] pn.dom().contains(j) ==> pn.dom().contains(pv::<V>(pn, j)),
+            forall|j: V::V| #[trigger] pn.dom().contains(j) ==> pn.dom().contains(#[trigger] pv::<V>(pn, j)),
             forall|j: V::V| pn.dom().contains(j) && pv::<V>(pn, j) != j ==>
                 (#[trigger] rn[j] as int) < (rn[pv::<V>(pn, j)] as int),
             forall|j: V::V| pn.dom().contains(j) ==> (#[trigger] rn[j] as int) < n_new as int,
@@ -385,10 +583,12 @@ pub mod UnionFindNoPCStEph {
         }
 
         fn new() -> (uf: Self) {
+            broadcast use crate::vstdplus::hash_specs_plus::hash_specs_plus::group_key_view_lemmas;
             UnionFind { parent: HashMap::new(), rank: HashMap::new() }
         }
 
         fn insert(&mut self, v: V) {
+            broadcast use crate::vstdplus::hash_specs_plus::hash_specs_plus::group_key_view_lemmas;
             let ghost vv = v@;
             let ghost po = key_view(self.parent@);
             let ghost ro = key_view(self.rank@);
@@ -402,7 +602,7 @@ pub mod UnionFindNoPCStEph {
                 let n_new = self.spec_n();
                 // Parent-in-domain for new state.
                 assert forall|k: V::V| #[trigger] pn.dom().contains(k) implies
-                    pn.dom().contains(pv::<V>(pn, k))
+                    pn.dom().contains(#[trigger] pv::<V>(pn, k))
                 by {
                     if k == vv { assert(pv::<V>(pn, k) == vv); }
                     else {
@@ -490,6 +690,7 @@ pub mod UnionFindNoPCStEph {
         }
 
         fn find(&self, v: &V) -> (root: V) {
+            broadcast use crate::vstdplus::hash_specs_plus::hash_specs_plus::group_key_view_lemmas;
             let mut curr = v.clone_view();
             let n = self.parent.len();
             let mut steps: usize = 0;
@@ -504,6 +705,7 @@ pub mod UnionFindNoPCStEph {
                     (key_view(self.rank@)[curr@] as int) >= steps as int,
                 decreases n - steps,
             {
+                proof { lemma_key_view_contains(self.parent@, curr); }
                 let p = self.parent.get(&curr);
                 match p {
                     Some(parent_val) => {
@@ -563,7 +765,12 @@ pub mod UnionFindNoPCStEph {
             let ghost po = key_view(self.parent@);
             let ghost ro = key_view(self.rank@);
             let ghost n = self.spec_n();
+            let ghost praw = self.parent@;
+            let ghost rraw = self.rank@;
             proof {
+                // Key-view bridge for the two raw rank lookups (r214: explicit, not broadcast).
+                lemma_key_view_contains(self.rank@, root_u);
+                lemma_key_view_contains(self.rank@, root_v);
                 // Connect exec rank reads to ghost map.
                 assert(ro.dom().contains(root_u@));
                 assert(ro.dom().contains(root_v@));
@@ -572,7 +779,24 @@ pub mod UnionFindNoPCStEph {
             }
             if rank_u < rank_v {
                 // Link root_u under root_v.
-                self.parent.insert(root_u.clone_view(), root_v);
+                let ku = root_u.clone_view();
+                self.parent.insert(ku, root_v);
+                proof {
+                    // r214: the invariant and find proofs are in lemma_link_preserves_inv;
+                    // the inline proof they replace is kept below as a comment.
+                    lemma_key_view_insert(praw, ku, root_v);
+                    let pn = key_view(self.parent@);
+                    let rn = key_view(self.rank@);
+                    assert(rn == ro);
+                    assert(pn == po.insert(root_u@, root_v));
+                    lemma_link_preserves_inv::<V>(po, ro, n, root_u@, root_v@, root_v, rn);
+                    assert(po.dom().contains(u@));
+                    assert(po.dom().contains(v@));
+                    assert(spec_pure_find::<V>(pn, rn, n, u@) == root_v@);
+                    assert(spec_pure_find::<V>(pn, rn, n, v@) == root_v@);
+                    assert(pn.dom().len() == n);
+                }
+                /* r214: replaced by lemma_link_preserves_inv.
                 proof {
                     let pn = key_view(self.parent@);
                     let rn = key_view(self.rank@);
@@ -582,7 +806,7 @@ pub mod UnionFindNoPCStEph {
                     assert forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k) by {}
                     // Parent-in-domain.
                     assert forall|k: V::V| #[trigger] pn.dom().contains(k) implies
-                        pn.dom().contains(pv::<V>(pn, k))
+                        pn.dom().contains(#[trigger] pv::<V>(pn, k))
                     by {
                         if k == root_u@ { assert(pv::<V>(pn, k) == root_v@); }
                         else { assert(pv::<V>(pn, k) == pv::<V>(po, k)); }
@@ -594,7 +818,10 @@ pub mod UnionFindNoPCStEph {
                         if k == root_u@ {} else { assert(pv::<V>(pn, k) == pv::<V>(po, k)); }
                     }
                     // Rank bounded (unchanged).
-                    // Size-rank invariant.
+                    // Size-rank invariant (r214: proved by lemma_link_size_rank_inv;
+                    // the inline proof it replaces is kept below as a comment).
+                    lemma_link_size_rank_inv::<V>(po, ro, pn, rn, n, root_u@, root_v@);
+                    /* r214: moved to lemma_link_size_rank_inv.
                     assert(spec_size_rank_inv_map::<V>(pn, rn, n)) by {
                         assert forall|r: V::V| pn.dom().contains(r) && pv::<V>(pn, r) == r implies
                             spec_subtree::<V>(pn, rn, n, r).len() >= (#[trigger] rn[r] as nat) + 1
@@ -648,6 +875,7 @@ pub mod UnionFindNoPCStEph {
                             }
                         }
                     }
+                    */
                     // Trichotomy for u and v.
                     assert(po.dom().contains(u@));
                     assert(po.dom().contains(v@));
@@ -660,9 +888,26 @@ pub mod UnionFindNoPCStEph {
                     lemma_find_after_link::<V>(po, ro, pn, rn, n, root_u@, root_v@, u@);
                     lemma_find_after_link::<V>(po, ro, pn, rn, n, root_u@, root_v@, v@);
                 }
+                */
             } else if rank_u > rank_v {
                 // Link root_v under root_u.
-                self.parent.insert(root_v.clone_view(), root_u);
+                let kv = root_v.clone_view();
+                self.parent.insert(kv, root_u);
+                proof {
+                    // r214: see lemma_link_preserves_inv; old inline proof kept below.
+                    lemma_key_view_insert(praw, kv, root_u);
+                    let pn = key_view(self.parent@);
+                    let rn = key_view(self.rank@);
+                    assert(rn == ro);
+                    assert(pn == po.insert(root_v@, root_u));
+                    lemma_link_preserves_inv::<V>(po, ro, n, root_v@, root_u@, root_u, rn);
+                    assert(po.dom().contains(u@));
+                    assert(po.dom().contains(v@));
+                    assert(spec_pure_find::<V>(pn, rn, n, u@) == root_u@);
+                    assert(spec_pure_find::<V>(pn, rn, n, v@) == root_u@);
+                    assert(pn.dom().len() == n);
+                }
+                /* r214: replaced by lemma_link_preserves_inv.
                 proof {
                     let pn = key_view(self.parent@);
                     let rn = key_view(self.rank@);
@@ -670,7 +915,7 @@ pub mod UnionFindNoPCStEph {
                     assert(pv::<V>(pn, root_v@) == root_u@);
                     assert forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k) by {}
                     assert forall|k: V::V| #[trigger] pn.dom().contains(k) implies
-                        pn.dom().contains(pv::<V>(pn, k))
+                        pn.dom().contains(#[trigger] pv::<V>(pn, k))
                     by {
                         if k == root_v@ { assert(pv::<V>(pn, k) == root_u@); }
                         else { assert(pv::<V>(pn, k) == pv::<V>(po, k)); }
@@ -680,7 +925,9 @@ pub mod UnionFindNoPCStEph {
                     by {
                         if k == root_v@ {} else { assert(pv::<V>(pn, k) == pv::<V>(po, k)); }
                     }
-                    // Size-rank invariant.
+                    // Size-rank invariant (r214: lemma_link_size_rank_inv; old inline proof below).
+                    lemma_link_size_rank_inv::<V>(po, ro, pn, rn, n, root_v@, root_u@);
+                    /* r214: moved to lemma_link_size_rank_inv.
                     assert(spec_size_rank_inv_map::<V>(pn, rn, n)) by {
                         assert forall|r: V::V| pn.dom().contains(r) && pv::<V>(pn, r) == r implies
                             spec_subtree::<V>(pn, rn, n, r).len() >= (#[trigger] rn[r] as nat) + 1
@@ -729,6 +976,7 @@ pub mod UnionFindNoPCStEph {
                             }
                         }
                     }
+                    */
                     assert(po.dom().contains(u@));
                     assert(po.dom().contains(v@));
                     assert(pn.dom().contains(u@));
@@ -742,13 +990,19 @@ pub mod UnionFindNoPCStEph {
                     lemma_find_after_link::<V>(po, ro, pn, rn, n, root_v@, root_u@, u@);
                     lemma_find_after_link::<V>(po, ro, pn, rn, n, root_v@, root_u@, v@);
                 }
+                */
             } else {
                 // Equal rank. Link root_v under root_u, increment root_u's rank.
                 let root_u2 = root_u.clone_view();
-                self.parent.insert(root_v.clone_view(), root_u.clone_view());
+                let root_u3 = root_u.clone_view();
+                let kv = root_v.clone_view();
+                self.parent.insert(kv, root_u3);
                 // Prove rank_u + 1 < n using size-rank invariant.
                 let n_len = self.parent.len();
                 proof {
+                    lemma_key_view_insert(praw, kv, root_u3);
+                    lemma_key_view_len(self.parent@);
+                    assert(key_view(self.parent@).dom() =~= po.dom());
                     assert(po.dom().contains(root_u@));
                     assert(po.dom().contains(root_v@));
                     assert(ro.dom().contains(root_u@));
@@ -760,12 +1014,28 @@ pub mod UnionFindNoPCStEph {
                 }
                 self.rank.insert(root_u2, rank_u + 1);
                 proof {
+                    // r214: see lemma_link_preserves_inv; old inline proof kept below.
+                    lemma_key_view_insert(rraw, root_u2, (rank_u + 1) as usize);
+                    let pn = key_view(self.parent@);
+                    let rn = key_view(self.rank@);
+                    assert(pn == po.insert(root_v@, root_u3));
+                    assert(rn == ro.insert(root_u@, (rank_u + 1) as usize));
+                    assert(rn[root_u@] == rank_u + 1);
+                    lemma_link_preserves_inv::<V>(po, ro, n, root_v@, root_u@, root_u3, rn);
+                    assert(po.dom().contains(u@));
+                    assert(po.dom().contains(v@));
+                    assert(spec_pure_find::<V>(pn, rn, n, u@) == root_u@);
+                    assert(spec_pure_find::<V>(pn, rn, n, v@) == root_u@);
+                    assert(pn.dom().len() == n);
+                }
+                /* r214: replaced by lemma_link_preserves_inv.
+                proof {
                     let pn = key_view(self.parent@);
                     let rn = key_view(self.rank@);
                     assert(pv::<V>(pn, root_v@) == root_u@);
                     assert forall|k: V::V| po.dom().contains(k) <==> #[trigger] pn.dom().contains(k) by {}
                     assert forall|k: V::V| #[trigger] pn.dom().contains(k) implies
-                        pn.dom().contains(pv::<V>(pn, k))
+                        pn.dom().contains(#[trigger] pv::<V>(pn, k))
                     by {
                         if k == root_v@ { assert(pv::<V>(pn, k) == root_u@); }
                         else { assert(pv::<V>(pn, k) == pv::<V>(po, k)); }
@@ -798,7 +1068,16 @@ pub mod UnionFindNoPCStEph {
                             assert(rn[k] == ro[k]);
                         }
                     }
-                    // Size-rank invariant.
+                    // Size-rank invariant (r214: lemma_link_size_rank_inv; old inline proof below).
+                    assert forall|k: V::V| rn.dom().contains(k) && k != root_u@ implies
+                        #[trigger] rn[k] == ro[k]
+                    by {
+                        assert(ro.dom().contains(k));
+                    }
+                    assert(rn.dom().contains(root_u@));
+                    assert(rn[root_u@] == rank_u + 1);
+                    lemma_link_size_rank_inv::<V>(po, ro, pn, rn, n, root_v@, root_u@);
+                    /* r214: moved to lemma_link_size_rank_inv.
                     assert(spec_size_rank_inv_map::<V>(pn, rn, n)) by {
                         assert forall|r: V::V| pn.dom().contains(r) && pv::<V>(pn, r) == r implies
                             spec_subtree::<V>(pn, rn, n, r).len() >= (#[trigger] rn[r] as nat) + 1
@@ -846,6 +1125,7 @@ pub mod UnionFindNoPCStEph {
                             }
                         }
                     }
+                    */
                     assert(po.dom().contains(u@));
                     assert(po.dom().contains(v@));
                     assert(pn.dom().contains(u@));
@@ -859,16 +1139,21 @@ pub mod UnionFindNoPCStEph {
                     lemma_find_after_link::<V>(po, ro, pn, rn, n, root_v@, root_u@, u@);
                     lemma_find_after_link::<V>(po, ro, pn, rn, n, root_v@, root_u@, v@);
                 }
+                */
             }
         }
 
         fn equals(&self, u: &V, v: &V) -> (eq: bool) {
+            broadcast use crate::vstdplus::hash_specs_plus::hash_specs_plus::group_key_view_lemmas;
             let root_u = self.find(u);
             let root_v = self.find(v);
             feq(&root_u, &root_v)
         }
 
-        fn size(&self) -> (n: usize) { self.parent.len() }
+        fn size(&self) -> (n: usize) {
+            broadcast use crate::vstdplus::hash_specs_plus::hash_specs_plus::group_key_view_lemmas;
+            self.parent.len()
+        }
     }
 
     } // verus!

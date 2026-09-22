@@ -1,0 +1,34 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+note: verifying module Chap65::UnionFindNoPCStEph::UnionFindNoPCStEph
+
+error: assertion failed
+   --> src/Chap65/UnionFindNoPCStEph.rs:715:40
+    |
+715 | ...                   assert(pv::<V>(key_view(self.parent@), curr@) == curr@);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/UnionFindNoPCStEph.rs:726:36
+    |
+726 | ...                   assert(pv::<V>(key_view(self.parent@), curr@) == parent_val@);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/UnionFindNoPCStEph.rs:735:40
+    |
+735 |                         proof { assert(false); } // unreachable: curr in domain
+    |                                        ^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+false 
+
+verification results:: 14 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1526MB, peak z3 RSS: 0MB, min free: 26635MB
+Sampled CPU Usage: rust_verify: 11s, z3 children: 0s

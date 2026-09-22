@@ -318,6 +318,85 @@ pub mod UnionFindArrayStEph {
         // 2*(r+1) <= n, and n >= 2*(r+1) >= 2. So r+1 <= n/2 < n.
     }
 
+    /// Linking root `ra` under root `rb` (`pn = po.update(ra, rb)`) preserves the four
+    /// wf predicates; afterwards elements rooted at `ra` or `rb` have root `rb` and
+    /// every other root is unchanged. Either the ranks are unchanged and
+    /// `ro[ra] < ro[rb]`, or they were equal and `rb`'s rank grows by one.
+    /// Pure-sequence statement of the three `union` branches, factored out in r214.
+    proof fn lemma_link_preserves_wf(po: Seq<int>, ro: Seq<int>, n: nat, ra: int, rb: int, rn: Seq<int>)
+        requires
+            spec_wf(UnionFindArrayView { parent: po, rank: ro, n }),
+            spec_rank_invariant(UnionFindArrayView { parent: po, rank: ro, n }),
+            spec_rank_bounded(UnionFindArrayView { parent: po, rank: ro, n }),
+            spec_size_rank_inv(UnionFindArrayView { parent: po, rank: ro, n }),
+            0 <= ra < n as int, 0 <= rb < n as int, ra != rb, po[ra] == ra, po[rb] == rb,
+            (rn == ro && ro[ra] < ro[rb])
+                || (ro[ra] == ro[rb] && ro[rb] + 1 < n as int && rn == ro.update(rb, ro[rb] + 1)),
+        ensures
+            spec_wf(UnionFindArrayView { parent: po.update(ra, rb), rank: rn, n }),
+            spec_rank_invariant(UnionFindArrayView { parent: po.update(ra, rb), rank: rn, n }),
+            spec_rank_bounded(UnionFindArrayView { parent: po.update(ra, rb), rank: rn, n }),
+            spec_size_rank_inv(UnionFindArrayView { parent: po.update(ra, rb), rank: rn, n }),
+            forall|z: int| #![trigger spec_pure_find(po.update(ra, rb), rn, n, z)]
+                0 <= z < n as int ==>
+                spec_pure_find(po.update(ra, rb), rn, n, z) ==
+                    (if spec_pure_find(po, ro, n, z) == ra || spec_pure_find(po, ro, n, z) == rb {
+                        rb
+                    } else {
+                        spec_pure_find(po, ro, n, z)
+                    }),
+    {
+        let pn = po.update(ra, rb);
+        let ov = UnionFindArrayView { parent: po, rank: ro, n };
+        assert(po.len() == n && ro.len() == n);
+        assert(rn.len() == n);
+        assert forall|i: int| 0 <= i < n as int implies 0 <= #[trigger] po[i] && po[i] < n as int by {
+            assert(ov.parent[i] == po[i]);
+        }
+        assert forall|i: int| 0 <= i < n as int implies #[trigger] ro[i] >= 0 by {
+            assert(ov.rank[i] == ro[i]);
+        }
+        assert forall|i: int| 0 <= i < n as int && po[i] != i implies #[trigger] ro[i] < ro[po[i] as int] by {
+            assert(ov.parent[i] == po[i]);
+            assert(ov.rank[i] == ro[i]);
+        }
+        assert forall|i: int| 0 <= i < n as int implies ro[i] < n as int by {
+            assert(ov.rank[i] == ro[i]);
+        }
+        assert forall|i: int| 0 <= i < n as int implies 0 <= #[trigger] pn[i] && pn[i] < n as int by {}
+        assert forall|i: int| 0 <= i < n as int implies #[trigger] rn[i] >= 0 by {}
+        assert forall|i: int| 0 <= i < n as int && pn[i] != i implies #[trigger] rn[i] < rn[pn[i] as int] by {
+            if i == ra { assert(pn[i] == rb); } else { assert(pn[i] == po[i]); }
+        }
+        assert forall|i: int| 0 <= i < n as int implies #[trigger] rn[i] < n as int by {}
+        assert forall|i: int| 0 <= i < n as int implies rn[i] >= ro[i] by {}
+        lemma_count_additive(po, ro, pn, rn, n, ra, rb, 0);
+        assert forall|r: int| 0 <= r < n as int && pn[r] == r implies
+            spec_count_with_root(pn, rn, n, r, 0) >= #[trigger] rn[r] + 1
+        by {
+            if r == rb {
+                assert(ov.parent[ra] == ra && ov.parent[rb] == rb);
+                assert(spec_count_with_root(po, ro, n, ra, 0) >= ov.rank[ra] + 1);
+                assert(spec_count_with_root(po, ro, n, rb, 0) >= ov.rank[rb] + 1);
+            } else {
+                assert(r != ra);
+                lemma_count_other(po, ro, pn, rn, n, ra, rb, r, 0);
+                assert(ov.parent[r] == r);
+                assert(spec_count_with_root(po, ro, n, r, 0) >= ov.rank[r] + 1);
+                assert(rn[r] == ro[r]);
+            }
+        }
+        assert forall|z: int| #![trigger spec_pure_find(pn, rn, n, z)]
+            0 <= z < n as int implies
+            spec_pure_find(pn, rn, n, z) ==
+                (if spec_pure_find(po, ro, n, z) == ra || spec_pure_find(po, ro, n, z) == rb {
+                    rb
+                } else {
+                    spec_pure_find(po, ro, n, z)
+                })
+        by { lemma_find_after_link(po, ro, pn, rn, n, ra, rb, z); }
+    }
+
 	//		Section 8. traits — struct UnionFindArray
 
     pub trait UnionFindArrayStEphTrait: Sized + View<V = UnionFindArrayView> {
@@ -410,6 +489,16 @@ pub mod UnionFindArrayStEph {
             if self.rank[root_x] < self.rank[root_y] {
                 self.parent.set(root_x, root_y);
                 proof {
+                    // r214: invariants and find facts from lemma_link_preserves_wf;
+                    // the inline proof it replaces is kept below as a comment.
+                    lemma_map_update(old(self).parent@, root_x as int, root_y);
+                    let pn = self@.parent; let rn = self@.rank;
+                    assert(pn =~= po.update(root_x as int, root_y as int));
+                    assert(rn =~= ro);
+                    lemma_link_preserves_wf(po, ro, n, root_x as int, root_y as int, rn);
+                }
+                /* r214: replaced by lemma_link_preserves_wf.
+                proof {
                     lemma_map_update(old(self).parent@, root_x as int, root_y);
                     let pn = self@.parent; let rn = self@.rank;
                     assert(pn =~= po.update(root_x as int, root_y as int));
@@ -434,8 +523,18 @@ pub mod UnionFindArrayStEph {
                         implies spec_pure_find(pn, rn, n, z) == spec_pure_find(po, ro, n, z)
                     by { lemma_find_after_link(po, ro, pn, rn, n, root_x as int, root_y as int, z); }
                 }
+                */
             } else if self.rank[root_x] > self.rank[root_y] {
                 self.parent.set(root_y, root_x);
+                proof {
+                    // r214: see lemma_link_preserves_wf; old inline proof kept below.
+                    lemma_map_update(old(self).parent@, root_y as int, root_x);
+                    let pn = self@.parent; let rn = self@.rank;
+                    assert(pn =~= po.update(root_y as int, root_x as int));
+                    assert(rn =~= ro);
+                    lemma_link_preserves_wf(po, ro, n, root_y as int, root_x as int, rn);
+                }
+                /* r214: replaced by lemma_link_preserves_wf.
                 proof {
                     lemma_map_update(old(self).parent@, root_y as int, root_x);
                     let pn = self@.parent; let rn = self@.rank;
@@ -461,6 +560,7 @@ pub mod UnionFindArrayStEph {
                         implies spec_pure_find(pn, rn, n, z) == spec_pure_find(po, ro, n, z)
                     by { lemma_find_after_link(po, ro, pn, rn, n, root_y as int, root_x as int, z); }
                 }
+                */
             } else {
                 self.parent.set(root_y, root_x);
                 let n_len = self.parent.len();
@@ -473,6 +573,17 @@ pub mod UnionFindArrayStEph {
                 }
                 let new_rank = self.rank[root_x] + 1;
                 self.rank.set(root_x, new_rank);
+                proof {
+                    // r214: see lemma_link_preserves_wf; old inline proof kept below.
+                    lemma_map_update(old(self).parent@, root_y as int, root_x);
+                    lemma_map_update(old(self).rank@, root_x as int, new_rank);
+                    let pn = self@.parent; let rn = self@.rank;
+                    assert(pn =~= po.update(root_y as int, root_x as int));
+                    assert(rn =~= ro.update(root_x as int, new_rank as int));
+                    assert(new_rank as int == ro[root_x as int] + 1);
+                    lemma_link_preserves_wf(po, ro, n, root_y as int, root_x as int, rn);
+                }
+                /* r214: replaced by lemma_link_preserves_wf.
                 proof {
                     lemma_map_update(old(self).parent@, root_y as int, root_x);
                     lemma_map_update(old(self).rank@, root_x as int, new_rank);
@@ -507,6 +618,7 @@ pub mod UnionFindArrayStEph {
                         implies spec_pure_find(pn, rn, n, z) == spec_pure_find(po, ro, n, z)
                     by { lemma_find_after_link(po, ro, pn, rn, n, root_y as int, root_x as int, z); }
                 }
+                */
             }
         }
 
