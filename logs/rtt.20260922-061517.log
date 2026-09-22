@@ -1,0 +1,99 @@
+r212 RTT for Chap44: cargo test --release on 2 targets: TestDocumentIndex TestExample44_1
+Starting RTT at 06:15:17
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 5.65s
+     Running tests/Chap44/TestDocumentIndex.rs (target/release/deps/TestDocumentIndex-e5bd41973ca77f09)
+
+running 25 tests
+test test_case_insensitive_tokenization ... ok
+test test_algorithmic_costs_verification ... ok
+test test_display ... ok
+test test_clone_eq ... ok
+test test_documentcollectionlit_macro_functionality ... ok
+test test_complex_query_combinations ... ok
+test test_empty_index ... ok
+test test_empty_index_operations ... ok
+test test_create_finder ... ok
+test test_duplicate_words_in_document ... ok
+test test_empty_query_results ... ok
+test test_find_operation ... ok
+test test_make_index_basic ... ok
+test test_query_and ... ok
+test test_query_and_not ... ok
+test test_query_and_not_all_excluded ... ok
+test test_single_document_index ... ok
+test test_query_builder ... ok
+test test_query_or ... ok
+test test_tokens_edge_cases ... ok
+test test_tokens_function ... ok
+test test_size_operation ... ok
+test test_tokens_numbers_and_special ... ok
+test test_to_seq_operation ... ok
+test test_large_document_collection ... ok
+
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/Chap44/TestExample44_1.rs (target/release/deps/TestExample44_1-c2c8e8d9a425370d)
+
+running 20 tests
+test test_algorithmic_complexity_verification ... ok
+test test_case_insensitive_search ... ok
+test test_create_tweet_collection ... ok
+test test_create_tweet_index ... ok
+test test_complex_query_fun_and_food_or_chess ... ok
+test test_count_fun_but_not_chess ... ok
+test test_performance_comparison_demo ... ok
+test test_get_word_count ... ok
+test test_index_statistics ... ok
+test test_query_builder_example ... ok
+test test_search_food_or_fun ... ok
+test test_query_combinations ... ok
+test test_single_word_documents ... ok
+test test_tokenization_demo ... ok
+test test_search_party_and_food ... ok
+test test_empty_search_results ... ok
+test test_staged_computation_pattern ... ok
+test test_tweet_query_examples ... ok
+test test_get_all_words ... ok
+test test_verify_textbook_examples ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 6s

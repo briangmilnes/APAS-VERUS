@@ -69,7 +69,7 @@ calls, removed chapter by chapter as each is migrated.
 | 22 | 41 | 18, 19, 37, 38 | 0 | r213: 2188 verified, 0 err, 0 warn; RTT 250 pass | `validate.20260922-054937.log` |
 | 23 | 42 | 02, 19, 41 | 0 | r213: 2312 verified, 0 err, 0 warn; RTT 66 pass | `validate.20260922-055734.log` |
 | 24 | 43 | 18, 19, 37, 38, 41, 42 | 0 | r213: 2686 verified, 0 err, 0 warn; RTT 279 pass | `validate.20260922-060943.log` |
-| 25 | 44 | 19, 37, 41, 42 | 2 | `lemma_set_insert_len` shape | full log |
+| 25 | 44 | 19, 37, 41, 42 | 0 | r213: 2336 verified, 0 err, 0 warn; RTT 45 pass | `validate.20260922-061449.log` |
 | 26 | 45 | 19, 37 | 0 | blocked on 19, 37 | full log |
 | 27 | 47 | 18 | 0 | blocked on 18 | full log |
 | 28 | 49 | 02, 18, 19 | 0 | type-checked in r209; blocked on 18, 19 | `validate.20260921-084828.log` |

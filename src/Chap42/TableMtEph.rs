@@ -1114,8 +1114,9 @@ broadcast use {
         #[verifier::loop_isolation(false)]
         // r213: rlimit raised after a profile (logs/validate.20260922-055536.log) showed
         // no matching loop: 61K instantiations, led by the quadratic
-        // `phase2_sources[j1] < phase2_sources[j2]` invariant.
-        #[verifier::rlimit(40)]
+        // `phase2_sources[j1] < phase2_sources[j2]` invariant. 40 passed under
+        // `isolate Chap42` but not under `isolate Chap44` (larger context); 60 passes both.
+        #[verifier::rlimit(60)]
         fn union<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
         {
             proof {

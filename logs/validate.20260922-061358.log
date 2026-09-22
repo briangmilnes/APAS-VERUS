@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap42 Chap41 Chap44 Chap18 Chap19 Chap23 Chap02
+error[E0599]: no method named `view` found for struct `std::str::Chars<'a>` in the current scope
+   --> src/Chap44/DocumentIndex.rs:606:28
+    |
+606 |             decreases chars@.1.len() - chars@.0,
+    |                            ^ method not found in `std::str::Chars<'_>`
+
+error[E0599]: no method named `view` found for struct `std::str::Chars<'a>` in the current scope
+   --> src/Chap44/DocumentIndex.rs:606:45
+    |
+606 |             decreases chars@.1.len() - chars@.0,
+    |                                             ^ method not found in `std::str::Chars<'_>`
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 681MB, peak z3 RSS: 0MB, min free: 25824MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

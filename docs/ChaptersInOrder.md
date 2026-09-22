@@ -46,6 +46,7 @@ file, or listed at the end.
 | 22 | 41 | 2188 | 0 | 0 | 250 pass | 10 pass | r213 Chap41 |
 | 23 | 42 | 2312 | 0 | 0 | 66 pass | 10 pass | r213 Chap42 |
 | 24 | 43 | 2686 | 0 | 0 | 279 pass | 14 pass | r213 Chap43 |
+| 25 | 44 | 2336 | 0 | 0 | 45 pass | none | r213 Chap44 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -476,3 +477,24 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   (`logs/validate.20260922-060943.log`).
 - RTT: 11 targets, 279 tests pass (`logs/rtt.20260922-061245.log`).
 - PTT: 7 files, 14 tests pass (`logs/ptt-Chap43.20260922-061251.log`).
+
+### Chap44
+
+- Start: did not compile (`logs/validate.20260922-061358.log`): `tokens`
+  used the old-model `chars@` in its loop `decreases`; 5 deprecated
+  `finite()` sites.
+- Edit class 3: `iterator-upgrade` found no delegated site (one residual
+  loop-with-break over `std::str::Chars`). By hand, the `tokens` loop now
+  uses the prophetic model: invariant `obeys_prophetic_iter_laws(&chars)`
+  and `decrease(&chars) is Some`, `decreases decrease(&chars)->0` (the old
+  invariant was `true`).
+- Edit class 1 and 2: two `gds.finite()` invariant conjuncts and two
+  finite-only `assert(ds@.finite())` removed in `DocumentIndex.rs`.
+- Dependency fix: `TableMtEph::union` (Chap42) exceeded its r213
+  `rlimit(40)` under `isolate Chap44` (`logs/validate.20260922-061421.log`);
+  raised to 60, which passed both isolates (see Chap42 for the profile).
+- Exec cost: none changed.
+- End: 2336 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-061449.log`).
+- RTT: 2 targets, 45 tests pass (`logs/rtt.20260922-061517.log`).
+- PTT: none registered.

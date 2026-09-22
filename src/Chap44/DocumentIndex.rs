@@ -30,6 +30,8 @@ pub mod DocumentIndex {
 
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
+    #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
@@ -203,7 +205,6 @@ pub mod DocumentIndex {
                     obeys_feq_full::<Pair<Word, DocumentSet>>(),
                     vstd::laws_cmp::obeys_cmp::<DocumentId>(),
                     view_ord_consistent::<DocumentId>(),
-                    gds.finite(),
                     gds.len() <= i as nat,
                     forall|k: Seq<char>| #[trigger] table@.contains_key(k) ==> {
                         let ds = table.spec_stored_value(k);
@@ -252,7 +253,6 @@ pub mod DocumentIndex {
                         vstd::laws_cmp::obeys_cmp::<DocumentId>(),
                         view_ord_consistent::<DocumentId>(),
                         gds == gds_snap,
-                        gds.finite(),
                         gds.len() <= (i + 1) as nat,
                         gds.contains(doc_id_view),
                         doc_id@ == doc_id_view,
@@ -330,9 +330,7 @@ pub mod DocumentIndex {
                                     // new_set@ ⊆ existing@ ∪ {doc_id@} ⊆ gds.
                                 };
 // Veracity: UNNEEDED assert                                 assert(ds@.subset_of(gds));
-                                // Wf: ds@.finite() and ds@.len() < usize::MAX.
-                                // Veracity: NEEDED assert (speed hint)
-                                assert(ds@.finite());
+                                // Wf: ds@.len() < usize::MAX.
 // Veracity: UNNEEDED assert                                 assert(ds@.len() < usize::MAX as nat);
                             } else {
                                 // Veracity: NEEDED assert (speed hint)
@@ -346,8 +344,6 @@ pub mod DocumentIndex {
 // Veracity: UNNEEDED assert                                 assert(old_ds@.subset_of(gds));
                                 // Veracity: NEEDED assert (speed hint)
                                 assert(ds@.subset_of(gds));
-                                // Veracity: NEEDED assert (speed hint)
-                                assert(ds@.finite());
 // Veracity: UNNEEDED assert                                 assert(ds@.len() < usize::MAX as nat);
                             }
                         };
@@ -608,8 +604,10 @@ pub mod DocumentIndex {
 
         let mut chars = content_str.chars();
         loop
-            invariant true,
-            decreases chars@.1.len() - chars@.0,
+            invariant
+                IteratorSpec::obeys_prophetic_iter_laws(&chars),
+                IteratorSpec::decrease(&chars) is Some,
+            decreases IteratorSpec::decrease(&chars)->0,
         {
             let ch_opt = chars.next();
             match ch_opt {
