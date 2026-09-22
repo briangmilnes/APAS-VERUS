@@ -1,0 +1,70 @@
+r212 PTT for Chap05 (isolate: Chap05 Chap02); tests: SetStEph SetMtEph RelationStEph MappingStEph ProveSetMtEph ProveSetStEph ProveKleeneStPer
+Starting PTT at 07:23:53
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 1.04s
+     Running tests/Chap05/MappingStEph.rs (target/release/build/rust_verify_test/f9923e2695843959/out/MappingStEph-f9923e2695843959)
+
+running 2 tests
+test mapping_st_eph_loop_loop ... ok
+test mapping_st_eph_for_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.60s
+
+     Running tests/Chap05/ProveKleeneStPer.rs (target/release/build/rust_verify_test/7b952e23ae4a05ef/out/ProveKleeneStPer-7b952e23ae4a05ef)
+
+running 3 tests
+test kleene_mem_plus ... ok
+test kleene_alphabet ... ok
+test kleene_mem_star ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.54s
+
+     Running tests/Chap05/ProveSetMtEph.rs (target/release/build/rust_verify_test/f493000dada629e6/out/ProveSetMtEph-f493000dada629e6)
+
+running 4 tests
+test set_mt_eph_loop_borrow_iter ... ok
+test set_mt_eph_loop_borrow_into ... ok
+test set_mt_eph_for_borrow_iter ... ok
+test set_mt_eph_for_borrow_into ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.71s
+
+     Running tests/Chap05/ProveSetStEph.rs (target/release/build/rust_verify_test/ce59cdf07a6b8d63/out/ProveSetStEph-ce59cdf07a6b8d63)
+
+running 4 tests
+test setsteph_loop_borrow_iter ... ok
+test setsteph_for_borrow_into ... ok
+test setsteph_loop_borrow_into ... ok
+test setsteph_for_borrow_iter ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.69s
+
+     Running tests/Chap05/RelationStEph.rs (target/release/build/rust_verify_test/2ee093063d35c8b5/out/RelationStEph-2ee093063d35c8b5)
+
+running 2 tests
+test relation_st_eph_loop_loop ... ok
+test relation_st_eph_for_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.59s
+
+     Running tests/Chap05/SetMtEph.rs (target/release/build/rust_verify_test/5df91b945c588731/out/SetMtEph-5df91b945c588731)
+
+running 3 tests
+test set_mt_eph_from_vec ... ok
+test set_mt_eph_loop_loop ... ok
+test set_mt_eph_for_iter ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.58s
+
+     Running tests/Chap05/SetStEph.rs (target/release/build/rust_verify_test/733ecc99ab50a546/out/SetStEph-733ecc99ab50a546)
+
+running 3 tests
+test set_st_eph_from_vec ... ok
+test set_st_eph_loop_loop ... ok
+test set_st_eph_for_iter ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.65s
+
+cargo test rc: 0
+Elapsed: 8s

@@ -1,0 +1,511 @@
+r212 PTT for Chap05 (isolate: Chap05 Chap02); tests: SetStEph SetMtEph RelationStEph MappingStEph ProveSetMtEph ProveSetStEph ProveKleeneStPer
+Starting PTT at 07:22:01
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 1.42s
+     Running tests/Chap05/MappingStEph.rs (target/release/build/rust_verify_test/f9923e2695843959/out/MappingStEph-f9923e2695843959)
+
+running 2 tests
+test mapping_st_eph_loop_loop ... FAILED
+test mapping_st_eph_for_iter ... FAILED
+
+failures:
+
+---- mapping_st_eph_loop_loop stdout ----
+error[E0425]: cannot find type `MappingStEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f9923e2695843959/test_inputs/MappingStEph-f9923e2695843959-mapping_st_eph_loop_loop/test.rs:27:17
+   |
+27 |     let mut it: MappingStEphIter<u64, u64> = m.iter();
+   |                 ^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap05/MappingStEph.rs:85:4
+   |
+   = note: similarly named struct `MappingStEph` defined here
+help: a struct with a similar name exists
+   |
+27 -     let mut it: MappingStEphIter<u64, u64> = m.iter();
+27 +     let mut it: MappingStEph<u64, u64> = m.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f9923e2695843959/test_inputs/MappingStEph-f9923e2695843959-mapping_st_eph_loop_loop
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f9923e2695843959/test_inputs/MappingStEph-f9923e2695843959-mapping_st_eph_loop_loop/test.rs
+
+
+thread 'mapping_st_eph_loop_loop' (2518924) panicked at tests/Chap05/MappingStEph.rs:14:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- mapping_st_eph_for_iter stdout ----
+error[E0425]: cannot find type `MappingStEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f9923e2695843959/test_inputs/MappingStEph-f9923e2695843959-mapping_st_eph_for_iter/test.rs:27:13
+   |
+27 |     let it: MappingStEphIter<u64, u64> = m.iter();
+   |             ^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap05/MappingStEph.rs:85:4
+   |
+   = note: similarly named struct `MappingStEph` defined here
+help: a struct with a similar name exists
+   |
+27 -     let it: MappingStEphIter<u64, u64> = m.iter();
+27 +     let it: MappingStEph<u64, u64> = m.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f9923e2695843959/test_inputs/MappingStEph-f9923e2695843959-mapping_st_eph_for_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f9923e2695843959/test_inputs/MappingStEph-f9923e2695843959-mapping_st_eph_for_iter/test.rs
+
+
+thread 'mapping_st_eph_for_iter' (2518923) panicked at tests/Chap05/MappingStEph.rs:58:1:
+Err(_) does not match $result
+
+
+failures:
+    mapping_st_eph_for_iter
+    mapping_st_eph_loop_loop
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+error: test failed, to rerun pass `--test MappingStEph`
+     Running tests/Chap05/ProveKleeneStPer.rs (target/release/build/rust_verify_test/7b952e23ae4a05ef/out/ProveKleeneStPer-7b952e23ae4a05ef)
+
+running 3 tests
+test kleene_alphabet ... ok
+test kleene_mem_star ... ok
+test kleene_mem_plus ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.52s
+
+     Running tests/Chap05/ProveSetMtEph.rs (target/release/build/rust_verify_test/f493000dada629e6/out/ProveSetMtEph-f493000dada629e6)
+
+running 4 tests
+test set_mt_eph_for_borrow_into ... FAILED
+test set_mt_eph_for_borrow_iter ... FAILED
+test set_mt_eph_loop_borrow_iter ... FAILED
+test set_mt_eph_loop_borrow_into ... FAILED
+
+failures:
+
+---- set_mt_eph_for_borrow_into stdout ----
+error[E0425]: cannot find type `SetMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f493000dada629e6/test_inputs/ProveSetMtEph-f493000dada629e6-set_mt_eph_for_borrow_into/test.rs:24:13
+   |
+24 |     let it: SetMtEphIter<u64> = (&a).into_iter();
+   |             ^^^^^^^^^^^^
+   |
+  --> src/Chap05/SetMtEph.rs:1077:4
+   |
+   = note: similarly named struct `SetMtEphInv` defined here
+help: a struct with a similar name exists
+   |
+24 -     let it: SetMtEphIter<u64> = (&a).into_iter();
+24 +     let it: SetMtEphInv<u64> = (&a).into_iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f493000dada629e6/test_inputs/ProveSetMtEph-f493000dada629e6-set_mt_eph_for_borrow_into
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f493000dada629e6/test_inputs/ProveSetMtEph-f493000dada629e6-set_mt_eph_for_borrow_into/test.rs
+
+
+thread 'set_mt_eph_for_borrow_into' (2519057) panicked at tests/Chap05/ProveSetMtEph.rs:126:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- set_mt_eph_for_borrow_iter stdout ----
+error[E0425]: cannot find type `SetMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f493000dada629e6/test_inputs/ProveSetMtEph-f493000dada629e6-set_mt_eph_for_borrow_iter/test.rs:24:13
+   |
+24 |     let it: SetMtEphIter<u64> = a.iter();
+   |             ^^^^^^^^^^^^
+   |
+  --> src/Chap05/SetMtEph.rs:1077:4
+   |
+   = note: similarly named struct `SetMtEphInv` defined here
+help: a struct with a similar name exists
+   |
+24 -     let it: SetMtEphIter<u64> = a.iter();
+24 +     let it: SetMtEphInv<u64> = a.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f493000dada629e6/test_inputs/ProveSetMtEph-f493000dada629e6-set_mt_eph_for_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f493000dada629e6/test_inputs/ProveSetMtEph-f493000dada629e6-set_mt_eph_for_borrow_iter/test.rs
+
+
+thread 'set_mt_eph_for_borrow_iter' (2519058) panicked at tests/Chap05/ProveSetMtEph.rs:95:1:
+Err(_) does not match $result
+
+---- set_mt_eph_loop_borrow_iter stdout ----
+error[E0425]: cannot find type `SetMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f493000dada629e6/test_inputs/ProveSetMtEph-f493000dada629e6-set_mt_eph_loop_borrow_iter/test.rs:24:17
+   |
+24 |     let mut it: SetMtEphIter<u64> = a.iter();
+   |                 ^^^^^^^^^^^^
+   |
+  --> src/Chap05/SetMtEph.rs:1077:4
+   |
+   = note: similarly named struct `SetMtEphInv` defined here
+help: a struct with a similar name exists
+   |
+24 -     let mut it: SetMtEphIter<u64> = a.iter();
+24 +     let mut it: SetMtEphInv<u64> = a.iter();
+   |
+
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f493000dada629e6/test_inputs/ProveSetMtEph-f493000dada629e6-set_mt_eph_loop_borrow_iter/test.rs:32:13
+   |
+32 |             iter_invariant(&it),
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f493000dada629e6/test_inputs/ProveSetMtEph-f493000dada629e6-set_mt_eph_loop_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f493000dada629e6/test_inputs/ProveSetMtEph-f493000dada629e6-set_mt_eph_loop_borrow_iter/test.rs
+
+
+thread 'set_mt_eph_loop_borrow_iter' (2519060) panicked at tests/Chap05/ProveSetMtEph.rs:17:1:
+Err(_) does not match $result
+
+---- set_mt_eph_loop_borrow_into stdout ----
+error[E0425]: cannot find type `SetMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f493000dada629e6/test_inputs/ProveSetMtEph-f493000dada629e6-set_mt_eph_loop_borrow_into/test.rs:24:17
+   |
+24 |     let mut it: SetMtEphIter<u64> = (&a).into_iter();
+   |                 ^^^^^^^^^^^^
+   |
+  --> src/Chap05/SetMtEph.rs:1077:4
+   |
+   = note: similarly named struct `SetMtEphInv` defined here
+help: a struct with a similar name exists
+   |
+24 -     let mut it: SetMtEphIter<u64> = (&a).into_iter();
+24 +     let mut it: SetMtEphInv<u64> = (&a).into_iter();
+   |
+
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f493000dada629e6/test_inputs/ProveSetMtEph-f493000dada629e6-set_mt_eph_loop_borrow_into/test.rs:32:13
+   |
+32 |             iter_invariant(&it),
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f493000dada629e6/test_inputs/ProveSetMtEph-f493000dada629e6-set_mt_eph_loop_borrow_into
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/f493000dada629e6/test_inputs/ProveSetMtEph-f493000dada629e6-set_mt_eph_loop_borrow_into/test.rs
+
+
+thread 'set_mt_eph_loop_borrow_into' (2519059) panicked at tests/Chap05/ProveSetMtEph.rs:56:1:
+Err(_) does not match $result
+
+
+failures:
+    set_mt_eph_for_borrow_into
+    set_mt_eph_for_borrow_iter
+    set_mt_eph_loop_borrow_into
+    set_mt_eph_loop_borrow_iter
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+error: test failed, to rerun pass `--test ProveSetMtEph`
+     Running tests/Chap05/ProveSetStEph.rs (target/release/build/rust_verify_test/ce59cdf07a6b8d63/out/ProveSetStEph-ce59cdf07a6b8d63)
+
+running 4 tests
+test setsteph_loop_borrow_iter ... ok
+test setsteph_loop_borrow_into ... ok
+test setsteph_for_borrow_into ... ok
+test setsteph_for_borrow_iter ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.71s
+
+     Running tests/Chap05/RelationStEph.rs (target/release/build/rust_verify_test/2ee093063d35c8b5/out/RelationStEph-2ee093063d35c8b5)
+
+running 2 tests
+test relation_st_eph_loop_loop ... FAILED
+test relation_st_eph_for_iter ... FAILED
+
+failures:
+
+---- relation_st_eph_loop_loop stdout ----
+error[E0425]: cannot find type `RelationStEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/2ee093063d35c8b5/test_inputs/RelationStEph-2ee093063d35c8b5-relation_st_eph_loop_loop/test.rs:26:17
+   |
+26 |     let mut it: RelationStEphIter<u64, u64> = r.iter();
+   |                 ^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap05/RelationStEph.rs:78:4
+   |
+   = note: similarly named struct `RelationStEph` defined here
+help: a struct with a similar name exists
+   |
+26 -     let mut it: RelationStEphIter<u64, u64> = r.iter();
+26 +     let mut it: RelationStEph<u64, u64> = r.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/2ee093063d35c8b5/test_inputs/RelationStEph-2ee093063d35c8b5-relation_st_eph_loop_loop
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/2ee093063d35c8b5/test_inputs/RelationStEph-2ee093063d35c8b5-relation_st_eph_loop_loop/test.rs
+
+
+thread 'relation_st_eph_loop_loop' (2519264) panicked at tests/Chap05/RelationStEph.rs:14:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- relation_st_eph_for_iter stdout ----
+error[E0425]: cannot find type `RelationStEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/2ee093063d35c8b5/test_inputs/RelationStEph-2ee093063d35c8b5-relation_st_eph_for_iter/test.rs:26:13
+   |
+26 |     let it: RelationStEphIter<u64, u64> = r.iter();
+   |             ^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap05/RelationStEph.rs:78:4
+   |
+   = note: similarly named struct `RelationStEph` defined here
+help: a struct with a similar name exists
+   |
+26 -     let it: RelationStEphIter<u64, u64> = r.iter();
+26 +     let it: RelationStEph<u64, u64> = r.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/2ee093063d35c8b5/test_inputs/RelationStEph-2ee093063d35c8b5-relation_st_eph_for_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/2ee093063d35c8b5/test_inputs/RelationStEph-2ee093063d35c8b5-relation_st_eph_for_iter/test.rs
+
+
+thread 'relation_st_eph_for_iter' (2519263) panicked at tests/Chap05/RelationStEph.rs:57:1:
+Err(_) does not match $result
+
+
+failures:
+    relation_st_eph_for_iter
+    relation_st_eph_loop_loop
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+error: test failed, to rerun pass `--test RelationStEph`
+     Running tests/Chap05/SetMtEph.rs (target/release/build/rust_verify_test/5df91b945c588731/out/SetMtEph-5df91b945c588731)
+
+running 3 tests
+test set_mt_eph_for_iter ... FAILED
+test set_mt_eph_loop_loop ... FAILED
+test set_mt_eph_from_vec ... ok
+
+failures:
+
+---- set_mt_eph_for_iter stdout ----
+error[E0425]: cannot find type `SetMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/5df91b945c588731/test_inputs/SetMtEph-5df91b945c588731-set_mt_eph_for_iter/test.rs:26:13
+   |
+26 |     let it: SetMtEphIter<u64> = s.iter();
+   |             ^^^^^^^^^^^^
+   |
+  --> src/Chap05/SetMtEph.rs:1077:4
+   |
+   = note: similarly named struct `SetMtEphInv` defined here
+help: a struct with a similar name exists
+   |
+26 -     let it: SetMtEphIter<u64> = s.iter();
+26 +     let it: SetMtEphInv<u64> = s.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/5df91b945c588731/test_inputs/SetMtEph-5df91b945c588731-set_mt_eph_for_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/5df91b945c588731/test_inputs/SetMtEph-5df91b945c588731-set_mt_eph_for_iter/test.rs
+
+
+thread 'set_mt_eph_for_iter' (2519306) panicked at tests/Chap05/SetMtEph.rs:58:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- set_mt_eph_loop_loop stdout ----
+error[E0425]: cannot find type `SetMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/5df91b945c588731/test_inputs/SetMtEph-5df91b945c588731-set_mt_eph_loop_loop/test.rs:26:17
+   |
+26 |     let mut it: SetMtEphIter<u64> = s.iter();
+   |                 ^^^^^^^^^^^^
+   |
+  --> src/Chap05/SetMtEph.rs:1077:4
+   |
+   = note: similarly named struct `SetMtEphInv` defined here
+help: a struct with a similar name exists
+   |
+26 -     let mut it: SetMtEphIter<u64> = s.iter();
+26 +     let mut it: SetMtEphInv<u64> = s.iter();
+   |
+
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/5df91b945c588731/test_inputs/SetMtEph-5df91b945c588731-set_mt_eph_loop_loop/test.rs:34:13
+   |
+34 |             iter_invariant(&it),
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/5df91b945c588731/test_inputs/SetMtEph-5df91b945c588731-set_mt_eph_loop_loop
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/5df91b945c588731/test_inputs/SetMtEph-5df91b945c588731-set_mt_eph_loop_loop/test.rs
+
+
+thread 'set_mt_eph_loop_loop' (2519308) panicked at tests/Chap05/SetMtEph.rs:14:1:
+Err(_) does not match $result
+
+
+failures:
+    set_mt_eph_for_iter
+    set_mt_eph_loop_loop
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.50s
+
+error: test failed, to rerun pass `--test SetMtEph`
+     Running tests/Chap05/SetStEph.rs (target/release/build/rust_verify_test/733ecc99ab50a546/out/SetStEph-733ecc99ab50a546)
+
+running 3 tests
+test set_st_eph_loop_loop ... FAILED
+test set_st_eph_for_iter ... FAILED
+test set_st_eph_from_vec ... ok
+
+failures:
+
+---- set_st_eph_loop_loop stdout ----
+error[E0425]: cannot find type `SetStEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/733ecc99ab50a546/test_inputs/SetStEph-733ecc99ab50a546-set_st_eph_loop_loop/test.rs:26:17
+   |
+26 |     let mut it: SetStEphIter<u64> = s.iter();
+   |                 ^^^^^^^^^^^^
+   |
+  --> src/Chap05/SetStEph.rs:83:4
+   |
+   = note: similarly named struct `SetStEph` defined here
+help: a struct with a similar name exists
+   |
+26 -     let mut it: SetStEphIter<u64> = s.iter();
+26 +     let mut it: SetStEph<u64> = s.iter();
+   |
+
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/733ecc99ab50a546/test_inputs/SetStEph-733ecc99ab50a546-set_st_eph_loop_loop/test.rs:34:13
+   |
+34 |             iter_invariant(&it),
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/733ecc99ab50a546/test_inputs/SetStEph-733ecc99ab50a546-set_st_eph_loop_loop
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/733ecc99ab50a546/test_inputs/SetStEph-733ecc99ab50a546-set_st_eph_loop_loop/test.rs
+
+
+thread 'set_st_eph_loop_loop' (2519381) panicked at tests/Chap05/SetStEph.rs:18:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- set_st_eph_for_iter stdout ----
+error[E0425]: cannot find type `SetStEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/733ecc99ab50a546/test_inputs/SetStEph-733ecc99ab50a546-set_st_eph_for_iter/test.rs:26:13
+   |
+26 |     let it: SetStEphIter<u64> = s.iter();
+   |             ^^^^^^^^^^^^
+   |
+  --> src/Chap05/SetStEph.rs:83:4
+   |
+   = note: similarly named struct `SetStEph` defined here
+help: a struct with a similar name exists
+   |
+26 -     let it: SetStEphIter<u64> = s.iter();
+26 +     let it: SetStEph<u64> = s.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/733ecc99ab50a546/test_inputs/SetStEph-733ecc99ab50a546-set_st_eph_for_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/733ecc99ab50a546/test_inputs/SetStEph-733ecc99ab50a546-set_st_eph_for_iter/test.rs
+
+
+thread 'set_st_eph_for_iter' (2519379) panicked at tests/Chap05/SetStEph.rs:62:1:
+Err(_) does not match $result
+
+
+failures:
+    set_st_eph_for_iter
+    set_st_eph_loop_loop
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s
+
+error: test failed, to rerun pass `--test SetStEph`
+error: 5 targets failed:
+    `--test MappingStEph`
+    `--test ProveSetMtEph`
+    `--test RelationStEph`
+    `--test SetMtEph`
+    `--test SetStEph`
+cargo test rc: 101
+Elapsed: 6s
