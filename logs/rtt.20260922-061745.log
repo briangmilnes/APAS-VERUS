@@ -1,0 +1,263 @@
+r212 RTT for Chap50: cargo test --release on 9 targets: TestMatrixChainMtEph TestMatrixChainMtPer TestMatrixChainStEph TestMatrixChainStPer TestOBSTMtEph TestOBSTMtPer TestOptBinSearchTreeStEph TestOptBinSearchTreeStPer TestProbability
+Starting RTT at 06:17:45
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.35s
+     Running tests/Chap50/TestMatrixChainMtEph.rs (target/release/deps/TestMatrixChainMtEph-5fd0c6c5481ee11b)
+
+running 22 tests
+test test_clear_memo ... ok
+test test_clone ... ok
+test test_dimension_consistency ... ok
+test test_dimensions ... ok
+test test_display ... ok
+test test_empty_chain ... ok
+test test_equality ... ok
+test test_four_matrices ... ok
+test test_from_dim_pairs ... ok
+test test_from_dimensions ... ok
+test test_large_chain ... ok
+test test_matrixchainmtephlit_macro_functionality ... ok
+test test_matrixdim_equality ... ok
+test test_memo_size ... ok
+test test_memoization_reuse ... ok
+test test_new ... ok
+test test_optimal_cost_three_matrices ... ok
+test test_optimal_cost_two_matrices ... ok
+test test_set_dimension ... ok
+test test_single_matrix ... ok
+test test_update_dimension ... ok
+test test_parallel_execution ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap50/TestMatrixChainMtPer.rs (target/release/deps/TestMatrixChainMtPer-da289fe45677bd9d)
+
+running 20 tests
+test test_clone ... ok
+test test_dimension_consistency ... ok
+test test_dimensions ... ok
+test test_display ... ok
+test test_equality ... ok
+test test_empty_chain ... ok
+test test_four_matrices ... ok
+test test_from_dim_pairs ... ok
+test test_from_dimensions ... ok
+test test_large_chain ... ok
+test test_matrixchainmtperlit_macro_functionality ... ok
+test test_matrixdim_clone ... ok
+test test_new ... ok
+test test_num_matrices ... ok
+test test_optimal_cost_three_matrices ... ok
+test test_optimal_cost_two_matrices ... ok
+test test_persistent_semantics ... ok
+test test_concurrent_reads ... ok
+test test_single_matrix ... ok
+test test_parallel_execution ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap50/TestMatrixChainStEph.rs (target/release/deps/TestMatrixChainStEph-08864e768a77e3d7)
+
+running 18 tests
+test test_display_matrix_chain ... ok
+test test_display_matrix_dim ... ok
+test test_into_iterator_mut_ref ... ok
+test test_from_dim_pairs ... ok
+test test_into_iterator_ref ... ok
+test test_macro_empty ... ok
+test test_macro_with_dims ... ok
+test test_matrix_chain_st_eph_empty ... ok
+test test_matrix_chain_st_eph_iteration ... ok
+test test_matrix_chain_st_eph_mutation ... ok
+test test_matrix_chain_st_eph_single_matrix ... ok
+test test_memoization ... ok
+test test_optimal_cost_four_matrices ... ok
+test test_optimal_cost_three_matrices ... ok
+test test_optimal_cost_two_matrices ... ok
+test test_update_dimension ... ok
+test test_set_dimension_out_of_bounds - should panic ... ok
+test test_update_dimension_out_of_bounds - should panic ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap50/TestMatrixChainStPer.rs (target/release/deps/TestMatrixChainStPer-bba17ec48bfe8213)
+
+running 14 tests
+test test_dimensions_accessor ... ok
+test test_into_iter_by_ref ... ok
+test test_matrix_chain_display ... ok
+test test_matrix_chain_macro ... ok
+test test_matrix_chain_multiply_cost ... ok
+test test_matrix_chain_large_example ... ok
+test test_matrix_chain_st_per_empty ... ok
+test test_matrix_chain_st_per_from_dim_pairs ... ok
+test test_matrix_chain_st_per_iteration ... ok
+test test_matrix_chain_st_per_single_matrix ... ok
+test test_matrix_chain_st_per_three_matrices ... ok
+test test_matrix_chain_st_per_two_matrices ... ok
+test test_matrix_dim_display ... ok
+test test_memo_size ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap50/TestOBSTMtEph.rs (target/release/deps/TestOBSTMtEph-efa54e03c297f646)
+
+running 25 tests
+test test_clone ... ok
+test test_display ... ok
+test test_empty_tree ... ok
+test test_equality ... ok
+test test_from_key_probs ... ok
+test test_from_keys_probs ... ok
+test test_into_iter ... ok
+test test_keyprob_display ... ok
+test test_into_iter_ref ... ok
+test test_keys_method ... ok
+test test_clear_memo ... ok
+test test_new ... ok
+test test_num_keys ... ok
+test test_num_keys_method ... ok
+test test_memo_size ... ok
+test test_optimal_cost_single_key ... ok
+test test_obstmtephlit_macro_functionality ... ok
+test test_optimal_cost_three_keys ... ok
+test test_set_key_prob ... ok
+test test_optimal_cost_two_keys ... ok
+test test_update_prob ... ok
+test test_parallel_execution ... ok
+test test_skewed_probabilities ... ok
+test test_large_tree ... ok
+test test_uniform_probabilities ... ok
+
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap50/TestOBSTMtPer.rs (target/release/deps/TestOBSTMtPer-6a7d47079b190b6e)
+
+running 14 tests
+test test_keyprob_display ... ok
+test test_obst_display ... ok
+test test_obst_empty ... ok
+test test_obst_equality ... ok
+test test_obst_iterability ... ok
+test test_obst_two_keys ... ok
+test test_obst_from_key_probs ... ok
+test test_obst_three_keys ... ok
+test test_obst_single_key ... ok
+test test_obst_five_keys ... ok
+test test_obst_from_keys_probs ... ok
+test test_obst_memo_cache ... ok
+test test_obst_four_keys_equal_probs ... ok
+test test_obst_skewed_probabilities ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap50/TestOptBinSearchTreeStEph.rs (target/release/deps/TestOptBinSearchTreeStEph-0d7f3aebd33a49ad)
+
+running 18 tests
+test test_display_key_prob ... ok
+test test_display_obst ... ok
+test test_four_keys ... ok
+test test_from_key_probs ... ok
+test test_into_iterator ... ok
+test test_into_iterator_mut_ref ... ok
+test test_into_iterator_ref ... ok
+test test_keys_getter ... ok
+test test_keys_mut ... ok
+test test_macro_empty ... ok
+test test_memoization ... ok
+test test_obst_st_eph_empty ... ok
+test test_obst_st_eph_mutation ... ok
+test test_obst_st_eph_single_key ... ok
+test test_set_key_prob ... ok
+test test_three_keys ... ok
+test test_two_keys ... ok
+test test_update_prob ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap50/TestOptBinSearchTreeStPer.rs (target/release/deps/TestOptBinSearchTreeStPer-c7c93ca963105ff3)
+
+running 12 tests
+test test_obst_macro ... ok
+test test_obst_st_per_display ... ok
+test test_obst_st_per_empty ... ok
+test test_obst_st_per_from_key_probs ... ok
+test test_obst_st_per_into_iter_owned ... ok
+test test_obst_st_per_into_iter_ref ... ok
+test test_obst_st_per_key_prob_display ... ok
+test test_obst_st_per_keys_getter ... ok
+test test_obst_st_per_memo_size ... ok
+test test_obst_st_per_single_key ... ok
+test test_obst_st_per_three_keys ... ok
+test test_obst_st_per_two_keys ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap50/TestProbability.rs (target/release/deps/TestProbability-b1488b5164cb776c)
+
+running 24 tests
+test test_add ... ok
+test test_clone ... ok
+test test_copy_trait ... ok
+test test_debug ... ok
+test test_display ... ok
+test test_div ... ok
+test test_default ... ok
+test test_eq ... ok
+test test_from_f64 ... ok
+test test_hash ... ok
+test test_infinity ... ok
+test test_infinity_operations ... ok
+test test_into_f64 ... ok
+test test_mul ... ok
+test test_new ... ok
+test test_ord ... ok
+test test_ordering_greater ... ok
+test test_ordering_equal ... ok
+test test_ordering_less ... ok
+test test_partial_cmp ... ok
+test test_prob_macro ... ok
+test test_sub ... ok
+test test_zero ... ok
+test test_zero_operations ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 1s
