@@ -393,7 +393,7 @@ pub mod TableStPer {
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: nested linear scans on array
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
-            requires self.spec_tablestper_wf(), obeys_feq_full::<Pair<K, V>>(), keys@.finite(),
+            requires self.spec_tablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
             ensures
                 restricted@.dom() =~= self@.dom().intersect(keys@),
                 restricted.spec_tablestper_wf(),
@@ -402,7 +402,7 @@ pub mod TableStPer {
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: nested linear scans on array
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
-            requires self.spec_tablestper_wf(), obeys_feq_full::<Pair<K, V>>(), keys@.finite(),
+            requires self.spec_tablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
             ensures
                 subtracted@.dom() =~= self@.dom().difference(keys@),
                 subtracted.spec_tablestper_wf(),
@@ -516,7 +516,6 @@ pub mod TableStPer {
                 invariant
                     i <= self.entries.spec_len(),
                     keys.spec_arraysetsteph_wf(),
-                    keys@.finite(),
                     forall|j: int| 0 <= j < i as int
                         ==> keys@.contains((#[trigger] self.entries@[j]).0),
                     forall|k: K::V| keys@.contains(k)
@@ -608,7 +607,6 @@ pub mod TableStPer {
             }
             let entries = ArraySeqStPerS::from_vec(entry_vec);
             proof {
-                lemma_entries_to_map_finite::<K::V, V::V>(entries@);
                 // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < entries@.len()
                     implies (#[trigger] entries@[j]).0 == key_seq@[j]
@@ -2398,7 +2396,6 @@ pub mod TableStPer {
                         0 <= j1 < j2 < sources.len() ==> sources[j1] < sources[j2],
                     spec_keys_no_dups(self_view),
                     obeys_feq_full::<Pair<K, V>>(),
-                    keys@.finite(),
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
@@ -2497,7 +2494,6 @@ pub mod TableStPer {
                         0 <= j1 < j2 < sources.len() ==> sources[j1] < sources[j2],
                     spec_keys_no_dups(self_view),
                     obeys_feq_full::<Pair<K, V>>(),
-                    keys@.finite(),
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
@@ -2590,13 +2586,8 @@ pub mod TableStPer {
     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
         entries: Vec<Pair<K, V>>,
     ) -> (cloned: TableStPer<K, V>)
-        ensures cloned@.dom().finite()
     {
         let seq = ArraySeqStPerS::from_vec(entries);
-        proof {
-            lemma_entries_to_map_finite::<K::V, V::V>(seq@);
-        }
-        // Veracity: NEEDED proof block
         TableStPer { entries: seq }
     }
 
@@ -2629,7 +2620,6 @@ pub mod TableStPer {
                 i <= pairs.spec_len(),
                 pairs@ == pairs_view,
                 result.spec_tablestper_wf(),
-                result@.dom().finite(),
                 forall|k: K::V| #[trigger] result@.contains_key(k)
                     <==> spec_collect_domain::<K::V, V::V>(
                         pairs_view.subrange(0, i as int)).contains(k),

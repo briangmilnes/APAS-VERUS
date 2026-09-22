@@ -311,7 +311,6 @@ broadcast use {
             requires
                 old(self).spec_tablesteph_wf(),
                 obeys_feq_full::<Pair<K, V>>(),
-                keys@.finite(),
             ensures
                 self.spec_tablesteph_wf(),
                 self@.dom() =~= old(self)@.dom().intersect(keys@),
@@ -322,7 +321,6 @@ broadcast use {
             requires
                 old(self).spec_tablesteph_wf(),
                 obeys_feq_full::<Pair<K, V>>(),
-                keys@.finite(),
             ensures
                 self.spec_tablesteph_wf(),
                 self@.dom() =~= old(self)@.dom().difference(keys@),
@@ -461,7 +459,6 @@ broadcast use {
                 invariant
                     i <= self.entries.spec_len(),
                     keys.spec_arraysetsteph_wf(),
-                    keys@.finite(),
                     forall|j: int| 0 <= j < i as int
                         ==> keys@.contains((#[trigger] self.entries@[j]).0),
                     forall|k: K::V| keys@.contains(k)
@@ -556,7 +553,6 @@ broadcast use {
             }
             let seq = ArraySeqStEphS::from_vec(entries);
             proof {
-                lemma_entries_to_map_finite::<K::V, V::V>(seq@);
                 // Each entry key matches the corresponding key_seq element.
                 // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < seq@.len()
@@ -2338,7 +2334,6 @@ broadcast use {
                 invariant
                     i <= self.entries.spec_len(),
                     self.entries@ == old_view,
-                    keys@.finite(),
                     sources.len() == kept@.len(),
                     forall|j: int| 0 <= j < sources.len() ==>
                         0 <= (#[trigger] sources[j]) < old_view.len()
@@ -2434,7 +2429,6 @@ broadcast use {
                 invariant
                     i <= self.entries.spec_len(),
                     self.entries@ == old_view,
-                    keys@.finite(),
                     sources.len() == kept@.len(),
                     forall|j: int| 0 <= j < sources.len() ==>
                         0 <= (#[trigger] sources[j]) < old_view.len()
@@ -2539,12 +2533,8 @@ broadcast use {
     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
         entries: Vec<Pair<K, V>>,
     ) -> (cloned: TableStEph<K, V>)
-        ensures cloned@.dom().finite()
     {
         let seq = ArraySeqStEphS::from_vec(entries);
-        proof {
-            lemma_entries_to_map_finite::<K::V, V::V>(seq@);
-        }
         TableStEph { entries: seq }
     }
 

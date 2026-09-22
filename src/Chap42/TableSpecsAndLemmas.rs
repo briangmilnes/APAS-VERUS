@@ -49,14 +49,16 @@ broadcast use {
     //		Section 7. proof fns
 
 
-    pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
-        ensures spec_entries_to_map(entries).dom().finite()
-        decreases entries.len()
-    {
-        if entries.len() > 0 {
-            lemma_entries_to_map_finite::<KV, VV>(entries.drop_last());
-        }
-    }
+    // BYPASSED (r213): the only postcondition was `finite()`, which every
+    // `Set` now has by type (src/standards/finite_sets_standard.rs).
+    // pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
+    //     ensures spec_entries_to_map(entries).dom().finite()
+    //     decreases entries.len()
+    // {
+    //     if entries.len() > 0 {
+    //         lemma_entries_to_map_finite::<KV, VV>(entries.drop_last());
+    //     }
+    // }
 
     // If a key is in spec_entries_to_map, it appears in the seq.
     pub proof fn lemma_entries_to_map_key_in_seq<KV, VV>(entries: Seq<(KV, VV)>, k: KV)
@@ -107,10 +109,6 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq(prefix, last.0);
                     let idx = choose|i: int| 0 <= i < prefix.len() && (#[trigger] prefix[i]).0 == last.0;
                 }
-            };
-            // Veracity: NEEDED assert
-            assert(prefix_map.dom().finite()) by {
-                lemma_entries_to_map_finite::<KV, VV>(prefix);
             };
         }
     }

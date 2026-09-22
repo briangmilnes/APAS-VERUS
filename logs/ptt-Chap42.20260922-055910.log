@@ -1,0 +1,35 @@
+r212 PTT for Chap42 (isolate: Chap38 Chap37 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02); tests: ProveTableStEph ProveTableStPer ProveTableMtEph
+Starting PTT at 05:59:10
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 0.77s
+     Running tests/Chap42/ProveTableMtEph.rs (target/release/build/rust_verify_test/ae6adaf75a3b4028/out/ProveTableMtEph-ae6adaf75a3b4028)
+
+running 2 tests
+test tablemteph_for_borrow_iter ... ok
+test tablemteph_loop_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.71s
+
+     Running tests/Chap42/ProveTableStEph.rs (target/release/build/rust_verify_test/bb71d3412e650392/out/ProveTableStEph-bb71d3412e650392)
+
+running 4 tests
+test tablesteph_for_borrow_into ... ok
+test tablesteph_loop_borrow_iter ... ok
+test tablesteph_for_borrow_iter ... ok
+test tablesteph_loop_borrow_into ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.74s
+
+     Running tests/Chap42/ProveTableStPer.rs (target/release/build/rust_verify_test/494e0254db96c579/out/ProveTableStPer-494e0254db96c579)
+
+running 4 tests
+test tablestper_loop_borrow_iter ... ok
+test tablestper_loop_borrow_into ... ok
+test tablestper_for_borrow_into ... ok
+test tablestper_for_borrow_iter ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.64s
+
+cargo test rc: 0
+Elapsed: 15s

@@ -1,0 +1,728 @@
+r212 PTT for Chap42 (isolate: Chap38 Chap37 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02); tests: ProveTableStEph ProveTableStPer ProveTableMtEph
+Starting PTT at 05:58:14
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 0.80s
+     Running tests/Chap42/ProveTableMtEph.rs (target/release/build/rust_verify_test/ae6adaf75a3b4028/out/ProveTableMtEph-ae6adaf75a3b4028)
+
+running 4 tests
+test tablemteph_for_borrow_into ... FAILED
+test tablemteph_loop_borrow_into ... FAILED
+test tablemteph_for_borrow_iter ... FAILED
+test tablemteph_loop_borrow_iter ... FAILED
+
+failures:
+
+---- tablemteph_for_borrow_into stdout ----
+error[E0425]: cannot find type `TableMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/ae6adaf75a3b4028/test_inputs/ProveTableMtEph-ae6adaf75a3b4028-tablemteph_for_borrow_into/test.rs:25:13
+   |
+25 |     let it: TableMtEphIter<'_, u64, u64> = (&t).into_iter();
+   |             ^^^^^^^^^^^^^^
+   |
+  --> src/Chap42/TableMtEph.rs:74:4
+   |
+   = note: similarly named struct `TableMtEph` defined here
+help: a struct with a similar name exists
+   |
+25 -     let it: TableMtEphIter<'_, u64, u64> = (&t).into_iter();
+25 +     let it: TableMtEph<'_, u64, u64> = (&t).into_iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/ae6adaf75a3b4028/test_inputs/ProveTableMtEph-ae6adaf75a3b4028-tablemteph_for_borrow_into
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/ae6adaf75a3b4028/test_inputs/ProveTableMtEph-ae6adaf75a3b4028-tablemteph_for_borrow_into/test.rs
+
+
+thread 'tablemteph_for_borrow_into' (2420432) panicked at tests/Chap42/ProveTableMtEph.rs:126:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- tablemteph_loop_borrow_into stdout ----
+error[E0425]: cannot find type `TableMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/ae6adaf75a3b4028/test_inputs/ProveTableMtEph-ae6adaf75a3b4028-tablemteph_loop_borrow_into/test.rs:25:17
+   |
+25 |     let mut it: TableMtEphIter<'_, u64, u64> = (&t).into_iter();
+   |                 ^^^^^^^^^^^^^^
+   |
+  --> src/Chap42/TableMtEph.rs:74:4
+   |
+   = note: similarly named struct `TableMtEph` defined here
+help: a struct with a similar name exists
+   |
+25 -     let mut it: TableMtEphIter<'_, u64, u64> = (&t).into_iter();
+25 +     let mut it: TableMtEph<'_, u64, u64> = (&t).into_iter();
+   |
+
+
+error[E0425]: cannot find function `iter_invariant_tablemteph` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/ae6adaf75a3b4028/test_inputs/ProveTableMtEph-ae6adaf75a3b4028-tablemteph_loop_borrow_into/test.rs:33:13
+   |
+33 |             iter_invariant_tablemteph(&it),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/ae6adaf75a3b4028/test_inputs/ProveTableMtEph-ae6adaf75a3b4028-tablemteph_loop_borrow_into
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/ae6adaf75a3b4028/test_inputs/ProveTableMtEph-ae6adaf75a3b4028-tablemteph_loop_borrow_into/test.rs
+
+
+thread 'tablemteph_loop_borrow_into' (2420434) panicked at tests/Chap42/ProveTableMtEph.rs:56:1:
+Err(_) does not match $result
+
+---- tablemteph_for_borrow_iter stdout ----
+error[E0425]: cannot find type `TableMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/ae6adaf75a3b4028/test_inputs/ProveTableMtEph-ae6adaf75a3b4028-tablemteph_for_borrow_iter/test.rs:25:13
+   |
+25 |     let it: TableMtEphIter<'_, u64, u64> = t.iter();
+   |             ^^^^^^^^^^^^^^
+   |
+  --> src/Chap42/TableMtEph.rs:74:4
+   |
+   = note: similarly named struct `TableMtEph` defined here
+help: a struct with a similar name exists
+   |
+25 -     let it: TableMtEphIter<'_, u64, u64> = t.iter();
+25 +     let it: TableMtEph<'_, u64, u64> = t.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/ae6adaf75a3b4028/test_inputs/ProveTableMtEph-ae6adaf75a3b4028-tablemteph_for_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/ae6adaf75a3b4028/test_inputs/ProveTableMtEph-ae6adaf75a3b4028-tablemteph_for_borrow_iter/test.rs
+
+
+thread 'tablemteph_for_borrow_iter' (2420433) panicked at tests/Chap42/ProveTableMtEph.rs:95:1:
+Err(_) does not match $result
+
+---- tablemteph_loop_borrow_iter stdout ----
+error[E0425]: cannot find type `TableMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/ae6adaf75a3b4028/test_inputs/ProveTableMtEph-ae6adaf75a3b4028-tablemteph_loop_borrow_iter/test.rs:25:17
+   |
+25 |     let mut it: TableMtEphIter<'_, u64, u64> = t.iter();
+   |                 ^^^^^^^^^^^^^^
+   |
+  --> src/Chap42/TableMtEph.rs:74:4
+   |
+   = note: similarly named struct `TableMtEph` defined here
+help: a struct with a similar name exists
+   |
+25 -     let mut it: TableMtEphIter<'_, u64, u64> = t.iter();
+25 +     let mut it: TableMtEph<'_, u64, u64> = t.iter();
+   |
+
+
+error[E0425]: cannot find function `iter_invariant_tablemteph` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/ae6adaf75a3b4028/test_inputs/ProveTableMtEph-ae6adaf75a3b4028-tablemteph_loop_borrow_iter/test.rs:33:13
+   |
+33 |             iter_invariant_tablemteph(&it),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/ae6adaf75a3b4028/test_inputs/ProveTableMtEph-ae6adaf75a3b4028-tablemteph_loop_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/ae6adaf75a3b4028/test_inputs/ProveTableMtEph-ae6adaf75a3b4028-tablemteph_loop_borrow_iter/test.rs
+
+
+thread 'tablemteph_loop_borrow_iter' (2420435) panicked at tests/Chap42/ProveTableMtEph.rs:17:1:
+Err(_) does not match $result
+
+
+failures:
+    tablemteph_for_borrow_into
+    tablemteph_for_borrow_iter
+    tablemteph_loop_borrow_into
+    tablemteph_loop_borrow_iter
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+error: test failed, to rerun pass `--test ProveTableMtEph`
+     Running tests/Chap42/ProveTableStEph.rs (target/release/build/rust_verify_test/bb71d3412e650392/out/ProveTableStEph-bb71d3412e650392)
+
+running 4 tests
+test tablesteph_for_borrow_into ... FAILED
+test tablesteph_loop_borrow_iter ... FAILED
+test tablesteph_for_borrow_iter ... FAILED
+test tablesteph_loop_borrow_into ... FAILED
+
+failures:
+
+---- tablesteph_for_borrow_into stdout ----
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_for_borrow_into/test.rs:23:5
+   |
+23 |     let ghost orig: Seq<u64> = a.entries.seq@;
+   |     ^^^^^^^^^^^^^^^^--------^^^^^^^^^^^^^^^^^^
+   |     |               |
+   |     |               expected due to this
+   |     expected `Seq<u64>`, found `Seq<Pair<u64, u64>>`
+   |
+   = note: expected struct `vstd::seq::Seq<u64>`
+              found struct `vstd::seq::Seq<apas_verus::Types::Types::Pair<u64, u64>>`
+   = note: this error originates in the macro `::verus_builtin_macros::verus` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+
+error[E0277]: the trait bound `vstd::seq::Seq<&apas_verus::Types::Types::Pair<u64, u64>>: verus_builtin::SpecEq<vstd::seq::Seq<&u64>>` is not satisfied
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_for_borrow_into/test.rs:27:13
+   |
+27 |             it.seq() == orig.as_ref(),
+   |             ^^^^^^^^-----------------
+   |             |
+   |             the trait `verus_builtin::SpecEq<vstd::seq::Seq<&u64>>` is not implemented for `vstd::seq::Seq<&apas_verus::Types::Types::Pair<u64, u64>>`
+   |             required by a bound introduced by this call
+   |
+   = help: the following other types implement trait `verus_builtin::SpecEq<Rhs>`:
+             `&A` implements `verus_builtin::SpecEq<A>`
+             `&char` implements `verus_builtin::SpecEq<i128>`
+             `&char` implements `verus_builtin::SpecEq<i16>`
+             `&char` implements `verus_builtin::SpecEq<i32>`
+             `&char` implements `verus_builtin::SpecEq<i64>`
+             `&char` implements `verus_builtin::SpecEq<i8>`
+             `&char` implements `verus_builtin::SpecEq<isize>`
+             `&char` implements `verus_builtin::SpecEq<u128>`
+           and 1048 others
+note: required by a bound in `verus_builtin::spec_eq`
+  --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:1249:0
+
+
+error[E0277]: the trait bound `u64: verus_builtin::SpecEq<apas_verus::Types::Types::Pair<u64, u64>>` is not satisfied
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_for_borrow_into/test.rs:30:21
+   |
+30 |                 ==> #[trigger] collected@[i] == *it.seq()[i],
+   |                     ^^^^^^^^^^^^^^^^^^^^^^^^----------------
+   |                     |
+   |                     the trait `verus_builtin::SpecEq<apas_verus::Types::Types::Pair<u64, u64>>` is not implemented for `u64`
+   |                     required by a bound introduced by this call
+   |
+   = help: the following other types implement trait `verus_builtin::SpecEq<Rhs>`:
+             `&u64` implements `verus_builtin::SpecEq<char>`
+             `&u64` implements `verus_builtin::SpecEq<i128>`
+             `&u64` implements `verus_builtin::SpecEq<i16>`
+             `&u64` implements `verus_builtin::SpecEq<i32>`
+             `&u64` implements `verus_builtin::SpecEq<i64>`
+             `&u64` implements `verus_builtin::SpecEq<i8>`
+             `&u64` implements `verus_builtin::SpecEq<isize>`
+             `&u64` implements `verus_builtin::SpecEq<u128>`
+           and 48 others
+note: required by a bound in `verus_builtin::spec_eq`
+  --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:1249:0
+
+
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_for_borrow_into/test.rs:32:24
+   |
+32 |         collected.push(*x);
+   |                   ---- ^^ expected `u64`, found `Pair<u64, u64>`
+   |                   |
+   |                   arguments to this method are incorrect
+   |
+   = note: expected type `u64`
+            found struct `apas_verus::Types::Types::Pair<u64, u64>`
+note: method defined here
+  --> /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library/alloc/src/vec/mod.rs:1001:11
+
+
+error: aborting due to 4 previous errors
+
+
+Some errors have detailed explanations: E0277, E0308.
+
+For more information about an error, try `rustc --explain E0277`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_for_borrow_into
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_for_borrow_into/test.rs
+
+
+thread 'tablesteph_for_borrow_into' (2420517) panicked at tests/Chap42/ProveTableStEph.rs:141:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- tablesteph_loop_borrow_iter stdout ----
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_loop_borrow_iter/test.rs:23:5
+   |
+23 |     let ghost orig: Seq<u64> = a.entries.seq@;
+   |     ^^^^^^^^^^^^^^^^--------^^^^^^^^^^^^^^^^^^
+   |     |               |
+   |     |               expected due to this
+   |     expected `Seq<u64>`, found `Seq<Pair<u64, u64>>`
+   |
+   = note: expected struct `vstd::seq::Seq<u64>`
+              found struct `vstd::seq::Seq<apas_verus::Types::Types::Pair<u64, u64>>`
+   = note: this error originates in the macro `::verus_builtin_macros::verus` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_loop_borrow_iter/test.rs:25:45
+   |
+25 |     let mut it: std::slice::Iter<'_, u64> = a.iter();
+   |                 -------------------------   ^^^^^^^^ expected `Iter<'_, u64>`, found `Iter<'_, Pair<u64, u64>>`
+   |                 |
+   |                 expected due to this
+   |
+   = note: expected struct `std::slice::Iter<'_, u64>`
+              found struct `std::slice::Iter<'_, apas_verus::Types::Types::Pair<u64, u64>>`
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0308`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_loop_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_loop_borrow_iter/test.rs
+
+
+thread 'tablesteph_loop_borrow_iter' (2420520) panicked at tests/Chap42/ProveTableStEph.rs:18:1:
+Err(_) does not match $result
+
+---- tablesteph_for_borrow_iter stdout ----
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_for_borrow_iter/test.rs:23:5
+   |
+23 |     let ghost orig: Seq<u64> = a.entries.seq@;
+   |     ^^^^^^^^^^^^^^^^--------^^^^^^^^^^^^^^^^^^
+   |     |               |
+   |     |               expected due to this
+   |     expected `Seq<u64>`, found `Seq<Pair<u64, u64>>`
+   |
+   = note: expected struct `vstd::seq::Seq<u64>`
+              found struct `vstd::seq::Seq<apas_verus::Types::Types::Pair<u64, u64>>`
+   = note: this error originates in the macro `::verus_builtin_macros::verus` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+
+error[E0277]: the trait bound `vstd::seq::Seq<&apas_verus::Types::Types::Pair<u64, u64>>: verus_builtin::SpecEq<vstd::seq::Seq<&u64>>` is not satisfied
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_for_borrow_iter/test.rs:27:13
+   |
+27 |             it.seq() == orig.as_ref(),
+   |             ^^^^^^^^-----------------
+   |             |
+   |             the trait `verus_builtin::SpecEq<vstd::seq::Seq<&u64>>` is not implemented for `vstd::seq::Seq<&apas_verus::Types::Types::Pair<u64, u64>>`
+   |             required by a bound introduced by this call
+   |
+   = help: the following other types implement trait `verus_builtin::SpecEq<Rhs>`:
+             `&A` implements `verus_builtin::SpecEq<A>`
+             `&char` implements `verus_builtin::SpecEq<i128>`
+             `&char` implements `verus_builtin::SpecEq<i16>`
+             `&char` implements `verus_builtin::SpecEq<i32>`
+             `&char` implements `verus_builtin::SpecEq<i64>`
+             `&char` implements `verus_builtin::SpecEq<i8>`
+             `&char` implements `verus_builtin::SpecEq<isize>`
+             `&char` implements `verus_builtin::SpecEq<u128>`
+           and 1048 others
+note: required by a bound in `verus_builtin::spec_eq`
+  --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:1249:0
+
+
+error[E0277]: the trait bound `u64: verus_builtin::SpecEq<apas_verus::Types::Types::Pair<u64, u64>>` is not satisfied
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_for_borrow_iter/test.rs:30:21
+   |
+30 |                 ==> #[trigger] collected@[i] == *it.seq()[i],
+   |                     ^^^^^^^^^^^^^^^^^^^^^^^^----------------
+   |                     |
+   |                     the trait `verus_builtin::SpecEq<apas_verus::Types::Types::Pair<u64, u64>>` is not implemented for `u64`
+   |                     required by a bound introduced by this call
+   |
+   = help: the following other types implement trait `verus_builtin::SpecEq<Rhs>`:
+             `&u64` implements `verus_builtin::SpecEq<char>`
+             `&u64` implements `verus_builtin::SpecEq<i128>`
+             `&u64` implements `verus_builtin::SpecEq<i16>`
+             `&u64` implements `verus_builtin::SpecEq<i32>`
+             `&u64` implements `verus_builtin::SpecEq<i64>`
+             `&u64` implements `verus_builtin::SpecEq<i8>`
+             `&u64` implements `verus_builtin::SpecEq<isize>`
+             `&u64` implements `verus_builtin::SpecEq<u128>`
+           and 48 others
+note: required by a bound in `verus_builtin::spec_eq`
+  --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:1249:0
+
+
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_for_borrow_iter/test.rs:32:24
+   |
+32 |         collected.push(*x);
+   |                   ---- ^^ expected `u64`, found `Pair<u64, u64>`
+   |                   |
+   |                   arguments to this method are incorrect
+   |
+   = note: expected type `u64`
+            found struct `apas_verus::Types::Types::Pair<u64, u64>`
+note: method defined here
+  --> /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library/alloc/src/vec/mod.rs:1001:11
+
+
+error: aborting due to 4 previous errors
+
+
+Some errors have detailed explanations: E0277, E0308.
+
+For more information about an error, try `rustc --explain E0277`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_for_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_for_borrow_iter/test.rs
+
+
+thread 'tablesteph_for_borrow_iter' (2420518) panicked at tests/Chap42/ProveTableStEph.rs:114:1:
+Err(_) does not match $result
+
+---- tablesteph_loop_borrow_into stdout ----
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_loop_borrow_into/test.rs:23:5
+   |
+23 |     let ghost orig: Seq<u64> = a.entries.seq@;
+   |     ^^^^^^^^^^^^^^^^--------^^^^^^^^^^^^^^^^^^
+   |     |               |
+   |     |               expected due to this
+   |     expected `Seq<u64>`, found `Seq<Pair<u64, u64>>`
+   |
+   = note: expected struct `vstd::seq::Seq<u64>`
+              found struct `vstd::seq::Seq<apas_verus::Types::Types::Pair<u64, u64>>`
+   = note: this error originates in the macro `::verus_builtin_macros::verus` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_loop_borrow_into/test.rs:25:45
+   |
+25 |     let mut it: std::slice::Iter<'_, u64> = (&a).into_iter();
+   |                 -------------------------   ^^^^^^^^^^^^^^^^ expected `Iter<'_, u64>`, found `Iter<'_, Pair<u64, u64>>`
+   |                 |
+   |                 expected due to this
+   |
+   = note: expected struct `std::slice::Iter<'_, u64>`
+              found struct `std::slice::Iter<'_, apas_verus::Types::Types::Pair<u64, u64>>`
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0308`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_loop_borrow_into
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/bb71d3412e650392/test_inputs/ProveTableStEph-bb71d3412e650392-tablesteph_loop_borrow_into/test.rs
+
+
+thread 'tablesteph_loop_borrow_into' (2420519) panicked at tests/Chap42/ProveTableStEph.rs:66:1:
+Err(_) does not match $result
+
+
+failures:
+    tablesteph_for_borrow_into
+    tablesteph_for_borrow_iter
+    tablesteph_loop_borrow_into
+    tablesteph_loop_borrow_iter
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s
+
+error: test failed, to rerun pass `--test ProveTableStEph`
+     Running tests/Chap42/ProveTableStPer.rs (target/release/build/rust_verify_test/494e0254db96c579/out/ProveTableStPer-494e0254db96c579)
+
+running 4 tests
+test tablestper_loop_borrow_into ... FAILED
+test tablestper_for_borrow_iter ... FAILED
+test tablestper_loop_borrow_iter ... FAILED
+test tablestper_for_borrow_into ... FAILED
+
+failures:
+
+---- tablestper_loop_borrow_into stdout ----
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_loop_borrow_into/test.rs:23:5
+   |
+23 |     let ghost orig: Seq<u64> = a.entries.seq@;
+   |     ^^^^^^^^^^^^^^^^--------^^^^^^^^^^^^^^^^^^
+   |     |               |
+   |     |               expected due to this
+   |     expected `Seq<u64>`, found `Seq<Pair<u64, u64>>`
+   |
+   = note: expected struct `vstd::seq::Seq<u64>`
+              found struct `vstd::seq::Seq<apas_verus::Types::Types::Pair<u64, u64>>`
+   = note: this error originates in the macro `::verus_builtin_macros::verus` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_loop_borrow_into/test.rs:25:45
+   |
+25 |     let mut it: std::slice::Iter<'_, u64> = (&a).into_iter();
+   |                 -------------------------   ^^^^^^^^^^^^^^^^ expected `Iter<'_, u64>`, found `Iter<'_, Pair<u64, u64>>`
+   |                 |
+   |                 expected due to this
+   |
+   = note: expected struct `std::slice::Iter<'_, u64>`
+              found struct `std::slice::Iter<'_, apas_verus::Types::Types::Pair<u64, u64>>`
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0308`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_loop_borrow_into
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_loop_borrow_into/test.rs
+
+
+thread 'tablestper_loop_borrow_into' (2420604) panicked at tests/Chap42/ProveTableStPer.rs:66:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- tablestper_for_borrow_iter stdout ----
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_for_borrow_iter/test.rs:23:5
+   |
+23 |     let ghost orig: Seq<u64> = a.entries.seq@;
+   |     ^^^^^^^^^^^^^^^^--------^^^^^^^^^^^^^^^^^^
+   |     |               |
+   |     |               expected due to this
+   |     expected `Seq<u64>`, found `Seq<Pair<u64, u64>>`
+   |
+   = note: expected struct `vstd::seq::Seq<u64>`
+              found struct `vstd::seq::Seq<apas_verus::Types::Types::Pair<u64, u64>>`
+   = note: this error originates in the macro `::verus_builtin_macros::verus` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+
+error[E0277]: the trait bound `vstd::seq::Seq<&apas_verus::Types::Types::Pair<u64, u64>>: verus_builtin::SpecEq<vstd::seq::Seq<&u64>>` is not satisfied
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_for_borrow_iter/test.rs:27:13
+   |
+27 |             it.seq() == orig.as_ref(),
+   |             ^^^^^^^^-----------------
+   |             |
+   |             the trait `verus_builtin::SpecEq<vstd::seq::Seq<&u64>>` is not implemented for `vstd::seq::Seq<&apas_verus::Types::Types::Pair<u64, u64>>`
+   |             required by a bound introduced by this call
+   |
+   = help: the following other types implement trait `verus_builtin::SpecEq<Rhs>`:
+             `&A` implements `verus_builtin::SpecEq<A>`
+             `&char` implements `verus_builtin::SpecEq<i128>`
+             `&char` implements `verus_builtin::SpecEq<i16>`
+             `&char` implements `verus_builtin::SpecEq<i32>`
+             `&char` implements `verus_builtin::SpecEq<i64>`
+             `&char` implements `verus_builtin::SpecEq<i8>`
+             `&char` implements `verus_builtin::SpecEq<isize>`
+             `&char` implements `verus_builtin::SpecEq<u128>`
+           and 1048 others
+note: required by a bound in `verus_builtin::spec_eq`
+  --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:1249:0
+
+
+error[E0277]: the trait bound `u64: verus_builtin::SpecEq<apas_verus::Types::Types::Pair<u64, u64>>` is not satisfied
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_for_borrow_iter/test.rs:30:21
+   |
+30 |                 ==> #[trigger] collected@[i] == *it.seq()[i],
+   |                     ^^^^^^^^^^^^^^^^^^^^^^^^----------------
+   |                     |
+   |                     the trait `verus_builtin::SpecEq<apas_verus::Types::Types::Pair<u64, u64>>` is not implemented for `u64`
+   |                     required by a bound introduced by this call
+   |
+   = help: the following other types implement trait `verus_builtin::SpecEq<Rhs>`:
+             `&u64` implements `verus_builtin::SpecEq<char>`
+             `&u64` implements `verus_builtin::SpecEq<i128>`
+             `&u64` implements `verus_builtin::SpecEq<i16>`
+             `&u64` implements `verus_builtin::SpecEq<i32>`
+             `&u64` implements `verus_builtin::SpecEq<i64>`
+             `&u64` implements `verus_builtin::SpecEq<i8>`
+             `&u64` implements `verus_builtin::SpecEq<isize>`
+             `&u64` implements `verus_builtin::SpecEq<u128>`
+           and 48 others
+note: required by a bound in `verus_builtin::spec_eq`
+  --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:1249:0
+
+
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_for_borrow_iter/test.rs:32:24
+   |
+32 |         collected.push(*x);
+   |                   ---- ^^ expected `u64`, found `Pair<u64, u64>`
+   |                   |
+   |                   arguments to this method are incorrect
+   |
+   = note: expected type `u64`
+            found struct `apas_verus::Types::Types::Pair<u64, u64>`
+note: method defined here
+  --> /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library/alloc/src/vec/mod.rs:1001:11
+
+
+error: aborting due to 4 previous errors
+
+
+Some errors have detailed explanations: E0277, E0308.
+
+For more information about an error, try `rustc --explain E0277`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_for_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_for_borrow_iter/test.rs
+
+
+thread 'tablestper_for_borrow_iter' (2420603) panicked at tests/Chap42/ProveTableStPer.rs:114:1:
+Err(_) does not match $result
+
+---- tablestper_loop_borrow_iter stdout ----
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_loop_borrow_iter/test.rs:23:5
+   |
+23 |     let ghost orig: Seq<u64> = a.entries.seq@;
+   |     ^^^^^^^^^^^^^^^^--------^^^^^^^^^^^^^^^^^^
+   |     |               |
+   |     |               expected due to this
+   |     expected `Seq<u64>`, found `Seq<Pair<u64, u64>>`
+   |
+   = note: expected struct `vstd::seq::Seq<u64>`
+              found struct `vstd::seq::Seq<apas_verus::Types::Types::Pair<u64, u64>>`
+   = note: this error originates in the macro `::verus_builtin_macros::verus` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_loop_borrow_iter/test.rs:25:45
+   |
+25 |     let mut it: std::slice::Iter<'_, u64> = a.iter();
+   |                 -------------------------   ^^^^^^^^ expected `Iter<'_, u64>`, found `Iter<'_, Pair<u64, u64>>`
+   |                 |
+   |                 expected due to this
+   |
+   = note: expected struct `std::slice::Iter<'_, u64>`
+              found struct `std::slice::Iter<'_, apas_verus::Types::Types::Pair<u64, u64>>`
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0308`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_loop_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_loop_borrow_iter/test.rs
+
+
+thread 'tablestper_loop_borrow_iter' (2420605) panicked at tests/Chap42/ProveTableStPer.rs:18:1:
+Err(_) does not match $result
+
+---- tablestper_for_borrow_into stdout ----
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_for_borrow_into/test.rs:23:5
+   |
+23 |     let ghost orig: Seq<u64> = a.entries.seq@;
+   |     ^^^^^^^^^^^^^^^^--------^^^^^^^^^^^^^^^^^^
+   |     |               |
+   |     |               expected due to this
+   |     expected `Seq<u64>`, found `Seq<Pair<u64, u64>>`
+   |
+   = note: expected struct `vstd::seq::Seq<u64>`
+              found struct `vstd::seq::Seq<apas_verus::Types::Types::Pair<u64, u64>>`
+   = note: this error originates in the macro `::verus_builtin_macros::verus` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+
+error[E0277]: the trait bound `vstd::seq::Seq<&apas_verus::Types::Types::Pair<u64, u64>>: verus_builtin::SpecEq<vstd::seq::Seq<&u64>>` is not satisfied
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_for_borrow_into/test.rs:27:13
+   |
+27 |             it.seq() == orig.as_ref(),
+   |             ^^^^^^^^-----------------
+   |             |
+   |             the trait `verus_builtin::SpecEq<vstd::seq::Seq<&u64>>` is not implemented for `vstd::seq::Seq<&apas_verus::Types::Types::Pair<u64, u64>>`
+   |             required by a bound introduced by this call
+   |
+   = help: the following other types implement trait `verus_builtin::SpecEq<Rhs>`:
+             `&A` implements `verus_builtin::SpecEq<A>`
+             `&char` implements `verus_builtin::SpecEq<i128>`
+             `&char` implements `verus_builtin::SpecEq<i16>`
+             `&char` implements `verus_builtin::SpecEq<i32>`
+             `&char` implements `verus_builtin::SpecEq<i64>`
+             `&char` implements `verus_builtin::SpecEq<i8>`
+             `&char` implements `verus_builtin::SpecEq<isize>`
+             `&char` implements `verus_builtin::SpecEq<u128>`
+           and 1048 others
+note: required by a bound in `verus_builtin::spec_eq`
+  --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:1249:0
+
+
+error[E0277]: the trait bound `u64: verus_builtin::SpecEq<apas_verus::Types::Types::Pair<u64, u64>>` is not satisfied
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_for_borrow_into/test.rs:30:21
+   |
+30 |                 ==> #[trigger] collected@[i] == *it.seq()[i],
+   |                     ^^^^^^^^^^^^^^^^^^^^^^^^----------------
+   |                     |
+   |                     the trait `verus_builtin::SpecEq<apas_verus::Types::Types::Pair<u64, u64>>` is not implemented for `u64`
+   |                     required by a bound introduced by this call
+   |
+   = help: the following other types implement trait `verus_builtin::SpecEq<Rhs>`:
+             `&u64` implements `verus_builtin::SpecEq<char>`
+             `&u64` implements `verus_builtin::SpecEq<i128>`
+             `&u64` implements `verus_builtin::SpecEq<i16>`
+             `&u64` implements `verus_builtin::SpecEq<i32>`
+             `&u64` implements `verus_builtin::SpecEq<i64>`
+             `&u64` implements `verus_builtin::SpecEq<i8>`
+             `&u64` implements `verus_builtin::SpecEq<isize>`
+             `&u64` implements `verus_builtin::SpecEq<u128>`
+           and 48 others
+note: required by a bound in `verus_builtin::spec_eq`
+  --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:1249:0
+
+
+error[E0308]: mismatched types
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_for_borrow_into/test.rs:32:24
+   |
+32 |         collected.push(*x);
+   |                   ---- ^^ expected `u64`, found `Pair<u64, u64>`
+   |                   |
+   |                   arguments to this method are incorrect
+   |
+   = note: expected type `u64`
+            found struct `apas_verus::Types::Types::Pair<u64, u64>`
+note: method defined here
+  --> /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library/alloc/src/vec/mod.rs:1001:11
+
+
+error: aborting due to 4 previous errors
+
+
+Some errors have detailed explanations: E0277, E0308.
+
+For more information about an error, try `rustc --explain E0277`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_for_borrow_into
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/494e0254db96c579/test_inputs/ProveTableStPer-494e0254db96c579-tablestper_for_borrow_into/test.rs
+
+
+thread 'tablestper_for_borrow_into' (2420602) panicked at tests/Chap42/ProveTableStPer.rs:141:1:
+Err(_) does not match $result
+
+
+failures:
+    tablestper_for_borrow_into
+    tablestper_for_borrow_iter
+    tablestper_loop_borrow_into
+    tablestper_loop_borrow_iter
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.42s
+
+error: test failed, to rerun pass `--test ProveTableStPer`
+error: 3 targets failed:
+    `--test ProveTableMtEph`
+    `--test ProveTableStEph`
+    `--test ProveTableStPer`
+cargo test rc: 101
+Elapsed: 14s

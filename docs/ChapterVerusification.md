@@ -67,7 +67,7 @@ calls, removed chapter by chapter as each is migrated.
 | 20 | 39 | 18 | 0 | r213: 1218 verified, 0 err, 0 warn; RTT 148, PTT 8 pass | `validate.20260922-053007.log` |
 | 21 | 40 | 18 | 0 | r213: 1180 verified, 0 err, 0 warn; RTT 54 pass | `validate.20260922-053048.log` |
 | 22 | 41 | 18, 19, 37, 38 | 0 | r213: 2188 verified, 0 err, 0 warn; RTT 250 pass | `validate.20260922-054937.log` |
-| 23 | 42 | 02, 19, 41 | 0 | blocked on 19, 41 | full log |
+| 23 | 42 | 02, 19, 41 | 0 | r213: 2312 verified, 0 err, 0 warn; RTT 66 pass | `validate.20260922-055734.log` |
 | 24 | 43 | 18, 19, 37, 38, 41, 42 | 6 | `Map::new`, `lemma_map_finite`, old iterators | full log |
 | 25 | 44 | 19, 37, 41, 42 | 2 | `lemma_set_insert_len` shape | full log |
 | 26 | 45 | 19, 37 | 0 | blocked on 19, 37 | full log |

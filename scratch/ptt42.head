@@ -1,0 +1,16 @@
+//! Proof tests for TableMtEph iterators.
+//!
+//! Loop patterns tested (see docs/APAS-VERUSIterators.rs):
+//!   - loop-borrow-iter:   `loop { ... t.iter() ... }`
+//!   - loop-borrow-into:   `loop { ... (&t).into_iter() ... }`
+//!   - for-borrow-iter:    `for x in iter: t.iter()`
+//!   - for-borrow-into:    `for x in iter: (&t).into_iter()`
+//!
+//! Iterator yields &'a Pair<K, V> references (wraps ArraySeqMtEphIter).
+
+#[macro_use]
+#[path = "../common/mod.rs"]
+mod common;
+use common::*;
+
+// loop-borrow-iter

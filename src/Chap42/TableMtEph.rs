@@ -248,7 +248,6 @@ broadcast use {
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
             requires
                 old(self).spec_tablemteph_wf(),
-                keys@.finite(),
             ensures
                 self.spec_tablemteph_wf(),
                 self@.dom() =~= old(self)@.dom().intersect(keys@),
@@ -258,7 +257,6 @@ broadcast use {
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             requires
                 old(self).spec_tablemteph_wf(),
-                keys@.finite(),
             ensures
                 self.spec_tablemteph_wf(),
                 self@.dom() =~= old(self)@.dom().difference(keys@),
@@ -270,7 +268,10 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn iter(&self) -> (it: std::slice::Iter<'_, Pair<K, V>>)
             requires self.spec_tablemteph_wf()
-            ensures it@.0 == 0, iter_invariant_tablemteph(&it);
+            ensures
+                IteratorSpec::remaining(&it) == vstd::std_specs::slice::into_iter_elts(it).as_ref(),
+                spec_entries_to_map(vstd::std_specs::slice::into_iter_elts(it).map(|_i: int, p: Pair<K, V>| p@)) == self@,
+                IteratorSpec::decrease(&it) is Some;
     }
 
     //		Section 9. impls
@@ -635,7 +636,6 @@ broadcast use {
                 invariant
                     i <= self.entries.spec_len(),
                     keys.spec_arraysetsteph_wf(),
-                    keys@.finite(),
                     forall|j: int| 0 <= j < i as int
                         ==> keys@.contains((#[trigger] self.entries@[j]).0),
                     // Veracity: NEEDED proof block
@@ -713,7 +713,6 @@ broadcast use {
             let key_seq = keys.to_seq();
             let seq = tabulate_table_dc(&f, &key_seq);
             proof {
-                lemma_entries_to_map_finite::<K::V, V::V>(seq@);
                 // Each entry key matches the corresponding key_seq element.
                 // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < seq@.len()
@@ -1113,6 +1112,10 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         #[verifier::loop_isolation(false)]
+        // r213: rlimit raised after a profile (logs/validate.20260922-055536.log) showed
+        // no matching loop: 61K instantiations, led by the quadratic
+        // `phase2_sources[j1] < phase2_sources[j2]` invariant.
+        #[verifier::rlimit(40)]
         fn union<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
         {
             proof {
@@ -2202,7 +2205,6 @@ broadcast use {
                 invariant
                     i <= self.entries.spec_len(),
                     self.entries@ == old_view,
-                    keys@.finite(),
                     sources.len() == kept@.len(),
                     forall|j: int| 0 <= j < sources.len() ==>
                         0 <= #[trigger] sources[j] < old_view.len()
@@ -2302,7 +2304,6 @@ broadcast use {
                 invariant
                     i <= self.entries.spec_len(),
                     self.entries@ == old_view,
-                    keys@.finite(),
                     sources.len() == kept@.len(),
                     forall|j: int| 0 <= j < sources.len() ==>
                         0 <= #[trigger] sources[j] < old_view.len(),
@@ -2406,25 +2407,31 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn iter(&self) -> std::slice::Iter<'_, Pair<K, V>> {
-            self.entries.iter()
+        fn iter(&self) -> (it: std::slice::Iter<'_, Pair<K, V>>) {
+            let it = self.entries.iter();
+            proof {
+                assert(vstd::std_specs::slice::into_iter_elts(it).map(|_i: int, p: Pair<K, V>| p@)
+                    =~= self.entries@);
+            }
+            it
         }
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     // veracity: no_requires
     pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (constructed: TableMtEph<K, V>)
-        ensures constructed@.dom().finite()
     {
         let seq = ArraySeqMtEphS::from_vec(entries);
-        proof {
-            lemma_entries_to_map_finite::<K::V, V::V>(seq@);
-        }
         TableMtEph { entries: seq }
     }
 
     //		Section 10. iterators — TableMtEph
 
+    // r212 form C: this `IntoIterator` impl required `requires self.spec_tablemteph_wf()`, which
+    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
+    // can establish; use `iter()`, which keeps the requires
+    // (src/experiments/intoiter_form_c_no_impl.rs).
+    /*
     impl<'a, K: MtKey, V: MtVal> std::iter::IntoIterator for &'a TableMtEph<K, V> {
         type Item = &'a Pair<K, V>;
         type IntoIter = std::slice::Iter<'a, Pair<K, V>>;
@@ -2435,6 +2442,7 @@ broadcast use {
             self.iter()
         }
     }
+    */
 
     //		Section 12. derive impls in verus!
 

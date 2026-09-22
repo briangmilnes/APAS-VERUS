@@ -25,9 +25,9 @@ test_verify_one_file! {
         fn test_loop_borrow_iter() {
             let a: TableStEph<u64, u64> = TableStEph::empty();
 
-            let ghost orig: Seq<u64> = a.entries.seq@;
-            let mut collected: Vec<u64> = Vec::new();
-            let mut it: std::slice::Iter<'_, u64> = a.iter();
+            let ghost orig: Seq<Pair<u64, u64>> = a.entries.seq@;
+            let mut collected: Vec<Pair<u64, u64>> = Vec::new();
+            let mut it: std::slice::Iter<'_, Pair<u64, u64>> = a.iter();
             let ghost mut pos: int = 0;
             loop
                 invariant
@@ -73,9 +73,9 @@ test_verify_one_file! {
         fn test_loop_borrow_into() {
             let a: TableStEph<u64, u64> = TableStEph::empty();
 
-            let ghost orig: Seq<u64> = a.entries.seq@;
-            let mut collected: Vec<u64> = Vec::new();
-            let mut it: std::slice::Iter<'_, u64> = (&a).into_iter();
+            let ghost orig: Seq<Pair<u64, u64>> = a.entries.seq@;
+            let mut collected: Vec<Pair<u64, u64>> = Vec::new();
+            let mut it: std::slice::Iter<'_, Pair<u64, u64>> = (&a).into_iter();
             let ghost mut pos: int = 0;
             loop
                 invariant
@@ -121,8 +121,8 @@ test_verify_one_file! {
         fn test_for_borrow_iter() {
             let a: TableStEph<u64, u64> = TableStEph::empty();
 
-            let ghost orig: Seq<u64> = a.entries.seq@;
-            let mut collected: Vec<u64> = Vec::new();
+            let ghost orig: Seq<Pair<u64, u64>> = a.entries.seq@;
+            let mut collected: Vec<Pair<u64, u64>> = Vec::new();
             for x in it: a.iter()
                 invariant
                     it.seq() == orig.as_ref(),
@@ -148,8 +148,8 @@ test_verify_one_file! {
         fn test_for_borrow_into() {
             let a: TableStEph<u64, u64> = TableStEph::empty();
 
-            let ghost orig: Seq<u64> = a.entries.seq@;
-            let mut collected: Vec<u64> = Vec::new();
+            let ghost orig: Seq<Pair<u64, u64>> = a.entries.seq@;
+            let mut collected: Vec<Pair<u64, u64>> = Vec::new();
             for x in it: (&a).into_iter()
                 invariant
                     it.seq() == orig.as_ref(),

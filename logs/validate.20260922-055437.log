@@ -1,0 +1,30 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error[E0615]: attempted to take value of method `entries` on type `&Self`
+   --> src/Chap42/TableMtEph.rs:272:54
+    |
+272 |                 IteratorSpec::remaining(&it) == self.entries.seq@.as_ref(),
+    |                                                      ^^^^^^^ method, not a field
+    |
+help: use parentheses to call the method
+    |
+272 |                 IteratorSpec::remaining(&it) == self.entries().seq@.as_ref(),
+    |                                                             ++
+
+error[E0615]: attempted to take value of method `entries` on type `&Self`
+   --> src/Chap42/TableMtEph.rs:273:68
+    |
+273 |                 vstd::std_specs::slice::into_iter_elts(it) == self.entries.seq@,
+    |                                                                    ^^^^^^^ method, not a field
+    |
+help: use parentheses to call the method
+    |
+273 |                 vstd::std_specs::slice::into_iter_elts(it) == self.entries().seq@,
+    |                                                                           ++
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0615`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 682MB, peak z3 RSS: 0MB, min free: 25881MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

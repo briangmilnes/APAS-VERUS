@@ -1,0 +1,116 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: function body check: Resource limit (rlimit) exceeded
+    --> src/Chap42/TableMtEph.rs:1115:9
+     |
+1115 |         fn union<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Analyzing prover log for (profile rerun) lib::Chap42::TableMtEph::TableMtEph::TableMtEph::union ...
+
+Z3 4.16.0
+note: Log analysis complete for (profile rerun) lib::Chap42::TableMtEph::TableMtEph::TableMtEph::union
+
+note: Profile statistics for lib::Chap42::TableMtEph::TableMtEph::TableMtEph::union
+
+note: Observed 61,208 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 741793494 (Instantiated 26,941 times - 44% of the total, cost 27534) top 1 of 86 user-level quantifiers.
+      
+    --> src/Chap42/TableMtEph.rs:1263:29
+     |
+1260 | /                     forall|j1: int, j2: int|
+1261 | |                         // Veracity: NEEDED proof block
+1262 | |                         0 <= j1 < j2 < phase2_sources.len()
+1263 | |                         ==> #[trigger] phase2_sources[j1] < #[trigger] phase2_sources[j2],
+     | |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^-
+     | |_________________________________________________________________________________________|
+     |                                                                                           Triggers selected for this quantifier
+
+note: Cost * Instantiations: 264362319 (Instantiated 16,101 times - 26% of the total, cost 16419) top 2 of 86 user-level quantifiers.
+      
+    --> src/Chap42/TableMtEph.rs:1391:32
+     |
+1389 |                           let kidx = choose|kidx: int|
+     |  ____________________________________-
+1390 | |                             0 <= kidx < phase2_sources.len()
+1391 | |                             && (#[trigger] phase2_sources[kidx]) == oj;
+     | |________________________________^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^_____- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 19143981 (Instantiated 4,021 times - 6% of the total, cost 4761) top 3 of 86 user-level quantifiers.
+      
+    --> src/Chap42/TableMtEph.rs:1359:28
+     |
+1358 |                       let si = choose|si: int| 0 <= si < old_self_view.len()
+     |  ______________________________-
+1359 | |                         && (#[trigger] old_self_view[si]).0 == k;
+     | |____________________________^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^______- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 13764100 (Instantiated 3,710 times - 6% of the total, cost 3710) top 4 of 86 user-level quantifiers.
+      
+   --> src/Types.rs:287:13
+    |
+285 |     pub broadcast proof fn axiom_Pair_view_injective<K: vstd::prelude::View, V: vstd::prelude::View>(p1: Pair<K, V>, p2: Pair<K, V>)
+    |     -------------------------------------------------------------------------------------------------------------------------------- Triggers selected for this quantifier
+286 |         requires
+287 |             #[trigger] p1@ == #[trigger] p2@,
+    |             ^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^
+
+note: Cost * Instantiations: 4168740 (Instantiated 1,830 times - 2% of the total, cost 2278) top 5 of 86 user-level quantifiers.
+      
+  --> src/Chap42/TableSpecsAndLemmas.rs:46:44
+   |
+45 | /         forall|i: int, j: int|
+46 | |             0 <= i < j < entries.len() ==> (#[trigger] entries[i]).0 != (#[trigger] entries[j]).0
+   | |____________________________________________^^^^^^^^^^^^^^^^^^^^^^^______^^^^^^^^^^^^^^^^^^^^^^^_- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 3948169 (Instantiated 1,987 times - 3% of the total, cost 1987) top 6 of 86 user-level quantifiers.
+      
+    --> src/Chap42/TableMtEph.rs:1334:40
+     |
+1332 |   ...                   let k = choose|k: int|
+     |  _______________________________-
+1333 | | ...                       0 <= k < old_phase2_sources.len()
+1334 | | ...                       && (#[trigger] old_phase2_sources[k]) == oj;
+     | |______________________________^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^_____- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 3460210 (Instantiated 619 times - 1% of the total, cost 5590) top 7 of 86 user-level quantifiers.
+      
+    --> src/Chap42/TableMtEph.rs:1248:30
+     |
+1247 | /                     forall|k: int| 0 <= k < phase2_sources.len() ==>
+1248 | |                         0 <= #[trigger] phase2_sources[k] < other.entries@.len()
+     | |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1249 | |                         && other.entries@[phase2_sources[k]].0
+1250 | |                             == kept@[(phase1_len + k) as int].0@
+...    |
+1253 | |                         && !spec_entries_to_map(old_self_view).contains_key(
+1254 | |                             other.entries@[phase2_sources[k]].0),
+     | |________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1212165 (Instantiated 615 times - 1% of the total, cost 1971) top 8 of 86 user-level quantifiers.
+      
+ --> seq.rs:1340:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 539092 (Instantiated 614 times - 1% of the total, cost 878) top 9 of 86 user-level quantifiers.
+      
+ --> set.rs:369:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 383161 (Instantiated 619 times - 1% of the total, cost 619) top 10 of 86 user-level quantifiers.
+      
+    --> src/Chap42/TableMtEph.rs:1265:29
+     |
+1264 | /                     forall|k: int| 0 <= k < phase2_sources.len()
+1265 | |                         ==> #[trigger] phase2_sources[k] < j as int,
+     | |_____________________________^^^^^^^^^^^^^^^^^^^^^^^^^^^^__________- Triggers selected for this quantifier
+
+verification results:: 2311 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 2508MB, peak z3 RSS: 326MB, min free: 23593MB
+Sampled CPU Usage: rust_verify: 32s, z3 children: 36s

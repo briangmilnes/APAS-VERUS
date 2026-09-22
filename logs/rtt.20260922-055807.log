@@ -1,0 +1,132 @@
+r212 RTT for Chap42: cargo test --release on 4 targets: TestExample42_1 TestTableMtEph TestTableStEph TestTableStPer
+Starting RTT at 05:58:07
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 6.98s
+     Running tests/Chap42/TestExample42_1.rs (target/release/deps/TestExample42_1-f4fe5b668dfb6dc9)
+
+running 2 tests
+test test_example_42_1_runs ... ok
+test test_performance_comparison_runs ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/Chap42/TestTableMtEph.rs (target/release/deps/TestTableMtEph-1a1eab940245047f)
+
+running 19 tests
+test test_table_delete_ephemeral ... ok
+test test_table_difference_ephemeral ... ok
+test test_table_domain ... ok
+test test_table_ephemeral_semantics ... ok
+test test_table_empty ... ok
+test test_table_filter_ephemeral ... ok
+test test_table_insert_ephemeral ... ok
+test test_table_find ... ok
+test test_table_intersection_ephemeral ... ok
+test test_table_mteph_lit_macro ... ok
+test test_table_restrict_ephemeral ... ok
+test test_table_map_ephemeral ... ok
+test test_table_singleton ... ok
+test test_table_subtract_ephemeral ... ok
+test test_table_union_ephemeral ... ok
+test test_tablemtephlit_macro_functionality ... ok
+test test_table_tabulate ... ok
+test test_table_parallel_operations ... ok
+test test_table_parallel_tabulate ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap42/TestTableStEph.rs (target/release/deps/TestTableStEph-370e2d9a9d89638d)
+
+running 24 tests
+test table_delete_nonexistent_key ... ok
+test table_insert_duplicate_key_combines ... ok
+test table_insert_then_delete_same ... ok
+test test_into_iter_empty ... ok
+test test_into_iter_collects_all_pairs ... ok
+test test_into_iter_for_loop ... ok
+test test_table_delete_ephemeral ... ok
+test test_table_difference_ephemeral ... ok
+test test_table_domain ... ok
+test test_table_empty ... ok
+test test_table_ephemeral_semantics ... ok
+test test_table_filter_ephemeral ... ok
+test test_table_find ... ok
+test test_table_insert_ephemeral ... ok
+test test_table_intersection_ephemeral ... ok
+test test_table_map_ephemeral ... ok
+test test_table_restrict_ephemeral ... ok
+test test_table_singleton ... ok
+test test_table_steph_lit_macro ... ok
+test test_table_subtract_ephemeral ... ok
+test test_table_tabulate ... ok
+test test_table_union_ephemeral ... ok
+test test_tablestephlit_macro_functionality ... ok
+test test_table_large_operations ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap42/TestTableStPer.rs (target/release/deps/TestTableStPer-c57db81860c5ace9)
+
+running 21 tests
+test test_into_iter_empty ... ok
+test test_into_iter_collects_all_pairs ... ok
+test test_into_iter_for_loop ... ok
+test test_table_domain ... ok
+test test_table_difference ... ok
+test test_table_delete ... ok
+test test_table_empty_and_size ... ok
+test test_table_empty_operations ... ok
+test test_table_filter ... ok
+test test_table_insert_and_find ... ok
+test test_table_insert_with_combine ... ok
+test test_table_intersection ... ok
+test test_table_macro ... ok
+test test_table_map ... ok
+test test_table_persistence ... ok
+test test_table_restrict ... ok
+test test_table_singleton ... ok
+test test_table_subtract ... ok
+test test_table_tabulate ... ok
+test test_table_union ... ok
+test test_tablestperlit_macro_functionality ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 7s

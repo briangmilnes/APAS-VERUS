@@ -44,6 +44,7 @@ file, or listed at the end.
 | 20 | 39 | 1218 | 0 | 0 | 148 pass | 8 pass | r213 Chap39 |
 | 21 | 40 | 1180 | 0 | 0 | 54 pass | 6 pass | r213 Chap40 |
 | 22 | 41 | 2188 | 0 | 0 | 250 pass | 10 pass | r213 Chap41 |
+| 23 | 42 | 2312 | 0 | 0 | 66 pass | 10 pass | r213 Chap42 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -386,3 +387,37 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   (`logs/validate.20260922-054937.log`), after seven intermediate runs.
 - RTT: 8 targets, 250 tests pass (`logs/rtt.20260922-055208.log`).
 - PTT: 6 files, 10 tests pass (`logs/ptt-Chap41.20260922-055210.log`).
+
+### Chap42
+
+- Start: did not compile (`logs/validate.20260922-055354.log`): the
+  `TableMtEphTrait::iter` spec used the old-model `iter_invariant_tablemteph`,
+  which no longer exists; 21 deprecated `finite()` sites.
+- Edit class 3, iterator migration: `iterator-upgrade --apply --into-iter c`
+  commented out `IntoIterator for &TableMtEph` (form C, it required
+  `spec_tablemteph_wf`). The `iter` trait spec is now on the prophetic model:
+  `remaining(&it) == into_iter_elts(it).as_ref()`,
+  `spec_entries_to_map(into_iter_elts(it).map(view)) == self@` and
+  `decrease(&it) is Some`; the impl proves the middle clause with one `=~=`
+  assert. `ProveTableMtEph.rs` was rewritten on the new model (two tests; the
+  two into-iter tests dropped as form C); the generated `ProveTableStEph.rs`
+  and `ProveTableStPer.rs` had element type `u64` and now use
+  `Pair<u64, u64>`.
+- Edit class 1 and 2, `finite()` removal: `keys@.finite()` conjuncts deleted
+  from `restrict`/`subtract` requires and loop invariants in all three table
+  files; `result@.dom().finite()` deleted from the `collect_by_key` invariant
+  (`TableStPer.rs`); the three `from_sorted_entries` fns lose their
+  finite-only `ensures` and proof block. `lemma_entries_to_map_finite`
+  (`TableSpecsAndLemmas.rs`) BYPASSED, its calls and one finite-only `assert
+  ... by` removed. Chap52 still calls the lemma inside ghost code; it is
+  fixed when Chap52 is reached (cargo builds do not see it).
+- Rlimit: `TableMtEph::union` exceeded the default rlimit. The profile
+  (`logs/validate.20260922-055536.log`) shows 61K instantiations and no
+  matching loop (top: the quadratic `phase2_sources[j1] < phase2_sources[j2]`
+  invariant, 27K). It fails at 20 and passes at 40; `#[verifier::rlimit(40)]`
+  with a comment citing the profile.
+- Exec cost: no exec statement changed; only ghost calls removed.
+- End: 2312 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-055734.log`).
+- RTT: 4 targets, 66 tests pass (`logs/rtt.20260922-055909.log`).
+- PTT: 3 files, 10 tests pass (`logs/ptt-Chap42.20260922-055910.log`).
