@@ -1,0 +1,192 @@
+r212 RTT for Chap56: cargo test --release on 12 targets: TestAllPairsResultStEphF64 TestAllPairsResultStEphI64 TestAllPairsResultStPerF64 TestAllPairsResultStPerI64 TestExample56_1 TestExample56_3 TestPathWeightUtilsStEph TestPathWeightUtilsStPer TestSSSPResultStEphF64 TestSSSPResultStEphI64 TestSSSPResultStPerF64 TestSSSPResultStPerI64
+Starting RTT at 06:24:59
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap56/TestExample56_1.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap56/TestExample56_3.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestExample56_1") generated 1 warning
+warning: `apas-verus` (test "TestExample56_3") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 0.19s
+     Running tests/Chap56/TestAllPairsResultStEphF64.rs (target/release/deps/TestAllPairsResultStEphF64-f8af9efceecd5eef)
+
+running 5 tests
+test test_extract_path ... ok
+test test_new ... ok
+test test_set_predecessor ... ok
+test test_set_distance ... ok
+test test_extract_path_unreachable ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap56/TestAllPairsResultStEphI64.rs (target/release/deps/TestAllPairsResultStEphI64-d4d1ad0fe5b7180f)
+
+running 5 tests
+test test_extract_path ... ok
+test test_extract_path_unreachable ... ok
+test test_new ... ok
+test test_set_distance ... ok
+test test_set_predecessor ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap56/TestAllPairsResultStPerF64.rs (target/release/deps/TestAllPairsResultStPerF64-8065bbcf53d2e9cb)
+
+running 5 tests
+test test_extract_path ... ok
+test test_extract_path_unreachable ... ok
+test test_new ... ok
+test test_set_predecessor ... ok
+test test_set_distance ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap56/TestAllPairsResultStPerI64.rs (target/release/deps/TestAllPairsResultStPerI64-c3ac3f1f660da049)
+
+running 5 tests
+test test_extract_path ... ok
+test test_extract_path_unreachable ... ok
+test test_set_distance ... ok
+test test_new ... ok
+test test_set_predecessor ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap56/TestExample56_1.rs (target/release/deps/TestExample56_1-39c747d1fb725cac)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap56/TestExample56_3.rs (target/release/deps/TestExample56_3-cae0129676f940c0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap56/TestPathWeightUtilsStEph.rs (target/release/deps/TestPathWeightUtilsStEph-c192e35bee61a2b1)
+
+running 5 tests
+test test_path_weight_int_negative ... ok
+test test_path_weight_float_simple ... ok
+test test_path_weight_int_simple ... ok
+test test_validate_subpath_int ... ok
+test test_validate_subpath_float ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap56/TestPathWeightUtilsStPer.rs (target/release/deps/TestPathWeightUtilsStPer-1c64bd3f0cf3f7ed)
+
+running 5 tests
+test test_path_weight_float_simple ... ok
+test test_path_weight_int_negative ... ok
+test test_path_weight_int_simple ... ok
+test test_validate_subpath_float ... ok
+test test_validate_subpath_int ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap56/TestSSSPResultStEphF64.rs (target/release/deps/TestSSSPResultStEphF64-0077c556b303594c)
+
+running 5 tests
+test test_extract_path ... ok
+test test_extract_path_unreachable ... ok
+test test_new ... ok
+test test_set_distance ... ok
+test test_set_predecessor ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap56/TestSSSPResultStEphI64.rs (target/release/deps/TestSSSPResultStEphI64-d15d94dbc9cbd167)
+
+running 9 tests
+test test_distances_array ... ok
+test test_extract_path ... ok
+test test_extract_path_source ... ok
+test test_is_reachable ... ok
+test test_extract_path_unreachable ... ok
+test test_overwrite_distance ... ok
+test test_set_distance ... ok
+test test_set_predecessor ... ok
+test test_new ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap56/TestSSSPResultStPerF64.rs (target/release/deps/TestSSSPResultStPerF64-eef55dfdeadebb04)
+
+running 5 tests
+test test_extract_path ... ok
+test test_extract_path_unreachable ... ok
+test test_new ... ok
+test test_set_distance ... ok
+test test_set_predecessor ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap56/TestSSSPResultStPerI64.rs (target/release/deps/TestSSSPResultStPerI64-7dad89b1df90d0d6)
+
+running 5 tests
+test test_extract_path ... ok
+test test_extract_path_unreachable ... ok
+test test_set_predecessor ... ok
+test test_new ... ok
+test test_set_distance ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 1s
