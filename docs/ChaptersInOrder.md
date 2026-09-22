@@ -33,39 +33,39 @@ file, or listed at the end.
 | 9 | 19 | 824 | 0 | 0 | 156 pass | 23 pass | 7ac57e5c8 |
 | 10 | 21 | 1262 | 0 | 0 | 46 pass | none | 0a048df27 |
 | 11 | 23 | 679 | 0 | 0 | 92 pass | 17 pass | 8d3afb083 |
-| 12 | 26 | 1098 | 0 | 0 | 59 pass | none | r213 Chap26 |
-| 13 | 27 | 846 | 0 | 0 | 48 pass | none | r213 Chap27 |
-| 14 | 28 | 883 | 0 | 0 | 68 pass | none | r213 Chap28 |
-| 15 | 30 | 626 | 0 | 0 | none | none | r213 Chap30 |
-| 16 | 35 | 1224 | 0 | 0 | 58 pass | none | r213 Chap35 |
-| 17 | 36 | 867 | 0 | 0 | 24 pass | none | r213 Chap36 |
-| 18 | 37 | 1862 | 0 | 0 | 544 pass | 24 pass | r213 Chap37 |
-| 19 | 38 | 1078 | 0 | 0 | 53 pass | 2 pass | r213 Chap38 |
-| 20 | 39 | 1218 | 0 | 0 | 148 pass | 8 pass | r213 Chap39 |
-| 21 | 40 | 1180 | 0 | 0 | 54 pass | 6 pass | r213 Chap40 |
-| 22 | 41 | 2188 | 0 | 0 | 250 pass | 10 pass | r213 Chap41 |
-| 23 | 42 | 2312 | 0 | 0 | 66 pass | 10 pass | r213 Chap42 |
-| 24 | 43 | 2686 | 0 | 0 | 279 pass | 14 pass | r213 Chap43 |
-| 25 | 44 | 2336 | 0 | 0 | 45 pass | none | r213 Chap44 |
-| 26 | 45 | 2034 | 0 | 0 | 210 pass | none | r213 Chap45 |
-| 27 | 47 | 1161 | 0 | 0 | 102 pass | none | r213 Chap47 |
-| 28 | 49 | 1283 | 0 | 0 | 136 pass | none | r213 Chap49 |
-| 29 | 50 | 766 | 0 | 0 | 167 pass | none | r213 Chap50 |
-| 30 | 51 | 1333 | 0 | 0 | 109 pass | none | r213 Chap51 |
-| 31 | 52 | 2943 | 0 | 0 | 148 pass | none | r213 Chap52 |
-| 32 | 53 | 2246 | 0 | 0 | 46 pass | none | r213 Chap53 |
-| 33 | 54 | 1277 | 0 | 0 | 53 pass | 8 pass | r213 Chap54 |
-| 34 | 55 | 2290 | 0 | 0 | 58 pass | none | r213 Chap55 |
-| 35 | 56 | 948 | 0 | 0 | 54 pass | none | r213 Chap56 |
-| 36 | 57 | 2583 | 0 | 0 | 48 pass | none | r213 Chap57 |
-| 37 | 58 | 1370 | 0 | 0 | 41 pass | none | r213 Chap58 |
-| 38 | 59 | 2632 | 0 | 0 | 41 pass | none | r213 Chap59 |
-| 39 | 61 | 1243 | 0 | 0 | 40 pass | none | r213 Chap61 |
-| 40 | 62 | 1256 | 0 | 0 | 39 pass | none | r213 Chap62 |
-| 41 | 63 | 1271 | 0 | 0 | 40 pass | none | r213 Chap63 |
-| 42 | 64 | 1271 | 0 | 0 | 24 pass | none | r213 Chap64 |
-| 43 | 65 | 2522 | 4 | 0 | 0 run (gated) | none | r213 Chap65 (not clean) |
-| 44 | 66 | 805 | 0 | 0 | 40 pass | none | r213 Chap66 |
+| 12 | 26 | 1098 | 0 | 0 | 59 pass | none | 3d9aac18c |
+| 13 | 27 | 846 | 0 | 0 | 48 pass | none | 5369c431f |
+| 14 | 28 | 883 | 0 | 0 | 68 pass | none | ba9524671 |
+| 15 | 30 | 626 | 0 | 0 | none | none | a452bde90 |
+| 16 | 35 | 1224 | 0 | 0 | 58 pass | none | 9a73d13bb |
+| 17 | 36 | 867 | 0 | 0 | 24 pass | none | c54289512 |
+| 18 | 37 | 1862 | 0 | 0 | 544 pass | 24 pass | 5c0513151 |
+| 19 | 38 | 1078 | 0 | 0 | 53 pass | 2 pass | e1bc1eb32 |
+| 20 | 39 | 1218 | 0 | 0 | 148 pass | 8 pass | ccd391de0 |
+| 21 | 40 | 1180 | 0 | 0 | 54 pass | 6 pass | 9473aa308 |
+| 22 | 41 | 2188 | 0 | 0 | 250 pass | 10 pass | 469798319 |
+| 23 | 42 | 2312 | 0 | 0 | 66 pass | 10 pass | 6a0ee50c9 |
+| 24 | 43 | 2686 | 0 | 0 | 279 pass | 14 pass | f7931d2de |
+| 25 | 44 | 2336 | 0 | 0 | 45 pass | none | ff3727eeb |
+| 26 | 45 | 2034 | 0 | 0 | 210 pass | none | 9cc03f02d |
+| 27 | 47 | 1161 | 0 | 0 | 102 pass | none | 7521218a2 |
+| 28 | 49 | 1283 | 0 | 0 | 136 pass | none | 52b78e66c |
+| 29 | 50 | 766 | 0 | 0 | 167 pass | none | f55ba47bb |
+| 30 | 51 | 1333 | 0 | 0 | 109 pass | none | 3d5951b8c |
+| 31 | 52 | 2943 | 0 | 0 | 148 pass | none | 3c0a192b0 |
+| 32 | 53 | 2246 | 0 | 0 | 46 pass | none | 09fcbc85c |
+| 33 | 54 | 1277 | 0 | 0 | 53 pass | 8 pass | 4f592130b |
+| 34 | 55 | 2290 | 0 | 0 | 58 pass | none | 41e46fbdb |
+| 35 | 56 | 948 | 0 | 0 | 54 pass | none | 8b23fbabd |
+| 36 | 57 | 2583 | 0 | 0 | 48 pass | none | d169e1d95 |
+| 37 | 58 | 1370 | 0 | 0 | 41 pass | none | 936939b04 |
+| 38 | 59 | 2632 | 0 | 0 | 41 pass | none | 4fd1c3ac8 |
+| 39 | 61 | 1243 | 0 | 0 | 40 pass | none | a77dee8f1 |
+| 40 | 62 | 1256 | 0 | 0 | 39 pass | none | b9b94c621 |
+| 41 | 63 | 1271 | 0 | 0 | 40 pass | none | 09dea009a |
+| 42 | 64 | 1271 | 0 | 0 | 24 pass | none | dee93dcbe |
+| 43 | 65 | 2522 | 4 | 0 | 0 run (gated) | none | 7e36a17c2 (not clean) |
+| 44 | 66 | 805 | 0 | 0 | 40 pass | none | 4aeec3055 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -796,3 +796,22 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   (`logs/validate.20260922-065209.log`). No edit.
 - RTT: 2 targets, 40 tests pass (`logs/rtt.20260922-065219.log`).
 - PTT: none registered.
+
+## End of round
+
+- Rlimits raised in r213: one, `TableMtEph::union` (`src/Chap42/TableMtEph.rs`),
+  default to `rlimit(60)` after a profile with no matching loop (61K
+  instantiations; 40 passed `isolate Chap42` but not `isolate Chap44`). The
+  r212 `rlimit(20)` on Chap37 `insert_at_link` is unchanged. A trial
+  `rlimit(30)`/`rlimit(60)` on Chap65 `UnionFindArray::union` did not help and
+  was taken out.
+- Functions left failing: four, all in Chap65, all rlimit (see the Chap65
+  section): `UnionFindArray::union`, `UnionFind::union_sets` (NoPC; matching
+  loop in the `spec_uf_wf` domain-closure conjunct), `lemma_build_final_wf`
+  and `UnionFindPC::union` (PC).
+- Later-chapter fixes in earlier chapters (each verified again by the next
+  dependent isolate): Chap18 `LinkedListStPer::scan` (with Chap41), Chap19
+  `ArraySeqStEph::length`/`nth` (with Chap58), Chap42 `TableMtEph::union`
+  rlimit (with Chap44), Chap38 bypassed-lemma callers in Chap41.
+- PTTs still on the old iterator model: Chap05 (16 tests) and Chap17 (7);
+  Chap06's are not registered.
