@@ -209,7 +209,7 @@ fn test_large_set_operations() {
 #[test]
 fn test_into_iter_collects_all_elements() {
     let set = ArraySetStEphLit![5, 3, 7, 1, 9];
-    let collected: Vec<i32> = (&set).into_iter().cloned().collect();
+    let collected: Vec<i32> = set.iter().cloned().collect();
     let mut sorted = collected.clone();
     sorted.sort();
     assert_eq!(sorted, vec![1, 3, 5, 7, 9]);
@@ -218,7 +218,7 @@ fn test_into_iter_collects_all_elements() {
 #[test]
 fn test_into_iter_empty() {
     let set: ArraySetStEph<i32> = ArraySetStEph::empty();
-    let collected: Vec<i32> = (&set).into_iter().cloned().collect();
+    let collected: Vec<i32> = set.iter().cloned().collect();
     assert!(collected.is_empty());
 }
 
@@ -226,7 +226,7 @@ fn test_into_iter_empty() {
 fn test_into_iter_for_loop() {
     let set = ArraySetStEphLit![10, 20, 30];
     let mut sum = 0i32;
-    for v in &set {
+    for v in set.iter() {
         sum += v;
     }
     assert_eq!(sum, 60);

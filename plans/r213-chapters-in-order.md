@@ -82,8 +82,11 @@ live tree and their warnings removed; the rest are migrated.
 6. One Verus or cargo process at a time; read every log in full; never rerun
    a validate whose log you have not read.
 7. No subagents. Temporary files under `scratch/`.
-8. After every fourth chapter, run the regression set (`isolate` on every
-   chapter already committed clean) and fix any regression before going on.
+8. No separate regression pass. `isolate ChapNN` re-verifies the chapter's
+   transitive dependencies, so a regression in an earlier chapter appears in
+   the next dependent chapter's run; fix it there. Running the committed
+   chapters together only stacks the costliest ones and risks memory
+   exhaustion (withdrawn by the user, 2026-09-22).
 
 ## Deliverable
 

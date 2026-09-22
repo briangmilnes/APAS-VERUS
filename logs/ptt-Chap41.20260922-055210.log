@@ -1,0 +1,62 @@
+r212 PTT for Chap41 (isolate: Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02); tests: ProveArraySetStEph ProveAVLTreeSetMtPer ProveAVLTreeSetMtEph ProveAVLTreeSetStEph ProveAVLTreeSetStPer ProveOrdKeyMap
+Starting PTT at 05:52:10
+compile rc: 0
+warning: unused import: `common::*`
+  --> tests/Chap41/ProveAVLTreeSetStPer.rs:13:5
+   |
+13 | use common::*;
+   |     ^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+warning: `rust_verify_test` (test "ProveAVLTreeSetStPer") generated 1 warning (run `cargo fix --test "ProveAVLTreeSetStPer" -p rust_verify_test` to apply 1 suggestion)
+    Finished `release` profile [optimized] target(s) in 0.64s
+     Running tests/Chap41/ProveAVLTreeSetMtEph.rs (target/release/build/rust_verify_test/f908534e0d417d87/out/ProveAVLTreeSetMtEph-f908534e0d417d87)
+
+running 2 tests
+test avltreesetmteph_for_borrow_iter ... ok
+test avltreesetmteph_loop_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.63s
+
+     Running tests/Chap41/ProveAVLTreeSetMtPer.rs (target/release/build/rust_verify_test/372c6588fe3feaea/out/ProveAVLTreeSetMtPer-372c6588fe3feaea)
+
+running 2 tests
+test avltreesetmtper_loop_borrow_into ... ok
+test avltreesetmtper_for_borrow_into ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.63s
+
+     Running tests/Chap41/ProveAVLTreeSetStEph.rs (target/release/build/rust_verify_test/2439dfa5c85f07ce/out/ProveAVLTreeSetStEph-2439dfa5c85f07ce)
+
+running 2 tests
+test avltreesetsteph_for_borrow_iter ... ok
+test avltreesetsteph_loop_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.70s
+
+     Running tests/Chap41/ProveAVLTreeSetStPer.rs (target/release/build/rust_verify_test/0b956220df98ed20/out/ProveAVLTreeSetStPer-0b956220df98ed20)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap41/ProveArraySetStEph.rs (target/release/build/rust_verify_test/addd2240c9cb2cbd/out/ProveArraySetStEph-addd2240c9cb2cbd)
+
+running 2 tests
+test arraysetseph_loop_borrow_iter ... ok
+test arraysetseph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.65s
+
+     Running tests/Chap41/ProveOrdKeyMap.rs (target/release/build/rust_verify_test/099d3fc69073e425/out/ProveOrdKeyMap-099d3fc69073e425)
+
+running 2 tests
+test ordkeymap_loop_borrow_iter ... ok
+test ordkeymap_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.76s
+
+cargo test rc: 0
+Elapsed: 14s

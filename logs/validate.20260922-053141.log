@@ -1,0 +1,657 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error[E0308]: mismatched types
+  --> src/Chap41/OrdKeyMap.rs:87:13
+   |
+86 |         Map::new(
+   |         -------- arguments to this function are incorrect
+87 |             |k: KV| exists|v: VV| s.contains((k, v)),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Set<KV>`, found `FnSpec<(KV,), bool>`
+   |
+   = note: expected struct `vstd::set::Set<KV>`
+              found struct `vstd::prelude::FnSpec<(KV,), bool>`
+note: associated function defined here
+  --> map.rs:67:25
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:157:20
+    |
+157 |         requires s.finite()
+    |                    ^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:158:47
+    |
+158 |         ensures spec_pair_set_to_map(s).dom().finite()
+    |                                               ^^^^^^
+
+error[E0599]: no method named `lemma_map_finite` found for struct `vstd::set::Set<A>` in the current scope
+   --> src/Chap41/OrdKeyMap.rs:170:11
+    |
+170 |         s.lemma_map_finite(proj);
+    |           ^^^^^^^^^^^^^^^^
+    |
+help: there is a method `lemma_map_contains` with a similar name, but with different arguments
+   --> set_lib.rs:32:4
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:176:20
+    |
+176 |         requires s.finite(), spec_key_unique_pairs_set(s)
+    |                    ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:283:18
+    |
+283 |             tree.finite(),
+    |                  ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:617:21
+    |
+617 |             old_set.finite(),
+    |                     ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:682:18
+    |
+682 |             tree.finite(),
+    |                  ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:722:61
+    |
+722 |             ensures count == self@.dom().len(), self@.dom().finite();
+    |                                                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:749:29
+    |
+749 |                 self@.dom().finite(),
+    |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:760:29
+    |
+760 |                 self@.dom().finite(),
+    |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:772:32
+    |
+772 |                 parts.0@.dom().finite(),
+    |                                ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:773:32
+    |
+773 |                 parts.2@.dom().finite(),
+    |                                ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:858:29
+    |
+858 |                 self@.dom().finite(),
+    |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:873:29
+    |
+873 |                 self@.dom().finite(),
+    |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:887:29
+    |
+887 |                 self@.dom().finite(),
+    |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:900:29
+    |
+900 |                 self@.dom().finite(),
+    |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:912:29
+    |
+912 |                 self@.dom().finite(),
+    |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:922:29
+    |
+922 |                 self@.dom().finite(),
+    |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:931:30
+    |
+931 |                 range@.dom().finite(),
+    |                              ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:941:34
+    |
+941 |                 old(self)@.dom().finite(),
+    |                                  ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:942:32
+    |
+942 |                 split.0@.dom().finite(),
+    |                                ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:943:32
+    |
+943 |                 split.1@.dom().finite(),
+    |                                ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:956:29
+    |
+956 |                 self@.dom().finite();
+    |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:974:33
+    |
+974 |                 filtered@.dom().finite(),
+    |                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:985:31
+    |
+985 |                 mapped@.dom().finite(),
+    |                               ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/OrdKeyMap.rs:993:33
+    |
+993 |             ensures self@.dom().finite();
+    |                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:1020:30
+     |
+1020 |                 table@.dom().finite();
+     |                              ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:1029:35
+     |
+1029 |                 restricted@.dom().finite();
+     |                                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:1038:34
+     |
+1038 |                 remaining@.dom().finite();
+     |                                  ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:1168:22
+     |
+1168 |             parts.0@.finite(),
+     |                      ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:1169:22
+     |
+1169 |             parts.2@.finite(),
+     |                      ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:1324:47
+     |
+1324 |             spec_pair_set_to_map(tree@).dom().finite(),
+     |                                               ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:1579:47
+     |
+1579 |             spec_pair_set_to_map(tree@).dom().finite(),
+     |                                               ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:1839:47
+     |
+1839 |             spec_pair_set_to_map(tree@).dom().finite(),
+     |                                               ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:2074:47
+     |
+2074 |             spec_pair_set_to_map(tree@).dom().finite(),
+     |                                               ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:2343:43
+     |
+2343 | ...                   assert(lu.finite()) by {
+     |                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:2396:61
+     |
+2396 |             ensures count == self@.dom().len(), self@.dom().finite()
+     |                                                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:4329:33
+     |
+4329 |             ensures self@.dom().finite()
+     |                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:4372:29
+     |
+4372 |                     domain@.finite(),
+     |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:4508:37
+     |
+4508 |                     assert(old_tree.finite());
+     |                                     ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:4606:27
+     |
+4606 |                     keys@.finite(),
+     |                           ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap41/OrdKeyMap.rs:4720:27
+     |
+4720 |                     keys@.finite(),
+     |                           ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:231:49
+    |
+231 |             ensures count == self@.len(), self@.finite();
+    |                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:239:23
+    |
+239 |                 self@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:271:23
+    |
+271 |                 self@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:290:23
+    |
+290 |                 self@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:291:24
+    |
+291 |                 other@.finite(),
+    |                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:303:23
+    |
+303 |                 self@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:304:24
+    |
+304 |                 other@.finite(),
+    |                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:316:23
+    |
+316 |                 self@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:317:24
+    |
+317 |                 other@.finite(),
+    |                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:326:28
+    |
+326 |             requires self@.finite(),
+    |                            ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:335:28
+    |
+335 |                 old(self)@.finite(),
+    |                            ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:346:28
+    |
+346 |                 old(self)@.finite(),
+    |                            ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:358:22
+    |
+358 |             && self@.finite()
+    |                      ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:379:22
+    |
+379 |             && self@.finite()
+    |                      ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:448:34
+    |
+448 |                     constructed@.finite(),
+    |                                  ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:638:28
+    |
+638 |                     other@.finite(),
+    |                            ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:720:28
+    |
+720 |                     other@.finite(),
+    |                            ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetStEph.rs:835:27
+    |
+835 |                     self@.finite(),
+    |                           ^^^^^^
+
+error[E0308]: mismatched types
+  --> src/Chap41/ArraySetEnumMtEph.rs:89:13
+   |
+88 |           open spec fn view(&self) -> Set<usize> {
+   |                                       ---------- expected `vstd::set::Set<usize>` because of return type
+89 | /             Set::new(|i: usize|
+90 | |                 (i as int) < self.universe_size as int
+91 | |                 && u64_view(self.bits@[i as int / 64])[i as int % 64]
+92 | |             )
+   | |_____________^ expected `Set<usize>`, found `Option<Set<usize>>`
+   |
+   = note: expected struct `vstd::set::Set<_>`
+                found enum `std::option::Option<vstd::set::Set<_>>`
+help: consider using `Option::expect` to unwrap the `std::option::Option<vstd::set::Set<usize>>` value, panicking if the value is an `Option::None`
+   |
+92 |             ).expect("REASON")
+   |              +++++++++++++++++
+
+error[E0599]: no method named `finite` found for enum `std::option::Option<T>` in the current scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:150:60
+    |
+150 |         ensures Set::new(|i: usize| (i as int) < n as int).finite()
+    |                                                            ^^^^^^
+    |
+note: the method `finite` exists on the type `vstd::set::Set<usize>`
+   --> set.rs:228:4
+help: consider using `Option::expect` to unwrap the `vstd::set::Set<usize>` value, panicking if the value is an `Option::None`
+    |
+150 |         ensures Set::new(|i: usize| (i as int) < n as int).expect("REASON").finite()
+    |                                                           +++++++++++++++++
+help: there is a method `into` with a similar name
+    |
+150 -         ensures Set::new(|i: usize| (i as int) < n as int).finite()
+150 +         ensures Set::new(|i: usize| (i as int) < n as int).into()
+    |
+
+error[E0308]: mismatched types
+   --> src/Chap41/ArraySetEnumMtEph.rs:155:63
+    |
+155 |             assert(Set::new(|i: usize| (i as int) < 0int) =~= Set::<usize>::empty());
+    |                    -------------------------------------------^^^^^^^^^^^^^^^^^^^^^
+    |                    |                                          |
+    |                    |                                          expected `Option<Set<usize>>`, found `Set<usize>`
+    |                    arguments to this function are incorrect
+    |
+    = note: expected enum `std::option::Option<vstd::set::Set<_>>`
+             found struct `vstd::set::Set<_>`
+note: function defined here
+   --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:267:7
+help: try wrapping the expression in `Some`
+    |
+155 |             assert(Set::new(|i: usize| (i as int) < 0int) =~= Some(Set::<usize>::empty()));
+    |                                                               +++++                     +
+
+error[E0308]: mismatched types
+   --> src/Chap41/ArraySetEnumMtEph.rs:161:46
+    |
+161 |             assert(bigger =~= smaller.insert((n - 1) as usize));
+    |                                       ------ ^^^^^^^^^^^^^^^^ expected `Set<usize>`, found `usize`
+    |                                       |
+    |                                       arguments to this method are incorrect
+    |
+    = note: expected struct `vstd::set::Set<usize>`
+                 found type `usize`
+help: the return type of this call is `usize` due to the type of the argument passed
+   --> src/Chap41/ArraySetEnumMtEph.rs:161:31
+    |
+161 |             assert(bigger =~= smaller.insert((n - 1) as usize));
+    |                               ^^^^^^^^^^^^^^^----------------^
+    |                                              |
+    |                                              this argument influences the return type of `insert`
+note: method defined here
+   --> /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library/core/src/option.rs:1718:17
+
+error[E0308]: mismatched types
+   --> src/Chap41/ArraySetEnumMtEph.rs:161:31
+    |
+161 |             assert(bigger =~= smaller.insert((n - 1) as usize));
+    |                    -----------^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |                    |          |
+    |                    |          expected `Option<Set<usize>>`, found `&mut Set<usize>`
+    |                    arguments to this function are incorrect
+    |
+    = note:           expected enum `std::option::Option<vstd::set::Set<_>>`
+            found mutable reference `&mut vstd::set::Set<_>`
+note: function defined here
+   --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:267:7
+
+error[E0599]: no method named `finite` found for enum `std::option::Option<T>` in the current scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:170:11
+    |
+167 |           ensures Set::new(|i: usize|
+    |  _________________-
+168 | |             (i as int) < universe_size as int
+169 | |             && u64_view(bits[i as int / 64])[i as int % 64]
+170 | |         ).finite(),
+    | |__________-^^^^^^
+    |
+note: the method `finite` exists on the type `vstd::set::Set<usize>`
+   --> set.rs:228:4
+help: consider using `Option::expect` to unwrap the `vstd::set::Set<usize>` value, panicking if the value is an `Option::None`
+    |
+170 |         ).expect("REASON").finite(),
+    |          +++++++++++++++++
+help: there is a method `into` with a similar name
+    |
+170 -         ).finite(),
+170 +         ).into(),
+    |
+
+error[E0599]: no method named `subset_of` found for enum `std::option::Option<T>` in the current scope
+   --> src/Chap41/ArraySetEnumMtEph.rs:178:24
+    |
+178 |         assert(our_set.subset_of(range_set));
+    |                        ^^^^^^^^^ method not found in `std::option::Option<vstd::set::Set<usize>>`
+    |
+note: the method `subset_of` exists on the type `vstd::set::Set<usize>`
+   --> set.rs:159:4
+help: consider using `Option::expect` to unwrap the `vstd::set::Set<usize>` value, panicking if the value is an `Option::None`
+    |
+178 |         assert(our_set.expect("REASON").subset_of(range_set));
+    |                       +++++++++++++++++
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetEnumMtEph.rs:203:49
+    |
+203 |             ensures count == self@.len(), self@.finite();
+    |                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetEnumMtEph.rs:211:23
+    |
+211 |                 self@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetEnumMtEph.rs:379:49
+    |
+379 |             ensures count == self@.len(), self@.finite(),
+    |                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetEnumMtEph.rs:389:33
+    |
+389 |                     partial_set.finite(),
+    |                                 ^^^^^^
+
+error[E0308]: mismatched types
+   --> src/Chap41/ArraySetEnumMtEph.rs:392:37
+    |
+392 |                     partial_set =~= Set::new(|j: usize| (j as int) < i as int && self@.contains(j)),
+    |                     ----------------^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |                     |               |
+    |                     |               expected `Set<usize>`, found `Option<Set<usize>>`
+    |                     arguments to this function are incorrect
+    |
+    = note: expected struct `vstd::set::Set<_>`
+                 found enum `std::option::Option<vstd::set::Set<_>>`
+note: function defined here
+   --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:267:7
+help: consider using `Option::expect` to unwrap the `std::option::Option<vstd::set::Set<usize>>` value, panicking if the value is an `Option::None`
+    |
+392 |                     partial_set =~= Set::new(|j: usize| (j as int) < i as int && self@.contains(j)).expect("REASON"),
+    |                                                                                                    +++++++++++++++++
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/ArraySetEnumMtEph.rs:435:31
+    |
+435 |                     collected.finite(),
+    |                               ^^^^^^
+
+error[E0308]: mismatched types
+   --> src/Chap41/ArraySetEnumMtEph.rs:437:35
+    |
+437 |                        collected =~= Set::new(|j: usize|
+    |   _____________________-             ^
+    |  |___________________________________|
+438 | ||                         (j as int) < i as int && self@.contains(j)),
+    | ||                                                                   ^
+    | ||___________________________________________________________________|
+    |  |___________________________________________________________________expected `Set<usize>`, found `Option<Set<usize>>`
+    |                                                                      arguments to this function are incorrect
+    |
+    = note: expected struct `vstd::set::Set<_>`
+                 found enum `std::option::Option<vstd::set::Set<_>>`
+note: function defined here
+   --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:267:7
+help: consider using `Option::expect` to unwrap the `std::option::Option<vstd::set::Set<usize>>` value, panicking if the value is an `Option::None`
+    |
+438 |                         (j as int) < i as int && self@.contains(j)).expect("REASON"),
+    |                                                                    +++++++++++++++++
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+  --> src/Chap41/AVLTreeSetMtEph.rs:96:49
+   |
+96 |             ensures count == self@.len(), self@.finite();
+   |                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/AVLTreeSetMtEph.rs:106:23
+    |
+106 |                 self@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/AVLTreeSetMtEph.rs:255:19
+    |
+255 |             tree@.finite(),
+    |                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/AVLTreeSetMtEph.rs:327:28
+    |
+327 |                 ensures t@.finite(), t@ =~= left_vals@.map_values(|t: T| t@).to_set()
+    |                            ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/AVLTreeSetMtEph.rs:332:28
+    |
+332 |                 ensures t@.finite(), t@ =~= right_vals@.map_values(|t: T| t@).to_set()
+    |                            ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/AVLTreeSetMtEph.rs:362:24
+    |
+362 |             self.tree@.finite()
+    |                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+  --> src/Chap41/AVLTreeSetMtPer.rs:99:49
+   |
+99 |             ensures count == self@.len(), self@.finite();
+   |                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/AVLTreeSetMtPer.rs:109:23
+    |
+109 |                 self@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/AVLTreeSetMtPer.rs:231:24
+    |
+231 |             self.tree@.finite()
+    |                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/AVLTreeSetMtPer.rs:269:19
+    |
+269 |             tree@.finite(),
+    |                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/AVLTreeSetMtPer.rs:341:28
+    |
+341 |                 ensures t@.finite(), t@ =~= left_vals@.map_values(|t: T| t@).to_set()
+    |                            ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/AVLTreeSetMtPer.rs:346:28
+    |
+346 |                 ensures t@.finite(), t@ =~= right_vals@.map_values(|t: T| t@).to_set()
+    |                            ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap41/AVLTreeSetMtPer.rs:373:24
+    |
+373 |             self.tree@.finite()
+    |                        ^^^^^^
+
+error: aborting due to 11 previous errors; 77 warnings emitted
+
+Some errors have detailed explanations: E0308, E0599.
+For more information about an error, try `rustc --explain E0308`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 337MB, peak z3 RSS: 0MB, min free: 25632MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

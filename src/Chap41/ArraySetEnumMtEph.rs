@@ -86,9 +86,8 @@ broadcast use {
     impl View for ArraySetEnumMtEph {
         type V = Set<usize>;
         open spec fn view(&self) -> Set<usize> {
-            Set::new(|i: usize|
-                (i as int) < self.universe_size as int
-                && u64_view(self.bits@[i as int / 64])[i as int % 64]
+            Set::<usize>::range(0, self.universe_size).filter(|i: usize|
+                u64_view(self.bits@[i as int / 64])[i as int % 64]
             )
         }
     }
@@ -145,40 +144,44 @@ broadcast use {
             get_bit64!(bv_new, i) == (get_bit64!(bv1, i) && !get_bit64!(bv2, i)),
     {}
 
-    /// A set of usize values bounded by n is finite.
-    proof fn lemma_bounded_usize_set_finite(n: usize)
-        ensures Set::new(|i: usize| (i as int) < n as int).finite()
-        decreases n
-    {
-        if n == 0 {
-            // Veracity: NEEDED assert
-            assert(Set::new(|i: usize| (i as int) < 0int) =~= Set::<usize>::empty());
-        } else {
-            lemma_bounded_usize_set_finite((n - 1) as usize);
-            let smaller = Set::new(|i: usize| (i as int) < (n - 1) as int);
-            let bigger = Set::new(|i: usize| (i as int) < n as int);
-            // Veracity: NEEDED assert
-            assert(bigger =~= smaller.insert((n - 1) as usize));
-        }
-    }
-
-    proof fn lemma_view_finite(bits: Seq<u64>, universe_size: usize)
-        requires bits.len() == num_words(universe_size as int),
-        ensures Set::new(|i: usize|
-            (i as int) < universe_size as int
-            && u64_view(bits[i as int / 64])[i as int % 64]
-        ).finite(),
-    {
-        let our_set = Set::new(|i: usize|
-            (i as int) < universe_size as int
-            && u64_view(bits[i as int / 64])[i as int % 64]
-        );
-        let range_set = Set::new(|i: usize| (i as int) < universe_size as int);
-        // Veracity: NEEDED assert
-        assert(our_set.subset_of(range_set));
-        lemma_bounded_usize_set_finite(universe_size);
-        // range_set is finite, our_set is a subset — lemma_set_subset_finite fires.
-    }
+    // BYPASSED (r213): both lemmas proved only finiteness of a `Set::new`
+    // comprehension. At verus 0.2026.09.13 every `Set` is finite and the view
+    // is `Set::<usize>::range(0, universe_size).filter(..)`, a `Set` by
+    // construction; their calls are removed.
+    // /// A set of usize values bounded by n is finite.
+    // proof fn lemma_bounded_usize_set_finite(n: usize)
+    //     ensures Set::new(|i: usize| (i as int) < n as int).finite()
+    //     decreases n
+    // {
+    //     if n == 0 {
+    //         // Veracity: NEEDED assert
+    //         assert(Set::new(|i: usize| (i as int) < 0int) =~= Set::<usize>::empty());
+    //     } else {
+    //         lemma_bounded_usize_set_finite((n - 1) as usize);
+    //         let smaller = Set::new(|i: usize| (i as int) < (n - 1) as int);
+    //         let bigger = Set::new(|i: usize| (i as int) < n as int);
+    //         // Veracity: NEEDED assert
+    //         assert(bigger =~= smaller.insert((n - 1) as usize));
+    //     }
+    // }
+    //
+    // proof fn lemma_view_finite(bits: Seq<u64>, universe_size: usize)
+    //     requires bits.len() == num_words(universe_size as int),
+    //     ensures Set::new(|i: usize|
+    //         (i as int) < universe_size as int
+    //         && u64_view(bits[i as int / 64])[i as int % 64]
+    //     ).finite(),
+    // {
+    //     let our_set = Set::new(|i: usize|
+    //         (i as int) < universe_size as int
+    //         && u64_view(bits[i as int / 64])[i as int % 64]
+    //     );
+    //     let range_set = Set::new(|i: usize| (i as int) < universe_size as int);
+    //     // Veracity: NEEDED assert
+    //     assert(our_set.subset_of(range_set));
+    //     lemma_bounded_usize_set_finite(universe_size);
+    //     // range_set is finite, our_set is a subset — lemma_set_subset_finite fires.
+    // }
 
     //		Section 8. traits
 
@@ -200,7 +203,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — ACCEPTED DIFFERENCE: PRAM gap; sequential bit scan; APAS CS 41.3 Span O(1) assumes PRAM, not fork-join
         fn size(&self) -> (count: usize)
             requires self.spec_arraysetenummteph_wf(),
-            ensures count == self@.len(), self@.finite();
+            ensures count == self@.len();
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(|a|), Span O(lg |a|)
@@ -208,7 +211,6 @@ broadcast use {
         fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)
             requires self.spec_arraysetenummteph_wf(),
             ensures
-                self@.finite(),
                 seq@.to_set() =~= self@,
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
 
@@ -376,20 +378,17 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
-            ensures count == self@.len(), self@.finite(),
+            ensures count == self@.len(),
         {
-            // Veracity: NEEDED proof block
-            proof { lemma_view_finite(self.bits@, self.universe_size); }
             let mut count: usize = 0;
             let ghost mut partial_set: Set<usize> = Set::empty();
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             for i in 0..self.universe_size
                 invariant
-                    partial_set.finite(),
                     count as int == partial_set.len(),
                     count <= i,
-                    partial_set =~= Set::new(|j: usize| (j as int) < i as int && self@.contains(j)),
+                    partial_set =~= self@.filter(|j: usize| (j as int) < i as int),
                     self.spec_arraysetenummteph_wf(),
             {
                 let word_idx = i / 64;
@@ -405,11 +404,6 @@ broadcast use {
                     proof {
                     }
                 }
-                // Veracity: NEEDED proof block
-                proof {
-                    let range_set = Set::new(|j: usize| (j as int) < (i + 1) as int);
-                    lemma_bounded_usize_set_finite((i + 1) as usize);
-                }
             }
             // Veracity: NEEDED proof block
             proof {
@@ -422,8 +416,6 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)
         {
-            // Veracity: NEEDED proof block
-            proof { lemma_view_finite(self.bits@, self.universe_size); }
             let mut result_vec: Vec<usize> = Vec::new();
             let ghost mut collected: Set<usize> = Set::empty();
 
@@ -432,10 +424,8 @@ broadcast use {
                 invariant
                     self.spec_arraysetenummteph_wf(),
                     result_vec@.len() <= i,
-                    collected.finite(),
                     // Ghost set matches the partial view.
-                    collected =~= Set::new(|j: usize|
-                        (j as int) < i as int && self@.contains(j)),
+                    collected =~= self@.filter(|j: usize| (j as int) < i as int),
                     // All collected elements are in self@ and below i.
                     forall|k: int| #![trigger result_vec@[k]]
                         0 <= k < result_vec@.len() ==> (
@@ -491,15 +481,6 @@ broadcast use {
                                 assert(result_vec@[k] == x);
                             }
                         }
-                        // Ghost set update.
-                        let range_set = Set::new(|j: usize| (j as int) < (i + 1) as int);
-                        lemma_bounded_usize_set_finite((i + 1) as usize);
-                    }
-                } else {
-                    // Veracity: NEEDED proof block
-                    proof {
-                        let range_set = Set::new(|j: usize| (j as int) < (i + 1) as int);
-                        lemma_bounded_usize_set_finite((i + 1) as usize);
                     }
                 }
             }
@@ -560,7 +541,6 @@ broadcast use {
                 s.insert(x);
                 // Veracity: NEEDED proof block
                 proof {
-                    lemma_view_finite(s.bits@, u);
                 }
             }
             s
@@ -603,7 +583,6 @@ broadcast use {
             }
             let constructed = ArraySetEnumMtEph { bits, universe_size: u };
             // Veracity: NEEDED proof block
-            proof { lemma_view_finite(constructed.bits@, u); }
             constructed
         }
 
@@ -701,7 +680,6 @@ broadcast use {
                         let b = elem as int % 64;
                     }
                 }
-                lemma_view_finite(filtered.bits@, self.universe_size);
             }
             filtered
         }
@@ -750,7 +728,6 @@ broadcast use {
                         let j = elem as int % 64;
                     }
                 }
-                lemma_view_finite(common.bits@, self.universe_size);
             }
             common
         }
@@ -799,7 +776,6 @@ broadcast use {
                         let j = elem as int % 64;
                     }
                 }
-                lemma_view_finite(remaining.bits@, self.universe_size);
             }
             remaining
         }
@@ -848,7 +824,6 @@ broadcast use {
                         let j = elem as int % 64;
                     }
                 }
-                lemma_view_finite(combined.bits@, self.universe_size);
             }
             combined
         }
@@ -905,13 +880,11 @@ broadcast use {
                             }
                         }
                     }
-                    lemma_view_finite(self.bits@, self.universe_size);
                 }
             } else {
                 // x not in set (x >= universe_size), so remove(x) is identity.
                 // Veracity: NEEDED proof block
                 proof {
-                    lemma_view_finite(self.bits@, self.universe_size);
                 }
             }
         }
@@ -949,12 +922,10 @@ broadcast use {
                             }
                         }
                     }
-                    lemma_view_finite(self.bits@, self.universe_size);
                 }
             } else {
                 // Veracity: NEEDED proof block
                 proof {
-                    lemma_view_finite(self.bits@, self.universe_size);
                 }
             }
         }

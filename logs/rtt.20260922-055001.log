@@ -1,0 +1,212 @@
+r212 RTT for Chap41: cargo test --release on 8 targets: TestOrdKeyMap TestArraySetEnumMtEph TestArraySetStEph TestAVLTreeSetMtEph TestAVLTreeSetMtPer TestAVLTreeSetStEph TestAVLTreeSetStPer TestExample41_3
+Starting RTT at 05:50:01
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+error[E0599]: the method `into_iter` exists for reference `&apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<{integer}>`, but its trait bounds were not satisfied
+   --> tests/Chap41/TestArraySetStEph.rs:212:38
+    |
+212 |     let collected: Vec<i32> = (&set).into_iter().cloned().collect();
+    |                                      ^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/ArraySetStEph.rs:74:5
+    |
+ 74 |     pub struct ArraySetStEph<T: StT + Ord> {
+    |     -------------------------------------- doesn't satisfy `_: IntoIterator` or `_: Iterator`
+    |
+    = note: the following trait bounds were not satisfied:
+            `&apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<{integer}>: Iterator`
+            which is required by `&apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<{integer}>: IntoIterator`
+            `&&apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<{integer}>: Iterator`
+            which is required by `&&apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<{integer}>: IntoIterator`
+            `&mut &apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<{integer}>: Iterator`
+            which is required by `&mut &apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<{integer}>: IntoIterator`
+            `apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<{integer}>: Iterator`
+            which is required by `apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<{integer}>: IntoIterator`
+            `&mut apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<{integer}>: Iterator`
+            which is required by `&mut apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<{integer}>: IntoIterator`
+
+error[E0599]: the method `into_iter` exists for reference `&apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<i32>`, but its trait bounds were not satisfied
+   --> tests/Chap41/TestArraySetStEph.rs:221:38
+    |
+221 |     let collected: Vec<i32> = (&set).into_iter().cloned().collect();
+    |                                      ^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/ArraySetStEph.rs:74:5
+    |
+ 74 |     pub struct ArraySetStEph<T: StT + Ord> {
+    |     -------------------------------------- doesn't satisfy `_: IntoIterator` or `_: Iterator`
+    |
+    = note: the following trait bounds were not satisfied:
+            `&apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<i32>: Iterator`
+            which is required by `&apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<i32>: IntoIterator`
+            `&&apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<i32>: Iterator`
+            which is required by `&&apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<i32>: IntoIterator`
+            `&mut &apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<i32>: Iterator`
+            which is required by `&mut &apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<i32>: IntoIterator`
+            `apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<i32>: Iterator`
+            which is required by `apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<i32>: IntoIterator`
+            `&mut apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<i32>: Iterator`
+            which is required by `&mut apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<i32>: IntoIterator`
+
+error[E0277]: `&apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<{integer}>` is not an iterator
+   --> tests/Chap41/TestArraySetStEph.rs:229:14
+    |
+229 |     for v in &set {
+    |              ^^^^ `&apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<{integer}>` is not an iterator
+    |
+    = help: the trait `Iterator` is not implemented for `&apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<{integer}>`
+    = note: required for `&apas_verus::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEph<{integer}>` to implement `IntoIterator`
+
+Some errors have detailed explanations: E0277, E0599.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `apas-verus` (test "TestArraySetStEph") due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...
+error[E0599]: the method `into_iter` exists for reference `&apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>`, but its trait bounds were not satisfied
+   --> tests/Chap41/TestAVLTreeSetStPer.rs:207:38
+    |
+207 |     let collected: Vec<i32> = (&set).into_iter().collect();
+    |                                      ^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:71:5
+    |
+ 71 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- doesn't satisfy `_: IntoIterator` or `_: Iterator`
+    |
+    = note: the following trait bounds were not satisfied:
+            `&apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>: Iterator`
+            which is required by `&apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>: IntoIterator`
+            `&&apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>: Iterator`
+            which is required by `&&apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>: IntoIterator`
+            `&mut &apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>: Iterator`
+            which is required by `&mut &apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>: IntoIterator`
+            `apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>: Iterator`
+            which is required by `apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>: IntoIterator`
+            `&mut apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>: Iterator`
+            which is required by `&mut apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>: IntoIterator`
+
+error[E0599]: the method `into_iter` exists for reference `&apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<i32>`, but its trait bounds were not satisfied
+   --> tests/Chap41/TestAVLTreeSetStPer.rs:216:38
+    |
+216 |     let collected: Vec<i32> = (&set).into_iter().collect();
+    |                                      ^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:71:5
+    |
+ 71 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- doesn't satisfy `_: IntoIterator` or `_: Iterator`
+    |
+    = note: the following trait bounds were not satisfied:
+            `&apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<i32>: Iterator`
+            which is required by `&apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<i32>: IntoIterator`
+            `&&apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<i32>: Iterator`
+            which is required by `&&apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<i32>: IntoIterator`
+            `&mut &apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<i32>: Iterator`
+            which is required by `&mut &apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<i32>: IntoIterator`
+            `apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<i32>: Iterator`
+            which is required by `apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<i32>: IntoIterator`
+            `&mut apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<i32>: Iterator`
+            which is required by `&mut apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<i32>: IntoIterator`
+
+error[E0277]: `&apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>` is not an iterator
+   --> tests/Chap41/TestAVLTreeSetStPer.rs:224:14
+    |
+224 |     for v in &set {
+    |              ^^^^ `&apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>` is not an iterator
+    |
+    = help: the trait `Iterator` is not implemented for `&apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>`
+    = note: required for `&apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<{integer}>` to implement `IntoIterator`
+
+error[E0599]: the method `into_iter` exists for reference `&apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<{integer}>`, but its trait bounds were not satisfied
+   --> tests/Chap41/TestAVLTreeSetStEph.rs:498:38
+    |
+498 |     let collected: Vec<i32> = (&set).into_iter().collect();
+    |                                      ^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:71:5
+    |
+ 71 |     pub struct AVLTreeSetStEph<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- doesn't satisfy `_: IntoIterator` or `_: Iterator`
+    |
+    = note: the following trait bounds were not satisfied:
+            `&apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<{integer}>: Iterator`
+            which is required by `&apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<{integer}>: IntoIterator`
+            `&&apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<{integer}>: Iterator`
+            which is required by `&&apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<{integer}>: IntoIterator`
+            `&mut &apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<{integer}>: Iterator`
+            which is required by `&mut &apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<{integer}>: IntoIterator`
+            `apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<{integer}>: Iterator`
+            which is required by `apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<{integer}>: IntoIterator`
+            `&mut apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<{integer}>: Iterator`
+            which is required by `&mut apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<{integer}>: IntoIterator`
+
+error: could not compile `apas-verus` (test "TestAVLTreeSetStPer") due to 3 previous errors
+error[E0599]: the method `into_iter` exists for reference `&apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<i32>`, but its trait bounds were not satisfied
+   --> tests/Chap41/TestAVLTreeSetStEph.rs:507:38
+    |
+507 |     let collected: Vec<i32> = (&set).into_iter().collect();
+    |                                      ^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:71:5
+    |
+ 71 |     pub struct AVLTreeSetStEph<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- doesn't satisfy `_: IntoIterator` or `_: Iterator`
+    |
+    = note: the following trait bounds were not satisfied:
+            `&apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<i32>: Iterator`
+            which is required by `&apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<i32>: IntoIterator`
+            `&&apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<i32>: Iterator`
+            which is required by `&&apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<i32>: IntoIterator`
+            `&mut &apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<i32>: Iterator`
+            which is required by `&mut &apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<i32>: IntoIterator`
+            `apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<i32>: Iterator`
+            which is required by `apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<i32>: IntoIterator`
+            `&mut apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<i32>: Iterator`
+            which is required by `&mut apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<i32>: IntoIterator`
+
+error[E0277]: `&apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<{integer}>` is not an iterator
+   --> tests/Chap41/TestAVLTreeSetStEph.rs:515:14
+    |
+515 |     for v in &set {
+    |              ^^^^ `&apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<{integer}>` is not an iterator
+    |
+    = help: the trait `Iterator` is not implemented for `&apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<{integer}>`
+    = note: required for `&apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<{integer}>` to implement `IntoIterator`
+
+error: could not compile `apas-verus` (test "TestAVLTreeSetStEph") due to 3 previous errors
+cargo test rc: 101
+Elapsed: 7s

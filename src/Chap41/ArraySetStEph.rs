@@ -228,7 +228,7 @@ pub mod ArraySetStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — ACCEPTED DIFFERENCE: stored count, not array scan
         fn size(&self) -> (count: usize)
             requires self.spec_arraysetsteph_wf()
-            ensures count == self@.len(), self@.finite();
+            ensures count == self@.len();
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(|a|), Span O(lg |a|)
@@ -236,7 +236,6 @@ pub mod ArraySetStEph {
         fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)
             requires self.spec_arraysetsteph_wf(),
             ensures
-                self@.finite(),
                 seq@.no_duplicates(),
                 seq@.to_set() =~= self@;
 
@@ -268,7 +267,6 @@ pub mod ArraySetStEph {
         ) -> (filtered: Self)
             requires
                 self.spec_arraysetsteph_wf(),
-                self@.finite(),
                 forall|t: &T| #[trigger] f.requires((t,)),
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -287,8 +285,6 @@ pub mod ArraySetStEph {
             requires
                 self.spec_arraysetsteph_wf(),
                 other.spec_arraysetsteph_wf(),
-                self@.finite(),
-                other@.finite(),
             ensures
                 common@ == self@.intersect(other@),
                 common.spec_arraysetsteph_wf();
@@ -300,8 +296,6 @@ pub mod ArraySetStEph {
             requires
                 self.spec_arraysetsteph_wf(),
                 other.spec_arraysetsteph_wf(),
-                self@.finite(),
-                other@.finite(),
             ensures
                 remaining@ == self@.difference(other@),
                 remaining.spec_arraysetsteph_wf();
@@ -313,8 +307,6 @@ pub mod ArraySetStEph {
             requires
                 self.spec_arraysetsteph_wf(),
                 other.spec_arraysetsteph_wf(),
-                self@.finite(),
-                other@.finite(),
             ensures
                 combined@ == self@.union(other@),
                 combined.spec_arraysetsteph_wf();
@@ -323,7 +315,6 @@ pub mod ArraySetStEph {
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: linear scan, not indexed
         fn find(&self, x: &T) -> (found: bool)
-            requires self@.finite(),
             ensures found == self@.contains(x@);
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
@@ -332,7 +323,6 @@ pub mod ArraySetStEph {
         fn delete(&mut self, x: &T)
             requires
                 old(self).spec_arraysetsteph_wf(),
-                old(self)@.finite(),
             ensures
                 self@ == old(self)@.remove(x@),
                 self.spec_arraysetsteph_wf();
@@ -343,7 +333,6 @@ pub mod ArraySetStEph {
         fn insert(&mut self, x: T)
             requires
                 old(self).spec_arraysetsteph_wf(),
-                old(self)@.finite(),
             ensures
                 self@ == old(self)@.insert(x@),
                 self.spec_arraysetsteph_wf();
@@ -355,7 +344,6 @@ pub mod ArraySetStEph {
     impl<T: StT + Ord> ArraySetStEph<T> {
         pub open spec fn spec_arraysetsteph_wf(&self) -> bool {
             self.elements@.no_duplicates()
-            && self@.finite()
             && obeys_feq_full::<T>()
         }
 
@@ -376,7 +364,6 @@ pub mod ArraySetStEph {
     impl<T: StT + Ord> ArraySetStEphTrait<T> for ArraySetStEph<T> {
         open spec fn spec_arraysetsteph_wf(&self) -> bool {
             self.elements@.no_duplicates()
-            && self@.finite()
             && obeys_feq_full::<T>()
         }
 
@@ -445,7 +432,6 @@ pub mod ArraySetStEph {
             let mut i: usize = 0;
             while i < seq.length()
                 invariant
-                    constructed@.finite(),
                     constructed.spec_arraysetsteph_wf(),
                     i <= seq.spec_len(),
                     forall|j: int| 0 <= j < i ==> #[trigger] constructed@.contains(seq@[j]),
@@ -635,7 +621,6 @@ pub mod ArraySetStEph {
                     self.elements@ == old_view,
                     old_view.no_duplicates(),
                     other.spec_arraysetsteph_wf(),
-                    other@.finite(),
                     other@ == other_set,
                     obeys_feq_full::<T>(),
                     rv_views =~=
@@ -717,7 +702,6 @@ pub mod ArraySetStEph {
                     self.elements@ == old_view,
                     old_view.no_duplicates(),
                     other.spec_arraysetsteph_wf(),
-                    other@.finite(),
                     other@ == other_set,
                     obeys_feq_full::<T>(),
                     rv_views =~=
@@ -832,7 +816,6 @@ pub mod ArraySetStEph {
                     other_len as int == other.elements.spec_len(),
                     other.elements@ == other_view,
                     self.spec_arraysetsteph_wf(),
-                    self@.finite(),
                     self@ == self_set,
                     obeys_feq_full::<T>(),
                     rv_views =~= self_view +
@@ -1054,6 +1037,11 @@ pub mod ArraySetStEph {
 
     //		Section 10. iterators
 
+    // r212 form C: this `IntoIterator` impl required `requires self.spec_arraysetsteph_wf()`, which
+    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
+    // can establish; use `iter()`, which keeps the requires
+    // (src/experiments/intoiter_form_c_no_impl.rs).
+    /*
     impl<'a, T: StT + Ord> std::iter::IntoIterator for &'a ArraySetStEph<T> {
         type Item = &'a T;
         type IntoIter = std::slice::Iter<'a, T>;
@@ -1067,6 +1055,7 @@ pub mod ArraySetStEph {
             self.iter()
         }
     }
+    */
 
     //		Section 12. derive impls in verus!
 

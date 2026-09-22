@@ -708,11 +708,14 @@ pub mod LinkedListStPer {
                 }
                 acc = f(&acc, &a.seq[i]);
                 proof {
-                    let ghost t = s.take(i as int + 1);
-                    // Veracity: NEEDED assert
-                    // Veracity: NEEDED proof block
-                    assert(t.drop_last() =~= s.take(i as int));
-                    reveal(Seq::fold_left);
+                    // r213: the one-step unfolding moved into
+                    // lemma_take_fold_left_step, as r212 did in LinkedListStEph,
+                    // ArraySeqStEph and ArraySeqStPer; inline, it exceeded the
+                    // rlimit under isolate Chap41.
+                    // BYPASSED (r213): let ghost t = s.take(i as int + 1);
+                    // BYPASSED (r213): assert(t.drop_last() =~= s.take(i as int));
+                    // BYPASSED (r213): reveal(Seq::fold_left);
+                    lemma_take_fold_left_step(s, i as int, id, spec_f);
                 }
                 let cloned = acc.clone();
                 proof {
@@ -735,6 +738,17 @@ pub mod LinkedListStPer {
         }
     }
 
+
+    /// One step of a prefix fold: folding the first `i + 1` elements is `f`
+    /// applied to the fold of the first `i` and element `i`.
+    proof fn lemma_take_fold_left_step<T>(s: Seq<T>, i: int, id: T, f: spec_fn(T, T) -> T)
+        requires 0 <= i < s.len(),
+        ensures s.take(i + 1).fold_left(id, f) == f(s.take(i).fold_left(id, f), s[i]),
+    {
+        let t = s.take(i + 1);
+        assert(t.drop_last() =~= s.take(i));
+        reveal(Seq::fold_left);
+    }
 
     impl<T> LinkedListStPerS<T> {
         broadcast proof fn lemma_spec_index(&self, i: int)

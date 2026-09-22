@@ -1,0 +1,168 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap41/OrdKeyMap.rs:239:13
+    |
+239 |               #[trigger] spec_pair_set_to_map(s).dom().contains(k) <==> exists|v: VV| s.contains((k, v)),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+242 | /         if exists|v: VV| s.contains((k, v)) {
+243 | |             let v = choose|v: VV| s.contains((k, v));
+244 | |             assert(s.contains((k, v)));
+245 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap41/OrdKeyMap.rs:239:71
+    |
+239 |             #[trigger] spec_pair_set_to_map(s).dom().contains(k) <==> exists|v: VV| s.contains((k, v)),
+    |                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_pair_set_to_map(old(s)).dom().to_iset().contains(old(k)) == (exists |v| old(s).to_iset().contains((old(k), v)))
+|   spec_pair_set_to_map(old(s)).dom().to_iset().contains(old(k)) ==>
+|       (exists |v| old(s).to_iset().contains((old(k), v))) ✘
+|   (exists |v| old(s).to_iset().contains((old(k), v))) ==>
+|       spec_pair_set_to_map(old(s)).dom().to_iset().contains(old(k)) ✔
++---
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:3168:29
+     |
+3168 |                     implies spec_pair_set_to_map(new_tree@).dom().contains(kv)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:3174:28
+     |
+3174 |                     assert(spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[jx].0));
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_pair_set_to_map(new_tree.view()).dom().to_iset().contains(self_sorted.view().index(jx).0) 
+    function is uninterpreted
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap41/OrdKeyMap.rs:3172:51
+     |
+3172 |                     let jx: int = choose|jx: int| 0 <= jx < self_sorted@.len() as int && self_sorted@[jx] == (kv, vv);
+     |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+    --> src/Chap41/OrdKeyMap.rs:3174:75
+     |
+3174 |                     assert(spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[jx].0));
+     |                                                                           ^^^^^^^^^^^^^^^^
+     |
+    --> seq.rs:972:12
+     |
+     = note: recommendation not met
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:4240:32
+     |
+4240 |                         assert(self.inner@.contains(sorted@[j]));
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+self.inner.view().to_iset().contains(sorted.view().index(j)) 
+    function is uninterpreted
+
+error: postcondition not satisfied
+   --> src/Chap41/OrdKeyMap.rs:504:13
+    |
+490 |       proof fn lemma_set_to_map_union_root<KV, VV>(
+    |  ___________-
+491 | |         left: Set<(KV, VV)>, right: Set<(KV, VV)>, root_k: KV, root_v: VV,
+492 | |     )
+    | |_____- at the end of the function body
+...
+504 | /             ({
+505 | |                 let combined = left.union(right).insert((root_k, root_v));
+506 | |                 let combined_map = spec_pair_set_to_map(combined);
+507 | |                 let left_map = spec_pair_set_to_map(left);
+...   |
+514 | |                 &&& combined_map.contains_key(root_k) && combined_map[root_k] == root_v
+515 | |             })
+    | |______________^ failed this postcondition
+
+note: 
+
+let combined = old(left).union(old(right)).insert((old(root_k), old(root_v)));
+    let combined_map = spec_pair_set_to_map(combined);
+        let left_map = spec_pair_set_to_map(old(left));
+            let right_map = spec_pair_set_to_map(old(right));
+                combined_map.dom() =~= left_map.dom().union(right_map.dom()).insert(old(root_k)) ✔
+                forall |k|
+                    left_map.dom().to_iset().contains(k) ==>
+                        combined_map.index(k) == left_map.index(k) ✔
+                forall |k|
+                    right_map.dom().to_iset().contains(k) ==>
+                        combined_map.index(k) == right_map.index(k) ✔
+                combined_map.dom().to_iset().contains(old(root_k)) ✔
+                combined_map.index(old(root_k)) == old(root_v) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap18/LinkedListStPer.rs:688:13
+    |
+688 |             while i < len
+    |             ^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap41/OrdKeyMap.rs:302:13
+    |
+302 |             forall|v: (KV, VV)| tree.contains(v) <==> sorted.contains(v),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap41/OrdKeyMap.rs:302:55
+    |
+302 |             forall|v: (KV, VV)| tree.contains(v) <==> sorted.contains(v),
+    |                                                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap41/OrdKeyMap.rs:702:13
+    |
+702 |             forall|v: (K::V, V::V)| tree.contains(v) <==> sorted.contains(v),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap41/OrdKeyMap.rs:702:59
+    |
+702 |             forall|v: (K::V, V::V)| tree.contains(v) <==> sorted.contains(v),
+    |                                                           ^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap41/OrdKeyMap.rs:702:13
+    |
+702 |             forall|v: (K::V, V::V)| tree.contains(v) <==> sorted.contains(v),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2182 verified, 5 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 160s
+Sampled Memory Usage: peak rust_verify RSS: 2019MB, peak z3 RSS: 1528MB, min free: 23094MB
+Sampled CPU Usage: rust_verify: 27s, z3 children: 28s

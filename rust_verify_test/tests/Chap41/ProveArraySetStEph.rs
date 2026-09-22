@@ -63,6 +63,9 @@ test_verify_one_file! {
 }
 
 // loop-borrow-into: Manual iteration via (&a).into_iter()
+// r213 form C: the `IntoIterator for &ArraySetStEph` impl is commented out
+// (src/experiments/intoiter_form_c_no_impl.rs), so this test is too.
+/*
 test_verify_one_file! {
     #[test] arraysetseph_loop_borrow_into verus_code! {
         use vstd::prelude::*;
@@ -109,6 +112,7 @@ test_verify_one_file! {
         }
     } => Ok(())
 }
+*/
 
 // for-borrow-iter: `for x in iter: a.iter()`
 test_verify_one_file! {
@@ -138,6 +142,9 @@ test_verify_one_file! {
 }
 
 // for-borrow-into: `for x in iter: (&a).into_iter()`
+// r213 form C: the `IntoIterator for &ArraySetStEph` impl is commented out
+// (src/experiments/intoiter_form_c_no_impl.rs), so this test is too.
+/*
 test_verify_one_file! {
     #[test] arraysetseph_for_borrow_into verus_code! {
         use vstd::prelude::*;
@@ -163,3 +170,4 @@ test_verify_one_file! {
         }
     } => Ok(())
 }
+*/

@@ -1,0 +1,340 @@
+r212 RTT for Chap41: cargo test --release on 8 targets: TestOrdKeyMap TestArraySetEnumMtEph TestArraySetStEph TestAVLTreeSetMtEph TestAVLTreeSetMtPer TestAVLTreeSetStEph TestAVLTreeSetStPer TestExample41_3
+Starting RTT at 05:52:08
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.55s
+     Running tests/Chap41/TestAVLTreeSetMtEph.rs (target/release/deps/TestAVLTreeSetMtEph-55bb47715be2dfa6)
+
+running 40 tests
+test test_avltreesetmtephlit_macro_functionality ... ok
+test test_clone ... ok
+test test_debug_trait ... ok
+test test_delete_nonexistent ... ok
+test test_delete ... ok
+test test_delete_all_elements ... ok
+test test_difference_empty_sets ... ok
+test test_empty ... ok
+test test_equality_via_elements ... ok
+test test_filter_all_match ... ok
+test test_filter_empty ... ok
+test test_filter_none_match ... ok
+test test_difference_disjoint_sets ... ok
+test test_from_seq_empty ... ok
+test test_filter_small ... ok
+test test_difference_identical_sets ... ok
+test test_insert_duplicate ... ok
+test test_from_seq_singleton ... ok
+test test_intersection_empty_sets ... ok
+test test_intersection_disjoint_sets ... ok
+test test_to_seq_empty ... ok
+test test_to_seq_singleton ... ok
+test test_union_empty_sets ... ok
+test test_to_seq ... ok
+test test_union_disjoint_sets ... ok
+test test_union_small ... ok
+test test_insert_find ... ok
+test test_difference ... ok
+test test_union_identical_sets ... ok
+test test_singleton ... ok
+test test_intersection_small ... ok
+test test_string_set ... ok
+test test_intersection_identical_sets ... ok
+test test_from_seq ... ok
+test test_mixed_operations_comprehensive ... ok
+test test_from_seq_all_duplicates ... ok
+test test_intersection_large_parallel ... ok
+test test_filter_large_parallel ... ok
+test test_large_set_operations ... ok
+test test_union_large_parallel ... ok
+
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+
+     Running tests/Chap41/TestAVLTreeSetMtPer.rs (target/release/deps/TestAVLTreeSetMtPer-0b78aae5b4aa1ba8)
+
+running 37 tests
+test test_avltreesetmtperlit_macro_type_safety ... ok
+test test_clone ... ok
+test test_delete_multiple ... ok
+test test_default_trait ... ok
+test test_empty_set ... ok
+test test_filter_empty_result ... ok
+test test_debug_trait ... ok
+test test_filter_operation ... ok
+test test_delete_operation ... ok
+test test_delete ... ok
+test test_duplicate_insert ... ok
+test test_filter_parallel_path ... ok
+test test_display_trait ... ok
+test test_find_missing ... ok
+test test_difference_empty ... ok
+test test_difference_operation ... ok
+test test_insert_multiple ... ok
+test test_insert ... ok
+test test_into_iter_collects_all_elements ... ok
+test test_into_iter_empty ... ok
+test test_intersection_empty ... ok
+test test_ord_trait ... ok
+test test_into_iter_singleton ... ok
+test test_negative_numbers ... ok
+test test_partial_ord_trait ... ok
+test test_persistence_delete ... ok
+test test_union_operation ... ok
+test test_singleton_operation ... ok
+test test_singleton_set ... ok
+test test_into_iter_for_loop ... ok
+test test_intersection_operation ... ok
+test test_to_seq ... ok
+test test_intersection_parallel_path ... ok
+test test_union_self ... ok
+test test_from_seq_operation ... ok
+test test_from_seq_parallel_sort ... ok
+test test_large_set ... ok
+
+test result: ok. 37 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap41/TestAVLTreeSetStEph.rs (target/release/deps/TestAVLTreeSetStEph-41b2dd6e66fe50cf)
+
+running 42 tests
+test test_avl_tree_set_basic_operations ... ok
+test test_avl_tree_set_bulk_operations ... ok
+test test_avl_tree_set_filter ... ok
+test test_avl_tree_set_from_seq ... ok
+test test_avl_tree_set_macro ... ok
+test test_avl_tree_set_to_seq ... ok
+test test_avl_tree_set_ordering ... ok
+test test_avltreesetstephlit_macro_functionality ... ok
+test test_clone_set ... ok
+test test_clone_impl ... ok
+test test_debug_impl ... ok
+test test_debug_trait ... ok
+test test_default_impl ... ok
+test test_delete_nonexistent ... ok
+test test_delete_all_elements ... ok
+test test_difference_disjoint_sets ... ok
+test test_difference_empty_sets ... ok
+test test_difference_identical_sets ... ok
+test test_display_impl ... ok
+test test_equality ... ok
+test test_filter_all_match ... ok
+test test_filter_empty_set ... ok
+test test_example_41_1_avl_cases ... ok
+test test_filter_none_match ... ok
+test test_from_seq_all_duplicates ... ok
+test test_from_seq_empty ... ok
+test test_from_seq_singleton ... ok
+test test_insert_duplicate ... ok
+test test_intersection_disjoint_sets ... ok
+test test_intersection_empty_sets ... ok
+test test_intersection_identical_sets ... ok
+test test_into_iter_collects_all_elements ... ok
+test test_into_iter_empty ... ok
+test test_into_iter_for_loop ... ok
+test test_mixed_operations_comprehensive ... ok
+test test_string_set ... ok
+test test_to_seq_empty ... ok
+test test_to_seq_singleton ... ok
+test test_union_disjoint_sets ... ok
+test test_union_empty_sets ... ok
+test test_union_identical_sets ... ok
+test test_large_set_operations ... ok
+
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/Chap41/TestAVLTreeSetStPer.rs (target/release/deps/TestAVLTreeSetStPer-0848980bd22bdd8c)
+
+running 14 tests
+test test_avl_tree_set_per_basic_operations ... ok
+test test_avl_tree_set_per_bulk_operations ... ok
+test test_avl_tree_set_per_filter ... ok
+test test_avl_tree_set_per_from_seq ... ok
+test test_avl_tree_set_per_macro ... ok
+test test_avl_tree_set_per_persistence ... ok
+test test_avl_tree_set_per_to_seq ... ok
+test test_avltreesetstperlit_macro_functionality ... ok
+test test_clone_impl ... ok
+test test_default_impl ... ok
+test test_display_impl ... ok
+test test_into_iter_collects_all_elements ... ok
+test test_into_iter_empty ... ok
+test test_into_iter_for_loop ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap41/TestArraySetEnumMtEph.rs (target/release/deps/TestArraySetEnumMtEph-834fa5939b691bc0)
+
+running 9 tests
+test test_array_set_enum_mt_basic_operations ... ok
+test test_array_set_enum_mt_bulk_operations ... ok
+test test_array_set_enum_mt_macro ... ok
+test test_array_set_enum_mt_filter ... ok
+test test_array_set_enum_mt_to_seq ... ok
+test test_array_set_enum_mt_from_seq ... ok
+test test_array_set_enum_mt_universe_bounds ... ok
+test test_arraysetenummtephlit_macro_type_safety ... ok
+test test_array_set_enum_mt_thread_safety ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap41/TestArraySetStEph.rs (target/release/deps/TestArraySetStEph-55010e3fcda5eec2)
+
+running 18 tests
+test test_array_set_basic_operations ... ok
+test test_array_set_bulk_operations ... ok
+test test_array_set_filter ... ok
+test test_array_set_to_seq ... ok
+test test_arraysetstephlit_macro_functionality ... ok
+test test_delete_all_elements ... ok
+test test_array_set_macro ... ok
+test test_array_set_from_seq ... ok
+test test_delete_nonexistent ... ok
+test test_difference_with_self ... ok
+test test_filter_all_match ... ok
+test test_filter_none_match ... ok
+test test_intersection_disjoint ... ok
+test test_into_iter_collects_all_elements ... ok
+test test_into_iter_empty ... ok
+test test_into_iter_for_loop ... ok
+test test_union_with_empty ... ok
+test test_large_set_operations ... ok
+
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap41/TestExample41_3.rs (target/release/deps/TestExample41_3-4fcd00e617dcf093)
+
+running 4 tests
+test test_additional_set_operations ... ok
+test test_example_41_1_array_set ... ok
+test test_example_41_3_from_seq_demonstration ... ok
+test test_example_41_1_avl_set ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap41/TestOrdKeyMap.rs (target/release/deps/TestOrdKeyMap-1779ed8bb187c245)
+
+running 86 tests
+test test_ordkeymap_clone_empty ... ok
+test test_ordkeymap_clone_equals_original ... ok
+test test_ordkeymap_clone_filter_map_values_independent ... ok
+test test_ordkeymap_clone_modify_clone_no_effect_on_original ... ok
+test test_ordkeymap_collect_after_filter ... ok
+test test_ordkeymap_collect_empty ... ok
+test test_ordkeymap_collect_roundtrip ... ok
+test test_ordkeymap_collect_singleton ... ok
+test test_ordkeymap_collect_sorted_order ... ok
+test test_ordkeymap_collect_values_correct ... ok
+test test_ordkeymap_delete ... ok
+test test_ordkeymap_delete_nonexistent ... ok
+test test_ordkeymap_filter_by_value ... ok
+test test_ordkeymap_filter_empty_map ... ok
+test test_ordkeymap_filter_keep_all ... ok
+test test_ordkeymap_filter_keep_none ... ok
+test test_ordkeymap_filter_keep_some ... ok
+test test_ordkeymap_first_key_empty ... ok
+test test_ordkeymap_first_key_is_minimum ... ok
+test test_ordkeymap_first_key_multiple ... ok
+test test_ordkeymap_first_key_singleton ... ok
+test test_ordkeymap_first_last_key_singleton_equal ... ok
+test test_ordkeymap_get_key_range_all_keys ... ok
+test test_ordkeymap_get_key_range_empty_map ... ok
+test test_ordkeymap_get_key_range_exact_boundaries ... ok
+test test_ordkeymap_get_key_range_no_keys_in_bounds ... ok
+test test_ordkeymap_get_key_range_subset ... ok
+test test_ordkeymap_get_key_range_values_preserved ... ok
+test test_ordkeymap_insert_find ... ok
+test test_ordkeymap_insert_overwrite ... ok
+test test_ordkeymap_intersect_with_disjoint ... ok
+test test_ordkeymap_intersect_with_empty ... ok
+test test_ordkeymap_intersect_with_left_wins ... ok
+test test_ordkeymap_intersect_with_overlap_sum ... ok
+test test_ordkeymap_last_key_empty ... ok
+test test_ordkeymap_last_key_is_maximum ... ok
+test test_ordkeymap_last_key_multiple ... ok
+test test_ordkeymap_last_key_singleton ... ok
+test test_ordkeymap_map_values_double ... ok
+test test_ordkeymap_map_values_empty ... ok
+test test_ordkeymap_map_values_key_dependent ... ok
+test test_ordkeymap_map_values_keys_unchanged ... ok
+test test_ordkeymap_new_empty ... ok
+test test_ordkeymap_next_key_after_all ... ok
+test test_ordkeymap_next_key_basic ... ok
+test test_ordkeymap_next_key_before_all ... ok
+test test_ordkeymap_next_key_between_keys ... ok
+test test_ordkeymap_next_key_empty ... ok
+test test_ordkeymap_next_key_last_element ... ok
+test test_ordkeymap_prev_key_after_all ... ok
+test test_ordkeymap_next_prev_walk ... ok
+test test_ordkeymap_prev_key_before_all ... ok
+test test_ordkeymap_prev_key_basic ... ok
+test test_ordkeymap_prev_key_between_keys ... ok
+test test_ordkeymap_prev_key_empty ... ok
+test test_ordkeymap_prev_key_first_element ... ok
+test test_ordkeymap_rank_key_basic ... ok
+test test_ordkeymap_rank_key_empty ... ok
+test test_ordkeymap_rank_key_missing ... ok
+test test_ordkeymap_rank_select_roundtrip ... ok
+test test_ordkeymap_reduce_after_map_values ... ok
+test test_ordkeymap_reduce_empty ... ok
+test test_ordkeymap_reduce_max ... ok
+test test_ordkeymap_reduce_singleton ... ok
+test test_ordkeymap_reduce_sum ... ok
+test test_ordkeymap_select_key_basic ... ok
+test test_ordkeymap_select_key_empty ... ok
+test test_ordkeymap_select_key_out_of_range ... ok
+test test_ordkeymap_split ... ok
+test test_ordkeymap_split_missing_key ... ok
+test test_ordkeymap_split_rank_key_at_middle ... ok
+test test_ordkeymap_split_rank_key_at_size ... ok
+test test_ordkeymap_split_rank_key_at_zero ... ok
+test test_ordkeymap_split_rank_key_disjoint_doms ... ok
+test test_ordkeymap_split_rank_key_ordering ... ok
+test test_ordkeymap_split_rank_key_singleton_left ... ok
+test test_ordkeymap_split_rank_key_sizes_sum ... ok
+test test_ordkeymap_union_with_empty_left ... ok
+test test_ordkeymap_union_with_disjoint ... ok
+test test_ordkeymap_union_with_overlap_left_wins ... ok
+test test_ordkeymap_union_with_empty_right ... ok
+test test_ordkeymap_union_with_overlap_sum ... ok
+test test_ordkeymap_union_with_overlap_right_wins ... ok
+test test_ordkeymap_stress_union_intersect ... ok
+test test_ordkeymap_stress_insert_delete_find ... ok
+test test_ordkeymap_stress_200_entries ... ok
+
+test result: ok. 86 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.33s
+
+cargo test rc: 0
+Elapsed: 2s

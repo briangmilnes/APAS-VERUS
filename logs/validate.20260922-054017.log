@@ -1,0 +1,18 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: found a cyclic self-reference in a definition, which may result in nontermination
+    --> src/Chap41/OrdKeyMap.rs:238:5
+     |
+  22 | / pub mod OrdKeyMap {
+...    |
+ 238 | |     pub broadcast proof fn lemma_pair_set_to_map_dom_contains<KV, VV>(s: Set<(KV, VV)>, k: KV)
+     | |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ may be part of cycle (node 1 of 2 in cycle): function definition, whose body may have dependencies
+...    |
+4789 | | } // pub mod OrdKeyMap
+     | |_- may be part of cycle (node 2 of 2 in cycle): module-level reveal
+
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 1224MB, peak z3 RSS: 0MB, min free: 25315MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s

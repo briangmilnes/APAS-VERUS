@@ -1,0 +1,46 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: precondition not satisfied
+    --> src/Chap41/OrdKeyMap.rs:1641:45
+     |
+1641 | ...                   K::cmp_spec_greater_implies_le(rk, root_pair.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:78:18
+     |
+  78 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/total_order.rs:78:36
+   |
+78 |         requires a.cmp_spec(&b) == Ordering::Greater
+   |                                    ^^^^^^^^^^^^^^^^^
+
+note: 
+
+rk.cmp_spec(tmp%) == Greater
+|   !(rk.cmp_spec(tmp%) is Less) ✔
+|   !(rk.cmp_spec(tmp%) is Equal) ✘
++---
+
+error: assertion failed
+   --> src/Chap41/OrdKeyMap.rs:565:16
+    |
+565 |         assert(forall|k: KV| rm.dom().contains(k) ==> #[trigger] cm[k] == rm[k]);
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+forall |k|
+    rm.dom().to_iset().contains(k) ==>
+        cm.index(k) == rm.index(k) 
+
+verification results:: 2186 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 2028MB, peak z3 RSS: 305MB, min free: 24193MB
+Sampled CPU Usage: rust_verify: 26s, z3 children: 25s

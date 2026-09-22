@@ -43,6 +43,7 @@ file, or listed at the end.
 | 19 | 38 | 1078 | 0 | 0 | 53 pass | 2 pass | r213 Chap38 |
 | 20 | 39 | 1218 | 0 | 0 | 148 pass | 8 pass | r213 Chap39 |
 | 21 | 40 | 1180 | 0 | 0 | 54 pass | 6 pass | r213 Chap40 |
+| 22 | 41 | 2188 | 0 | 0 | 250 pass | 10 pass | r213 Chap41 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -340,3 +341,48 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   (`logs/validate.20260922-053048.log`). No edit.
 - RTT: 3 targets, 54 tests pass (`logs/rtt.20260922-053058.log`).
 - PTT: 3 files, 6 tests pass (`logs/ptt-Chap40.20260922-053058.log`).
+
+### Chap41
+
+- Start: did not compile, 15 errors and 77 warnings (deprecated `finite()`)
+  (`logs/validate.20260922-053119.log`): `Set::new` now returns
+  `Option<Set>` (`ArraySetEnumMtEph` view, `OrdKeyMap::spec_pair_set_to_map`),
+  `Set::lemma_map_finite` is gone, and the old iterator model's `IntoIter@`
+  no longer exists.
+- Edit class 3, iterator migration: `iterator-upgrade --apply --into-iter c`
+  over all six files (100 sites). `IntoIterator for &Self` impls whose
+  `requires` cannot be checked are commented out (form C); loops use `.iter()`
+  with a ghost `pos`. PTT loop/for-borrow-into tests on those impls are
+  commented out with form-C notes (`ProveArraySetStEph.rs` by hand); the two
+  generated `ProveOrdKeyMap.rs` iter tests had element type `u64` and now use
+  `Pair<u64, u64>`. RTT callers `(&set).into_iter()` / `for v in &set` became
+  `set.iter()` in `TestArraySetStEph.rs`, `TestAVLTreeSetStEph.rs`,
+  `TestAVLTreeSetStPer.rs`.
+- Edit class 4, finite-by-type API: `ArraySetEnumMtEph` view is now
+  `Set::<usize>::range(0, universe_size).filter(...)`, and its loop
+  invariants filter `self@`. `OrdKeyMap::spec_pair_set_to_map` is
+  `Map::new(s.map(|p| p.0), |k| choose|v| s.contains((k, v)))`; a new
+  broadcast lemma `lemma_pair_set_to_map_dom_contains` states its domain,
+  used by fn-level `broadcast use` in three set-to-map lemmas and called in
+  `lemma_map_contains_pair_in_set`. Small membership asserts added in
+  `lemma_set_to_map_union_root`, `union_with`, `map_values` and the
+  `ordkeymap_prev` root branch; explicit `#[trigger]` on two `requires`
+  quantifiers.
+- Edit class 1 and 2, `finite()` removal (about 80 sites) across
+  `OrdKeyMap.rs`, `ArraySetStEph.rs`, `ArraySetEnumMtEph.rs` and the four
+  `AVLTreeSet*` files. `spec_avltreesetmteph_wf` and both
+  `spec_avltreesetmtper_wf` now read `true`; an empty `requires` on `find`
+  deleted. BYPASSED (commented, not deleted): `lemma_bounded_usize_set_finite`,
+  `lemma_view_finite` (`ArraySetEnumMtEph.rs`) and
+  `lemma_pair_set_to_map_dom_finite` (`OrdKeyMap.rs`), with their calls
+  removed; `lemma_pair_set_to_map_len` no longer requires `s.finite()`.
+- Dependency fix: `LinkedListStPer::scan` (Chap18) hit its rlimit under
+  `isolate Chap41`; its inline reveal is replaced by a call to a new free
+  proof fn `lemma_take_fold_left_step` (r212 pattern), old lines kept as
+  `// BYPASSED (r213):` comments. No rlimit raised.
+- Exec cost: only O(1) ghost-only lemma calls removed; no Alg Analysis line
+  changed, no exec statement changed.
+- End: 2188 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-054937.log`), after seven intermediate runs.
+- RTT: 8 targets, 250 tests pass (`logs/rtt.20260922-055208.log`).
+- PTT: 6 files, 10 tests pass (`logs/ptt-Chap41.20260922-055210.log`).

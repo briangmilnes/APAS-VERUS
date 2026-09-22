@@ -26,9 +26,10 @@ pub mod OrdKeyMap {
 
     use std::cmp::Ordering::{Equal, Greater, Less};
     use std::fmt::{Debug, Display, Formatter};
-    use std::vec::IntoIter;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::OrdSpec;
     #[cfg(verus_keep_ghost)]
@@ -83,7 +84,7 @@ pub mod OrdKeyMap {
     /// With key uniqueness, each key maps to a unique value via `choose`.
     pub open spec fn spec_pair_set_to_map<KV, VV>(s: Set<(KV, VV)>) -> Map<KV, VV> {
         Map::new(
-            |k: KV| exists|v: VV| s.contains((k, v)),
+            s.map(|p: (KV, VV)| p.0),
             |k: KV| choose|v: VV| s.contains((k, v)),
         )
     }
@@ -151,31 +152,34 @@ pub mod OrdKeyMap {
     {
     }
 
-    /// The domain of spec_pair_set_to_map is finite when the source set is finite.
-    pub proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
-        requires s.finite()
-        ensures spec_pair_set_to_map(s).dom().finite()
-    {
-        let dom_set = spec_pair_set_to_map(s).dom();
-        let proj = |p: (KV, VV)| -> KV { p.0 };
-        let proj_set = s.map(proj);
-        // dom_set ⊆ proj_set.
-        // Veracity: NEEDED assert
-        assert forall|k: KV| dom_set.contains(k)
-            implies #[trigger] proj_set.contains(k)
-        by {
-            let v: VV = choose|v: VV| s.contains((k, v));
-        };
-        s.lemma_map_finite(proj);
-        vstd::set_lib::lemma_len_subset(dom_set, proj_set);
-    }
+    // BYPASSED (r213): the lemma's only postcondition was
+    // `spec_pair_set_to_map(s).dom().finite()`, `true` for every `Set` at verus
+    // 0.2026.09.13 (and `vstd` no longer has `Set::lemma_map_finite`); its calls
+    // here and in Chap43 are removed.
+    // /// The domain of spec_pair_set_to_map is finite when the source set is finite.
+    // pub proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
+    //     requires s.finite()
+    //     ensures spec_pair_set_to_map(s).dom().finite()
+    // {
+    //     let dom_set = spec_pair_set_to_map(s).dom();
+    //     let proj = |p: (KV, VV)| -> KV { p.0 };
+    //     let proj_set = s.map(proj);
+    //     // dom_set ⊆ proj_set.
+    //     // Veracity: NEEDED assert
+    //     assert forall|k: KV| dom_set.contains(k)
+    //         implies #[trigger] proj_set.contains(k)
+    //     by {
+    //         let v: VV = choose|v: VV| s.contains((k, v));
+    //     };
+    //     s.lemma_map_finite(proj);
+    //     vstd::set_lib::lemma_len_subset(dom_set, proj_set);
+    // }
 
     /// The domain length equals the set length when keys are unique.
     proof fn lemma_pair_set_to_map_len<KV, VV>(s: Set<(KV, VV)>)
-        requires s.finite(), spec_key_unique_pairs_set(s)
+        requires spec_key_unique_pairs_set(s)
         ensures spec_pair_set_to_map(s).dom().len() == s.len()
     {
-        lemma_pair_set_to_map_dom_finite(s);
         let dom_set = spec_pair_set_to_map(s).dom();
         let proj = |p: (KV, VV)| -> KV { p.0 };
         let proj_set = s.map(proj);
@@ -226,12 +230,31 @@ pub mod OrdKeyMap {
         let v2 = choose|v2: VV| s.contains((k, v2));
     }
 
+    /// Domain membership of `spec_pair_set_to_map`: the domain is the image of
+    /// the pair set under the first projection, so a key is in it iff some
+    /// pair with that key is in the set. This is the statement the pre-09.13
+    /// `Map::new(|k| exists|v| s.contains((k, v)), ..)` gave by definition.
+    pub broadcast proof fn lemma_pair_set_to_map_dom_contains<KV, VV>(s: Set<(KV, VV)>, k: KV)
+        ensures
+            #[trigger] spec_pair_set_to_map(s).dom().contains(k) <==> exists|v: VV| s.contains((k, v)),
+    {
+        broadcast use vstd::set_lib::group_set_lib_default;
+        if spec_pair_set_to_map(s).dom().contains(k) {
+            let p = choose|p: (KV, VV)| #[trigger] s.contains(p) && k == p.0;
+            assert(s.contains((k, p.1)));
+        }
+        if exists|v: VV| s.contains((k, v)) {
+            let v = choose|v: VV| s.contains((k, v));
+            assert(s.contains((k, v)));
+        }
+    }
+
     /// If the map contains a key, a pair with that key exists in the set.
     proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
         requires spec_pair_set_to_map(s).contains_key(k)
         ensures exists|v: VV| s.contains((k, v))
     {
-        // Follows directly from the domain definition.
+        lemma_pair_set_to_map_dom_contains(s, k);
     }
 
     /// Key uniqueness is preserved by set insert when the key is fresh.
@@ -279,9 +302,8 @@ pub mod OrdKeyMap {
         sorted: Seq<(KV, VV)>,
     )
         requires
-            tree.finite(),
             spec_key_unique_pairs_set(tree),
-            forall|v: (KV, VV)| tree.contains(v) <==> sorted.contains(v),
+            forall|v: (KV, VV)| tree.contains(v) <==> #[trigger] sorted.contains(v),
             sorted.len() == tree.len(),
         ensures
             sorted.no_duplicates(),
@@ -393,6 +415,7 @@ pub mod OrdKeyMap {
             spec_pair_set_to_map(s.insert((k, v)))
                 =~= spec_pair_set_to_map(s).insert(k, v),
     {
+        broadcast use lemma_pair_set_to_map_dom_contains;
         let old_m = spec_pair_set_to_map(s);
         let new_s = s.insert((k, v));
         let new_m = spec_pair_set_to_map(new_s);
@@ -442,6 +465,7 @@ pub mod OrdKeyMap {
             spec_pair_set_to_map(s.remove((k, v)))
                 =~= spec_pair_set_to_map(s).remove(k),
     {
+        broadcast use lemma_pair_set_to_map_dom_contains;
         let old_m = spec_pair_set_to_map(s);
         let new_s = s.remove((k, v));
         let new_m = spec_pair_set_to_map(new_s);
@@ -494,6 +518,7 @@ pub mod OrdKeyMap {
                 &&& combined_map.contains_key(root_k) && combined_map[root_k] == root_v
             })
     {
+        broadcast use lemma_pair_set_to_map_dom_contains;
         let combined = left.union(right).insert((root_k, root_v));
         let cm = spec_pair_set_to_map(combined);
         let lm = spec_pair_set_to_map(left);
@@ -535,7 +560,21 @@ pub mod OrdKeyMap {
         };
         let cv: VV = choose|cv: VV| combined.contains((root_k, cv));
         // Left values.
+        assert(forall|k: KV| lm.dom().contains(k) ==> #[trigger] cm[k] == lm[k]);
         // Right values.
+        assert forall|k: KV| rm.dom().contains(k) implies #[trigger] cm[k] == rm[k] by {
+            assert(right.contains((k, rm[k])));
+            assert(cm.dom().contains(k));
+            let w = choose|w: VV| combined.contains((k, w));
+            assert(combined.contains((k, w)));
+            assert(cm[k] == w);
+            if left.contains((k, cm[k])) {
+                assert(false);
+            } else if (k, cm[k]) != (root_k, root_v) {
+                assert(right.contains((k, cm[k])));
+            }
+        }
+        assert(cm[root_k] == root_v);
     }
 
     /// The map over an empty set is the empty map.
@@ -613,7 +652,6 @@ pub mod OrdKeyMap {
     )
         requires
             spec_key_unique_pairs_set(old_set),
-            old_set.finite(),
             !spec_pair_set_to_map(old_set).dom().contains(pair@.0),
             spec_set_pair_view_generated::<K, V>(old_set),
         ensures
@@ -678,9 +716,8 @@ pub mod OrdKeyMap {
         sorted: Seq<(K::V, V::V)>,
     )
         requires
-            tree.finite(),
             spec_key_unique_pairs_set(tree),
-            forall|v: (K::V, V::V)| tree.contains(v) <==> sorted.contains(v),
+            forall|v: (K::V, V::V)| tree.contains(v) <==> #[trigger] sorted.contains(v),
             sorted.len() == tree.len(),
         ensures
             forall|ii: int, jj: int|
@@ -718,7 +755,7 @@ pub mod OrdKeyMap {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
             requires self.spec_ordkeymap_wf(),
-            ensures count == self@.dom().len(), self@.dom().finite();
+            ensures count == self@.dom().len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (is_empty: bool)
@@ -745,7 +782,6 @@ pub mod OrdKeyMap {
                 self@[k@] == v@,
                 self@.dom() =~= old(self)@.dom().insert(k@),
                 forall|key: K::V| key != k@ && #[trigger] old(self)@.contains_key(key) ==> self@[key] == old(self)@[key],
-                self@.dom().finite(),
                 self.spec_ordkeymap_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
@@ -756,7 +792,6 @@ pub mod OrdKeyMap {
                 obeys_feq_clone::<Pair<K, V>>(),
             ensures
                 self@ == old(self)@.remove(k@),
-                self@.dom().finite(),
                 self.spec_ordkeymap_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
@@ -768,8 +803,6 @@ pub mod OrdKeyMap {
                 parts.2.spec_ordkeymap_wf(),
                 parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
                 parts.1 matches None ==> !self@.contains_key(k@),
-                parts.0@.dom().finite(),
-                parts.2@.dom().finite(),
                 // Left has all keys < k in the pair-view sense.
                 forall|key: K::V| #[trigger] parts.0@.contains_key(key) ==> self@.contains_key(key) && parts.0@[key] == self@[key],
                 forall|key: K::V| #[trigger] parts.2@.contains_key(key) ==> self@.contains_key(key) && parts.2@[key] == self@[key],
@@ -854,7 +887,6 @@ pub mod OrdKeyMap {
             where K: TotalOrder
             requires self.spec_ordkeymap_wf()
             ensures
-                self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@]
@@ -869,7 +901,6 @@ pub mod OrdKeyMap {
             where K: TotalOrder
             requires self.spec_ordkeymap_wf()
             ensures
-                self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@]
@@ -883,7 +914,6 @@ pub mod OrdKeyMap {
                 self.spec_ordkeymap_wf(),
                 obeys_view_eq::<K>(),
             ensures
-                self@.dom().finite(),
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(
                     |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@
@@ -896,7 +926,6 @@ pub mod OrdKeyMap {
                 self.spec_ordkeymap_wf(),
                 obeys_view_eq::<K>(),
             ensures
-                self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,
                 selected matches Some(k) ==> self@.dom().contains(k@),
                 selected matches Some(v) ==> self@.dom().filter(
@@ -908,7 +937,6 @@ pub mod OrdKeyMap {
             where K: TotalOrder
             requires self.spec_ordkeymap_wf()
             ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
@@ -918,7 +946,6 @@ pub mod OrdKeyMap {
             where K: TotalOrder
             requires self.spec_ordkeymap_wf()
             ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
@@ -927,7 +954,6 @@ pub mod OrdKeyMap {
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             requires self.spec_ordkeymap_wf()
             ensures
-                range@.dom().finite(),
                 range@.dom().subset_of(self@.dom()),
                 forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],
                 range.spec_ordkeymap_wf();
@@ -937,9 +963,6 @@ pub mod OrdKeyMap {
             requires
                 old(self).spec_ordkeymap_wf(),
             ensures
-                old(self)@.dom().finite(),
-                split.0@.dom().finite(),
-                split.1@.dom().finite(),
                 split.0@.dom().subset_of(old(self)@.dom()),
                 split.1@.dom().subset_of(old(self)@.dom()),
                 split.0@.dom().disjoint(split.1@.dom()),
@@ -951,8 +974,7 @@ pub mod OrdKeyMap {
         fn collect(&self) -> (entries: Vec<Pair<K, V>>)
             requires self.spec_ordkeymap_wf(),
             ensures
-                entries@.len() == self@.dom().len(),
-                self@.dom().finite();
+                entries@.len() == self@.dom().len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         fn filter<F: Fn(&K, &V) -> bool>(
@@ -970,7 +992,6 @@ pub mod OrdKeyMap {
                 forall|k: K::V| #[trigger] filtered@.contains_key(k) ==> filtered@[k] == self@[k],
                 forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
                     ==> #[trigger] filtered@.dom().contains(k),
-                filtered@.dom().finite(),
                 filtered.spec_ordkeymap_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
@@ -981,15 +1002,13 @@ pub mod OrdKeyMap {
                 obeys_feq_clone::<Pair<K, V>>(),
             ensures
                 mapped@.dom() =~= self@.dom(),
-                mapped@.dom().finite(),
                 mapped.spec_ordkeymap_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn reduce<F: Fn(&V, &V) -> V>(&self, f: F, id: &V) -> (reduced: V)
             requires
                 self.spec_ordkeymap_wf(),
-                forall|v1: &V, v2: &V| #[trigger] f.requires((v1, v2)),
-            ensures self@.dom().finite();
+                forall|v1: &V, v2: &V| #[trigger] f.requires((v1, v2));
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn domain(&self) -> (keys: ArraySetStEph<K>)
@@ -1015,8 +1034,7 @@ pub mod OrdKeyMap {
                 forall|k: K::V| #[trigger] table@.contains_key(k) ==>
                     (exists|key_arg: K, result: V|
                         key_arg@ == k && f.ensures((&key_arg,), result)
-                        && table@[k] == result@),
-                table@.dom().finite();
+                        && table@[k] == result@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
@@ -1024,8 +1042,7 @@ pub mod OrdKeyMap {
             ensures
                 restricted.spec_ordkeymap_wf(),
                 restricted@.dom() =~= self@.dom().intersect(keys@),
-                forall|k: K::V| #[trigger] restricted@.contains_key(k) ==> restricted@[k] == self@[k],
-                restricted@.dom().finite();
+                forall|k: K::V| #[trigger] restricted@.contains_key(k) ==> restricted@[k] == self@[k];
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (remaining: Self)
@@ -1033,12 +1050,13 @@ pub mod OrdKeyMap {
             ensures
                 remaining.spec_ordkeymap_wf(),
                 remaining@.dom() =~= self@.dom().difference(keys@),
-                forall|k: K::V| #[trigger] remaining@.contains_key(k) ==> remaining@[k] == self@[k],
-                remaining@.dom().finite();
+                forall|k: K::V| #[trigger] remaining@.contains_key(k) ==> remaining@[k] == self@[k];
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn iter(&self) -> (it: OrdKeyMapIter<K, V>)
+        fn iter(&self) -> (it: std::vec::IntoIter<Pair<K, V>>)
             requires self.spec_ordkeymap_wf()
-            ensures it@.0 == 0, iter_invariant_ordkeymap(&it);
+            ensures
+                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
+                IteratorSpec::decrease(&it) is Some;
     }
 
     //		Section 9. impls
@@ -1162,8 +1180,6 @@ pub mod OrdKeyMap {
         ensures
             parts.1 matches Some(v) ==> spec_pair_set_to_map(tree@).contains_key(k@) && v@ == spec_pair_set_to_map(tree@)[k@],
             parts.1 matches None ==> !spec_pair_set_to_map(tree@).contains_key(k@),
-            parts.0@.finite(),
-            parts.2@.finite(),
             forall|p: Pair<K, V>| (#[trigger] parts.0@.contains(p@)) ==> p.0.cmp_spec(k) == Less,
             forall|p: Pair<K, V>| (#[trigger] parts.2@.contains(p@)) ==> p.0.cmp_spec(k) == Greater,
             parts.0@.subset_of(tree@),
@@ -1318,7 +1334,6 @@ pub mod OrdKeyMap {
             view_ord_consistent::<Pair<K, V>>(),
             vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
         ensures
-            spec_pair_set_to_map(tree@).dom().finite(),
             successor matches Some(nk) ==> spec_pair_set_to_map(tree@).dom().contains(nk@),
             successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
             successor matches Some(v) ==> forall|t: K| #![trigger t@]
@@ -1330,7 +1345,6 @@ pub mod OrdKeyMap {
         decreases tree@.len(),
     {
         // Veracity: NEEDED proof block
-        proof { lemma_pair_set_to_map_dom_finite(tree@); }
         match tree.expose() {
             Exposed::Leaf => None,
             Exposed::Node(left, root_pair, right) => {
@@ -1573,7 +1587,6 @@ pub mod OrdKeyMap {
             view_ord_consistent::<Pair<K, V>>(),
             vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
         ensures
-            spec_pair_set_to_map(tree@).dom().finite(),
             predecessor matches Some(pk) ==> spec_pair_set_to_map(tree@).dom().contains(pk@),
             predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
             predecessor matches Some(v) ==> forall|t: K| #![trigger t@]
@@ -1585,7 +1598,6 @@ pub mod OrdKeyMap {
         decreases tree@.len(),
     {
         // Veracity: NEEDED proof block
-        proof { lemma_pair_set_to_map_dom_finite(tree@); }
         match tree.expose() {
             Exposed::Leaf => None,
             Exposed::Node(left, root_pair, right) => {
@@ -1625,6 +1637,11 @@ pub mod OrdKeyMap {
                                             lemma_pair_in_set_map_contains(right@, t@, tv);
                                         } else if (t@, tv) == root_pair@ {
                                             let rp: Pair<K, V> = choose|rp: Pair<K, V>| #[trigger] right@.contains(rp@) && rp@ == (rk@, rv);
+                                            assert(rp.0@ != root_pair.0@) by {
+                                                if rp.0@ == root_pair.0@ {
+                                                    assert(tree@.contains(root_pair@));
+                                                }
+                                            };
                                             K::cmp_spec_greater_implies_le(rk, root_pair.0);
                                         } else {
                                             let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
@@ -1833,7 +1850,6 @@ pub mod OrdKeyMap {
             view_ord_consistent::<Pair<K, V>>(),
             vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
         ensures
-            spec_pair_set_to_map(tree@).dom().finite(),
             rank <= spec_pair_set_to_map(tree@).dom().len(),
             rank as int == spec_pair_set_to_map(tree@).dom().filter(
                 |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@
@@ -1842,7 +1858,6 @@ pub mod OrdKeyMap {
     {
         // Veracity: NEEDED proof block
         proof {
-            lemma_pair_set_to_map_dom_finite(tree@);
             lemma_pair_set_to_map_len(tree@);
             lemma_reveal_view_injective::<K>();
         }
@@ -1925,7 +1940,6 @@ pub mod OrdKeyMap {
                         proof {
                             let tree_dom = spec_pair_set_to_map(tree@).dom();
                             let left_dom = spec_pair_set_to_map(left@).dom();
-                            lemma_pair_set_to_map_dom_finite(left@);
                             lemma_pair_set_to_map_len(left@);
                             // Veracity: NEEDED assert
                             assert(tree_dom.filter(rank_pred) =~= left_dom) by {
@@ -1973,8 +1987,6 @@ pub mod OrdKeyMap {
                             let tree_dom = spec_pair_set_to_map(tree@).dom();
                             let left_dom = spec_pair_set_to_map(left@).dom();
                             let right_dom = spec_pair_set_to_map(right@).dom();
-                            lemma_pair_set_to_map_dom_finite(left@);
-                            lemma_pair_set_to_map_dom_finite(right@);
                             lemma_pair_set_to_map_len(left@);
                             lemma_pair_set_to_map_len(right@);
                             let root_key_set = Set::empty().insert(root_pair.0@);
@@ -2068,7 +2080,6 @@ pub mod OrdKeyMap {
             view_ord_consistent::<Pair<K, V>>(),
             vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
         ensures
-            spec_pair_set_to_map(tree@).dom().finite(),
             i >= spec_pair_set_to_map(tree@).dom().len() ==> selected matches None,
             selected matches Some(k) ==> spec_pair_set_to_map(tree@).dom().contains(k@),
             selected matches Some(v) ==> spec_pair_set_to_map(tree@).dom().filter(
@@ -2078,7 +2089,6 @@ pub mod OrdKeyMap {
     {
         // Veracity: NEEDED proof block
         proof {
-            lemma_pair_set_to_map_dom_finite(tree@);
             lemma_pair_set_to_map_len(tree@);
             lemma_reveal_view_injective::<K>();
         }
@@ -2095,7 +2105,6 @@ pub mod OrdKeyMap {
                     lemma_key_unique_subset(tree@, right@);
                     lemma_view_gen_subset::<K, V>(left@, tree@);
                     lemma_view_gen_subset::<K, V>(right@, tree@);
-                    lemma_pair_set_to_map_dom_finite(left@);
                     lemma_pair_set_to_map_len(left@);
                 }
                 let left_size = left.size();
@@ -2212,7 +2221,6 @@ pub mod OrdKeyMap {
                     let result = ordkeymap_select(&right, i - left_size - 1);
                     // Veracity: NEEDED proof block
                     proof {
-                        lemma_pair_set_to_map_dom_finite(right@);
                         lemma_pair_set_to_map_len(right@);
                         if result is Some {
                             let sel_key = result->Some_0;
@@ -2336,10 +2344,6 @@ pub mod OrdKeyMap {
                                     };
                                 };
                                 let lu = left_dom.union(root_key_set);
-                                // Veracity: NEEDED assert
-                                assert(lu.finite()) by {
-                                    vstd::set_lib::lemma_len_union(left_dom, root_key_set);
-                                };
                                 right_dom.lemma_len_filter(rank_pred_sel);
                                 vstd::set_lib::lemma_len_union(left_dom, root_key_set);
                                 // Veracity: NEEDED assert
@@ -2383,20 +2387,17 @@ pub mod OrdKeyMap {
                 assert(spec_key_unique_pairs_set::<K::V, V::V>(inner@));
                 // Veracity: NEEDED assert
                 assert(spec_set_pair_view_generated::<K, V>(inner@));
-                lemma_pair_set_to_map_dom_finite(inner@);
             }
             OrdKeyMap { inner }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
-            ensures count == self@.dom().len(), self@.dom().finite()
-        {
+            ensures count == self@.dom().len()        {
             let r = self.inner.size();
             // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_len(self.inner@);
-                lemma_pair_set_to_map_dom_finite(self.inner@);
             }
             r
         }
@@ -2408,7 +2409,6 @@ pub mod OrdKeyMap {
             let r = self.inner.is_empty();
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(self.inner@);
                 lemma_pair_set_to_map_len(self.inner@);
             }
             r
@@ -2462,7 +2462,6 @@ pub mod OrdKeyMap {
                     proof {
                         lemma_set_to_map_insert(mid_inner_view, k@, v@);
                         lemma_key_unique_insert(mid_inner_view, k@, v@);
-                        lemma_pair_set_to_map_dom_finite(self.inner@);
                         let ghost new_map = spec_pair_set_to_map(self.inner@);
                         // Veracity: NEEDED assert
                         assert(new_map =~= old_map.remove(k@).insert(k@, v@));
@@ -2518,7 +2517,6 @@ pub mod OrdKeyMap {
                     // Veracity: NEEDED proof block
                     proof {
                         lemma_set_to_map_insert(old_inner_view, k@, v@);
-                        lemma_pair_set_to_map_dom_finite(self.inner@);
                         lemma_key_unique_insert(old_inner_view, k@, v@);
                         lemma_pair_set_to_map_len(old_inner_view);
                         // Veracity: NEEDED assert
@@ -2549,7 +2547,6 @@ pub mod OrdKeyMap {
                     // Veracity: NEEDED proof block
                     proof {
                         lemma_set_to_map_remove_pair(old_inner_view, k@, v@);
-                        lemma_pair_set_to_map_dom_finite(self.inner@);
                         lemma_key_unique_remove(old_inner_view, (k@, v@));
                         // View generation: self.inner@ subset_of old_inner_view.
                         lemma_view_gen_subset::<K, V>(self.inner@, old_inner_view);
@@ -2560,7 +2557,6 @@ pub mod OrdKeyMap {
                     proof {
                         // Veracity: NEEDED assert
                         assert(self@ =~= old_map.remove(k@));
-                        lemma_pair_set_to_map_dom_finite(self.inner@);
                     }
                 },
             }
@@ -2574,8 +2570,6 @@ pub mod OrdKeyMap {
             let right = OrdKeyMap { inner: right_bst };
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(left_bst@);
-                lemma_pair_set_to_map_dom_finite(right_bst@);
                 // Map-level ensures from BST-level ensures.
                 // Left: every key in left map is in self map with same value.
                 // Veracity: NEEDED assert
@@ -2780,6 +2774,7 @@ pub mod OrdKeyMap {
                     let vv: V::V = choose|vv: V::V| self_tree.contains((kv, vv));
                     // Veracity: NEEDED assert
                     assert(self_sorted@.contains((kv, vv)));
+                    assert(self_sorted@.contains((kv, vv)));
                     let jx: int = choose|jx: int| 0 <= jx < self_sorted@.len() as int && self_sorted@[jx] == (kv, vv);
                     // Veracity: NEEDED assert
                     assert(spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[jx].0));
@@ -2876,9 +2871,6 @@ pub mod OrdKeyMap {
             let combined = OrdKeyMap { inner: new_tree };
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(new_tree@);
-                lemma_pair_set_to_map_dom_finite(self_tree);
-                lemma_pair_set_to_map_dom_finite(other.inner@);
                 // Veracity: NEEDED assert
                 assert(combined@.dom() =~= self_map.dom().union(other_map.dom())) by {
                     // Veracity: NEEDED assert
@@ -2939,7 +2931,6 @@ pub mod OrdKeyMap {
                 assert(obeys_feq_full_trigger::<V>());
                 // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<K>());
-                lemma_pair_set_to_map_dom_finite(self_tree);
                 lemma_loop_init_sorted::<K, V>(self_tree, sorted@);
                 // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
@@ -3018,8 +3009,6 @@ pub mod OrdKeyMap {
             let common = OrdKeyMap { inner: new_tree };
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(new_tree@);
-                lemma_pair_set_to_map_dom_finite(self_tree);
                 // Domain proof: common@.dom() =~= self_map.dom().intersect(other_map.dom()).
                 // Veracity: NEEDED assert
                 assert(common@.dom() =~= self_map.dom().intersect(other_map.dom())) by {
@@ -3204,6 +3193,7 @@ pub mod OrdKeyMap {
                 by {
                     lemma_map_contains_pair_in_set(self_tree, kv);
                     let vv: V::V = choose|vv: V::V| self_tree.contains((kv, vv));
+                    assert(self_sorted@.contains((kv, vv)));
                     let jx: int = choose|jx: int| 0 <= jx < self_sorted@.len() as int && self_sorted@[jx] == (kv, vv);
                     // Veracity: NEEDED assert
                     assert(spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[jx].0));
@@ -3311,9 +3301,6 @@ pub mod OrdKeyMap {
             let combined = OrdKeyMap { inner: new_tree };
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(new_tree@);
-                lemma_pair_set_to_map_dom_finite(self_tree);
-                lemma_pair_set_to_map_dom_finite(other.inner@);
                 // 1. Domain: combined@.dom() =~= self_map.dom().union(other_map.dom()).
                 // Veracity: NEEDED assert
                 assert(combined@.dom() =~= self_map.dom().union(other_map.dom())) by {
@@ -3408,7 +3395,6 @@ pub mod OrdKeyMap {
                 assert(obeys_feq_full_trigger::<V>());
                 // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<K>());
-                lemma_pair_set_to_map_dom_finite(self_tree);
                 lemma_loop_init_sorted::<K, V>(self_tree, sorted@);
                 // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
@@ -3533,8 +3519,6 @@ pub mod OrdKeyMap {
             let common = OrdKeyMap { inner: new_tree };
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(new_tree@);
-                lemma_pair_set_to_map_dom_finite(self_tree);
                 // Domain proof: common@.dom() =~= self_map.dom().intersect(other_map.dom()).
                 // Veracity: NEEDED assert
                 assert(common@.dom() =~= self_map.dom().intersect(other_map.dom())) by {
@@ -3677,8 +3661,6 @@ pub mod OrdKeyMap {
             let remaining = OrdKeyMap { inner: new_tree };
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(new_tree@);
-                lemma_pair_set_to_map_dom_finite(self_tree);
                 // Prove: remaining@.dom() =~= self_map.dom().difference(other_map.dom())
                 // Veracity: NEEDED assert
                 assert(remaining@.dom() =~= self_map.dom().difference(other_map.dom())) by {
@@ -3724,7 +3706,6 @@ pub mod OrdKeyMap {
         {
             let r = ordkeymap_next(&self.inner, k);
             // Veracity: NEEDED proof block
-            proof { lemma_pair_set_to_map_dom_finite(self.inner@); }
             r
         }
 
@@ -3734,7 +3715,6 @@ pub mod OrdKeyMap {
         {
             let r = ordkeymap_prev(&self.inner, k);
             // Veracity: NEEDED proof block
-            proof { lemma_pair_set_to_map_dom_finite(self.inner@); }
             r
         }
 
@@ -3744,7 +3724,6 @@ pub mod OrdKeyMap {
         {
             let r = ordkeymap_rank(&self.inner, k);
             // Veracity: NEEDED proof block
-            proof { lemma_pair_set_to_map_dom_finite(self.inner@); }
             r
         }
 
@@ -3754,7 +3733,6 @@ pub mod OrdKeyMap {
         {
             let r = ordkeymap_select(&self.inner, i);
             // Veracity: NEEDED proof block
-            proof { lemma_pair_set_to_map_dom_finite(self.inner@); }
             r
         }
 
@@ -3764,7 +3742,6 @@ pub mod OrdKeyMap {
         {
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(self.inner@);
                 lemma_pair_set_to_map_len(self.inner@);
             }
             let min_pair = self.inner.min_key();
@@ -3820,7 +3797,6 @@ pub mod OrdKeyMap {
         {
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(self.inner@);
                 lemma_pair_set_to_map_len(self.inner@);
             }
             let max_pair = self.inner.max_key();
@@ -3946,8 +3922,6 @@ pub mod OrdKeyMap {
             let range = OrdKeyMap { inner: result_tree };
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(result_tree@);
-                lemma_pair_set_to_map_dom_finite(self.inner@);
                 // Veracity: NEEDED assert
                 assert(range@.dom().subset_of(self@.dom())) by {
                     // Veracity: NEEDED assert
@@ -3984,7 +3958,6 @@ pub mod OrdKeyMap {
             let ghost old_map = self@;
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(old_tree);
                 lemma_pair_set_to_map_len(old_tree);
             }
             let size = self.size();
@@ -3997,8 +3970,6 @@ pub mod OrdKeyMap {
                 let right = OrdKeyMap { inner: right_tree };
                 // Veracity: NEEDED proof block
                 proof {
-                    lemma_pair_set_to_map_dom_finite(left_tree@);
-                    lemma_pair_set_to_map_dom_finite(right_tree@);
                     lemma_set_to_map_empty::<K::V, V::V>();
                     // Veracity: NEEDED assert
                     assert(left@.dom() =~= old_map.dom());
@@ -4040,8 +4011,6 @@ pub mod OrdKeyMap {
                 let right = OrdKeyMap { inner: right_tree_final };
                 // Veracity: NEEDED proof block
                 proof {
-                    lemma_pair_set_to_map_dom_finite(left_tree@);
-                    lemma_pair_set_to_map_dom_finite(right_tree_final@);
                     // left ⊆ old.
                     // Veracity: NEEDED assert
                     assert(left@.dom().subset_of(old_map.dom())) by {
@@ -4165,7 +4134,6 @@ pub mod OrdKeyMap {
             // Veracity: NEEDED proof block
             proof {
                 lemma_pair_set_to_map_len(self.inner@);
-                lemma_pair_set_to_map_dom_finite(self.inner@);
             }
             out
         }
@@ -4188,8 +4156,6 @@ pub mod OrdKeyMap {
             let filtered = OrdKeyMap { inner: filtered_tree };
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(filtered_tree@);
-                lemma_pair_set_to_map_dom_finite(self.inner@);
                 lemma_key_unique_subset(self.inner@, filtered_tree@);
                 // filtered_tree@ ⊆ self.inner@.
                 // Veracity: NEEDED assert
@@ -4286,8 +4252,6 @@ pub mod OrdKeyMap {
             let mapped = OrdKeyMap { inner: new_tree };
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(new_tree@);
-                lemma_pair_set_to_map_dom_finite(self.inner@);
                 // Veracity: NEEDED assert
                 assert(mapped@.dom() =~= self@.dom()) by {
                     // Veracity: NEEDED assert
@@ -4297,6 +4261,7 @@ pub mod OrdKeyMap {
                         lemma_map_contains_pair_in_set(new_tree@, key);
                         let v: V::V = choose|v: V::V| new_tree@.contains((key, v));
                         let j = choose|j: int| 0 <= j < i as int && (key, v).0 == (#[trigger] sorted@[j]).0;
+                        assert(sorted@.contains(sorted@[j]));
                         // Veracity: NEEDED assert
                         assert(self.inner@.contains(sorted@[j]));
                         lemma_pair_in_set_map_contains(self.inner@, sorted@[j].0, sorted@[j].1);
@@ -4323,7 +4288,6 @@ pub mod OrdKeyMap {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + fold
         fn reduce<F: Fn(&V, &V) -> V>(&self, f: F, id: &V) -> (reduced: V)
-            ensures self@.dom().finite()
         {
             let sorted = self.inner.in_order();
             let len = sorted.length();
@@ -4343,7 +4307,6 @@ pub mod OrdKeyMap {
                 i = i + 1;
             }
             // Veracity: NEEDED proof block
-            proof { lemma_pair_set_to_map_dom_finite(self.inner@); }
             reduced
         }
 
@@ -4356,7 +4319,6 @@ pub mod OrdKeyMap {
             let mut i: usize = 0;
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(self.inner@);
             }
             while i < len
                 invariant
@@ -4366,7 +4328,6 @@ pub mod OrdKeyMap {
                     forall|v: <Pair<K, V> as View>::V| self.inner@.contains(v) <==> #[trigger] sorted@.contains(v),
                     0 <= i <= len,
                     domain.spec_arraysetsteph_wf(),
-                    domain@.finite(),
                     forall|kv: K::V| domain@.contains(kv) ==>
                         #[trigger] self@.dom().contains(kv),
                     forall|j: int| 0 <= j < i ==>
@@ -4502,8 +4463,6 @@ pub mod OrdKeyMap {
                 proof {
                     lemma_view_gen_insert::<K, V>(old_tree, Pair(k_clone, val));
                     // Veracity: NEEDED assert
-                    assert(old_tree.finite());
-                    // Veracity: NEEDED assert
                     assert(!old_tree.contains((seq_view[i as int], val@)));
                     // Veracity: NEEDED assert
                     assert(tree@ =~= old_tree.insert((seq_view[i as int], val@)));
@@ -4531,7 +4490,6 @@ pub mod OrdKeyMap {
             let table = OrdKeyMap { inner: tree };
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(tree@);
                 // Veracity: NEEDED assert
                 assert(table@.dom() =~= keys@) by {
                     // Veracity: NEEDED assert
@@ -4600,7 +4558,6 @@ pub mod OrdKeyMap {
                     self.spec_ordkeymap_wf(),
                     obeys_feq_full::<Pair<K, V>>(),
                     keys@ == keys_set,
-                    keys@.finite(),
                     old_map == spec_pair_set_to_map(old_tree),
                     len as nat == sorted@.len(),
                     sorted@.len() == old_tree.len(),
@@ -4656,8 +4613,6 @@ pub mod OrdKeyMap {
             let restricted = OrdKeyMap { inner: new_tree };
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(new_tree@);
-                lemma_pair_set_to_map_dom_finite(old_tree);
                 // Veracity: NEEDED assert
                 assert(restricted@.dom() =~= old_map.dom().intersect(keys_set)) by {
                     // Veracity: NEEDED assert
@@ -4714,7 +4669,6 @@ pub mod OrdKeyMap {
                     self.spec_ordkeymap_wf(),
                     obeys_feq_full::<Pair<K, V>>(),
                     keys@ == keys_set,
-                    keys@.finite(),
                     old_map == spec_pair_set_to_map(old_tree),
                     len as nat == sorted@.len(),
                     sorted@.len() == old_tree.len(),
@@ -4770,8 +4724,6 @@ pub mod OrdKeyMap {
             let remaining = OrdKeyMap { inner: new_tree };
             // Veracity: NEEDED proof block
             proof {
-                lemma_pair_set_to_map_dom_finite(new_tree@);
-                lemma_pair_set_to_map_dom_finite(old_tree);
                 // Veracity: NEEDED assert
                 assert(remaining@.dom() =~= old_map.dom().difference(keys_set)) by {
                     // Veracity: NEEDED assert
@@ -4809,112 +4761,19 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn iter(&self) -> OrdKeyMapIter<K, V> {
+        fn iter(&self) -> std::vec::IntoIter<Pair<K, V>> {
             let entries = self.collect();
-            OrdKeyMapIter { inner: entries.into_iter() }
+            entries.into_iter()
         }
     }
 
     //		Section 10. iterators — OrdKeyMap
 
-    /// Consuming iterator over OrdKeyMap entries (Pair<K,V>) in ascending key order.
-    #[verifier::reject_recursive_types(K)]
-    #[verifier::reject_recursive_types(V)]
-    pub struct OrdKeyMapIter<K: StT + Ord, V: StT + Ord> {
-        pub inner: IntoIter<Pair<K, V>>,
-    }
-
-    impl<K: StT + Ord, V: StT + Ord> View for OrdKeyMapIter<K, V> {
-        type V = (int, Seq<Pair<K, V>>);
-        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) {
-            self.inner@
-        }
-    }
-
-    pub open spec fn iter_invariant_ordkeymap<K: StT + Ord, V: StT + Ord>(it: &OrdKeyMapIter<K, V>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<K: StT + Ord, V: StT + Ord> std::iter::Iterator for OrdKeyMapIter<K, V> {
-        type Item = Pair<K, V>;
-        fn next(&mut self) -> (next: Option<Pair<K, V>>)
-            ensures
-                ({
-                    let (old_index, old_seq) = old(self)@;
-                    match next {
-                        None => {
-                            &&& self@ == old(self)@
-                            &&& old_index >= old_seq.len()
-                        },
-                        Some(element) => {
-                            let (new_index, new_seq) = self@;
-                            &&& 0 <= old_index < old_seq.len()
-                            &&& new_seq == old_seq
-                            &&& new_index == old_index + 1
-                            &&& element == old_seq[old_index]
-                        },
-                    }
-                }),
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for for-loop support over OrdKeyMapIter.
-    #[verifier::reject_recursive_types(K)]
-    #[verifier::reject_recursive_types(V)]
-    pub struct OrdKeyMapGhostIterator<K: StT + Ord, V: StT + Ord> {
-        pub pos: int,
-        pub elements: Seq<Pair<K, V>>,
-    }
-
-    impl<K: StT + Ord, V: StT + Ord> View for OrdKeyMapGhostIterator<K, V> {
-        type V = Seq<Pair<K, V>>;
-        open spec fn view(&self) -> Seq<Pair<K, V>> { self.elements.take(self.pos) }
-    }
-
-    impl<K: StT + Ord, V: StT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for OrdKeyMapIter<K, V> {
-        type GhostIter = OrdKeyMapGhostIterator<K, V>;
-        open spec fn ghost_iter(&self) -> OrdKeyMapGhostIterator<K, V> {
-            OrdKeyMapGhostIterator { pos: self@.0, elements: self@.1 }
-        }
-    }
-
-    impl<K: StT + Ord, V: StT + Ord> vstd::pervasive::ForLoopGhostIterator for OrdKeyMapGhostIterator<K, V> {
-        type ExecIter = OrdKeyMapIter<K, V>;
-        type Item = Pair<K, V>;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &OrdKeyMapIter<K, V>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &OrdKeyMapIter<K, V>) -> OrdKeyMapGhostIterator<K, V> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
+    // r212 form C: this `IntoIterator` impl required `requires self.spec_ordkeymap_wf()`, which
+    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
+    // can establish; use `iter()`, which keeps the requires
+    // (src/experiments/intoiter_form_c_no_impl.rs).
+    /*
     impl<'a, K: StT + Ord, V: StT + Ord> std::iter::IntoIterator for &'a OrdKeyMap<K, V> {
         type Item = Pair<K, V>;
         type IntoIter = OrdKeyMapIter<K, V>;
@@ -4925,6 +4784,7 @@ pub mod OrdKeyMap {
             self.iter()
         }
     }
+    */
 
     //		Section 12. derive impls in verus!
 

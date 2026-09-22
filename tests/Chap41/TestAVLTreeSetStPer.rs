@@ -204,7 +204,7 @@ fn test_display_impl() {
 #[test]
 fn test_into_iter_collects_all_elements() {
     let set = AVLTreeSetStPerLit![5, 3, 7, 1, 9];
-    let collected: Vec<i32> = (&set).into_iter().collect();
+    let collected: Vec<i32> = set.iter().collect();
     let mut sorted = collected.clone();
     sorted.sort();
     assert_eq!(sorted, vec![1, 3, 5, 7, 9]);
@@ -213,7 +213,7 @@ fn test_into_iter_collects_all_elements() {
 #[test]
 fn test_into_iter_empty() {
     let set: AVLTreeSetStPer<i32> = AVLTreeSetStPer::empty();
-    let collected: Vec<i32> = (&set).into_iter().collect();
+    let collected: Vec<i32> = set.iter().collect();
     assert!(collected.is_empty());
 }
 
@@ -221,7 +221,7 @@ fn test_into_iter_empty() {
 fn test_into_iter_for_loop() {
     let set = AVLTreeSetStPerLit![10, 20, 30];
     let mut sum = 0i32;
-    for v in &set {
+    for v in set.iter() {
         sum += v;
     }
     assert_eq!(sum, 60);

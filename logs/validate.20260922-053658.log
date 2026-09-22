@@ -1,0 +1,255 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap41/OrdKeyMap.rs:236:17
+    |
+234 |     proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
+    |           ------------------------------------------------------------------ at the end of the function body
+235 |         requires spec_pair_set_to_map(s).contains_key(k)
+236 |         ensures exists|v: VV| s.contains((k, v))
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+(exists |v| old(s).to_iset().contains((old(k), v))) 
+
+error: postcondition not satisfied
+   --> src/Chap41/OrdKeyMap.rs:445:13
+    |
+440 |       proof fn lemma_set_to_map_remove_pair<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |             ----------------------------------------------------------------------- at the end of the function body
+...
+445 | /             spec_pair_set_to_map(s.remove((k, v)))
+446 | |                 =~= spec_pair_set_to_map(s).remove(k),
+    | |_____________________________________________________^ failed this postcondition
+
+error: assertion failed
+   --> src/Chap41/OrdKeyMap.rs:454:21
+    |
+454 |             implies old_m.remove(k).dom().contains(key) && #[trigger] new_m[key] == #[trigger] old_m[key]
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap41/OrdKeyMap.rs:454:21
+    |
+454 |             implies old_m.remove(k).dom().contains(key) && #[trigger] new_m[key] == #[trigger] old_m[key]
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old_m.remove(k).dom().to_iset().contains(key) ✘
+    function is uninterpreted
+new_m.index(key) == old_m.index(key) ✘
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap41/OrdKeyMap.rs:456:41
+    |
+456 |             let vv: VV = choose|vv: VV| new_s.contains((key, vv));
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap41/OrdKeyMap.rs:460:41
+    |
+460 |             let cv: VV = choose|cv: VV| s.contains((key, cv));
+    |                                         ^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap41/OrdKeyMap.rs:467:41
+    |
+467 |             let vv: VV = choose|vv: VV| s.contains((key, vv));
+    |                                         ^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap41/OrdKeyMap.rs:421:24
+    |
+421 |                 assert(new_s.contains((key, vv)));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap41/OrdKeyMap.rs:427:21
+    |
+427 |             implies #[trigger] new_m[key] == old_m.insert(k, v)[key]
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+new_s.to_iset().contains((key, vv)) 
+    function is uninterpreted
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap41/OrdKeyMap.rs:408:45
+    |
+408 |                 let vv: VV = choose|vv: VV| new_s.contains((key, vv));
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap41/OrdKeyMap.rs:419:45
+    |
+419 |                 let vv: VV = choose|vv: VV| s.contains((key, vv));
+    |                                             ^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap41/OrdKeyMap.rs:433:45
+    |
+433 |                 let cv: VV = choose|cv: VV| new_s.contains((key, cv));
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap41/OrdKeyMap.rs:434:47
+    |
+434 |                 let cv2: VV = choose|cv2: VV| s.contains((key, cv2));
+    |                                               ^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:3150:29
+     |
+3150 |                     implies spec_pair_set_to_map(new_tree@).dom().contains(kv)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:3156:28
+     |
+3156 |                     assert(spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[jx].0));
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_pair_set_to_map(new_tree.view()).dom().to_iset().contains(self_sorted.view().index(jx).0) 
+    function is uninterpreted
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap41/OrdKeyMap.rs:3154:51
+     |
+3154 |                     let jx: int = choose|jx: int| 0 <= jx < self_sorted@.len() as int && self_sorted@[jx] == (kv, vv);
+     |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+    --> src/Chap41/OrdKeyMap.rs:3156:75
+     |
+3156 |                     assert(spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[jx].0));
+     |                                                                           ^^^^^^^^^^^^^^^^
+     |
+    --> seq.rs:972:12
+     |
+     = note: recommendation not met
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:4222:32
+     |
+4222 |                         assert(self.inner@.contains(sorted@[j]));
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+self.inner.view().to_iset().contains(sorted.view().index(j)) 
+    function is uninterpreted
+
+error: postcondition not satisfied
+   --> src/Chap41/OrdKeyMap.rs:487:13
+    |
+473 |       proof fn lemma_set_to_map_union_root<KV, VV>(
+    |  ___________-
+474 | |         left: Set<(KV, VV)>, right: Set<(KV, VV)>, root_k: KV, root_v: VV,
+475 | |     )
+    | |_____- at the end of the function body
+...
+487 | /             ({
+488 | |                 let combined = left.union(right).insert((root_k, root_v));
+489 | |                 let combined_map = spec_pair_set_to_map(combined);
+490 | |                 let left_map = spec_pair_set_to_map(left);
+...   |
+497 | |                 &&& combined_map.contains_key(root_k) && combined_map[root_k] == root_v
+498 | |             })
+    | |______________^ failed this postcondition
+
+error: assertion failed
+   --> src/Chap41/OrdKeyMap.rs:527:28
+    |
+527 |                     assert(combined.contains((k, v)));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap41/OrdKeyMap.rs:531:28
+    |
+531 |                     assert(combined.contains((k, v)));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+combined.to_iset().contains((k, v)) 
+    function is uninterpreted
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap41/OrdKeyMap.rs:511:43
+    |
+511 |                 let v: VV = choose|v: VV| combined.contains((k, v));
+    |                                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap41/OrdKeyMap.rs:525:47
+    |
+525 |                     let v: VV = choose|v: VV| left.contains((k, v));
+    |                                               ^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap41/OrdKeyMap.rs:529:47
+    |
+529 |                     let v: VV = choose|v: VV| right.contains((k, v));
+    |                                               ^^^^^^^^^^^^^^^^^^^^^^
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap18/LinkedListStPer.rs:688:13
+    |
+688 |             while i < len
+    |             ^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap41/OrdKeyMap.rs:287:13
+    |
+287 |             forall|v: (KV, VV)| tree.contains(v) <==> sorted.contains(v),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap41/OrdKeyMap.rs:287:55
+    |
+287 |             forall|v: (KV, VV)| tree.contains(v) <==> sorted.contains(v),
+    |                                                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap41/OrdKeyMap.rs:684:13
+    |
+684 |             forall|v: (K::V, V::V)| tree.contains(v) <==> sorted.contains(v),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap41/OrdKeyMap.rs:684:59
+    |
+684 |             forall|v: (K::V, V::V)| tree.contains(v) <==> sorted.contains(v),
+    |                                                           ^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap41/OrdKeyMap.rs:684:13
+    |
+684 |             forall|v: (K::V, V::V)| tree.contains(v) <==> sorted.contains(v),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2179 verified, 7 errors
+error: aborting due to 12 previous errors
+
+Elapsed: 169s
+Sampled Memory Usage: peak rust_verify RSS: 2027MB, peak z3 RSS: 1485MB, min free: 21990MB
+Sampled CPU Usage: rust_verify: 28s, z3 children: 31s
