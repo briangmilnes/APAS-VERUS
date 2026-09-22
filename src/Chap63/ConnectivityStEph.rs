@@ -13,6 +13,7 @@
 //  Table of Contents
 //	Section 1. module
 //	Section 2. imports
+//	Section 3. broadcast use
 //	Section 4. type definitions
 //	Section 8. traits
 //	Section 9. impls
@@ -31,18 +32,23 @@ pub mod ConnectivityStEph {
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
     use crate::Types::Types::*;
 
+    use std::collections::HashMap;
     use std::hash::Hash;
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::hash::obeys_key_model;
+    use vstd::std_specs::hash::{into_iter_hash_keys, obeys_key_model};
     use crate::vstdplus::clone_plus::clone_plus::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_view_injective;
     use crate::Chap62::StarContractionStEph::StarContractionStEph::star_contract;
     use crate::SetLit;
 
-    verus! 
+    verus!
 {
+
+    //		Section 3. broadcast use
+
+
+    broadcast use vstd::std_specs::hash::group_hash_axioms;
 
     //		Section 4. type definitions
 
@@ -70,7 +76,7 @@ pub mod ConnectivityStEph {
         /// Find connected components using star contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star contraction; St sequential.
-        fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
+        fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
             requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Count components using higher-order function approach.
@@ -82,7 +88,7 @@ pub mod ConnectivityStEph {
         /// Find components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — star_contract with base/expand closures; St sequential.
-        fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
+        fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
             requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();
     }
 
@@ -128,7 +134,7 @@ pub mod ConnectivityStEph {
     /// Returns:
     /// - (representatives, component_map): Set of component representatives and
     ///   mapping from each vertex to its component representative
-    pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (components: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+    pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (components: (SetStEph<V>, HashMap<V, V>))
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
@@ -143,7 +149,7 @@ pub mod ConnectivityStEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — single pass over edges
     fn build_quotient_edges<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
-        partition_map: &HashMapWithViewPlus<V, V>,
+        partition_map: &HashMap<V, V>,
     ) -> (quotient_edges: SetStEph<Edge<V>>)
         requires
             spec_graphview_wf(graph@),
@@ -155,12 +161,12 @@ pub mod ConnectivityStEph {
         let graph_edges = graph.edges();
 
         let it = graph_edges.iter();
-        let ghost edge_seq = it@.1;
+        let ghost edge_seq = into_iter_hash_keys(it);
 
         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         for edge in iter: it
             invariant
-                iter.elements == edge_seq,
+                iter.seq().unref() == edge_seq,
                 edge_seq.map(|i: int, e: Edge<V>| e@).to_set() == graph_edges@,
                 quotient_edges.spec_setsteph_wf(),
                 valid_key_type_Edge::<V>(),
@@ -205,7 +211,7 @@ pub mod ConnectivityStEph {
             ensures n as nat == vertices@.len()
         { vertices.size() };
 
-        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: usize| -> (count: usize) { r };
+        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMap<V, V>, r: usize| -> (count: usize) { r };
 
         star_contract(graph, &base, &expand, Ghost(|r: usize| true))
     }
@@ -217,25 +223,23 @@ pub mod ConnectivityStEph {
     /// - Alg Analysis: APAS (Ch63 Alg 63.3): Work O((n+m) lg n), Span O((n+m) lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n); delegates to star_contract
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
-    pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (components: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+    pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (components: (SetStEph<V>, HashMap<V, V>))
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
         ensures graph@.A.is_empty() ==> components.0@ == graph@.V,
     {
-        let base = |vertices: &SetStEph<V>| -> (r: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+        let base = |vertices: &SetStEph<V>| -> (r: (SetStEph<V>, HashMap<V, V>))
             requires
                 vertices.spec_setsteph_wf(),
                 obeys_key_model::<V>(),
                 obeys_feq_view_injective::<V>(),
             ensures r.0@ == vertices@,
         {
-            let mut map = HashMapWithViewPlus::new();
+            let mut map = HashMap::new();
             let it = vertices.iter();
-            let ghost elem_seq = it@.1;
             for v in iter: it
                 invariant
-                    iter.elements == elem_seq,
                     obeys_key_model::<V>(),
                     obeys_feq_view_injective::<V>(),
             {
@@ -247,15 +251,15 @@ pub mod ConnectivityStEph {
         let expand = |_v: &SetStEph<V>,
                       _e: &SetStEph<Edge<V>>,
                       _centers: &SetStEph<V>,
-                      partition_map: &HashMapWithViewPlus<V, V>,
-                      reps_and_map: (SetStEph<V>, HashMapWithViewPlus<V, V>)|
-            -> (expanded: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+                      partition_map: &HashMap<V, V>,
+                      reps_and_map: (SetStEph<V>, HashMap<V, V>)|
+            -> (expanded: (SetStEph<V>, HashMap<V, V>))
             requires
                 obeys_key_model::<V>(),
                 obeys_feq_view_injective::<V>(),
         {
             let (reps, component_map) = reps_and_map;
-            let mut result_map = HashMapWithViewPlus::new();
+            let mut result_map = HashMap::new();
             let it = partition_map.iter();
             for pair in iter: it
                 invariant
@@ -269,7 +273,7 @@ pub mod ConnectivityStEph {
             (reps, result_map)
         };
 
-        star_contract(graph, &base, &expand, Ghost(|r: (SetStEph<V>, HashMapWithViewPlus<V, V>)| true))
+        star_contract(graph, &base, &expand, Ghost(|r: (SetStEph<V>, HashMap<V, V>)| true))
     }
 
     } // verus!

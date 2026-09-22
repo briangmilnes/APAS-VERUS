@@ -1,39 +1,99 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
-//! Iterator Standard: how to implement verified iterators in APAS-VERUS.
+//! Iterator Standard: delegated iteration for a Vec-backed collection under
+//! the verus 0.2026.09.13 prophetic iterator model.
 //!
-//! Every APAS-VERUS collection implements the iterator standard, which enables
-//! verified iteration via both manual `loop` and Verus `for x in iter: it`.
+//! Every APAS-VERUS collection supports verified iteration via both a manual
+//! `loop` and a Verus `for x in it: ...`. A collection whose elements live in
+//! a `Vec<T>` implements iteration by returning the std iterator directly:
+//! vstd already supplies `IteratorSpecImpl` for `std::slice::Iter` and
+//! `std::vec::IntoIter`, so the collection writes no iterator type, no `View`
+//! for it, and no ghost iterator. The pre-#2163 10-component pattern is gone.
 //!
-//! This file shows all 10 required components for a Vec<T>-backed collection.
-//! The canonical reference implementation is src/Chap18/ArraySeqStEph.rs.
-//! The full specification is in docs/APAS-VERUSIterators.rs.
+//! Required components (all inside verus!):
+//!  1. `iter(&self) -> std::slice::Iter<'_, T>` in the collection trait
+//!     (section 8), with the three constructor postconditions below.
+//!  2. `IntoIterator for &Self` returning the same std iterator with the same
+//!     postconditions (section 10). Enables `for x in &coll`.
+//!  3. Optional: `IntoIterator for Self` returning `std::vec::IntoIter<T>`
+//!     (section 10). Enables `for x in coll`, yielding owned `T`.
 //!
-//! Components (all inside verus!):
-//!  1. Custom iterator struct (section 4)
-//!  2. View for iterator: (int, Seq<T>) (section 5)
-//!  3. iter_invariant spec fn (section 6)
-//!  4. Iterator::next with two-arm ensures (section 10)
-//!  5. Ghost iterator struct (section 4)
-//!  6. ForLoopGhostIteratorNew impl (section 10)
-//!  7. ForLoopGhostIterator impl (6 spec fns) (section 10)
-//!  8. View for ghost iterator: elements.take(pos) (section 5)
-//!  9. iter() method with ensures (section 10)
-//! 10. IntoIterator for &Self (section 10)
+//! Constructor postconditions, for a borrowing iterator `it` over `self.seq`:
+//!     IteratorSpec::remaining(&it) == self.seq@.as_ref(),      // prophetic
+//!     vstd::std_specs::slice::into_iter_elts(it) == self.seq@, // what peek reads
+//!     IteratorSpec::decrease(&it) is Some,                     // for-loop termination
+//! For the consuming iterator drop `.as_ref()` and use
+//! `vstd::std_specs::vec::into_iter_elts`.
 //!
-//! Optional: IntoIterator for Self (consuming pattern).
+//! Loop idioms (proved in
+//! rust_verify_test/tests/standards/Proveiterators_standard.rs):
 //!
-//! Note on iter_mut: some modules have `iter_mut` or `into_iter_mut` methods left
-//! over from early development. These cannot be verified until Verus supports
-//! prophetic iterators (mutable borrows yielded from iterators). Leave them as-is
-//! — do not delete, do not try to verify, do not add specs. They will be revisited
-//! when prophetic iterator support lands in Verus.
+//!   for x in it: coll.iter()
+//!       invariant
+//!           it.seq() == orig.as_ref(),
+//!           collected.len() == it.index(),
+//!           forall|i: int| 0 <= i < collected.len()
+//!               ==> #[trigger] collected@[i] == *it.seq()[i],
+//!   {
+//!       collected.push(*x);
+//!   }
+//!   assert(collected@ =~= orig);   // it.index() == it.seq().len() after the loop
+//!
+//!   let mut it = coll.iter();
+//!   let ghost mut pos: int = 0;
+//!   loop
+//!       invariant
+//!           IteratorSpec::obeys_prophetic_iter_laws(&it),
+//!           IteratorSpec::decrease(&it) is Some,
+//!           0 <= pos <= orig.len(),
+//!           IteratorSpec::remaining(&it).len() == orig.len() - pos,
+//!           forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+//!               ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
+//!           collected.len() == pos,
+//!           forall|i: int| 0 <= i < collected.len()
+//!               ==> #[trigger] collected@[i] == orig[i],
+//!       decreases IteratorSpec::decrease(&it)->0,
+//!   {
+//!       let ghost old_pos = pos;
+//!       match it.next() {
+//!           Some(x) => {
+//!               proof { pos = pos + 1; assert(orig[old_pos] == *x); }
+//!               collected.push(*x);
+//!           },
+//!           None => { assert(pos == orig.len()); assert(collected@ =~= orig); break; },
+//!       }
+//!   }
+//!
+//! A manual loop runs on the iterator's own `next()`, whose contract is the
+//! `IteratorSpec` one (vstd/std_specs/iter.rs), not on `VerusForLoopWrapper`:
+//! that wrapper lives in `vstd::std_specs`, which vstd declares only under
+//! `verus_keep_ghost`, so a wrapper loop does not compile under `cargo`
+//! (experiment: src/experiments/prophetic_manual_loop_next.rs). The ghost
+//! counter `pos` is the number of items consumed; the two `remaining` clauses
+//! are the wrapper's own `wf_inner`, written out. The `decreases` rule:
+//! `remaining()` is prophetic and may not appear in `decreases`; a manual
+//! loop measures the iterator's non-prophetic `IteratorSpec::decrease(&it)->0`,
+//! and draws its conclusion before `break`, because the prophetic equality
+//! does not survive the break. `it` is not in scope after a `for` loop.
+//!
+//! Custom iteration (a collection with no slice underneath) implements the
+//! five `IteratorSpecImpl` spec fns by hand; see
+//! prophetic_iterators_standard.rs. Wrapping another collection's iterator is
+//! covered by wrapping_iterators_standard.rs.
+//!
+//! Note on iter_mut: vstd 0.2026.09.13 specifies `std::slice::IterMut`
+//! (`vstd/std_specs/slice.rs`), so mutable iteration is now specifiable.
+//! Modules that still carry an unspecified `iter_mut` or `into_iter_mut` keep
+//! it as-is until a standard covers mutable iteration.
 // 1. module
 pub mod iterators_standard {
 
     use std::fmt::{Debug, Display, Formatter};
 
+    // 2. imports
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
 
     verus! {
 
@@ -44,69 +104,38 @@ pub mod iterators_standard {
         pub seq: Vec<T>,
     }
 
-    // Component 1: Custom iterator struct.
-    // Wraps the underlying Rust iterator. The inner field is pub for vstd access.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ExampleIter<'a, T> {
-        pub inner: std::slice::Iter<'a, T>,
-    }
-
-    // Component 5: Ghost iterator struct.
-    // Pure spec-level state for the ForLoopGhostIterator protocol.
-    // Fields are pub so for-loop invariants can reference iter.pos, iter.elements.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ExampleGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
     // 5. view impls
 
-    // Component 2: View for iterator.
-    // The View is a pair: (position_index, full_sequence).
-    // Position starts at 0 and advances to elements.len().
-    // The sequence is fixed at creation time.
-    impl<'a, T> View for ExampleIter<'a, T> {
-        type V = (int, Seq<T>);
-
-        open spec fn view(&self) -> (int, Seq<T>) {
-            self.inner@
-        }
-    }
-
-    // Component 8: View for ghost iterator.
-    // Items seen so far: the prefix of length pos.
-    // This is what user code asserts against after the loop completes.
-    impl<'a, T> View for ExampleGhostIterator<'a, T> {
+    impl<T> View for ExampleS<T> {
         type V = Seq<T>;
 
         open spec fn view(&self) -> Seq<T> {
-            self.elements.take(self.pos)
+            self.seq@
         }
-    }
-
-    // 6. spec fns
-
-    // Component 3: iter_invariant spec fn.
-    // Bounds the position index. Users include this in loop invariants.
-    pub open spec fn iter_invariant<'a, T>(it: &ExampleIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
     }
 
     // 8. traits
 
-    pub trait ExampleTrait<T>: Sized {
+    pub trait ExampleTrait<T>: Sized + View<V = Seq<T>> {
         spec fn spec_len(&self) -> nat;
 
         spec fn spec_index(&self, i: int) -> T
             recommends
-                i < self.spec_len(),
+                0 <= i < self.spec_len(),
         ;
 
         fn new(length: usize, init: T) -> (s: Self) where T: Copy
             ensures
                 s.spec_len() == length as nat,
+        ;
+
+        // Component 1: the borrowing entry point returns the std slice
+        // iterator. The three postconditions are the constructor triple.
+        fn iter(&self) -> (it: std::slice::Iter<'_, T>)
+            ensures
+                IteratorSpec::remaining(&it) == self@.as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self@,
+                IteratorSpec::decrease(&it) is Some,
         ;
     }
 
@@ -135,134 +164,31 @@ pub mod iterators_standard {
             }
             ExampleS { seq: v }
         }
-    }
 
-    // Component 9: iter() method with ensures.
-    // Entry point for iteration. Position starts at 0, sequence matches data.
-    impl<T> ExampleS<T> {
-        pub fn iter(&self) -> (it: ExampleIter<'_, T>)
-            ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
-                iter_invariant(&it),
-        {
-            ExampleIter { inner: self.seq.iter() }
+        fn iter(&self) -> (it: std::slice::Iter<'_, T>) {
+            self.seq.iter()
         }
     }
 
     // 10. iterators
 
-    // Component 4: Iterator::next with ensures.
-    // Two arms: None (exhausted) and Some (produced an element).
-    // None: iterator unchanged, position at/past end.
-    // Some: sequence unchanged, position advances by 1, element at old position.
-    impl<'a, T> std::iter::Iterator for ExampleIter<'a, T> {
-        type Item = &'a T;
-
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures
-                ({
-                    let (old_index, old_seq) = old(self)@;
-                    match next {
-                        None => {
-                            &&& self@ == old(self)@
-                            &&& old_index >= old_seq.len()
-                        },
-                        Some(element) => {
-                            let (new_index, new_seq) = self@;
-                            &&& 0 <= old_index < old_seq.len()
-                            &&& new_seq == old_seq
-                            &&& new_index == old_index + 1
-                            &&& element == old_seq[old_index]
-                        },
-                    }
-                }),
-        {
-            self.inner.next()
-        }
-    }
-
-    // Component 6: ForLoopGhostIteratorNew.
-    // Creates ghost state from the exec iterator at loop start.
-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ExampleIter<'a, T> {
-        type GhostIter = ExampleGhostIterator<'a, T>;
-
-        open spec fn ghost_iter(&self) -> ExampleGhostIterator<'a, T> {
-            ExampleGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    // Component 7: ForLoopGhostIterator.
-    // The full ghost-loop protocol with six spec functions.
-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ExampleGhostIterator<'a, T> {
-        type ExecIter = ExampleIter<'a, T>;
-
-        type Item = T;
-
-        type Decrease = int;
-
-        /// Links ghost state to exec iterator.
-        open spec fn exec_invariant(&self, exec_iter: &ExampleIter<'a, T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        /// Maintained across iterations; init is state before first iteration.
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        /// Holds after the loop exits normally.
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        /// Termination measure.
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        /// What the next call to next() will yield (before the call).
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(self.elements[self.pos])
-            } else {
-                None
-            }
-        }
-
-        /// Ghost state after processing one element.
-        open spec fn ghost_advance(&self, _exec_iter: &ExampleIter<'a, T>) -> ExampleGhostIterator<
-            'a,
-            T,
-        > {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    // Component 10: IntoIterator for &Self.
-    // Enables `for x in &collection` syntax.
+    // Component 2: IntoIterator for &Self. Enables `for x in &collection`.
     impl<'a, T> std::iter::IntoIterator for &'a ExampleS<T> {
         type Item = &'a T;
 
-        type IntoIter = ExampleIter<'a, T>;
+        type IntoIter = std::slice::Iter<'a, T>;
 
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
-                iter_invariant(&it),
+                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
-            ExampleIter { inner: self.seq.iter() }
+            self.seq.iter()
         }
     }
 
-    // Optional: IntoIterator for Self (consuming pattern).
-    // Yields owned T, not &T. Uses vstd's built-in IntoIter View and ghost support.
+    // Component 3 (optional): IntoIterator for Self. Yields owned T.
     impl<T> std::iter::IntoIterator for ExampleS<T> {
         type Item = T;
 
@@ -270,8 +196,9 @@ pub mod iterators_standard {
 
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
+                IteratorSpec::remaining(&it) == self.seq@,
+                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
             self.seq.into_iter()
         }
@@ -295,30 +222,6 @@ pub mod iterators_standard {
                 write!(f, "{}", item)?;
             }
             write!(f, "]")
-        }
-    }
-
-    impl<'a, T: Debug> Debug for ExampleIter<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "ExampleIter({:?})", self.inner)
-        }
-    }
-
-    impl<'a, T> Display for ExampleIter<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "ExampleIter")
-        }
-    }
-
-    impl<'a, T> Debug for ExampleGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "ExampleGhostIterator")
-        }
-    }
-
-    impl<'a, T> Display for ExampleGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "ExampleGhostIterator")
         }
     }
 } // pub mod iterators_standard

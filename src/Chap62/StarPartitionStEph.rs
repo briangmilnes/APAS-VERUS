@@ -31,17 +31,22 @@ pub mod StarPartitionStEph {
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
     use crate::Types::Types::*;
 
+    use std::collections::HashMap;
     use std::hash::Hash;
     use crate::SetLit;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::hash_specs_plus::hash_specs_plus::key_view;
 
-    verus! 
+    verus!
 {
 
     //		Section 3. broadcast use
 
 
-    broadcast use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms;
+    broadcast use {
+        vstd::std_specs::hash::group_hash_axioms,
+        crate::vstdplus::hash_specs_plus::hash_specs_plus::group_key_view_lemmas,
+    };
 
     //		Section 4. type definitions
 
@@ -82,7 +87,7 @@ pub mod StarPartitionStEph {
         /// Sequential star partition using greedy selection.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — single pass over vertices + edges; St sequential.
-        fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
+        fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
             requires Self::spec_starpartitionsteph_wf(graph);
     }
 
@@ -94,15 +99,15 @@ pub mod StarPartitionStEph {
     /// - Alg Analysis: APAS (Ch62 Thm 62.1): Work O(n + m), Span O(n + m)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) — agrees with APAS.
-    pub fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+    pub fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (partition: (SetStEph<V>, HashMap<V, V>))
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
         ensures
             partition.0.spec_setsteph_wf(),
-            spec_valid_partition_map::<V>(graph.V@, partition.0@, partition.1@),
+            spec_valid_partition_map::<V>(graph.V@, partition.0@, key_view(partition.1@)),
     {
-        let mut partition_map = HashMapWithViewPlus::<V, V>::new();
+        let mut partition_map = HashMap::<V, V>::new();
         let mut centers: SetStEph<V> = SetLit![];
         let mut processed: SetStEph<V> = SetLit![];
 
@@ -124,10 +129,10 @@ pub mod StarPartitionStEph {
                 // All vertices at indices < vi are in processed.
                 forall|j: int| 0 <= j < vi as int ==> #[trigger] processed@.contains(vert_vec@[j]@),
                 // All processed vertex views are in partition_map domain.
-                forall|w: V::V| #[trigger] processed@.contains(w) ==> partition_map@.contains_key(w),
+                forall|w: V::V| #[trigger] processed@.contains(w) ==> key_view(partition_map@).contains_key(w),
                 // Range validity: every partition_map value is a center.
-                forall|v_view: V::V| #[trigger] partition_map@.contains_key(v_view) ==>
-                    centers@.contains(partition_map@[v_view]@),
+                forall|v_view: V::V| #[trigger] key_view(partition_map@).contains_key(v_view) ==>
+                    centers@.contains(key_view(partition_map@)[v_view]@),
             decreases nv - vi,
         {
             let vertex = &vert_vec[vi];
@@ -135,7 +140,7 @@ pub mod StarPartitionStEph {
             if !processed.mem(vertex) {
                 // Save ghost views before mutations to help invariant proofs.
                 let ghost pre_proc: Set<V::V> = processed@;
-                let ghost pre_pm: Map<V::V, V> = partition_map@;
+                let ghost pre_pm: Map<V::V, V> = key_view(partition_map@);
                 let ghost pre_ctr: Set<V::V> = centers@;
                 let ghost vv: V::V = (*vertex)@;
 
@@ -180,10 +185,10 @@ pub mod StarPartitionStEph {
                         // Prior vertices (j < vi) are still in processed.
                         forall|j: int| 0 <= j < vi as int ==> #[trigger] processed@.contains(vert_vec@[j]@),
                         // All processed vertex views are in partition_map domain.
-                        forall|w: V::V| #[trigger] processed@.contains(w) ==> partition_map@.contains_key(w),
+                        forall|w: V::V| #[trigger] processed@.contains(w) ==> key_view(partition_map@).contains_key(w),
                         // Range validity: every partition_map value is a center.
-                        forall|v_view: V::V| #[trigger] partition_map@.contains_key(v_view) ==>
-                            centers@.contains(partition_map@[v_view]@),
+                        forall|v_view: V::V| #[trigger] key_view(partition_map@).contains_key(v_view) ==>
+                            centers@.contains(key_view(partition_map@)[v_view]@),
                     decreases ne - ei,
                 {
                     let edge = &edge_vec[ei];
@@ -191,7 +196,7 @@ pub mod StarPartitionStEph {
                     if a.clone_view() == vertex.clone_view() {
                         if !processed.mem(b) {
                             let ghost pre_proc_i: Set<V::V> = processed@;
-                            let ghost pre_pm_i: Map<V::V, V> = partition_map@;
+                            let ghost pre_pm_i: Map<V::V, V> = key_view(partition_map@);
                             let ghost bv: V::V = (*b)@;
                             let ghost cv: V::V = (*vertex)@;
                             partition_map.insert(b.clone_view(), vertex.clone_view());
@@ -205,7 +210,7 @@ pub mod StarPartitionStEph {
                     } else if b.clone_view() == vertex.clone_view() {
                         if !processed.mem(a) {
                             let ghost pre_proc_i: Set<V::V> = processed@;
-                            let ghost pre_pm_i: Map<V::V, V> = partition_map@;
+                            let ghost pre_pm_i: Map<V::V, V> = key_view(partition_map@);
                             let ghost av: V::V = (*a)@;
                             let ghost cv: V::V = (*vertex)@;
                             partition_map.insert(a.clone_view(), vertex.clone_view());
@@ -242,7 +247,7 @@ pub mod StarPartitionStEph {
             // Veracity: NEEDED assert
             // Veracity: NEEDED assert
             assert forall|v_view: V::V| #[trigger] graph.V@.contains(v_view)
-                implies partition_map@.contains_key(v_view) by {
+                implies key_view(partition_map@).contains_key(v_view) by {
                 // to_seq ensures: graph.V@.contains(v_view) ↔ vert_vec@.map(fn).contains(v_view)
                 // Derive: ∃j < nv, vert_vec@[j]@ == v_view (from Seq::map open definition).
                 // trigger on vert_vec@[j]@ avoids lambda-in-trigger error.

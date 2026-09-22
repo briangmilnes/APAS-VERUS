@@ -10,6 +10,7 @@
 //	Section 4. type definitions
 //	Section 5. view impls
 //	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
 //	Section 8. traits
 //	Section 9. impls
 //	Section 10. iterators
@@ -26,15 +27,17 @@ pub mod MappingStEph {
 
     use vstd::prelude::*;
 
-verus! 
+verus!
 {
 
 
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::Hash;
     #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
+    #[cfg(verus_keep_ghost)]
     use {
-        vstd::std_specs::hash::obeys_key_model,
+        vstd::std_specs::hash::{obeys_key_model, into_iter_hash_keys},
         vstd::std_specs::clone::*,
     };
     use crate::vstdplus::seq_set::*;
@@ -55,7 +58,7 @@ verus!
 
     broadcast use {
         // Set groups
-        vstd::set::group_set_axioms,
+        vstd::set::group_set_lemmas,
         vstd::set_lib::group_set_lib_default,
         vstd::set_lib::group_set_properties,
         // Seq groups
@@ -67,11 +70,10 @@ verus!
         vstd::laws_eq::group_laws_eq,
         vstd::laws_cmp::group_laws_cmp,
         // Our groups
-        crate::vstdplus::feq::feq::group_feq_axioms, 
+        crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_Pair_axioms,
-        crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
-        vstd::map::group_map_axioms,
+        vstd::map::group_map_lemmas,
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
@@ -87,12 +89,14 @@ verus!
     //		Section 5. view impls
 
 
+    /// The map whose domain is the relation's first projection and whose value
+    /// at `x` is the `y` the relation pairs with `x` (unique under functionality).
     impl<A: StT + Hash, B: StT + Hash> View for MappingStEph<A, B> {
         type V = Map<A::V, B::V>;
 
         open spec fn view(&self) -> Self::V {
             Map::new(
-                |x: A::V| exists |y: B::V| self.mapping@.contains((x, y)),
+                self.mapping@.map(|p: (A::V, B::V)| p.0),
                 |x: A::V| choose |y: B::V| self.mapping@.contains((x, y))
             )
         }
@@ -102,7 +106,7 @@ verus!
 
 
     pub open spec fn is_functional_set<X, Y>(s: Set<(X, Y)>) -> bool {
-        forall |x: X, y1: Y, y2: Y| 
+        forall |x: X, y1: Y, y2: Y|
             #![trigger s.contains((x, y1)), s.contains((x, y2))]
             s.contains((x, y1)) && s.contains((x, y2)) ==> y1 == y2
     }
@@ -124,6 +128,49 @@ verus!
         forall |q: (X, Y)| #![trigger s.contains(q)] s.contains(q) && q.0 == p.0 ==> q.1 == p.1
     }
 
+    //		Section 7. proof fns/broadcast groups
+
+
+    /// Under functionality, the map view holds `x -> y` exactly when the relation holds `(x, y)`.
+    pub proof fn lemma_view_contains_pair<X: StT + Hash, Y: StT + Hash>(m: &MappingStEph<X, Y>, x: X::V, y: Y::V)
+        requires
+            is_functional_set(m.mapping@),
+        ensures
+            m.mapping@.contains((x, y)) <==> (m@.dom().contains(x) && m@[x] == y),
+    {
+        let r = m.mapping@;
+        if r.contains((x, y)) {
+            assert(m@.dom().contains(x));
+            let chosen_y = choose |y2: Y::V| r.contains((x, y2));
+            assert(r.contains((x, chosen_y)));
+            assert(m@[x] == chosen_y);
+        } else if m@.dom().contains(x) {
+            let q = choose |q: (X::V, Y::V)| #[trigger] r.contains(q) && x == q.0;
+            assert(r.contains((x, q.1)));
+            let chosen_y = choose |y2: Y::V| r.contains((x, y2));
+            assert(r.contains((x, chosen_y)));
+            assert(m@[x] == chosen_y);
+        }
+    }
+
+    /// Under functionality, the map view's key-value pairs are the relation.
+    pub proof fn lemma_view_kv_pairs<X: StT + Hash, Y: StT + Hash>(m: &MappingStEph<X, Y>)
+        requires
+            is_functional_set(m.mapping@),
+        ensures
+            m@.kv_pairs() == m.mapping@,
+    {
+        assert forall |p: (X::V, Y::V)| #[trigger] m@.kv_pairs().contains(p) implies m.mapping@.contains(p) by {
+            let k = choose |k: X::V| #[trigger] m@.dom().contains(k) && p == (k, m@[k]);
+            lemma_view_contains_pair(m, k, m@[k]);
+        }
+        assert forall |p: (X::V, Y::V)| #[trigger] m.mapping@.contains(p) implies m@.kv_pairs().contains(p) by {
+            assert(m.mapping@.contains((p.0, p.1)));
+            lemma_view_contains_pair(m, p.0, p.1);
+        }
+        assert(m@.kv_pairs() =~= m.mapping@);
+    }
+
     //		Section 8. traits
 
 
@@ -132,11 +179,6 @@ verus!
 
         spec fn spec_mappingsteph_wf(&self) -> bool;
         spec fn spec_valid_key_type() -> bool;
-
-        /// A mapping is finite
-        open spec fn spec_finite(&self) -> bool {
-            self@.dom().finite()
-        }
 
         spec fn is_functional(&self) -> bool;
 
@@ -206,17 +248,16 @@ verus!
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
         fn domain(&self) -> (domain: SetStEph<X>)
             requires self.spec_mappingsteph_wf()
-            ensures domain@.finite(), domain@ == self@.dom();
+            ensures domain@ == self@.dom();
 
+        /// - The range `{y | exists x. m(x) = y}` is vstd's `Map::values()`.
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|m|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — agrees on work. Iterates pairs, inserts each value.
         /// - Matches vstd Map::values() from map_lib.
         fn range(&self) -> (range: SetStEph<Y>)
             requires self.spec_mappingsteph_wf()
             ensures
-                range@.finite(),
-                range@ =~= Set::<Y::V>::new(|y: Y::V| exists |x: X::V| #![trigger self@[x]] self@.dom().contains(x) && self@[x] == y),
-                range@ == self@.values();  // vstd equivalence
+                range@ == self@.values();
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set contains() on the pair.
@@ -227,16 +268,16 @@ verus!
                 contains == (self@.dom().contains(p@.0) && self@[p@.0] == p@.1),
                 contains == self@.contains_pair(p@.0, p@.1);  // vstd equivalence
 
+        /// - The iterator's pairs are the map's key-value pairs, vstd's `Map::kv_pairs()`.
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator handle.
-        fn iter<'a>(&'a self) -> (it: MappingStEphIter<'a, X, Y>)
+        fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, Pair<X, Y>>)
             requires self.spec_mappingsteph_wf()
             ensures
-                it@.0 == 0int,
-                it@.1.map(|i: int, p: Pair<X, Y>| p@).to_set() ==
-                    Set::new(|p: (X::V, Y::V)| self@.dom().contains(p.0) && self@[p.0] == p.1),
-                it@.1.no_duplicates(),
-                iter_invariant(&it);
+                IteratorSpec::remaining(&it).unref().map(|i: int, p: Pair<X, Y>| p@).to_set() == self@.kv_pairs(),
+                IteratorSpec::remaining(&it).unref().no_duplicates(),
+                into_iter_hash_keys(it) == IteratorSpec::remaining(&it).unref(),
+                IteratorSpec::decrease(&it) is Some;
     }
 
     //		Section 9. impls
@@ -246,8 +287,7 @@ verus!
         MappingStEphTrait<X, Y> for MappingStEph<X, Y> {
 
         open spec fn spec_mappingsteph_wf(&self) -> bool {
-               self.mapping@.finite()
-            && valid_key_type_Pair::<X, Y>()
+               valid_key_type_Pair::<X, Y>()
             && is_functional_set(self.mapping@)
             && obeys_feq_full::<Pair<X, Y>>()
         }
@@ -310,25 +350,33 @@ verus!
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|) — iterates set, compares each element's key against p.
         fn is_functional_SetStEph_at(s: &SetStEph<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool) {
-            let mut iter = s.iter();
-            let ghost the_seq = iter@.1;
+            let s_iter = s.iter();
+            let ghost the_seq = into_iter_hash_keys(s_iter);
+            let mut iter = s_iter;
+            let ghost mut pos: int = 0;
             loop
                 invariant
                     valid_key_type_Pair::<X, Y>(),
-                    iter@.1 == the_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&iter),
+                    IteratorSpec::decrease(&iter) is Some,
+                    0 <= pos <= the_seq.len(),
+                    IteratorSpec::remaining(&iter).len() == the_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&iter).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&iter)[i]) == the_seq[pos + i],
                     the_seq.map(|i: int, pair: Pair<X,Y>| pair@).to_set() == s@,
-                    0 <= iter@.0 <= the_seq.len(),
-                    forall |k: int| #![trigger the_seq[k]] 0 <= k < iter@.0 && the_seq[k]@.0 == p@.0 ==> the_seq[k]@.1 == p@.1,
-                decreases the_seq.len() - iter@.0,
+                    forall |k: int| #![trigger the_seq[k]] 0 <= k < pos && the_seq[k]@.0 == p@.0 ==> the_seq[k]@.1 == p@.1,
+                decreases IteratorSpec::decrease(&iter)->0,
             {
+                let ghost old_pos = pos;
                 match iter.next() {
                     None => { return true; }
                     Some(q) => {
+                        proof { pos = pos + 1; }
                         if feq(&q.0, &p.0) {
                             if !feq(&q.1, &p.1) {
                                 // Veracity: NEEDED proof block
                                 proof {
-                                    let idx = iter@.0 - 1;
+                                    let idx = old_pos;
                                     let mapped = the_seq.map(|i: int, pair: Pair<X,Y>| pair@);
                                     // Veracity: NEEDED assert
                                     assert(mapped[idx] == q@);
@@ -345,17 +393,24 @@ verus!
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|^2), Span O(|s|^2) — for each element calls is_functional_SetStEph_at which is O(|s|).
         fn is_functional_SetStEph(s: &SetStEph<Pair<X, Y>>) -> (functional: bool) {
-            let mut outer_iter = s.iter();
-            let ghost the_seq = outer_iter@.1;
+            let s_iter = s.iter();
+            let ghost the_seq = into_iter_hash_keys(s_iter);
+            let mut outer_iter = s_iter;
+            let ghost mut pos: int = 0;
             loop
                 invariant
                     valid_key_type_Pair::<X, Y>(),
-                    outer_iter@.1 == the_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&outer_iter),
+                    IteratorSpec::decrease(&outer_iter) is Some,
+                    0 <= pos <= the_seq.len(),
+                    IteratorSpec::remaining(&outer_iter).len() == the_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&outer_iter).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&outer_iter)[i]) == the_seq[pos + i],
                     the_seq.map(|i: int, pair: Pair<X,Y>| pair@).to_set() == s@,
-                    0 <= outer_iter@.0 <= the_seq.len(),
-                    forall |k: int| #![trigger the_seq[k]] 0 <= k < outer_iter@.0 ==> is_functional_set_at(s@, the_seq[k]@),
-                decreases the_seq.len() - outer_iter@.0,
+                    forall |k: int| #![trigger the_seq[k]] 0 <= k < pos ==> is_functional_set_at(s@, the_seq[k]@),
+                decreases IteratorSpec::decrease(&outer_iter)->0,
             {
+                let ghost old_pos = pos;
                 match outer_iter.next() {
                     None => {
                         // Veracity: NEEDED proof block
@@ -373,10 +428,11 @@ verus!
                         return true;
                     }
                     Some(p) => {
+                        proof { pos = pos + 1; }
                         if !Self::is_functional_SetStEph_at(s, p) {
                             // Veracity: NEEDED proof block
                             proof {
-                                let idx = outer_iter@.0 - 1;
+                                let idx = old_pos;
                                 let mapped = the_seq.map(|i: int, pair: Pair<X,Y>| pair@);
                                 // Veracity: NEEDED assert
                                 assert(mapped[idx] == p@);
@@ -399,7 +455,9 @@ verus!
         fn empty() -> MappingStEph<X, Y> {
             let result = MappingStEph { mapping: RelationStEph::empty() };
             // Veracity: NEEDED proof block
-            proof { 
+            proof {
+                assert(result@.dom() =~= Set::<X::V>::empty());
+                assert(result@ =~= Map::<X::V, Y::V>::empty());
             }
             result
         }
@@ -414,17 +472,13 @@ verus!
                 // result.mapping@ == pairs@ == v_seq.map(|i, p: Pair<X, Y>| p@).to_set()
                 // is_functional_seq(v_seq) == is_functional_set(v_seq.map(|i, p| p@).to_set())
                 //                          == is_functional_set(result.mapping@)
-                // Prove the domain/value ensures for each index.
                 // Veracity: NEEDED assert
                 assert forall |i: int| #![trigger v_seq[i]] 0 <= i < v_seq.len() implies
                     result@.dom().contains(v_seq[i]@.0) && result@[v_seq[i]@.0] == v_seq[i]@.1 by {
-                    // v_seq[i]@ is in the mapped-to-set.
                     lemma_seq_index_in_map_to_set(v_seq, i);
                     let pair_view = v_seq[i]@;
-                    // So exists y such that (x, y) in mapping@ — domain containment.
-                    // The chosen y must equal pair_view.1 by functionality.
-                    let chosen_y = choose |y: Y::V| result.mapping@.contains((pair_view.0, y));
-                    // is_functional_set gives y uniqueness.
+                    assert(result.mapping@.contains((pair_view.0, pair_view.1)));
+                    lemma_view_contains_pair(&result, pair_view.0, pair_view.1);
                 }
             }
             result
@@ -436,13 +490,10 @@ verus!
             // Veracity: NEEDED proof block
             proof {
                 // result.mapping@ == r@ (from clone ensures).
-                // is_functional_relation(*r) == is_functional_set(r@) == is_functional_set(result.mapping@).
-                // Prove domain/value ensures.
                 // Veracity: NEEDED assert
                 assert forall |x: X::V, y: Y::V| r@.contains((x, y)) implies
                     result@.dom().contains(x) && result@[x] == y by {
-                    // By functionality, the chosen y' must equal y.
-                    let chosen = choose |y2: Y::V| result.mapping@.contains((x, y2));
+                    lemma_view_contains_pair(&result, x, y);
                 }
             }
             result
@@ -470,7 +521,15 @@ verus!
             size
         }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to relation relates().
-        fn mem(&self, p: &Pair<X, Y>) -> bool { self.mapping.relates(p) }
+        fn mem(&self, p: &Pair<X, Y>) -> bool {
+            let contains = self.mapping.relates(p);
+            // Veracity: NEEDED proof block
+            proof {
+                assert(self.mapping@.contains((p@.0, p@.1)) == self.mapping@.contains(p@));
+                lemma_view_contains_pair(self, p@.0, p@.1);
+            }
+            contains
+        }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — delegates to relation domain().
         fn domain(&self) -> SetStEph<X> { self.mapping.domain() }
 
@@ -479,146 +538,54 @@ verus!
             let result = self.mapping.range();
             // Veracity: NEEDED proof block
             proof {
+                let m = self.mapping@;
                 // Veracity: NEEDED assert
-                assert forall |y: Y::V| result@.contains(y) implies 
-                    (exists |x: X::V| #![trigger self@[x]] self@.dom().contains(x) && self@[x] == y) by {
-                    if result@.contains(y) {
-                        let witness_x = choose |x: X::V| self.mapping@.contains((x, y));
-                        let chosen_y = choose |y_prime: Y::V| self.mapping@.contains((witness_x, y_prime));
-                        // Veracity: NEEDED assert
-                        assert(self@[witness_x] == chosen_y);
-                    }
+                assert forall |y: Y::V| #[trigger] result@.contains(y) implies self@.values().contains(y) by {
+                    let p = choose |p: (X::V, Y::V)| #[trigger] m.contains(p) && y == p.1;
+                    assert(m.contains((p.0, p.1)));
+                    lemma_view_contains_pair(self, p.0, p.1);
                 }
+                // Veracity: NEEDED assert
+                assert forall |y: Y::V| #[trigger] self@.values().contains(y) implies result@.contains(y) by {
+                    let x = choose |x: X::V| #[trigger] self@.dom().contains(x) && y == self@[x];
+                    lemma_view_contains_pair(self, x, y);
+                }
+                assert(result@ =~= self@.values());
             }
             result
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates iterator handle.
-        fn iter(&self) -> MappingStEphIter<'_, X, Y> {
-            MappingStEphIter { inner: self.mapping.iter() }
+        fn iter(&self) -> std::collections::hash_set::Iter<'_, Pair<X, Y>> {
+            proof { lemma_view_kv_pairs(self); }
+            self.mapping.iter()
         }
     }
 
     //		Section 10. iterators
 
 
-    /// Iterator wrapper to hide RelationStEphIter<X, Y>.
-    #[verifier::reject_recursive_types(X)]
-    #[verifier::reject_recursive_types(Y)]
-    pub struct MappingStEphIter<'a, X: StT + Hash, Y: StT + Hash> {
-        pub inner: RelationStEphIter<'a, X, Y>,
-    }
-
-    impl<'a, X: StT + Hash, Y: StT + Hash> View for MappingStEphIter<'a, X, Y> {
-        type V = (int, Seq<Pair<X, Y>>);
-        open spec fn view(&self) -> (int, Seq<Pair<X, Y>>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant<'a, X: StT + Hash, Y: StT + Hash>(it: &MappingStEphIter<'a, X, Y>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<'a, X: StT + Hash, Y: StT + Hash> std::iter::Iterator for MappingStEphIter<'a, X, Y> {
-        type Item = &'a Pair<X, Y>;
-
-        fn next(&mut self) -> (next: Option<&'a Pair<X, Y>>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support (for-iter patterns).
-    #[verifier::reject_recursive_types(X)]
-    #[verifier::reject_recursive_types(Y)]
-    pub struct MappingStEphGhostIterator<'a, X: StT + Hash, Y: StT + Hash> {
-        pub pos: int,
-        pub elements: Seq<Pair<X, Y>>,
-        pub phantom: core::marker::PhantomData<&'a Pair<X, Y>>,
-    }
-
-    impl<'a, X: StT + Hash, Y: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for MappingStEphIter<'a, X, Y> {
-        type GhostIter = MappingStEphGhostIterator<'a, X, Y>;
-
-        open spec fn ghost_iter(&self) -> MappingStEphGhostIterator<'a, X, Y> {
-            MappingStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, X: StT + Hash, Y: StT + Hash> vstd::pervasive::ForLoopGhostIterator for MappingStEphGhostIterator<'a, X, Y> {
-        type ExecIter = MappingStEphIter<'a, X, Y>;
-        type Item = Pair<X, Y>;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &MappingStEphIter<'a, X, Y>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<Pair<X, Y>> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(self.elements[self.pos])
-            } else {
-                None
-            }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &MappingStEphIter<'a, X, Y>) -> MappingStEphGhostIterator<'a, X, Y> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    impl<'a, X: StT + Hash, Y: StT + Hash> View for MappingStEphGhostIterator<'a, X, Y> {
-        type V = Seq<Pair<X, Y>>;
-
-        open spec fn view(&self) -> Seq<Pair<X, Y>> {
-            self.elements.take(self.pos)
-        }
-    }
-
+    // Re-exposes the relation's std iterator (wrapping_iterators_standard.rs, pattern A).
+    // An impl of an external trait method may not add `requires`, so the
+    // contract is conditional on well-formedness instead.
     impl<'a, X: StT + Hash, Y: StT + Hash> std::iter::IntoIterator for &'a MappingStEph<X, Y> {
         type Item = &'a Pair<X, Y>;
-        type IntoIter = MappingStEphIter<'a, X, Y>;
+        type IntoIter = std::collections::hash_set::Iter<'a, Pair<X, Y>>;
         fn into_iter(self) -> (it: Self::IntoIter)
-            requires self.spec_mappingsteph_wf()
             ensures
-                it@.0 == 0int,
-                it@.1.map(|i: int, p: Pair<X, Y>| p@).to_set() ==
-                    Set::new(|p: (X::V, Y::V)| self@.dom().contains(p.0) && self@[p.0] == p.1),
-                it@.1.no_duplicates(),
+                self.spec_mappingsteph_wf() ==> {
+                    &&& IteratorSpec::remaining(&it).unref().map(|i: int, p: Pair<X, Y>| p@).to_set() == self@.kv_pairs()
+                    &&& IteratorSpec::remaining(&it).unref().no_duplicates()
+                    &&& into_iter_hash_keys(it) == IteratorSpec::remaining(&it).unref()
+                    &&& IteratorSpec::decrease(&it) is Some
+                },
         {
-            self.iter()
+            proof {
+                if self.spec_mappingsteph_wf() {
+                    lemma_view_kv_pairs(self);
+                }
+            }
+            (&self.mapping).into_iter()
         }
     }
 
@@ -676,7 +643,7 @@ verus!
             // Check for duplicate domain elements (runtime only, skipped in Verus proof mode)
             #[cfg(not(verus_keep_ghost))]
             {
-                let mut __seen_keys = $crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus::new();
+                let mut __seen_keys = std::collections::HashSet::new();
                 for pair in &__pairs {
                     let key = pair.0.clone();
                     if !__seen_keys.insert(key) {
@@ -696,22 +663,6 @@ verus!
 
     impl<A: StT + Hash, B: StT + Hash> Display for MappingStEph<A, B> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { Display::fmt(&self.mapping, f) }
-    }
-
-    impl<'a, X: StT + Hash, Y: StT + Hash> Debug for MappingStEphIter<'a, X, Y> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MappingStEphIter") }
-    }
-
-    impl<'a, X: StT + Hash, Y: StT + Hash> Display for MappingStEphIter<'a, X, Y> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MappingStEphIter") }
-    }
-
-    impl<'a, X: StT + Hash, Y: StT + Hash> Debug for MappingStEphGhostIterator<'a, X, Y> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MappingStEphGhostIterator") }
-    }
-
-    impl<'a, X: StT + Hash, Y: StT + Hash> Display for MappingStEphGhostIterator<'a, X, Y> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MappingStEphGhostIterator") }
     }
 
 }

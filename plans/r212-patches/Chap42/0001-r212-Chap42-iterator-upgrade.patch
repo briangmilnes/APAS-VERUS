@@ -1,0 +1,915 @@
+diff --git a/rust_verify_test/tests/Chap42/ProveTableStEph.rs b/rust_verify_test/tests/Chap42/ProveTableStEph.rs
+index 8e62c12..d4a0a3b 100644
+--- a/rust_verify_test/tests/Chap42/ProveTableStEph.rs
++++ b/rust_verify_test/tests/Chap42/ProveTableStEph.rs
+@@ -18,34 +18,46 @@ use common::*;
+ test_verify_one_file! {
+     #[test] tablesteph_loop_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap42::TableStEph::TableStEph::*;
+         use apas_verus::Types::Types::*;
+ 
+         fn test_loop_borrow_iter() {
+             let a: TableStEph<u64, u64> = TableStEph::empty();
+ 
+-            let mut it: TableStEphIter<u64, u64> = a.iter();
+-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.entries.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = a.iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant_table(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof { items = items.push(*x); }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -54,34 +66,46 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] tablesteph_loop_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap42::TableStEph::TableStEph::*;
+         use apas_verus::Types::Types::*;
+ 
+         fn test_loop_borrow_into() {
+             let a: TableStEph<u64, u64> = TableStEph::empty();
+ 
+-            let mut it: TableStEphIter<u64, u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.entries.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = (&a).into_iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant_table(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof { items = items.push(*x); }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -90,26 +114,25 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] tablesteph_for_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap42::TableStEph::TableStEph::*;
+         use apas_verus::Types::Types::*;
+ 
+         fn test_for_borrow_iter() {
+             let a: TableStEph<u64, u64> = TableStEph::empty();
+ 
+-            let it: TableStEphIter<u64, u64> = a.iter();
+-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.entries.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: a.iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof { items = items.push(*x); }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+@@ -118,26 +141,25 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] tablesteph_for_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap42::TableStEph::TableStEph::*;
+         use apas_verus::Types::Types::*;
+ 
+         fn test_for_borrow_into() {
+             let a: TableStEph<u64, u64> = TableStEph::empty();
+ 
+-            let it: TableStEphIter<u64, u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.entries.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: (&a).into_iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof { items = items.push(*x); }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+diff --git a/rust_verify_test/tests/Chap42/ProveTableStPer.rs b/rust_verify_test/tests/Chap42/ProveTableStPer.rs
+index 1f13ff8..ccc2fc1 100644
+--- a/rust_verify_test/tests/Chap42/ProveTableStPer.rs
++++ b/rust_verify_test/tests/Chap42/ProveTableStPer.rs
+@@ -18,34 +18,46 @@ use common::*;
+ test_verify_one_file! {
+     #[test] tablestper_loop_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap42::TableStPer::TableStPer::*;
+         use apas_verus::Types::Types::*;
+ 
+         fn test_loop_borrow_iter() {
+             let a: TableStPer<u64, u64> = TableStPer::empty();
+ 
+-            let mut it: TableStPerIter<u64, u64> = a.iter();
+-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.entries.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = a.iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant_tablestper(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof { items = items.push(*x); }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -54,34 +66,46 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] tablestper_loop_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap42::TableStPer::TableStPer::*;
+         use apas_verus::Types::Types::*;
+ 
+         fn test_loop_borrow_into() {
+             let a: TableStPer<u64, u64> = TableStPer::empty();
+ 
+-            let mut it: TableStPerIter<u64, u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.entries.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = (&a).into_iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant_tablestper(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof { items = items.push(*x); }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -90,26 +114,25 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] tablestper_for_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap42::TableStPer::TableStPer::*;
+         use apas_verus::Types::Types::*;
+ 
+         fn test_for_borrow_iter() {
+             let a: TableStPer<u64, u64> = TableStPer::empty();
+ 
+-            let it: TableStPerIter<u64, u64> = a.iter();
+-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.entries.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: a.iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof { items = items.push(*x); }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+@@ -118,26 +141,25 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] tablestper_for_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap42::TableStPer::TableStPer::*;
+         use apas_verus::Types::Types::*;
+ 
+         fn test_for_borrow_into() {
+             let a: TableStPer<u64, u64> = TableStPer::empty();
+ 
+-            let it: TableStPerIter<u64, u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.entries.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: (&a).into_iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof { items = items.push(*x); }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+diff --git a/src/Chap42/TableMtEph.rs b/src/Chap42/TableMtEph.rs
+index edba1d1..8272ade 100644
+--- a/src/Chap42/TableMtEph.rs
++++ b/src/Chap42/TableMtEph.rs
+@@ -30,6 +30,8 @@ pub mod TableMtEph {
+     use std::sync::Arc;
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+ 
+     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
+     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
+@@ -266,7 +268,7 @@ broadcast use {
+         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>)
+             ensures spec_entries_to_map(entries@) == self@;
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+-        fn iter(&self) -> (it: TableMtEphIter<'_, K, V>)
++        fn iter(&self) -> (it: std::slice::Iter<'_, Pair<K, V>>)
+             requires self.spec_tablemteph_wf()
+             ensures it@.0 == 0, iter_invariant_tablemteph(&it);
+     }
+@@ -2404,8 +2406,8 @@ broadcast use {
+         }
+ 
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+-        fn iter(&self) -> TableMtEphIter<'_, K, V> {
+-            TableMtEphIter { inner: self.entries.iter() }
++        fn iter(&self) -> std::slice::Iter<'_, Pair<K, V>> {
++            self.entries.iter()
+         }
+     }
+ 
+@@ -2423,109 +2425,10 @@ broadcast use {
+ 
+     //		Section 10. iterators — TableMtEph
+ 
+-    /// Reference iterator over TableMtEph entries, wrapping ArraySeqMtEphIter.
+-    #[verifier::reject_recursive_types(K)]
+-    #[verifier::reject_recursive_types(V)]
+-    pub struct TableMtEphIter<'a, K: MtKey, V: MtVal> {
+-        pub inner: ArraySeqMtEphIter<'a, Pair<K, V>>,
+-    }
+-
+-    impl<'a, K: MtKey, V: MtVal> View for TableMtEphIter<'a, K, V> {
+-        type V = (int, Seq<Pair<K, V>>);
+-        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) {
+-            self.inner@
+-        }
+-    }
+-
+-    pub open spec fn iter_invariant_tablemteph<'a, K: MtKey, V: MtVal>(it: &TableMtEphIter<'a, K, V>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<'a, K: MtKey, V: MtVal> std::iter::Iterator for TableMtEphIter<'a, K, V> {
+-        type Item = &'a Pair<K, V>;
+-        fn next(&mut self) -> (next: Option<&'a Pair<K, V>>)
+-            ensures
+-                ({
+-                    let (old_index, old_seq) = old(self)@;
+-                    match next {
+-                        None => {
+-                            &&& self@ == old(self)@
+-                            &&& old_index >= old_seq.len()
+-                        },
+-                        Some(element) => {
+-                            let (new_index, new_seq) = self@;
+-                            &&& 0 <= old_index < old_seq.len()
+-                            &&& new_seq == old_seq
+-                            &&& new_index == old_index + 1
+-                            &&& element == old_seq[old_index]
+-                        },
+-                    }
+-                }),
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    /// Ghost iterator for for-loop support over TableMtEphIter.
+-    #[verifier::reject_recursive_types(K)]
+-    #[verifier::reject_recursive_types(V)]
+-    pub struct TableMtEphGhostIterator<'a, K: MtKey, V: MtVal> {
+-        pub pos: int,
+-        pub elements: Seq<Pair<K, V>>,
+-        pub phantom: core::marker::PhantomData<&'a Pair<K, V>>,
+-    }
+-
+-    impl<'a, K: MtKey, V: MtVal> View for TableMtEphGhostIterator<'a, K, V> {
+-        type V = Seq<Pair<K, V>>;
+-        open spec fn view(&self) -> Seq<Pair<K, V>> { self.elements.take(self.pos) }
+-    }
+-
+-    impl<'a, K: MtKey, V: MtVal> vstd::pervasive::ForLoopGhostIteratorNew for TableMtEphIter<'a, K, V> {
+-        type GhostIter = TableMtEphGhostIterator<'a, K, V>;
+-        open spec fn ghost_iter(&self) -> TableMtEphGhostIterator<'a, K, V> {
+-            TableMtEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+-        }
+-    }
+-
+-    impl<'a, K: MtKey, V: MtVal> vstd::pervasive::ForLoopGhostIterator for TableMtEphGhostIterator<'a, K, V> {
+-        type ExecIter = TableMtEphIter<'a, K, V>;
+-        type Item = Pair<K, V>;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &TableMtEphIter<'a, K, V>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &TableMtEphIter<'a, K, V>) -> TableMtEphGhostIterator<'a, K, V> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+     impl<'a, K: MtKey, V: MtVal> std::iter::IntoIterator for &'a TableMtEph<K, V> {
+         type Item = &'a Pair<K, V>;
+-        type IntoIter = TableMtEphIter<'a, K, V>;
+-        fn into_iter(self) -> (it: TableMtEphIter<'a, K, V>)
++        type IntoIter = std::slice::Iter<'a, Pair<K, V>>;
++        fn into_iter(self) -> (it: std::slice::Iter<'a, Pair<K, V>>)
+             requires self.spec_tablemteph_wf()
+             ensures it@.0 == 0, iter_invariant_tablemteph(&it),
+         {
+diff --git a/src/Chap42/TableStEph.rs b/src/Chap42/TableStEph.rs
+index ec3596f..03a481c 100644
+--- a/src/Chap42/TableStEph.rs
++++ b/src/Chap42/TableStEph.rs
+@@ -27,6 +27,8 @@ pub mod TableStEph {
+     use std::fmt;
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
+     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+     pub use crate::Chap42::TableSpecsAndLemmas::TableSpecsAndLemmas::*;
+@@ -373,13 +375,13 @@ broadcast use {
+ 
+         /// Returns an iterator over table entries (key-value pairs).
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+-        pub fn iter<'a>(&'a self) -> (it: TableStEphIter<'a, K, V>)
++        pub fn iter<'a>(&'a self) -> (it: std::slice::Iter<'a, Pair<K, V>>)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.entries.seq@,
+-                iter_invariant_table(&it),
++                IteratorSpec::remaining(&it) == self.entries.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.entries.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            TableStEphIter { inner: self.entries.iter() }
++            self.entries.iter()
+         }
+     }
+ 
+@@ -2549,113 +2551,14 @@ broadcast use {
+ 
+     //		Section 10. iterators
+ 
+-
+-    /// Wrapping iterator over a TableStEph — delegates to the backing ArraySeqStEphIter.
+-    #[verifier::reject_recursive_types(K)]
+-    #[verifier::reject_recursive_types(V)]
+-    pub struct TableStEphIter<'a, K: StT + Ord, V: StT> {
+-        pub inner: ArraySeqStEphIter<'a, Pair<K, V>>,
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> View for TableStEphIter<'a, K, V> {
+-        type V = (int, Seq<Pair<K, V>>);
+-        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
+-    }
+-
+-    pub open spec fn iter_invariant_table<'a, K: StT + Ord, V: StT>(it: &TableStEphIter<'a, K, V>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> std::iter::Iterator for TableStEphIter<'a, K, V> {
+-        type Item = &'a Pair<K, V>;
+-
+-        fn next(&mut self) -> (next: Option<&'a Pair<K, V>>)
+-            ensures
+-                ({
+-                    let (old_index, old_seq) = old(self)@;
+-                    match next {
+-                        None => {
+-                            &&& self@ == old(self)@
+-                            &&& old_index >= old_seq.len()
+-                        },
+-                        Some(element) => {
+-                            let (new_index, new_seq) = self@;
+-                            &&& 0 <= old_index < old_seq.len()
+-                            &&& new_seq == old_seq
+-                            &&& new_index == old_index + 1
+-                            &&& element == old_seq[old_index]
+-                        },
+-                    }
+-                }),
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    /// Ghost iterator for for-loop support over TableStEphIter.
+-    #[verifier::reject_recursive_types(K)]
+-    #[verifier::reject_recursive_types(V)]
+-    pub struct TableStEphGhostIterator<'a, K: StT + Ord, V: StT> {
+-        pub pos: int,
+-        pub elements: Seq<Pair<K, V>>,
+-        pub phantom: core::marker::PhantomData<&'a Pair<K, V>>,
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> View for TableStEphGhostIterator<'a, K, V> {
+-        type V = Seq<Pair<K, V>>;
+-        open spec fn view(&self) -> Seq<Pair<K, V>> { self.elements.take(self.pos) }
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> vstd::pervasive::ForLoopGhostIteratorNew for TableStEphIter<'a, K, V> {
+-        type GhostIter = TableStEphGhostIterator<'a, K, V>;
+-        open spec fn ghost_iter(&self) -> TableStEphGhostIterator<'a, K, V> {
+-            TableStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+-        }
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> vstd::pervasive::ForLoopGhostIterator for TableStEphGhostIterator<'a, K, V> {
+-        type ExecIter = TableStEphIter<'a, K, V>;
+-        type Item = Pair<K, V>;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &TableStEphIter<'a, K, V>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &TableStEphIter<'a, K, V>) -> TableStEphGhostIterator<'a, K, V> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+     impl<'a, K: StT + Ord, V: StT> std::iter::IntoIterator for &'a TableStEph<K, V> {
+         type Item = &'a Pair<K, V>;
+-        type IntoIter = TableStEphIter<'a, K, V>;
++        type IntoIter = std::slice::Iter<'a, Pair<K, V>>;
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.entries.seq@,
+-                iter_invariant_table(&it),
++                IteratorSpec::remaining(&it) == self.entries.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.entries.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+             self.iter()
+         }
+@@ -2720,28 +2623,4 @@ broadcast use {
+             write!(f, "TableStEph(len={})", self.entries.length())
+         }
+     }
+-
+-    impl<'a, K: StT + Ord + fmt::Debug, V: StT + fmt::Debug> fmt::Debug for TableStEphIter<'a, K, V> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "TableStEphIter")
+-        }
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> fmt::Display for TableStEphIter<'a, K, V> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "TableStEphIter")
+-        }
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> fmt::Debug for TableStEphGhostIterator<'a, K, V> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "TableStEphGhostIterator")
+-        }
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> fmt::Display for TableStEphGhostIterator<'a, K, V> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "TableStEphGhostIterator")
+-        }
+-    }
+ }
+diff --git a/src/Chap42/TableStPer.rs b/src/Chap42/TableStPer.rs
+index 716bb49..cdaf6d7 100644
+--- a/src/Chap42/TableStPer.rs
++++ b/src/Chap42/TableStPer.rs
+@@ -26,6 +26,8 @@ pub mod TableStPer {
+     use std::cmp::Ordering;
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
+     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+@@ -445,13 +447,13 @@ pub mod TableStPer {
+ 
+         /// Returns an iterator over table entries (key-value pairs).
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+-        pub fn iter<'a>(&'a self) -> (it: TableStPerIter<'a, K, V>)
++        pub fn iter<'a>(&'a self) -> (it: std::slice::Iter<'a, Pair<K, V>>)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.entries.seq@,
+-                iter_invariant_tablestper(&it),
++                IteratorSpec::remaining(&it) == self.entries.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.entries.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            TableStPerIter { inner: self.entries.iter() }
++            self.entries.iter()
+         }
+     }
+ 
+@@ -2762,113 +2764,14 @@ pub mod TableStPer {
+ 
+     //		Section 10. iterators
+ 
+-
+-    /// Wrapping iterator over a TableStPer — delegates to the backing ArraySeqStPerIter.
+-    #[verifier::reject_recursive_types(K)]
+-    #[verifier::reject_recursive_types(V)]
+-    pub struct TableStPerIter<'a, K: StT + Ord, V: StT> {
+-        pub inner: ArraySeqStPerIter<'a, Pair<K, V>>,
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> View for TableStPerIter<'a, K, V> {
+-        type V = (int, Seq<Pair<K, V>>);
+-        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
+-    }
+-
+-    pub open spec fn iter_invariant_tablestper<'a, K: StT + Ord, V: StT>(it: &TableStPerIter<'a, K, V>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> std::iter::Iterator for TableStPerIter<'a, K, V> {
+-        type Item = &'a Pair<K, V>;
+-
+-        fn next(&mut self) -> (next: Option<&'a Pair<K, V>>)
+-            ensures
+-                ({
+-                    let (old_index, old_seq) = old(self)@;
+-                    match next {
+-                        None => {
+-                            &&& self@ == old(self)@
+-                            &&& old_index >= old_seq.len()
+-                        },
+-                        Some(element) => {
+-                            let (new_index, new_seq) = self@;
+-                            &&& 0 <= old_index < old_seq.len()
+-                            &&& new_seq == old_seq
+-                            &&& new_index == old_index + 1
+-                            &&& element == old_seq[old_index]
+-                        },
+-                    }
+-                }),
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    /// Ghost iterator for for-loop support over TableStPerIter.
+-    #[verifier::reject_recursive_types(K)]
+-    #[verifier::reject_recursive_types(V)]
+-    pub struct TableStPerGhostIterator<'a, K: StT + Ord, V: StT> {
+-        pub pos: int,
+-        pub elements: Seq<Pair<K, V>>,
+-        pub phantom: core::marker::PhantomData<&'a Pair<K, V>>,
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> View for TableStPerGhostIterator<'a, K, V> {
+-        type V = Seq<Pair<K, V>>;
+-        open spec fn view(&self) -> Seq<Pair<K, V>> { self.elements.take(self.pos) }
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> vstd::pervasive::ForLoopGhostIteratorNew for TableStPerIter<'a, K, V> {
+-        type GhostIter = TableStPerGhostIterator<'a, K, V>;
+-        open spec fn ghost_iter(&self) -> TableStPerGhostIterator<'a, K, V> {
+-            TableStPerGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+-        }
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> vstd::pervasive::ForLoopGhostIterator for TableStPerGhostIterator<'a, K, V> {
+-        type ExecIter = TableStPerIter<'a, K, V>;
+-        type Item = Pair<K, V>;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &TableStPerIter<'a, K, V>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &TableStPerIter<'a, K, V>) -> TableStPerGhostIterator<'a, K, V> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+     impl<'a, K: StT + Ord, V: StT> std::iter::IntoIterator for &'a TableStPer<K, V> {
+         type Item = &'a Pair<K, V>;
+-        type IntoIter = TableStPerIter<'a, K, V>;
++        type IntoIter = std::slice::Iter<'a, Pair<K, V>>;
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.entries.seq@,
+-                iter_invariant_tablestper(&it),
++                IteratorSpec::remaining(&it) == self.entries.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.entries.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+             self.iter()
+         }
+@@ -2939,28 +2842,4 @@ pub mod TableStPer {
+             write!(f, "TableStPer(len={})", self.entries.length())
+         }
+     }
+-
+-    impl<'a, K: StT + Ord + std::fmt::Debug, V: StT + std::fmt::Debug> std::fmt::Debug for TableStPerIter<'a, K, V> {
+-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+-            write!(f, "TableStPerIter")
+-        }
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> std::fmt::Display for TableStPerIter<'a, K, V> {
+-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+-            write!(f, "TableStPerIter")
+-        }
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> std::fmt::Debug for TableStPerGhostIterator<'a, K, V> {
+-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+-            write!(f, "TableStPerGhostIterator")
+-        }
+-    }
+-
+-    impl<'a, K: StT + Ord, V: StT> std::fmt::Display for TableStPerGhostIterator<'a, K, V> {
+-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+-            write!(f, "TableStPerGhostIterator")
+-        }
+-    }
+ }

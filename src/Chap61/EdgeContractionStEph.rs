@@ -11,6 +11,7 @@
 //  Table of Contents
 //	Section 1. module
 //	Section 2. imports
+//	Section 3. broadcast use
 //	Section 4. type definitions
 //	Section 8. traits
 //	Section 9. impls
@@ -29,14 +30,21 @@ pub mod EdgeContractionStEph {
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
     use crate::Types::Types::*;
 
+    use std::collections::HashMap;
     use std::hash::Hash;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::obeys_key_model;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap61::VertexMatchingStEph::VertexMatchingStEph::greedy_matching;
     use crate::SetLit;
 
-    verus! 
+    verus!
 {
+
+    //		Section 3. broadcast use
+
+
+    broadcast use vstd::std_specs::hash::group_hash_axioms;
 
     //		Section 4. type definitions
 
@@ -94,7 +102,7 @@ pub mod EdgeContractionStEph {
             graph.V.spec_setsteph_wf(),
         ensures true,
     {
-        let mut vertex_to_block = HashMapWithViewPlus::<V, V>::new();
+        let mut vertex_to_block = HashMap::<V, V>::new();
 
         let matching_it = matching.iter();
         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
@@ -125,11 +133,13 @@ pub mod EdgeContractionStEph {
         let mut new_edges: SetStEph<Edge<V>> = SetLit![];
 
         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-        for (_, representative) in vertex_to_block.iter()
+        for kv in vertex_to_block.iter()
             invariant
                 valid_key_type_Edge::<V>(),
+                obeys_key_model::<V>(),
                 new_vertices.spec_setsteph_wf(),
         {
+            let (_, representative) = kv;
             let _ = new_vertices.insert(representative.clone());
         }
 

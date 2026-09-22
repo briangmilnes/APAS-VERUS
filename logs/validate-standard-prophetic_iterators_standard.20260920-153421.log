@@ -1,0 +1,31 @@
+Standard: prophetic_iterators_standard (deps: nodeps; extra: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/ptt_prophetic_iterators_standard.rs)
+Harness root: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/harness-prophetic_iterators_standard/lib.rs
+Starting verification at 15:34:21
+error[E0107]: struct takes 0 lifetime arguments but 1 lifetime argument was supplied
+  --> /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/ptt_prophetic_iterators_standard.rs:61:17
+   |
+61 |     let mut it: VerusForLoopWrapper<'_, std::slice::Iter<'_, u64>> =
+   |                 ^^^^^^^^^^^^^^^^^^^ -- help: remove the lifetime argument
+   |                 |
+   |                 expected 0 lifetime arguments
+
+error[E0107]: struct takes 0 lifetime arguments but 1 lifetime argument was supplied
+  --> /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/ptt_prophetic_iterators_standard.rs:88:17
+   |
+88 |     let mut it: VerusForLoopWrapper<'_, std::vec::IntoIter<u64>> =
+   |                 ^^^^^^^^^^^^^^^^^^^ -- help: remove the lifetime argument
+   |                 |
+   |                 expected 0 lifetime arguments
+
+error[E0107]: struct takes 0 lifetime arguments but 1 lifetime argument was supplied
+   --> /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/ptt_prophetic_iterators_standard.rs:126:17
+    |
+126 |     let mut it: VerusForLoopWrapper<'_, CountIter> =
+    |                 ^^^^^^^^^^^^^^^^^^^ -- help: remove the lifetime argument
+    |                 |
+    |                 expected 0 lifetime arguments
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0107`.
+Elapsed: 1s

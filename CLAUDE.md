@@ -18,6 +18,19 @@ is to get code to **verify (prove)** with Verus.
   still read all of them. Agents that skip standards write code that violates project
   conventions and has to be reverted — this has happened repeatedly and wastes rounds.
 
+## Computational Thinking and Vocabulary
+
+ You are to apply computational thinking in your work. Including
+experimental thinking: computer science is an experimental science.
+
+@~/projects/ComputAItionalThinking/ComputAItionalThinkingRules.md
+@~/projects/ComputAItionalThinking/ExperAImentalThinking.md
+
+And you are not to use hackerish language. If in doubt, don't 
+metaphor, use the vocabulary worked out below.
+
+@~/projects/ComputAItionalThinking/ComputAItionalThinkingVocabulary.md
+
 ### Standards Index
 
 | # | Standard | Read when... |
@@ -982,11 +995,17 @@ Do not create PTTs speculatively.
 
 ### Collection Iterator Standard
 
-Every collection module implements the iterator standard from `docs/APAS-VERUSIterators.rs`.
-Reference implementation: `src/Chap18/ArraySeqStEph.rs`. Requires 10 components inside
-`verus!` section 10. See `.cursor/rules/apas-verus/collection-iterators.mdc` for full details
-including PTT test patterns (6 patterns: loop-borrow-iter, loop-borrow-into, for-borrow-iter,
-for-borrow-into, loop-consume, for-consume).
+Every collection module implements the verus 0.2026.09.13 prophetic iterator model.
+A Vec-backed collection is delegated: `iter()` returns the std iterator vstd already
+specifies, with three postconditions (`src/standards/iterators_standard.rs`). A
+collection with no slice underneath is custom: it implements the five `IteratorSpecImpl`
+spec fns (`src/standards/prophetic_iterators_standard.rs`). A collection that wraps
+another re-exposes the inner iterator (`src/standards/wrapping_iterators_standard.rs`).
+Reference doc: `docs/PropheticIterators.md`. Loop invariants use `it.index()` and
+`it.seq()`; manual loops wrap the iterator in `VerusForLoopWrapper::new(it)`. See
+`.cursor/rules/apas-verus/collection-iterators.mdc` for the PTT test patterns
+(6 patterns: loop-borrow-iter, loop-borrow-into, for-borrow-iter, for-borrow-into,
+loop-consume, for-consume).
 
 ### Threaded Test Timeout
 
@@ -1077,3 +1096,4 @@ Chap56-59 have duplicated Float/I64 files for graph algorithms. `vstdplus/float.
 identity). Key challenge: bridging `OrderedFloat<f64>` to f64 axioms. Strategy prioritizes
 SSSPResult files (no float arithmetic) before Dijkstra/BellmanFord (need addition axioms).
 See `.cursor/rules/apas-verus/float-axiom-fixes.mdc`.
+

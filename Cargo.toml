@@ -95,9 +95,10 @@ path = "tests/Chap05/TestSetMtEph.rs"
 name = "test_total_order"
 path = "tests/vstdplus/test_total_order.rs"
 
-[[test]]
-name = "test_partial_order"
-path = "tests/vstdplus/test_partial_order.rs"
+# r208: vstdplus::partial_order is commented out in src/lib.rs (0 users in src).
+# [[test]]
+# name = "test_partial_order"
+# path = "tests/vstdplus/test_partial_order.rs"
 
 [[test]]
 name = "test_feq"
@@ -2140,6 +2141,7 @@ path = "tests/Chap61/TestVertexMatchingMtEph.rs"
 name = "TestVertexMatchingStEph"
 path = "tests/Chap61/TestVertexMatchingStEph.rs"
 
+# r211: re-enabled; Chap62 and Chap63 moved to std HashMap in r209.
 [[test]]
 name = "TestStarContractionMtEph"
 path = "tests/Chap62/TestStarContractionMtEph.rs"
@@ -2196,6 +2198,7 @@ path = "tests/Chap65/TestUnionFindNoPCStEph.rs"
 name = "TestUnionFindPCStEph"
 path = "tests/Chap65/TestUnionFindPCStEph.rs"
 
+# r211: re-enabled; Chap66 moved to std HashMap in r209.
 [[test]]
 name = "TestBoruvkaMtEph"
 path = "tests/Chap66/TestBoruvkaMtEph.rs"

@@ -1,0 +1,16 @@
+Mode: isolate
+Isolate: including Chap65 Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02
+error[E0432]: unresolved import `crate::Chap05::SetStEph::SetStEph::iter_invariant`
+  --> src/Chap65/KruskalStEph.rs:29:9
+   |
+29 |     use crate::Chap05::SetStEph::SetStEph::iter_invariant;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^--------------
+   |                                            |
+   |                                            no `iter_invariant` in `Chap05::SetStEph::SetStEph`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0432`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 358MB, peak z3 RSS: 0MB, min free: 27759MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

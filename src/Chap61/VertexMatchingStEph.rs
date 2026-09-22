@@ -29,9 +29,9 @@ pub mod VertexMatchingStEph {
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
     use crate::Types::Types::*;
 
+    use std::collections::HashMap;
     use std::hash::Hash;
     use crate::SetLit;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::rand::rand::{seeded_rng, random_bool_seeded};
 
     verus! 
@@ -119,7 +119,7 @@ pub mod VertexMatchingStEph {
         let mut matching: SetStEph<Edge<V>> = SetLit![];
 
         let mut rng = seeded_rng(seed);
-        let mut edge_coins = HashMapWithViewPlus::<Edge<V>, bool>::new();
+        let mut edge_coins = HashMap::<Edge<V>, bool>::new();
 
         let edge_vec = graph.E.to_seq();
         let ne = edge_vec.len();

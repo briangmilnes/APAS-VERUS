@@ -29,9 +29,9 @@ pub mod EdgeContractionMtEph {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
 
+    use std::collections::HashMap;
     use std::hash::Hash;
     use std::sync::Arc;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use std::vec::Vec;
     use crate::Chap61::VertexMatchingMtEph::VertexMatchingMtEph::parallel_matching_mt;
     use crate::{ParaPair, SetLit};
@@ -105,7 +105,7 @@ pub mod EdgeContractionMtEph {
         use std::sync::{Arc, Mutex};
         pub type T<V> = UnDirGraphMtEph<V>;
 
-        let vertex_to_block = Arc::new(Mutex::new(HashMapWithViewPlus::new()));
+        let vertex_to_block = Arc::new(Mutex::new(HashMap::new()));
 
         {
             let mut map = vertex_to_block.lock().unwrap();
@@ -136,7 +136,7 @@ pub mod EdgeContractionMtEph {
         let edges_seq = ArraySeqStEphS::from_vec(edges_vec);
         let n_edges = edges_seq.length();
         let edges_arc = Arc::new(edges_seq);
-        let vertex_map_arc: Arc<HashMapWithViewPlus<V, V>> = Arc::new(vertex_to_block);
+        let vertex_map_arc: Arc<HashMap<V, V>> = Arc::new(vertex_to_block);
 
         let new_edges_set = build_edges_parallel(edges_arc, vertex_map_arc, 0, n_edges);
 
@@ -148,7 +148,7 @@ pub mod EdgeContractionMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|E|), Span Θ(lg |E|) — genuine divide-and-conquer parallelism
     fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
-        vertex_map: Arc<HashMapWithViewPlus<V, V>>,
+        vertex_map: Arc<HashMap<V, V>>,
         start: usize,
         end: usize,
     ) -> (contracted: SetStEph<Edge<V>>)

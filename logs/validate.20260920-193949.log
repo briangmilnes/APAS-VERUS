@@ -1,0 +1,173 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error: postcondition not satisfied
+   --> src/Chap05/SetStEph.rs:940:21
+    |
+940 |             ensures clone@ == self@
+    |                     ^^^^^^^^^^^^^^^ failed this postcondition
+941 |         { SetStEph { elements: self.elements.clone() } }
+    |           -------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+let clone = _VERUS_ret_ident;
+    clone.view() =~= old(self).view() 
+
+error: postcondition not satisfied
+    --> src/Chap05/SetMtEph.rs:1204:21
+     |
+1204 |             ensures clone@ == self@
+     |                     ^^^^^^^^^^^^^^^ failed this postcondition
+1205 |         { SetMtEph { elements: self.elements.clone() } }
+     |           -------------------------------------------- at the end of the function body
+
+note: 
+
+let clone = _VERUS_ret_ident;
+    clone.view() =~= old(self).view() 
+
+error: postcondition not satisfied
+   --> src/Chap06/LabDirGraphMtEph.rs:162:21
+    |
+162 |             ensures spec_labgraphview_wf(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+360 |         fn add_vertex(&mut self, v: V) { let _ = self.vertices.insert(v); }
+    |         ------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Types.rs:105:21
+    |
+105 |                     gv.V.contains(u) && gv.V.contains(w)
+    |                     ^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap06/LabDirGraphMtEph.rs:162:21
+    |
+162 |             ensures spec_labgraphview_wf(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_labgraphview_wf((mut_ref_future(old(self))).view()) ✘
+|   forall |u, w, l|
+|       (mut_ref_future(old(self))).view().A.to_iset().contains((u, w, l)) ==>
+|           (mut_ref_future(old(self))).view().V.to_iset().contains(u) ✘
+|               function is uninterpreted
+|           (mut_ref_future(old(self))).view().V.to_iset().contains(w) ✘
+|               function is uninterpreted
++---
+(mut_ref_future(old(self))).view().V =~= (mut_ref_current(old(self))).view().V.insert(old(v).view()) ✔
+(mut_ref_future(old(self))).view().A =~= (mut_ref_current(old(self))).view().A ✔
+
+error: postcondition not satisfied
+   --> src/Chap06/LabDirGraphMtEph.rs:169:17
+    |
+169 |                 spec_labgraphview_wf(self@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+363 |         fn add_labeled_arc(&mut self, from: V, to: V, label: L) {
+    |         ------------------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Types.rs:105:21
+    |
+105 |                     gv.V.contains(u) && gv.V.contains(w)
+    |                     ^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap06/LabDirGraphMtEph.rs:169:17
+    |
+169 |                 spec_labgraphview_wf(self@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_labgraphview_wf((mut_ref_future(old(self))).view()) ✘
+|   forall |u, w, l|
+|       (mut_ref_future(old(self))).view().A.to_iset().contains((u, w, l)) ==>
+|           (mut_ref_future(old(self))).view().V.to_iset().contains(u) ✘
+|               function is uninterpreted
+|           (mut_ref_future(old(self))).view().V.to_iset().contains(w) ✘
+|               function is uninterpreted
++---
+(mut_ref_future(old(self))).view().V =~= (mut_ref_current(old(self))).view().V.insert(old(from).view()).insert(old(to).view()) ✔
+(mut_ref_future(old(self))).view().A =~= (mut_ref_current(old(self))).view().A.insert((old(from).view(), old(to).view(), old(label).view())) ✔
+
+error: postcondition not satisfied
+   --> src/Chap06/LabUnDirGraphMtEph.rs:174:21
+    |
+174 |             ensures spec_labgraphview_wf(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+334 |         fn add_vertex(&mut self, v: V) { let _ = self.vertices.insert(v); }
+    |         ------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Types.rs:105:21
+    |
+105 |                     gv.V.contains(u) && gv.V.contains(w)
+    |                     ^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap06/LabUnDirGraphMtEph.rs:174:21
+    |
+174 |             ensures spec_labgraphview_wf(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_labgraphview_wf((mut_ref_future(old(self))).view()) ✘
+|   forall |u, w, l|
+|       (mut_ref_future(old(self))).view().A.to_iset().contains((u, w, l)) ==>
+|           (mut_ref_future(old(self))).view().V.to_iset().contains(u) ✘
+|               function is uninterpreted
+|           (mut_ref_future(old(self))).view().V.to_iset().contains(w) ✘
+|               function is uninterpreted
++---
+(mut_ref_future(old(self))).view().V =~= (mut_ref_current(old(self))).view().V.insert(old(v).view()) ✔
+(mut_ref_future(old(self))).view().A =~= (mut_ref_current(old(self))).view().A ✔
+
+error: postcondition not satisfied
+   --> src/Chap06/LabUnDirGraphMtEph.rs:181:17
+    |
+181 |                   spec_labgraphview_wf(self@),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+340 | /             if v1 <= v2 {
+341 | |                 let _ = self.labeled_edges.insert(LabEdge(v1, v2, label));
+342 | |             } else {
+343 | |                 let _ = self.labeled_edges.insert(LabEdge(v2, v1, label));
+344 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Types.rs:105:21
+    |
+105 |                     gv.V.contains(u) && gv.V.contains(w)
+    |                     ^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap06/LabUnDirGraphMtEph.rs:181:17
+    |
+181 |                 spec_labgraphview_wf(self@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_labgraphview_wf((mut_ref_future(old(self))).view()) ✘
+|   forall |u, w, l|
+|       (mut_ref_future(old(self))).view().A.to_iset().contains((u, w, l)) ==>
+|           (mut_ref_future(old(self))).view().V.to_iset().contains(u) ✘
+|               function is uninterpreted
+|           (mut_ref_future(old(self))).view().V.to_iset().contains(w) ✘
+|               function is uninterpreted
++---
+(mut_ref_future(old(self))).view().V =~= (mut_ref_current(old(self))).view().V.insert(old(v1).view()).insert(old(v2).view()) ✔
+!((mut_ref_future(old(self))).view().A =~= (mut_ref_current(old(self))).view().A.insert((old(v1).view(), old(v2).view(), old(label).view()))) ==>
+    (mut_ref_future(old(self))).view().A =~= (mut_ref_current(old(self))).view().A.insert((old(v2).view(), old(v1).view(), old(label).view())) ✔
+
+verification results:: 906 verified, 6 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 995MB, peak z3 RSS: 207MB, min free: 26993MB
+Sampled CPU Usage: rust_verify: 7s, z3 children: 3s

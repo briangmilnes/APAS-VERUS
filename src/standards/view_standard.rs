@@ -17,6 +17,8 @@ pub mod view_standard {
     use std::fmt::{Debug, Display, Formatter};
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
 
     verus! {
 
@@ -46,18 +48,6 @@ pub mod view_standard {
         pub seq: Vec<T>,
     }
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct CollectionIter<'a, T> {
-        pub inner: std::slice::Iter<'a, T>,
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct CollectionGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
     // 5. view impls
 
     /// View for a simple single-field struct.
@@ -78,28 +68,6 @@ pub mod view_standard {
         open spec fn view(&self) -> Seq<T::V> {
             self.seq@.map(|_i: int, t: T| t@)
         }
-    }
-
-    impl<'a, T> View for CollectionIter<'a, T> {
-        type V = (int, Seq<T>);
-
-        open spec fn view(&self) -> (int, Seq<T>) {
-            self.inner@
-        }
-    }
-
-    impl<'a, T> View for CollectionGhostIterator<'a, T> {
-        type V = Seq<T>;
-
-        open spec fn view(&self) -> Seq<T> {
-            self.elements.take(self.pos)
-        }
-    }
-
-    // 6. spec fns
-
-    pub open spec fn iter_invariant<'a, T>(it: &CollectionIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
     }
 
     // 8. traits
@@ -173,104 +141,33 @@ pub mod view_standard {
         }
     }
 
+    // Delegated iteration: the collection returns the std slice iterator that
+    // vstd already specifies. Postconditions per iterators_standard.rs.
     impl<T> CollectionS<T> {
-        pub fn iter(&self) -> (it: CollectionIter<'_, T>)
+        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
-                iter_invariant(&it),
+                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
-            CollectionIter { inner: self.seq.iter() }
+            self.seq.iter()
         }
     }
 
     // 10. iterators
 
-    impl<'a, T> std::iter::Iterator for CollectionIter<'a, T> {
-        type Item = &'a T;
-
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures
-                ({
-                    let (old_index, old_seq) = old(self)@;
-                    match next {
-                        None => {
-                            &&& self@ == old(self)@
-                            &&& old_index >= old_seq.len()
-                        },
-                        Some(element) => {
-                            let (new_index, new_seq) = self@;
-                            &&& 0 <= old_index < old_seq.len()
-                            &&& new_seq == old_seq
-                            &&& new_index == old_index + 1
-                            &&& element == old_seq[old_index]
-                        },
-                    }
-                }),
-        {
-            self.inner.next()
-        }
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for CollectionIter<'a, T> {
-        type GhostIter = CollectionGhostIterator<'a, T>;
-
-        open spec fn ghost_iter(&self) -> CollectionGhostIterator<'a, T> {
-            CollectionGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for CollectionGhostIterator<'a, T> {
-        type ExecIter = CollectionIter<'a, T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &CollectionIter<'a, T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(self.elements[self.pos])
-            } else {
-                None
-            }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &CollectionIter<'a, T>) -> CollectionGhostIterator<'a, T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
     impl<'a, T> std::iter::IntoIterator for &'a CollectionS<T> {
         type Item = &'a T;
 
-        type IntoIter = CollectionIter<'a, T>;
+        type IntoIter = std::slice::Iter<'a, T>;
 
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
-                iter_invariant(&it),
+                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
-            CollectionIter { inner: self.seq.iter() }
+            self.seq.iter()
         }
     }
 
@@ -281,8 +178,9 @@ pub mod view_standard {
 
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
+                IteratorSpec::remaining(&it) == self.seq@,
+                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
             self.seq.into_iter()
         }
@@ -318,29 +216,6 @@ pub mod view_standard {
                 write!(f, "{}", item)?;
             }
             write!(f, "]")
-        }
-    }
-    impl<'a, T: Debug> Debug for CollectionIter<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "CollectionIter({:?})", self.inner)
-        }
-    }
-
-    impl<'a, T> Display for CollectionIter<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "CollectionIter")
-        }
-    }
-
-    impl<'a, T> Debug for CollectionGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "CollectionGhostIterator")
-        }
-    }
-
-    impl<'a, T> Display for CollectionGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "CollectionGhostIterator")
         }
     }
 } // pub mod view_standard

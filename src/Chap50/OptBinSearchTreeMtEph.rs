@@ -4,7 +4,7 @@
 //! Chapter 50: Optimal Binary Search Tree - ephemeral, multi-threaded.
 //!
 //! Memoized top-down DP with parallel min reduction.
-//! Uses Arc<RwLock<HashMapWithViewPlus>> for the memo table.
+//! Uses Arc<RwLock<HashMap>> for the memo table.
 
 
 //  Table of Contents
@@ -39,6 +39,7 @@ pub mod OptBinSearchTreeMtEph {
 
     //		Section 2. imports
 
+    use std::collections::HashMap;
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::sync::Arc;
     use std::vec::IntoIter;
@@ -49,8 +50,6 @@ pub mod OptBinSearchTreeMtEph {
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap30::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
-    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
     use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
@@ -65,7 +64,7 @@ pub mod OptBinSearchTreeMtEph {
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     crate::Types::Types::group_Pair_axioms,
-    vstd::map::group_map_axioms,
+    vstd::map::group_map_lemmas,
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,
 };
@@ -154,7 +153,7 @@ broadcast use {
     /// - Alg Analysis: APAS (Ch50 Alg 50.2): Work O(n^3), Span O(n lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n lg n) — parallel min reduction over split points via join, O(1) prefix sum lookup
     fn obst_rec(
-        memo: &Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, OptBSTMtEphMemoInv>>,
+        memo: &Arc<RwLock<HashMap<Pair<usize, usize>, Probability>, OptBSTMtEphMemoInv>>,
         prefix_sums: &Arc<Vec<Probability>>,
         n: usize,
         i: usize,
@@ -209,7 +208,7 @@ broadcast use {
     /// Returns the minimum of obst_rec(i, k) + obst_rec(i+k+1, l-k-1) for k in [lo, hi).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(l), Span O(lg l)
     fn parallel_min_split_cost(
-        memo: &Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, OptBSTMtEphMemoInv>>,
+        memo: &Arc<RwLock<HashMap<Pair<usize, usize>, Probability>, OptBSTMtEphMemoInv>>,
         prefix_sums: &Arc<Vec<Probability>>,
         n: usize,
         i: usize,
@@ -233,10 +232,10 @@ broadcast use {
             left_cost + right_cost
         } else {
             let mid = lo + (hi - lo) / 2;
-            let memo1 = clone_arc_rwlock(memo);
-            let ps1 = clone_arc(prefix_sums);
-            let memo2 = clone_arc_rwlock(memo);
-            let ps2 = clone_arc(prefix_sums);
+            let memo1 = memo.clone();
+            let ps1 = prefix_sums.clone();
+            let memo2 = memo.clone();
+            let ps2 = prefix_sums.clone();
 
             let f1 = move || -> (r: Probability)
                 requires
@@ -274,7 +273,7 @@ broadcast use {
     #[verifier::reject_recursive_types(T)]
     pub struct OBSTMtEphS<T: MtVal> {
         pub keys: Arc<RwLock<Vec<KeyProb<T>>, OptBSTMtEphKeysInv<T>>>,
-        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, OptBSTMtEphMemoInv>>,
+        pub memo: Arc<RwLock<HashMap<Pair<usize, usize>, Probability>, OptBSTMtEphMemoInv>>,
         pub ghost_keys: Ghost<Seq<KeyProb<T>>>,
     }
 
@@ -302,8 +301,8 @@ broadcast use {
             // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                keys: new_arc_rwlock(Vec::new(), Ghost(OptBSTMtEphKeysInv { expected_keys: Seq::empty() })),
-                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
+                keys: Arc::new(RwLock::new(Vec::new(), Ghost(OptBSTMtEphKeysInv { expected_keys: Seq::empty() }))),
+                memo: Arc::new(RwLock::new(HashMap::new(), Ghost(OptBSTMtEphMemoInv))),
                 ghost_keys: Ghost(Seq::empty()),
             }
         }
@@ -326,8 +325,8 @@ broadcast use {
             let ghost gk = key_probs@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv { expected_keys: gk })),
-                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
+                keys: Arc::new(RwLock::new(key_probs, Ghost(OptBSTMtEphKeysInv { expected_keys: gk }))),
+                memo: Arc::new(RwLock::new(HashMap::new(), Ghost(OptBSTMtEphMemoInv))),
                 ghost_keys: Ghost(gk),
             }
         }
@@ -339,8 +338,8 @@ broadcast use {
             let _len = key_probs.len();
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv { expected_keys: gk })),
-                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
+                keys: Arc::new(RwLock::new(key_probs, Ghost(OptBSTMtEphKeysInv { expected_keys: gk }))),
+                memo: Arc::new(RwLock::new(HashMap::new(), Ghost(OptBSTMtEphMemoInv))),
                 ghost_keys: Ghost(gk),
             }
         }
@@ -380,7 +379,7 @@ broadcast use {
 
             // Clear memo.
             {
-                let memo_arc = clone_arc_rwlock(&self.memo);
+                let memo_arc = self.memo.clone();
                 let rwlock = arc_deref(&memo_arc);
                 let (mut memo, write_handle) = rwlock.acquire_write();
                 memo.clear();
@@ -416,8 +415,8 @@ broadcast use {
             keys.set(index, key_prob);
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             *self = OBSTMtEphS {
-                keys: new_arc_rwlock(keys, Ghost(OptBSTMtEphKeysInv { expected_keys: new_keys_ghost })),
-                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
+                keys: Arc::new(RwLock::new(keys, Ghost(OptBSTMtEphKeysInv { expected_keys: new_keys_ghost }))),
+                memo: Arc::new(RwLock::new(HashMap::new(), Ghost(OptBSTMtEphMemoInv))),
                 ghost_keys: Ghost(new_keys_ghost),
             };
         }
@@ -437,8 +436,8 @@ broadcast use {
             keys.set(index, new_kp);
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             *self = OBSTMtEphS {
-                keys: new_arc_rwlock(keys, Ghost(OptBSTMtEphKeysInv { expected_keys: new_keys_ghost })),
-                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
+                keys: Arc::new(RwLock::new(keys, Ghost(OptBSTMtEphKeysInv { expected_keys: new_keys_ghost }))),
+                memo: Arc::new(RwLock::new(HashMap::new(), Ghost(OptBSTMtEphMemoInv))),
                 ghost_keys: Ghost(new_keys_ghost),
             };
         }
@@ -493,9 +492,12 @@ broadcast use {
     //		Section 11c. top level coarse locking
 
 
-        impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, Probability>> for OptBSTMtEphMemoInv {
-            open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> bool {
-                v@.dom().finite()
+        impl RwLockPredicate<HashMap<Pair<usize, usize>, Probability>> for OptBSTMtEphMemoInv {
+            open spec fn inv(self, v: HashMap<Pair<usize, usize>, Probability>) -> bool {
+                // The previous body, `v@.dom().finite()`, is identically true at vstd
+                // 0.2026.09.13 (`Set` is finite by type); a real invariant needs the
+                // memo correctness predicate (docs/HashMigration.md, Needs discussion).
+                true
             }
         }
 

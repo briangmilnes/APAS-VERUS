@@ -44,7 +44,7 @@ pub mod EdgeSetGraphMtPer {
 
 
     broadcast use {
-        vstd::set::group_set_axioms,
+        vstd::set::group_set_lemmas,
         vstd::set_lib::group_set_lib_default,
         crate::vstdplus::feq::feq::group_feq_axioms,
     };

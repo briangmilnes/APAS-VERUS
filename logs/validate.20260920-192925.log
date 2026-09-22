@@ -1,0 +1,61 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error: postcondition not satisfied
+    --> src/Chap05/SetMtEph.rs:1204:21
+     |
+1204 |             ensures clone@ == self@
+     |                     ^^^^^^^^^^^^^^^ failed this postcondition
+1205 |         { SetMtEph { elements: self.elements.clone() } }
+     |           -------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+let clone = _VERUS_ret_ident;
+    clone.view() =~= old(self).view() 
+
+error: postcondition not satisfied
+   --> src/Chap05/SetStEph.rs:940:21
+    |
+940 |             ensures clone@ == self@
+    |                     ^^^^^^^^^^^^^^^ failed this postcondition
+941 |         { SetStEph { elements: self.elements.clone() } }
+    |           -------------------------------------------- at the end of the function body
+
+note: 
+
+let clone = _VERUS_ret_ident;
+    clone.view() =~= old(self).view() 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap06/DirGraphStEph.rs:384:21
+    |
+384 | /                     forall |w: V::V| #[trigger] out@.contains(w) <==> exists |i: int|
+385 | |                         #![trigger arcs_seq[i]]
+386 | |                         0 <= i < it.index() && arcs_seq[i]@.0 == v_view && arcs_seq[i]@.1 == w,
+    | |______________________________________________________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap06/DirGraphStEph.rs:447:21
+    |
+447 | /                     forall |u: V::V| #[trigger] inn@.contains(u) <==> exists |i: int|
+448 | |                         #![trigger arcs_seq[i]]
+449 | |                         0 <= i < it.index() && arcs_seq[i]@.1 == v_view && arcs_seq[i]@.0 == u,
+    | |______________________________________________________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap06/UnDirGraphStEph.rs:257:21
+    |
+257 | /                     forall |w: V::V| #[trigger] ng@.contains(w) <==>
+258 | |                         exists |i: int| #![trigger edges_seq[i]] 0 <= i < it.index() &&
+259 | |                             ((edges_seq[i]@.0 == v_view && edges_seq[i]@.1 == w) ||
+260 | |                              (edges_seq[i]@.1 == v_view && edges_seq[i]@.0 == w)),
+    | |_________________________________________________________________________________^
+
+verification results:: 780 verified, 5 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 622MB, peak z3 RSS: 0MB, min free: 27604MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

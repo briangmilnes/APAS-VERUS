@@ -1,0 +1,6 @@
+File: src/experiments/prophetic_manual_loop_next.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-prophetic_manual_loop_next/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 14:59:35
+verification results:: 10 verified, 0 errors
+Elapsed: 1s

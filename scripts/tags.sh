@@ -14,7 +14,7 @@ if ! command -v ctags >/dev/null 2>&1; then
   exit 1
 fi
 
-VERUS_SRC=$(ls -d ~/.cargo/git/checkouts/verus-*/*/source 2>/dev/null | head -1 || true)
+VERUS_SRC=~/projects/verus/source
 if [ -z "$VERUS_SRC" ]; then
   echo "Warning: no verus git checkout under ~/.cargo/git/checkouts; run 'cargo fetch' first. Tagging src/ only." >&2
   VSTD_DIRS=""

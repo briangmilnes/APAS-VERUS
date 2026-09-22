@@ -1,0 +1,48 @@
+File: src/experiments/prophetic_manual_loop_next_skip.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-prophetic_manual_loop_next_skip/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 14:59:39
+error: invariant not satisfied at end of loop body
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_manual_loop_next_skip.rs:57:17
+   |
+57 |                 0 <= pos <= orig.len(),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_manual_loop_next_skip.rs:68:32
+   |
+68 |                         assert(orig[old_pos] == *x);
+   |                                ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_manual_loop_next_skip.rs:69:32
+   |
+69 |                         assert(IteratorSpec::remaining(&it).unref() =~= orig.skip(pos));
+   |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_manual_loop_next_skip.rs:74:28
+   |
+74 |                     assert(pos == orig.len());
+   |                            ^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+pos == orig.len() 
+
+note: recommendation not met
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_manual_loop_next_skip.rs:68:32
+   |
+68 |                         assert(orig[old_pos] == *x);
+   |                                ^^^^^^^^^^^^^
+   |
+  --> seq.rs:972:12
+   |
+   = note: recommendation not met
+
+verification results:: 2 verified, 1 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 1s

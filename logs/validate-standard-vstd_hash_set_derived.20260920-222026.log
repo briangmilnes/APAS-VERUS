@@ -1,0 +1,29 @@
+File: src/experiments/vstd_hash_set_derived.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-vstd_hash_set_derived/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 22:20:26
+error: possible arithmetic underflow/overflow
+   --> /home/milnes/projects/APAS-VERUS/src/experiments/vstd_hash_set_derived.rs:139:21
+    |
+139 |             count = count + 1;
+    |                     ^^^^^^^^^
+
+note: diagnostics via expansion
+   --> /home/milnes/projects/APAS-VERUS/src/experiments/vstd_hash_set_derived.rs:139:21
+    |
+139 |             count = count + 1;
+    |                     ^^^^^^^^^
+
+note: 
+
+usize::BITS == 32 ==>
+    0 <= count + 1 ✔
+    count + 1 < 4294967296 ✘
+usize::BITS == 64 ==>
+    0 <= count + 1 ✔
+    count + 1 < 18446744073709551616 ✘
+
+verification results:: 10 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 1s

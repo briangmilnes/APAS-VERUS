@@ -186,6 +186,28 @@ pub mod experiments {
 //    pub mod f32_ieee_total_order;                         // FAILS: by(bit_vector) flaky — antisymmetric/add_zero/add_monotone fail
 //    pub mod f64_ieee_total_order;                         // FAILS: f64 by(bit_vector) crashes Verus — bitvector_to_air.rs:424
     pub mod new_mut_ref_matching_loop;                     // R115: new-mut-ref matching loop experiment
+//    pub mod prophetic_iter_slice_direct;                  // FAILS on 0.2026.09.13: E0425 axiom_spec_slice_iter removed (SUCCEEDS on 0.2026.05.21)
+//    pub mod prophetic_iter_custom_struct;                 // FAILS on 0.2026.09.13: E0407 initial_value_relation removed, #2739 (SUCCEEDS on 0.2026.05.21)
+//    pub mod prophetic_iter_consume;                       // FAILS on 0.2026.09.13: E0425 axiom_spec_into_iter removed (SUCCEEDS on 0.2026.05.21)
+//    pub mod prophetic_adaptor_obeys_true;                 // SUCCEEDS: r207 adaptor probe, obeys_prophetic_iter_laws as constant true
+//    pub mod prophetic_adaptor_p2_elts;                    // SUCCEEDS: r207 adaptor probe, inherent elts() spec fn
+//    pub mod prophetic_adaptor_p3_ctor;                    // SUCCEEDS: r207 adaptor probe, free-fn ctor naming adaptor specs
+//    pub mod prophetic_adaptor_p4_docs;                    // SUCCEEDS: r207 adaptor probe, doc comments on impls
+//    pub mod prophetic_adaptor_pa_nointoiter;              // FAILS: r207 adaptor probe, trait iter_adapted naming adaptor specs breaks next()
+//    pub mod prophetic_adaptor_pb_notraits;                // SUCCEEDS: r207 adaptor probe, no traits
+//    pub mod prophetic_adaptor_pc_nofmt;                   // SUCCEEDS: r207 adaptor probe, Debug/Display outside verus!
+//    pub mod prophetic_adaptor_pd_noadapted;               // SUCCEEDS: r207 adaptor probe, pa minus trait iter_adapted
+//    pub mod prophetic_adaptor_pe_noinner;                 // FAILS: r207 adaptor probe, trait ensures naming IteratorSpec::remaining(&it) breaks next()
+//    pub mod prophetic_manual_loop_next;                   // SUCCEEDS: r211 manual loop on the iterator's own next(), index-wise remaining() invariants
+//    pub mod prophetic_manual_loop_next_skip;              // FAILS: r211 same loop with a remaining().unref() == orig.skip(pos) invariant
+//    pub mod prophetic_adaptor_pf_inherent;                // SUCCEEDS: r207 adaptor probe, iter_adapted as inherent method
+//    pub mod prophetic_adaptor_pg_innerensures;            // SUCCEEDS: r207 adaptor probe, trait ensures over it.inner
+//    pub mod accept_cargo_stub_rustc;                      // SUCCEEDS: r207 rustc-only experiment, cargo path of vstdplus/accept.rs on 1.98.1
+//    pub mod vstd_hash_set_derived;                        // SUCCEEDS: r209 every HashSetWithViewPlus postcondition derivable from vstd std_specs/hash.rs
+//    pub mod vstd_hash_set_clone;                          // FAILS: r209 vstd 0.2026.09.13 has no HashSet::clone postcondition
+//    pub mod vstd_hash_map_derived;                        // SUCCEEDS: r209 every HashMapWithViewPlus postcondition derivable from vstd std_specs/hash.rs
+//    pub mod vstd_hash_set_clone_plus;                     // SUCCEEDS: r209 vstdplus/hash_specs_plus HashSet::clone spec gives t@ == s@ for every key type
+//    pub mod vstd_hash_eq_plus;                            // SUCCEEDS: r209 vstdplus/hash_specs_plus HashSet/HashMap eq specs give r == (a@ == b@)
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "isolate")))]
@@ -212,7 +234,7 @@ pub mod standards {
 //  pub mod total_order_standard;                  // comment-only
     pub mod tsm_standard;
     pub mod using_closures_standard;
-//  pub mod using_hashmap_standard;                // comment-only
+    pub mod using_hashmap_standard;
 //  pub mod using_rand_standard;                   // comment-only
     pub mod view_standard;
     pub mod wrapping_iterators_standard;
@@ -222,19 +244,18 @@ pub mod vstdplus {
     pub mod accept;
     pub mod pervasives_plus;
     pub mod threads_plus;
-    pub mod VecQueue;
+//    pub mod VecQueue;                                     // r208: 0 users; vstd std_specs/vecdeque.rs specifies VecDeque
     pub mod seq_set;
+//    pub mod seq_set_pre_0913;                             // r208: pre-0.2026.09.13 version, kept as record; seq_set.rs is its finite-Set replacement
     pub mod seq;
-    pub mod hash_set_with_view_plus;
-    pub mod hash_map_with_view_plus;
-    pub mod hash_set_specs;
+    pub mod hash_specs_plus;
     pub mod total_order;
-    pub mod partial_order;
+//    pub mod partial_order;                                // r208: 0 users in src; vstd relations::partial_ordering and cmp::PartialOrdSpec cover it
     pub mod feq;
     pub mod clone_plus;
     pub mod clone_view;
     pub mod smart_ptrs;
-    pub mod arc_rwlock;
+//    pub mod arc_rwlock;                                   // r207: clone_arc spec fails SpecEq (#2377); Arc::new/clone specs in vstd and smart_ptrs.rs replace it
     pub mod checked_int;
     pub mod checked_nat;
     pub mod hashed_checked_u32;

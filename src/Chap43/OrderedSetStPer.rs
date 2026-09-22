@@ -55,7 +55,7 @@ pub mod OrderedSetStPer {
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
-    vstd::set::group_set_axioms,
+    vstd::set::group_set_lemmas,
     vstd::set_lib::group_set_lib_default,
     vstd::laws_cmp::group_laws_cmp,
 };

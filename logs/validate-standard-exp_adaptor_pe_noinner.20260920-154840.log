@@ -1,0 +1,86 @@
+Standard: exp_adaptor_pe_noinner (deps: nodeps; extra: none)
+Harness root: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/harness-exp_adaptor_pe_noinner/lib.rs
+Starting verification at 15:48:40
+error: postcondition not satisfied
+  --> std_specs/iter.rs:38:12
+   |
+   = note: failed this postcondition
+   |
+  ::: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/exp_adaptor_pe_noinner.rs:54:54
+   |
+54 |         fn next(&mut self) -> (ret: Option<&'a T>) { self.inner.next() }
+   |                                                      ----------------- at the end of the function body
+
+error: postcondition not satisfied
+  --> std_specs/iter.rs:39:12
+   |
+   = note: failed this postcondition
+   |
+  ::: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/exp_adaptor_pe_noinner.rs:54:54
+   |
+54 |         fn next(&mut self) -> (ret: Option<&'a T>) { self.inner.next() }
+   |                                                      ----------------- at the end of the function body
+
+error: postcondition not satisfied
+  --> std_specs/iter.rs:40:12
+   |
+   = note: failed this postcondition
+   |
+  ::: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/exp_adaptor_pe_noinner.rs:54:54
+   |
+54 |         fn next(&mut self) -> (ret: Option<&'a T>) { self.inner.next() }
+   |                                                      ----------------- at the end of the function body
+
+error: postcondition not satisfied
+  --> std_specs/iter.rs:42:12
+  ::: std_specs/iter.rs:50:14
+   |
+   = note: failed this postcondition
+   |
+  ::: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/exp_adaptor_pe_noinner.rs:54:54
+   |
+54 |         fn next(&mut self) -> (ret: Option<&'a T>) { self.inner.next() }
+   |                                                      ----------------- at the end of the function body
+
+error: postcondition not satisfied
+  --> std_specs/iter.rs:52:12
+  ::: std_specs/iter.rs:53:83
+   |
+   = note: failed this postcondition
+   |
+  ::: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/exp_adaptor_pe_noinner.rs:54:54
+   |
+54 |         fn next(&mut self) -> (ret: Option<&'a T>) { self.inner.next() }
+   |                                                      ----------------- at the end of the function body
+
+note: diagnostics via expansion
+ --> std_specs/iter.rs:38:12
+
+note: 
+
+(mut_ref_future(old(self))).obeys_prophetic_iter_laws() == (mut_ref_current(old(self))).obeys_prophetic_iter_laws() ✘
+(mut_ref_future(old(self))).obeys_prophetic_iter_laws() ==>
+    (mut_ref_future(old(self))).will_return_none() == (mut_ref_current(old(self))).will_return_none() ✘
+(mut_ref_future(old(self))).obeys_prophetic_iter_laws() ==>
+    (mut_ref_current(old(self))).decrease() is Some == (mut_ref_future(old(self))).decrease() is Some ✘
+    |   (mut_ref_current(old(self))).decrease() is Some ==>
+    |       (mut_ref_future(old(self))).decrease() is Some ✘
+    |   (mut_ref_future(old(self))).decrease() is Some ==>
+    |       (mut_ref_current(old(self))).decrease() is Some ✘
+    +---
+(mut_ref_future(old(self))).obeys_prophetic_iter_laws() ==>
+    (mut_ref_current(old(self))).remaining().len() > 0 ==>
+        (mut_ref_future(old(self))).remaining() =~= (mut_ref_current(old(self))).remaining().drop_first() 
+        %return =~= Some((mut_ref_current(old(self))).remaining().index(0)) 
+    !((mut_ref_current(old(self))).remaining().len() > 0) ==>
+        (mut_ref_future(old(self))).remaining() =~= (mut_ref_current(old(self))).remaining() 
+        %return =~= None 
+        (mut_ref_future(old(self))).will_return_none() 
+(mut_ref_future(old(self))).obeys_prophetic_iter_laws() && (mut_ref_current(old(self))).remaining().len() > 0 && (mut_ref_future(old(self))).decrease() is Some ==>
+    0 <= (mut_ref_future(old(self))).decrease().0 
+    (mut_ref_future(old(self))).decrease().0 < (mut_ref_current(old(self))).decrease().0 
+
+verification results:: 2 verified, 1 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 1s

@@ -5,8 +5,8 @@
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-VERUS=~/projects/verus/verus
-export VERUS_Z3_PATH=~/projects/verus/z3
+VERUS=~/projects/verus/source/target-verus/release/verus
+export VERUS_Z3_PATH=~/projects/verus/source/target-verus/release/z3
 
 MODE="${1:-full}"
 shift 2>/dev/null || true

@@ -1,0 +1,814 @@
+src/Chap06/DirGraphStEph.rs:121:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:122:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:131:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|V| + |A|), Span O(1)
+src/Chap06/DirGraphStEph.rs:132:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |A|), Span O(|V| + |A|) — sequential
+src/Chap06/DirGraphStEph.rs:144:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:145:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:149:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:150:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:154:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:155:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:160:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:161:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:166:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:167:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:172:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
+src/Chap06/DirGraphStEph.rs:173:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
+src/Chap06/DirGraphStEph.rs:178:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|vertices| × |A|), Span O(1)
+src/Chap06/DirGraphStEph.rs:179:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|vertices| × |A|), Span O(|vertices| × |A|) — nested iteration
+src/Chap06/DirGraphStEph.rs:184:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
+src/Chap06/DirGraphStEph.rs:185:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
+src/Chap06/DirGraphStEph.rs:190:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
+src/Chap06/DirGraphStEph.rs:191:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
+src/Chap06/DirGraphStEph.rs:196:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|vertices| × |A|), Span O(1)
+src/Chap06/DirGraphStEph.rs:197:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|vertices| × |A|), Span O(|vertices| × |A|) — nested iteration
+src/Chap06/DirGraphStEph.rs:202:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|vertices| × |A|), Span O(1)
+src/Chap06/DirGraphStEph.rs:203:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|vertices| × |A|), Span O(|vertices| × |A|) — nested iteration
+src/Chap06/DirGraphStEph.rs:208:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:209:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:214:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
+src/Chap06/DirGraphStEph.rs:215:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
+src/Chap06/DirGraphStEph.rs:220:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
+src/Chap06/DirGraphStEph.rs:221:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
+src/Chap06/DirGraphStEph.rs:226:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
+src/Chap06/DirGraphStEph.rs:227:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
+src/Chap06/DirGraphStEph.rs:238:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:250:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:268:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:273:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:278:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:281:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:284:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:287:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:290:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:293:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|)
+src/Chap06/DirGraphStEph.rs:298:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(|S| * |A|) -- iterates vertices, calls ng for each
+src/Chap06/DirGraphStEph.rs:369:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of arcs
+src/Chap06/DirGraphStEph.rs:436:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of arcs
+src/Chap06/DirGraphStEph.rs:503:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(|S| * |A|) -- iterates vertices, calls n_plus for each
+src/Chap06/DirGraphStEph.rs:574:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(|S| * |A|) -- iterates vertices, calls n_minus for each
+src/Chap06/DirGraphStEph.rs:645:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphStEph.rs:648:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|)
+src/Chap06/DirGraphStEph.rs:653:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|)
+src/Chap06/DirGraphStEph.rs:658:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|)
+src/Chap06/DirGraphMtEph.rs:117:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:118:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:127:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|V| + |A|), Span O(1)
+src/Chap06/DirGraphMtEph.rs:128:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |A|), Span O(1)
+src/Chap06/DirGraphMtEph.rs:140:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:141:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:145:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:146:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:150:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:151:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:156:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:157:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:162:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:163:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:172:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:173:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:192:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(log |A|) — parallel
+src/Chap06/DirGraphMtEph.rs:193:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) — ParaPair! split arcs
+src/Chap06/DirGraphMtEph.rs:204:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(log |A|) — parallel
+src/Chap06/DirGraphMtEph.rs:205:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) — calls n_plus
+src/Chap06/DirGraphMtEph.rs:227:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(log |A|) — parallel
+src/Chap06/DirGraphMtEph.rs:228:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) — ParaPair! split arcs
+src/Chap06/DirGraphMtEph.rs:239:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(log |A|) — parallel
+src/Chap06/DirGraphMtEph.rs:240:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) — calls n_minus
+src/Chap06/DirGraphMtEph.rs:254:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(log |A|) — parallel
+src/Chap06/DirGraphMtEph.rs:255:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) — n_plus + n_minus
+src/Chap06/DirGraphMtEph.rs:272:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(log |A|) — parallel
+src/Chap06/DirGraphMtEph.rs:273:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) — calls ng
+src/Chap06/DirGraphMtEph.rs:293:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|u_set| × |A|), Span O(log |u_set| + log |A|) — parallel
+src/Chap06/DirGraphMtEph.rs:294:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|u_set| × |A|), Span O(log |u_set| + log |A|) — ParaPair! split vertices
+src/Chap06/DirGraphMtEph.rs:317:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|u_set| × |A|), Span O(log |u_set| + log |A|) — parallel
+src/Chap06/DirGraphMtEph.rs:318:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|u_set| × |A|), Span O(log |u_set| + log |A|) — ParaPair! split vertices
+src/Chap06/DirGraphMtEph.rs:341:        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|u_set| × |A|), Span O(log |u_set| + log |A|) — parallel
+src/Chap06/DirGraphMtEph.rs:342:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|u_set| × |A|), Span O(log |u_set| + log |A|) — ParaPair! split vertices
+src/Chap06/DirGraphMtEph.rs:354:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on arcs
+src/Chap06/DirGraphMtEph.rs:368:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on arcs
+src/Chap06/DirGraphMtEph.rs:382:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
+src/Chap06/DirGraphMtEph.rs:396:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
+src/Chap06/DirGraphMtEph.rs:410:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
+src/Chap06/DirGraphMtEph.rs:433:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:438:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:443:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:445:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:447:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:449:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:452:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:457:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/DirGraphMtEph.rs:460:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- delegates to n_plus_par
+src/Chap06/DirGraphMtEph.rs:466:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|)
+src/Chap06/DirGraphMtEph.rs:469:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- delegates to n_minus_par
+src/Chap06/DirGraphMtEph.rs:474:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|)
+src/Chap06/DirGraphMtEph.rs:477:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|)
+src/Chap06/DirGraphMtEph.rs:479:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|)
+src/Chap06/DirGraphMtEph.rs:482:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
+src/Chap06/DirGraphMtEph.rs:484:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
+src/Chap06/DirGraphMtEph.rs:486:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
+src/Chap06/DirGraphMtEph.rs:489:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on arcs
+src/Chap06/DirGraphMtEph.rs:527:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on arcs
+src/Chap06/DirGraphMtEph.rs:565:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
+src/Chap06/DirGraphMtEph.rs:626:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
+src/Chap06/DirGraphMtEph.rs:687:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
+src/Chap06/DirGraphMtEph.rs:824:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:835:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) -- clones vertex set under lock
+src/Chap06/DirGraphMtEph.rs:840:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- clones arc set under lock
+src/Chap06/DirGraphMtEph.rs:845:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:850:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:855:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:863:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:873:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:883:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:893:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:903:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:913:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:943:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:953:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) -- clones vertex set under lock
+src/Chap06/DirGraphMtEph.rs:965:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- clones arc set under lock
+src/Chap06/DirGraphMtEph.rs:978:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:989:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:1001:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:1013:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:1025:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:1037:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:1049:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:1061:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|) -- RwLock wrapper
+src/Chap06/DirGraphMtEph.rs:1073:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|) -- RwLock wrapper
+src/Chap06/LabDirGraphStEph.rs:103:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:104:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:113:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |A|), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:114:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |A|), Span O(|V| + |A|) — ACCEPTED DIFFERENCE: St sequential, APAS Span O(1)
+src/Chap06/LabDirGraphStEph.rs:126:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:127:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:131:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:132:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:136:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:137:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — ACCEPTED DIFFERENCE: St sequential, APAS Span O(1)
+src/Chap06/LabDirGraphStEph.rs:142:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:143:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:148:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:149:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:156:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:157:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — ACCEPTED DIFFERENCE: St sequential, APAS Span O(1)
+src/Chap06/LabDirGraphStEph.rs:164:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:165:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — ACCEPTED DIFFERENCE: St sequential, APAS Span O(1)
+src/Chap06/LabDirGraphStEph.rs:171:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:172:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — ACCEPTED DIFFERENCE: St sequential, APAS Span O(1)
+src/Chap06/LabDirGraphStEph.rs:178:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:179:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — ACCEPTED DIFFERENCE: St sequential, APAS Span O(1)
+src/Chap06/LabDirGraphStEph.rs:194:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:201:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:208:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:211:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:214:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+src/Chap06/LabDirGraphStEph.rs:272:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:275:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphStEph.rs:282:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+src/Chap06/LabDirGraphStEph.rs:334:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+src/Chap06/LabDirGraphStEph.rs:390:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+src/Chap06/LabDirGraphStEph.rs:455:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+src/Chap06/WeightedDirGraphStEphI8.rs:71:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:72:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+src/Chap06/WeightedDirGraphStEphI8.rs:81:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:82:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:89:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:90:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
+src/Chap06/WeightedDirGraphStEphI8.rs:97:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:98:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
+src/Chap06/WeightedDirGraphStEphI8.rs:104:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:105:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI8.rs:112:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:113:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI8.rs:120:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:121:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential fold
+src/Chap06/WeightedDirGraphStEphI8.rs:126:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:127:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI8.rs:134:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:135:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI8.rs:148:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:149:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+src/Chap06/WeightedDirGraphStEphI8.rs:192:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:193:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:198:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:199:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI8.rs:207:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:208:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI8.rs:250:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:251:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI8.rs:314:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:315:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI8.rs:378:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI8.rs:379:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI8.rs:428:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI8.rs:489:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/LabDirGraphMtEph.rs:120:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:121:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:130:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |A|), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:131:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |A|), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:143:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:144:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:148:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:149:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:153:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:154:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential map
+src/Chap06/LabDirGraphMtEph.rs:159:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:160:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:165:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:166:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:174:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:175:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential search
+src/Chap06/LabDirGraphMtEph.rs:182:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:183:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential search
+src/Chap06/LabDirGraphMtEph.rs:217:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(log |A|) — parallel
+src/Chap06/LabDirGraphMtEph.rs:218:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) — ParaPair! split arcs
+src/Chap06/LabDirGraphMtEph.rs:230:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(log |A|) — parallel
+src/Chap06/LabDirGraphMtEph.rs:231:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) — ParaPair! split arcs
+src/Chap06/LabDirGraphMtEph.rs:243:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on labeled arcs
+src/Chap06/LabDirGraphMtEph.rs:257:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on labeled arcs
+src/Chap06/LabDirGraphMtEph.rs:281:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:289:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:294:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:297:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:300:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+src/Chap06/LabDirGraphMtEph.rs:363:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:374:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabDirGraphMtEph.rs:389:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+src/Chap06/LabDirGraphMtEph.rs:441:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+src/Chap06/LabDirGraphMtEph.rs:494:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- delegates to n_plus_par
+src/Chap06/LabDirGraphMtEph.rs:501:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- delegates to n_minus_par
+src/Chap06/LabDirGraphMtEph.rs:507:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on labeled arcs
+src/Chap06/LabDirGraphMtEph.rs:596:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on labeled arcs
+src/Chap06/LabDirGraphMtEph.rs:748:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/LabDirGraphMtEph.rs:759:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/LabDirGraphMtEph.rs:769:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/LabDirGraphMtEph.rs:780:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
+src/Chap06/LabDirGraphMtEph.rs:790:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
+src/Chap06/LabDirGraphMtEph.rs:820:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/LabDirGraphMtEph.rs:831:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/LabDirGraphMtEph.rs:844:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/LabDirGraphMtEph.rs:857:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
+src/Chap06/LabDirGraphMtEph.rs:869:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
+src/Chap06/WeightedDirGraphStEphI64.rs:71:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:72:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+src/Chap06/WeightedDirGraphStEphI64.rs:81:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:82:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:89:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:90:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
+src/Chap06/WeightedDirGraphStEphI64.rs:97:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:98:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
+src/Chap06/WeightedDirGraphStEphI64.rs:104:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:105:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI64.rs:112:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:113:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI64.rs:120:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:121:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential fold
+src/Chap06/WeightedDirGraphStEphI64.rs:126:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:127:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI64.rs:134:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:135:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI64.rs:148:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:149:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+src/Chap06/WeightedDirGraphStEphI64.rs:192:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:193:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:198:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:199:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI64.rs:207:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:208:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI64.rs:250:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:251:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI64.rs:314:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:315:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI64.rs:378:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI64.rs:379:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI64.rs:428:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI64.rs:489:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU128.rs:71:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:72:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+src/Chap06/WeightedDirGraphStEphU128.rs:81:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:82:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:89:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:90:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
+src/Chap06/WeightedDirGraphStEphU128.rs:97:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:98:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
+src/Chap06/WeightedDirGraphStEphU128.rs:104:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:105:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU128.rs:112:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:113:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU128.rs:120:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:121:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential fold
+src/Chap06/WeightedDirGraphStEphU128.rs:126:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:127:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU128.rs:134:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:135:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU128.rs:148:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:149:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+src/Chap06/WeightedDirGraphStEphU128.rs:192:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:193:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:198:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:199:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU128.rs:207:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:208:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU128.rs:250:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:251:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU128.rs:314:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:315:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU128.rs:378:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU128.rs:379:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU128.rs:429:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU128.rs:490:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphF64.rs:68:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphF64.rs:69:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+src/Chap06/WeightedDirGraphStEphF64.rs:78:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphF64.rs:79:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphF64.rs:86:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphF64.rs:87:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
+src/Chap06/WeightedDirGraphStEphF64.rs:94:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphF64.rs:95:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
+src/Chap06/WeightedDirGraphStEphF64.rs:101:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphF64.rs:102:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphF64.rs:109:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphF64.rs:110:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphF64.rs:123:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphF64.rs:124:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+src/Chap06/WeightedDirGraphStEphF64.rs:174:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphF64.rs:175:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphF64.rs:180:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphF64.rs:181:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphF64.rs:189:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphF64.rs:190:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphF64.rs:232:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphF64.rs:233:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphF64.rs:296:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphF64.rs:297:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphIsize.rs:71:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:72:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+src/Chap06/WeightedDirGraphStEphIsize.rs:81:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:82:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:89:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:90:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
+src/Chap06/WeightedDirGraphStEphIsize.rs:97:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:98:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
+src/Chap06/WeightedDirGraphStEphIsize.rs:104:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:105:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphIsize.rs:112:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:113:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphIsize.rs:120:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:121:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential fold
+src/Chap06/WeightedDirGraphStEphIsize.rs:126:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:127:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphIsize.rs:134:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:135:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphIsize.rs:148:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:149:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+src/Chap06/WeightedDirGraphStEphIsize.rs:192:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:193:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:198:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:199:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphIsize.rs:207:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:208:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphIsize.rs:250:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:251:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphIsize.rs:314:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:315:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphIsize.rs:378:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphIsize.rs:379:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphIsize.rs:428:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphIsize.rs:489:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/UnDirGraphStEph.rs:107:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:108:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:117:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|V| + |E|), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:118:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+src/Chap06/UnDirGraphStEph.rs:129:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:130:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:134:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:135:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:139:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:140:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:145:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:146:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:151:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:152:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:161:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|E|), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:162:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential filter
+src/Chap06/UnDirGraphStEph.rs:172:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|u_set| x |E|), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:173:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|u_set| x |E|), Span O(|u_set| x |E|) -- nested iteration
+src/Chap06/UnDirGraphStEph.rs:183:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:184:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:189:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|E|), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:190:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential filter
+src/Chap06/UnDirGraphStEph.rs:208:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:215:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:222:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:225:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:228:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:231:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:234:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:240:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of edges
+src/Chap06/UnDirGraphStEph.rs:314:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |E|), Span O(|S| * |E|) -- iterates vertices, calls ng for each
+src/Chap06/UnDirGraphStEph.rs:384:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphStEph.rs:389:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|)
+src/Chap06/WeightedDirGraphStEphU16.rs:71:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:72:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+src/Chap06/WeightedDirGraphStEphU16.rs:81:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:82:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:89:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:90:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
+src/Chap06/WeightedDirGraphStEphU16.rs:97:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:98:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
+src/Chap06/WeightedDirGraphStEphU16.rs:104:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:105:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU16.rs:112:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:113:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU16.rs:120:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:121:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential fold
+src/Chap06/WeightedDirGraphStEphU16.rs:126:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:127:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU16.rs:134:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:135:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU16.rs:148:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:149:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+src/Chap06/WeightedDirGraphStEphU16.rs:192:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:193:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:198:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:199:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU16.rs:207:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:208:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU16.rs:250:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:251:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU16.rs:314:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:315:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU16.rs:378:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU16.rs:379:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU16.rs:429:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU16.rs:490:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI16.rs:71:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:72:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+src/Chap06/WeightedDirGraphStEphI16.rs:81:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:82:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:89:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:90:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
+src/Chap06/WeightedDirGraphStEphI16.rs:97:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:98:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
+src/Chap06/WeightedDirGraphStEphI16.rs:104:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:105:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI16.rs:112:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:113:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI16.rs:120:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:121:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential fold
+src/Chap06/WeightedDirGraphStEphI16.rs:126:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:127:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI16.rs:134:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:135:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI16.rs:148:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:149:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+src/Chap06/WeightedDirGraphStEphI16.rs:192:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:193:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:198:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:199:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI16.rs:207:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:208:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI16.rs:250:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:251:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI16.rs:314:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:315:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI16.rs:378:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI16.rs:379:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI16.rs:428:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI16.rs:489:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI128.rs:71:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:72:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+src/Chap06/WeightedDirGraphStEphI128.rs:81:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:82:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:89:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:90:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
+src/Chap06/WeightedDirGraphStEphI128.rs:97:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:98:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
+src/Chap06/WeightedDirGraphStEphI128.rs:104:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:105:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI128.rs:112:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:113:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI128.rs:120:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:121:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential fold
+src/Chap06/WeightedDirGraphStEphI128.rs:126:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:127:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI128.rs:134:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:135:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI128.rs:148:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:149:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+src/Chap06/WeightedDirGraphStEphI128.rs:199:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:200:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:205:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:206:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI128.rs:214:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:215:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI128.rs:257:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:258:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI128.rs:321:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:322:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI128.rs:385:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI128.rs:386:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI128.rs:435:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI128.rs:496:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/UnDirGraphMtEph.rs:135:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:136:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:145:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|V| + |E|), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:146:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:158:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:159:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:163:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:164:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:168:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:169:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:174:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:175:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:180:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:181:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:196:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|E|), Span O(log |E|) — parallel
+src/Chap06/UnDirGraphMtEph.rs:197:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) — ParaPair! split edges
+src/Chap06/UnDirGraphMtEph.rs:214:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|u_set| × |E|), Span O(log |u_set| + log |E|) — parallel
+src/Chap06/UnDirGraphMtEph.rs:215:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|u_set| × |E|), Span O(log |u_set| + log |E|) — ParaPair! split vertices
+src/Chap06/UnDirGraphMtEph.rs:226:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:227:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:232:        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|E|), Span O(log |E|) — parallel
+src/Chap06/UnDirGraphMtEph.rs:233:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) — calls ng
+src/Chap06/UnDirGraphMtEph.rs:242:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- parallel split on edges
+src/Chap06/UnDirGraphMtEph.rs:256:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |E|), Span O(log |S| * log |E|)
+src/Chap06/UnDirGraphMtEph.rs:279:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:287:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:292:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:295:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:298:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:301:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:304:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:309:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- delegates to ng_par
+src/Chap06/UnDirGraphMtEph.rs:315:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |E|), Span O(log |S| * log |E|)
+src/Chap06/UnDirGraphMtEph.rs:320:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/UnDirGraphMtEph.rs:325:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|)
+src/Chap06/UnDirGraphMtEph.rs:330:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- parallel split on edges
+src/Chap06/UnDirGraphMtEph.rs:390:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |E|), Span O(log |S| * log |E|)
+src/Chap06/UnDirGraphMtEph.rs:516:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/UnDirGraphMtEph.rs:527:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) -- clones vertex set under lock
+src/Chap06/UnDirGraphMtEph.rs:532:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- clones edge set under lock
+src/Chap06/UnDirGraphMtEph.rs:537:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/UnDirGraphMtEph.rs:542:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/UnDirGraphMtEph.rs:547:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/UnDirGraphMtEph.rs:555:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- RwLock wrapper
+src/Chap06/UnDirGraphMtEph.rs:565:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |E|), Span O(log |S| * log |E|) -- RwLock wrapper
+src/Chap06/UnDirGraphMtEph.rs:595:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/UnDirGraphMtEph.rs:606:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) -- clones under lock
+src/Chap06/UnDirGraphMtEph.rs:618:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- clones under lock
+src/Chap06/UnDirGraphMtEph.rs:630:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/UnDirGraphMtEph.rs:642:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/UnDirGraphMtEph.rs:654:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/UnDirGraphMtEph.rs:666:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- RwLock wrapper
+src/Chap06/UnDirGraphMtEph.rs:678:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |E|), Span O(log |S| * log |E|) -- RwLock wrapper
+src/Chap06/WeightedDirGraphStEphUsize.rs:71:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:72:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+src/Chap06/WeightedDirGraphStEphUsize.rs:81:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:82:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:89:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:90:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
+src/Chap06/WeightedDirGraphStEphUsize.rs:97:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:98:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
+src/Chap06/WeightedDirGraphStEphUsize.rs:104:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:105:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphUsize.rs:112:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:113:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphUsize.rs:120:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:121:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential fold
+src/Chap06/WeightedDirGraphStEphUsize.rs:126:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:127:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphUsize.rs:134:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:135:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphUsize.rs:148:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:149:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+src/Chap06/WeightedDirGraphStEphUsize.rs:192:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:193:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:198:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:199:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphUsize.rs:207:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:208:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphUsize.rs:250:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:251:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphUsize.rs:314:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:315:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphUsize.rs:378:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphUsize.rs:379:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphUsize.rs:429:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphUsize.rs:490:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/LabUnDirGraphStEph.rs:100:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:101:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:110:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:111:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+src/Chap06/LabUnDirGraphStEph.rs:123:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:124:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:128:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:129:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:133:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:134:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential map
+src/Chap06/LabUnDirGraphStEph.rs:140:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:141:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:146:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:147:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:155:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:156:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential search
+src/Chap06/LabUnDirGraphStEph.rs:165:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:166:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential search
+src/Chap06/LabUnDirGraphStEph.rs:172:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:173:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential filter
+src/Chap06/LabUnDirGraphStEph.rs:188:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:195:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:202:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:205:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:208:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
+src/Chap06/LabUnDirGraphStEph.rs:269:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:272:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphStEph.rs:283:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
+src/Chap06/LabUnDirGraphStEph.rs:343:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
+src/Chap06/LabUnDirGraphStEph.rs:404:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
+src/Chap06/LabUnDirGraphMtEph.rs:131:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:132:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:141:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:142:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:154:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:155:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:159:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:160:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:164:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:165:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential map
+src/Chap06/LabUnDirGraphMtEph.rs:171:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:172:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:177:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:178:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:187:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:188:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential search
+src/Chap06/LabUnDirGraphMtEph.rs:197:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:198:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential search
+src/Chap06/LabUnDirGraphMtEph.rs:215:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(log |E|) — parallel
+src/Chap06/LabUnDirGraphMtEph.rs:216:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) — ParaPair! split edges
+src/Chap06/LabUnDirGraphMtEph.rs:228:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- parallel split on labeled edges
+src/Chap06/LabUnDirGraphMtEph.rs:253:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:261:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:269:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:272:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:275:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
+src/Chap06/LabUnDirGraphMtEph.rs:337:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:348:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/LabUnDirGraphMtEph.rs:367:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
+src/Chap06/LabUnDirGraphMtEph.rs:426:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
+src/Chap06/LabUnDirGraphMtEph.rs:486:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- delegates to ng_par
+src/Chap06/LabUnDirGraphMtEph.rs:492:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- parallel split on labeled edges
+src/Chap06/LabUnDirGraphMtEph.rs:707:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/LabUnDirGraphMtEph.rs:715:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) -- clones under lock
+src/Chap06/LabUnDirGraphMtEph.rs:719:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- clones under lock
+src/Chap06/LabUnDirGraphMtEph.rs:723:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- RwLock wrapper
+src/Chap06/LabUnDirGraphMtEph.rs:729:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- RwLock wrapper
+src/Chap06/LabUnDirGraphMtEph.rs:736:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- RwLock wrapper
+src/Chap06/LabUnDirGraphMtEph.rs:744:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/LabUnDirGraphMtEph.rs:751:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/LabUnDirGraphMtEph.rs:781:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/LabUnDirGraphMtEph.rs:792:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) -- clones under lock
+src/Chap06/LabUnDirGraphMtEph.rs:804:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- clones under lock
+src/Chap06/LabUnDirGraphMtEph.rs:816:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- RwLock wrapper
+src/Chap06/LabUnDirGraphMtEph.rs:828:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- RwLock wrapper
+src/Chap06/LabUnDirGraphMtEph.rs:841:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- RwLock wrapper
+src/Chap06/LabUnDirGraphMtEph.rs:853:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/LabUnDirGraphMtEph.rs:865:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+src/Chap06/WeightedDirGraphStEphI32.rs:71:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:72:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+src/Chap06/WeightedDirGraphStEphI32.rs:81:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:82:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:89:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:90:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
+src/Chap06/WeightedDirGraphStEphI32.rs:97:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:98:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
+src/Chap06/WeightedDirGraphStEphI32.rs:104:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:105:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI32.rs:112:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:113:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI32.rs:120:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:121:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential fold
+src/Chap06/WeightedDirGraphStEphI32.rs:126:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:127:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI32.rs:134:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:135:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI32.rs:148:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:149:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+src/Chap06/WeightedDirGraphStEphI32.rs:192:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:193:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:198:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:199:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI32.rs:207:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:208:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI32.rs:250:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:251:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI32.rs:314:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:315:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI32.rs:378:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphI32.rs:379:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphI32.rs:428:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphI32.rs:489:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU8.rs:71:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:72:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+src/Chap06/WeightedDirGraphStEphU8.rs:81:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:82:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:89:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:90:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
+src/Chap06/WeightedDirGraphStEphU8.rs:97:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:98:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
+src/Chap06/WeightedDirGraphStEphU8.rs:104:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:105:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU8.rs:112:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:113:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU8.rs:120:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:121:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential fold
+src/Chap06/WeightedDirGraphStEphU8.rs:126:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:127:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU8.rs:134:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:135:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU8.rs:148:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:149:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+src/Chap06/WeightedDirGraphStEphU8.rs:192:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:193:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:198:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:199:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU8.rs:207:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:208:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU8.rs:250:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:251:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU8.rs:314:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:315:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU8.rs:378:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU8.rs:379:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU8.rs:429:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU8.rs:490:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU64.rs:71:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:72:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+src/Chap06/WeightedDirGraphStEphU64.rs:81:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:82:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:89:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:90:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
+src/Chap06/WeightedDirGraphStEphU64.rs:97:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:98:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
+src/Chap06/WeightedDirGraphStEphU64.rs:104:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:105:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU64.rs:112:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:113:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU64.rs:120:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:121:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential fold
+src/Chap06/WeightedDirGraphStEphU64.rs:126:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:127:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU64.rs:134:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:135:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU64.rs:148:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:149:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+src/Chap06/WeightedDirGraphStEphU64.rs:192:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:193:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:198:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:199:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU64.rs:207:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:208:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU64.rs:250:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:251:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU64.rs:314:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:315:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU64.rs:378:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU64.rs:379:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU64.rs:429:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU64.rs:490:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU32.rs:71:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:72:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+src/Chap06/WeightedDirGraphStEphU32.rs:81:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:82:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:89:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:90:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
+src/Chap06/WeightedDirGraphStEphU32.rs:97:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:98:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
+src/Chap06/WeightedDirGraphStEphU32.rs:104:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:105:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU32.rs:112:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:113:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU32.rs:120:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:121:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential fold
+src/Chap06/WeightedDirGraphStEphU32.rs:126:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:127:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU32.rs:134:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:135:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU32.rs:148:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:149:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+src/Chap06/WeightedDirGraphStEphU32.rs:192:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:193:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:198:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:199:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU32.rs:207:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:208:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU32.rs:250:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:251:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU32.rs:314:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:315:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU32.rs:378:        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+src/Chap06/WeightedDirGraphStEphU32.rs:379:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
+src/Chap06/WeightedDirGraphStEphU32.rs:429:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
+src/Chap06/WeightedDirGraphStEphU32.rs:490:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter

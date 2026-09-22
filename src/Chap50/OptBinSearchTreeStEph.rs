@@ -4,7 +4,7 @@
 //! Chapter 50: Optimal Binary Search Tree - ephemeral, single-threaded.
 //!
 //! Memoized top-down DP for optimal BST cost.
-//! Uses HashMapWithViewPlus for the memo table.
+//! Uses HashMap for the memo table.
 
 
 //  Table of Contents
@@ -40,7 +40,7 @@ pub mod OptBinSearchTreeStEph {
 
     use crate::Chap30::Probability::Probability::{Probability, ProbabilityTrait};
     use crate::Types::Types::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use std::collections::HashMap;
     use crate::prob;
     use crate::vstdplus::accept::accept;
 
@@ -53,9 +53,10 @@ pub mod OptBinSearchTreeStEph {
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     crate::Types::Types::group_Pair_axioms,
-    vstd::map::group_map_axioms,
+    vstd::map::group_map_lemmas,
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,
+    vstd::std_specs::hash::group_hash_axioms,
 };
 
     //		Section 4a. type definitions
@@ -74,7 +75,7 @@ broadcast use {
     #[verifier::reject_recursive_types(T)]
     pub struct OBSTStEphS<T: StT> {
         pub keys: Vec<KeyProb<T>>,
-        pub memo: HashMapWithViewPlus<Pair<usize, usize>, Probability>,
+        pub memo: HashMap<Pair<usize, usize>, Probability>,
     }
 
     //		Section 5b. view impls
@@ -98,20 +99,20 @@ broadcast use {
         fn new() -> (empty: Self)
             ensures
                 empty@.keys.len() == 0,
-                empty@.memo =~= Map::<(usize, usize), Probability>::empty();
+                empty@.memo =~= Map::<Pair<usize, usize>, Probability>::empty();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self)
             requires keys@.len() == probs@.len(),
             ensures
                 constructed@.keys.len() == keys@.len(),
-                constructed@.memo =~= Map::<(usize, usize), Probability>::empty();
+                constructed@.memo =~= Map::<Pair<usize, usize>, Probability>::empty();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)
             ensures
                 constructed@.keys =~= key_probs@,
-                constructed@.memo =~= Map::<(usize, usize), Probability>::empty();
+                constructed@.memo =~= Map::<Pair<usize, usize>, Probability>::empty();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
         fn optimal_cost(&mut self) -> (cost: Probability);
@@ -125,14 +126,14 @@ broadcast use {
             requires index < old(self)@.keys.len(),
             ensures
                 self@.keys =~= old(self)@.keys.update(index as int, key_prob),
-                self@.memo =~= Map::<(usize, usize), Probability>::empty();
+                self@.memo =~= Map::<Pair<usize, usize>, Probability>::empty();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn update_prob(&mut self, index: usize, prob: Probability)
             requires index < old(self)@.keys.len(),
             ensures
                 self@.keys.len() == old(self)@.keys.len(),
-                self@.memo =~= Map::<(usize, usize), Probability>::empty();
+                self@.memo =~= Map::<Pair<usize, usize>, Probability>::empty();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_keys(&self) -> (count: usize)
@@ -142,7 +143,7 @@ broadcast use {
         fn clear_memo(&mut self)
             ensures
                 self@.keys =~= old(self)@.keys,
-                self@.memo =~= Map::<(usize, usize), Probability>::empty();
+                self@.memo =~= Map::<Pair<usize, usize>, Probability>::empty();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (count: usize)
@@ -159,7 +160,7 @@ broadcast use {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 keys: Vec::new(),
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             }
         }
 
@@ -183,7 +184,7 @@ broadcast use {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 keys: key_probs,
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             }
         }
 
@@ -192,7 +193,7 @@ broadcast use {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 keys: key_probs,
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             }
         }
 
@@ -231,7 +232,11 @@ broadcast use {
         fn clear_memo(&mut self) { self.memo.clear(); }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn memo_size(&self) -> (count: usize) { self.memo.len() }
+        fn memo_size(&self) -> (count: usize) {
+            // The vstd `len` axiom holds under the Pair key model.
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
+            self.memo.len()
+        }
     }
 
 
@@ -240,10 +245,8 @@ broadcast use {
     fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> (cost: Probability)
         requires
             i + l <= old(s)@.keys.len(),
-            old(s)@.memo.dom().finite(),
         ensures
             s@.keys =~= old(s)@.keys,
-            s@.memo.dom().finite(),
         decreases l,
     {
         let cached = match s.memo.get(&Pair(i, l)) {
@@ -268,7 +271,6 @@ broadcast use {
                     i + l <= n,
                     n == s@.keys.len(),
                     s@.keys =~= old(s)@.keys,
-                    s@.memo.dom().finite(),
                 decreases l - k,
             {
                 prob_sum = prob_sum + s.keys[i + k].prob;
@@ -285,7 +287,6 @@ broadcast use {
                     n == s@.keys.len(),
                     i + l <= s@.keys.len(),
                     s@.keys =~= old(s)@.keys,
-                    s@.memo.dom().finite(),
                 decreases l - k,
             {
                 let left_cost = obst_rec_st_eph(s, i, k);
@@ -310,7 +311,7 @@ broadcast use {
     #[verifier::reject_recursive_types(T)]
     pub ghost struct OBSTStEphV<T: StT> {
         pub keys: Seq<KeyProb<T>>,
-        pub memo: Map<(usize, usize), Probability>,
+        pub memo: Map<Pair<usize, usize>, Probability>,
     }
 
     //		Section 12a. derive impls in verus!

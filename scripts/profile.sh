@@ -14,8 +14,8 @@ set -uo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/verus-lock.sh"
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-VERUS=~/projects/verus/verus
-export VERUS_Z3_PATH=~/projects/verus/z3
+VERUS=~/projects/verus/source/target-verus/release/verus
+export VERUS_Z3_PATH=~/projects/verus/source/target-verus/release/z3
 
 # --- Summary function ---
 

@@ -30,29 +30,30 @@ pub mod BoruvkaStEph {
     //		Section 2. imports
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     use crate::vstdplus::float::float::{WrappedF64, zero_dist};
     use crate::Chap05::SetStEph::SetStEph::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap05::SetStEph::SetStEph::iter_invariant;
     use crate::Types::Types::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_view_injective, obeys_feq_full_trigger};
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger};
 
+    use std::collections::HashMap;
     use std::hash::Hash;
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::hash::obeys_key_model;
+    use vstd::std_specs::hash::{obeys_key_model, into_iter_hash_keys};
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! 
+    verus!
 {
 
     //		Section 3. broadcast use
 
 
     broadcast use {
-        vstd::set::group_set_axioms,
+        vstd::set::group_set_lemmas,
+        vstd::std_specs::hash::group_hash_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
         crate::vstdplus::float::float::group_float_finite_total_order,
     };
@@ -125,11 +126,10 @@ pub mod BoruvkaStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — single pass over edges; St sequential.
         fn vertex_bridges<V: HashOrd + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
-        ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
+        ) -> (bridges: HashMap<V, (V, WrappedF64, usize)>)
             requires
                 edges.spec_setsteph_wf(),
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
                 spec_all_weights_finite(edges@);
 
         /// Bridge-based star partition.
@@ -137,14 +137,13 @@ pub mod BoruvkaStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — single pass over vertices with coin flips; St sequential.
         fn bridge_star_partition<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
-            bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
+            bridges: &HashMap<V, (V, WrappedF64, usize)>,
             seed: u64,
-        ) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>))
+        ) -> (partition: (SetStEph<V>, HashMap<V, (V, WrappedF64, usize)>))
             requires
                 vertices.spec_setsteph_wf(),
                 obeys_key_model::<V>(),
-                obeys_feq_full::<V>(),
-                obeys_feq_view_injective::<V>()
+                obeys_feq_full::<V>()
             ensures partition.0.spec_setsteph_wf();
 
         /// Borůvka's MST algorithm.
@@ -165,8 +164,7 @@ pub mod BoruvkaStEph {
                 obeys_key_model::<V>(),
                 obeys_feq_full::<V>(),
                 obeys_key_model::<LabeledEdge<V>>(),
-                obeys_feq_full::<LabeledEdge<V>>(),
-                obeys_feq_view_injective::<V>()
+                obeys_feq_full::<LabeledEdge<V>>()
             ensures mst.spec_setsteph_wf();
 
         /// Borůvka's MST with random seed.
@@ -187,8 +185,7 @@ pub mod BoruvkaStEph {
                 obeys_key_model::<V>(),
                 obeys_feq_full::<V>(),
                 obeys_key_model::<LabeledEdge<V>>(),
-                obeys_feq_full::<LabeledEdge<V>>(),
-                obeys_feq_view_injective::<V>()
+                obeys_feq_full::<LabeledEdge<V>>()
             ensures mst.spec_setsteph_wf();
 
         /// Compute total weight of MST.
@@ -217,60 +214,52 @@ pub mod BoruvkaStEph {
         /// - Sequential: Work O(m), Span O(m) — sequential iteration over edges.
         fn vertex_bridges<V: HashOrd + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
-        ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>) {
-            let mut bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)> =
-                HashMapWithViewPlus::new();
+        ) -> (bridges: HashMap<V, (V, WrappedF64, usize)>) {
+            let mut bridges: HashMap<V, (V, WrappedF64, usize)> = HashMap::new();
 
-            let mut it = edges.iter();
-            let ghost iter_seq = it@.1;
+            let it = edges.iter();
+            let ghost iter_seq = into_iter_hash_keys(it);
 
-            loop
+            for edge in eit: it
                 invariant
-                    iter_invariant(&it),
-                    iter_seq == it@.1,
+                    eit.seq().unref() == iter_seq,
                     forall|j: int| 0 <= j < iter_seq.len() ==> edges@.contains(#[trigger] iter_seq[j]@),
                     spec_all_weights_finite(edges@),
-                    forall|k: V::V| #[trigger] bridges@.contains_key(k) ==> bridges@[k].1.spec_is_finite(),
+                    forall|k: V| #[trigger] bridges@.contains_key(k) ==> bridges@[k].1.spec_is_finite(),
                     obeys_key_model::<V>(),
-                    obeys_feq_view_injective::<V>(),
-                decreases iter_seq.len() - it@.0,
             {
-                if let Some(edge) = it.next() {
-                    let LabeledEdge(u, v, w, label) = edge.clone();
+                let LabeledEdge(u, v, w, label) = edge.clone();
 
-                    // Prove edge is in edges@ and weight is finite.
-                    // Veracity: NEEDED assert
-                    assert(edges@.contains(iter_seq[it@.0 - 1]@));
-                    // Veracity: NEEDED assert (speed hint)
-                    assert(LabeledEdge(u, v, w, label) == *edge);
-                    // Veracity: NEEDED assert (speed hint)
-                    assert(w.spec_is_finite());
+                // Prove edge is in edges@ and weight is finite.
+                // Veracity: NEEDED assert
+                assert(edges@.contains(iter_seq[eit.index()]@));
+                // Veracity: NEEDED assert (speed hint)
+                assert(LabeledEdge(u, v, w, label) == *edge);
+                // Veracity: NEEDED assert (speed hint)
+                assert(w.spec_is_finite());
 
-                    // Update bridge for u.
-                    match bridges.get(&u) {
-                        None => {
+                // Update bridge for u.
+                match bridges.get(&u) {
+                    None => {
+                        bridges.insert(u.clone(), (v.clone(), w, label));
+                    }
+                    Some((_, existing_w, _)) => {
+                        if w.dist_lt(existing_w) {
                             bridges.insert(u.clone(), (v.clone(), w, label));
                         }
-                        Some((_, existing_w, _)) => {
-                            if w.dist_lt(existing_w) {
-                                bridges.insert(u.clone(), (v.clone(), w, label));
-                            }
-                        }
                     }
+                }
 
-                    // Update bridge for v.
-                    match bridges.get(&v) {
-                        None => {
+                // Update bridge for v.
+                match bridges.get(&v) {
+                    None => {
+                        bridges.insert(v.clone(), (u.clone(), w, label));
+                    }
+                    Some((_, existing_w, _)) => {
+                        if w.dist_lt(existing_w) {
                             bridges.insert(v.clone(), (u.clone(), w, label));
                         }
-                        Some((_, existing_w, _)) => {
-                            if w.dist_lt(existing_w) {
-                                bridges.insert(v.clone(), (u.clone(), w, label));
-                            }
-                        }
                     }
-                } else {
-                    break;
                 }
             }
             bridges
@@ -286,92 +275,62 @@ pub mod BoruvkaStEph {
         /// - Sequential: Work O(n), Span O(n) — sequential iteration over vertices.
         fn bridge_star_partition<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
-            bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
+            bridges: &HashMap<V, (V, WrappedF64, usize)>,
             seed: u64,
-        ) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>)) {
+        ) -> (partition: (SetStEph<V>, HashMap<V, (V, WrappedF64, usize)>)) {
             // Phase 1: Assign coin flips to all vertices.
-            let mut flips: HashMapWithViewPlus<V, bool> = HashMapWithViewPlus::new();
+            let mut flips: HashMap<V, bool> = HashMap::new();
             let mut idx: usize = 0;
-            let mut vit = vertices.iter();
-            let ghost vit_seq = vit@.1;
 
-            loop
+            for v in vit: vertices.iter()
                 invariant
-                    iter_invariant(&vit),
-                    vit_seq == vit@.1,
                     obeys_key_model::<V>(),
-                    obeys_feq_view_injective::<V>(),
-                decreases vit_seq.len() - vit@.0,
             {
-                if let Some(v) = vit.next() {
-                    let flip = coin_flip(seed, idx);
-                    flips.insert(v.clone(), flip);
-                    if idx < usize::MAX {
-                        idx = idx + 1;
-                    }
-                } else {
-                    break;
+                let flip = coin_flip(seed, idx);
+                flips.insert(v.clone(), flip);
+                if idx < usize::MAX {
+                    idx = idx + 1;
                 }
             }
 
             // Phase 2: Select edges from Tail to Head (iterate vertices, check bridges).
-            let mut contracted: HashMapWithViewPlus<V, (V, WrappedF64, usize)> =
-                HashMapWithViewPlus::new();
-            let mut vit2 = vertices.iter();
-            let ghost vit2_seq = vit2@.1;
+            let mut contracted: HashMap<V, (V, WrappedF64, usize)> = HashMap::new();
 
-            loop
+            for u in vit2: vertices.iter()
                 invariant
-                    iter_invariant(&vit2),
-                    vit2_seq == vit2@.1,
                     obeys_key_model::<V>(),
-                    obeys_feq_view_injective::<V>(),
-                decreases vit2_seq.len() - vit2@.0,
             {
-                if let Some(u) = vit2.next() {
-                    let u_heads = match flips.get(u) {
-                        Some(b) => *b,
-                        None => false,
-                    };
+                let u_heads = match flips.get(u) {
+                    Some(b) => *b,
+                    None => false,
+                };
 
-                    if !u_heads {
-                        match bridges.get(u) {
-                            Some((v, w, label)) => {
-                                let v_heads = match flips.get(v) {
-                                    Some(b) => *b,
-                                    None => false,
-                                };
-                                if v_heads {
-                                    contracted.insert(
-                                        u.clone(), (v.clone(), *w, *label));
-                                }
+                if !u_heads {
+                    match bridges.get(u) {
+                        Some((v, w, label)) => {
+                            let v_heads = match flips.get(v) {
+                                Some(b) => *b,
+                                None => false,
+                            };
+                            if v_heads {
+                                contracted.insert(
+                                    u.clone(), (v.clone(), *w, *label));
                             }
-                            None => {}
                         }
+                        None => {}
                     }
-                } else {
-                    break;
                 }
             }
 
             // Phase 3: Remaining vertices = all vertices minus contracted tails.
             let mut remaining: SetStEph<V> = SetStEph::empty();
-            let mut vit3 = vertices.iter();
-            let ghost vit3_seq = vit3@.1;
 
-            loop
+            for v in vit3: vertices.iter()
                 invariant
-                    iter_invariant(&vit3),
-                    vit3_seq == vit3@.1,
                     remaining.spec_setsteph_wf(),
-                decreases vit3_seq.len() - vit3@.0,
             {
-                if let Some(v) = vit3.next() {
-                    if !contracted.contains_key(v) {
-                        let _ = remaining.insert(v.clone());
-                    }
-                } else {
-                    break;
+                if !contracted.contains_key(v) {
+                    let _ = remaining.insert(v.clone());
                 }
             }
 
@@ -403,100 +362,73 @@ pub mod BoruvkaStEph {
 
             // Collect new MST labels from partition and build tail->head map.
             let mut new_mst_labels = mst_labels;
-            let mut full_partition: HashMapWithViewPlus<V, V> = HashMapWithViewPlus::new();
+            let mut full_partition: HashMap<V, V> = HashMap::new();
 
-            let mut pit = partition.iter();
-            let ghost pit_seq = pit@.1;
-
-            loop
+            for kv in pit: partition.iter()
                 invariant
-                    0 <= pit@.0 <= pit@.1.len(),
-                    pit_seq == pit@.1,
                     new_mst_labels.spec_setsteph_wf(),
                     obeys_key_model::<V>(),
-                    obeys_feq_view_injective::<V>(),
-                decreases pit_seq.len() - pit@.0,
             {
-                if let Some((tail, bridge_entry)) = pit.next() {
-                    let (head, _w, label) = bridge_entry;
-                    let _ = new_mst_labels.insert(*label);
-                    full_partition.insert(tail.clone(), head.clone());
-                } else {
-                    break;
-                }
+                let (tail, bridge_entry) = kv;
+                let (head, _w, label) = bridge_entry;
+                let _ = new_mst_labels.insert(*label);
+                full_partition.insert(tail.clone(), head.clone());
             }
 
             // Add identity mappings for remaining vertices.
-            let mut rit = remaining_vertices.iter();
-            let ghost rit_seq = rit@.1;
-
-            loop
+            for v in rit: remaining_vertices.iter()
                 invariant
-                    iter_invariant(&rit),
-                    rit_seq == rit@.1,
                     obeys_key_model::<V>(),
-                    obeys_feq_view_injective::<V>(),
-                decreases rit_seq.len() - rit@.0,
             {
-                if let Some(v) = rit.next() {
-                    full_partition.insert(v.clone(), v.clone());
-                } else {
-                    break;
-                }
+                full_partition.insert(v.clone(), v.clone());
             }
 
             // Re-route edges to new endpoints, removing self-edges.
             let mut new_edges: SetStEph<LabeledEdge<V>> = SetStEph::empty();
-            let mut eit = edges.iter();
-            let ghost eit_seq = eit@.1;
+            let eit0 = edges.iter();
+            let ghost eit_seq = into_iter_hash_keys(eit0);
 
-            loop
+            for edge in eit: eit0
                 invariant
-                    iter_invariant(&eit),
-                    eit_seq == eit@.1,
+                    eit.seq().unref() == eit_seq,
                     new_edges.spec_setsteph_wf(),
                     spec_all_weights_finite(edges@),
                     spec_all_weights_finite(new_edges@),
                     forall|j: int| 0 <= j < eit_seq.len() ==> edges@.contains(#[trigger] eit_seq[j]@),
-                decreases eit_seq.len() - eit@.0,
             {
-                if let Some(edge) = eit.next() {
-                    let ghost old_idx = eit@.0 - 1;
-                    let LabeledEdge(u, v, w, label) = edge.clone();
+                let ghost old_idx = eit.index();
+                let LabeledEdge(u, v, w, label) = edge.clone();
 
-                    // edge == eit_seq[old_idx], and View is identity.
-                    // Veracity: NEEDED assert
-                    assert(edges@.contains(eit_seq[old_idx]@));
-                    // Veracity: NEEDED assert (speed hint)
-                    assert(*edge == eit_seq[old_idx]);
-                    // Veracity: NEEDED assert (speed hint)
-                    assert(LabeledEdge(u, v, w, label) == *edge);
-                    // Veracity: NEEDED assert (speed hint)
-                    assert(w.spec_is_finite());
+                // edge == eit_seq[old_idx], and View is identity.
+                // Veracity: NEEDED assert
+                assert(edges@.contains(eit_seq[old_idx]@));
+                // Veracity: NEEDED assert (speed hint)
+                assert(*edge == eit_seq[old_idx]);
+                // Veracity: NEEDED assert (speed hint)
+                assert(LabeledEdge(u, v, w, label) == *edge);
+                // Veracity: NEEDED assert (speed hint)
+                assert(w.spec_is_finite());
 
-                    let new_u = match full_partition.get(&u) {
-                        Some(mapped) => mapped.clone(),
-                        None => u,
+                let new_u = match full_partition.get(&u) {
+                    Some(mapped) => mapped.clone(),
+                    None => u,
+                };
+                let new_v = match full_partition.get(&v) {
+                    Some(mapped) => mapped.clone(),
+                    None => v,
+                };
+                if new_u != new_v {
+                    // New edge preserves weight, so finiteness is maintained.
+                    let new_edge = LabeledEdge(new_u, new_v, w, label);
+                    // Veracity: NEEDED assert (speed hint)
+                    assert(new_edge.2.spec_is_finite());
+                    let _ = new_edges.insert(new_edge);
+
+                    // After insert, all edges in new_edges@ are still finite.
+                    // Veracity: NEEDED assert (speed hint)
+                    assert forall|e: LabeledEdge<V>| #[trigger] new_edges@.contains(e) implies e.2.spec_is_finite() by {
+                        // e was either already in new_edges@ (old invariant) or is new_edge.
                     };
-                    let new_v = match full_partition.get(&v) {
-                        Some(mapped) => mapped.clone(),
-                        None => v,
-                    };
-                    if new_u != new_v {
-                        // New edge preserves weight, so finiteness is maintained.
-                        let new_edge = LabeledEdge(new_u, new_v, w, label);
-                        // Veracity: NEEDED assert (speed hint)
-                        assert(new_edge.2.spec_is_finite());
-                        let _ = new_edges.insert(new_edge);
-
-                        // After insert, all edges in new_edges@ are still finite.
-                        // Veracity: NEEDED assert (speed hint)
-                        assert forall|e: LabeledEdge<V>| #[trigger] new_edges@.contains(e) implies e.2.spec_is_finite() by {
-                            // e was either already in new_edges@ (old invariant) or is new_edge.
-                        };
-                    }
-                } else {
-                    break;
                 }
             }
 
@@ -528,23 +460,14 @@ pub mod BoruvkaStEph {
             mst_labels: &SetStEph<usize>,
         ) -> (total: WrappedF64) {
             let mut total = zero_dist();
-            let mut it = edges.iter();
-            let ghost iter_seq = it@.1;
 
-            loop
+            for edge in it: edges.iter()
                 invariant
-                    iter_invariant(&it),
-                    iter_seq == it@.1,
                     mst_labels.spec_setsteph_wf(),
-                decreases iter_seq.len() - it@.0,
             {
-                if let Some(edge) = it.next() {
-                    let LabeledEdge(_, _, w, label) = edge;
-                    if mst_labels.mem(label) {
-                        total = total.dist_add(w);
-                    }
-                } else {
-                    break;
+                let LabeledEdge(_, _, w, label) = edge;
+                if mst_labels.mem(label) {
+                    total = total.dist_add(w);
                 }
             }
             total

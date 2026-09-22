@@ -1,0 +1,21 @@
+Mode: full
+error[E0432]: unresolved import `crate::vstdplus::seq_set::lemma_push_not_contains_to_set`
+  --> src/Chap41/ArraySetStEph.rs:44:36
+   |
+44 |     use crate::vstdplus::seq_set::{lemma_push_not_contains_to_set, lemma_seq_index_in_map_to_set};
+   |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `lemma_push_not_contains_to_set` in `vstdplus::seq_set`
+
+error[E0432]: unresolved import `crate::Chap05::SetStEph::SetStEph::iter_invariant`
+  --> src/Chap65/KruskalStEph.rs:29:9
+   |
+29 |     use crate::Chap05::SetStEph::SetStEph::iter_invariant;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^--------------
+   |                                            |
+   |                                            no `iter_invariant` in `Chap05::SetStEph::SetStEph`
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0432`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 839MB, peak z3 RSS: 0MB, min free: 27323MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s

@@ -134,10 +134,10 @@ fn test_vertex_bridges_triangle() {
         LabeledEdge(3, 1, w(1.0), 2),
     ];
     let bridges = BoruvkaStEph::vertex_bridges(&edges);
-    assert_eq!(bridges.inner.len(), 3);
-    assert_eq!(bridges.inner.get(&1), Some(&(3, w(1.0), 2)));
-    assert_eq!(bridges.inner.get(&2), Some(&(3, w(2.0), 1)));
-    assert_eq!(bridges.inner.get(&3), Some(&(1, w(1.0), 2)));
+    assert_eq!(bridges.len(), 3);
+    assert_eq!(bridges.get(&1), Some(&(3, w(1.0), 2)));
+    assert_eq!(bridges.get(&2), Some(&(3, w(2.0), 1)));
+    assert_eq!(bridges.get(&3), Some(&(1, w(1.0), 2)));
 }
 
 #[test]
@@ -148,18 +148,18 @@ fn test_vertex_bridges_star() {
         LabeledEdge(0, 3, w(3.0), 2),
     ];
     let bridges = BoruvkaStEph::vertex_bridges(&edges);
-    assert_eq!(bridges.inner.len(), 4);
-    assert_eq!(bridges.inner.get(&0), Some(&(1, w(1.0), 0)));
-    assert_eq!(bridges.inner.get(&1), Some(&(0, w(1.0), 0)));
-    assert_eq!(bridges.inner.get(&2), Some(&(0, w(2.0), 1)));
-    assert_eq!(bridges.inner.get(&3), Some(&(0, w(3.0), 2)));
+    assert_eq!(bridges.len(), 4);
+    assert_eq!(bridges.get(&0), Some(&(1, w(1.0), 0)));
+    assert_eq!(bridges.get(&1), Some(&(0, w(1.0), 0)));
+    assert_eq!(bridges.get(&2), Some(&(0, w(2.0), 1)));
+    assert_eq!(bridges.get(&3), Some(&(0, w(3.0), 2)));
 }
 
 #[test]
 fn test_vertex_bridges_empty() {
     let edges: SetStEph<LabeledEdge<i32>> = SetLit![];
     let bridges = BoruvkaStEph::vertex_bridges(&edges);
-    assert_eq!(bridges.inner.len(), 0);
+    assert_eq!(bridges.len(), 0);
 }
 
 #[test]
@@ -172,19 +172,18 @@ fn test_bridge_star_partition() {
     ];
     let bridges = BoruvkaStEph::vertex_bridges(&edges);
     let (remaining, partition) = BoruvkaStEph::bridge_star_partition(&vertices, &bridges, 42);
-    assert!(remaining.size() + partition.inner.len() <= 3);
-    assert!(remaining.size() > 0 || partition.inner.len() > 0);
+    assert!(remaining.size() + partition.len() <= 3);
+    assert!(remaining.size() > 0 || partition.len() > 0);
 }
 
 #[test]
 fn test_bridge_star_partition_single_vertex() {
-    use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus;
     let vertices = SetLit![1];
-    let bridges: HashMapWithViewPlus<i32, (i32, WrappedF64, usize)> =
-        HashMapWithViewPlus { inner: std::collections::HashMap::new() };
+    let bridges: std::collections::HashMap<i32, (i32, WrappedF64, usize)> =
+        std::collections::HashMap::new();
     let (remaining, partition) = BoruvkaStEph::bridge_star_partition(&vertices, &bridges, 42);
     assert_eq!(remaining.size(), 1);
-    assert_eq!(partition.inner.len(), 0);
+    assert_eq!(partition.len(), 0);
 }
 
 #[test]
@@ -337,7 +336,7 @@ fn test_boruvka_parallel_edges_different_weights() {
 fn test_vertex_bridges_single_edge() {
     let edges = SetLit![LabeledEdge(1, 2, w(7.0), 0)];
     let bridges = BoruvkaStEph::vertex_bridges(&edges);
-    assert_eq!(bridges.inner.len(), 2);
-    assert_eq!(bridges.inner.get(&1), Some(&(2, w(7.0), 0)));
-    assert_eq!(bridges.inner.get(&2), Some(&(1, w(7.0), 0)));
+    assert_eq!(bridges.len(), 2);
+    assert_eq!(bridges.get(&1), Some(&(2, w(7.0), 0)));
+    assert_eq!(bridges.get(&2), Some(&(1, w(7.0), 0)));
 }

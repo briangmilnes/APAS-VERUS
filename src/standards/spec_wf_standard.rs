@@ -41,7 +41,7 @@
 //!
 //!    ```
 //!    pub open spec fn spec_<mod>_wf_generic<V: Bounds>(s: &MyType<V>) -> bool {
-//!        s@.finite() && valid_key_type::<V>()
+//!        valid_key_type::<V>()
 //!    }
 //!    ```
 //!

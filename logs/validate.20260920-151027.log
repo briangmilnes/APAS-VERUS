@@ -1,0 +1,172 @@
+Mode: full
+error[E0432]: unresolved import `vstd::relations::injective_on`
+  --> src/Chap53/PQMinStPer.rs:41:9
+   |
+41 |     use vstd::relations::injective_on;
+   |         ^^^^^^^^^^^^^^^^^------------
+   |                          |
+   |                          no `injective_on` in `relations`
+   |
+help: a similar name exists in the module
+   |
+41 -     use vstd::relations::injective_on;
+41 +     use vstd::relations::injective;
+   |
+
+error[E0407]: method `initial_value_relation` is not a member of trait `IteratorSpecImpl`
+   --> src/standards/prophetic_iterators_standard.rs:174:19
+    |
+174 |           open spec fn initial_value_relation(&self, init: &Self) -> bool {
+    |  ___________________^
+175 | |             &&& IteratorSpec::remaining(init) == IteratorSpec::remaining(self)
+176 | |             &&& init.elts() == self.elts()
+177 | |         }
+    | |_________^ not a member of trait `IteratorSpecImpl`
+
+error[E0425]: cannot find value `axiom_spec_slice_iter` in module `vstd::std_specs::slice`
+  --> src/standards/prophetic_iterators_standard.rs:65:43
+   |
+65 |     broadcast use vstd::std_specs::slice::axiom_spec_slice_iter;
+   |                                           ^^^^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::slice`
+
+error[E0425]: cannot find value `axiom_spec_into_iter` in module `vstd::std_specs::vec`
+   --> src/standards/prophetic_iterators_standard.rs:291:49
+    |
+291 |             broadcast use vstd::std_specs::vec::axiom_spec_into_iter;
+    |                                                 ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::vec`
+
+error[E0425]: cannot find function `axiom_set_new` in module `vstd::set`
+   --> src/Chap06/LabDirGraphStEph.rs:341:40
+    |
+341 | ...                   vstd::set::axiom_set_new(pred, (from_view, to_view));
+    |                                  ^^^^^^^^^^^^^ not found in `vstd::set`
+
+error[E0425]: cannot find value `group_slice_axioms` in module `vstd::std_specs::slice`
+  --> src/Chap18/ArraySeqMtEphSlice.rs:61:33
+   |
+61 |         vstd::std_specs::slice::group_slice_axioms,
+   |                                 ^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::slice`
+   |
+help: consider importing this function
+   |
+33 +     use vstd::slice::group_slice_axioms;
+   |
+help: if you import `group_slice_axioms`, refer to it directly
+   |
+61 -         vstd::std_specs::slice::group_slice_axioms,
+61 +         group_slice_axioms,
+   |
+
+error[E0425]: cannot find value `group_slice_axioms` in module `vstd::std_specs::slice`
+  --> src/Chap19/ArraySeqMtEphSlice.rs:61:33
+   |
+61 |         vstd::std_specs::slice::group_slice_axioms,
+   |                                 ^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::slice`
+   |
+help: consider importing this function
+   |
+33 +     use vstd::slice::group_slice_axioms;
+   |
+help: if you import `group_slice_axioms`, refer to it directly
+   |
+61 -         vstd::std_specs::slice::group_slice_axioms,
+61 +         group_slice_axioms,
+   |
+
+error[E0425]: cannot find function `injective_on` in module `vstd::relations`
+   --> src/Chap41/OrdKeyMap.rs:202:33
+    |
+202 |         assert(vstd::relations::injective_on(proj, s)) by {
+    |                                 ^^^^^^^^^^^^
+    |
+   --> relations.rs:11:0
+    |
+    = note: similarly named function `injective` defined here
+help: a function with a similar name exists
+    |
+202 -         assert(vstd::relations::injective_on(proj, s)) by {
+202 +         assert(vstd::relations::injective(proj, s)) by {
+    |
+
+error[E0425]: cannot find function `injective_on` in module `vstd::relations`
+   --> src/Chap43/OrderedSpecsAndLemmas.rs:144:33
+    |
+144 |         assert(vstd::relations::injective_on(proj, s)) by {
+    |                                 ^^^^^^^^^^^^
+    |
+   --> relations.rs:11:0
+    |
+    = note: similarly named function `injective` defined here
+help: a function with a similar name exists
+    |
+144 -         assert(vstd::relations::injective_on(proj, s)) by {
+144 +         assert(vstd::relations::injective(proj, s)) by {
+    |
+
+error[E0425]: cannot find function `axiom_set_insert_finite` in module `vstd::set`
+   --> src/Chap44/DocumentIndex.rs:222:32
+    |
+222 |                     vstd::set::axiom_set_insert_finite(old_gds, doc_id@);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:797:0
+    |
+    = note: similarly named function `lemma_iset_insert_finite` defined here
+help: a function with a similar name exists
+    |
+222 -                     vstd::set::axiom_set_insert_finite(old_gds, doc_id@);
+222 +                     vstd::set::lemma_iset_insert_finite(old_gds, doc_id@);
+    |
+
+error[E0425]: cannot find function `axiom_set_insert_len` in module `vstd::set`
+   --> src/Chap44/DocumentIndex.rs:223:32
+    |
+223 |                     vstd::set::axiom_set_insert_len(old_gds, doc_id@);
+    |                                ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> set.rs:504:0
+    |
+    = note: similarly named function `lemma_set_insert_len` defined here
+help: a function with a similar name exists
+    |
+223 -                     vstd::set::axiom_set_insert_len(old_gds, doc_id@);
+223 +                     vstd::set::lemma_set_insert_len(old_gds, doc_id@);
+    |
+
+error[E0425]: cannot find function `axiom_set_insert_len` in module `vstd::set`
+   --> src/Chap44/DocumentIndex.rs:283:44
+    |
+283 | ...                   vstd::set::axiom_set_insert_len(
+    |                                  ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> set.rs:504:0
+    |
+    = note: similarly named function `lemma_set_insert_len` defined here
+help: a function with a similar name exists
+    |
+283 -                                 vstd::set::axiom_set_insert_len(
+283 +                                 vstd::set::lemma_set_insert_len(
+    |
+
+error[E0425]: cannot find function `lemma_set_union_finite_iff` in module `vstd::set_lib`
+   --> src/Chap65/PrimStEph.rs:295:28
+    |
+295 |             vstd::set_lib::lemma_set_union_finite_iff(DA_fwd, DA_rev);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:862:0
+    |
+    = note: similarly named function `lemma_iset_union_finite` defined here
+help: a function with a similar name exists
+    |
+295 -             vstd::set_lib::lemma_set_union_finite_iff(DA_fwd, DA_rev);
+295 +             vstd::set_lib::lemma_iset_union_finite(DA_fwd, DA_rev);
+    |
+
+error: aborting due to 13 previous errors
+
+Some errors have detailed explanations: E0407, E0425, E0432.
+For more information about an error, try `rustc --explain E0407`.
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 836MB, peak z3 RSS: 0MB, min free: 27978MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s

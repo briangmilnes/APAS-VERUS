@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Chapter 62: Star Contraction - Sequential Ephemeral Tests
 
-use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+use std::collections::HashMap;
 
 use vstd::prelude::Ghost;
 
@@ -44,7 +44,7 @@ fn test_contract_with_base_expand() {
     let base = |vertices: &SetStEph<usize>| vertices.size();
 
     // Expand function that just returns the recursive result
-    let expand = |_v: &SetStEph<usize>, _e: &SetStEph<Edge<usize>>, _centers: &SetStEph<usize>, _part: &HashMapWithViewPlus<usize, usize>, r: usize| r;
+    let expand = |_v: &SetStEph<usize>, _e: &SetStEph<Edge<usize>>, _centers: &SetStEph<usize>, _part: &HashMap<usize, usize>, r: usize| r;
 
     let result = star_contract(&graph, &base, &expand, Ghost::assume_new());
 

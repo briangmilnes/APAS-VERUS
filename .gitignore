@@ -30,3 +30,6 @@ logs/profile/*/*.profile.gz
 logs/profile/*/*.graph
 logs/profile/*/*.graph.gz
 .~lock.*#
+
+# Generated harness crate roots from scripts/validate-standard.sh (regenerable).
+scratch/harness-*/

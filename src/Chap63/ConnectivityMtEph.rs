@@ -13,6 +13,7 @@
 //  Table of Contents
 //	Section 1. module
 //	Section 2. imports
+//	Section 3. broadcast use
 //	Section 4. type definitions
 //	Section 8. traits
 //	Section 9. impls
@@ -31,18 +32,28 @@ pub mod ConnectivityMtEph {
     use crate::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
     use crate::Types::Types::*;
 
+    use std::collections::HashMap;
     use std::hash::Hash;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_view_injective;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::hash_specs_plus::hash_specs_plus::key_view;
     use crate::Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt;
 
-    verus! 
+    verus!
 {
+
+    //		Section 3. broadcast use
+
+
+    broadcast use {
+        vstd::std_specs::hash::group_hash_axioms,
+        crate::vstdplus::hash_specs_plus::hash_specs_plus::group_key_view_lemmas,
+    };
 
     //		Section 4. type definitions
 
@@ -73,7 +84,7 @@ pub mod ConnectivityMtEph {
         fn connected_components_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
-        ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
+        ) -> (SetStEph<V>, HashMap<V, V>)
             requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Count components using higher-order function approach.
@@ -88,7 +99,7 @@ pub mod ConnectivityMtEph {
         fn connected_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
-        ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
+        ) -> (SetStEph<V>, HashMap<V, V>)
             requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();
     }
 
@@ -138,7 +149,7 @@ pub mod ConnectivityMtEph {
     pub fn connected_components_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> (components: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+    ) -> (components: (SetStEph<V>, HashMap<V, V>))
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
@@ -151,23 +162,23 @@ pub mod ConnectivityMtEph {
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|P|), Span O(|P|) — currently sequential despite "parallel" name
     fn compose_maps_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
-        partition_map: &HashMapWithViewPlus<V, V>,
-        component_map: &HashMapWithViewPlus<V, V>,
-    ) -> (composed: HashMapWithViewPlus<V, V>)
+        partition_map: &HashMap<V, V>,
+        component_map: &HashMap<V, V>,
+    ) -> (composed: HashMap<V, V>)
         requires
             obeys_key_model::<V>(),
             obeys_feq_view_injective::<V>(),
         ensures
-            forall|k: V::V| #[trigger] composed@.contains_key(k) ==> partition_map@.contains_key(k),
+            forall|k: V::V| #[trigger] key_view(composed@).contains_key(k) ==> key_view(partition_map@).contains_key(k),
     {
-        let mut result: HashMapWithViewPlus<V, V> = HashMapWithViewPlus::new();
+        let mut result: HashMap<V, V> = HashMap::new();
 
         let it = partition_map.iter();
         for pair in iter: it
             invariant
                 obeys_key_model::<V>(),
                 obeys_feq_view_injective::<V>(),
-                forall|k: V::V| #[trigger] result@.contains_key(k) ==> partition_map@.contains_key(k),
+                forall|k: V::V| #[trigger] key_view(result@).contains_key(k) ==> key_view(partition_map@).contains_key(k),
         {
             let (u_ref, v_ref) = pair;
             let u_key = u_ref.clone_view();
@@ -202,7 +213,7 @@ pub mod ConnectivityMtEph {
             ensures n as nat == vertices@.len()
         { vertices.size() };
 
-        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: usize| -> (count: usize) { r };
+        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMap<V, V>, r: usize| -> (count: usize) { r };
 
         star_contract_mt(graph, seed, &base, &expand, Ghost(|_r: usize| true))
     }
@@ -215,25 +226,23 @@ pub mod ConnectivityMtEph {
     pub fn connected_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> (components: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+    ) -> (components: (SetStEph<V>, HashMap<V, V>))
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
         ensures graph@.A.is_empty() ==> components.0@ == graph@.V,
     {
-        let base = |vertices: &SetStEph<V>| -> (r: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+        let base = |vertices: &SetStEph<V>| -> (r: (SetStEph<V>, HashMap<V, V>))
             requires
                 vertices.spec_setsteph_wf(),
                 obeys_key_model::<V>(),
                 obeys_feq_view_injective::<V>(),
             ensures r.0@ == vertices@,
         {
-            let mut map = HashMapWithViewPlus::new();
+            let mut map = HashMap::new();
             let it = vertices.iter();
-            let ghost elem_seq = it@.1;
             for v in iter: it
                 invariant
-                    iter.elements == elem_seq,
                     obeys_key_model::<V>(),
                     obeys_feq_view_injective::<V>(),
             {
@@ -245,15 +254,15 @@ pub mod ConnectivityMtEph {
         let expand = |_v: &SetStEph<V>,
                       _e: &SetStEph<Edge<V>>,
                       _centers: &SetStEph<V>,
-                      partition_map: &HashMapWithViewPlus<V, V>,
-                      reps_and_map: (SetStEph<V>, HashMapWithViewPlus<V, V>)|
-            -> (expanded: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+                      partition_map: &HashMap<V, V>,
+                      reps_and_map: (SetStEph<V>, HashMap<V, V>)|
+            -> (expanded: (SetStEph<V>, HashMap<V, V>))
             requires
                 obeys_key_model::<V>(),
                 obeys_feq_view_injective::<V>(),
         {
             let (reps, component_map) = reps_and_map;
-            let mut result_map = HashMapWithViewPlus::new();
+            let mut result_map = HashMap::new();
             let it = partition_map.iter();
             for pair in iter: it
                 invariant
@@ -267,7 +276,7 @@ pub mod ConnectivityMtEph {
             (reps, result_map)
         };
 
-        star_contract_mt(graph, seed, &base, &expand, Ghost(|_r: (SetStEph<V>, HashMapWithViewPlus<V, V>)| true))
+        star_contract_mt(graph, seed, &base, &expand, Ghost(|_r: (SetStEph<V>, HashMap<V, V>)| true))
     }
 
     } // verus!

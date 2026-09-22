@@ -41,6 +41,10 @@ pub mod LabUnDirGraphMtEph {
     use std::hash::Hash;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::into_iter_hash_keys;
     use crate::Types::Types::*;
     use crate::Concurrency::Concurrency::*;
     use crate::Chap05::SetStEph::SetStEph::*;
@@ -64,7 +68,7 @@ pub mod LabUnDirGraphMtEph {
 
 
     broadcast use {
-        vstd::set::group_set_axioms,
+        vstd::set::group_set_lemmas,
         crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_LabEdge_axioms,
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
@@ -106,23 +110,22 @@ pub mod LabUnDirGraphMtEph {
     {
         spec fn spec_labundirgraphmteph_wf(&self) -> bool;
 
-        open spec fn spec_finite(&self) -> bool {
-            self@.V.finite() && self@.A.finite()
-        }
-
         open spec fn spec_vertices(&self) -> Set<V::V> { self@.V }
         open spec fn spec_labeled_edges(&self) -> Set<(V::V, V::V, L::V)> { self@.A }
 
         open spec fn spec_edges(&self) -> Set<(V::V, V::V)> {
-            Set::new(|e: (V::V, V::V)| exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l)))
+            self@.A.map(|e: (V::V, V::V, L::V)| (e.0, e.1))
         }
 
-        open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V, L::V)>) -> Set<V::V> 
-            recommends 
+        open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V, L::V)>) -> Set<V::V>
+            recommends
                 spec_labgraphview_wf(self@),
                 subedges <= self@.A,
         {
-            Set::new(|w: V::V| exists |l: L::V| subedges.contains((v, w, l)) || subedges.contains((w, v, l)))
+            self@.V.filter(|w: V::V| exists |l: L::V|
+                #![trigger subedges.contains((v, w, l))]
+                #![trigger subedges.contains((w, v, l))]
+                subedges.contains((v, w, l)) || subedges.contains((w, v, l)))
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
@@ -140,8 +143,6 @@ pub mod LabUnDirGraphMtEph {
         fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: Self)
             requires
                 valid_key_type_for_lab_graph::<V, L>(),
-                vertices@.finite(),
-                labeled_edges@.finite(),
                 forall |u: V::V, w: V::V, l: L::V|
                     #[trigger] labeled_edges@.contains((u, w, l)) ==> vertices@.contains(u) && vertices@.contains(w),
             ensures
@@ -205,7 +206,10 @@ pub mod LabUnDirGraphMtEph {
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V>
             recommends spec_labgraphview_wf(self@), self@.V.contains(v)
         {
-            Set::new(|w: V::V| exists |l: L::V| self@.A.contains((v, w, l)) || self@.A.contains((w, v, l)))
+            self@.V.filter(|w: V::V| exists |l: L::V|
+                #![trigger self@.A.contains((v, w, l))]
+                #![trigger self@.A.contains((w, v, l))]
+                self@.A.contains((v, w, l)) || self@.A.contains((w, v, l)))
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(log |E|) — parallel
@@ -271,9 +275,11 @@ pub mod LabUnDirGraphMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
         fn edges(&self) -> (edges: SetStEph<Edge<V>>) {
             let mut edges: SetStEph<Edge<V>> = SetStEph::empty();
-            let mut it = self.labeled_edges.iter();
-            let ghost le_seq = it@.1;
+            let le_iter = self.labeled_edges.iter();
+            let ghost le_seq = into_iter_hash_keys(le_iter);
             let ghost le_view = self@.A;
+            let mut it = le_iter;
+            let ghost mut pos: int = 0;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
@@ -281,13 +287,18 @@ pub mod LabUnDirGraphMtEph {
                     valid_key_type_LabEdge::<V, L>(),
                     valid_key_type_Edge::<V>(),
                     edges.spec_setsteph_wf(),
-                    it@.0 <= le_seq.len(),
-                    it@.1 == le_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= le_seq.len(),
+                    IteratorSpec::remaining(&it).len() == le_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == le_seq[pos + i],
                     le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
-                    forall |e: (V::V, V::V)| edges@.contains(e) ==
-                        (exists |i: int| #![trigger le_seq[i]] 0 <= i < it@.0 && le_seq[i]@.0 == e.0 && le_seq[i]@.1 == e.1),
-                decreases le_seq.len() - it@.0,
+                    forall |e: (V::V, V::V)| #[trigger] edges@.contains(e) ==
+                        (exists |i: int| #![trigger le_seq[i]] 0 <= i < pos && le_seq[i]@.0 == e.0 && le_seq[i]@.1 == e.1),
+                decreases IteratorSpec::decrease(&it)->0,
             {
+                let ghost old_pos = pos;
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
@@ -300,6 +311,7 @@ pub mod LabUnDirGraphMtEph {
                                 if edges@.contains(e) {
                                     let i = choose |i: int| #![trigger le_seq[i]] 0 <= i < le_seq.len() && le_seq[i]@.0 == e.0 && le_seq[i]@.1 == e.1;
                                     lemma_seq_index_in_map_to_set(le_seq, i);
+                                    assert(le_view.contains((e.0, e.1, le_seq[i]@.2)));
                                 }
                             }
                             // Veracity: NEEDED assert
@@ -315,6 +327,7 @@ pub mod LabUnDirGraphMtEph {
                         return edges;
                     },
                     Some(labeled_edge) => {
+                        proof { pos = pos + 1; assert(le_seq[old_pos] == *labeled_edge); }
                         let _ = edges.insert(Edge(labeled_edge.0.clone_plus(), labeled_edge.1.clone_plus()));
                     },
                 }
@@ -322,7 +335,15 @@ pub mod LabUnDirGraphMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn add_vertex(&mut self, v: V) { let _ = self.vertices.insert(v); }
+        fn add_vertex(&mut self, v: V) {
+            let _ = self.vertices.insert(v);
+            proof {
+                assert forall |u: V::V, w: V::V, l: L::V| #[trigger] self@.A.contains((u, w, l))
+                    implies self@.V.contains(u) && self@.V.contains(w) by {
+                    assert(old(self)@.A.contains((u, w, l)));
+                }
+            }
+        }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) {
@@ -333,44 +354,67 @@ pub mod LabUnDirGraphMtEph {
             } else {
                 let _ = self.labeled_edges.insert(LabEdge(v2, v1, label));
             }
+            proof {
+                assert forall |u: V::V, w: V::V, l: L::V| #[trigger] self@.A.contains((u, w, l))
+                    implies self@.V.contains(u) && self@.V.contains(w) by {
+                    if old(self)@.A.contains((u, w, l)) {
+                        assert(old(self)@.V.contains(u) && old(self)@.V.contains(w));
+                    }
+                }
+            }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
         fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>) {
-            let mut it = self.labeled_edges.iter();
-            let ghost le_seq = it@.1;
+            let le_iter = self.labeled_edges.iter();
+            let ghost le_seq = into_iter_hash_keys(le_iter);
             let ghost le_view = self@.A;
             let ghost v1_view = v1@;
             let ghost v2_view = v2@;
+            let mut it = le_iter;
+            let ghost mut pos: int = 0;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type_LabEdge::<V, L>(),
-                    it@.0 <= le_seq.len(),
-                    it@.1 == le_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= le_seq.len(),
+                    IteratorSpec::remaining(&it).len() == le_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == le_seq[pos + i],
                     le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
-                    forall |i: int| #![trigger le_seq[i]] 0 <= i < it@.0 ==> 
+                    forall |i: int| #![trigger le_seq[i]] 0 <= i < pos ==>
                         !((le_seq[i]@.0 == v1_view && le_seq[i]@.1 == v2_view) ||
                           (le_seq[i]@.0 == v2_view && le_seq[i]@.1 == v1_view)),
-                decreases le_seq.len() - it@.0,
+                decreases IteratorSpec::decrease(&it)->0,
             {
+                let ghost old_pos = pos;
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
                         // Veracity: NEEDED proof block
                         proof {
+                            if exists |l: L::V| le_view.contains((v1_view, v2_view, l)) || le_view.contains((v2_view, v1_view, l)) {
+                                let l = choose |l: L::V| le_view.contains((v1_view, v2_view, l)) || le_view.contains((v2_view, v1_view, l));
+                                if le_view.contains((v1_view, v2_view, l)) {
+                                    lemma_map_to_set_contains_index(le_seq, (v1_view, v2_view, l));
+                                } else {
+                                    lemma_map_to_set_contains_index(le_seq, (v2_view, v1_view, l));
+                                }
+                            }
                         }
                         return None;
                     },
                     Some(labeled_edge) => {
-                        if (feq(&labeled_edge.0, v1) && feq(&labeled_edge.1, v2)) || 
+                        proof { pos = pos + 1; assert(le_seq[old_pos] == *labeled_edge); }
+                        if (feq(&labeled_edge.0, v1) && feq(&labeled_edge.1, v2)) ||
                            // Veracity: NEEDED proof block
                            (feq(&labeled_edge.0, v2) && feq(&labeled_edge.1, v1)) {
                             // Veracity: NEEDED proof block
                             proof {
-                                let idx = it@.0 - 1;
-                                lemma_seq_index_in_map_to_set(le_seq, idx);
+                                lemma_seq_index_in_map_to_set(le_seq, old_pos);
                             }
                             return Some(&labeled_edge.2);
                         }
@@ -381,40 +425,55 @@ pub mod LabUnDirGraphMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
         fn has_edge(&self, v1: &V, v2: &V) -> (b: bool) {
-            let mut it = self.labeled_edges.iter();
-            let ghost le_seq = it@.1;
+            let le_iter = self.labeled_edges.iter();
+            let ghost le_seq = into_iter_hash_keys(le_iter);
             let ghost le_view = self@.A;
             let ghost v1_view = v1@;
             let ghost v2_view = v2@;
+            let mut it = le_iter;
+            let ghost mut pos: int = 0;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type_LabEdge::<V, L>(),
-                    it@.0 <= le_seq.len(),
-                    it@.1 == le_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= le_seq.len(),
+                    IteratorSpec::remaining(&it).len() == le_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == le_seq[pos + i],
                     le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
-                    forall |i: int| #![trigger le_seq[i]] 0 <= i < it@.0 ==> 
+                    forall |i: int| #![trigger le_seq[i]] 0 <= i < pos ==>
                         !((le_seq[i]@.0 == v1_view && le_seq[i]@.1 == v2_view) ||
                           (le_seq[i]@.0 == v2_view && le_seq[i]@.1 == v1_view)),
-                decreases le_seq.len() - it@.0,
+                decreases IteratorSpec::decrease(&it)->0,
             {
+                let ghost old_pos = pos;
                 // Veracity: NEEDED proof block
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
                         proof {
+                            if exists |l: L::V| le_view.contains((v1_view, v2_view, l)) || le_view.contains((v2_view, v1_view, l)) {
+                                let l = choose |l: L::V| le_view.contains((v1_view, v2_view, l)) || le_view.contains((v2_view, v1_view, l));
+                                if le_view.contains((v1_view, v2_view, l)) {
+                                    lemma_map_to_set_contains_index(le_seq, (v1_view, v2_view, l));
+                                } else {
+                                    lemma_map_to_set_contains_index(le_seq, (v2_view, v1_view, l));
+                                }
+                            }
                         }
                         return false;
                     },
                     // Veracity: NEEDED proof block
                     Some(labeled_edge) => {
-                        if (feq(&labeled_edge.0, v1) && feq(&labeled_edge.1, v2)) || 
+                        proof { pos = pos + 1; assert(le_seq[old_pos] == *labeled_edge); }
+                        if (feq(&labeled_edge.0, v1) && feq(&labeled_edge.1, v2)) ||
                            (feq(&labeled_edge.0, v2) && feq(&labeled_edge.1, v1)) {
                             // Veracity: NEEDED proof block
                             proof {
-                                let idx = it@.0 - 1;
-                                lemma_seq_index_in_map_to_set(le_seq, idx);
+                                lemma_seq_index_in_map_to_set(le_seq, old_pos);
                             }
                             return true;
                         }
@@ -585,121 +644,23 @@ pub mod LabUnDirGraphMtEph {
     //		Section 10a. iterators
 
 
-    /// Iterator wrapper for LabUnDirGraphMtEph vertex iteration.
-    #[verifier::reject_recursive_types(V)]
-    pub struct LabUnDirGraphMtEphIter<'a, V: StTInMtT + Hash + Ord + 'static> {
-        pub inner: SetStEphIter<'a, V>,
-    }
-
-    impl<'a, V: StTInMtT + Hash + Ord + 'static> View for LabUnDirGraphMtEphIter<'a, V> {
-        type V = (int, Seq<V>);
-        open spec fn view(&self) -> (int, Seq<V>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant<'a, V: StTInMtT + Hash + Ord + 'static>(it: &LabUnDirGraphMtEphIter<'a, V>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<'a, V: StTInMtT + Hash + Ord + 'static> std::iter::Iterator for LabUnDirGraphMtEphIter<'a, V> {
-        type Item = &'a V;
-
-        fn next(&mut self) -> (next: Option<&'a V>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(V)]
-    pub struct LabUnDirGraphMtEphGhostIterator<'a, V: StTInMtT + Hash + Ord + 'static> {
-        pub pos: int,
-        pub elements: Seq<V>,
-        pub phantom: core::marker::PhantomData<&'a V>,
-    }
-
-    impl<'a, V: StTInMtT + Hash + Ord + 'static> vstd::pervasive::ForLoopGhostIteratorNew for LabUnDirGraphMtEphIter<'a, V> {
-        type GhostIter = LabUnDirGraphMtEphGhostIterator<'a, V>;
-
-        open spec fn ghost_iter(&self) -> LabUnDirGraphMtEphGhostIterator<'a, V> {
-            LabUnDirGraphMtEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, V: StTInMtT + Hash + Ord + 'static> vstd::pervasive::ForLoopGhostIterator for LabUnDirGraphMtEphGhostIterator<'a, V> {
-        type ExecIter = LabUnDirGraphMtEphIter<'a, V>;
-        type Item = V;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &LabUnDirGraphMtEphIter<'a, V>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<V> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(self.elements[self.pos])
-            } else {
-                None
-            }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &LabUnDirGraphMtEphIter<'a, V>) -> LabUnDirGraphMtEphGhostIterator<'a, V> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    impl<'a, V: StTInMtT + Hash + Ord + 'static> View for LabUnDirGraphMtEphGhostIterator<'a, V> {
-        type V = Seq<V>;
-
-        open spec fn view(&self) -> Seq<V> {
-            self.elements.take(self.pos)
-        }
-    }
-
+    // Delegated iteration over the vertices: the std hash-set iterator that vstd
+    // specifies. An impl of an external trait method may not add `requires`, so
+    // the contract is conditional on the vertex set's well-formedness.
     impl<'a, V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> std::iter::IntoIterator for &'a LabUnDirGraphMtEph<V, L> {
         type Item = &'a V;
-        type IntoIter = LabUnDirGraphMtEphIter<'a, V>;
+        type IntoIter = std::collections::hash_set::Iter<'a, V>;
         fn into_iter(self) -> (it: Self::IntoIter)
-            requires valid_key_type::<V>(), spec_labgraphview_wf(self@)
             ensures
-                it@.0 == 0int,
-                it@.1.map(|i: int, k: V| k@).to_set() == self@.V,
-                it@.1.no_duplicates(),
-                iter_invariant(&it),
+                self.vertices.spec_setsteph_wf() ==> {
+                    &&& IteratorSpec::remaining(&it).unref().map(|i: int, k: V| k@).to_set() == self@.V
+                    &&& IteratorSpec::remaining(&it).unref().no_duplicates()
+                    &&& IteratorSpec::remaining(&it).len() == self@.V.len()
+                    &&& into_iter_hash_keys(it) == IteratorSpec::remaining(&it).unref()
+                    &&& IteratorSpec::decrease(&it) is Some
+                },
         {
-            LabUnDirGraphMtEphIter { inner: self.vertices().iter() }
+            (&self.vertices).into_iter()
         }
     }
 
@@ -738,7 +699,9 @@ pub mod LabUnDirGraphMtEph {
 
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V>
             recommends spec_labgraphview_wf(self@), self@.V.contains(v)
-        { Set::new(|w: V::V| exists |l: L::V|
+        { self@.V.filter(|w: V::V| exists |l: L::V|
+            #![trigger self@.A.contains((v, w, l))]
+            #![trigger self@.A.contains((w, v, l))]
             self@.A.contains((v, w, l)) || self@.A.contains((w, v, l))) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
@@ -976,22 +939,6 @@ pub mod LabUnDirGraphMtEph {
                 self.vertices, self.labeled_edges
             )
         }
-    }
-
-    impl<'a, V: StTInMtT + Hash + Ord + 'static> Debug for LabUnDirGraphMtEphIter<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphMtEphIter") }
-    }
-
-    impl<'a, V: StTInMtT + Hash + Ord + 'static> Display for LabUnDirGraphMtEphIter<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphMtEphIter") }
-    }
-
-    impl<'a, V: StTInMtT + Hash + Ord + 'static> Debug for LabUnDirGraphMtEphGhostIterator<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphMtEphGhostIterator") }
-    }
-
-    impl<'a, V: StTInMtT + Hash + Ord + 'static> Display for LabUnDirGraphMtEphGhostIterator<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphMtEphGhostIterator") }
     }
 
     //		Section 14b. derive impls outside verus!

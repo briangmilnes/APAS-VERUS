@@ -49,7 +49,7 @@ pub mod EdgeSetGraphStPer {
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
-    vstd::set::group_set_axioms,
+    vstd::set::group_set_lemmas,
     vstd::set_lib::group_set_lib_default,
 };
 

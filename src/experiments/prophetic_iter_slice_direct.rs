@@ -15,6 +15,9 @@
 //!  - `for x in &coll` through `IntoIterator for &Coll`
 //!
 //! RESULT: SUCCEEDS — 8 verified, 0 errors (verus 0.2026.05.21, standalone).
+//! RESULT: FAILS — E0425 `axiom_spec_slice_iter` removed from vstd; also declares
+//!         `initial_value_relation`, removed by #2739 (verus 0.2026.09.13.671956e).
+//! DATE: 2026-09-20. LOG: logs/validate-experiment-prophetic_iter_slice_direct.20260920-160424.log
 //! Finding: a Vec-backed collection needs no custom iterator type. `for` loops
 //! verify cleanly; a manual `loop` must draw its conclusion before `break`
 //! because the prophetic `seq()` equality does not propagate past `break`.

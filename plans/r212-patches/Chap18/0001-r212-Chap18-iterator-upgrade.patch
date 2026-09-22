@@ -1,0 +1,3238 @@
+diff --git a/rust_verify_test/tests/Chap18/ProveArraySeq.rs b/rust_verify_test/tests/Chap18/ProveArraySeq.rs
+index 0e624ce..98238d3 100644
+--- a/rust_verify_test/tests/Chap18/ProveArraySeq.rs
++++ b/rust_verify_test/tests/Chap18/ProveArraySeq.rs
+@@ -19,6 +19,7 @@ use common::*;
+ test_verify_one_file! {
+     #[test] arrayseq_loop_loop verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeq::ArraySeq::*;
+         use apas_verus::vstdplus::feq::feq::*;
+         broadcast use group_feq_axioms;
+@@ -27,30 +28,39 @@ test_verify_one_file! {
+             proof { assert(obeys_feq_full_trigger::<u64>()); }
+             let a: ArraySeqS<u64> = ArraySeqS::new(3, 42);
+             
+-            let mut it: ArraySeqIter<u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-            
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = a.iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(*x);
+-                    }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-            
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -59,6 +69,7 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseq_for_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeq::ArraySeq::*;
+         use apas_verus::vstdplus::feq::feq::*;
+         broadcast use group_feq_axioms;
+@@ -67,22 +78,18 @@ test_verify_one_file! {
+             proof { assert(obeys_feq_full_trigger::<u64>()); }
+             let a: ArraySeqS<u64> = ArraySeqS::new(3, 99);
+             
+-            let it: ArraySeqIter<u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-            
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: a.iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(*x);
+-                }
++                collected.push(*x);
+             }
+-            
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+diff --git a/rust_verify_test/tests/Chap18/ProveArraySeqMtEph.rs b/rust_verify_test/tests/Chap18/ProveArraySeqMtEph.rs
+index fe5054f..40801ac 100644
+--- a/rust_verify_test/tests/Chap18/ProveArraySeqMtEph.rs
++++ b/rust_verify_test/tests/Chap18/ProveArraySeqMtEph.rs
+@@ -17,35 +17,45 @@ use common::*;
+ test_verify_one_file! {
+     #[test] arrayseqmteph_loop_loop verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtEph::ArraySeqMtEph::*;
+         
+         fn test_loop_loop() {
+             let a: ArraySeqMtEphS<u64> = ArraySeqMtEphS::new(3, 42);
+             
+-            let mut it: ArraySeqMtEphIter<u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-            
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = a.iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(*x);
+-                    }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-            
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -54,27 +64,24 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqmteph_for_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtEph::ArraySeqMtEph::*;
+ 
+         fn test_for_iter() {
+             let a: ArraySeqMtEphS<u64> = ArraySeqMtEphS::new(3, 99);
+ 
+-            let it: ArraySeqMtEphIter<u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: a.iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(*x);
+-                }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+@@ -83,33 +90,45 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqmteph_loop_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtEph::ArraySeqMtEph::*;
+ 
+         fn test_loop_borrow_into() {
+             let a: ArraySeqMtEphS<u64> = ArraySeqMtEphS::new(3, 55);
+ 
+-            let mut it: ArraySeqMtEphIter<u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = (&a).into_iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof { items = items.push(*x); }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -118,25 +137,24 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqmteph_for_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtEph::ArraySeqMtEph::*;
+ 
+         fn test_for_borrow_into() {
+             let a: ArraySeqMtEphS<u64> = ArraySeqMtEphS::new(3, 77);
+ 
+-            let it: ArraySeqMtEphIter<u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: (&a).into_iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof { items = items.push(*x); }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+@@ -145,35 +163,44 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqmteph_loop_consume verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtEph::ArraySeqMtEph::*;
+ 
+         fn test_loop_consume() {
+             let a: ArraySeqMtEphS<u64> = ArraySeqMtEphS::new(3, 33);
+-            let ghost orig_seq: Seq<u64> = a.seq@;
+-
+-            let mut it = a.into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            assert(iter_seq == orig_seq);
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::vec::IntoIter<u64> = a.into_iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_seq == it@.1,
+-                    0 <= it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> #[trigger] IteratorSpec::remaining(&it)[i] == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof { items = items.push(x); }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == x);
++                        }
++                        collected.push(x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -182,28 +209,23 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqmteph_for_consume verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtEph::ArraySeqMtEph::*;
+ 
+         fn test_for_consume() {
+             let a: ArraySeqMtEphS<u64> = ArraySeqMtEphS::new(3, 66);
+-            let ghost orig_seq: Seq<u64> = a.seq@;
+-
+-            let it = a.into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            assert(iter_seq == orig_seq);
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: a.into_iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig,
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == it.seq()[i],
+             {
+-                proof { items = items.push(x); }
++                collected.push(x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+diff --git a/rust_verify_test/tests/Chap18/ProveArraySeqMtEphSlice.rs b/rust_verify_test/tests/Chap18/ProveArraySeqMtEphSlice.rs
+index 89e11d8..e814f89 100644
+--- a/rust_verify_test/tests/Chap18/ProveArraySeqMtEphSlice.rs
++++ b/rust_verify_test/tests/Chap18/ProveArraySeqMtEphSlice.rs
+@@ -19,33 +19,45 @@ use common::*;
+ test_verify_one_file! {
+     #[test] chap18_arrayseqmtephslice_loop_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice::*;
+ 
+         fn test_loop_borrow_iter() {
+             let a: ArraySeqMtEphSliceS<u64> = ArraySeqMtEphSliceS::new(3, 42);
+ 
+-            let mut it: ArraySeqMtEphSliceIter<'_, u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.spec_backing_seq();
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = a.iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof { items = items.push(*x); }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -54,33 +66,45 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] chap18_arrayseqmtephslice_loop_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice::*;
+ 
+         fn test_loop_borrow_into() {
+             let a: ArraySeqMtEphSliceS<u64> = ArraySeqMtEphSliceS::new(3, 55);
+ 
+-            let mut it: ArraySeqMtEphSliceIter<'_, u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.spec_backing_seq();
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = (&a).into_iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof { items = items.push(*x); }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -89,25 +113,24 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] chap18_arrayseqmtephslice_for_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice::*;
+ 
+         fn test_for_borrow_iter() {
+             let a: ArraySeqMtEphSliceS<u64> = ArraySeqMtEphSliceS::new(3, 99);
+ 
+-            let it: ArraySeqMtEphSliceIter<'_, u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.spec_backing_seq();
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: a.iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof { items = items.push(*x); }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+@@ -116,25 +139,24 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] chap18_arrayseqmtephslice_for_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice::*;
+ 
+         fn test_for_borrow_into() {
+             let a: ArraySeqMtEphSliceS<u64> = ArraySeqMtEphSliceS::new(3, 77);
+ 
+-            let it: ArraySeqMtEphSliceIter<'_, u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.spec_backing_seq();
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: (&a).into_iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof { items = items.push(*x); }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+diff --git a/rust_verify_test/tests/Chap18/ProveArraySeqMtPer.rs b/rust_verify_test/tests/Chap18/ProveArraySeqMtPer.rs
+index 08b18f5..e0d3970 100644
+--- a/rust_verify_test/tests/Chap18/ProveArraySeqMtPer.rs
++++ b/rust_verify_test/tests/Chap18/ProveArraySeqMtPer.rs
+@@ -17,35 +17,45 @@ use common::*;
+ test_verify_one_file! {
+     #[test] arrayseqmtper_loop_loop verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
+         
+         fn test_loop_loop() {
+             let a: ArraySeqMtPerS<u64> = ArraySeqMtPerS::new(3, 42);
+             
+-            let mut it: ArraySeqMtPerIter<u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-            
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = a.iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(*x);
+-                    }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-            
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -54,27 +64,24 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqmtper_for_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
+ 
+         fn test_for_iter() {
+             let a: ArraySeqMtPerS<u64> = ArraySeqMtPerS::new(3, 99);
+ 
+-            let it: ArraySeqMtPerIter<u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: a.iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(*x);
+-                }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+@@ -83,33 +90,45 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqmtper_loop_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
+ 
+         fn test_loop_borrow_into() {
+             let a: ArraySeqMtPerS<u64> = ArraySeqMtPerS::new(3, 55);
+ 
+-            let mut it: ArraySeqMtPerIter<u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = (&a).into_iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof { items = items.push(*x); }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -118,25 +137,24 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqmtper_for_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
+ 
+         fn test_for_borrow_into() {
+             let a: ArraySeqMtPerS<u64> = ArraySeqMtPerS::new(3, 77);
+ 
+-            let it: ArraySeqMtPerIter<u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: (&a).into_iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof { items = items.push(*x); }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+@@ -145,35 +163,44 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqmtper_loop_consume verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
+ 
+         fn test_loop_consume() {
+             let a: ArraySeqMtPerS<u64> = ArraySeqMtPerS::new(3, 33);
+-            let ghost orig_seq: Seq<u64> = a.seq@;
+-
+-            let mut it = a.into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            assert(iter_seq == orig_seq);
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::vec::IntoIter<u64> = a.into_iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_seq == it@.1,
+-                    0 <= it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> #[trigger] IteratorSpec::remaining(&it)[i] == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof { items = items.push(x); }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == x);
++                        }
++                        collected.push(x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -182,28 +209,23 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqmtper_for_consume verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
+ 
+         fn test_for_consume() {
+             let a: ArraySeqMtPerS<u64> = ArraySeqMtPerS::new(3, 66);
+-            let ghost orig_seq: Seq<u64> = a.seq@;
+-
+-            let it = a.into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            assert(iter_seq == orig_seq);
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: a.into_iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig,
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == it.seq()[i],
+             {
+-                proof { items = items.push(x); }
++                collected.push(x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+diff --git a/rust_verify_test/tests/Chap18/ProveArraySeqStEph.rs b/rust_verify_test/tests/Chap18/ProveArraySeqStEph.rs
+index c360129..9e32096 100644
+--- a/rust_verify_test/tests/Chap18/ProveArraySeqStEph.rs
++++ b/rust_verify_test/tests/Chap18/ProveArraySeqStEph.rs
+@@ -17,35 +17,45 @@ use common::*;
+ test_verify_one_file! {
+     #[test] arrayseqsteph_loop_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqStEph::ArraySeqStEph::*;
+         
+         fn test_loop_borrow_iter() {
+             let a: ArraySeqStEphS<u64> = ArraySeqStEphS::new(3, 42);
+             
+-            let mut it: ArraySeqStEphIter<u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-            
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = a.iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(*x);
+-                    }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-            
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -54,35 +64,45 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqsteph_loop_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqStEph::ArraySeqStEph::*;
+ 
+         fn test_loop_borrow_into() {
+             let a: ArraySeqStEphS<u64> = ArraySeqStEphS::new(3, 55);
+ 
+-            let mut it: ArraySeqStEphIter<u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = (&a).into_iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(*x);
+-                    }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -91,37 +111,44 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqsteph_loop_consume verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqStEph::ArraySeqStEph::*;
+ 
+         fn test_loop_consume() {
+             let a: ArraySeqStEphS<u64> = ArraySeqStEphS::new(3, 33);
+-            let ghost orig_seq: Seq<u64> = a.seq@;
+-
+-            let mut it = a.into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            assert(iter_seq == orig_seq);
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::vec::IntoIter<u64> = a.into_iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_seq == it@.1,
+-                    0 <= it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> #[trigger] IteratorSpec::remaining(&it)[i] == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(x);
+-                    }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == x);
++                        }
++                        collected.push(x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -130,27 +157,24 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqsteph_for_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqStEph::ArraySeqStEph::*;
+ 
+         fn test_for_borrow_iter() {
+             let a: ArraySeqStEphS<u64> = ArraySeqStEphS::new(3, 99);
+             
+-            let it: ArraySeqStEphIter<u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-            
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: a.iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(*x);
+-                }
++                collected.push(*x);
+             }
+-            
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+@@ -159,27 +183,24 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqsteph_for_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqStEph::ArraySeqStEph::*;
+ 
+         fn test_for_borrow_into() {
+             let a: ArraySeqStEphS<u64> = ArraySeqStEphS::new(3, 77);
+ 
+-            let it: ArraySeqStEphIter<u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: (&a).into_iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(*x);
+-                }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+@@ -188,30 +209,23 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqsteph_for_consume verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqStEph::ArraySeqStEph::*;
+ 
+         fn test_for_consume() {
+             let a: ArraySeqStEphS<u64> = ArraySeqStEphS::new(3, 66);
+-            let ghost orig_seq: Seq<u64> = a.seq@;
+-
+-            let it = a.into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            assert(iter_seq == orig_seq);
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: a.into_iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig,
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(x);
+-                }
++                collected.push(x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+diff --git a/rust_verify_test/tests/Chap18/ProveArraySeqStPer.rs b/rust_verify_test/tests/Chap18/ProveArraySeqStPer.rs
+index 4615fb7..613a40b 100644
+--- a/rust_verify_test/tests/Chap18/ProveArraySeqStPer.rs
++++ b/rust_verify_test/tests/Chap18/ProveArraySeqStPer.rs
+@@ -16,35 +16,45 @@ use common::*;
+ test_verify_one_file! {
+     #[test] arrayseqstper_loop_loop verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+         
+         fn test_loop_loop() {
+             let a: ArraySeqStPerS<u64> = ArraySeqStPerS::new(3, 42);
+             
+-            let mut it: ArraySeqStPerIter<u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-            
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = a.iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(*x);
+-                    }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-            
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -53,27 +63,24 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqstper_for_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+ 
+         fn test_for_iter() {
+             let a: ArraySeqStPerS<u64> = ArraySeqStPerS::new(3, 99);
+ 
+-            let it: ArraySeqStPerIter<u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: a.iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(*x);
+-                }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+diff --git a/rust_verify_test/tests/Chap18/ProveLinkedListStEph.rs b/rust_verify_test/tests/Chap18/ProveLinkedListStEph.rs
+index 3ece7b4..44b78e7 100644
+--- a/rust_verify_test/tests/Chap18/ProveLinkedListStEph.rs
++++ b/rust_verify_test/tests/Chap18/ProveLinkedListStEph.rs
+@@ -16,35 +16,45 @@ use common::*;
+ test_verify_one_file! {
+     #[test] linkedliststeph_loop_loop verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::LinkedListStEph::LinkedListStEph::*;
+ 
+         fn test_loop_loop() {
+             let list: LinkedListStEphS<u64> = LinkedListStEphS::new(3, 42);
+ 
+-            let mut it: LinkedListStEphIter<u64> = list.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = list.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = list.iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(*x);
+-                    }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -53,27 +63,24 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] linkedliststeph_for_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::LinkedListStEph::LinkedListStEph::*;
+ 
+         fn test_for_iter() {
+             let list: LinkedListStEphS<u64> = LinkedListStEphS::new(3, 99);
+ 
+-            let it: LinkedListStEphIter<u64> = list.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = list.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: list.iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(*x);
+-                }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+diff --git a/rust_verify_test/tests/Chap18/ProveLinkedListStPer.rs b/rust_verify_test/tests/Chap18/ProveLinkedListStPer.rs
+index b31e585..b1469ba 100644
+--- a/rust_verify_test/tests/Chap18/ProveLinkedListStPer.rs
++++ b/rust_verify_test/tests/Chap18/ProveLinkedListStPer.rs
+@@ -16,35 +16,45 @@ use common::*;
+ test_verify_one_file! {
+     #[test] linkedliststper_loop_loop verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::LinkedListStPer::LinkedListStPer::*;
+ 
+         fn test_loop_loop() {
+             let list: LinkedListStPerS<u64> = LinkedListStPerS::new(3, 42);
+ 
+-            let mut it: LinkedListStPerIter<u64> = list.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = list.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = list.iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(*x);
+-                    }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -53,27 +63,24 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] linkedliststper_for_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::LinkedListStPer::LinkedListStPer::*;
+ 
+         fn test_for_iter() {
+             let list: LinkedListStPerS<u64> = LinkedListStPerS::new(3, 99);
+ 
+-            let it: LinkedListStPerIter<u64> = list.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = list.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: list.iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(*x);
+-                }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+diff --git a/src/Chap18/ArraySeq.rs b/src/Chap18/ArraySeq.rs
+index 316ec7f..cc4b783 100644
+--- a/src/Chap18/ArraySeq.rs
++++ b/src/Chap18/ArraySeq.rs
+@@ -31,6 +31,8 @@ pub mod ArraySeq {
+     use std::vec::IntoIter;
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+     pub use crate::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::*;
+ 
+     verus!
+@@ -1506,13 +1508,13 @@ pub mod ArraySeq {
+         {}
+ 
+         /// Returns custom ArraySeqIter following Chap05 pattern.
+-        pub fn iter(&self) -> (it: ArraySeqIter<'_, T>)
++        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            ArraySeqIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+@@ -1523,123 +1525,16 @@ pub mod ArraySeq {
+ 
+     //		Section 10. iterators
+ 
+-
+-    /// Inner is private; closed view() can access it but external code cannot see it.
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqIter<'a, T> {
+-        pub inner: std::slice::Iter<'a, T>, 
+-    }
+-
+-    /// Ghost iterator for ForLoopGhostIterator support (for-iter, for-borrow patterns).
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqGhostIterator<'a, T> {
+-        pub pos: int,
+-        pub elements: Seq<T>,
+-        pub phantom: core::marker::PhantomData<&'a T>,
+-    }
+-
+-    impl<'a, T> View for ArraySeqIter<'a, T> {
+-        type V = (int, Seq<T>);
+-        open spec fn view(&self) -> (int, Seq<T>) {
+-            self.inner@
+-        }
+-    }
+-
+-    impl<'a, T> View for ArraySeqGhostIterator<'a, T> {
+-        type V = Seq<T>;
+-
+-        open spec fn view(&self) -> Seq<T> {
+-            self.elements.take(self.pos)
+-        }
+-    }
+-
+-    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqIter<'a, T>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<'a, T> std::iter::Iterator for ArraySeqIter<'a, T> {
+-        type Item = &'a T;
+-
+-        // Relies on vstd's assume_specification for slice::Iter::next.
+-        fn next(&mut self) -> (next: Option<&'a T>)
+-            ensures ({
+-                let (old_index, old_seq) = old(self)@;
+-                match next {
+-                    None => {
+-                        &&& self@ == old(self)@
+-                        &&& old_index >= old_seq.len()
+-                    },
+-                    Some(element) => {
+-                        let (new_index, new_seq) = self@;
+-                        &&& 0 <= old_index < old_seq.len()
+-                        &&& new_seq == old_seq
+-                        &&& new_index == old_index + 1
+-                        &&& element == old_seq[old_index]
+-                    },
+-                }
+-            })
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqIter<'a, T> {
+-        type GhostIter = ArraySeqGhostIterator<'a, T>;
+-
+-        open spec fn ghost_iter(&self) -> ArraySeqGhostIterator<'a, T> {
+-            ArraySeqGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ArraySeqGhostIterator<'a, T> {
+-        type ExecIter = ArraySeqIter<'a, T>;
+-        type Item = T;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &ArraySeqIter<'a, T>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<T> {
+-            if 0 <= self.pos < self.elements.len() {
+-                Some(self.elements[self.pos])
+-            } else {
+-                None
+-            }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &ArraySeqIter<'a, T>) -> ArraySeqGhostIterator<'a, T> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqS<T> {
+         type Item = &'a T;
+-        type IntoIter = ArraySeqIter<'a, T>;
++        type IntoIter = std::slice::Iter<'a, T>;
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            ArraySeqIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+@@ -1648,8 +1543,9 @@ pub mod ArraySeq {
+         type IntoIter = IntoIter<T>;
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
++                IteratorSpec::remaining(&it) == self.seq@,
++                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+             self.seq.into_iter()
+         }
+@@ -1717,28 +1613,4 @@ pub mod ArraySeq {
+             write!(f, "]")
+         }
+     }
+-
+-    impl<'a, T: Debug> Debug for ArraySeqIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqIter({:?})", self.inner)
+-        }
+-    }
+-
+-    impl<'a, T> Display for ArraySeqIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqIter")
+-        }
+-    }
+-
+-    impl<'a, T> Debug for ArraySeqGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqGhostIterator")
+-        }
+-    }
+-
+-    impl<'a, T> Display for ArraySeqGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqGhostIterator")
+-        }
+-    }
+ }
+diff --git a/src/Chap18/ArraySeqMtEph.rs b/src/Chap18/ArraySeqMtEph.rs
+index c1f92f1..790bf6d 100644
+--- a/src/Chap18/ArraySeqMtEph.rs
++++ b/src/Chap18/ArraySeqMtEph.rs
+@@ -39,6 +39,8 @@ pub mod ArraySeqMtEph {
+     use std::vec::IntoIter;
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+     use vstd::rwlock::*;
+     pub use crate::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::*;
+ 
+@@ -638,13 +640,13 @@ pub mod ArraySeqMtEph {
+         {}
+ 
+         /// Returns an iterator over the sequence elements.
+-        pub fn iter(&self) -> (it: ArraySeqMtEphIter<'_, T>)
++        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            ArraySeqMtEphIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+ 
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|).
+@@ -1419,112 +1421,16 @@ pub mod ArraySeqMtEph {
+ 
+     //		Section 10a. iterators
+ 
+-
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqMtEphIter<'a, T> {
+-        pub inner: std::slice::Iter<'a, T>,
+-    }
+-
+-    impl<'a, T> View for ArraySeqMtEphIter<'a, T> {
+-        type V = (int, Seq<T>);
+-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+-    }
+-
+-    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqMtEphIter<'a, T>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<'a, T> std::iter::Iterator for ArraySeqMtEphIter<'a, T> {
+-        type Item = &'a T;
+-
+-        // Relies on vstd's assume_specification for slice::Iter::next.
+-        fn next(&mut self) -> (next: Option<&'a T>)
+-            ensures ({
+-                let (old_index, old_seq) = old(self)@;
+-                match next {
+-                    None => {
+-                        &&& self@ == old(self)@
+-                        &&& old_index >= old_seq.len()
+-                    },
+-                    Some(element) => {
+-                        let (new_index, new_seq) = self@;
+-                        &&& 0 <= old_index < old_seq.len()
+-                        &&& new_seq == old_seq
+-                        &&& new_index == old_index + 1
+-                        &&& element == old_seq[old_index]
+-                    },
+-                }
+-            })
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    /// Ghost iterator for ForLoopGhostIterator support.
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqMtEphGhostIterator<'a, T> {
+-        pub pos: int,
+-        pub elements: Seq<T>,
+-        pub phantom: core::marker::PhantomData<&'a T>,
+-    }
+-
+-    impl<'a, T> View for ArraySeqMtEphGhostIterator<'a, T> {
+-        type V = Seq<T>;
+-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqMtEphIter<'a, T> {
+-        type GhostIter = ArraySeqMtEphGhostIterator<'a, T>;
+-        open spec fn ghost_iter(&self) -> ArraySeqMtEphGhostIterator<'a, T> {
+-            ArraySeqMtEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ArraySeqMtEphGhostIterator<'a, T> {
+-        type ExecIter = ArraySeqMtEphIter<'a, T>;
+-        type Item = T;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &ArraySeqMtEphIter<'a, T>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<T> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &ArraySeqMtEphIter<'a, T>) -> ArraySeqMtEphGhostIterator<'a, T> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqMtEphS<T> {
+         type Item = &'a T;
+-        type IntoIter = ArraySeqMtEphIter<'a, T>;
++        type IntoIter = std::slice::Iter<'a, T>;
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            ArraySeqMtEphIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+@@ -1533,8 +1439,9 @@ pub mod ArraySeqMtEph {
+         type IntoIter = IntoIter<T>;
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
++                IteratorSpec::remaining(&it) == self.seq@,
++                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+             self.seq.into_iter()
+         }
+@@ -1955,30 +1862,6 @@ pub mod ArraySeqMtEph {
+ 
+     //		Section 14. derive impls outside verus!
+ 
+-    impl<'a, T: Debug> Debug for ArraySeqMtEphIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqMtEphIter({:?})", self.inner)
+-        }
+-    }
+-
+-    impl<'a, T> Display for ArraySeqMtEphIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqMtEphIter")
+-        }
+-    }
+-
+-    impl<'a, T> Debug for ArraySeqMtEphGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqMtEphGhostIterator")
+-        }
+-    }
+-
+-    impl<'a, T> Display for ArraySeqMtEphGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqMtEphGhostIterator")
+-        }
+-    }
+-
+     //		Section 14a. derive impls outside verus!
+ 
+     #[cfg(verus_keep_ghost)]
+diff --git a/src/Chap18/ArraySeqMtEphSlice.rs b/src/Chap18/ArraySeqMtEphSlice.rs
+index a5f913e..ed76f27 100644
+--- a/src/Chap18/ArraySeqMtEphSlice.rs
++++ b/src/Chap18/ArraySeqMtEphSlice.rs
+@@ -33,6 +33,8 @@ pub mod ArraySeqMtEphSlice {
+     use std::sync::Arc;
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+     pub use crate::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::*;
+ 
+     verus!
+@@ -341,12 +343,12 @@ pub mod ArraySeqMtEphSlice {
+                 forall|i: int| #![trigger v@[i]]
+                     0 <= i < self.spec_len() ==> v@[i] == self.spec_index(i);
+ 
+-        fn iter(&self) -> (it: ArraySeqMtEphSliceIter<'_, T>)
++        fn iter(&self) -> (it: std::slice::Iter<'_, T>)
+             requires self.spec_arrayseqmtephslice_wf(),
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.spec_backing_seq(),
+-                iter_invariant(&it);
++                IteratorSpec::remaining(&it) == self.spec_backing_seq().as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.spec_backing_seq(),
++                IteratorSpec::decrease(&it) is Some;
+ 
+         /// Parallel reduce via D&C on O(1) slices.
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C + join, O(1) split.
+@@ -610,9 +612,9 @@ pub mod ArraySeqMtEphSlice {
+             v
+         }
+ 
+-        fn iter(&self) -> (it: ArraySeqMtEphSliceIter<'_, T>) {
++        fn iter(&self) -> (it: std::slice::Iter<'_, T>) {
+             let sl: &[T] = arc_vec_as_slice(&self.data, self.start, self.len);
+-            ArraySeqMtEphSliceIter { inner: sl.iter() }
++            sl.iter()
+         }
+ 
+         fn reduce<F: MtReduceFn<T>>(
+@@ -1548,114 +1550,28 @@ pub mod ArraySeqMtEphSlice {
+ 
+     //		Section 10. iterators
+ 
+-
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqMtEphSliceIter<'a, T> {
+-        pub inner: std::slice::Iter<'a, T>,
+-    }
+-
+-    impl<'a, T> View for ArraySeqMtEphSliceIter<'a, T> {
+-        type V = (int, Seq<T>);
+-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+-    }
+-
+-    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqMtEphSliceIter<'a, T>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<'a, T> std::iter::Iterator for ArraySeqMtEphSliceIter<'a, T> {
+-        type Item = &'a T;
+-
+-        fn next(&mut self) -> (next: Option<&'a T>)
+-            ensures ({
+-                let (old_index, old_seq) = old(self)@;
+-                match next {
+-                    None => {
+-                        &&& self@ == old(self)@
+-                        &&& old_index >= old_seq.len()
+-                    },
+-                    Some(element) => {
+-                        let (new_index, new_seq) = self@;
+-                        &&& 0 <= old_index < old_seq.len()
+-                        &&& new_seq == old_seq
+-                        &&& new_index == old_index + 1
+-                        &&& element == old_seq[old_index]
+-                    },
+-                }
+-            })
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    /// Ghost iterator for ForLoopGhostIterator support.
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqMtEphSliceGhostIterator<'a, T> {
+-        pub pos: int,
+-        pub elements: Seq<T>,
+-        pub phantom: core::marker::PhantomData<&'a T>,
+-    }
+-
+-    impl<'a, T> View for ArraySeqMtEphSliceGhostIterator<'a, T> {
+-        type V = Seq<T>;
+-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqMtEphSliceIter<'a, T> {
+-        type GhostIter = ArraySeqMtEphSliceGhostIterator<'a, T>;
+-        open spec fn ghost_iter(&self) -> ArraySeqMtEphSliceGhostIterator<'a, T> {
+-            ArraySeqMtEphSliceGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ArraySeqMtEphSliceGhostIterator<'a, T> {
+-        type ExecIter = ArraySeqMtEphSliceIter<'a, T>;
+-        type Item = T;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &ArraySeqMtEphSliceIter<'a, T>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<T> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &ArraySeqMtEphSliceIter<'a, T>) -> ArraySeqMtEphSliceGhostIterator<'a, T> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+     impl<'a, T: StTInMtT> std::iter::IntoIterator for &'a ArraySeqMtEphSliceS<T> {
+         type Item = &'a T;
+-        type IntoIter = ArraySeqMtEphSliceIter<'a, T>;
++        type IntoIter = std::slice::Iter<'a, T>;
+ 
+         fn into_iter(self) -> (it: Self::IntoIter)
+-            requires self.spec_arrayseqmtephslice_wf(),
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.spec_backing_seq(),
+-                iter_invariant(&it),
++                self.spec_arrayseqmtephslice_wf() ==> {
++                    &&& IteratorSpec::remaining(&it) == self.spec_backing_seq().as_ref()
++                    &&& vstd::std_specs::slice::into_iter_elts(it) == self.spec_backing_seq()
++                    &&& IteratorSpec::decrease(&it) is Some
++                },
+         {
+-            let sl: &[T] = arc_vec_as_slice(&self.data, self.start, self.len);
+-            ArraySeqMtEphSliceIter { inner: sl.iter() }
++            // Verus 0.2026.09.13 rejects `requires` on an external trait's
++            // impl, so the well-formedness bound the old `requires` carried is
++            // checked here in O(1) (r212, src/experiments/intoiter_form_b_total_body.rs).
++            let backing: &Vec<T> = arc_deref(&self.data);
++            let sl: &[T] = if self.len <= backing.len() && self.start <= backing.len() - self.len {
++                arc_vec_as_slice(&self.data, self.start, self.len)
++            } else {
++                arc_vec_as_slice(&self.data, 0, 0)
++            };
++            sl.iter()
+         }
+     }
+ 
+@@ -1748,28 +1664,4 @@ pub mod ArraySeqMtEphSlice {
+             write!(f, "]")
+         }
+     }
+-
+-    impl<'a, T: std::fmt::Debug> std::fmt::Debug for ArraySeqMtEphSliceIter<'a, T> {
+-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+-            write!(f, "ArraySeqMtEphSliceIter({:?})", self.inner)
+-        }
+-    }
+-
+-    impl<'a, T> std::fmt::Display for ArraySeqMtEphSliceIter<'a, T> {
+-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+-            write!(f, "ArraySeqMtEphSliceIter")
+-        }
+-    }
+-
+-    impl<'a, T> std::fmt::Debug for ArraySeqMtEphSliceGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+-            write!(f, "ArraySeqMtEphSliceGhostIterator")
+-        }
+-    }
+-
+-    impl<'a, T> std::fmt::Display for ArraySeqMtEphSliceGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+-            write!(f, "ArraySeqMtEphSliceGhostIterator")
+-        }
+-    }
+ }
+diff --git a/src/Chap18/ArraySeqMtPer.rs b/src/Chap18/ArraySeqMtPer.rs
+index 8151bff..8f7c244 100644
+--- a/src/Chap18/ArraySeqMtPer.rs
++++ b/src/Chap18/ArraySeqMtPer.rs
+@@ -33,6 +33,8 @@ pub mod ArraySeqMtPer {
+     use std::vec::IntoIter;
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
+     use crate::vstdplus::clone_plus::clone_plus::*;
+     #[cfg(verus_keep_ghost)]
+@@ -887,13 +889,13 @@ pub mod ArraySeqMtPer {
+         {}
+ 
+         /// Returns an iterator over the sequence elements.
+-        pub fn iter(&self) -> (it: ArraySeqMtPerIter<'_, T>)
++        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            ArraySeqMtPerIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+ // Veracity: NEEDED proof block
+ 
+@@ -1732,113 +1734,17 @@ pub mod ArraySeqMtPer {
+ 
+     //		Section 10. iterators
+ 
+-
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqMtPerIter<'a, T> {
+-        pub inner: std::slice::Iter<'a, T>,
+-    }
+-
+-    impl<'a, T> View for ArraySeqMtPerIter<'a, T> {
+-        type V = (int, Seq<T>);
+-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+-    }
+-
+-    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqMtPerIter<'a, T>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<'a, T> std::iter::Iterator for ArraySeqMtPerIter<'a, T> {
+-        type Item = &'a T;
+-
+-        // Relies on vstd's assume_specification for slice::Iter::next.
+-        fn next(&mut self) -> (next: Option<&'a T>)
+-            ensures ({
+-                let (old_index, old_seq) = old(self)@;
+-                match next {
+-                    None => {
+-                        &&& self@ == old(self)@
+-                        &&& old_index >= old_seq.len()
+-                    },
+-                    Some(element) => {
+-                        let (new_index, new_seq) = self@;
+-                        &&& 0 <= old_index < old_seq.len()
+-                        &&& new_seq == old_seq
+-                        &&& new_index == old_index + 1
+-                        &&& element == old_seq[old_index]
+-                    },
+-                }
+-            })
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    /// Ghost iterator for ForLoopGhostIterator support.
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqMtPerGhostIterator<'a, T> {
+-        pub pos: int,
+-        pub elements: Seq<T>,
+-        pub phantom: core::marker::PhantomData<&'a T>,
+-    }
+-
+-    impl<'a, T> View for ArraySeqMtPerGhostIterator<'a, T> {
+-        type V = Seq<T>;
+-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqMtPerIter<'a, T> {
+-        type GhostIter = ArraySeqMtPerGhostIterator<'a, T>;
+-        open spec fn ghost_iter(&self) -> ArraySeqMtPerGhostIterator<'a, T> {
+-            ArraySeqMtPerGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ArraySeqMtPerGhostIterator<'a, T> {
+-        type ExecIter = ArraySeqMtPerIter<'a, T>;
+-        type Item = T;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &ArraySeqMtPerIter<'a, T>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<T> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &ArraySeqMtPerIter<'a, T>) -> ArraySeqMtPerGhostIterator<'a, T> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqMtPerS<T> {
+         type Item = &'a T;
+-        type IntoIter = ArraySeqMtPerIter<'a, T>;
++        type IntoIter = std::slice::Iter<'a, T>;
+         // Veracity: NEEDED proof block
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            ArraySeqMtPerIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+@@ -1847,8 +1753,9 @@ pub mod ArraySeqMtPer {
+         type IntoIter = IntoIter<T>;
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
++                IteratorSpec::remaining(&it) == self.seq@,
++                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+             self.seq.into_iter()
+         }
+@@ -1925,28 +1832,4 @@ pub mod ArraySeqMtPer {
+             write!(f, "]")
+         }
+     }
+-
+-    impl<'a, T: Debug> Debug for ArraySeqMtPerIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqMtPerIter({:?})", self.inner)
+-        }
+-    }
+-
+-    impl<'a, T> Display for ArraySeqMtPerIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqMtPerIter")
+-        }
+-    }
+-
+-    impl<'a, T> Debug for ArraySeqMtPerGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqMtPerGhostIterator")
+-        }
+-    }
+-
+-    impl<'a, T> Display for ArraySeqMtPerGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqMtPerGhostIterator")
+-        }
+-    }
+ }
+diff --git a/src/Chap18/ArraySeqStEph.rs b/src/Chap18/ArraySeqStEph.rs
+index 1ab9957..8250125 100644
+--- a/src/Chap18/ArraySeqStEph.rs
++++ b/src/Chap18/ArraySeqStEph.rs
+@@ -31,6 +31,8 @@ pub mod ArraySeqStEph {
+     use std::vec::IntoIter;
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+     pub use crate::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::*;
+ 
+     verus!
+@@ -800,10 +802,19 @@ pub mod ArraySeqStEph {
+                 }
+                 acc = f(&acc, &a.seq[i]);
+                 proof {
+-                    let ghost t = s.take(i as int + 1);
+-                    // Veracity: NEEDED assert
+-                    assert(t.drop_last() =~= s.take(i as int));
+-                    reveal(Seq::fold_left);
++                    // r212 accepted hole (user, 2026-09-21): on Z3 4.16 the
++                    // `while i < len` loop exceeds the rlimit with the proof
++                    // below, which is token-identical to the five sibling
++                    // files that verify (docs/IteratorTransformerChap18.md §4).
++                    // The fold step the bypassed lines established is accepted.
++                    // BYPASSED (r212):
++                    // let ghost t = s.take(i as int + 1);
++                    // // Veracity: NEEDED assert
++                    // assert(t.drop_last() =~= s.take(i as int));
++                    // reveal(Seq::fold_left);
++                    // BYPASSED (r212, replaced by lemma_take_fold_left_step):
++                    // accept(acc == s.take(i as int + 1).fold_left(id, spec_f));
++                    lemma_take_fold_left_step(s, i as int, id, spec_f);
+                 }
+                 let cloned = acc.clone();
+                 proof {
+@@ -922,6 +933,17 @@ pub mod ArraySeqStEph {
+     }
+ 
+ 
++    /// One step of a prefix fold: folding the first `i + 1` elements is `f`
++    /// applied to the fold of the first `i` and element `i`.
++    proof fn lemma_take_fold_left_step<T>(s: Seq<T>, i: int, id: T, f: spec_fn(T, T) -> T)
++        requires 0 <= i < s.len(),
++        ensures s.take(i + 1).fold_left(id, f) == f(s.take(i).fold_left(id, f), s[i]),
++    {
++        let t = s.take(i + 1);
++        assert(t.drop_last() =~= s.take(i));
++        reveal(Seq::fold_left);
++    }
++
+     impl<T> ArraySeqStEphS<T> {
+         broadcast proof fn lemma_spec_index(&self, i: int)
+             requires 0 <= i < self.spec_len()
+@@ -929,124 +951,28 @@ pub mod ArraySeqStEph {
+         {}
+ 
+         /// Returns an iterator over the sequence elements.
+-        pub fn iter(&self) -> (it: ArraySeqStEphIter<'_, T>)
++        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            ArraySeqStEphIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+     //		Section 10. iterators
+ 
+-
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqStEphIter<'a, T> {
+-        pub inner: std::slice::Iter<'a, T>,
+-    }
+-
+-    impl<'a, T> View for ArraySeqStEphIter<'a, T> {
+-        type V = (int, Seq<T>);
+-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+-    }
+-
+-    /// Ghost iterator for ForLoopGhostIterator support.
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqStEphGhostIterator<'a, T> {
+-        pub pos: int,
+-        pub elements: Seq<T>,
+-        pub phantom: core::marker::PhantomData<&'a T>,
+-    }
+-
+-    impl<'a, T> View for ArraySeqStEphGhostIterator<'a, T> {
+-        type V = Seq<T>;
+-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+-    }
+-
+-    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqStEphIter<'a, T>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<'a, T> std::iter::Iterator for ArraySeqStEphIter<'a, T> {
+-        type Item = &'a T;
+-
+-        // Relies on vstd's assume_specification for slice::Iter::next.
+-        fn next(&mut self) -> (next: Option<&'a T>)
+-            ensures ({
+-                let (old_index, old_seq) = old(self)@;
+-                match next {
+-                    None => {
+-                        &&& self@ == old(self)@
+-                        &&& old_index >= old_seq.len()
+-                    },
+-                    Some(element) => {
+-                        let (new_index, new_seq) = self@;
+-                        &&& 0 <= old_index < old_seq.len()
+-                        &&& new_seq == old_seq
+-                        &&& new_index == old_index + 1
+-                        &&& element == old_seq[old_index]
+-                    },
+-                }
+-            })
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqStEphIter<'a, T> {
+-        type GhostIter = ArraySeqStEphGhostIterator<'a, T>;
+-        open spec fn ghost_iter(&self) -> ArraySeqStEphGhostIterator<'a, T> {
+-            ArraySeqStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ArraySeqStEphGhostIterator<'a, T> {
+-        type ExecIter = ArraySeqStEphIter<'a, T>;
+-        type Item = T;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &ArraySeqStEphIter<'a, T>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<T> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &ArraySeqStEphIter<'a, T>) -> ArraySeqStEphGhostIterator<'a, T> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStEphS<T> {
+         type Item = &'a T;
+-        type IntoIter = ArraySeqStEphIter<'a, T>;
++        type IntoIter = std::slice::Iter<'a, T>;
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            ArraySeqStEphIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+@@ -1055,8 +981,9 @@ pub mod ArraySeqStEph {
+         type IntoIter = IntoIter<T>;
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
++                IteratorSpec::remaining(&it) == self.seq@,
++                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+             self.seq.into_iter()
+         }
+@@ -1117,28 +1044,4 @@ pub mod ArraySeqStEph {
+             write!(f, "]")
+         }
+     }
+-
+-    impl<'a, T: Debug> Debug for ArraySeqStEphIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqStEphIter({:?})", self.inner)
+-        }
+-    }
+-
+-    impl<'a, T> Display for ArraySeqStEphIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqStEphIter")
+-        }
+-    }
+-
+-    impl<'a, T> Debug for ArraySeqStEphGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqStEphGhostIterator")
+-        }
+-    }
+-
+-    impl<'a, T> Display for ArraySeqStEphGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqStEphGhostIterator")
+-        }
+-    }
+ }
+diff --git a/src/Chap18/ArraySeqStPer.rs b/src/Chap18/ArraySeqStPer.rs
+index ecbae16..e08c5f6 100644
+--- a/src/Chap18/ArraySeqStPer.rs
++++ b/src/Chap18/ArraySeqStPer.rs
+@@ -32,6 +32,8 @@ pub mod ArraySeqStPer {
+     use std::vec::IntoIter;
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+     pub use crate::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::*;
+ 
+     verus!
+@@ -781,10 +783,15 @@ pub mod ArraySeqStPer {
+                 }
+                 acc = f(&acc, &a.seq[i]);
+                 proof {
+-                    let ghost t = s.take(i as int + 1);
+-                    // Veracity: NEEDED assert
+-                    assert(t.drop_last() =~= s.take(i as int));
+-                    reveal(Seq::fold_left);
++                    // r212: the one-step unfolding moved into
++                    // lemma_take_fold_left_step so `reveal(Seq::fold_left)`
++                    // no longer meets the loop's quantified invariants; in
++                    // the loop's own context it exceeded the rlimit under
++                    // verus 0.2026.09.13 once more modules were in scope.
++                    // BYPASSED (r212): let ghost t = s.take(i as int + 1);
++                    // BYPASSED (r212): assert(t.drop_last() =~= s.take(i as int));
++                    // BYPASSED (r212): reveal(Seq::fold_left);
++                    lemma_take_fold_left_step(s, i as int, id, spec_f);
+                 }
+                 let cloned = acc.clone();
+                 proof {
+@@ -903,6 +910,17 @@ pub mod ArraySeqStPer {
+     }
+ 
+ 
++    /// One step of a prefix fold: folding the first `i + 1` elements is `f`
++    /// applied to the fold of the first `i` and element `i`.
++    proof fn lemma_take_fold_left_step<T>(s: Seq<T>, i: int, id: T, f: spec_fn(T, T) -> T)
++        requires 0 <= i < s.len(),
++        ensures s.take(i + 1).fold_left(id, f) == f(s.take(i).fold_left(id, f), s[i]),
++    {
++        let t = s.take(i + 1);
++        assert(t.drop_last() =~= s.take(i));
++        reveal(Seq::fold_left);
++    }
++
+     impl<T> ArraySeqStPerS<T> {
+         broadcast proof fn lemma_spec_index(&self, i: int)
+             requires 0 <= i < self.spec_len()
+@@ -910,117 +928,18 @@ pub mod ArraySeqStPer {
+         {}
+ 
+         /// Returns an iterator over the sequence elements.
+-        pub fn iter(&self) -> (it: ArraySeqStPerIter<'_, T>)
++        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            ArraySeqStPerIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+     //		Section 10. iterators
+ 
+-
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqStPerIter<'a, T> {
+-        pub inner: std::slice::Iter<'a, T>,
+-    }
+-
+-    impl<'a, T> View for ArraySeqStPerIter<'a, T> {
+-        type V = (int, Seq<T>);
+-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+-    }
+-
+-    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqStPerIter<'a, T>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<'a, T> std::iter::Iterator for ArraySeqStPerIter<'a, T> {
+-        type Item = &'a T;
+-
+-        // Relies on vstd's assume_specification for slice::Iter::next.
+-        fn next(&mut self) -> (next: Option<&'a T>)
+-            ensures ({
+-                let (old_index, old_seq) = old(self)@;
+-                match next {
+-                    None => {
+-                        &&& self@ == old(self)@
+-                        &&& old_index >= old_seq.len()
+-                    },
+-                    Some(element) => {
+-                        let (new_index, new_seq) = self@;
+-                        &&& 0 <= old_index < old_seq.len()
+-                        &&& new_seq == old_seq
+-                        &&& new_index == old_index + 1
+-                        &&& element == old_seq[old_index]
+-                    },
+-                }
+-            })
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    /// Ghost iterator for ForLoopGhostIterator support (for-iter, for-borrow patterns).
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqStPerGhostIterator<'a, T> {
+-        pub pos: int,
+-        pub elements: Seq<T>,
+-        pub phantom: core::marker::PhantomData<&'a T>,
+-    }
+-
+-    impl<'a, T> View for ArraySeqStPerGhostIterator<'a, T> {
+-        type V = Seq<T>;
+-
+-        open spec fn view(&self) -> Seq<T> {
+-            self.elements.take(self.pos)
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqStPerIter<'a, T> {
+-        type GhostIter = ArraySeqStPerGhostIterator<'a, T>;
+-        open spec fn ghost_iter(&self) -> ArraySeqStPerGhostIterator<'a, T> {
+-            ArraySeqStPerGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ArraySeqStPerGhostIterator<'a, T> {
+-        type ExecIter = ArraySeqStPerIter<'a, T>;
+-        type Item = T;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &ArraySeqStPerIter<'a, T>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<T> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &ArraySeqStPerIter<'a, T>) -> ArraySeqStPerGhostIterator<'a, T> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+     //		Section 12. derive impls in verus!
+ 
+ 
+@@ -1034,14 +953,14 @@ pub mod ArraySeqStPer {
+ 
+     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStPerS<T> {
+         type Item = &'a T;
+-        type IntoIter = ArraySeqStPerIter<'a, T>;
++        type IntoIter = std::slice::Iter<'a, T>;
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            ArraySeqStPerIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+@@ -1050,8 +969,9 @@ pub mod ArraySeqStPer {
+         type IntoIter = IntoIter<T>;
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
++                IteratorSpec::remaining(&it) == self.seq@,
++                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+             self.seq.into_iter()
+         }
+@@ -1103,28 +1023,4 @@ pub mod ArraySeqStPer {
+         }
+     }
+ 
+-    impl<'a, T: Debug> Debug for ArraySeqStPerIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqStPerIter({:?})", self.inner)
+-        }
+-    }
+-
+-    impl<'a, T> Display for ArraySeqStPerIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqStPerIter")
+-        }
+-    }
+-
+-    impl<'a, T> Debug for ArraySeqStPerGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqStPerGhostIterator")
+-        }
+-    }
+-
+-    impl<'a, T> Display for ArraySeqStPerGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqStPerGhostIterator")
+-        }
+-    }
+-
+ }
+diff --git a/src/Chap18/LinkedListStEph.rs b/src/Chap18/LinkedListStEph.rs
+index 570a0b1..ed13bb0 100644
+--- a/src/Chap18/LinkedListStEph.rs
++++ b/src/Chap18/LinkedListStEph.rs
+@@ -32,6 +32,8 @@ pub mod LinkedListStEph {
+ 
+     use vstd::prelude::*;
+     #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
++    #[cfg(verus_keep_ghost)]
+     use vstd::std_specs::cmp::PartialEqSpecImpl;
+     pub use crate::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::*;
+ 
+@@ -724,11 +726,15 @@ pub mod LinkedListStEph {
+                 }
+                 acc = f(&acc, &a.seq[i]);
+                 proof {
+-                    let ghost t = s.take(i as int + 1);
+-                    // Veracity: NEEDED assert
+-                    // Veracity: NEEDED proof block
+-                    assert(t.drop_last() =~= s.take(i as int));
+-                    reveal(Seq::fold_left);
++                    // r212: the one-step unfolding moved into
++                    // lemma_take_fold_left_step so `reveal(Seq::fold_left)`
++                    // no longer meets the loop's quantified invariants; in
++                    // the loop's own context it exceeded the rlimit under
++                    // verus 0.2026.09.13 once more modules were in scope.
++                    // BYPASSED (r212): let ghost t = s.take(i as int + 1);
++                    // BYPASSED (r212): assert(t.drop_last() =~= s.take(i as int));
++                    // BYPASSED (r212): reveal(Seq::fold_left);
++                    lemma_take_fold_left_step(s, i as int, id, spec_f);
+                 }
+                 let cloned = acc.clone();
+                 proof {
+@@ -752,6 +758,17 @@ pub mod LinkedListStEph {
+     }
+ 
+ 
++    /// One step of a prefix fold: folding the first `i + 1` elements is `f`
++    /// applied to the fold of the first `i` and element `i`.
++    proof fn lemma_take_fold_left_step<T>(s: Seq<T>, i: int, id: T, f: spec_fn(T, T) -> T)
++        requires 0 <= i < s.len(),
++        ensures s.take(i + 1).fold_left(id, f) == f(s.take(i).fold_left(id, f), s[i]),
++    {
++        let t = s.take(i + 1);
++        assert(t.drop_last() =~= s.take(i));
++        reveal(Seq::fold_left);
++    }
++
+     impl<T> LinkedListStEphS<T> {
+         broadcast proof fn lemma_spec_index(&self, i: int)
+             requires 0 <= i < self.spec_len()
+@@ -760,121 +777,29 @@ pub mod LinkedListStEph {
+ 
+         /// Returns an iterator over the list elements.
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+-        pub fn iter(&self) -> (it: LinkedListStEphIter<'_, T>)
++        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            LinkedListStEphIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+     //		Section 10. iterators
+ 
+-
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct LinkedListStEphIter<'a, T> {
+-        pub inner: std::slice::Iter<'a, T>,
+-    }
+-
+-    impl<'a, T> View for LinkedListStEphIter<'a, T> {
+-        type V = (int, Seq<T>);
+-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+-    }
+-
+-    pub open spec fn iter_invariant<'a, T>(it: &LinkedListStEphIter<'a, T>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<'a, T> std::iter::Iterator for LinkedListStEphIter<'a, T> {
+-        type Item = &'a T;
+-
+-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+-        // Relies on vstd's assume_specification for slice::Iter::next.
+-        fn next(&mut self) -> (next: Option<&'a T>)
+-            ensures ({
+-                let (old_index, old_seq) = old(self)@;
+-                match next {
+-                    None => {
+-                        &&& self@ == old(self)@
+-                        &&& old_index >= old_seq.len()
+-                    },
+-                    Some(element) => {
+-                        let (new_index, new_seq) = self@;
+-                        &&& 0 <= old_index < old_seq.len()
+-                        &&& new_seq == old_seq
+-                        &&& new_index == old_index + 1
+-                        &&& element == old_seq[old_index]
+-                    },
+-                }
+-            })
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    /// Ghost iterator for ForLoopGhostIterator support.
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct LinkedListStEphGhostIterator<'a, T> {
+-        pub pos: int,
+-        pub elements: Seq<T>,
+-        pub phantom: core::marker::PhantomData<&'a T>,
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for LinkedListStEphIter<'a, T> {
+-        type GhostIter = LinkedListStEphGhostIterator<'a, T>;
+-        open spec fn ghost_iter(&self) -> LinkedListStEphGhostIterator<'a, T> {
+-            LinkedListStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for LinkedListStEphGhostIterator<'a, T> {
+-        type ExecIter = LinkedListStEphIter<'a, T>;
+-        type Item = T;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &LinkedListStEphIter<'a, T>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool { self.pos == self.elements.len() }
+-        open spec fn ghost_decrease(&self) -> Option<int> { Some(self.elements.len() - self.pos) }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<T> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &LinkedListStEphIter<'a, T>) -> LinkedListStEphGhostIterator<'a, T> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+-    impl<'a, T> View for LinkedListStEphGhostIterator<'a, T> {
+-        type V = Seq<T>;
+-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+-    }
+-
+     impl<'a, T> std::iter::IntoIterator for &'a LinkedListStEphS<T> {
+         type Item = &'a T;
+-        type IntoIter = LinkedListStEphIter<'a, T>;
++        type IntoIter = std::slice::Iter<'a, T>;
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            LinkedListStEphIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+@@ -884,8 +809,9 @@ pub mod LinkedListStEph {
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
++                IteratorSpec::remaining(&it) == self.seq@,
++                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+             self.seq.into_iter()
+         }
+@@ -948,28 +874,4 @@ pub mod LinkedListStEph {
+             write!(f, "]")
+         }
+     }
+-
+-    impl<'a, T: Debug> Debug for LinkedListStEphIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "LinkedListStEphIter({:?})", self.inner)
+-        }
+-    }
+-
+-    impl<'a, T> Display for LinkedListStEphIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "LinkedListStEphIter")
+-        }
+-    }
+-
+-    impl<'a, T> Debug for LinkedListStEphGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "LinkedListStEphGhostIterator")
+-        }
+-    }
+-
+-    impl<'a, T> Display for LinkedListStEphGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "LinkedListStEphGhostIterator")
+-        }
+-    }
+ }
+diff --git a/src/Chap18/LinkedListStPer.rs b/src/Chap18/LinkedListStPer.rs
+index d99b19a..e393f68 100644
+--- a/src/Chap18/LinkedListStPer.rs
++++ b/src/Chap18/LinkedListStPer.rs
+@@ -32,6 +32,8 @@ pub mod LinkedListStPer {
+ 
+     use vstd::prelude::*;
+     #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
++    #[cfg(verus_keep_ghost)]
+     use vstd::std_specs::cmp::PartialEqSpecImpl;
+     pub use crate::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::*;
+ 
+@@ -742,121 +744,29 @@ pub mod LinkedListStPer {
+ 
+         /// Returns an iterator over the list elements.
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+-        pub fn iter(&self) -> (it: LinkedListStPerIter<'_, T>)
++        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            LinkedListStPerIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+     //		Section 10. iterators
+ 
+-
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct LinkedListStPerIter<'a, T> {
+-        pub inner: std::slice::Iter<'a, T>,
+-    }
+-
+-    impl<'a, T> View for LinkedListStPerIter<'a, T> {
+-        type V = (int, Seq<T>);
+-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+-    }
+-
+-    pub open spec fn iter_invariant<'a, T>(it: &LinkedListStPerIter<'a, T>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<'a, T> std::iter::Iterator for LinkedListStPerIter<'a, T> {
+-        type Item = &'a T;
+-
+-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+-        // Relies on vstd's assume_specification for slice::Iter::next.
+-        fn next(&mut self) -> (next: Option<&'a T>)
+-            ensures ({
+-                let (old_index, old_seq) = old(self)@;
+-                match next {
+-                    None => {
+-                        &&& self@ == old(self)@
+-                        &&& old_index >= old_seq.len()
+-                    },
+-                    Some(element) => {
+-                        let (new_index, new_seq) = self@;
+-                        &&& 0 <= old_index < old_seq.len()
+-                        &&& new_seq == old_seq
+-                        &&& new_index == old_index + 1
+-                        &&& element == old_seq[old_index]
+-                    },
+-                }
+-            })
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    /// Ghost iterator for ForLoopGhostIterator support.
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct LinkedListStPerGhostIterator<'a, T> {
+-        pub pos: int,
+-        pub elements: Seq<T>,
+-        pub phantom: core::marker::PhantomData<&'a T>,
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for LinkedListStPerIter<'a, T> {
+-        type GhostIter = LinkedListStPerGhostIterator<'a, T>;
+-        open spec fn ghost_iter(&self) -> LinkedListStPerGhostIterator<'a, T> {
+-            LinkedListStPerGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for LinkedListStPerGhostIterator<'a, T> {
+-        type ExecIter = LinkedListStPerIter<'a, T>;
+-        type Item = T;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &LinkedListStPerIter<'a, T>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool { self.pos == self.elements.len() }
+-        open spec fn ghost_decrease(&self) -> Option<int> { Some(self.elements.len() - self.pos) }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<T> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &LinkedListStPerIter<'a, T>) -> LinkedListStPerGhostIterator<'a, T> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+-    impl<'a, T> View for LinkedListStPerGhostIterator<'a, T> {
+-        type V = Seq<T>;
+-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+-    }
+-
+     impl<'a, T> std::iter::IntoIterator for &'a LinkedListStPerS<T> {
+         type Item = &'a T;
+-        type IntoIter = LinkedListStPerIter<'a, T>;
++        type IntoIter = std::slice::Iter<'a, T>;
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            LinkedListStPerIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+@@ -866,8 +776,9 @@ pub mod LinkedListStPer {
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
++                IteratorSpec::remaining(&it) == self.seq@,
++                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+             self.seq.into_iter()
+         }
+@@ -930,28 +841,4 @@ pub mod LinkedListStPer {
+             write!(f, "]")
+         }
+     }
+-
+-    impl<'a, T: Debug> Debug for LinkedListStPerIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "LinkedListStPerIter({:?})", self.inner)
+-        }
+-    }
+-
+-    impl<'a, T> Display for LinkedListStPerIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "LinkedListStPerIter")
+-        }
+-    }
+-
+-    impl<'a, T> Debug for LinkedListStPerGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "LinkedListStPerGhostIterator")
+-        }
+-    }
+-
+-    impl<'a, T> Display for LinkedListStPerGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "LinkedListStPerGhostIterator")
+-        }
+-    }
+ }

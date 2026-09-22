@@ -1,0 +1,6 @@
+File: src/experiments/vstd_hash_set_clone_plus.rs (deps: deps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-vstd_hash_set_clone_plus/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 08:30:43
+verification results:: 183 verified, 0 errors
+Elapsed: 1s

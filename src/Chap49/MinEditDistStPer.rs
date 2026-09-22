@@ -30,7 +30,7 @@ pub mod MinEditDistStPer {
 
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use std::collections::HashMap;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
     use crate::ArraySeqStPerSLit;
@@ -54,7 +54,7 @@ pub mod MinEditDistStPer {
     pub struct MinEditDistStPerS<T: StT> {
         pub source: ArraySeqStPerS<T>,
         pub target: ArraySeqStPerS<T>,
-        pub memo: HashMapWithViewPlus<Pair<usize, usize>, usize>,
+        pub memo: HashMap<Pair<usize, usize>, usize>,
     }
 
     //		Section 6. spec fns
@@ -77,8 +77,8 @@ pub mod MinEditDistStPer {
     }
 
     /// Every memo entry at key (i, j) stores a value <= i + j.
-    pub open spec fn spec_memo_bounded(memo_view: Map<(usize, usize), usize>) -> bool {
-        forall|k: (usize, usize)| #[trigger] memo_view.contains_key(k) ==>
+    pub open spec fn spec_memo_bounded(memo_view: Map<Pair<usize, usize>, usize>) -> bool {
+        forall|k: Pair<usize, usize>| #[trigger] memo_view.contains_key(k) ==>
             (memo_view[k] as int) <= (k.0 + k.1) as int
     }
 
@@ -152,6 +152,8 @@ pub mod MinEditDistStPer {
             spec_memo_bounded(table.memo@),
         decreases i + j,
     {
+        // The vstd `get`/`insert` postconditions hold under the Pair key model.
+        proof { let _ = Pair_feq_trigger::<usize, usize>(); }
         if let Some(cached) = table.memo.get(&Pair(i, j)) {
             return *cached;
         }
@@ -197,7 +199,7 @@ pub mod MinEditDistStPer {
             Self {
                 source: ArraySeqStPerS::new(0, T::default()),
                 target: ArraySeqStPerS::new(0, T::default()),
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             }
         }
 
@@ -208,7 +210,7 @@ pub mod MinEditDistStPer {
             Self {
                 source,
                 target,
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             }
         }
 
@@ -219,7 +221,7 @@ pub mod MinEditDistStPer {
             let mut solver = MinEditDistStPerS {
                 source: self.source.clone(),
                 target: self.target.clone(),
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             };
 
             let source_len = solver.source.length();
@@ -260,7 +262,7 @@ pub mod MinEditDistStPer {
         fn eq(&self, other: &Self) -> bool {
             self.source == other.source
                 && self.target == other.target
-                && self.memo.inner == other.memo.inner
+                && self.memo == other.memo
         }
     }
 
@@ -271,7 +273,7 @@ pub mod MinEditDistStPer {
             f.debug_struct("MinEditDistStPerS")
                 .field("source", &self.source)
                 .field("target", &self.target)
-                .field("memo", &self.memo.inner)
+                .field("memo", &self.memo)
                 .finish()
         }
     }
@@ -283,7 +285,7 @@ pub mod MinEditDistStPer {
                 "MinEditDistStPer(source: {}, target: {}, memo_entries: {})",
                 self.source,
                 self.target,
-                self.memo.inner.len()
+                self.memo.len()
             )
         }
     }

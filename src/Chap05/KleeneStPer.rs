@@ -37,7 +37,7 @@ verus!
 
 
     broadcast use {
-        vstd::set::group_set_axioms,
+        vstd::set::group_set_lemmas,
         vstd::seq::group_seq_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
         vstd::seq_lib::group_seq_properties,
@@ -181,7 +181,7 @@ verus!
         /// Construct from an alphabet Σ.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — stores alphabet, O(1).
         fn new(alphabet: SetStEph<T>) -> (kleene: Self)
-            requires Self::spec_valid_key_type(), alphabet@.finite()
+            requires Self::spec_valid_key_type()
             ensures kleene.spec_kleenestper_wf(), kleene@ == alphabet@;
 
         /// Membership in Σ*: is every element of s in the alphabet?
@@ -209,8 +209,7 @@ verus!
     impl<T: StT + Hash> KleeneStPerTrait<T> for KleeneStPer<T> {
 
         open spec fn spec_kleenestper_wf(&self) -> bool {
-               self@.finite()
-            && valid_key_type::<T>()
+            valid_key_type::<T>()
         }
 
         open spec fn spec_valid_key_type() -> bool {
@@ -227,7 +226,6 @@ verus!
             while i < s.len()
                 invariant
                     valid_key_type::<T>(),
-                    self.alphabet@.finite(),
                     0 <= i <= s.len(),
                     forall|j: int| 0 <= j < i as int
                         ==> self.alphabet@.contains(#[trigger] s@[j]@),

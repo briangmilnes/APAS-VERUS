@@ -41,6 +41,10 @@ pub mod DirGraphMtEph {
     use std::hash::Hash;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::into_iter_hash_keys;
     use crate::Types::Types::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Concurrency::Concurrency::*;
@@ -67,7 +71,7 @@ pub mod DirGraphMtEph {
 
 
     broadcast use {
-        vstd::set::group_set_axioms,
+        vstd::set::group_set_lemmas,
         crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_Edge_axioms,
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
@@ -125,8 +129,6 @@ pub mod DirGraphMtEph {
         fn from_sets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (g: Self)
             requires
                 valid_key_type_for_graph::<V>(),
-                V@.finite(),
-                A@.finite(),
                 forall |u: V::V, w: V::V|
                     #[trigger] A@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),
             ensures
@@ -176,15 +178,15 @@ pub mod DirGraphMtEph {
         open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V> 
             recommends spec_graphview_wf(self@), self@.V.contains(v)
         { 
-            Set::new(|w: V::V| self@.A.contains((v, w)))
+            self@.V.filter(|w: V::V| self@.A.contains((v, w)))
         }
 
-        open spec fn spec_n_plus_from_set(&self, v: V::V, subarcs: Set<(V::V, V::V)>) -> Set<V::V> 
-            recommends 
+        open spec fn spec_n_plus_from_set(&self, v: V::V, subarcs: Set<(V::V, V::V)>) -> Set<V::V>
+            recommends
                 spec_graphview_wf(self@),
                 subarcs <= self@.A,
         {
-            Set::new(|w: V::V| subarcs.contains((v, w)))
+            self@.V.filter(|w: V::V| subarcs.contains((v, w)))
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(log |A|) — parallel
@@ -211,15 +213,15 @@ pub mod DirGraphMtEph {
         open spec fn spec_n_minus(&self, v: V::V) -> Set<V::V> 
             recommends spec_graphview_wf(self@), self@.V.contains(v)
         { 
-            Set::new(|u: V::V| self@.A.contains((u, v))) 
+            self@.V.filter(|u: V::V| self@.A.contains((u, v)))
         }
 
-        open spec fn spec_n_minus_from_set(&self, v: V::V, subarcs: Set<(V::V, V::V)>) -> Set<V::V> 
-            recommends 
+        open spec fn spec_n_minus_from_set(&self, v: V::V, subarcs: Set<(V::V, V::V)>) -> Set<V::V>
+            recommends
                 spec_graphview_wf(self@),
                 subarcs <= self@.A,
         {
-            Set::new(|u: V::V| subarcs.contains((u, v)))
+            self@.V.filter(|u: V::V| subarcs.contains((u, v)))
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(log |A|) — parallel
@@ -279,13 +281,13 @@ pub mod DirGraphMtEph {
         open spec fn spec_n_plus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
             recommends spec_graphview_wf(self@), vertices <= self@.V
         {
-            Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_plus(u).contains(w))
+            self@.V.filter(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_plus(u).contains(w))
         }
 
-        open spec fn spec_n_plus_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V> 
+        open spec fn spec_n_plus_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V>
             recommends spec_graphview_wf(self@), subverts <= self@.V
         {
-            Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_n_plus(u).contains(w))
+            self@.V.filter(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_n_plus(u).contains(w))
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|u_set| × |A|), Span O(log |u_set| + log |A|) — parallel
@@ -303,13 +305,13 @@ pub mod DirGraphMtEph {
         open spec fn spec_n_minus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
             recommends spec_graphview_wf(self@), vertices <= self@.V
         {
-            Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_minus(u).contains(w))
+            self@.V.filter(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_minus(u).contains(w))
         }
 
-        open spec fn spec_n_minus_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V> 
+        open spec fn spec_n_minus_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V>
             recommends spec_graphview_wf(self@), subverts <= self@.V
         {
-            Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_n_minus(u).contains(w))
+            self@.V.filter(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_n_minus(u).contains(w))
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|u_set| × |A|), Span O(log |u_set| + log |A|) — parallel
@@ -327,13 +329,13 @@ pub mod DirGraphMtEph {
         open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
             recommends spec_graphview_wf(self@), vertices <= self@.V
         {
-            Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
+            self@.V.filter(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
         }
 
-        open spec fn spec_ng_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V> 
+        open spec fn spec_ng_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V>
             recommends spec_graphview_wf(self@), subverts <= self@.V
         {
-            Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_ng(u).contains(w))
+            self@.V.filter(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_ng(u).contains(w))
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|u_set| × |A|), Span O(log |u_set| + log |A|) — parallel
@@ -747,121 +749,23 @@ pub mod DirGraphMtEph {
     //		Section 10a. iterators
 
 
-    /// Iterator wrapper for DirGraphMtEph vertex iteration.
-    #[verifier::reject_recursive_types(V)]
-    pub struct DirGraphMtEphIter<'a, V: StTInMtT + Hash + 'static> {
-        pub inner: SetStEphIter<'a, V>,
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> View for DirGraphMtEphIter<'a, V> {
-        type V = (int, Seq<V>);
-        open spec fn view(&self) -> (int, Seq<V>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant<'a, V: StTInMtT + Hash + 'static>(it: &DirGraphMtEphIter<'a, V>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> std::iter::Iterator for DirGraphMtEphIter<'a, V> {
-        type Item = &'a V;
-
-        fn next(&mut self) -> (next: Option<&'a V>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(V)]
-    pub struct DirGraphMtEphGhostIterator<'a, V: StTInMtT + Hash + 'static> {
-        pub pos: int,
-        pub elements: Seq<V>,
-        pub phantom: core::marker::PhantomData<&'a V>,
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> vstd::pervasive::ForLoopGhostIteratorNew for DirGraphMtEphIter<'a, V> {
-        type GhostIter = DirGraphMtEphGhostIterator<'a, V>;
-
-        open spec fn ghost_iter(&self) -> DirGraphMtEphGhostIterator<'a, V> {
-            DirGraphMtEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> vstd::pervasive::ForLoopGhostIterator for DirGraphMtEphGhostIterator<'a, V> {
-        type ExecIter = DirGraphMtEphIter<'a, V>;
-        type Item = V;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &DirGraphMtEphIter<'a, V>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<V> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(self.elements[self.pos])
-            } else {
-                None
-            }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &DirGraphMtEphIter<'a, V>) -> DirGraphMtEphGhostIterator<'a, V> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> View for DirGraphMtEphGhostIterator<'a, V> {
-        type V = Seq<V>;
-
-        open spec fn view(&self) -> Seq<V> {
-            self.elements.take(self.pos)
-        }
-    }
-
+    // Delegated iteration over the vertices: the std hash-set iterator that vstd
+    // specifies. An impl of an external trait method may not add `requires`, so
+    // the contract is conditional on the vertex set's well-formedness.
     impl<'a, V: StTInMtT + Hash + 'static> std::iter::IntoIterator for &'a DirGraphMtEph<V> {
         type Item = &'a V;
-        type IntoIter = DirGraphMtEphIter<'a, V>;
+        type IntoIter = std::collections::hash_set::Iter<'a, V>;
         fn into_iter(self) -> (it: Self::IntoIter)
-            requires valid_key_type::<V>(), spec_graphview_wf(self@)
             ensures
-                it@.0 == 0int,
-                it@.1.map(|i: int, k: V| k@).to_set() == self@.V,
-                it@.1.no_duplicates(),
-                iter_invariant(&it),
+                self.V.spec_setsteph_wf() ==> {
+                    &&& IteratorSpec::remaining(&it).unref().map(|i: int, k: V| k@).to_set() == self@.V
+                    &&& IteratorSpec::remaining(&it).unref().no_duplicates()
+                    &&& IteratorSpec::remaining(&it).len() == self@.V.len()
+                    &&& into_iter_hash_keys(it) == IteratorSpec::remaining(&it).unref()
+                    &&& IteratorSpec::decrease(&it) is Some
+                },
         {
-            DirGraphMtEphIter { inner: self.vertices().iter() }
+            (&self.V).into_iter()
         }
     }
 
@@ -895,11 +799,11 @@ pub mod DirGraphMtEph {
 
         open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V>
             recommends spec_graphview_wf(self@), self@.V.contains(v)
-        { Set::new(|w: V::V| self@.A.contains((v, w))) }
+        { self@.V.filter(|w: V::V| self@.A.contains((v, w))) }
 
         open spec fn spec_n_minus(&self, v: V::V) -> Set<V::V>
             recommends spec_graphview_wf(self@), self@.V.contains(v)
-        { Set::new(|u: V::V| self@.A.contains((u, v))) }
+        { self@.V.filter(|u: V::V| self@.A.contains((u, v))) }
 
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V>
             recommends spec_graphview_wf(self@), self@.V.contains(v)
@@ -907,22 +811,20 @@ pub mod DirGraphMtEph {
 
         open spec fn spec_n_plus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V>
             recommends spec_graphview_wf(self@), vertices <= self@.V
-        { Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_plus(u).contains(w)) }
+        { self@.V.filter(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_plus(u).contains(w)) }
 
         open spec fn spec_n_minus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V>
             recommends spec_graphview_wf(self@), vertices <= self@.V
-        { Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_minus(u).contains(w)) }
+        { self@.V.filter(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_minus(u).contains(w)) }
 
         open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V>
             recommends spec_graphview_wf(self@), vertices <= self@.V
-        { Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w)) }
+        { self@.V.filter(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w)) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn new(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (s: Self)
             requires
                 valid_key_type_for_graph::<V>(),
-                V@.finite(),
-                A@.finite(),
                 forall |u: V::V, w: V::V|
                     #[trigger] A@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),
             ensures
@@ -965,7 +867,7 @@ pub mod DirGraphMtEph {
                 self@.V.contains(v@),
             ensures
                 out_neighbors.spec_setsteph_wf(),
-                out_neighbors@ == Set::new(|w: V::V| self@.A.contains((v@, w))),
+                out_neighbors@ == self.spec_n_plus(v@),
                 out_neighbors@ <= self@.V;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
@@ -975,7 +877,7 @@ pub mod DirGraphMtEph {
                 self@.V.contains(v@),
             ensures
                 in_neighbors.spec_setsteph_wf(),
-                in_neighbors@ == Set::new(|u: V::V| self@.A.contains((u, v@))),
+                in_neighbors@ == self.spec_n_minus(v@),
                 in_neighbors@ <= self@.V;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
@@ -1261,22 +1163,6 @@ pub mod DirGraphMtEph {
 
     impl<V: StTInMtT + Hash + 'static> Display for DirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} A={:?}", self.V, self.A) }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> Debug for DirGraphMtEphIter<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphMtEphIter") }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> Display for DirGraphMtEphIter<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphMtEphIter") }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> Debug for DirGraphMtEphGhostIterator<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphMtEphGhostIterator") }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> Display for DirGraphMtEphGhostIterator<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphMtEphGhostIterator") }
     }
 
     //		Section 14b. derive impls outside verus!

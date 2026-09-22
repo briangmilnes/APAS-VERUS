@@ -30,7 +30,7 @@ pub mod MinEditDistStEph {
 
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use std::collections::HashMap;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
     use crate::ArraySeqStEphSLit;
@@ -54,7 +54,7 @@ pub mod MinEditDistStEph {
     pub struct MinEditDistStEphS<T: StT> {
         pub source: ArraySeqStEphS<T>,
         pub target: ArraySeqStEphS<T>,
-        pub memo: HashMapWithViewPlus<Pair<usize, usize>, usize>,
+        pub memo: HashMap<Pair<usize, usize>, usize>,
     }
 
     //		Section 6. spec fns
@@ -77,8 +77,8 @@ pub mod MinEditDistStEph {
     }
 
     /// Every memo entry at key (i, j) stores a value <= i + j.
-    pub open spec fn spec_memo_bounded(memo_view: Map<(usize, usize), usize>) -> bool {
-        forall|k: (usize, usize)| #[trigger] memo_view.contains_key(k) ==>
+    pub open spec fn spec_memo_bounded(memo_view: Map<Pair<usize, usize>, usize>) -> bool {
+        forall|k: Pair<usize, usize>| #[trigger] memo_view.contains_key(k) ==>
             (memo_view[k] as int) <= (k.0 + k.1) as int
     }
 
@@ -178,6 +178,8 @@ pub mod MinEditDistStEph {
             spec_memo_bounded(table.memo@),
         decreases i + j,
     {
+        // The vstd `get`/`insert` postconditions hold under the Pair key model.
+        proof { let _ = Pair_feq_trigger::<usize, usize>(); }
         if let Some(cached) = table.memo.get(&Pair(i, j)) {
             return *cached;
         }
@@ -223,7 +225,7 @@ pub mod MinEditDistStEph {
             Self {
                 source: ArraySeqStEphS::new(0, T::default()),
                 target: ArraySeqStEphS::new(0, T::default()),
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             }
         }
 
@@ -234,7 +236,7 @@ pub mod MinEditDistStEph {
             Self {
                 source,
                 target,
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             }
         }
 
@@ -314,7 +316,7 @@ pub mod MinEditDistStEph {
             f.debug_struct("MinEditDistStEphS")
                 .field("source", &self.source)
                 .field("target", &self.target)
-                .field("memo", &self.memo.inner)
+                .field("memo", &self.memo)
                 .finish()
         }
     }
@@ -326,7 +328,7 @@ pub mod MinEditDistStEph {
                 "MinEditDistStEph(source: {}, target: {}, memo_entries: {})",
                 self.source,
                 self.target,
-                self.memo.inner.len()
+                self.memo.len()
             )
         }
     }

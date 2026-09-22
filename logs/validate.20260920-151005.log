@@ -1,0 +1,692 @@
+Mode: full
+error[E0432]: unresolved import `vstd::relations::injective_on`
+  --> src/Chap53/PQMinStPer.rs:41:9
+   |
+41 |     use vstd::relations::injective_on;
+   |         ^^^^^^^^^^^^^^^^^------------
+   |                          |
+   |                          no `injective_on` in `relations`
+   |
+help: a similar name exists in the module
+   |
+41 -     use vstd::relations::injective_on;
+41 +     use vstd::relations::injective;
+   |
+
+error[E0407]: method `initial_value_relation` is not a member of trait `IteratorSpecImpl`
+   --> src/standards/prophetic_iterators_standard.rs:174:19
+    |
+174 |           open spec fn initial_value_relation(&self, init: &Self) -> bool {
+    |  ___________________^
+175 | |             &&& IteratorSpec::remaining(init) == IteratorSpec::remaining(self)
+176 | |             &&& init.elts() == self.elts()
+177 | |         }
+    | |_________^ not a member of trait `IteratorSpecImpl`
+
+error[E0425]: cannot find value `axiom_spec_slice_iter` in module `vstd::std_specs::slice`
+  --> src/standards/prophetic_iterators_standard.rs:65:43
+   |
+65 |     broadcast use vstd::std_specs::slice::axiom_spec_slice_iter;
+   |                                           ^^^^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::slice`
+
+error[E0425]: cannot find value `axiom_spec_into_iter` in module `vstd::std_specs::vec`
+   --> src/standards/prophetic_iterators_standard.rs:291:49
+    |
+291 |             broadcast use vstd::std_specs::vec::axiom_spec_into_iter;
+    |                                                 ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::vec`
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:462:26
+    |
+462 |         vstd::set::fold::lemma_fold_empty::<nat, nat>(0nat, f);
+    |                          ^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:640:0
+    |
+    = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+    |
+462 -         vstd::set::fold::lemma_fold_empty::<nat, nat>(0nat, f);
+462 +         vstd::set::fold::lemma_iset_empty::<nat, nat>(0nat, f);
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_empty;
+    |
+help: if you import `lemma_fold_empty`, refer to it directly
+    |
+462 -         vstd::set::fold::lemma_fold_empty::<nat, nat>(0nat, f);
+462 +         lemma_fold_empty::<nat, nat>(0nat, f);
+    |
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:485:26
+    |
+485 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_insert;
+    |
+help: if you import `lemma_fold_insert`, refer to it directly
+    |
+485 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+485 +         lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:753:26
+    |
+753 |         vstd::set::fold::lemma_fold_empty::<(A, B, u32), nat>(0nat, f);
+    |                          ^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:640:0
+    |
+    = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+    |
+753 -         vstd::set::fold::lemma_fold_empty::<(A, B, u32), nat>(0nat, f);
+753 +         vstd::set::fold::lemma_iset_empty::<(A, B, u32), nat>(0nat, f);
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_empty;
+    |
+help: if you import `lemma_fold_empty`, refer to it directly
+    |
+753 -         vstd::set::fold::lemma_fold_empty::<(A, B, u32), nat>(0nat, f);
+753 +         lemma_fold_empty::<(A, B, u32), nat>(0nat, f);
+    |
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:778:26
+    |
+778 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_insert;
+    |
+help: if you import `lemma_fold_insert`, refer to it directly
+    |
+778 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+778 +         lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:895:26
+    |
+895 |         vstd::set::fold::lemma_fold_empty::<(A, B, u8), nat>(0nat, f);
+    |                          ^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:640:0
+    |
+    = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+    |
+895 -         vstd::set::fold::lemma_fold_empty::<(A, B, u8), nat>(0nat, f);
+895 +         vstd::set::fold::lemma_iset_empty::<(A, B, u8), nat>(0nat, f);
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_empty;
+    |
+help: if you import `lemma_fold_empty`, refer to it directly
+    |
+895 -         vstd::set::fold::lemma_fold_empty::<(A, B, u8), nat>(0nat, f);
+895 +         lemma_fold_empty::<(A, B, u8), nat>(0nat, f);
+    |
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:903:26
+    |
+903 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_insert;
+    |
+help: if you import `lemma_fold_insert`, refer to it directly
+    |
+903 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+903 +         lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:933:26
+    |
+933 |         vstd::set::fold::lemma_fold_empty::<(A, B, u16), nat>(0nat, f);
+    |                          ^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:640:0
+    |
+    = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+    |
+933 -         vstd::set::fold::lemma_fold_empty::<(A, B, u16), nat>(0nat, f);
+933 +         vstd::set::fold::lemma_iset_empty::<(A, B, u16), nat>(0nat, f);
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_empty;
+    |
+help: if you import `lemma_fold_empty`, refer to it directly
+    |
+933 -         vstd::set::fold::lemma_fold_empty::<(A, B, u16), nat>(0nat, f);
+933 +         lemma_fold_empty::<(A, B, u16), nat>(0nat, f);
+    |
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:941:26
+    |
+941 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_insert;
+    |
+help: if you import `lemma_fold_insert`, refer to it directly
+    |
+941 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+941 +         lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:972:26
+    |
+972 |         vstd::set::fold::lemma_fold_empty::<(A, B, u64), nat>(0nat, f);
+    |                          ^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:640:0
+    |
+    = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+    |
+972 -         vstd::set::fold::lemma_fold_empty::<(A, B, u64), nat>(0nat, f);
+972 +         vstd::set::fold::lemma_iset_empty::<(A, B, u64), nat>(0nat, f);
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_empty;
+    |
+help: if you import `lemma_fold_empty`, refer to it directly
+    |
+972 -         vstd::set::fold::lemma_fold_empty::<(A, B, u64), nat>(0nat, f);
+972 +         lemma_fold_empty::<(A, B, u64), nat>(0nat, f);
+    |
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:980:26
+    |
+980 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_insert;
+    |
+help: if you import `lemma_fold_insert`, refer to it directly
+    |
+980 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+980 +         lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1010:26
+     |
+1010 |         vstd::set::fold::lemma_fold_empty::<(A, B, u128), nat>(0nat, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1010 -         vstd::set::fold::lemma_fold_empty::<(A, B, u128), nat>(0nat, f);
+1010 +         vstd::set::fold::lemma_iset_empty::<(A, B, u128), nat>(0nat, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1010 -         vstd::set::fold::lemma_fold_empty::<(A, B, u128), nat>(0nat, f);
+1010 +         lemma_fold_empty::<(A, B, u128), nat>(0nat, f);
+     |
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1018:26
+     |
+1018 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1018 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+1018 +         lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+     |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1048:26
+     |
+1048 |         vstd::set::fold::lemma_fold_empty::<(A, B, usize), nat>(0nat, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1048 -         vstd::set::fold::lemma_fold_empty::<(A, B, usize), nat>(0nat, f);
+1048 +         vstd::set::fold::lemma_iset_empty::<(A, B, usize), nat>(0nat, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1048 -         vstd::set::fold::lemma_fold_empty::<(A, B, usize), nat>(0nat, f);
+1048 +         lemma_fold_empty::<(A, B, usize), nat>(0nat, f);
+     |
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1056:26
+     |
+1056 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1056 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+1056 +         lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+     |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1079:26
+     |
+1079 |         vstd::set::fold::lemma_fold_empty::<(A, B, i8), int>(0int, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1079 -         vstd::set::fold::lemma_fold_empty::<(A, B, i8), int>(0int, f);
+1079 +         vstd::set::fold::lemma_iset_empty::<(A, B, i8), int>(0int, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1079 -         vstd::set::fold::lemma_fold_empty::<(A, B, i8), int>(0int, f);
+1079 +         lemma_fold_empty::<(A, B, i8), int>(0int, f);
+     |
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1087:26
+     |
+1087 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1087 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+1087 +         lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1111:26
+     |
+1111 |         vstd::set::fold::lemma_fold_empty::<(A, B, i16), int>(0int, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1111 -         vstd::set::fold::lemma_fold_empty::<(A, B, i16), int>(0int, f);
+1111 +         vstd::set::fold::lemma_iset_empty::<(A, B, i16), int>(0int, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1111 -         vstd::set::fold::lemma_fold_empty::<(A, B, i16), int>(0int, f);
+1111 +         lemma_fold_empty::<(A, B, i16), int>(0int, f);
+     |
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1119:26
+     |
+1119 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1119 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+1119 +         lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1142:26
+     |
+1142 |         vstd::set::fold::lemma_fold_empty::<(A, B, i32), int>(0int, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1142 -         vstd::set::fold::lemma_fold_empty::<(A, B, i32), int>(0int, f);
+1142 +         vstd::set::fold::lemma_iset_empty::<(A, B, i32), int>(0int, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1142 -         vstd::set::fold::lemma_fold_empty::<(A, B, i32), int>(0int, f);
+1142 +         lemma_fold_empty::<(A, B, i32), int>(0int, f);
+     |
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1150:26
+     |
+1150 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1150 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+1150 +         lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1173:26
+     |
+1173 |         vstd::set::fold::lemma_fold_empty::<(A, B, i64), int>(0int, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1173 -         vstd::set::fold::lemma_fold_empty::<(A, B, i64), int>(0int, f);
+1173 +         vstd::set::fold::lemma_iset_empty::<(A, B, i64), int>(0int, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1173 -         vstd::set::fold::lemma_fold_empty::<(A, B, i64), int>(0int, f);
+1173 +         lemma_fold_empty::<(A, B, i64), int>(0int, f);
+     |
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1181:26
+     |
+1181 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1181 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+1181 +         lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1204:26
+     |
+1204 |         vstd::set::fold::lemma_fold_empty::<(A, B, i128), int>(0int, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1204 -         vstd::set::fold::lemma_fold_empty::<(A, B, i128), int>(0int, f);
+1204 +         vstd::set::fold::lemma_iset_empty::<(A, B, i128), int>(0int, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1204 -         vstd::set::fold::lemma_fold_empty::<(A, B, i128), int>(0int, f);
+1204 +         lemma_fold_empty::<(A, B, i128), int>(0int, f);
+     |
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1212:26
+     |
+1212 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1212 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+1212 +         lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1235:26
+     |
+1235 |         vstd::set::fold::lemma_fold_empty::<(A, B, isize), int>(0int, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1235 -         vstd::set::fold::lemma_fold_empty::<(A, B, isize), int>(0int, f);
+1235 +         vstd::set::fold::lemma_iset_empty::<(A, B, isize), int>(0int, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1235 -         vstd::set::fold::lemma_fold_empty::<(A, B, isize), int>(0int, f);
+1235 +         lemma_fold_empty::<(A, B, isize), int>(0int, f);
+     |
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1243:26
+     |
+1243 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1243 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+1243 +         lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |
+
+error[E0425]: cannot find function `axiom_set_new` in module `vstd::set`
+   --> src/Chap06/LabDirGraphStEph.rs:341:40
+    |
+341 | ...                   vstd::set::axiom_set_new(pred, (from_view, to_view));
+    |                                  ^^^^^^^^^^^^^ not found in `vstd::set`
+
+error[E0425]: cannot find value `group_slice_axioms` in module `vstd::std_specs::slice`
+  --> src/Chap18/ArraySeqMtEphSlice.rs:61:33
+   |
+61 |         vstd::std_specs::slice::group_slice_axioms,
+   |                                 ^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::slice`
+   |
+help: consider importing this function
+   |
+33 +     use vstd::slice::group_slice_axioms;
+   |
+help: if you import `group_slice_axioms`, refer to it directly
+   |
+61 -         vstd::std_specs::slice::group_slice_axioms,
+61 +         group_slice_axioms,
+   |
+
+error[E0425]: cannot find value `group_slice_axioms` in module `vstd::std_specs::slice`
+  --> src/Chap19/ArraySeqMtEphSlice.rs:61:33
+   |
+61 |         vstd::std_specs::slice::group_slice_axioms,
+   |                                 ^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::slice`
+   |
+help: consider importing this function
+   |
+33 +     use vstd::slice::group_slice_axioms;
+   |
+help: if you import `group_slice_axioms`, refer to it directly
+   |
+61 -         vstd::std_specs::slice::group_slice_axioms,
+61 +         group_slice_axioms,
+   |
+
+error[E0425]: cannot find function `injective_on` in module `vstd::relations`
+   --> src/Chap41/OrdKeyMap.rs:202:33
+    |
+202 |         assert(vstd::relations::injective_on(proj, s)) by {
+    |                                 ^^^^^^^^^^^^
+    |
+   --> relations.rs:11:0
+    |
+    = note: similarly named function `injective` defined here
+help: a function with a similar name exists
+    |
+202 -         assert(vstd::relations::injective_on(proj, s)) by {
+202 +         assert(vstd::relations::injective(proj, s)) by {
+    |
+
+error[E0425]: cannot find function `injective_on` in module `vstd::relations`
+   --> src/Chap43/OrderedSpecsAndLemmas.rs:144:33
+    |
+144 |         assert(vstd::relations::injective_on(proj, s)) by {
+    |                                 ^^^^^^^^^^^^
+    |
+   --> relations.rs:11:0
+    |
+    = note: similarly named function `injective` defined here
+help: a function with a similar name exists
+    |
+144 -         assert(vstd::relations::injective_on(proj, s)) by {
+144 +         assert(vstd::relations::injective(proj, s)) by {
+    |
+
+error[E0425]: cannot find function `axiom_set_insert_finite` in module `vstd::set`
+   --> src/Chap44/DocumentIndex.rs:222:32
+    |
+222 |                     vstd::set::axiom_set_insert_finite(old_gds, doc_id@);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:797:0
+    |
+    = note: similarly named function `lemma_iset_insert_finite` defined here
+help: a function with a similar name exists
+    |
+222 -                     vstd::set::axiom_set_insert_finite(old_gds, doc_id@);
+222 +                     vstd::set::lemma_iset_insert_finite(old_gds, doc_id@);
+    |
+
+error[E0425]: cannot find function `axiom_set_insert_len` in module `vstd::set`
+   --> src/Chap44/DocumentIndex.rs:223:32
+    |
+223 |                     vstd::set::axiom_set_insert_len(old_gds, doc_id@);
+    |                                ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> set.rs:504:0
+    |
+    = note: similarly named function `lemma_set_insert_len` defined here
+help: a function with a similar name exists
+    |
+223 -                     vstd::set::axiom_set_insert_len(old_gds, doc_id@);
+223 +                     vstd::set::lemma_set_insert_len(old_gds, doc_id@);
+    |
+
+error[E0425]: cannot find function `axiom_set_insert_len` in module `vstd::set`
+   --> src/Chap44/DocumentIndex.rs:283:44
+    |
+283 | ...                   vstd::set::axiom_set_insert_len(
+    |                                  ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> set.rs:504:0
+    |
+    = note: similarly named function `lemma_set_insert_len` defined here
+help: a function with a similar name exists
+    |
+283 -                                 vstd::set::axiom_set_insert_len(
+283 +                                 vstd::set::lemma_set_insert_len(
+    |
+
+error[E0425]: cannot find function `lemma_set_union_finite_iff` in module `vstd::set_lib`
+   --> src/Chap65/PrimStEph.rs:295:28
+    |
+295 |             vstd::set_lib::lemma_set_union_finite_iff(DA_fwd, DA_rev);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:862:0
+    |
+    = note: similarly named function `lemma_iset_union_finite` defined here
+help: a function with a similar name exists
+    |
+295 -             vstd::set_lib::lemma_set_union_finite_iff(DA_fwd, DA_rev);
+295 +             vstd::set_lib::lemma_iset_union_finite(DA_fwd, DA_rev);
+    |
+
+error: aborting due to 39 previous errors
+
+Some errors have detailed explanations: E0407, E0425, E0432.
+For more information about an error, try `rustc --explain E0407`.
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 870MB, peak z3 RSS: 0MB, min free: 27901MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 0s

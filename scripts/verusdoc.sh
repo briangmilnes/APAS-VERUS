@@ -1,13 +1,13 @@
 #!/bin/bash
 # Generate Verus documentation with specifications for APAS-VERUS.
 # Adapted from verus source/tools/docs.sh, using the prebuilt release in
-# ~/projects/verus (flat layout: verus, verusdoc, z3, lib*.rlib, lib*.so).
+# ~/projects/verus/source/target-verus/release (flat layout: verus, verusdoc, z3, lib*.rlib, lib*.so).
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APAS_ROOT="$(dirname "$SCRIPT_DIR")"
-VERUS_HOME="${VERUS_HOME:-$HOME/projects/verus}"
+VERUS_HOME="${VERUS_HOME:-$HOME/projects/verus/source/target-verus/release}"
 
 # Detect dynamic library extension
 if [ "$(uname)" == "Darwin" ]; then

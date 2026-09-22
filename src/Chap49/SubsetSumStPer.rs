@@ -28,7 +28,7 @@ pub mod SubsetSumStPer {
 
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use std::collections::HashMap;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
     use crate::ArraySeqStPerSLit;
@@ -51,7 +51,7 @@ pub mod SubsetSumStPer {
     #[verifier::reject_recursive_types(T)]
     pub struct SubsetSumStPerS<T: StT> {
         pub multiset: ArraySeqStPerS<T>,
-        pub memo: HashMapWithViewPlus<Pair<usize, i32>, bool>,
+        pub memo: HashMap<Pair<usize, i32>, bool>,
     }
 
     //		Section 6. spec fns
@@ -165,7 +165,7 @@ pub mod SubsetSumStPer {
             proof { let _ = Pair_feq_trigger::<usize, i32>(); }
             Self {
                 multiset: ArraySeqStPerS::new(0, T::default()),
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             }
         }
 
@@ -175,7 +175,7 @@ pub mod SubsetSumStPer {
             proof { let _ = Pair_feq_trigger::<usize, i32>(); }
             Self {
                 multiset,
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             }
         }
 
@@ -192,7 +192,7 @@ pub mod SubsetSumStPer {
             proof { let _ = Pair_feq_trigger::<usize, i32>(); }
             let mut solver = SubsetSumStPerS {
                 multiset: self.multiset.clone(),
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             };
 
             let n = solver.multiset.length();
@@ -225,7 +225,7 @@ pub mod SubsetSumStPer {
 
     impl<T: StT> PartialEq for SubsetSumStPerS<T> {
         fn eq(&self, other: &Self) -> bool {
-            self.multiset == other.multiset && self.memo.inner == other.memo.inner
+            self.multiset == other.multiset && self.memo == other.memo
         }
     }
 
@@ -235,7 +235,7 @@ pub mod SubsetSumStPer {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             f.debug_struct("SubsetSumStPerS")
                 .field("multiset", &self.multiset)
-                .field("memo", &self.memo.inner)
+                .field("memo", &self.memo)
                 .finish()
         }
     }
@@ -246,7 +246,7 @@ pub mod SubsetSumStPer {
                 f,
                 "SubsetSumStPer(multiset: {}, memo_entries: {})",
                 self.multiset,
-                self.memo.inner.len()
+                self.memo.len()
             )
         }
     }

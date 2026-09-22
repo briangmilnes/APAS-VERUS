@@ -1,0 +1,6 @@
+File: src/standards/iterators_standard.rs (deps: deps; ptt: ptt)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-iterators_standard/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 15:02:00
+verification results:: 207 verified, 0 errors
+Elapsed: 1s

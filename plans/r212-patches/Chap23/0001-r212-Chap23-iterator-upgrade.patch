@@ -1,0 +1,1320 @@
+diff --git a/rust_verify_test/tests/Chap23/ProveBalBinTreeStEph.rs b/rust_verify_test/tests/Chap23/ProveBalBinTreeStEph.rs
+index c121763..b334169 100644
+--- a/rust_verify_test/tests/Chap23/ProveBalBinTreeStEph.rs
++++ b/rust_verify_test/tests/Chap23/ProveBalBinTreeStEph.rs
+@@ -17,6 +17,7 @@ use common::*;
+ test_verify_one_file! {
+     #[test] balbintree_loop_inorder verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
+         use apas_verus::vstdplus::feq::feq::*;
+ 
+@@ -29,30 +30,39 @@ test_verify_one_file! {
+                 BalBinTree::node(BalBinTree::leaf(), 3, BalBinTree::leaf()),
+             );
+ 
+-            let mut it: InOrderIter<u64> = tree.iter_in_order();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = tree.spec_in_order();
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::vec::IntoIter<u64> = tree.iter_in_order();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0),
+-                    in_order_iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> #[trigger] IteratorSpec::remaining(&it)[i] == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(x);
+-                    }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == x);
++                        }
++                        collected.push(x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -61,6 +71,7 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] balbintree_loop_preorder verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
+         use apas_verus::vstdplus::feq::feq::*;
+ 
+@@ -73,30 +84,39 @@ test_verify_one_file! {
+                 BalBinTree::node(BalBinTree::leaf(), 3, BalBinTree::leaf()),
+             );
+ 
+-            let mut it: PreOrderIter<u64> = tree.iter_pre_order();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = tree.spec_pre_order();
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::vec::IntoIter<u64> = tree.iter_pre_order();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0),
+-                    pre_order_iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> #[trigger] IteratorSpec::remaining(&it)[i] == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(x);
+-                    }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == x);
++                        }
++                        collected.push(x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -105,6 +125,7 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] balbintree_for_inorder verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
+         use apas_verus::vstdplus::feq::feq::*;
+ 
+@@ -117,22 +138,18 @@ test_verify_one_file! {
+                 BalBinTree::node(BalBinTree::leaf(), 3, BalBinTree::leaf()),
+             );
+ 
+-            let it: InOrderIter<u64> = tree.iter_in_order();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = tree.spec_in_order();
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: tree.iter_in_order()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig,
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(x);
+-                }
++                collected.push(x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+@@ -141,6 +158,7 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] balbintree_for_preorder verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
+         use apas_verus::vstdplus::feq::feq::*;
+ 
+@@ -153,22 +171,18 @@ test_verify_one_file! {
+                 BalBinTree::node(BalBinTree::leaf(), 3, BalBinTree::leaf()),
+             );
+ 
+-            let it: PreOrderIter<u64> = tree.iter_pre_order();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = tree.spec_pre_order();
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: tree.iter_pre_order()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig,
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(x);
+-                }
++                collected.push(x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+@@ -177,6 +191,7 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] balbintree_loop_postorder verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
+         use apas_verus::vstdplus::feq::feq::*;
+ 
+@@ -189,30 +204,39 @@ test_verify_one_file! {
+                 BalBinTree::node(BalBinTree::leaf(), 3, BalBinTree::leaf()),
+             );
+ 
+-            let mut it: PostOrderIter<u64> = tree.iter_post_order();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = tree.spec_post_order();
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::vec::IntoIter<u64> = tree.iter_post_order();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0),
+-                    post_order_iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> #[trigger] IteratorSpec::remaining(&it)[i] == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(x);
+-                    }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == x);
++                        }
++                        collected.push(x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -221,6 +245,7 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] balbintree_for_postorder verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
+         use apas_verus::vstdplus::feq::feq::*;
+ 
+@@ -233,22 +258,18 @@ test_verify_one_file! {
+                 BalBinTree::node(BalBinTree::leaf(), 3, BalBinTree::leaf()),
+             );
+ 
+-            let it: PostOrderIter<u64> = tree.iter_post_order();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = tree.spec_post_order();
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: tree.iter_post_order()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig,
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(x);
+-                }
++                collected.push(x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+diff --git a/rust_verify_test/tests/Chap23/ProvePrimTreeSeqStPer.rs b/rust_verify_test/tests/Chap23/ProvePrimTreeSeqStPer.rs
+index 3862a93..047ced4 100644
+--- a/rust_verify_test/tests/Chap23/ProvePrimTreeSeqStPer.rs
++++ b/rust_verify_test/tests/Chap23/ProvePrimTreeSeqStPer.rs
+@@ -17,6 +17,7 @@ use common::*;
+ test_verify_one_file! {
+     #[test] primtreeseq_loop_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap23::PrimTreeSeqStPer::PrimTreeSeqStPer::*;
+ 
+         fn test_loop_borrow_iter() {
+@@ -24,30 +25,39 @@ test_verify_one_file! {
+             v.push(10); v.push(20); v.push(30);
+             let a: PrimTreeSeqStS<u64> = PrimTreeSeqStS::from_vec(v);
+ 
+-            let mut it: PrimTreeSeqStIter<u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = a.iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    prim_tree_seq_iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(*x);
+-                    }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -56,6 +66,7 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] primtreeseq_loop_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap23::PrimTreeSeqStPer::PrimTreeSeqStPer::*;
+ 
+         fn test_loop_borrow_into() {
+@@ -63,30 +74,39 @@ test_verify_one_file! {
+             v.push(10); v.push(20); v.push(30);
+             let a: PrimTreeSeqStS<u64> = PrimTreeSeqStS::from_vec(v);
+ 
+-            let mut it: PrimTreeSeqStIter<u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::slice::Iter<'_, u64> = (&a).into_iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    prim_tree_seq_iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(*x);
+-                    }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == *x);
++                        }
++                        collected.push(*x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -95,39 +115,46 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] primtreeseq_loop_consume verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap23::PrimTreeSeqStPer::PrimTreeSeqStPer::*;
+ 
+         fn test_loop_consume() {
+             let mut v: Vec<u64> = Vec::new();
+             v.push(10); v.push(20); v.push(30);
+             let a: PrimTreeSeqStS<u64> = PrimTreeSeqStS::from_vec(v);
+-            let ghost orig_seq: Seq<u64> = a.seq@;
+-
+-            let mut it = a.into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            assert(iter_seq == orig_seq);
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::vec::IntoIter<u64> = a.into_iter();
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_seq == it@.1,
+-                    0 <= it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> #[trigger] IteratorSpec::remaining(&it)[i] == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(x);
+-                    }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == x);
++                        }
++                        collected.push(x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -136,6 +163,7 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] primtreeseq_for_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap23::PrimTreeSeqStPer::PrimTreeSeqStPer::*;
+ 
+         fn test_for_borrow_iter() {
+@@ -143,22 +171,18 @@ test_verify_one_file! {
+             v.push(10); v.push(20); v.push(30);
+             let a: PrimTreeSeqStS<u64> = PrimTreeSeqStS::from_vec(v);
+ 
+-            let it: PrimTreeSeqStIter<u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: a.iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(*x);
+-                }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+@@ -167,6 +191,7 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] primtreeseq_for_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap23::PrimTreeSeqStPer::PrimTreeSeqStPer::*;
+ 
+         fn test_for_borrow_into() {
+@@ -174,22 +199,18 @@ test_verify_one_file! {
+             v.push(10); v.push(20); v.push(30);
+             let a: PrimTreeSeqStS<u64> = PrimTreeSeqStS::from_vec(v);
+ 
+-            let it: PrimTreeSeqStIter<u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: (&a).into_iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(*x);
+-                }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+@@ -198,32 +219,25 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] primtreeseq_for_consume verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap23::PrimTreeSeqStPer::PrimTreeSeqStPer::*;
+ 
+         fn test_for_consume() {
+             let mut v: Vec<u64> = Vec::new();
+             v.push(10); v.push(20); v.push(30);
+             let a: PrimTreeSeqStS<u64> = PrimTreeSeqStS::from_vec(v);
+-            let ghost orig_seq: Seq<u64> = a.seq@;
+-
+-            let it = a.into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            assert(iter_seq == orig_seq);
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: a.into_iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig,
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(x);
+-                }
++                collected.push(x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+diff --git a/src/Chap23/BalBinTreeStEph.rs b/src/Chap23/BalBinTreeStEph.rs
+index 6cda02f..1db938f 100644
+--- a/src/Chap23/BalBinTreeStEph.rs
++++ b/src/Chap23/BalBinTreeStEph.rs
+@@ -31,9 +31,10 @@ pub mod BalBinTreeStEph {
+     //		Section 2. imports
+ 
+     use std::fmt::{Debug, Display, Formatter};
+-    use std::vec::IntoIter;
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+ 
+     verus! 
+ {
+@@ -341,43 +342,43 @@ pub mod BalBinTreeStEph {
+         /// Returns an in-order iterator.
+         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n) — dominated by in_order traversal.
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — calls in_order() then wraps in iterator.
+-        pub fn iter_in_order(&self) -> (it: InOrderIter<T>)
++        pub fn iter_in_order(&self) -> (it: std::vec::IntoIter<T>)
+             requires self.spec_size() <= usize::MAX,
+                      obeys_feq_clone::<T>(),
+             ensures
+-                it@.0 == 0,
+-                it@.1 =~= self.spec_in_order(),
+-                in_order_iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.spec_in_order(),
++                vstd::std_specs::vec::into_iter_elts(it) == self.spec_in_order(),
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            InOrderIter { inner: self.in_order().into_iter() }
++            self.in_order().into_iter()
+         }
+ 
+         /// Returns a pre-order iterator.
+         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n) — dominated by pre_order traversal.
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — calls pre_order() then wraps in iterator.
+-        pub fn iter_pre_order(&self) -> (it: PreOrderIter<T>)
++        pub fn iter_pre_order(&self) -> (it: std::vec::IntoIter<T>)
+             requires self.spec_size() <= usize::MAX,
+                      obeys_feq_clone::<T>(),
+             ensures
+-                it@.0 == 0,
+-                it@.1 =~= self.spec_pre_order(),
+-                pre_order_iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.spec_pre_order(),
++                vstd::std_specs::vec::into_iter_elts(it) == self.spec_pre_order(),
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            PreOrderIter { inner: self.pre_order().into_iter() }
++            self.pre_order().into_iter()
+         }
+ 
+         /// Returns a post-order iterator.
+         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n) — dominated by post_order traversal.
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — calls post_order() then wraps in iterator.
+-        pub fn iter_post_order(&self) -> (it: PostOrderIter<T>)
++        pub fn iter_post_order(&self) -> (it: std::vec::IntoIter<T>)
+             requires self.spec_size() <= usize::MAX,
+                      obeys_feq_clone::<T>(),
+             ensures
+-                it@.0 == 0,
+-                it@.1 =~= self.spec_post_order(),
+-                post_order_iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.spec_post_order(),
++                vstd::std_specs::vec::into_iter_elts(it) == self.spec_post_order(),
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            PostOrderIter { inner: self.post_order().into_iter() }
++            self.post_order().into_iter()
+         }
+     }
+ 
+@@ -393,19 +394,6 @@ pub mod BalBinTreeStEph {
+ 
+     //		Section 6b. spec fns
+ 
+-
+-    pub open spec fn in_order_iter_invariant<T>(it: &InOrderIter<T>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    pub open spec fn pre_order_iter_invariant<T>(it: &PreOrderIter<T>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    pub open spec fn post_order_iter_invariant<T>(it: &PostOrderIter<T>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+     //		Section 7b. proof fns/broadcast groups
+ 
+ 
+@@ -508,286 +496,6 @@ pub mod BalBinTreeStEph {
+ 
+     //		Section 10b. iterators
+ 
+-
+-    /// Iterator over in-order traversal of a BalBinTree.
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct InOrderIter<T> {
+-        pub inner: IntoIter<T>,
+-    }
+-
+-    /// Iterator over pre-order traversal of a BalBinTree.
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct PreOrderIter<T> {
+-        pub inner: IntoIter<T>,
+-    }
+-
+-    /// Iterator over post-order traversal of a BalBinTree.
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct PostOrderIter<T> {
+-        pub inner: IntoIter<T>,
+-    }
+-
+-    impl<T> View for InOrderIter<T> {
+-        type V = (int, Seq<T>);
+-        open spec fn view(&self) -> (int, Seq<T>) {
+-            self.inner@
+-        }
+-    }
+-
+-    impl<T> View for PreOrderIter<T> {
+-        type V = (int, Seq<T>);
+-        open spec fn view(&self) -> (int, Seq<T>) {
+-            self.inner@
+-        }
+-    }
+-
+-    impl<T> View for PostOrderIter<T> {
+-        type V = (int, Seq<T>);
+-        open spec fn view(&self) -> (int, Seq<T>) {
+-            self.inner@
+-        }
+-    }
+-
+-    /// Ghost iterator for ForLoopGhostIterator support (in-order).
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct InOrderGhostIterator<T> {
+-        pub pos: int,
+-        pub elements: Seq<T>,
+-    }
+-
+-    /// Ghost iterator for ForLoopGhostIterator support (pre-order).
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct PreOrderGhostIterator<T> {
+-        pub pos: int,
+-        pub elements: Seq<T>,
+-    }
+-
+-    /// Ghost iterator for ForLoopGhostIterator support (post-order).
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct PostOrderGhostIterator<T> {
+-        pub pos: int,
+-        pub elements: Seq<T>,
+-    }
+-
+-    impl<T> View for InOrderGhostIterator<T> {
+-        type V = Seq<T>;
+-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+-    }
+-
+-    impl<T> View for PreOrderGhostIterator<T> {
+-        type V = Seq<T>;
+-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+-    }
+-
+-    impl<T> View for PostOrderGhostIterator<T> {
+-        type V = Seq<T>;
+-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+-    }
+-
+-    impl<T> std::iter::Iterator for InOrderIter<T> {
+-        type Item = T;
+-
+-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
+-        fn next(&mut self) -> (next: Option<T>)
+-            ensures ({
+-                let (old_index, old_seq) = old(self)@;
+-                match next {
+-                    None => {
+-                        &&& self@ == old(self)@
+-                        &&& old_index >= old_seq.len()
+-                    },
+-                    Some(element) => {
+-                        let (new_index, new_seq) = self@;
+-                        &&& 0 <= old_index < old_seq.len()
+-                        &&& new_seq == old_seq
+-                        &&& new_index == old_index + 1
+-                        &&& element == old_seq[old_index]
+-                    },
+-                }
+-            })
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    impl<T> std::iter::Iterator for PreOrderIter<T> {
+-        type Item = T;
+-
+-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
+-        fn next(&mut self) -> (next: Option<T>)
+-            ensures ({
+-                let (old_index, old_seq) = old(self)@;
+-                match next {
+-                    None => {
+-                        &&& self@ == old(self)@
+-                        &&& old_index >= old_seq.len()
+-                    },
+-                    Some(element) => {
+-                        let (new_index, new_seq) = self@;
+-                        &&& 0 <= old_index < old_seq.len()
+-                        &&& new_seq == old_seq
+-                        &&& new_index == old_index + 1
+-                        &&& element == old_seq[old_index]
+-                    },
+-                }
+-            })
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    impl<T> std::iter::Iterator for PostOrderIter<T> {
+-        type Item = T;
+-
+-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
+-        fn next(&mut self) -> (next: Option<T>)
+-            ensures ({
+-                let (old_index, old_seq) = old(self)@;
+-                match next {
+-                    None => {
+-                        &&& self@ == old(self)@
+-                        &&& old_index >= old_seq.len()
+-                    },
+-                    Some(element) => {
+-                        let (new_index, new_seq) = self@;
+-                        &&& 0 <= old_index < old_seq.len()
+-                        &&& new_seq == old_seq
+-                        &&& new_index == old_index + 1
+-                        &&& element == old_seq[old_index]
+-                    },
+-                }
+-            })
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    impl<T> vstd::pervasive::ForLoopGhostIteratorNew for InOrderIter<T> {
+-        type GhostIter = InOrderGhostIterator<T>;
+-        open spec fn ghost_iter(&self) -> InOrderGhostIterator<T> {
+-            InOrderGhostIterator { pos: self@.0, elements: self@.1 }
+-        }
+-    }
+-
+-    impl<T> vstd::pervasive::ForLoopGhostIterator for InOrderGhostIterator<T> {
+-        type ExecIter = InOrderIter<T>;
+-        type Item = T;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &InOrderIter<T>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<T> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &InOrderIter<T>) -> InOrderGhostIterator<T> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+-    impl<T> vstd::pervasive::ForLoopGhostIteratorNew for PreOrderIter<T> {
+-        type GhostIter = PreOrderGhostIterator<T>;
+-        open spec fn ghost_iter(&self) -> PreOrderGhostIterator<T> {
+-            PreOrderGhostIterator { pos: self@.0, elements: self@.1 }
+-        }
+-    }
+-
+-    impl<T> vstd::pervasive::ForLoopGhostIterator for PreOrderGhostIterator<T> {
+-        type ExecIter = PreOrderIter<T>;
+-        type Item = T;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &PreOrderIter<T>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<T> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &PreOrderIter<T>) -> PreOrderGhostIterator<T> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+-    impl<T> vstd::pervasive::ForLoopGhostIteratorNew for PostOrderIter<T> {
+-        type GhostIter = PostOrderGhostIterator<T>;
+-        open spec fn ghost_iter(&self) -> PostOrderGhostIterator<T> {
+-            PostOrderGhostIterator { pos: self@.0, elements: self@.1 }
+-        }
+-    }
+-
+-    impl<T> vstd::pervasive::ForLoopGhostIterator for PostOrderGhostIterator<T> {
+-        type ExecIter = PostOrderIter<T>;
+-        type Item = T;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &PostOrderIter<T>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<T> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &PostOrderIter<T>) -> PostOrderGhostIterator<T> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+     //		Section 12a. derive impls in verus!
+ 
+ 
+@@ -873,79 +581,6 @@ pub mod BalBinTreeStEph {
+ 
+     //		Section 14. derive impls outside verus!
+ 
+-
+-    impl<T: Debug> Debug for InOrderIter<T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "InOrderIter({:?})", self.inner)
+-        }
+-    }
+-
+-    impl<T> Display for InOrderIter<T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "InOrderIter")
+-        }
+-    }
+-
+-    impl<T: Debug> Debug for PreOrderIter<T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "PreOrderIter({:?})", self.inner)
+-        }
+-    }
+-
+-    impl<T> Display for PreOrderIter<T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "PreOrderIter")
+-        }
+-    }
+-
+-    impl<T: Debug> Debug for PostOrderIter<T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "PostOrderIter({:?})", self.inner)
+-        }
+-    }
+-
+-    impl<T> Display for PostOrderIter<T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "PostOrderIter")
+-        }
+-    }
+-
+-    impl<T> Debug for InOrderGhostIterator<T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "InOrderGhostIterator")
+-        }
+-    }
+-
+-    impl<T> Display for InOrderGhostIterator<T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "InOrderGhostIterator")
+-        }
+-    }
+-
+-    impl<T> Debug for PreOrderGhostIterator<T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "PreOrderGhostIterator")
+-        }
+-    }
+-
+-    impl<T> Display for PreOrderGhostIterator<T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "PreOrderGhostIterator")
+-        }
+-    }
+-
+-    impl<T> Debug for PostOrderGhostIterator<T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "PostOrderGhostIterator")
+-        }
+-    }
+-
+-    impl<T> Display for PostOrderGhostIterator<T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "PostOrderGhostIterator")
+-        }
+-    }
+-
+     //		Section 14a. derive impls outside verus!
+ 
+     impl<T: std::fmt::Debug> std::fmt::Debug for BalBinTree<T> {
+diff --git a/src/Chap23/PrimTreeSeqStPer.rs b/src/Chap23/PrimTreeSeqStPer.rs
+index 1a6f5de..fabff25 100644
+--- a/src/Chap23/PrimTreeSeqStPer.rs
++++ b/src/Chap23/PrimTreeSeqStPer.rs
+@@ -42,6 +42,8 @@ pub mod PrimTreeSeqStPer {
+     use std::vec::IntoIter;
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+ 
+     verus! 
+ {
+@@ -109,13 +111,13 @@ pub mod PrimTreeSeqStPer {
+     impl<T> PrimTreeSeqStS<T> {
+         /// Returns a borrow iterator over the sequence elements.
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — wraps slice::Iter.
+-        pub fn iter(&self) -> (it: PrimTreeSeqStIter<'_, T>)
++        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                prim_tree_seq_iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            PrimTreeSeqStIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+@@ -578,8 +580,9 @@ pub mod PrimTreeSeqStPer {
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — consumes Vec into IntoIter.
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
++                IteratorSpec::remaining(&it) == self.seq@,
++                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+             self.seq.into_iter()
+         }
+@@ -613,109 +616,17 @@ pub mod PrimTreeSeqStPer {
+ 
+     //		Section 10b. iterators
+ 
+-
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct PrimTreeSeqStIter<'a, T> {
+-        pub inner: std::slice::Iter<'a, T>,
+-    }
+-
+-    impl<'a, T> View for PrimTreeSeqStIter<'a, T> {
+-        type V = (int, Seq<T>);
+-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+-    }
+-
+-    /// Ghost iterator for ForLoopGhostIterator support.
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct PrimTreeSeqStGhostIterator<'a, T> {
+-        pub pos: int,
+-        pub elements: Seq<T>,
+-        pub phantom: core::marker::PhantomData<&'a T>,
+-    }
+-
+-    impl<'a, T> View for PrimTreeSeqStGhostIterator<'a, T> {
+-        type V = Seq<T>;
+-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+-    }
+-
+-    impl<'a, T> std::iter::Iterator for PrimTreeSeqStIter<'a, T> {
+-        type Item = &'a T;
+-
+-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — delegates to slice::Iter::next.
+-        fn next(&mut self) -> (next: Option<&'a T>)
+-            ensures ({
+-                let (old_index, old_seq) = old(self)@;
+-                match next {
+-                    None => {
+-                        &&& self@ == old(self)@
+-                        &&& old_index >= old_seq.len()
+-                    },
+-                    Some(element) => {
+-                        let (new_index, new_seq) = self@;
+-                        &&& 0 <= old_index < old_seq.len()
+-                        &&& new_seq == old_seq
+-                        &&& new_index == old_index + 1
+-                        &&& element == old_seq[old_index]
+-                    },
+-                }
+-            })
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for PrimTreeSeqStIter<'a, T> {
+-        type GhostIter = PrimTreeSeqStGhostIterator<'a, T>;
+-        open spec fn ghost_iter(&self) -> PrimTreeSeqStGhostIterator<'a, T> {
+-            PrimTreeSeqStGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for PrimTreeSeqStGhostIterator<'a, T> {
+-        type ExecIter = PrimTreeSeqStIter<'a, T>;
+-        type Item = T;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &PrimTreeSeqStIter<'a, T>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<T> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &PrimTreeSeqStIter<'a, T>) -> PrimTreeSeqStGhostIterator<'a, T> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+     impl<'a, T> std::iter::IntoIterator for &'a PrimTreeSeqStS<T> {
+         type Item = &'a T;
+-        type IntoIter = PrimTreeSeqStIter<'a, T>;
++        type IntoIter = std::slice::Iter<'a, T>;
+         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — wraps slice::Iter.
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                prim_tree_seq_iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            PrimTreeSeqStIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+@@ -732,11 +643,6 @@ pub mod PrimTreeSeqStPer {
+ 
+     //		Section 6c. spec fns
+ 
+-
+-    pub open spec fn prim_tree_seq_iter_invariant<'a, T>(it: &PrimTreeSeqStIter<'a, T>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+     //		Section 8c. traits
+ 
+ 
+@@ -1040,31 +946,6 @@ pub mod PrimTreeSeqStPer {
+ 
+     //		Section 14. derive impls outside verus!
+ 
+-
+-    impl<'a, T: Debug> Debug for PrimTreeSeqStIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "PrimTreeSeqStIter({:?})", self.inner)
+-        }
+-    }
+-
+-    impl<'a, T> Display for PrimTreeSeqStIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "PrimTreeSeqStIter")
+-        }
+-    }
+-
+-    impl<'a, T> Debug for PrimTreeSeqStGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "PrimTreeSeqStGhostIterator")
+-        }
+-    }
+-
+-    impl<'a, T> Display for PrimTreeSeqStGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+-            write!(f, "PrimTreeSeqStGhostIterator")
+-        }
+-    }
+-
+     //		Section 14a. derive impls outside verus!
+ 
+     impl<T: std::fmt::Debug> std::fmt::Debug for PrimTreeSeqStS<T> {

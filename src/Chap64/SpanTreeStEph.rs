@@ -9,6 +9,7 @@
 //  Table of Contents
 //	Section 1. module
 //	Section 2. imports
+//	Section 3. broadcast use
 //	Section 4. type definitions
 //	Section 8. traits
 //	Section 9. impls
@@ -26,19 +27,23 @@ pub mod SpanTreeStEph {
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
     use crate::Types::Types::*;
 
+    use std::collections::HashMap;
     use std::hash::Hash;
     use crate::vstdplus::clone_plus::clone_plus::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
-    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
     use crate::Chap62::StarContractionStEph::StarContractionStEph::star_contract;
     use crate::SetLit;
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::hash::obeys_key_model;
+    use vstd::std_specs::hash::{into_iter_hash_keys, obeys_key_model};
 
     pub type T<V> = UnDirGraphStEph<V>;
 
-    verus! 
+    verus!
 {
+
+    //		Section 3. broadcast use
+
+
+    broadcast use vstd::std_specs::hash::group_hash_axioms;
 
     //		Section 4. type definitions
 
@@ -91,12 +96,12 @@ pub mod SpanTreeStEph {
         };
 
         // Expand: add star partition edges and map quotient tree edges back.
-        // Uses elements.iter() (HashSetWithViewPlus iter, no wf required) instead
+        // Uses elements.iter() (std `HashSet::iter`, no wf required) instead
         // of SetStEph::iter() so the closure has only type-level requires.
         let expand = |_v: &SetStEph<V>,
                       original_edges: &SetStEph<Edge<V>>,
                       _centers: &SetStEph<V>,
-                      partition_map: &HashMapWithViewPlus<V, V>,
+                      partition_map: &HashMap<V, V>,
                       quotient_tree: SetStEph<Edge<V>>|
             -> (span_edges: SetStEph<Edge<V>>)
             requires
@@ -113,6 +118,7 @@ pub mod SpanTreeStEph {
                 invariant
                     spanning_edges.spec_setsteph_wf(),
                     valid_key_type_Edge::<V>(),
+                    obeys_key_model::<V>(),
             {
                 let (vertex, center) = pair;
                 if *vertex != *center {
@@ -128,39 +134,32 @@ pub mod SpanTreeStEph {
             // Part 2: Map quotient tree edges back to original edges.
             // Use elements.iter() to avoid needing quotient_tree.spec_setsteph_wf().
             let it_qt = quotient_tree.elements.iter();
-            let ghost qt_seq = it_qt@.1;
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             for qe in iter: it_qt
                 invariant
-                    iter.elements == qt_seq,
                     spanning_edges.spec_setsteph_wf(),
                     valid_key_type_Edge::<V>(),
                     obeys_key_model::<V>(),
+                    obeys_key_model::<Edge<V>>(),
             {
                 let Edge(c1, c2) = qe;
                 // Use elements.iter() to avoid needing original_edges.spec_setsteph_wf().
-                let mut it_oe = original_edges.elements.iter();
+                let it_oe = original_edges.elements.iter();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-                loop
+                for oe in oit: it_oe
                     invariant
                         spanning_edges.spec_setsteph_wf(),
                         valid_key_type_Edge::<V>(),
                         obeys_key_model::<V>(),
-                        it_oe@.0 <= it_oe@.1.len(),
-                    decreases it_oe@.1.len() - it_oe@.0,
+                        obeys_key_model::<Edge<V>>(),
                 {
-                    match it_oe.next() {
-                        None => break,
-                        Some(oe) => {
-                            let Edge(u, v) = oe;
-                            let u_center = partition_map.get(u).unwrap_or(u);
-                            let v_center = partition_map.get(v).unwrap_or(v);
-                            if (*u_center == *c1 && *v_center == *c2) || (*u_center == *c2 && *v_center == *c1) {
-                                let owned_edge = Edge(u.clone(), v.clone());
-                                let _ = spanning_edges.insert(owned_edge);
-                                break;
-                            }
-                        }
+                    let Edge(u, v) = oe;
+                    let u_center = partition_map.get(u).unwrap_or(u);
+                    let v_center = partition_map.get(v).unwrap_or(v);
+                    if (*u_center == *c1 && *v_center == *c2) || (*u_center == *c2 && *v_center == *c1) {
+                        let owned_edge = Edge(u.clone(), v.clone());
+                        let _ = spanning_edges.insert(owned_edge);
+                        break;
                     }
                 }
             }
@@ -195,12 +194,12 @@ pub mod SpanTreeStEph {
 
         let graph_edges = graph.edges();
         let it = tree_edges.iter();
-        let ghost edge_seq = it@.1;
+        let ghost edge_seq = into_iter_hash_keys(it);
 
         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         for edge in iter: it
             invariant
-                iter.elements == edge_seq,
+                iter.seq().unref() == edge_seq,
                 edge_seq.map(|i: int, e: Edge<V>| e@).to_set() == tree_edges@,
                 graph_edges.spec_setsteph_wf(),
                 valid_key_type_Edge::<V>(),

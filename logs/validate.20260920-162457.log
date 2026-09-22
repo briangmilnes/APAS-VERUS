@@ -1,0 +1,93 @@
+Mode: isolate
+Isolate: including Chap02
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+  --> src/Types.rs:82:18
+   |
+82 |         &&& gv.V.finite()
+   |                  ^^^^^^
+   |
+   = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+  --> src/Types.rs:83:18
+   |
+83 |         &&& gv.A.finite()
+   |                  ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Types.rs:105:18
+    |
+105 |         &&& gv.V.finite()
+    |                  ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Types.rs:106:18
+    |
+106 |         &&& gv.A.finite()
+    |                  ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/vstdplus/seq_set.rs:491:11
+    |
+491 |         s.finite(),
+    |           ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/vstdplus/seq_set.rs:524:11
+    |
+524 |         s.finite(),
+    |           ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/vstdplus/seq_set.rs:712:11
+    |
+712 |         s.finite(),
+    |           ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/vstdplus/seq_set.rs:785:11
+    |
+785 |         s.finite(),
+    |           ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+  --> src/vstdplus/hash_set_with_view_plus.rs:76:23
+   |
+76 |         #[trigger] s@.finite(),
+   |                       ^^^^^^
+
+error[E0599]: no method named `view` found for struct `std::collections::hash_set::Iter<'a, K>` in the current scope
+   --> src/vstdplus/hash_set_with_view_plus.rs:174:19
+    |
+174 |         self.inner@
+    |                   ^ method not found in `std::collections::hash_set::Iter<'a, Key>`
+
+error[E0599]: no method named `view` found for struct `std::collections::hash_map::Iter<'a, K, V>` in the current scope
+   --> src/vstdplus/hash_map_with_view_plus.rs:180:19
+    |
+180 |         self.inner@
+    |                   ^ method not found in `std::collections::hash_map::Iter<'a, Key, Value>`
+
+error[E0277]: the trait bound `T: vstd::prelude::SpecEq<std::sync::Arc<T>>` is not satisfied
+  --> src/vstdplus/arc_rwlock.rs:65:17
+   |
+65 |         ensures *cloned == *arc,
+   |                 ^^^^^^^--------
+   |                 |
+   |                 the trait `vstd::prelude::SpecEq<std::sync::Arc<T>>` is not implemented for `T`
+   |                 required by a bound introduced by this call
+   |
+note: required by a bound in `vstd::prelude::spec_eq`
+  --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:1249:0
+help: consider restricting type parameter `T` with trait `SpecEq`
+   |
+64 |     pub fn clone_arc<T: vstd::prelude::SpecEq<std::sync::Arc<T>>>(arc: &Arc<T>) -> (cloned: Arc<T>)
+   |                       ++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 3 previous errors; 9 warnings emitted
+
+Some errors have detailed explanations: E0277, E0599.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 28016MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

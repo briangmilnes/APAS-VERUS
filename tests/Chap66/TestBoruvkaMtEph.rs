@@ -7,7 +7,6 @@ use apas_verus::Chap66::BoruvkaMtEph::BoruvkaMtEph::*;
 use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
 use apas_verus::vstdplus::float::float::*;
-use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait;
 
 fn w(v: f64) -> WrappedF64 {
     WrappedF64 { val: v }
@@ -175,9 +174,8 @@ fn test_vertex_bridges_mt_empty() {
 
 #[test]
 fn test_bridge_star_partition_mt() {
-    use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     let vertices = vec![1, 2, 3];
-    let mut bridges = HashMapWithViewPlus::new();
+    let mut bridges = std::collections::HashMap::new();
     bridges.insert(1, (2, w(1.0), 0));
     bridges.insert(2, (3, w(2.0), 1));
     let (remaining, partition) = bridge_star_partition_mt(vertices, bridges, 42, 0);

@@ -1,0 +1,29 @@
+File: src/standards/using_hashmap_standard.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-using_hashmap_standard/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 08:35:56
+error: possible arithmetic underflow/overflow
+   --> /home/milnes/projects/APAS-VERUS/src/standards/using_hashmap_standard.rs:194:21
+    |
+194 |                 n = n + 1;
+    |                     ^^^^^
+
+note: diagnostics via expansion
+   --> /home/milnes/projects/APAS-VERUS/src/standards/using_hashmap_standard.rs:194:21
+    |
+194 |                 n = n + 1;
+    |                     ^^^^^
+
+note: 
+
+usize::BITS == 32 ==>
+    0 <= n + 1 ✔
+    n + 1 < 4294967296 ✘
+usize::BITS == 64 ==>
+    0 <= n + 1 ✔
+    n + 1 < 18446744073709551616 ✘
+
+verification results:: 5 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 1s

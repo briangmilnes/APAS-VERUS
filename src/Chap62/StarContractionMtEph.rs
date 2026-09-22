@@ -31,21 +31,26 @@ pub mod StarContractionMtEph {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
 
+    use std::collections::HashMap;
     use std::hash::Hash;
     use std::sync::Arc;
     use std::vec::Vec;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::hash_specs_plus::hash_specs_plus::{key_view, lemma_hash_map_clone_eq};
     use crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition;
     use crate::{ParaPair, SetLit};
 
-    verus! 
+    verus!
 {
 
     //		Section 3. broadcast use
 
 
-    broadcast use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms;
+    broadcast use {
+        vstd::std_specs::hash::group_hash_axioms,
+        crate::vstdplus::hash_specs_plus::hash_specs_plus::group_key_view_lemmas,
+    };
 
     //		Section 4. type definitions
 
@@ -93,16 +98,16 @@ pub mod StarContractionMtEph {
         where
             V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
             F: Fn(&SetStEph<V>) -> R,
-            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R
+            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R
         requires
             Self::spec_starcontractionmteph_wf(graph),
             valid_key_type_Edge::<V>(),
             forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
             forall|s: &SetStEph<V>, r: R| s.spec_setsteph_wf() && base.ensures((s,), r) ==> r_inv(r),
-            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|
+            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R|
                 v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf() && r_inv(r)
                 ==> #[trigger] expand.requires((v, e, c, p, r)),
-            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R, out: R|
+            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R, out: R|
                 #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
         ensures r_inv(contracted);
 
@@ -127,16 +132,16 @@ pub mod StarContractionMtEph {
     where
         V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
         F: Fn(&SetStEph<V>) -> R,
-        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R,
+        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R,
     requires
         spec_graphview_wf(graph@),
         valid_key_type_Edge::<V>(),
         forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
         forall|s: &SetStEph<V>, r: R| s.spec_setsteph_wf() && base.ensures((s,), r) ==> r_inv(r),
-        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|
+        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R|
             v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf() && r_inv(r)
             ==> #[trigger] expand.requires((v, e, c, p, r)),
-        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R, out: R|
+        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R, out: R|
             #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
     ensures
         r_inv(contracted),
@@ -218,16 +223,16 @@ pub mod StarContractionMtEph {
     where
         V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
         F: Fn(&SetStEph<V>) -> R,
-        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R,
+        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R,
     requires
         spec_graphview_wf(graph@),
         valid_key_type_Edge::<V>(),
         forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
         forall|s: &SetStEph<V>, r: R| s.spec_setsteph_wf() && base.ensures((s,), r) ==> r_inv(r),
-        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|
+        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R|
             v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf() && r_inv(r)
             ==> #[trigger] expand.requires((v, e, c, p, r)),
-        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R, out: R|
+        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R, out: R|
             #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
     ensures
         r_inv(contracted),
@@ -256,13 +261,13 @@ pub mod StarContractionMtEph {
     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         centers: &SetStEph<V>,
-        partition_map: &HashMapWithViewPlus<V, V>,
+        partition_map: &HashMap<V, V>,
     ) -> (quotient: UnDirGraphMtEph<V>)
         requires
             valid_key_type_Edge::<V>(),
             spec_graphview_wf(graph@),
             centers.spec_setsteph_wf(),
-            spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@),
+            spec_valid_partition_map::<V>(graph@.V, centers@, key_view(partition_map@)),
         ensures
             spec_graphview_wf(quotient@),
     {
@@ -273,6 +278,8 @@ pub mod StarContractionMtEph {
 
         // Veracity: NEEDED proof block
         let part_map_arc = Arc::new(partition_map.clone());
+        // The vstd clone relates values through `cloned`; feq makes that equality.
+        proof { lemma_hash_map_clone_eq(partition_map@, (*part_map_arc)@); }
 
         // Establish that all edges in the array are graph edges with endpoints in graph@.V.
         // Uses spec_index (returns exec Edge<V>) to avoid view-of-view confusion.
@@ -321,7 +328,7 @@ pub mod StarContractionMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.
     fn route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
-        partition_map: Arc<HashMapWithViewPlus<V, V>>,
+        partition_map: Arc<HashMap<V, V>>,
         Ghost(graph_v_view): Ghost<Set<V::V>>,
         Ghost(centers_view): Ghost<Set<V::V>>,
         start: usize,
@@ -334,7 +341,7 @@ pub mod StarContractionMtEph {
             forall |j: int| start as int <= j < end as int ==>
                 graph_v_view.contains(#[trigger] (*edges).spec_index(j)@.0) &&
                 graph_v_view.contains((*edges).spec_index(j)@.1),
-            spec_valid_partition_map::<V>(graph_v_view, centers_view, (*partition_map)@),
+            spec_valid_partition_map::<V>(graph_v_view, centers_view, key_view((*partition_map)@)),
         ensures
             quotient_edges.spec_setsteph_wf(),
             forall |u_v: V::V, w_v: V::V|
@@ -443,7 +450,7 @@ pub mod StarContractionMtEph {
             graph,
             seed,
             &|vertices: &SetStEph<V>| -> (r: SetStEph<V>) { vertices.clone() },
-            &|_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, result: SetStEph<V>| -> (r: SetStEph<V>) { result },
+            &|_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMap<V, V>, result: SetStEph<V>| -> (r: SetStEph<V>) { result },
             Ghost(|r: SetStEph<V>| true),
         )
     }

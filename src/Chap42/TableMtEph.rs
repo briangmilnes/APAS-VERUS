@@ -58,7 +58,7 @@ pub mod TableMtEph {
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     crate::Types::Types::group_Pair_axioms,
-    vstd::map::group_map_axioms,
+    vstd::map::group_map_lemmas,
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,

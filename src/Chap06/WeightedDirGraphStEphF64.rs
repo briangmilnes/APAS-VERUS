@@ -25,6 +25,10 @@ pub mod WeightedDirGraphStEphF64 {
     use std::hash::Hash;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::into_iter_hash_keys;
     use crate::Types::Types::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::*;
@@ -42,7 +46,7 @@ verus!
     broadcast use {
         vstd::std_specs::hash::group_hash_axioms,
         vstd::set_lib::group_set_lib_default,
-        vstd::set::group_set_axioms,
+        vstd::set::group_set_lemmas,
         vstd::seq_lib::group_seq_properties,
         crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_LabEdge_axioms,
@@ -66,7 +70,6 @@ verus!
         fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, WrappedF64>>) -> (g: WeightedDirGraphStEphF64<V>)
             requires
                 valid_key_type_WeightedEdge::<V, WrappedF64>(),
-                edges@.finite(),
                 forall |u: V::V, w: V::V, weight: f64|
                     #[trigger] edges@.contains((u, w, weight)) ==>
                         vertices@.contains(u) && vertices@.contains(w),
@@ -121,31 +124,39 @@ verus!
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
         fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, WrappedF64>>) -> (g: WeightedDirGraphStEphF64<V>) {
             let mut edge_set: SetStEph<LabEdge<V, WrappedF64>> = SetStEph::empty();
-            let mut it = edges.iter();
-            let ghost edge_seq = it@.1;
+            let edge_iter = edges.iter();
+            let ghost edge_seq = into_iter_hash_keys(edge_iter);
+            let mut it = edge_iter;
+            let ghost mut pos: int = 0;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type_WeightedEdge::<V, WrappedF64>(),
                     edge_set.spec_setsteph_wf(),
-                    it@.0 <= edge_seq.len(),
-                    it@.1 == edge_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= edge_seq.len(),
+                    IteratorSpec::remaining(&it).len() == edge_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == edge_seq[pos + i],
                     edge_seq.map(|i: int, e: WeightedEdge<V, WrappedF64>| e@).to_set() == edges@,
                     forall |u: V::V, w: V::V, weight: f64|
                         #[trigger] edge_set@.contains((u, w, weight)) ==>
                             vertices@.contains(u) && vertices@.contains(w),
                     forall |t: (V::V, V::V, f64)| #[trigger] edge_set@.contains(t) <==>
-                        (exists |j: int| #![trigger edge_seq[j]] 0 <= j < it@.0 && edge_seq[j]@ == t),
-                decreases edge_seq.len() - it@.0,
+                        (exists |j: int| #![trigger edge_seq[j]] 0 <= j < pos && edge_seq[j]@ == t),
+                decreases IteratorSpec::decrease(&it)->0,
             {
+                let ghost old_pos = pos;
                 match it.next() {
                     None => break,
                     Some(triple) => {
+                        proof { pos = pos + 1; assert(edge_seq[old_pos] == *triple); }
                         // Veracity: NEEDED proof block
                         // Veracity: NEEDED proof block
                         proof {
-                            lemma_seq_index_in_map_to_set(edge_seq, it@.0 - 1);
+                            lemma_seq_index_in_map_to_set(edge_seq, old_pos);
                         }
                         let _ = edge_set.insert(LabEdge(triple.0.clone_plus(), triple.1.clone_plus(), triple.2));
                     },
@@ -179,8 +190,10 @@ verus!
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
         fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, WrappedF64>>) {
             let mut edges: SetStEph<WeightedEdge<V, WrappedF64>> = SetStEph::empty();
-            let mut it = self.labeled_arcs().iter();
-            let ghost wa_seq = it@.1;
+            let wa_iter = self.labeled_arcs().iter();
+            let ghost wa_seq = into_iter_hash_keys(wa_iter);
+            let mut it = wa_iter;
+            let ghost mut pos: int = 0;
             let ghost wa_view = self@.A;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
@@ -188,13 +201,18 @@ verus!
                 invariant
                     valid_key_type_WeightedEdge::<V, WrappedF64>(),
                     edges.spec_setsteph_wf(),
-                    it@.0 <= wa_seq.len(),
-                    it@.1 == wa_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= wa_seq.len(),
+                    IteratorSpec::remaining(&it).len() == wa_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == wa_seq[pos + i],
                     wa_seq.map(|i: int, e: LabEdge<V, WrappedF64>| e@).to_set() == wa_view,
                     forall |t: (V::V, V::V, f64)| edges@.contains(t) ==
-                        (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@ == t),
-                decreases wa_seq.len() - it@.0,
+                        (exists |i: int| #![trigger wa_seq[i]] 0 <= i < pos && wa_seq[i]@ == t),
+                decreases IteratorSpec::decrease(&it)->0,
             {
+                let ghost old_pos = pos;
                 match it.next() {
                     // Veracity: NEEDED proof block
                     None => {
@@ -204,6 +222,7 @@ verus!
                         return edges;
                     },
                     Some(labeled_edge) => {
+                        proof { pos = pos + 1; assert(wa_seq[old_pos] == *labeled_edge); }
                         let _ = edges.insert(WeightedEdge(labeled_edge.0.clone_plus(), labeled_edge.1.clone_plus(), labeled_edge.2));
                     },
                 }
@@ -214,8 +233,10 @@ verus!
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
         fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, WrappedF64>>) {
             let mut neighbors: SetStEph<Pair<V, WrappedF64>> = SetStEph::empty();
-            let mut it = self.labeled_arcs().iter();
-            let ghost wa_seq = it@.1;
+            let wa_iter = self.labeled_arcs().iter();
+            let ghost wa_seq = into_iter_hash_keys(wa_iter);
+            let mut it = wa_iter;
+            let ghost mut pos: int = 0;
             let ghost v_view = v@;
             let ghost wa_view = self@.A;
 
@@ -224,14 +245,19 @@ verus!
                 invariant
                     valid_key_type_WeightedEdge::<V, WrappedF64>(),
                     neighbors.spec_setsteph_wf(),
-                    it@.0 <= wa_seq.len(),
-                    it@.1 == wa_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= wa_seq.len(),
+                    IteratorSpec::remaining(&it).len() == wa_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == wa_seq[pos + i],
                     wa_seq.map(|i: int, e: LabEdge<V, WrappedF64>| e@).to_set() == wa_view,
                     forall |p: (V::V, f64)| neighbors@.contains(p) ==
-                        (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@.0 == v_view && wa_seq[i]@.1 == p.0 && wa_seq[i]@.2 == p.1),
-                decreases wa_seq.len() - it@.0,
+                        (exists |i: int| #![trigger wa_seq[i]] 0 <= i < pos && wa_seq[i]@.0 == v_view && wa_seq[i]@.1 == p.0 && wa_seq[i]@.2 == p.1),
+                decreases IteratorSpec::decrease(&it)->0,
             {
                 // Veracity: NEEDED proof block
+                let ghost old_pos = pos;
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
@@ -258,6 +284,7 @@ assert forall |p: (V::V, f64)| (exists |w: f64| #![trigger wa_view.contains((v_v
                         return neighbors;
                     },
                     Some(labeled_edge) => {
+                        proof { pos = pos + 1; assert(wa_seq[old_pos] == *labeled_edge); }
                         if feq(&labeled_edge.0, v) {
                             let _ = neighbors.insert(Pair(labeled_edge.1.clone_plus(), labeled_edge.2));
                         }
@@ -270,8 +297,10 @@ assert forall |p: (V::V, f64)| (exists |w: f64| #![trigger wa_view.contains((v_v
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
         fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, WrappedF64>>) {
             let mut neighbors: SetStEph<Pair<V, WrappedF64>> = SetStEph::empty();
-            let mut it = self.labeled_arcs().iter();
-            let ghost wa_seq = it@.1;
+            let wa_iter = self.labeled_arcs().iter();
+            let ghost wa_seq = into_iter_hash_keys(wa_iter);
+            let mut it = wa_iter;
+            let ghost mut pos: int = 0;
             let ghost v_view = v@;
             let ghost wa_view = self@.A;
 
@@ -280,14 +309,19 @@ assert forall |p: (V::V, f64)| (exists |w: f64| #![trigger wa_view.contains((v_v
                 invariant
                     valid_key_type_WeightedEdge::<V, WrappedF64>(),
                     neighbors.spec_setsteph_wf(),
-                    it@.0 <= wa_seq.len(),
-                    it@.1 == wa_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= wa_seq.len(),
+                    IteratorSpec::remaining(&it).len() == wa_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == wa_seq[pos + i],
                     wa_seq.map(|i: int, e: LabEdge<V, WrappedF64>| e@).to_set() == wa_view,
                     forall |p: (V::V, f64)| neighbors@.contains(p) ==
-                        (exists |i: int| #![trigger wa_seq[i]] 0 <= i < it@.0 && wa_seq[i]@.1 == v_view && wa_seq[i]@.0 == p.0 && wa_seq[i]@.2 == p.1),
-                decreases wa_seq.len() - it@.0,
+                        (exists |i: int| #![trigger wa_seq[i]] 0 <= i < pos && wa_seq[i]@.1 == v_view && wa_seq[i]@.0 == p.0 && wa_seq[i]@.2 == p.1),
+                decreases IteratorSpec::decrease(&it)->0,
             // Veracity: NEEDED proof block
             {
+                let ghost old_pos = pos;
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
@@ -314,6 +348,7 @@ assert forall |p: (V::V, f64)| (exists |w: f64| #![trigger wa_view.contains((p.0
                         return neighbors;
                     },
                     Some(labeled_edge) => {
+                        proof { pos = pos + 1; assert(wa_seq[old_pos] == *labeled_edge); }
                         if feq(&labeled_edge.1, v) {
                             let _ = neighbors.insert(Pair(labeled_edge.0.clone_plus(), labeled_edge.2));
                         }

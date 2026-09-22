@@ -1,6 +1,8 @@
 //! Proof tests for standards::view_standard.
 //!
-//! Tests View trait patterns and all 6 iterator loop forms.
+//! Tests View trait patterns and all 6 iterator loop forms (delegated
+//! iteration under the verus 0.2026.09.13 prophetic iterator model; see
+//! src/standards/iterators_standard.rs).
 
 #[macro_use]
 #[path = "../common/mod.rs"]
@@ -40,6 +42,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] view_standard_loop_borrow_iter verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::standards::view_standard::view_standard::*;
 
         fn test_loop_borrow_iter() {
@@ -48,29 +51,29 @@ test_verify_one_file! {
             v.push(20);
             v.push(30);
             let a = CollectionS { seq: v };
-
-            let mut it: CollectionIter<u64> = a.iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            #[verifier::loop_isolation(false)]
+            let ghost orig: Seq<u64> = a.seq@;
+            let mut collected: Vec<u64> = Vec::new();
+            let mut it: VerusForLoopWrapper<std::slice::Iter<'_, u64>> =
+                VerusForLoopWrapper::new(a.iter());
             loop
                 invariant
-                    items =~= iter_seq.take(it@.0 as int),
-                    iter_invariant(&it),
-                    iter_seq == it@.1,
-                    it@.0 <= iter_seq.len(),
-                decreases iter_seq.len() - it@.0,
+                    it.wf(),
+                    IteratorSpec::obeys_prophetic_iter_laws(&it.iter),
+                    IteratorSpec::decrease(&it.iter) is Some,
+                    it.seq() == orig.as_ref(),
+                    collected.len() == it.index(),
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == *it.seq()[i],
+                decreases IteratorSpec::decrease(&it.iter)->0,
             {
-                if let Some(x) = it.next() {
-                    proof { items = items.push(*x); }
-                } else {
-                    break;
+                match it.next() {
+                    Some(x) => { collected.push(*x); },
+                    None => {
+                        assert(collected@ =~= orig);
+                        break;
+                    },
                 }
             }
-
-            assert(it@.0 == iter_seq.len());
-            assert(items =~= iter_seq);
         }
     } => Ok(())
 }
@@ -79,6 +82,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] view_standard_loop_borrow_into verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::standards::view_standard::view_standard::*;
 
         fn test_loop_borrow_into() {
@@ -87,29 +91,29 @@ test_verify_one_file! {
             v.push(20);
             v.push(30);
             let a = CollectionS { seq: v };
-
-            let mut it: CollectionIter<u64> = (&a).into_iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            #[verifier::loop_isolation(false)]
+            let ghost orig: Seq<u64> = a.seq@;
+            let mut collected: Vec<u64> = Vec::new();
+            let mut it: VerusForLoopWrapper<std::slice::Iter<'_, u64>> =
+                VerusForLoopWrapper::new((&a).into_iter());
             loop
                 invariant
-                    items =~= iter_seq.take(it@.0 as int),
-                    iter_invariant(&it),
-                    iter_seq == it@.1,
-                    it@.0 <= iter_seq.len(),
-                decreases iter_seq.len() - it@.0,
+                    it.wf(),
+                    IteratorSpec::obeys_prophetic_iter_laws(&it.iter),
+                    IteratorSpec::decrease(&it.iter) is Some,
+                    it.seq() == orig.as_ref(),
+                    collected.len() == it.index(),
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == *it.seq()[i],
+                decreases IteratorSpec::decrease(&it.iter)->0,
             {
-                if let Some(x) = it.next() {
-                    proof { items = items.push(*x); }
-                } else {
-                    break;
+                match it.next() {
+                    Some(x) => { collected.push(*x); },
+                    None => {
+                        assert(collected@ =~= orig);
+                        break;
+                    },
                 }
             }
-
-            assert(it@.0 == iter_seq.len());
-            assert(items =~= iter_seq);
         }
     } => Ok(())
 }
@@ -118,6 +122,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] view_standard_loop_consume verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::standards::view_standard::view_standard::*;
 
         fn test_loop_consume() {
@@ -126,31 +131,29 @@ test_verify_one_file! {
             v.push(20);
             v.push(30);
             let a = CollectionS { seq: v };
-            let ghost orig_seq: Seq<u64> = a.seq@;
-
-            let mut it = a.into_iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            assert(iter_seq == orig_seq);
-
-            #[verifier::loop_isolation(false)]
+            let ghost orig: Seq<u64> = a.seq@;
+            let mut collected: Vec<u64> = Vec::new();
+            let mut it: VerusForLoopWrapper<std::vec::IntoIter<u64>> =
+                VerusForLoopWrapper::new(a.into_iter());
             loop
                 invariant
-                    items =~= iter_seq.take(it@.0 as int),
-                    iter_seq == it@.1,
-                    0 <= it@.0 <= iter_seq.len(),
-                decreases iter_seq.len() - it@.0,
+                    it.wf(),
+                    IteratorSpec::obeys_prophetic_iter_laws(&it.iter),
+                    IteratorSpec::decrease(&it.iter) is Some,
+                    it.seq() == orig,
+                    collected.len() == it.index(),
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == it.seq()[i],
+                decreases IteratorSpec::decrease(&it.iter)->0,
             {
-                if let Some(x) = it.next() {
-                    proof { items = items.push(x); }
-                } else {
-                    break;
+                match it.next() {
+                    Some(x) => { collected.push(x); },
+                    None => {
+                        assert(collected@ =~= orig);
+                        break;
+                    },
                 }
             }
-
-            assert(it@.0 == iter_seq.len());
-            assert(items =~= iter_seq);
         }
     } => Ok(())
 }
@@ -159,6 +162,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] view_standard_for_borrow_iter verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::standards::view_standard::view_standard::*;
 
         fn test_for_borrow_iter() {
@@ -167,21 +171,18 @@ test_verify_one_file! {
             v.push(20);
             v.push(30);
             let a = CollectionS { seq: v };
-
-            let it: CollectionIter<u64> = a.iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            for x in iter: it
+            let ghost orig: Seq<u64> = a.seq@;
+            let mut collected: Vec<u64> = Vec::new();
+            for x in it: a.iter()
                 invariant
-                    iter.elements == iter_seq,
-                    items =~= iter_seq.take(iter.pos),
-                    iter.pos <= iter_seq.len(),
+                    it.seq() == orig.as_ref(),
+                    collected.len() == it.index(),
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == *it.seq()[i],
             {
-                proof { items = items.push(*x); }
+                collected.push(*x);
             }
-
-            assert(items =~= iter_seq);
+            assert(collected@ =~= orig);
         }
     } => Ok(())
 }
@@ -190,6 +191,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] view_standard_for_borrow_into verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::standards::view_standard::view_standard::*;
 
         fn test_for_borrow_into() {
@@ -198,21 +200,18 @@ test_verify_one_file! {
             v.push(20);
             v.push(30);
             let a = CollectionS { seq: v };
-
-            let it: CollectionIter<u64> = (&a).into_iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            for x in iter: it
+            let ghost orig: Seq<u64> = a.seq@;
+            let mut collected: Vec<u64> = Vec::new();
+            for x in it: (&a).into_iter()
                 invariant
-                    iter.elements == iter_seq,
-                    items =~= iter_seq.take(iter.pos),
-                    iter.pos <= iter_seq.len(),
+                    it.seq() == orig.as_ref(),
+                    collected.len() == it.index(),
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == *it.seq()[i],
             {
-                proof { items = items.push(*x); }
+                collected.push(*x);
             }
-
-            assert(items =~= iter_seq);
+            assert(collected@ =~= orig);
         }
     } => Ok(())
 }
@@ -221,6 +220,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] view_standard_for_consume verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::standards::view_standard::view_standard::*;
 
         fn test_for_consume() {
@@ -229,24 +229,18 @@ test_verify_one_file! {
             v.push(20);
             v.push(30);
             let a = CollectionS { seq: v };
-            let ghost orig_seq: Seq<u64> = a.seq@;
-
-            let it = a.into_iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            assert(iter_seq == orig_seq);
-
-            for x in iter: it
+            let ghost orig: Seq<u64> = a.seq@;
+            let mut collected: Vec<u64> = Vec::new();
+            for x in it: a.into_iter()
                 invariant
-                    iter.elements == iter_seq,
-                    items =~= iter_seq.take(iter.pos),
-                    iter.pos <= iter_seq.len(),
+                    it.seq() == orig,
+                    collected.len() == it.index(),
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == it.seq()[i],
             {
-                proof { items = items.push(x); }
+                collected.push(x);
             }
-
-            assert(items =~= iter_seq);
+            assert(collected@ =~= orig);
         }
     } => Ok(())
 }

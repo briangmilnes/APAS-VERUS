@@ -1,0 +1,5 @@
+Standard: exp_adaptor_p3_ctor (deps: nodeps; extra: none)
+Harness root: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/harness-exp_adaptor_p3_ctor/lib.rs
+Starting verification at 15:46:43
+verification results:: 2 verified, 0 errors
+Elapsed: 1s

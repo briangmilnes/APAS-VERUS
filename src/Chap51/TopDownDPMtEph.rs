@@ -5,7 +5,7 @@
 //! Top-Down Dynamic Programming - Ephemeral Multi-Threaded Implementation
 //!
 //! This module implements the top-down (memoization) approach to dynamic programming
-//! using concurrent HashMapWithViewPlus with in-place mutations for thread-safe subproblem caching.
+//! using a lock-protected HashMap with in-place mutations for thread-safe subproblem caching.
 
 //  Table of Contents
 //	Section 1. module
@@ -29,6 +29,7 @@
 pub mod TopDownDPMtEph {
 
     //		Section 2. imports
+    use std::collections::HashMap;
     use std::fmt::{Formatter, Debug, Display};
     use std::sync::Arc;
     use vstd::rwlock::*;
@@ -40,8 +41,6 @@ pub mod TopDownDPMtEph {
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Chap51::SeqSpecsAndLemmas::SeqSpecsAndLemmas::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
     use crate::vstdplus::accept::accept;
 
@@ -53,7 +52,7 @@ pub mod TopDownDPMtEph {
 
     broadcast use {
         crate::Types::Types::group_Pair_axioms,
-        vstd::map::group_map_axioms,
+        vstd::map::group_map_lemmas,
         vstd::seq::group_seq_axioms,
         vstd::std_specs::hash::group_hash_axioms,
     };
@@ -115,7 +114,7 @@ pub mod TopDownDPMtEph {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
-            let mut memo = HashMapWithViewPlus::new();
+            let mut memo = HashMap::new();
             med_recursive_sequential(&self.seq_s, &self.seq_t, &mut memo, s_len, t_len)
         }
 
@@ -127,10 +126,10 @@ pub mod TopDownDPMtEph {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
-            let memo = new_arc_rwlock(
-                HashMapWithViewPlus::new(),
+            let memo = Arc::new(RwLock::new(
+                HashMap::new(),
                 Ghost(TopDownDPMtEphInv { seq_s: self.seq_s@, seq_t: self.seq_t@ }),
-            );
+            ));
             med_recursive_parallel(&self.seq_s, &self.seq_t, &memo, s_len, t_len)
         }
     }
@@ -239,7 +238,7 @@ pub mod TopDownDPMtEph {
     fn med_recursive_sequential(
         seq_s: &ArraySeqMtEphS<char>,
         seq_t: &ArraySeqMtEphS<char>,
-        memo: &mut HashMapWithViewPlus<Pair<usize, usize>, usize>,
+        memo: &mut HashMap<Pair<usize, usize>, usize>,
         i: usize,
         j: usize,
     ) -> (distance: usize)
@@ -247,14 +246,14 @@ pub mod TopDownDPMtEph {
             i <= seq_s.spec_len(),
             j <= seq_t.spec_len(),
             seq_s.spec_len() + seq_t.spec_len() < usize::MAX,
-            old(memo)@.dom().finite(),
             spec_memo_correct(old(memo)@, seq_s@, seq_t@),
         ensures
             distance as nat == spec_med_fn(seq_s@, seq_t@, i as nat, j as nat),
-            memo@.dom().finite(),
             spec_memo_correct(memo@, seq_s@, seq_t@),
         decreases i + j,
     {
+        // The vstd `get`/`insert` postconditions hold under the Pair key model.
+        proof { let _ = Pair_feq_trigger::<usize, usize>(); }
         match memo.get(&Pair(i, j)) {
             Some(v) => { return *v; }
             None => {}
@@ -294,21 +293,21 @@ pub mod TopDownDPMtEph {
         proof {
             // Veracity: NEEDED assert
             // Veracity: NEEDED assert
-            assert forall|a: usize, b: usize| #[trigger] pre_memo.contains_key((a, b))
+            assert forall|a: usize, b: usize| #[trigger] pre_memo.contains_key(Pair(a, b))
             implies
-                pre_memo[(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
+                pre_memo[Pair(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
             by {
             };
         }
         memo.insert(Pair(i, j), result);
         // Veracity: NEEDED assert
         // Veracity: NEEDED assert
-        assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
+        assert forall|a: usize, b: usize| #[trigger] memo@.contains_key(Pair(a, b))
         implies
-            memo@[(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
+            memo@[Pair(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
         by {
             if a == i && b == j {
-            } else if pre_memo.contains_key((a, b)) {
+            } else if pre_memo.contains_key(Pair(a, b)) {
             }
         };
         result
@@ -320,7 +319,7 @@ pub mod TopDownDPMtEph {
     fn med_recursive_parallel(
         seq_s: &ArraySeqMtEphS<char>,
         seq_t: &ArraySeqMtEphS<char>,
-        memo: &Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, TopDownDPMtEphInv>>,
+        memo: &Arc<RwLock<HashMap<Pair<usize, usize>, usize>, TopDownDPMtEphInv>>,
         i: usize,
         j: usize,
     ) -> (dist: usize)
@@ -334,6 +333,8 @@ pub mod TopDownDPMtEph {
             dist as nat == spec_med_fn(seq_s@, seq_t@, i as nat, j as nat),
         decreases i + j,
     {
+        // The vstd `get`/`insert` postconditions hold under the Pair key model.
+        proof { let _ = Pair_feq_trigger::<usize, usize>(); }
         // Memo lookup.
         {
             let rwlock = arc_deref(memo);
@@ -366,7 +367,7 @@ pub mod TopDownDPMtEph {
             } else {
                 let s1 = seq_s.clone();
                 let t1 = seq_t.clone();
-                let memo1 = clone_arc_rwlock(memo);
+                let memo1 = memo.clone();
 
                 // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
@@ -377,7 +378,7 @@ pub mod TopDownDPMtEph {
 
                 let s2 = seq_s.clone();
                 let t2 = seq_t.clone();
-                let memo2 = clone_arc_rwlock(memo);
+                let memo2 = memo.clone();
 
                 // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
@@ -438,12 +439,12 @@ pub mod TopDownDPMtEph {
             proof {
                 // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
-                assert forall|a: usize, b: usize| #[trigger] current@.contains_key((a, b))
+                assert forall|a: usize, b: usize| #[trigger] current@.contains_key(Pair(a, b))
                 implies
-                    current@[(a, b)] as nat == spec_med_fn(seq_s@, seq_t@, a as nat, b as nat)
+                    current@[Pair(a, b)] as nat == spec_med_fn(seq_s@, seq_t@, a as nat, b as nat)
                 by {
                     if a == i && b == j {
-                    } else if pre_insert.contains_key((a, b)) {
+                    } else if pre_insert.contains_key(Pair(a, b)) {
                     }
                 };
             }
@@ -456,10 +457,9 @@ pub mod TopDownDPMtEph {
     //		Section 11b. top level coarse locking
 
 
-    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for TopDownDPMtEphInv {
-        open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
-            &&& v@.dom().finite()
-            &&& spec_memo_correct(v@, self.seq_s, self.seq_t)
+    impl RwLockPredicate<HashMap<Pair<usize, usize>, usize>> for TopDownDPMtEphInv {
+        open spec fn inv(self, v: HashMap<Pair<usize, usize>, usize>) -> bool {
+            spec_memo_correct(v@, self.seq_s, self.seq_t)
         }
     }
 

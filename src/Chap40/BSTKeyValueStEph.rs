@@ -58,7 +58,7 @@ pub mod BSTKeyValueStEph {
     //		Section 3. broadcast use
 
 
-    broadcast use { vstd::map::group_map_axioms, vstd::map_lib::group_map_union, vstd::set::group_set_axioms };
+    broadcast use { vstd::map::group_map_lemmas, vstd::map_lib::group_map_union, vstd::set::group_set_lemmas };
 
     //		Section 4. type definitions
 

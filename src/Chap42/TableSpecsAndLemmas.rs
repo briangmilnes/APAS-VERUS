@@ -18,7 +18,7 @@ pub mod TableSpecsAndLemmas {
     verus! {
 
 broadcast use {
-    vstd::map::group_map_axioms,
+    vstd::map::group_map_lemmas,
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,
 };

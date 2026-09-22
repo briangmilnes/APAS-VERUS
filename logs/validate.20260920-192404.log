@@ -1,0 +1,203 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error[E0433]: cannot find `hash_set_with_view_plus` in `vstdplus`
+  --> src/Chap06/DirGraphStEph.rs:56:26
+   |
+56 |         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^ could not find `hash_set_with_view_plus` in `vstdplus`
+
+error[E0433]: cannot find `hash_set_with_view_plus` in `vstdplus`
+  --> src/Chap06/UnDirGraphStEph.rs:53:26
+   |
+53 |         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^ could not find `hash_set_with_view_plus` in `vstdplus`
+
+error[E0433]: cannot find `hash_set_with_view_plus` in `vstdplus`
+  --> src/Chap06/LabDirGraphStEph.rs:51:26
+   |
+51 |         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^ could not find `hash_set_with_view_plus` in `vstdplus`
+
+error[E0433]: cannot find `hash_set_with_view_plus` in `vstdplus`
+  --> src/Chap06/LabUnDirGraphStEph.rs:50:26
+   |
+50 |         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^ could not find `hash_set_with_view_plus` in `vstdplus`
+
+error[E0425]: cannot find type `SetStEphIter` in this scope
+   --> src/Chap06/DirGraphStEph.rs:236:45
+    |
+236 |         pub fn iter_vertices(&self) -> (it: SetStEphIter<'_, V>)
+    |                                             ^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:80:5
+    |
+ 80 |     pub struct SetStEph<T: StT + Hash> {
+    |     ---------------------------------- similarly named struct `SetStEph` defined here
+    |
+help: a struct with a similar name exists
+    |
+236 -         pub fn iter_vertices(&self) -> (it: SetStEphIter<'_, V>)
+236 +         pub fn iter_vertices(&self) -> (it: SetStEph<'_, V>)
+    |
+
+error[E0425]: cannot find type `SetStEphIter` in this scope
+   --> src/Chap06/DirGraphStEph.rs:243:41
+    |
+243 |         pub fn iter_arcs(&self) -> (it: SetStEphIter<'_, Edge<V>>)
+    |                                         ^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:80:5
+    |
+ 80 |     pub struct SetStEph<T: StT + Hash> {
+    |     ---------------------------------- similarly named struct `SetStEph` defined here
+    |
+help: a struct with a similar name exists
+    |
+243 -         pub fn iter_arcs(&self) -> (it: SetStEphIter<'_, Edge<V>>)
+243 +         pub fn iter_arcs(&self) -> (it: SetStEph<'_, Edge<V>>)
+    |
+
+error[E0425]: cannot find type `SetStEphIter` in this scope
+   --> src/Chap06/DirGraphStEph.rs:612:20
+    |
+612 |         pub inner: SetStEphIter<'a, V>,
+    |                    ^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:80:5
+    |
+ 80 |     pub struct SetStEph<T: StT + Hash> {
+    |     ---------------------------------- similarly named struct `SetStEph` defined here
+    |
+help: a struct with a similar name exists
+    |
+612 -         pub inner: SetStEphIter<'a, V>,
+612 +         pub inner: SetStEph<'a, V>,
+    |
+
+error[E0425]: cannot find type `SetStEphIter` in this scope
+   --> src/Chap06/UnDirGraphStEph.rs:378:20
+    |
+378 |         pub inner: SetStEphIter<'a, V>,
+    |                    ^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:80:5
+    |
+ 80 |     pub struct SetStEph<T: StT + Hash> {
+    |     ---------------------------------- similarly named struct `SetStEph` defined here
+    |
+help: a struct with a similar name exists
+    |
+378 -         pub inner: SetStEphIter<'a, V>,
+378 +         pub inner: SetStEph<'a, V>,
+    |
+
+error[E0425]: cannot find type `SetStEphIter` in this scope
+   --> src/Chap06/LabDirGraphStEph.rs:481:20
+    |
+481 |         pub inner: SetStEphIter<'a, V>,
+    |                    ^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:80:5
+    |
+ 80 |     pub struct SetStEph<T: StT + Hash> {
+    |     ---------------------------------- similarly named struct `SetStEph` defined here
+    |
+help: a struct with a similar name exists
+    |
+481 -         pub inner: SetStEphIter<'a, V>,
+481 +         pub inner: SetStEph<'a, V>,
+    |
+
+error[E0425]: cannot find type `SetStEphIter` in this scope
+   --> src/Chap06/LabUnDirGraphStEph.rs:437:20
+    |
+437 |         pub inner: SetStEphIter<'a, V>,
+    |                    ^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:80:5
+    |
+ 80 |     pub struct SetStEph<T: StT + Hash> {
+    |     ---------------------------------- similarly named struct `SetStEph` defined here
+    |
+help: a struct with a similar name exists
+    |
+437 -         pub inner: SetStEphIter<'a, V>,
+437 +         pub inner: SetStEph<'a, V>,
+    |
+
+error[E0425]: cannot find type `SetStEphIter` in this scope
+   --> src/Chap06/DirGraphMtEph.rs:753:20
+    |
+753 |         pub inner: SetStEphIter<'a, V>,
+    |                    ^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:80:5
+    |
+ 80 |     pub struct SetStEph<T: StT + Hash> {
+    |     ---------------------------------- similarly named struct `SetStEph` defined here
+    |
+help: a struct with a similar name exists
+    |
+753 -         pub inner: SetStEphIter<'a, V>,
+753 +         pub inner: SetStEph<'a, V>,
+    |
+
+error[E0425]: cannot find type `SetStEphIter` in this scope
+   --> src/Chap06/UnDirGraphMtEph.rs:461:20
+    |
+461 |         pub inner: SetStEphIter<'a, V>,
+    |                    ^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:80:5
+    |
+ 80 |     pub struct SetStEph<T: StT + Hash> {
+    |     ---------------------------------- similarly named struct `SetStEph` defined here
+    |
+help: a struct with a similar name exists
+    |
+461 -         pub inner: SetStEphIter<'a, V>,
+461 +         pub inner: SetStEph<'a, V>,
+    |
+
+error[E0425]: cannot find type `SetStEphIter` in this scope
+   --> src/Chap06/LabDirGraphMtEph.rs:649:20
+    |
+649 |         pub inner: SetStEphIter<'a, V>,
+    |                    ^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:80:5
+    |
+ 80 |     pub struct SetStEph<T: StT + Hash> {
+    |     ---------------------------------- similarly named struct `SetStEph` defined here
+    |
+help: a struct with a similar name exists
+    |
+649 -         pub inner: SetStEphIter<'a, V>,
+649 +         pub inner: SetStEph<'a, V>,
+    |
+
+error[E0425]: cannot find type `SetStEphIter` in this scope
+   --> src/Chap06/LabUnDirGraphMtEph.rs:591:20
+    |
+591 |         pub inner: SetStEphIter<'a, V>,
+    |                    ^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:80:5
+    |
+ 80 |     pub struct SetStEph<T: StT + Hash> {
+    |     ---------------------------------- similarly named struct `SetStEph` defined here
+    |
+help: a struct with a similar name exists
+    |
+591 -         pub inner: SetStEphIter<'a, V>,
+591 +         pub inner: SetStEph<'a, V>,
+    |
+
+error: aborting due to 14 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 28020MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

@@ -1,0 +1,147 @@
+src/Chap05/SetStEph.rs:220:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|v|), Span O(1)
+src/Chap05/SetStEph.rs:221:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel. Iterates vec, O(1) hash insert each.
+src/Chap05/SetStEph.rs:226:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetStEph.rs:227:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator handle.
+src/Chap05/SetStEph.rs:238:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, clones each element.
+src/Chap05/SetStEph.rs:245:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetStEph.rs:246:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Allocates empty hash set.
+src/Chap05/SetStEph.rs:251:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetStEph.rs:252:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. One allocation + one insert.
+src/Chap05/SetStEph.rs:257:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetStEph.rs:258:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set len().
+src/Chap05/SetStEph.rs:263:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetStEph.rs:264:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set contains().
+src/Chap05/SetStEph.rs:269:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetStEph.rs:270:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set insert(), amortized.
+src/Chap05/SetStEph.rs:278:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
+src/Chap05/SetStEph.rs:279:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel. Clone one, iterate other, insert all.
+src/Chap05/SetStEph.rs:287:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
+src/Chap05/SetStEph.rs:288:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel. Same as union, disjointness is a precondition only.
+src/Chap05/SetStEph.rs:299:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
+src/Chap05/SetStEph.rs:300:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — ACCEPTED DIFFERENCE: St sequential + only iterates self (not both). APAS parallel.
+src/Chap05/SetStEph.rs:307:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s2|), Span O(|s2|) — iterates s2, creates one pair per element.
+src/Chap05/SetStEph.rs:317:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| × |b|), Span O(1)
+src/Chap05/SetStEph.rs:318:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| × |b|), Span O(|a| × |b|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+src/Chap05/SetStEph.rs:328:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) size check each.
+src/Chap05/SetStEph.rs:336:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) membership check each.
+src/Chap05/SetStEph.rs:350:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| × |parts|), Span O(1)
+src/Chap05/SetStEph.rs:351:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| × |parts|), Span O(|a| × |parts|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel. Outer loop over |a|, inner partition_on_elt scans |parts| with O(1) hash lookups.
+src/Chap05/SetStEph.rs:369:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|self|), Span O(1)
+src/Chap05/SetStEph.rs:370:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — agrees on work. Iterates set, O(1) insert each.
+src/Chap05/SetStEph.rs:387:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetStEph.rs:388:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator, takes first.
+src/Chap05/SetStEph.rs:411:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — iterates vec, O(1) hash insert each.
+src/Chap05/SetStEph.rs:437:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, clones each element.
+src/Chap05/SetStEph.rs:456:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
+src/Chap05/SetStEph.rs:461:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — one allocation + one insert.
+src/Chap05/SetStEph.rs:472:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set len().
+src/Chap05/SetStEph.rs:480:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set contains().
+src/Chap05/SetStEph.rs:486:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set insert(), amortized.
+src/Chap05/SetStEph.rs:496:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — clone self + iterate s2, insert all.
+src/Chap05/SetStEph.rs:519:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — iterates both sets, insert all.
+src/Chap05/SetStEph.rs:572:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — iterates self, O(1) hash lookup in s2 each.
+src/Chap05/SetStEph.rs:601:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| x |b|), Span O(|a| x |b|) — iterates self, calls elt_cross_set (O(|b|)) + union for each.
+src/Chap05/SetStEph.rs:630:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s2|), Span O(|s2|) — iterates s2, creates one pair per element.
+src/Chap05/SetStEph.rs:663:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) size check each.
+src/Chap05/SetStEph.rs:705:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) membership check each.
+src/Chap05/SetStEph.rs:776:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| x |parts|), Span O(|a| x |parts|) — iterates self, calls partition_on_elt (O(|parts|)) each.
+src/Chap05/SetStEph.rs:831:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, O(1) insert each.
+src/Chap05/SetStEph.rs:874:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates iterator, takes first element.
+src/Chap05/MappingStEph.rs:185:        /// - Alg Analysis: APAS (Ch05 Def 5.6): definitional predicate, no cost specified.
+src/Chap05/MappingStEph.rs:186:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|^2), Span O(|v|^2). For each element calls is_functional_vec_at which is O(|v|).
+src/Chap05/MappingStEph.rs:191:        /// - Alg Analysis: APAS (Ch05 Def 5.6): definitional predicate, no cost specified.
+src/Chap05/MappingStEph.rs:192:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|). Scans vec for duplicate domain key at p.
+src/Chap05/MappingStEph.rs:197:        /// - Alg Analysis: APAS (Ch05 Def 5.6): definitional predicate, no cost specified.
+src/Chap05/MappingStEph.rs:198:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|). Iterates set, checks domain key at p.
+src/Chap05/MappingStEph.rs:203:        /// - Alg Analysis: APAS (Ch05 Def 5.6): definitional predicate, no cost specified.
+src/Chap05/MappingStEph.rs:204:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|²), Span O(|s|²). Iterates set and for each pair calls is_functional_SetStEph_at which is O(|s|).
+src/Chap05/MappingStEph.rs:209:        /// - Alg Analysis: APAS (Ch05 Def 5.6): definitional predicate, no cost specified.
+src/Chap05/MappingStEph.rs:210:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|²), Span O(|r|²). Delegates to is_functional_SetStEph which is O(|s|²).
+src/Chap05/MappingStEph.rs:215:        /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(1), Span O(1)
+src/Chap05/MappingStEph.rs:216:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap05/MappingStEph.rs:223:        /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|v|), Span O(1)
+src/Chap05/MappingStEph.rs:224:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+src/Chap05/MappingStEph.rs:232:        /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|r|), Span O(1)
+src/Chap05/MappingStEph.rs:233:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|), Span O(|r|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+src/Chap05/MappingStEph.rs:241:        /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(1), Span O(1)
+src/Chap05/MappingStEph.rs:242:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap05/MappingStEph.rs:247:        /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|m|), Span O(1)
+src/Chap05/MappingStEph.rs:248:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+src/Chap05/MappingStEph.rs:254:        /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|m|), Span O(1)
+src/Chap05/MappingStEph.rs:255:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — agrees on work. Iterates pairs, inserts each value.
+src/Chap05/MappingStEph.rs:262:        /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(1), Span O(1)
+src/Chap05/MappingStEph.rs:263:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set contains() on the pair.
+src/Chap05/MappingStEph.rs:272:        /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(1), Span O(1)
+src/Chap05/MappingStEph.rs:273:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator handle.
+src/Chap05/MappingStEph.rs:304:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — linear scan checking each element against p.
+src/Chap05/MappingStEph.rs:320:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|^2), Span O(|v|^2) — for each element calls is_functional_vec_at which is O(|v|).
+src/Chap05/MappingStEph.rs:351:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|) — iterates set, compares each element's key against p.
+src/Chap05/MappingStEph.rs:394:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|^2), Span O(|s|^2) — for each element calls is_functional_SetStEph_at which is O(|s|).
+src/Chap05/MappingStEph.rs:449:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|^2), Span O(|r|^2) — delegates to is_functional_SetStEph.
+src/Chap05/MappingStEph.rs:454:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
+src/Chap05/MappingStEph.rs:465:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — delegates to SetStEph::from_vec + RelationStEph::from_set.
+src/Chap05/MappingStEph.rs:487:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|), Span O(|r|) — clones the relation.
+src/Chap05/MappingStEph.rs:502:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to relation size().
+src/Chap05/MappingStEph.rs:523:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to relation relates().
+src/Chap05/MappingStEph.rs:533:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — delegates to relation domain().
+src/Chap05/MappingStEph.rs:536:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — delegates to relation range().
+src/Chap05/MappingStEph.rs:558:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates iterator handle.
+src/Chap05/SetMtEph.rs:232:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|v|), Span O(1)
+src/Chap05/SetMtEph.rs:233:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — sequential loop, not parallel. Span == Work.
+src/Chap05/SetMtEph.rs:238:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetMtEph.rs:239:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator handle.
+src/Chap05/SetMtEph.rs:250:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, clones each element.
+src/Chap05/SetMtEph.rs:257:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetMtEph.rs:258:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Allocates empty hash set.
+src/Chap05/SetMtEph.rs:263:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetMtEph.rs:264:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. One allocation + one insert.
+src/Chap05/SetMtEph.rs:269:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetMtEph.rs:270:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set len().
+src/Chap05/SetMtEph.rs:275:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetMtEph.rs:276:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set contains().
+src/Chap05/SetMtEph.rs:281:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetMtEph.rs:282:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set insert(), amortized.
+src/Chap05/SetMtEph.rs:290:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
+src/Chap05/SetMtEph.rs:291:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — sequential loop, not parallel. Span == Work.
+src/Chap05/SetMtEph.rs:299:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
+src/Chap05/SetMtEph.rs:300:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — sequential loop, not parallel. Span == Work.
+src/Chap05/SetMtEph.rs:311:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
+src/Chap05/SetMtEph.rs:312:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — iterates self only, O(1) hash lookup in s2 each. No parallelism.
+src/Chap05/SetMtEph.rs:319:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s2|), Span O(|s2|) — sequential loop, creates one pair per element.
+src/Chap05/SetMtEph.rs:329:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| × |b|), Span O(|b|)
+src/Chap05/SetMtEph.rs:330:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| × |b|), Span O(|a| × |b|) — spawns |a| parallel elt_cross_set tasks (each O(|b|)), but join phase is sequential disjoint_union over |a| results of size |b|. Sequential join dominates span.
+src/Chap05/SetMtEph.rs:341:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) size check each.
+src/Chap05/SetMtEph.rs:349:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) membership check each.
+src/Chap05/SetMtEph.rs:363:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| × |parts|), Span O(1)
+src/Chap05/SetMtEph.rs:364:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| × |parts|), Span O(|a| × |parts|) — sequential loop, not parallel. Span == Work.
+src/Chap05/SetMtEph.rs:382:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|self|), Span O(1)
+src/Chap05/SetMtEph.rs:383:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — sequential loop, not parallel. Span == Work.
+src/Chap05/SetMtEph.rs:399:        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetMtEph.rs:400:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator, takes first.
+src/Chap05/SetMtEph.rs:423:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — iterates vec, O(1) hash insert each.
+src/Chap05/SetMtEph.rs:449:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, clones each element.
+src/Chap05/SetMtEph.rs:468:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
+src/Chap05/SetMtEph.rs:473:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — one allocation + one insert.
+src/Chap05/SetMtEph.rs:484:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set len().
+src/Chap05/SetMtEph.rs:492:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set contains().
+src/Chap05/SetMtEph.rs:498:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set insert(), amortized.
+src/Chap05/SetMtEph.rs:508:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — clone self + iterate s2, insert all. No parallelism.
+src/Chap05/SetMtEph.rs:530:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — iterates both sets, insert all. No parallelism.
+src/Chap05/SetMtEph.rs:580:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — iterates self, O(1) hash lookup in s2 each. No parallelism.
+src/Chap05/SetMtEph.rs:608:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s2|), Span O(|s2|) — iterates s2, creates one pair per element.
+src/Chap05/SetMtEph.rs:638:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| x |b|), Span O(|a| x |b|) — spawns |a| parallel elt_cross_set tasks (each O(|b|)), but sequential disjoint_union join phase dominates span.
+src/Chap05/SetMtEph.rs:796:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) size check each.
+src/Chap05/SetMtEph.rs:838:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) membership check each.
+src/Chap05/SetMtEph.rs:909:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| x |parts|), Span O(|a| x |parts|) — iterates self, calls partition_on_elt (O(|parts|)) each. No parallelism.
+src/Chap05/SetMtEph.rs:964:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, O(1) insert each. No parallelism.
+src/Chap05/SetMtEph.rs:1007:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates iterator, takes first element.
+src/Chap05/SetMtEph.rs:1104:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates empty set under RwLock.
+src/Chap05/SetMtEph.rs:1109:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires read lock, delegates to size().
+src/Chap05/SetMtEph.rs:1113:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires read lock, delegates to mem().
+src/Chap05/SetMtEph.rs:1117:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires write lock, delegates to insert().
+src/Chap05/SetMtEph.rs:1123:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires read lock, delegates to choose().
+src/Chap05/SetMtEph.rs:1146:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates empty set under RwLock.
+src/Chap05/SetMtEph.rs:1156:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires read lock, delegates to size().
+src/Chap05/SetMtEph.rs:1167:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires read lock, delegates to mem().
+src/Chap05/SetMtEph.rs:1178:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires write lock, delegates to insert().
+src/Chap05/SetMtEph.rs:1190:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires read lock, delegates to choose().

@@ -50,7 +50,6 @@ pub mod JohnsonStEphI64 {
 
 
     broadcast use {
-        crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
         crate::Types::Types::group_Pair_axioms,
         crate::Types::Types::group_WeightedEdge_axioms,
     };

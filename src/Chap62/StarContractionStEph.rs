@@ -29,21 +29,26 @@ pub mod StarContractionStEph {
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
     use crate::Types::Types::*;
 
+    use std::collections::HashMap;
     use std::hash::Hash;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::hash_specs_plus::hash_specs_plus::key_view;
     use crate::Chap62::StarPartitionStEph::StarPartitionStEph::sequential_star_partition;
     #[cfg(verus_keep_ghost)]
     use crate::Chap62::StarPartitionStEph::StarPartitionStEph::spec_valid_partition_map;
     use crate::SetLit;
 
-    verus! 
+    verus!
 {
 
     //		Section 3. broadcast use
 
 
-    broadcast use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms;
+    broadcast use {
+        vstd::std_specs::hash::group_hash_axioms,
+        crate::vstdplus::hash_specs_plus::hash_specs_plus::group_key_view_lemmas,
+    };
 
     //		Section 4. type definitions
 
@@ -73,16 +78,16 @@ pub mod StarContractionStEph {
         where
             V: HashOrd,
             F: Fn(&SetStEph<V>) -> R,
-            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R
+            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R
         requires
             Self::spec_starcontractionsteph_wf(graph),
             valid_key_type_Edge::<V>(),
             forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
             forall|s: &SetStEph<V>, r: R| s.spec_setsteph_wf() && base.ensures((s,), r) ==> r_inv(r),
-            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|
+            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R|
                 v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf() && r_inv(r)
                 ==> #[trigger] expand.requires((v, e, c, p, r)),
-            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R, out: R|
+            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R, out: R|
                 #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
         ensures r_inv(contracted);
 
@@ -107,16 +112,16 @@ pub mod StarContractionStEph {
     where
         V: HashOrd,
         F: Fn(&SetStEph<V>) -> R,
-        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R,
+        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R,
     requires
         spec_graphview_wf(graph@),
         valid_key_type_Edge::<V>(),
         forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
         forall|s: &SetStEph<V>, r: R| s.spec_setsteph_wf() && base.ensures((s,), r) ==> r_inv(r),
-        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|
+        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R|
             v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf() && r_inv(r)
             ==> #[trigger] expand.requires((v, e, c, p, r)),
-        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R, out: R|
+        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R, out: R|
             #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
     ensures
         r_inv(contracted),
@@ -197,16 +202,16 @@ pub mod StarContractionStEph {
     where
         V: HashOrd,
         F: Fn(&SetStEph<V>) -> R,
-        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R,
+        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R,
     requires
         spec_graphview_wf(graph@),
         valid_key_type_Edge::<V>(),
         forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
         forall|s: &SetStEph<V>, r: R| s.spec_setsteph_wf() && base.ensures((s,), r) ==> r_inv(r),
-        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|
+        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R|
             v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf() && r_inv(r)
             ==> #[trigger] expand.requires((v, e, c, p, r)),
-        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R, out: R|
+        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R, out: R|
             #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
     ensures
         r_inv(contracted),
@@ -235,13 +240,13 @@ pub mod StarContractionStEph {
     fn build_quotient_graph<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         centers: &SetStEph<V>,
-        partition_map: &HashMapWithViewPlus<V, V>,
+        partition_map: &HashMap<V, V>,
     ) -> (quotient: UnDirGraphStEph<V>)
         requires
             valid_key_type_Edge::<V>(),
             spec_graphview_wf(graph@),
             centers.spec_setsteph_wf(),
-            spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@),
+            spec_valid_partition_map::<V>(graph@.V, centers@, key_view(partition_map@)),
         ensures
             spec_graphview_wf(quotient@),
     {
@@ -261,7 +266,7 @@ pub mod StarContractionStEph {
                     #[trigger] quotient_edges@.contains((u_v, w_v)) ==>
                         centers@.contains(u_v) && centers@.contains(w_v),
                 // Partition map properties flow from outer scope.
-                spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@),
+                spec_valid_partition_map::<V>(graph@.V, centers@, key_view(partition_map@)),
                 spec_graphview_wf(graph@),
             decreases n - i,
         {
@@ -348,7 +353,7 @@ pub mod StarContractionStEph {
         star_contract(
             graph,
             &|vertices: &SetStEph<V>| -> (r: SetStEph<V>) { vertices.clone() },
-            &|_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, result: SetStEph<V>| -> (r: SetStEph<V>) { result },
+            &|_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMap<V, V>, result: SetStEph<V>| -> (r: SetStEph<V>) { result },
             Ghost(|r: SetStEph<V>| true),
         )
     }

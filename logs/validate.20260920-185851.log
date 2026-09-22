@@ -1,0 +1,87 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error[E0433]: cannot find `hash_set_with_view_plus` in `vstdplus`
+  --> src/Chap05/SetMtEph.rs:62:26
+   |
+62 |     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^ could not find `hash_set_with_view_plus` in `vstdplus`
+
+error[E0433]: cannot find `hash_set_with_view_plus` in `vstdplus`
+  --> src/Chap05/SetMtEph.rs:63:26
+   |
+63 |     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^ could not find `hash_set_with_view_plus` in `vstdplus`
+
+error[E0433]: cannot find `hash_set_with_view_plus` in `vstdplus`
+  --> src/Chap05/SetMtEph.rs:64:26
+   |
+64 |     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusIter;
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^ could not find `hash_set_with_view_plus` in `vstdplus`
+
+error[E0433]: cannot find `hash_set_with_view_plus` in `vstdplus`
+  --> src/Chap05/SetStEph.rs:48:26
+   |
+48 |     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::*;
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^ could not find `hash_set_with_view_plus` in `vstdplus`
+
+error[E0433]: cannot find `hash_set_with_view_plus` in `vstdplus`
+  --> src/Chap05/SetStEph.rs:71:26
+   |
+71 |         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^ could not find `hash_set_with_view_plus` in `vstdplus`
+
+error[E0433]: cannot find `hash_set_with_view_plus` in `vstdplus`
+  --> src/Chap05/SetMtEph.rs:87:26
+   |
+87 |         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^ could not find `hash_set_with_view_plus` in `vstdplus`
+
+error[E0433]: cannot find `hash_set_with_view_plus` in `vstdplus`
+  --> src/Chap05/RelationStEph.rs:67:26
+   |
+67 |         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^ could not find `hash_set_with_view_plus` in `vstdplus`
+
+error[E0433]: cannot find `hash_set_with_view_plus` in `vstdplus`
+  --> src/Chap05/MappingStEph.rs:72:26
+   |
+72 |         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^ could not find `hash_set_with_view_plus` in `vstdplus`
+
+error[E0425]: cannot find type `HashSetWithViewPlus` in this scope
+  --> src/Chap05/SetStEph.rs:80:23
+   |
+80 |         pub elements: HashSetWithViewPlus<T>  // Public for open spec fn view()
+   |                       ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `HashSetWithViewPlusIter` in this scope
+   --> src/Chap05/SetStEph.rs:803:20
+    |
+803 |         pub inner: HashSetWithViewPlusIter<'a, T>,
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0433]: cannot find type `HashSetWithViewPlus` in this scope
+   --> src/Chap05/SetStEph.rs:380:31
+    |
+380 |          SetStEph { elements: HashSetWithViewPlus::new() } }
+    |                               ^^^^^^^^^^^^^^^^^^^ use of undeclared type `HashSetWithViewPlus`
+
+error[E0433]: cannot find type `HashSetWithViewPlus` in this scope
+   --> src/Chap05/SetStEph.rs:384:25
+    |
+384 |             let mut s = HashSetWithViewPlus::new();
+    |                         ^^^^^^^^^^^^^^^^^^^ use of undeclared type `HashSetWithViewPlus`
+
+error[E0433]: cannot find type `HashSetWithViewPlus` in this scope
+   --> src/Chap05/SetStEph.rs:429:27
+    |
+429 |                 elements: HashSetWithViewPlus::with_capacity(capacity) 
+    |                           ^^^^^^^^^^^^^^^^^^^ use of undeclared type `HashSetWithViewPlus`
+
+error: aborting due to 13 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 27921MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

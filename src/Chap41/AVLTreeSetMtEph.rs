@@ -56,7 +56,7 @@ pub mod AVLTreeSetMtEph {
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::seq::group_seq_axioms,
-    vstd::set::group_set_axioms,
+    vstd::set::group_set_lemmas,
     vstd::set_lib::group_set_lib_default,
 };
 
@@ -274,7 +274,6 @@ broadcast use {
                 let views = vals@.map_values(|t: T| t@);
                 // Veracity: NEEDED assert
                 assert(views =~= Seq::<T::V>::empty().push(views[0]));
-                vstd::seq_lib::seq_to_set_is_finite(views);
             }
             tree
         } else {
@@ -403,7 +402,6 @@ broadcast use {
                         assert(seq@[j] == out_seq[j]@);
                     }
                 };
-                vstd::seq_lib::seq_to_set_is_finite(seq@);
             }
             seq
         }

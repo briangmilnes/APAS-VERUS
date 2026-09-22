@@ -219,8 +219,7 @@ pub mod DocumentIndex {
                 proof {
                     let ghost old_gds = gds;
                     gds = gds.insert(doc_id@);
-                    vstd::set::axiom_set_insert_finite(old_gds, doc_id@);
-                    vstd::set::axiom_set_insert_len(old_gds, doc_id@);
+                    vstd::set::lemma_set_insert_len(old_gds, doc_id@);
                     // Veracity: NEEDED assert
                     assert forall|k: Seq<char>| #[trigger] table@.contains_key(k) implies {
                         let ds = table.spec_stored_value(k);
@@ -280,7 +279,7 @@ pub mod DocumentIndex {
                                 assert(existing@.len() <= usize::MAX as nat / 2);
                                 // singleton: {doc_id@}, len 1
 // Veracity: UNNEEDED assert                                 assert(singleton@ == Set::<<DocumentId as View>::V>::empty().insert(doc_id@));
-                                vstd::set::axiom_set_insert_len(
+                                vstd::set::lemma_set_insert_len(
                                     Set::<<DocumentId as View>::V>::empty(), doc_id@);
                                 // Veracity: NEEDED assert (speed hint)
                                 assert(singleton@.len() == 1);

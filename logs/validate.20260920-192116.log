@@ -1,0 +1,126 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: postcondition not satisfied
+   --> src/Chap05/SetStEph.rs:940:21
+    |
+940 |             ensures clone@ == self@
+    |                     ^^^^^^^^^^^^^^^ failed this postcondition
+941 |         { SetStEph { elements: self.elements.clone() } }
+    |           -------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+let clone = _VERUS_ret_ident;
+    clone.view() =~= old(self).view() 
+
+error: postcondition not satisfied
+    --> src/Chap05/SetMtEph.rs:1204:21
+     |
+1204 |             ensures clone@ == self@
+     |                     ^^^^^^^^^^^^^^^ failed this postcondition
+1205 |         { SetMtEph { elements: self.elements.clone() } }
+     |           -------------------------------------------- at the end of the function body
+
+note: 
+
+let clone = _VERUS_ret_ident;
+    clone.view() =~= old(self).view() 
+
+note: automatically chose triggers for this expression:
+   --> src/Chap05/SetStEph.rs:144:21
+    |
+144 |             let a = choose|a: T| s.contains(a) && x@ == a@;
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap05/SetStEph.rs:144:57
+    |
+144 |             let a = choose|a: T| s.contains(a) && x@ == a@;
+    |                                                         ^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap05/MappingStEph.rs:147:21
+    |
+147 |             let q = choose |q: (X::V, Y::V)| r.contains(q) && x == q.0;
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap05/MappingStEph.rs:147:46
+    |
+147 |             let q = choose |q: (X::V, Y::V)| r.contains(q) && x == q.0;
+    |                                              ^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap05/MappingStEph.rs:535:29
+    |
+535 |                     let p = choose |p: (X::V, Y::V)| m.contains(p) && y == p.1;
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap05/MappingStEph.rs:535:54
+    |
+535 |                     let p = choose |p: (X::V, Y::V)| m.contains(p) && y == p.1;
+    |                                                      ^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap05/MappingStEph.rs:541:29
+    |
+541 |                     let x = choose |x: X::V| self@.dom().contains(x) && y == self@[x];
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap05/MappingStEph.rs:541:78
+    |
+541 |                     let x = choose |x: X::V| self@.dom().contains(x) && y == self@[x];
+    |                                                                              ^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap05/MappingStEph.rs:163:21
+    |
+163 |             let k = choose |k: X::V| m@.dom().contains(k) && p == (k, m@[k]);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap05/MappingStEph.rs:163:38
+    |
+163 |             let k = choose |k: X::V| m@.dom().contains(k) && p == (k, m@[k]);
+    |                                      ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap05/SetMtEph.rs:156:21
+    |
+156 |             let a = choose|a: T| s.contains(a) && x@ == a@;
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap05/SetMtEph.rs:156:57
+    |
+156 |             let a = choose|a: T| s.contains(a) && x@ == a@;
+    |                                                         ^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap05/SetMtEph.rs:156:21
+    |
+156 |             let a = choose|a: T| s.contains(a) && x@ == a@;
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 747 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 700MB, peak z3 RSS: 38MB, min free: 27455MB
+Sampled CPU Usage: rust_verify: 2s, z3 children: 0s

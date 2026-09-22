@@ -35,8 +35,7 @@ pub mod SubsetSumMtPer {
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use std::collections::HashMap;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
@@ -130,23 +129,22 @@ pub mod SubsetSumMtPer {
     /// Create Arc-wrapped memo lock with empty map.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     fn new_arc_memo(
-        val: HashMapWithViewPlus<Pair<usize, i32>, bool>,
-    ) -> (memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>)
-        requires val@.dom().finite(),
+        val: HashMap<Pair<usize, i32>, bool>,
+    ) -> (memo: Arc<RwLock<HashMap<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>)
         ensures memo.pred() == SubsetSumMtPerMemoInv,
     {
-        new_arc_rwlock(val, Ghost(SubsetSumMtPerMemoInv))
+        Arc::new(RwLock::new(val, Ghost(SubsetSumMtPerMemoInv)))
     }
 
     /// Clone Arc memo (reference count increment).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     fn clone_arc_memo<T: MtVal>(
         s: &SubsetSumMtPerS<T>,
-    ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>)
+    ) -> (cloned: Arc<RwLock<HashMap<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>)
         requires s.memo.pred() == SubsetSumMtPerMemoInv,
         ensures cloned.pred() == s.memo.pred(),
     {
-        clone_arc_rwlock(&s.memo)
+        s.memo.clone()
     }
 
     /// Recursive memoized parallel subset sum solver.
@@ -154,7 +152,7 @@ pub mod SubsetSumMtPer {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k×|S|), Span O(|S|)
     fn subset_sum_rec<T: MtVal + Into<i32> + Copy>(
         multiset: &ArraySeqMtPerS<T>,
-        memo: &Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>,
+        memo: &Arc<RwLock<HashMap<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>,
         i: usize,
         j: i32,
     ) -> (found: bool)
@@ -188,9 +186,9 @@ pub mod SubsetSumMtPer {
                 subset_sum_rec(multiset, memo, i - 1, j)
             } else {
                 let multiset1 = multiset.clone();
-                let memo1 = clone_arc_rwlock(memo);
+                let memo1 = memo.clone();
                 let multiset2 = multiset.clone();
-                let memo2 = clone_arc_rwlock(memo);
+                let memo2 = memo.clone();
 
                 let f1 = move || -> (r: bool)
                     requires
@@ -229,7 +227,7 @@ pub mod SubsetSumMtPer {
     #[verifier::reject_recursive_types(T)]
     pub struct SubsetSumMtPerS<T: MtVal> {
         pub multiset: ArraySeqMtPerS<T>,
-        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>,
+        pub memo: Arc<RwLock<HashMap<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>,
     }
 
     //		Section 9b. impls
@@ -251,7 +249,7 @@ pub mod SubsetSumMtPer {
             proof { let _ = Pair_feq_trigger::<usize, i32>(); }
             Self {
                 multiset: ArraySeqMtPerS::new(0, T::default()),
-                memo: new_arc_memo(HashMapWithViewPlus::new()),
+                memo: new_arc_memo(HashMap::new()),
             }
         }
 
@@ -261,7 +259,7 @@ pub mod SubsetSumMtPer {
             proof { let _ = Pair_feq_trigger::<usize, i32>(); }
             Self {
                 multiset,
-                memo: new_arc_memo(HashMapWithViewPlus::new()),
+                memo: new_arc_memo(HashMap::new()),
             }
         }
 
@@ -299,9 +297,12 @@ pub mod SubsetSumMtPer {
     //		Section 11a. top level coarse locking
 
 
-    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, i32>, bool>> for SubsetSumMtPerMemoInv {
-        open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, i32>, bool>) -> bool {
-            v@.dom().finite()
+    impl RwLockPredicate<HashMap<Pair<usize, i32>, bool>> for SubsetSumMtPerMemoInv {
+        // The previous body, `v@.dom().finite()`, is identically true at vstd 0.2026.09.13
+        // (`Set` is finite by type); a real invariant needs the multiset length as a
+        // ghost field of this predicate (docs/HashMigration.md, Needs discussion).
+        open spec fn inv(self, v: HashMap<Pair<usize, i32>, bool>) -> bool {
+            true
         }
     }
 

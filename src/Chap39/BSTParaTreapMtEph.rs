@@ -59,7 +59,7 @@ pub mod BSTParaTreapMtEph {
     //		Section 3. broadcast use
 
 
-    broadcast use {vstd::set::group_set_axioms, vstd::set_lib::group_set_properties};
+    broadcast use {vstd::set::group_set_lemmas, vstd::set_lib::group_set_properties};
 
     //		Section 4a. type definitions
 

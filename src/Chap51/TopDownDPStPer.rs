@@ -5,7 +5,7 @@
 //! Top-Down Dynamic Programming - Persistent Single-Threaded Implementation.
 //!
 //! This module implements the top-down (memoization) approach to dynamic programming
-//! using HashMapWithViewPlus for efficient subproblem caching.
+//! using HashMap for efficient subproblem caching.
 
 //  Table of Contents
 //	Section 1. module
@@ -32,6 +32,7 @@ pub mod TopDownDPStPer {
     //		Section 12. derive impls in verus!
     //		Section 14. derive impls outside verus!
 
+    use std::collections::HashMap;
     use std::fmt::{Formatter, Debug, Display};
 
     use vstd::prelude::*;
@@ -40,7 +41,6 @@ pub mod TopDownDPStPer {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap51::SeqSpecsAndLemmas::SeqSpecsAndLemmas::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::accept::accept;
 
     verus! {
@@ -48,15 +48,16 @@ pub mod TopDownDPStPer {
 
     broadcast use {
         crate::Types::Types::group_Pair_axioms,
-        vstd::map::group_map_axioms,
+        vstd::map::group_map_lemmas,
         vstd::seq::group_seq_axioms,
+        vstd::std_specs::hash::group_hash_axioms,
     };
 
 
     pub struct TopDownDPStPerS {
         pub seq_s: ArraySeqStPerS<char>,
         pub seq_t: ArraySeqStPerS<char>,
-        pub memo_table: HashMapWithViewPlus<Pair<usize, usize>, usize>,
+        pub memo_table: HashMap<Pair<usize, usize>, usize>,
     }
 
 
@@ -65,9 +66,9 @@ pub mod TopDownDPStPer {
         spec fn spec_t(&self) -> Seq<char>;
         spec fn spec_s_len(&self) -> nat;
         spec fn spec_t_len(&self) -> nat;
-        spec fn spec_memo(&self) -> Map<(usize, usize), usize>;
+        spec fn spec_memo(&self) -> Map<Pair<usize, usize>, usize>;
         spec fn spec_med(&self, i: nat, j: nat) -> nat;
-        spec fn spec_memo_correct(&self, memo: Map<(usize, usize), usize>) -> bool;
+        spec fn spec_memo_correct(&self, memo: Map<Pair<usize, usize>, usize>) -> bool;
         spec fn spec_topdowndpstper_wf(&self) -> bool;
 
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
@@ -105,20 +106,20 @@ pub mod TopDownDPStPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — checks memo entry.
         fn is_memoized(&self, i: usize, j: usize) -> (memoized: bool)
             requires self.spec_topdowndpstper_wf(),
-            ensures memoized == self.spec_memo().contains_key((i, j));
+            ensures memoized == self.spec_memo().contains_key(Pair(i, j));
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash map lookup.
         fn get_memoized(&self, i: usize, j: usize) -> (val: Option<usize>)
             requires self.spec_topdowndpstper_wf(),
             ensures
                 match val {
-                    Some(v) => self.spec_memo().contains_key((i, j))
-                        && v == self.spec_memo()[(i, j)],
-                    None => !self.spec_memo().contains_key((i, j)),
+                    Some(v) => self.spec_memo().contains_key(Pair(i, j))
+                        && v == self.spec_memo()[Pair(i, j)],
+                    None => !self.spec_memo().contains_key(Pair(i, j)),
                 };
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct reconstruction with new memo.
-        fn with_memo_table(self, memo: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> (dp: Self)
+        fn with_memo_table(self, memo: HashMap<Pair<usize, usize>, usize>) -> (dp: Self)
             ensures
                 dp.spec_s() == self.spec_s(),
                 dp.spec_t() == self.spec_t();
@@ -142,7 +143,7 @@ pub mod TopDownDPStPer {
             &self,
             i: usize,
             j: usize,
-            memo: &mut HashMapWithViewPlus<Pair<usize, usize>, usize>,
+            memo: &mut HashMap<Pair<usize, usize>, usize>,
         ) -> (distance: usize)
             requires
                 i <= self.spec_s_len(),
@@ -162,15 +163,15 @@ pub mod TopDownDPStPer {
         open spec fn spec_s_len(&self) -> nat { self.seq_s.spec_len() }
         open spec fn spec_t_len(&self) -> nat { self.seq_t.spec_len() }
 
-        open spec fn spec_memo(&self) -> Map<(usize, usize), usize> { self.memo_table@ }
+        open spec fn spec_memo(&self) -> Map<Pair<usize, usize>, usize> { self.memo_table@ }
 
         open spec fn spec_med(&self, i: nat, j: nat) -> nat {
             spec_med_fn(self.seq_s@, self.seq_t@, i, j)
         }
 
-        open spec fn spec_memo_correct(&self, memo: Map<(usize, usize), usize>) -> bool {
-            forall|a: usize, b: usize| #[trigger] memo.contains_key((a, b)) ==>
-                memo[(a, b)] as nat == self.spec_med(a as nat, b as nat)
+        open spec fn spec_memo_correct(&self, memo: Map<Pair<usize, usize>, usize>) -> bool {
+            forall|a: usize, b: usize| #[trigger] memo.contains_key(Pair(a, b)) ==>
+                memo[Pair(a, b)] as nat == self.spec_med(a as nat, b as nat)
         }
         open spec fn spec_topdowndpstper_wf(&self) -> bool {
             self.spec_memo_correct(self.spec_memo())
@@ -190,7 +191,7 @@ pub mod TopDownDPStPer {
             TopDownDPStPerS {
                 seq_s: s,
                 seq_t: t,
-                memo_table: HashMapWithViewPlus::new(),
+                memo_table: HashMap::new(),
             }
         }
 
@@ -207,15 +208,21 @@ pub mod TopDownDPStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
-        fn memo_size(&self) -> (size: usize) { self.memo_table.len() }
+        fn memo_size(&self) -> (size: usize) {
+            // The vstd `len` axiom holds under the Pair key model.
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
+            self.memo_table.len()
+        }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — checks memo entry.
         fn is_memoized(&self, i: usize, j: usize) -> (memoized: bool) {
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             self.memo_table.contains_key(&Pair(i, j))
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash map lookup.
         fn get_memoized(&self, i: usize, j: usize) -> (val: Option<usize>) {
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             match self.memo_table.get(&Pair(i, j)) {
                 Some(v) => Some(*v),
                 None => None,
@@ -223,7 +230,7 @@ pub mod TopDownDPStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct reconstruction with new memo.
-        fn with_memo_table(self, memo: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> (dp: Self) {
+        fn with_memo_table(self, memo: HashMap<Pair<usize, usize>, usize>) -> (dp: Self) {
             TopDownDPStPerS { seq_s: self.seq_s, seq_t: self.seq_t, memo_table: memo }
         }
 
@@ -235,7 +242,7 @@ pub mod TopDownDPStPer {
             TopDownDPStPerS {
                 seq_s: self.seq_s,
                 seq_t: self.seq_t,
-                memo_table: HashMapWithViewPlus::new(),
+                memo_table: HashMap::new(),
             }
         }
 
@@ -247,7 +254,7 @@ pub mod TopDownDPStPer {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
-            let mut memo: HashMapWithViewPlus<Pair<usize, usize>, usize> = HashMapWithViewPlus::new();
+            let mut memo: HashMap<Pair<usize, usize>, usize> = HashMap::new();
             self.med_recursive(s_len, t_len, &mut memo)
         }
 
@@ -257,10 +264,12 @@ pub mod TopDownDPStPer {
             &self,
             i: usize,
             j: usize,
-            memo: &mut HashMapWithViewPlus<Pair<usize, usize>, usize>,
+            memo: &mut HashMap<Pair<usize, usize>, usize>,
         ) -> (distance: usize)
             decreases i + j,
         {
+            // The vstd `get`/`insert` postconditions hold under the Pair key model.
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             // Check memo cache.
             match memo.get(&Pair(i, j)) {
                 Some(v) => { return *v; }
@@ -301,12 +310,12 @@ pub mod TopDownDPStPer {
             proof {
                 // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
-                assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
+                assert forall|a: usize, b: usize| #[trigger] memo@.contains_key(Pair(a, b))
                 implies
-                    memo@[(a, b)] as nat == self.spec_med(a as nat, b as nat)
+                    memo@[Pair(a, b)] as nat == self.spec_med(a as nat, b as nat)
                 by {
                     if a == i && b == j {
-                    } else if pre_memo.contains_key((a, b)) {
+                    } else if pre_memo.contains_key(Pair(a, b)) {
                     }
                 };
             }
@@ -372,7 +381,7 @@ pub mod TopDownDPStPer {
             f.debug_struct("TopDownDPStPerS")
                 .field("seq_s", &self.seq_s)
                 .field("seq_t", &self.seq_t)
-                .field("memo_table", &self.memo_table.inner)
+                .field("memo_table", &self.memo_table)
                 .finish()
         }
     }

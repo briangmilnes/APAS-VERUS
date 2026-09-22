@@ -1,404 +1,180 @@
-// ─────────────────────────────────────────────────────────────────────────────
-//  APAS-VERUS Iterator Standard
-// ─────────────────────────────────────────────────────────────────────────────
+//  APAS-VERUS Iterator Standard (verus 0.2026.09.13 prophetic iterator model)
 //
 //  This file defines the standard iterator implementation pattern for
-//  APAS-VERUS data structures.
-//  The canonical implementation is ArraySeqStEph (Chap18).
+//  APAS-VERUS data structures as a component checklist. The verified
+//  reference implementations are the standards themselves:
+//      src/standards/iterators_standard.rs            delegated style, loop idioms
+//      src/standards/prophetic_iterators_standard.rs  delegated and custom styles
+//      src/standards/wrapping_iterators_standard.rs   re-expose and adaptor
+//  The prose reference is docs/PropheticIterators.md. The 09.13 measurements
+//  behind each rule are in docs/StandardsUpgrade.md.
 //
 //  Contents
-//  --------
-//   0. Rust's Three Standard For-Loop Patterns
-//   1. Required Components (11 items)
-//   2. Component Templates
-//   3. Proof-Time Test Templates (loop-loop, loop-loop-borrow, loop-loop-consume,
-//                                 for-iter, for-borrow, for-consume)
-//   4. Compliance Table
-//
-// ─────────────────────────────────────────────────────────────────────────────
+//   0. Rust's three standard for-loop patterns
+//   1. Required components, by style
+//   2. Constructor postconditions
+//   3. Loop invariants and the decreases rule
+//   4. Proof-time tests (six patterns)
+//   5. Compliance
 
 //  0. RUST'S THREE STANDARD FOR-LOOP PATTERNS
 //
 //  Rust's `for` loop desugars to `IntoIterator::into_iter()`.  The Rust
-//  standard library defines three conventional iteration patterns, which
-//  the community calls "the three iterators":
+//  standard library defines three conventional iteration patterns:
 //
 //   #  Pattern                    Trait / Method          Yields    Ownership
-//  ── ────────────────────────── ─────────────────────── ───────── ──────────
 //   1  for x in &collection      IntoIterator for &C     &T        borrows
 //   2  for x in &mut collection  IntoIterator for &mut C &mut T    mut borrows
 //   3  for x in collection       IntoIterator for C      T         consumes
 //
-//  These are sometimes called "iter", "iter_mut", and "into_iter" after
-//  the corresponding explicit method names:
-//
-//      for x in collection.iter()      // equivalent to for x in &collection
-//      for x in collection.iter_mut()  // equivalent to for x in &mut collection
-//      for x in collection.into_iter() // equivalent to for x in collection
-//
-//  See: The Rust Programming Language, Ch.13.2 "Processing a Series of
-//  Items with Iterators", and the IntoIterator trait documentation.
-//
 //  APAS-VERUS support:
 //
-//   Pattern 1 (borrow / iter):  Required.  This is the primary iteration
-//       pattern for APAS-VERUS collections.  Requires IntoIterator for &Self
-//       and iter() method, both with ensures.
+//   Pattern 1 (borrow / iter):  Required.  `iter()` and `IntoIterator for
+//       &Self`, both with the constructor postconditions of section 2.
 //
-//   Pattern 2 (mut borrow / iter_mut):  Not supported.  vstd does not yet
-//       spec IterMut / iter_mut.  Also not needed: APAS-VERUS collections
-//       use functional-style updates, not in-place mutation during iteration.
+//   Pattern 2 (mut borrow / iter_mut):  Not adopted.  vstd 0.2026.09.13
+//       specifies `std::slice::IterMut` (vstd/std_specs/slice.rs), so it is
+//       now specifiable; modules that carry an unspecified `iter_mut` keep it
+//       as-is until a standard covers mutable iteration.
 //
-//   Pattern 3 (consuming / into_iter):  Supported.  vstd fully specs
-//       Vec::IntoIter (View, next ensures, ForLoopGhostIterator).
-//       ArraySeqStEph provides IntoIterator for Self with ensures and
-//       has loop-loop-consume + for-consume proof-time tests.
-//       Note: the consuming pattern yields T (owned), not &T.
+//   Pattern 3 (consuming / into_iter):  Supported.  `IntoIterator for Self`
+//       returning `std::vec::IntoIter<T>` (or the custom type), with the
+//       same postconditions.  Yields owned `T`, not `&T`.
 
-//  1. REQUIRED COMPONENTS
+//  1. REQUIRED COMPONENTS, BY STYLE
 //
-//  For a collection `CollectionS<T>` with element type `T`, the following
-//  eleven components are required.  All items marked (V) must be inside the
-//  verus! { } block.
+//  Delegated (a Vec-backed collection; 68 of the 71 APAS iterators).  All
+//  inside verus!.  No iterator struct, no iterator View, no ghost iterator:
+//  vstd supplies `IteratorSpecImpl` for `std::slice::Iter` and
+//  `std::vec::IntoIter`.
 //
-//   #  Component                          Location   Purpose
-//  ── ──────────────────────────────────  ─────────  ─────────────────────────
-//   1  Custom iterator struct             (V)        Wraps underlying Rust iter
-//   2  View for iterator                  (V)        type V = (int, Seq<T>)
-//   3  iter_invariant spec fn             (V)        Bounds the position index
-//   4  Iterator::next with ensures        (V)        Core iteration contract
-//   5  Ghost iterator struct              (V)        Spec-level loop state
-//   6  ForLoopGhostIteratorNew impl       (V)        Creates ghost from exec
-//   7  ForLoopGhostIterator impl          (V)        Full ghost loop protocol
-//   8  View for ghost iterator            (V)        items-seen-so-far = take()
-//   9  iter() method with ensures         (V)        Entry point with specs
-//  10  IntoIterator for &Self             (V)        Enables for-borrow pattern
-//  11  Proof-time tests                   tests/     loop-loop + for-iter
+//   #  Component                                       Section
+//   1  fn iter(&self) -> std::slice::Iter<'_, T>        8 (trait) / 9 (impl)
+//   2  impl IntoIterator for &Self  (same type, same    10
+//      postconditions)
+//   3  impl IntoIterator for Self -> std::vec::IntoIter 10 (optional)
 //
-//  Items 1-10 go in the source file.  Item 11 goes in
-//      rust_verify_test/tests/<Chap>/Prove<Collection>.rs
+//  Custom (a collection with no slice underneath; the three lazy AVLTreeSeq
+//  iterators).  All inside verus!, in section 10 of the parent type.
+//
+//   #  Component
+//   1  The iterator struct, private fields, `#[verifier::type_invariant]`
+//   2  A closed spec fn `elts()` for the stable creation-time contents
+//   3  impl Iterator: `next` with no `ensures` (the spec is the trait impl)
+//   4  impl IteratorSpecImpl: the five spec fns
+//        obeys_prophetic_iter_laws   -> true for a verified iterator
+//        remaining (prophetic)       -> the items still to be returned
+//        will_return_none (prophetic)-> true for a terminating iterator
+//        decrease                    -> Some(non-prophetic metric)
+//        peek(index)                 -> Some(elts()[index]) in range
+//   5  A constructor: exec fn with `#[verifier::when_used_as_spec]` naming an
+//      open spec form, and the postconditions of section 2
+//   Optional: ExactSizeIteratorSpecImpl::exact_len,
+//             DoubleEndedIteratorSpecImpl::peek_back.
+//
+//  Wrapping (a collection that wraps another).  Re-expose the inner
+//  collection's iterator: `OuterS::iter()` returns the same std type
+//  `InnerS::iter()` returns, restating the postconditions over the outer
+//  view.  Only a module that must own its iterator type writes an adaptor
+//  `OuterIter { inner }` whose `remaining`, `will_return_none`, `decrease`
+//  and `peek` forward to the inner iterator's and whose
+//  `obeys_prophetic_iter_laws` is the inner value written out (`true` for a
+//  std iterator).
 
-//  2. COMPONENT TEMPLATES
+//  2. CONSTRUCTOR POSTCONDITIONS
 //
-//  Substitute "Collection" and "T" throughout.  The canonical reference
-//  implementation is src/Chap18/ArraySeqStEph.rs.
+//  Every `iter()`, `into_iter()` and custom constructor ensures three things
+//  (the guide's triple, examples/guide/iterators.rs):
 //
-//  ── 1. Custom Iterator Struct ──────────────────────────────────────────────
+//      IteratorSpec::remaining(&it) == self@.as_ref(),          // 1. prophetic seq
+//      vstd::std_specs::slice::into_iter_elts(it) == self@,     // 2. what peek reads
+//      IteratorSpec::decrease(&it) is Some,                     // 3. for termination
 //
-//  Wraps the inner Rust iterator.  Fields are private (not pub) so that
-//  users interact only through the View and Iterator trait.
+//  For a consuming iterator drop `.as_ref()` and use
+//  `vstd::std_specs::vec::into_iter_elts`.  For a custom type clause 2 is
+//  `IteratorSpec::remaining(&it) == it.elts()`.
 //
-//      #[verifier::reject_recursive_types(T)]
-//      pub struct CollectionIter<'a, T> {
-//          pub inner: std::slice::Iter<'a, T>,   // or hash_set::Iter, etc.
-//      }
-//
-//  ── 2. View for Iterator ───────────────────────────────────────────────────
-//
-//  The View is a pair: (position_index, full_sequence).
-//  - Position starts at 0 and advances to elements.len().
-//  - The sequence is the *full* iteration order, fixed at creation.
-//
-//      impl<'a, T> View for CollectionIter<'a, T> {
-//          type V = (int, Seq<T>);
-//          pub open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
-//      }
-//
-//  ── 3. iter_invariant ──────────────────────────────────────────────────────
-//
-//  A top-level spec fn bounding the position index.  Users include this
-//  in loop invariants.
-//
-//      pub open spec fn iter_invariant<'a, T>(it: &CollectionIter<'a, T>) -> bool {
-//          0 <= it@.0 <= it@.1.len()
-//      }
-//
-//  ── 4. Iterator::next with ensures ─────────────────────────────────────────
-//
-//  The ensures clause is the key verification contract.  It has two arms:
-//  None (exhausted) and Some (produced an element).
-//
-//      impl<'a, T> std::iter::Iterator for CollectionIter<'a, T> {
-//          type Item = &'a T;
-//
-//          fn next(&mut self) -> (next: Option<&'a T>)
-//              ensures ({
-//                  let (old_index, old_seq) = old(self)@;
-//                  match next {
-//                      None => {
-//                          &&& self@ == old(self)@
-//                          &&& old_index >= old_seq.len()
-//                      },
-//                      Some(element) => {
-//                          let (new_index, new_seq) = self@;
-//                          &&& 0 <= old_index < old_seq.len()
-//                          &&& new_seq == old_seq
-//                          &&& new_index == old_index + 1
-//                          &&& element == old_seq[old_index]
-//                      },
-//                  }
-//              })
-//          {
-//              self.inner.next()
-//          }
-//      }
-//
-//  ── 5. Ghost Iterator Struct ───────────────────────────────────────────────
-//
-//  Pure spec-level state used by the ForLoopGhostIterator protocol.
-//  Fields are pub so for-loop invariants can refer to them directly
-//  (e.g. `iter.pos`, `iter.elements`).
-//
-//      #[verifier::reject_recursive_types(T)]
-//      pub struct CollectionGhostIterator<'a, T> {
-//          pub pos: int,
-//          pub elements: Seq<T>,
-//          pub phantom: core::marker::PhantomData<&'a T>,
-//      }
-//
-//  ── 6. ForLoopGhostIteratorNew ─────────────────────────────────────────────
-//
-//  Creates ghost state from the exec iterator.
-//
-//      impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew
-//          for CollectionIter<'a, T>
-//      {
-//          type GhostIter = CollectionGhostIterator<'a, T>;
-//          open spec fn ghost_iter(&self) -> CollectionGhostIterator<'a, T> {
-//              CollectionGhostIterator {
-//                  pos: self@.0,
-//                  elements: self@.1,
-//                  phantom: core::marker::PhantomData,
-//              }
-//          }
-//      }
-//
-//  ── 7. ForLoopGhostIterator ────────────────────────────────────────────────
-//
-//  The full ghost-loop protocol.  Six spec functions:
-//
-//      impl<'a, T> vstd::pervasive::ForLoopGhostIterator
-//          for CollectionGhostIterator<'a, T>
-//      {
-//          type ExecIter = CollectionIter<'a, T>;
-//          type Item = T;
-//          type Decrease = int;
-//
-//          // Links ghost state to exec iterator.
-//          open spec fn exec_invariant(&self, exec_iter: &CollectionIter<'a, T>) -> bool {
-//              &&& self.pos == exec_iter@.0
-//              &&& self.elements == exec_iter@.1
-//          }
-//
-//          // Maintained across iterations; init is the state before the first iteration.
-//          open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-//              init matches Some(init) ==> {
-//                  &&& init.pos == 0
-//                  &&& init.elements == self.elements
-//                  &&& 0 <= self.pos <= self.elements.len()
-//              }
-//          }
-//
-//          // Holds after the loop exits normally.
-//          open spec fn ghost_ensures(&self) -> bool {
-//              self.pos == self.elements.len()
-//          }
-//
-//          // Termination measure.
-//          open spec fn ghost_decrease(&self) -> Option<int> {
-//              Some(self.elements.len() - self.pos)
-//          }
-//
-//          // What the next call to next() will yield (before the call).
-//          open spec fn ghost_peek_next(&self) -> Option<T> {
-//              if 0 <= self.pos < self.elements.len() {
-//                  Some(self.elements[self.pos])
-//              } else {
-//                  None
-//              }
-//          }
-//
-//          // Ghost state after processing one element.
-//          open spec fn ghost_advance(
-//              &self, _exec_iter: &CollectionIter<'a, T>,
-//          ) -> CollectionGhostIterator<'a, T> {
-//              Self { pos: self.pos + 1, ..*self }
-//          }
-//      }
-//
-//  ── 8. View for Ghost Iterator ─────────────────────────────────────────────
-//
-//  The ghost iterator's View is the *items seen so far*: the prefix of
-//  length `pos`.  This is what user code asserts against after the loop.
-//
-//      impl<'a, T> View for CollectionGhostIterator<'a, T> {
-//          type V = Seq<T>;
-//          open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-//      }
-//
-//  ── 9. iter() Method ───────────────────────────────────────────────────────
-//
-//  Entry point for iteration.  Ensures that:
-//  - Position starts at 0.
-//  - The sequence matches the collection's contents.
-//  - iter_invariant holds.
-//
-//      pub fn iter(&self) -> (it: CollectionIter<'_, T>)
-//          ensures
-//              it@.0 == 0,
-//              it@.1 == self.seq@,     // adapt to collection's data field
-//              iter_invariant(&it),
-//      {
-//          CollectionIter { inner: self.seq.iter() }
-//      }
-//
-//  For Set-like types the ensures additionally includes:
-//      it@.1.map(|i: int, k: T| k@).to_set() == self@,
-//      it@.1.no_duplicates(),
-//
-//  ── 10. IntoIterator for &Self ─────────────────────────────────────────────
-//
-//  Enables `for x in &collection`.  Must return the custom iterator with
-//  the same ensures as iter().
-//
-//      impl<'a, T> std::iter::IntoIterator for &'a CollectionS<T> {
-//          type Item = &'a T;
-//          type IntoIter = CollectionIter<'a, T>;
-//          fn into_iter(self) -> (it: Self::IntoIter)
-//              ensures
-//                  it@.0 == 0,
-//                  it@.1 == self.seq@,
-//                  iter_invariant(&it),
-//          {
-//              CollectionIter { inner: self.seq.iter() }
-//          }
-//      }
+//  Rule for trait methods: when the constructor is a trait method and returns
+//  a type whose `IteratorSpecImpl` and `next` are verified in this crate,
+//  clauses 1 and 3 name the inner std iterator (`&it.inner`), not the
+//  returned type; naming the returned type makes its `next` check fail on
+//  09.13.  Inherent methods and free functions may name the returned type.
 
-//  3. PROOF-TIME TEST TEMPLATES
+//  3. LOOP INVARIANTS AND THE DECREASES RULE
 //
-//  Every collection with an iterator must have both of these tests in
+//  A `for` loop names its wrapper and reasons through `it.index()` (items
+//  consumed), the prophetic `it.seq()` (the whole sequence) and
+//  `it.history()` (items consumed so far):
+//
+//      for x in it: coll.iter()
+//          invariant
+//              it.seq() == orig.as_ref(),
+//              collected.len() == it.index(),
+//              forall|i: int| 0 <= i < collected.len()
+//                  ==> #[trigger] collected@[i] == *it.seq()[i],
+//      {
+//          collected.push(*x);
+//      }
+//      assert(collected@ =~= orig);   // it.index() == it.seq().len() afterwards
+//
+//  A manual loop runs on the iterator's own `next()` (not on
+//  `VerusForLoopWrapper`, which vstd declares only under `verus_keep_ghost`
+//  and which does not compile under cargo), with a ghost consumed-count
+//  `pos` and the wrapper's wf_inner written out over `remaining()`:
+//
+//      let mut it = coll.iter();
+//      let ghost mut pos: int = 0;
+//      loop
+//          invariant
+//              IteratorSpec::obeys_prophetic_iter_laws(&it),
+//              IteratorSpec::decrease(&it) is Some,
+//              0 <= pos <= orig.len(),
+//              IteratorSpec::remaining(&it).len() == orig.len() - pos,
+//              forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+//                  ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
+//              collected.len() == pos,
+//              forall|i: int| 0 <= i < collected.len()
+//                  ==> #[trigger] collected@[i] == orig[i],
+//          decreases IteratorSpec::decrease(&it)->0,
+//      {
+//          let ghost old_pos = pos;
+//          match it.next() {
+//              Some(x) => {
+//                  proof { pos = pos + 1; assert(orig[old_pos] == *x); }
+//                  collected.push(*x);
+//              },
+//              None => { assert(pos == orig.len()); assert(collected@ =~= orig); break; },
+//          }
+//      }
+//
+//  The decreases rule: `remaining()` and `it.seq()` are prophetic and may not
+//  appear in `decreases`; measure the non-prophetic
+//  `IteratorSpec::decrease(&it)->0`. A manual loop draws its conclusion
+//  before `break`, because the prophetic equality does not survive the
+//  break.  `it` is not in scope after a `for` loop.
+
+//  4. PROOF-TIME TESTS (SIX PATTERNS)
+//
+//  Every collection with an iterator has these tests in
 //      rust_verify_test/tests/<Chap>/Prove<Collection>.rs
 //
-//  The tests verify that the ghost-level accumulation protocol works:
-//  after iterating the full collection, the ghost Seq equals the full
-//  iterator sequence.
+//   #  Pattern            Creates the iterator via                       Yields
+//   1  loop-borrow-iter   let mut it = a.iter(); loop { it.next() }      &T
+//   2  loop-borrow-into   let mut it = (&a).into_iter(); loop { .. }     &T
+//   3  for-borrow-iter    for x in it: a.iter()                          &T
+//   4  for-borrow-into    for x in it: (&a).into_iter()                  &T
+//   5  loop-consume       let mut it = a.into_iter(); loop { .. }        T
+//   6  for-consume        for x in it: a.into_iter()                     T
 //
-//  ── Test 1: loop-loop ──────────────────────────────────────────────────────
-//
-//  Manual iteration using `loop` + `if let`.  This is the fundamental
-//  pattern; it works with only Iterator::next ensures (no ghost iterator
-//  required).
-//
-//      test_verify_one_file! {
-//          #[test] collection_loop_loop verus_code! {
-//              use vstd::prelude::*;
-//              use apas_verus::<Chap>::<Collection>::<Collection>::*;
-//
-//              fn test_loop_loop() {
-//                  let a: CollectionS<u64> = /* construct */;
-//
-//                  let mut it: CollectionIter<u64> = a.iter();
-//                  let ghost iter_seq: Seq<u64> = it@.1;
-//                  let ghost mut items: Seq<u64> = Seq::empty();
-//
-//                  #[verifier::loop_isolation(false)]
-//                  loop
-//                      invariant
-//                          items =~= iter_seq.take(it@.0 as int),
-//                          iter_invariant(&it),
-//                          iter_seq == it@.1,
-//                          it@.0 <= iter_seq.len(),
-//                      decreases iter_seq.len() - it@.0,
-//                  {
-//                      if let Some(x) = it.next() {
-//                          proof { items = items.push(*x); }
-//                      } else {
-//                          break;
-//                      }
-//                  }
-//
-//                  assert(it@.0 == iter_seq.len());
-//                  assert(items =~= iter_seq);
-//              }
-//          } => Ok(())
-//      }
-//
-//  Key invariants:
-//    - items =~= iter_seq.take(it@.0)    ghost accumulates the prefix
-//    - iter_invariant(&it)               position stays in bounds
-//    - iter_seq == it@.1                 sequence doesn't change
-//    - it@.0 <= iter_seq.len()           needed for decreases
-//
-//  ── Test 2: for-iter ───────────────────────────────────────────────────────
-//
-//  Uses Verus's `for x in iter: it` syntax with the ForLoopGhostIterator
-//  protocol.  Cleaner than loop-loop; the ghost iterator fields (iter.pos,
-//  iter.elements) are available directly in invariants.
-//
-//      test_verify_one_file! {
-//          #[test] collection_for_iter verus_code! {
-//              use vstd::prelude::*;
-//              use apas_verus::<Chap>::<Collection>::<Collection>::*;
-//
-//              fn test_for_iter() {
-//                  let a: CollectionS<u64> = /* construct */;
-//
-//                  let it: CollectionIter<u64> = a.iter();
-//                  let ghost iter_seq: Seq<u64> = it@.1;
-//                  let ghost mut items: Seq<u64> = Seq::empty();
-//
-//                  for x in iter: it
-//                      invariant
-//                          iter.elements == iter_seq,
-//                          items =~= iter_seq.take(iter.pos),
-//                          iter.pos <= iter_seq.len(),
-//                  {
-//                      proof { items = items.push(*x); }
-//                  }
-//
-//                  assert(items =~= iter_seq);
-//              }
-//          } => Ok(())
-//      }
-//
-//  Key invariants:
-//    - iter.elements == iter_seq          sequence doesn't change
-//    - items =~= iter_seq.take(iter.pos)  ghost accumulates the prefix
-//    - iter.pos <= iter_seq.len()          position stays in bounds
-//
-//  After the loop, ghost_ensures gives iter.pos == iter.elements.len(),
-//  so items == iter_seq.take(len) == iter_seq.
-//
-//  ── Difference between the two tests ───────────────────────────────────────
-//
-//  | Aspect            | loop-loop                  | for-iter                  |
-//  |-------------------|----------------------------|---------------------------|
-//  | Syntax            | loop + if-let + break      | for x in iter: it         |
-//  | Ghost state       | Manual via it@             | Automatic via iter.*      |
-//  | Requires          | Iterator::next ensures     | + ForLoopGhostIterator    |
-//  | loop_isolation    | Needs #[...(false)]        | Not needed                |
-//  | Termination       | explicit decreases         | Automatic via Decrease    |
-//  | Postcondition     | assert after break         | Follows from ghost_ensures|
+//  Patterns 5 and 6 apply only to collections with `IntoIterator for Self`.
+//  The templates are in src/standards/iterator_ptt_standard.rs; the verified
+//  instances are rust_verify_test/tests/standards/Proveiterators_standard.rs
+//  and Proveprophetic_iterators_standard.rs (the latter adds `for-custom` and
+//  `loop-custom` over a custom iterator).
 
-//  4. COMPLIANCE TABLE
+//  5. COMPLIANCE
 //
-//  As of this writing.  ✅ = present and verified.  ⚠ = present but needs
-//  improvement.  ❌ = missing.
-//
-//  | Collection       | 1-8  | 9:iter | 10:Into | 11:tests          |
-//  |                  | Infra| ensures| ensures | loop  | for-iter  |
-//  |------------------|------|--------|---------|-------|-----------|
-//  | SetStEph         |  ✅  |   ✅   |   ❌    |  ✅   |    ✅     |
-//  | SetMtEph         |  ❌  |   ❌   |   ❌    |  ❌   |    ❌     |
-//  | RelationStEph    |  ✅  |   ✅   |   ❌    |  ✅   |    ✅     |
-//  | MappingStEph     |  ✅  |   ✅   |   ❌    |  ✅   |    ✅     |
-//  | ArraySeqStEph    |  ✅  |   ✅   |   ✅    |  ✅   |    ✅     |
-//  | ArraySeqStPer    |  ✅  |   ✅   |   ❌    |  ✅   |    ✅     |
-//  | ArraySeqMtEph    |  ✅  |   ✅   |   ❌    |  ✅   |    ✅     |
-//  | ArraySeqMtPer    |  ✅  |   ✅   |   ❌    |  ✅   |    ✅     |
-//  | ArraySeq         |  ✅  |   ✅   |   ❌    |  ✅   |    ✅     |
-//  | LinkedListStEph  |  ✅  |   ✅   |   ❌    |  ✅   |    ✅     |
-//  | LinkedListStPer  |  ✅  |   ✅   |   ❌    |  ✅   |    ✅     |
-//  | MathSeq          |  ❌  |   ❌   |   ❌    |  ❌   |    ❌     |
-//  | DirGraphStEph    |  ❌  |   ❌   |   ❌    |  ❌   |    ❌     |
-//  | UnDirGraphStEph  |  ❌  |   ❌   |   ❌    |  ❌   |    ❌     |
+//  The per-file inventory of all 71 APAS iterators, their style (delegated
+//  or custom) and their cost profile is the table in
+//  docs/PropheticIterators.md.  The migration of the chapter files to this
+//  model is planned in plans/verus-0.2026.05.21-iterator-migration.md.

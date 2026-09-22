@@ -34,8 +34,8 @@ pub mod AdjTableGraphSpecsAndLemmas {
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
-    vstd::map::group_map_axioms,
-    vstd::set::group_set_axioms,
+    vstd::map::group_map_lemmas,
+    vstd::set::group_set_lemmas,
     vstd::set_lib::group_set_lib_default,
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,

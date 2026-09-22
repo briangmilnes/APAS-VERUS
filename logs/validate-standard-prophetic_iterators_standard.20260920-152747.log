@@ -1,0 +1,51 @@
+Standard: prophetic_iterators_standard (deps: none)
+Harness root: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/harness-prophetic_iterators_standard/lib.rs
+Starting verification at 15:27:47
+error[E0782]: expected a type, found a trait
+   --> /home/milnes/projects/APAS-VERUS/src/standards/prophetic_iterators_standard.rs:127:13
+    |
+127 |             IteratorSpec::initial_value_relation(&it, &it),
+    |             ^^^^^^^^^^^^
+    |
+help: you can add the `dyn` keyword if you want a trait object
+    |
+127 |             <dyn IteratorSpec>::initial_value_relation(&it, &it),
+    |             ++++             +
+
+error[E0782]: expected a type, found a trait
+   --> /home/milnes/projects/APAS-VERUS/src/standards/prophetic_iterators_standard.rs:213:17
+    |
+213 |                 IteratorSpec::initial_value_relation(&it, &it),
+    |                 ^^^^^^^^^^^^
+    |
+help: you can add the `dyn` keyword if you want a trait object
+    |
+213 |                 <dyn IteratorSpec>::initial_value_relation(&it, &it),
+    |                 ++++             +
+
+error[E0782]: expected a type, found a trait
+   --> /home/milnes/projects/APAS-VERUS/src/standards/prophetic_iterators_standard.rs:264:17
+    |
+264 |                 IteratorSpec::initial_value_relation(&it, &it),
+    |                 ^^^^^^^^^^^^
+    |
+help: you can add the `dyn` keyword if you want a trait object
+    |
+264 |                 <dyn IteratorSpec>::initial_value_relation(&it, &it),
+    |                 ++++             +
+
+error[E0782]: expected a type, found a trait
+   --> /home/milnes/projects/APAS-VERUS/src/standards/prophetic_iterators_standard.rs:281:17
+    |
+281 |                 IteratorSpec::initial_value_relation(&it, &it),
+    |                 ^^^^^^^^^^^^
+    |
+help: you can add the `dyn` keyword if you want a trait object
+    |
+281 |                 <dyn IteratorSpec>::initial_value_relation(&it, &it),
+    |                 ++++             +
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0782`.
+Elapsed: 0s

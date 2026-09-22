@@ -8,11 +8,13 @@ table { width: 100% !important; table-layout: fixed; }
 # Prophetic Iterators in APAS-VERUS
 
 This document is the user-facing reference for iteration under the verus
-0.2026.05.21 prophetic iterator model (verus PR #2163, "New approach to
-specifying iterators via a prophetic sequence encoding"). It supersedes
-`docs/APAS-VERUSIterators.rs`, which described the pre-#2163
-`ForLoopGhostIterator` design that has been removed from the for-loop
-desugaring.
+0.2026.09.13 prophetic iterator model (introduced at 0.2026.05.21 by verus
+PR #2163, "New approach to specifying iterators via a prophetic sequence
+encoding"; `initial_value_relation` removed by PR #2739). The pre-#2163
+`ForLoopGhostIterator` design is gone from the for-loop desugaring;
+`docs/APAS-VERUSIterators.rs` restates the current model as a component
+checklist, and `docs/StandardsUpgrade.md` records the 09.13 measurements
+behind the rules below.
 
 The canonical, verified reference is the standard itself:
 
@@ -35,11 +37,40 @@ There are exactly two iterator styles, both defined in the standard:
   `IteratorSpecImpl` for all four, so the collection writes only an `ensures`
   pinning `IteratorSpec::remaining(&it)` to its contents.
 - **custom** — `iter()` returns a type that implements `IteratorSpecImpl` by
-  hand: six spec fns (`obeys_prophetic_iter_laws`, `remaining` [prophetic],
-  `will_return_none`, `decrease`, `initial_value_relation`, `peek`), a
+  hand: five spec fns (`obeys_prophetic_iter_laws`, `remaining` [prophetic],
+  `will_return_none` [prophetic], `decrease`, `peek`), a
   `#[verifier::type_invariant]`, a `closed` constructor behind an `open`
   `#[verifier::when_used_as_spec]` spec, and a plain `Iterator::next` whose
-  spec lives in the trait impl (no `ensures`).
+  spec lives in the trait impl (no `ensures`). Optional extensions:
+  `ExactSizeIteratorSpecImpl::exact_len` and
+  `DoubleEndedIteratorSpecImpl::peek_back`.
+
+A collection that wraps another collection (Mapping over Relation, the tables
+over ArraySeq) re-exposes the inner collection's iterator: same type, same
+postconditions restated over the outer view. Only a module that must own its
+iterator type writes an adaptor whose spec fns forward to the inner
+iterator's; see `src/standards/wrapping_iterators_standard.rs`.
+
+## Constructor postconditions
+
+Every `iter()`, `into_iter()` and custom constructor carries three
+postconditions, the guide's triple (`~/projects/verus/examples/guide/iterators.rs`):
+
+1. `IteratorSpec::remaining(&it) == <contents>` — the prophetic sequence, as
+   `self@.as_ref()` for a borrowing iterator and `self@` for a consuming one;
+2. the same sequence tied to the non-prophetic contents that `peek` reads —
+   `vstd::std_specs::slice::into_iter_elts(it) == self@` for `slice::Iter`,
+   `vstd::std_specs::vec::into_iter_elts(it) == self@` for `vec::IntoIter`,
+   `IteratorSpec::remaining(&it) == it.elts()` for a custom type;
+3. `IteratorSpec::decrease(&it) is Some` — lets a `for` loop prove
+   termination without an explicit `decreases`.
+
+When the constructor is a *trait method* and returns a type whose
+`IteratorSpecImpl` and `Iterator::next` are verified in this crate (an
+adaptor or a custom iterator), clauses 1 and 3 name the inner std iterator
+(`IteratorSpec::remaining(&it.inner)`), not the returned type; naming the
+returned type there makes its `next` fail verification on 09.13. An inherent
+method or a free function may name the returned type directly.
 
 "Chained", "flatten", "snapshot", "slice", and "hash" are descriptions of *how
 a collection obtains its sequence today*, not iterator styles. Of 71 collection
@@ -174,14 +205,70 @@ question, out of scope here.
 
 The PTT exercises seven loop forms — `for-borrow-iter`, `for-borrow-into`,
 `for-consume`, `loop-borrow`, `loop-consume`, `for-custom`, `loop-custom`.
-Reference invariants for each appear in `Proveprophetic_iterators_standard.rs`.
-Two recurring gotchas worth keeping in mind:
+Reference invariants for each appear in `Proveprophetic_iterators_standard.rs`;
+the six-pattern collection template is in `Proveiterators_standard.rs`.
 
-- A manual `loop` drives `decreases` with the non-prophetic
-  `IteratorSpec::decrease(&it.iter)->0` — the prophetic `it.seq()` cannot
-  appear in `decreases`, and the loop must draw its conclusion before `break`.
-- `it` is not in scope after a `for` loop. Post-loop facts come from the
-  iterator's `#[verifier::when_used_as_spec]` form, not from naming `it`.
+A `for` loop names its wrapper and reasons through `it.index()` (items
+consumed), the prophetic `it.seq()` (the whole sequence), and `it.history()`
+(items consumed so far):
+
+    for x in it: coll.iter()
+        invariant
+            it.seq() == orig.as_ref(),
+            collected.len() == it.index(),
+            forall|i: int| 0 <= i < collected.len()
+                ==> #[trigger] collected@[i] == *it.seq()[i],
+    { collected.push(*x); }
+    assert(collected@ =~= orig);   // it.index() == it.seq().len() after the loop
+
+A manual `loop` runs on the iterator's own `next()`, whose contract is the
+`IteratorSpec` one (vstd/std_specs/iter.rs:35), with a ghost counter `pos`
+of items consumed and the wrapper's `wf_inner` written out as two invariants
+over the prophetic `IteratorSpec::remaining(&it)` (r211,
+`src/experiments/prophetic_manual_loop_next.rs`, 10 verified, 0 errors):
+
+    let mut it = coll.iter();
+    let ghost mut pos: int = 0;
+    loop
+        invariant
+            IteratorSpec::obeys_prophetic_iter_laws(&it),
+            IteratorSpec::decrease(&it) is Some,
+            0 <= pos <= orig.len(),
+            IteratorSpec::remaining(&it).len() == orig.len() - pos,
+            forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
+            collected.len() == pos,
+            forall|i: int| 0 <= i < collected.len()
+                ==> #[trigger] collected@[i] == orig[i],
+        decreases IteratorSpec::decrease(&it)->0,
+    {
+        let ghost old_pos = pos;
+        match it.next() {
+            Some(x) => {
+                proof { pos = pos + 1; assert(orig[old_pos] == *x); }
+                collected.push(*x);
+            },
+            None => { assert(pos == orig.len()); assert(collected@ =~= orig); break; },
+        }
+    }
+
+It does not use `VerusForLoopWrapper`: vstd declares
+`#[cfg(verus_keep_ghost)] pub mod std_specs;` (vstd/vstd.rs:96), so a loop
+written on the wrapper does not compile under `cargo` (r208 wrote 119 such
+loops; r211 rewrote them, `docs/RunTimeTestsRestored.md`). The `verus!`
+macro desugars a `for` loop through the wrapper in both build modes, so
+`for` loops are unaffected. A `skip`-based single invariant
+(`remaining(&it).unref() == orig.skip(pos)`) does not verify without the
+seq `skip` lemmas (`src/experiments/prophetic_manual_loop_next_skip.rs`).
+
+The `decreases` rule: the prophetic `remaining()` (and a `for` loop's
+`it.seq()`) may not appear in `decreases`. A manual loop measures the
+iterator's non-prophetic `IteratorSpec::decrease(&it)->0`, and draws its
+conclusion before `break`, because the prophetic equality does not survive
+the break; a `return` inside the loop sees only the invariants, so a fact
+such as `orig == a.seq@` must be one of them. `it` is not in scope after a
+`for` loop; post-loop facts come from the iterator's
+`#[verifier::when_used_as_spec]` form, not from naming `it`.
 
 ## See also
 
@@ -189,11 +276,18 @@ Two recurring gotchas worth keeping in mind:
   upgrade fixes, the 178-error breakdown, the old → new API map, file
   inventory, the proposed round structure, and §10 which mirrors the tables
   above as part of the migration schedule.
-- **Standard (verified):** `src/standards/prophetic_iterators_standard.rs`.
-- **PTT:** `rust_verify_test/tests/standards/Proveprophetic_iterators_standard.rs`.
+- **Standards (verified):** `src/standards/prophetic_iterators_standard.rs`
+  (both styles), `src/standards/iterators_standard.rs` (delegated, with the
+  loop idioms), `src/standards/wrapping_iterators_standard.rs` (re-expose and
+  adaptor).
+- **PTTs:** `rust_verify_test/tests/standards/Proveprophetic_iterators_standard.rs`,
+  `Proveiterators_standard.rs`, `Provewrapping_iterators_standard.rs`.
+- **09.13 measurements:** `docs/StandardsUpgrade.md`.
 - **Experiments:** `src/experiments/prophetic_iter_slice_direct.rs`,
   `src/experiments/prophetic_iter_custom_struct.rs`,
-  `src/experiments/prophetic_iter_consume.rs`.
+  `src/experiments/prophetic_iter_consume.rs`,
+  `src/experiments/prophetic_manual_loop_next.rs` (the manual loop on
+  `next()`), `src/experiments/prophetic_manual_loop_next_skip.rs` (FAILS).
 - **Upstream verus reference:** `~/projects/verus/examples/guide/iterators.rs`
   (the canonical `VecIterator` example) and
   `~/projects/verus/source/vstd/std_specs/iter.rs` (the `IteratorSpec` /

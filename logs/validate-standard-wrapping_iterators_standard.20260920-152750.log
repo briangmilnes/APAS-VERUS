@@ -1,0 +1,13 @@
+Standard: wrapping_iterators_standard (deps: none)
+Harness root: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/harness-wrapping_iterators_standard/lib.rs
+Starting verification at 15:27:50
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+   --> /home/milnes/projects/APAS-VERUS/src/standards/wrapping_iterators_standard.rs:183:23
+    |
+183 |             self.inner@
+    |                       ^ method not found in `std::slice::Iter<'a, T>`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 0s

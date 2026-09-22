@@ -1,0 +1,36 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error: postcondition not satisfied
+    --> src/Chap05/SetMtEph.rs:1204:21
+     |
+1204 |             ensures clone@ == self@
+     |                     ^^^^^^^^^^^^^^^ failed this postcondition
+1205 |         { SetMtEph { elements: self.elements.clone() } }
+     |           -------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+let clone = _VERUS_ret_ident;
+    clone.view() =~= old(self).view() 
+
+error: postcondition not satisfied
+   --> src/Chap05/SetStEph.rs:940:21
+    |
+940 |             ensures clone@ == self@
+    |                     ^^^^^^^^^^^^^^^ failed this postcondition
+941 |         { SetStEph { elements: self.elements.clone() } }
+    |           -------------------------------------------- at the end of the function body
+
+note: 
+
+let clone = _VERUS_ret_ident;
+    clone.view() =~= old(self).view() 
+
+verification results:: 1024 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 1482MB, peak z3 RSS: 261MB, min free: 26379MB
+Sampled CPU Usage: rust_verify: 9s, z3 children: 5s

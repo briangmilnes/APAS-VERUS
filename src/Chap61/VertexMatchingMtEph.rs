@@ -29,9 +29,9 @@ pub mod VertexMatchingMtEph {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
 
+    use std::collections::HashMap;
     use std::hash::Hash;
     use std::sync::Arc;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::rand::rand::{seeded_rng, random_bool_seeded};
     use std::vec::Vec;
     use crate::{ParaPair, SetLit};
@@ -159,7 +159,7 @@ pub mod VertexMatchingMtEph {
             return SetLit![];
         }
 
-        let mut edge_coin_map = HashMapWithViewPlus::<Edge<V>, bool>::new();
+        let mut edge_coin_map = HashMap::<Edge<V>, bool>::new();
         for (e, c) in edges.iter().zip(coins.iter()) {
             edge_coin_map.insert(e.clone(), *c);
         }
@@ -182,7 +182,7 @@ pub mod VertexMatchingMtEph {
     fn select_edges_recursive<V: StT + MtT + Hash + 'static>(
         graph: Arc<UnDirGraphMtEph<V>>,
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
-        edge_coins: Arc<HashMapWithViewPlus<Edge<V>, bool>>,
+        edge_coins: Arc<HashMap<Edge<V>, bool>>,
         start: usize,
         end: usize,
     ) -> ArraySeqStEphS<Edge<V>> {
@@ -231,7 +231,7 @@ pub mod VertexMatchingMtEph {
     fn should_select_edge<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,
         edge: &Edge<V>,
-        edge_coins: &HashMapWithViewPlus<Edge<V>, bool>,
+        edge_coins: &HashMap<Edge<V>, bool>,
     ) -> (selected: bool)
         requires
             valid_key_type_Edge::<V>(),

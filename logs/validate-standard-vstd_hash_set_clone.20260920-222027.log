@@ -1,0 +1,24 @@
+File: src/experiments/vstd_hash_set_clone.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-vstd_hash_set_clone/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 22:20:27
+error: postcondition not satisfied
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/vstd_hash_set_clone.rs:28:13
+   |
+28 |             t@ == s@,
+   |             ^^^^^^^^ failed this postcondition
+29 |     {
+30 |         s.clone()
+   |         --------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+t.view() =~= old(s).view() 
+    datatype is opaque here
+
+verification results:: 0 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 0s

@@ -12,8 +12,8 @@ if [ "${VERUS_NO_LOCK:-0}" = "0" ]; then
 fi
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-VERUS=~/projects/verus/verus
-export VERUS_Z3_PATH=~/projects/verus/z3
+VERUS=~/projects/verus/source/target-verus/release/verus
+export VERUS_Z3_PATH=~/projects/verus/source/target-verus/release/z3
 RLIB_PATH="$PROJECT_ROOT/target/verus/libapas_verus.rlib"
 VIR_PATH="$PROJECT_ROOT/target/verus/apas_verus.vir"
 

@@ -1,97 +1,80 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 
-//! Finite Sets Standard: finiteness flows through wf, not assumes.
+//! Finite Sets Standard: finiteness is a property of the type, not of wf.
 //!
-//! Rule: if a data structure views as Set<A>, Seq<A>, or Map<K,V>, then
-//! self@.finite() (or self@.dom().finite() for maps) MUST be part of
-//! spec_X_wf. No exceptions. No alternatives. No "ensure it per-method."
+//! At verus 0.2026.09.13, `vstd::set::Set<A>` is finite by construction:
+//! `Set::finite()` is `open spec fn finite(self) -> bool { true }` and is
+//! `#[deprecated]` (vstd/set.rs:227). The possibly-infinite set type is
+//! `vstd::iset::ISet<A>`. Every APAS view that is a `Set<A>`, or a
+//! `Map<K, V>` whose `dom()` is a `Set<K>`, is therefore finite without
+//! saying so.
 //!
-//! Why: every APAS data structure is backed by a finite representation (Vec,
-//! Box-linked tree, HashMap). There is no infinite APAS collection. Finiteness
-//! is a structural invariant of the type, not a per-call property to be proved
-//! or assumed separately. It belongs in wf alongside other structural facts.
+//! Rules:
 //!
-//! What this buys you:
-//! - Every method that requires wf gets self@.finite() for free.
-//! - Every method that ensures wf gives callers finite() for free.
-//! - vstd broadcast lemmas fire automatically: insert, remove, union,
-//!   intersect, difference all preserve finiteness when the input is finite.
-//!   With finite() in wf, the broadcasts trigger without manual proof steps.
-//! - No redundant `ensures self@.finite()` on every method. The wf ensures
-//!   already carries it.
-//! - Mt wrappers get finiteness through the RwLockPredicate inv, which
-//!   requires the inner value's wf (which includes finite). No lock-boundary
-//!   assume needed for finiteness — it comes from the predicate.
+//! 1. Never write `.finite()` on a `Set` or on a `Map::dom()`. It is a
+//!    deprecation warning and carries no information; a wf conjunct
+//!    `self@.finite()` is `true` in disguise, which spec_wf_standard.rs
+//!    forbids. A Vec-only wrapper's wf is `true`; a set-viewing type's wf
+//!    states its real invariants only (no duplicates, ordering, key
+//!    validity). vstd removed `axiom_set_*_finite`, `lemma_set_subset_finite`,
+//!    `lemma_set_union_finite_iff` and `seq_to_set_is_finite`; a proof
+//!    statement that called one of them established a tautology and is
+//!    deleted, not replaced.
 //!
-//! Correct example (SetStEph):
-//!   open spec fn spec_setsteph_wf(&self) -> bool {
-//!       self@.finite() && valid_key_type::<V>()
-//!   }
+//! 2. `Set::new(f)` returns `Option<Set<A>>` (vstd/set.rs:133): a
+//!    comprehension over a bare predicate is a `Set` only if the predicate's
+//!    extension is finite, which vstd cannot decide from `f` alone. A spec fn
+//!    typed `Set<A>` cannot return `Set::new(f)`, and a `Set<A>` cannot be
+//!    compared to `Set::new(f)` with `==`.
 //!
-//! Correct example (Map-backed table):
-//!   open spec fn spec_tablesteph_wf(&self) -> bool {
-//!       self@.dom().finite() && ...
-//!   }
+//! 3. Preferred: comprehend inside a finite set with `filter`. `s.filter(f)`
+//!    is a `Set<A>` (no `Option`) whenever `s` is a `Set<A>`, and
+//!    `lemma_set_filter` (in `group_set_lemmas`) gives
+//!    `s.filter(f).contains(a) <==> s.contains(a) && f(a)`. Every APAS
+//!    comprehension `{x in A | p(x)}` names an enclosing finite set `A`, which
+//!    is the collection's own view, so write it as `self@.filter(p)`.
 //!
-//! ANTIPATTERN 1: finite() missing from wf, assumed in every body.
-//!
-//!   open spec fn spec_bad_wf(&self) -> bool { /* no finite */ }
-//!   fn size(&self) -> (count: usize)
-//!       requires self.spec_bad_wf(),
-//!   {
-//!       proof { assume(self@.finite()); }  // WRONG: 1 hole per method
-//!       ...
-//!   }
-//!   Twenty methods = twenty holes, all saying the same thing that should
-//!   have been said once in wf.
-//!
-//! ANTIPATTERN 2: finite() ensured per-method but not in wf.
-//!
-//!   fn insert(&mut self, x: T)
-//!       requires old(self).spec_X_wf(),
-//!       ensures self@.finite(), self.spec_X_wf();
-//!
-//!   This works but is verbose and fragile. If one method forgets the
-//!   `ensures self@.finite()`, downstream breaks. Put it in wf once.
-//!
-//! ANTIPATTERN 3: Seq-viewing types that skip finite().
-//!
-//!   A Seq<T> produced from a Vec is always finite. But Verus does not
-//!   know Vec::view().len() < infinity unless you tell it. If your type
-//!   views as Seq<T> and you call .to_set() or .len(), you need
-//!   self@.len() < usize::MAX or equivalent in wf. For Seq views, the
-//!   natural analog is that the sequence length is bounded — which Vec
-//!   guarantees but the spec type does not.
-//!
-//! vstd finiteness broadcast lemmas (fire automatically when input is finite):
-//!   - axiom_set_empty_finite:      Set::empty().finite()
-//!   - axiom_set_insert_finite:     s.finite() ==> s.insert(a).finite()
-//!   - axiom_set_remove_finite:     s.finite() ==> s.remove(a).finite()
-//!   - axiom_set_union_finite:      s1.finite() && s2.finite() ==> s1.union(s2).finite()
-//!   - axiom_set_intersect_finite:  s1.finite() ==> s1.intersect(s2).finite()
-//!   - axiom_set_difference_finite: s1.finite() ==> s1.difference(s2).finite()
-//!   - lemma_set_subset_finite:     s.finite() && sub.subset_of(s) ==> sub.finite()
-//!
-//! Once wf gives you self@.finite(), these fire for free. This is the payoff.
+//! 4. When the predicate is not written over an enclosing set, take the
+//!    `lemma_set_new_some` route: (a) show `ISet::new(f).finite()`, for
+//!    instance with `lemma_iset_finite_if_subset_of_seq` (vstd/iset.rs) or
+//!    with `lemma_iset_subset_finite` (vstd/iset_lib.rs) against
+//!    `s.to_iset()`, which `lemma_to_iset_finite` makes finite; (b)
+//!    `lemma_set_new_some(f)` then gives `Set::new(f) is Some`; (c)
+//!    `lemma_set_new(f, a)` gives `Set::new(f).unwrap().contains(a) == f(a)`.
+//!    Steps (b) and (c) are broadcast members of `group_set_lemmas`. Bind
+//!    the predicate to a named spec fn so that the spec and the proof name
+//!    one closure term, as `spec_lt` does below.
 //!
 //! References:
-//! - src/Chap05/SetStEph.rs (correct: finite in wf).
-//! - src/standards/spec_wf_standard.rs (wf contract: requires wf, ensures wf).
-//! - vstd/set.rs (axiom_set_*_finite broadcast lemmas).
-//! - vstd/set_lib.rs (lemma_set_subset_finite, lemma_set_union_finite_iff).
+//! - vstd/set.rs (Set::new, Set::filter, lemma_set_filter, lemma_set_new,
+//!   lemma_set_new_some, lemma_to_iset_finite).
+//! - vstd/iset.rs (ISet::finite, lemma_iset_new,
+//!   lemma_iset_finite_if_subset_of_seq).
+//! - vstd/iset_lib.rs (lemma_iset_subset_finite).
+//! - src/standards/spec_wf_standard.rs (wf carries real invariants only).
 
 pub mod finite_sets_standard {
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::iset::lemma_iset_finite_if_subset_of_seq;
 
     verus! {
 
-    // CORRECT: finite() in wf.
+    // 3. broadcast use
+    broadcast use {
+        vstd::set::group_set_lemmas,
+        vstd::iset::group_iset_lemmas,
+    };
+
+    // 4. type definitions
 
     pub struct FiniteCollection {
         pub elements: Vec<u64>,
     }
+
+    // 5. view impls
 
     impl View for FiniteCollection {
         type V = Set<u64>;
@@ -99,6 +82,51 @@ pub mod finite_sets_standard {
             self.elements@.to_set()
         }
     }
+
+    // 6. spec fns
+
+    /// Rule 3: a comprehension over an enclosing finite set is a `Set`.
+    pub open spec fn spec_evens(s: Set<u64>) -> Set<u64> {
+        s.filter(|x: u64| x % 2 == 0)
+    }
+
+    /// Rule 4: the predicate as one named closure term, shared by the spec
+    /// and its proof.
+    pub open spec fn spec_lt(bound: u64) -> spec_fn(u64) -> bool {
+        |x: u64| x < bound
+    }
+
+    /// Rule 4: a comprehension over a bare predicate is an `Option<Set>`.
+    pub open spec fn spec_below(bound: u64) -> Option<Set<u64>> {
+        Set::new(spec_lt(bound))
+    }
+
+    // 7. proof fns
+
+    /// Rule 3 needs no proof steps: `lemma_set_filter` fires by broadcast.
+    pub proof fn lemma_evens_contains(s: Set<u64>, x: u64)
+        ensures
+            spec_evens(s).contains(x) <==> s.contains(x) && x % 2 == 0,
+    {
+    }
+
+    /// Rule 4: `spec_lt(bound)`'s extension is a subset of the finite sequence
+    /// `0, 1, ..., bound - 1`, so `ISet::new(spec_lt(bound))` is finite,
+    /// `Set::new` is `Some`, and membership follows from `lemma_set_new`.
+    pub proof fn lemma_below_is_some(bound: u64)
+        ensures
+            spec_below(bound) is Some,
+            forall|x: u64| #[trigger] spec_below(bound).unwrap().contains(x) <==> x < bound,
+    {
+        let witnesses = Seq::new(bound as nat, |i: int| i as u64);
+        assert forall|x: u64| #[trigger] ISet::new(spec_lt(bound)).contains(x)
+            implies witnesses.contains(x) by {
+            assert(witnesses[x as int] == x);
+        }
+        lemma_iset_finite_if_subset_of_seq(ISet::new(spec_lt(bound)), witnesses);
+    }
+
+    // 8. traits
 
     pub trait FiniteCollectionTrait: Sized + View<V = Set<u64>> {
         spec fn spec_finitecollection_wf(&self) -> bool;
@@ -108,60 +136,106 @@ pub mod finite_sets_standard {
 
         fn insert(&mut self, x: u64)
             requires old(self).spec_finitecollection_wf(),
-            ensures self.spec_finitecollection_wf();
+            ensures self.spec_finitecollection_wf(), self@ == old(self)@.insert(x);
+
+        fn contains(&self, x: u64) -> (found: bool)
+            requires self.spec_finitecollection_wf(),
+            ensures found == self@.contains(x);
 
         fn len(&self) -> (count: usize)
-            requires self.spec_finitecollection_wf();
-        // No `ensures self@.finite()` needed — callers get it from wf.
+            requires self.spec_finitecollection_wf(),
+            ensures count == self@.len();
     }
 
+    // 9. impls
+
     impl FiniteCollectionTrait for FiniteCollection {
-        // finite() is part of wf. Said once, flows everywhere.
+        // Rule 1: no `finite()` conjunct. The real invariant of a Vec-backed
+        // set is that the Vec holds no duplicates, so `len()` is the set's.
         open spec fn spec_finitecollection_wf(&self) -> bool {
-            self@.finite()
+            self.elements@.no_duplicates()
         }
 
         fn new() -> (s: Self) {
             let s = FiniteCollection { elements: Vec::new() };
-            assert(s@.finite());
+            proof {
+                s.elements@.to_set_ensures();
+                assert(s@ =~= Set::<u64>::empty());
+            }
             s
         }
 
         fn insert(&mut self, x: u64) {
-            self.elements.push(x);
-            // seq_to_set_is_finite broadcast fires: elements@.to_set().finite().
-            // That is self@.finite(), which is wf. No assume needed.
+            if !self.contains(x) {
+                proof {
+                    self.elements@.to_set_ensures();
+                    self.elements@.lemma_push_to_set_commute(x);
+                }
+                self.elements.push(x);
+                proof {
+                    assert forall|i: int, j: int|
+                        0 <= i < self.elements@.len() && 0 <= j < self.elements@.len() && i != j
+                        implies #[trigger] self.elements@[i] != #[trigger] self.elements@[j] by {
+                        if i == old(self).elements@.len() || j == old(self).elements@.len() {
+                            assert(!old(self).elements@.contains(x));
+                        }
+                    }
+                }
+            } else {
+                proof {
+                    assert(self@ =~= old(self)@.insert(x));
+                }
+            }
+        }
+
+        // A linear scan; its postcondition crosses from the Vec's sequence to
+        // the set view through `Seq::to_set_ensures`.
+        fn contains(&self, x: u64) -> (found: bool) {
+            proof {
+                self.elements@.to_set_ensures();
+            }
+            let mut i: usize = 0;
+            while i < self.elements.len()
+                invariant
+                    i <= self.elements@.len(),
+                    forall|j: int| 0 <= j < i ==> #[trigger] self.elements@[j] != x,
+                decreases self.elements@.len() - i,
+            {
+                if self.elements[i] == x {
+                    return true;
+                }
+                i = i + 1;
+            }
+            false
         }
 
         fn len(&self) -> (count: usize) {
-            // wf gives us self@.finite() for free.
+            proof {
+                self.elements@.unique_seq_to_set();
+            }
             self.elements.len()
         }
     }
 
-    // ANTIPATTERN: assume(self@.finite()) scattered across method bodies.
+    // ANTIPATTERN: `finite()` anywhere.
     //
-    // struct BadCollection { elements: Vec<u64> }
     // open spec fn spec_badcollection_wf(&self) -> bool {
-    //     true  // no finite!
+    //     self@.finite()          // deprecated; always true; a `requires true`
     // }
     // fn size(&self) -> (count: usize)
     //     requires self.spec_badcollection_wf(),
     // {
-    //     proof { assume(self@.finite()); }  // hole
-    //     ...
-    // }
-    // fn insert(&mut self, x: u64) {
-    //     proof { assume(self@.finite()); }  // another hole, same fact
-    //     ...
-    // }
-    // fn union(&self, other: &Self) -> (combined: Self) {
-    //     proof { assume(self@.finite()); }  // yet another
-    //     proof { assume(other@.finite()); } // and another
+    //     proof { assert(self@.finite()); }  // a tautology, and a warning
     //     ...
     // }
     //
-    // Four holes for one structural fact. Put it in wf, get zero holes.
+    // ANTIPATTERN: unwrapping a comprehension over a bare predicate.
+    //
+    // open spec fn spec_neighbors(&self, v: u64) -> Set<u64> {
+    //     Set::new(|w: u64| self.spec_has_arc(v, w)).unwrap()   // Some? unproved
+    // }
+    // Write it over the enclosing finite set instead:
+    //     self.spec_vertices().filter(|w: u64| self.spec_has_arc(v, w))
 
     } // verus!
 

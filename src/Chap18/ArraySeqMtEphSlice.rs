@@ -58,7 +58,7 @@ pub mod ArraySeqMtEphSlice {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
         vstd::seq_lib::group_seq_properties,
-        vstd::std_specs::slice::group_slice_axioms,
+        vstd::slice::group_slice_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
         vstd::seq_lib::group_to_multiset_ensures,
     };

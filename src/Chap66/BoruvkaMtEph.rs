@@ -29,33 +29,32 @@ pub mod BoruvkaMtEph {
     //		Section 2. imports
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     use crate::vstdplus::float::float::{WrappedF64, zero_dist};
     use crate::Chap05::SetStEph::SetStEph::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap05::SetStEph::SetStEph::iter_invariant;
     use crate::Types::Types::*;
 
+    use std::collections::HashMap;
     use std::hash::Hash;
     use std::sync::Arc;
     #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::hash::obeys_key_model;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_view_injective;
+    use vstd::std_specs::hash::{obeys_key_model, into_iter_hash_keys};
     use crate::{ParaPair, SetLit};
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
     use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! 
+    verus!
 {
 
     //		Section 3. broadcast use
 
 
     broadcast use {
-        vstd::set::group_set_axioms,
+        vstd::set::group_set_lemmas,
+        vstd::std_specs::hash::group_hash_axioms,
         crate::vstdplus::float::float::group_float_finite_total_order,
     };
 
@@ -83,27 +82,25 @@ pub mod BoruvkaMtEph {
             edges: Arc<Vec<LabeledEdge<V>>>,
             start: usize,
             end: usize,
-        ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
+        ) -> (bridges: HashMap<V, (V, WrappedF64, usize)>)
             requires
                 start <= end, end <= edges@.len(),
                 spec_all_weights_finite_seq(edges@),
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
             ensures
-                forall|k: V::V| #[trigger] bridges@.contains_key(k) ==> bridges@[k].1.spec_is_finite();
+                forall|k: V| #[trigger] bridges@.contains_key(k) ==> bridges@[k].1.spec_is_finite();
 
         /// Parallel bridge-based star partition.
         /// APAS: Work O(|V| + |E|), Span O(lg |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(lg |V|) — parallel coin flips + partition map; Mt parallel.
         fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             vertices_vec: Vec<V>,
-            bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
+            bridges: HashMap<V, (V, WrappedF64, usize)>,
             seed: u64,
             round: usize,
-        ) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>))
+        ) -> (partition: (SetStEph<V>, HashMap<V, (V, WrappedF64, usize)>))
             requires
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
                 SetStEph::<V>::spec_valid_key_type(),
             ensures partition.0.spec_setsteph_wf();
 
@@ -120,7 +117,6 @@ pub mod BoruvkaMtEph {
         ) -> (mst: SetStEph<usize>)
             requires
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
                 mst_labels.spec_setsteph_wf(),
                 spec_all_weights_finite_seq(edges_vec@),
                 SetStEph::<V>::spec_valid_key_type(),
@@ -140,7 +136,6 @@ pub mod BoruvkaMtEph {
                 vertices.spec_setsteph_wf(),
                 edges.spec_setsteph_wf(),
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
                 SetStEph::<V>::spec_valid_key_type(),
                 SetStEph::<usize>::spec_valid_key_type(),
             ensures mst.spec_setsteph_wf();
@@ -214,22 +209,21 @@ pub mod BoruvkaMtEph {
         round: usize,
         start: usize,
         end: usize,
-    ) -> (flips: HashMapWithViewPlus<V, bool>)
+    ) -> (flips: HashMap<V, bool>)
         requires
             start <= end, end <= vertices@.len(),
             obeys_key_model::<V>(),
-            obeys_feq_view_injective::<V>(),
         ensures
             start == end ==> flips@.len() == 0,
         decreases end - start,
     {
         let size = end - start;
         if size == 0 {
-            return HashMapWithViewPlus::new();
+            return HashMap::new();
         }
         if size == 1 {
             let verts = arc_deref(&vertices);
-            let mut coins = HashMapWithViewPlus::new();
+            let mut coins = HashMap::new();
             coins.insert(verts[start].clone(), hash_coin(seed, round, start));
             return coins;
         }
@@ -238,40 +232,31 @@ pub mod BoruvkaMtEph {
         let v1 = vertices.clone();
         let v2 = vertices;
 
-        let f1 = move || -> (r: HashMapWithViewPlus<V, bool>)
+        let f1 = move || -> (r: HashMap<V, bool>)
             requires
                 start <= mid, mid <= v1@.len(),
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
         {
             hash_coin_flips_mt(v1, seed, round, start, mid)
         };
 
-        let f2 = move || -> (r: HashMapWithViewPlus<V, bool>)
+        let f2 = move || -> (r: HashMap<V, bool>)
             requires
                 mid <= end, end <= v2@.len(),
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
         {
             hash_coin_flips_mt(v2, seed, round, mid, end)
         };
 
         let Pair(mut merged, right) = crate::ParaPair!(f1, f2);
 
-        // Merge right into merged using Verus-compatible iterator.
-        let mut it = right.iter();
-        let ghost it_seq = it@.1;
-        loop
+        // Merge right into merged.
+        for kv in it: right.iter()
             invariant
-                it@.0 <= it@.1.len(),
-                it_seq == it@.1,
-            decreases it_seq.len() - it@.0,
+                obeys_key_model::<V>(),
         {
-            if let Some((k, v)) = it.next() {
-                merged.insert(k.clone(), *v);
-            } else {
-                break;
-            }
+            let (k, v) = kv;
+            merged.insert(k.clone(), *v);
         }
         merged
     }
@@ -282,7 +267,7 @@ pub mod BoruvkaMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join filtering vertices; Mt parallel.
     fn compute_remaining_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: Arc<Vec<V>>,
-        partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
+        partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,
         start: usize,
         end: usize,
     ) -> (remaining: Vec<V>)
@@ -350,7 +335,7 @@ pub mod BoruvkaMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join extracting labels; Mt parallel.
     fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         keys: Arc<Vec<V>>,
-        partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
+        partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,
         start: usize,
         end: usize,
     ) -> (labels: Vec<usize>)
@@ -418,26 +403,25 @@ pub mod BoruvkaMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join building partition map; Mt parallel.
     fn build_partition_map_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: Arc<Vec<V>>,
-        partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
+        partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,
         start: usize,
         end: usize,
-    ) -> (part_map: HashMapWithViewPlus<V, V>)
+    ) -> (part_map: HashMap<V, V>)
         requires
             start <= end, end <= vertices@.len(),
             obeys_key_model::<V>(),
-            obeys_feq_view_injective::<V>(),
         ensures
             start == end ==> part_map@.len() == 0,
         decreases end - start,
     {
         let size = end - start;
         if size == 0 {
-            return HashMapWithViewPlus::new();
+            return HashMap::new();
         }
         if size == 1 {
             let verts = arc_deref(&vertices);
             let v = &verts[start];
-            let mut heads: HashMapWithViewPlus<V, V> = HashMapWithViewPlus::new();
+            let mut heads: HashMap<V, V> = HashMap::new();
             if let Some((head, _, _)) = partition.get(v) {
                 heads.insert(v.clone(), head.clone());
             } else {
@@ -452,20 +436,18 @@ pub mod BoruvkaMtEph {
         let v2 = vertices;
         let p2 = partition;
 
-        let f1 = move || -> (r: HashMapWithViewPlus<V, V>)
+        let f1 = move || -> (r: HashMap<V, V>)
             requires
                 start <= mid, mid <= v1@.len(),
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
         {
             build_partition_map_mt(v1, p1, start, mid)
         };
 
-        let f2 = move || -> (r: HashMapWithViewPlus<V, V>)
+        let f2 = move || -> (r: HashMap<V, V>)
             requires
                 mid <= end, end <= v2@.len(),
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
         {
             build_partition_map_mt(v2, p2, mid, end)
         };
@@ -473,19 +455,12 @@ pub mod BoruvkaMtEph {
         let Pair(mut merged, right) = crate::ParaPair!(f1, f2);
 
         // Merge right into merged.
-        let mut it = right.iter();
-        let ghost it_seq = it@.1;
-        loop
+        for kv in it: right.iter()
             invariant
-                it@.0 <= it@.1.len(),
-                it_seq == it@.1,
-            decreases it_seq.len() - it@.0,
+                obeys_key_model::<V>(),
         {
-            if let Some((k, v)) = it.next() {
-                merged.insert(k.clone(), v.clone());
-            } else {
-                break;
-            }
+            let (k, v) = kv;
+            merged.insert(k.clone(), v.clone());
         }
         merged
     }
@@ -502,19 +477,18 @@ pub mod BoruvkaMtEph {
         edges: Arc<Vec<LabeledEdge<V>>>,
         start: usize,
         end: usize,
-    ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
+    ) -> (bridges: HashMap<V, (V, WrappedF64, usize)>)
         requires
             start <= end, end <= edges@.len(),
             spec_all_weights_finite_seq(edges@),
             obeys_key_model::<V>(),
-            obeys_feq_view_injective::<V>(),
         ensures
-            forall|k: V::V| #[trigger] bridges@.contains_key(k) ==> bridges@[k].1.spec_is_finite(),
+            forall|k: V| #[trigger] bridges@.contains_key(k) ==> bridges@[k].1.spec_is_finite(),
         decreases end - start,
     {
         let size = end - start;
         if size == 0 {
-            return HashMapWithViewPlus::new();
+            return HashMap::new();
         }
 
         if size == 1 {
@@ -522,7 +496,7 @@ pub mod BoruvkaMtEph {
             let LabeledEdge(u, v, w, label) = es[start];
             // Veracity: NEEDED assert (speed hint)
             assert(w.spec_is_finite());
-            let mut min_edges: HashMapWithViewPlus<V, (V, WrappedF64, usize)> = HashMapWithViewPlus::new();
+            let mut min_edges: HashMap<V, (V, WrappedF64, usize)> = HashMap::new();
             min_edges.insert(u.clone(), (v.clone(), w, label));
             min_edges.insert(v.clone(), (u.clone(), w, label));
             return min_edges;
@@ -533,26 +507,24 @@ pub mod BoruvkaMtEph {
         let edges1 = edges.clone();
         let edges2 = edges;
 
-        let f1 = move || -> (r: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
+        let f1 = move || -> (r: HashMap<V, (V, WrappedF64, usize)>)
             requires
                 start <= mid, mid <= edges1@.len(),
                 spec_all_weights_finite_seq(edges1@),
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
             ensures
-                forall|k: V::V| #[trigger] r@.contains_key(k) ==> r@[k].1.spec_is_finite(),
+                forall|k: V| #[trigger] r@.contains_key(k) ==> r@[k].1.spec_is_finite(),
         {
             vertex_bridges_mt(edges1, start, mid)
         };
 
-        let f2 = move || -> (r: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
+        let f2 = move || -> (r: HashMap<V, (V, WrappedF64, usize)>)
             requires
                 mid <= end, end <= edges2@.len(),
                 spec_all_weights_finite_seq(edges2@),
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
             ensures
-                forall|k: V::V| #[trigger] r@.contains_key(k) ==> r@[k].1.spec_is_finite(),
+                forall|k: V| #[trigger] r@.contains_key(k) ==> r@[k].1.spec_is_finite(),
         {
             vertex_bridges_mt(edges2, mid, end)
         };
@@ -561,44 +533,39 @@ pub mod BoruvkaMtEph {
 
         // Merge: for each vertex, keep the minimum weight edge.
         // Both merged and right_bridges have finite weights from their ensures.
-        let mut it = right_bridges.iter();
-        let ghost it_seq = it@.1;
-        loop
+        let rit = right_bridges.iter();
+        let ghost r_seq = vstd::std_specs::hash::into_iter(rit);
+        for kv in it: rit
             invariant
-                it@.0 <= it@.1.len(),
-                it_seq == it@.1,
-                forall|k: V::V| #[trigger] merged@.contains_key(k) ==> merged@[k].1.spec_is_finite(),
-                forall|kv: (V, (V, WrappedF64, usize))| #[trigger] it_seq.to_set().contains(kv)
-                    ==> right_bridges@.contains_key(kv.0@) && right_bridges@[kv.0@] == kv.1,
-                forall|k: V::V| #[trigger] right_bridges@.contains_key(k) ==> right_bridges@[k].1.spec_is_finite(),
+                it.seq().unref() == r_seq,
+                forall|i: int| 0 <= i < r_seq.len()
+                    ==> right_bridges@.contains_key(#[trigger] r_seq[i].0) && right_bridges@[r_seq[i].0] == r_seq[i].1,
+                forall|k: V| #[trigger] merged@.contains_key(k) ==> merged@[k].1.spec_is_finite(),
+                forall|k: V| #[trigger] right_bridges@.contains_key(k) ==> right_bridges@[k].1.spec_is_finite(),
                 obeys_key_model::<V>(),
-            decreases it_seq.len() - it@.0,
         {
-            if let Some((v, entry)) = it.next() {
-                let (neighbor, w, label) = entry;
-                // From iterator: (*v, *entry) is in it_seq.to_set(), so right_bridges has the entry.
-                // Veracity: NEEDED assert (speed hint)
-                assert(it_seq.to_set().contains((*v, *entry)));
-                // Veracity: NEEDED assert (speed hint)
-                assert(right_bridges@.contains_key(v@));
-                // Veracity: NEEDED assert (speed hint)
-                assert(right_bridges@[v@] == *entry);
-                // Veracity: NEEDED assert (speed hint)
-                assert(w.spec_is_finite());
-                match merged.get(v) {
-                    None => {
+            let (v, entry) = kv;
+            let (neighbor, w, label) = entry;
+            // From the iterator: (*v, *entry) is r_seq[it.index()], so right_bridges has the entry.
+            // Veracity: NEEDED assert (speed hint)
+            assert(r_seq[it.index()].0 == *v && r_seq[it.index()].1 == *entry);
+            // Veracity: NEEDED assert (speed hint)
+            assert(right_bridges@.contains_key(*v));
+            // Veracity: NEEDED assert (speed hint)
+            assert(right_bridges@[*v] == *entry);
+            // Veracity: NEEDED assert (speed hint)
+            assert(w.spec_is_finite());
+            match merged.get(v) {
+                None => {
+                    merged.insert(v.clone(), (neighbor.clone(), *w, *label));
+                }
+                Some((_, existing_w, _)) => {
+                    // Veracity: NEEDED assert (speed hint)
+                    assert(existing_w.spec_is_finite());
+                    if w.dist_lt(existing_w) {
                         merged.insert(v.clone(), (neighbor.clone(), *w, *label));
                     }
-                    Some((_, existing_w, _)) => {
-                        // Veracity: NEEDED assert (speed hint)
-                        assert(existing_w.spec_is_finite());
-                        if w.dist_lt(existing_w) {
-                            merged.insert(v.clone(), (neighbor.clone(), *w, *label));
-                        }
-                    }
                 }
-            } else {
-                break;
             }
         }
 
@@ -615,13 +582,12 @@ pub mod BoruvkaMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n) — coin flips, filter, and remaining all O(log n) via ParaPair!.
     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices_vec: Vec<V>,
-        bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
+        bridges: HashMap<V, (V, WrappedF64, usize)>,
         seed: u64,
         round: usize,
-    ) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>))
+    ) -> (partition: (SetStEph<V>, HashMap<V, (V, WrappedF64, usize)>))
         requires
             obeys_key_model::<V>(),
-            obeys_feq_view_injective::<V>(),
             SetStEph::<V>::spec_valid_key_type(),
         ensures partition.0.spec_setsteph_wf(),
     {
@@ -657,21 +623,14 @@ pub mod BoruvkaMtEph {
         }
 
         // Reconstruct partition from Arc by iterating.
-        let mut partition_out: HashMapWithViewPlus<V, (V, WrappedF64, usize)> = HashMapWithViewPlus::new();
-        let mut pit = partition_arc.iter();
-        let ghost pit_seq = pit@.1;
-        loop
+        let mut partition_out: HashMap<V, (V, WrappedF64, usize)> = HashMap::new();
+        for kv in pit: partition_arc.iter()
             invariant
-                pit@.0 <= pit@.1.len(),
-                pit_seq == pit@.1,
-            decreases pit_seq.len() - pit@.0,
+                obeys_key_model::<V>(),
         {
-            if let Some((k, entry)) = pit.next() {
-                let (v, w, label) = entry;
-                partition_out.insert(k.clone(), (v.clone(), *w, *label));
-            } else {
-                break;
-            }
+            let (k, entry) = kv;
+            let (v, w, label) = entry;
+            partition_out.insert(k.clone(), (v.clone(), *w, *label));
         }
         (remaining, partition_out)
     }
@@ -681,22 +640,21 @@ pub mod BoruvkaMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.
     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: Arc<Vec<V>>,
-        bridges: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
-        coin_flips: Arc<HashMapWithViewPlus<V, bool>>,
+        bridges: Arc<HashMap<V, (V, WrappedF64, usize)>>,
+        coin_flips: Arc<HashMap<V, bool>>,
         start: usize,
         end: usize,
-    ) -> (filtered: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
+    ) -> (filtered: HashMap<V, (V, WrappedF64, usize)>)
         requires
             start <= end, end <= vertices@.len(),
             obeys_key_model::<V>(),
-            obeys_feq_view_injective::<V>(),
         ensures
             start == end ==> filtered@.len() == 0,
         decreases end - start,
     {
         let size = end - start;
         if size == 0 {
-            return HashMapWithViewPlus::new();
+            return HashMap::new();
         }
 
         if size == 1 {
@@ -713,12 +671,12 @@ pub mod BoruvkaMtEph {
                 };
 
                 if !u_heads && v_heads {
-                    let mut result: HashMapWithViewPlus<V, (V, WrappedF64, usize)> = HashMapWithViewPlus::new();
+                    let mut result: HashMap<V, (V, WrappedF64, usize)> = HashMap::new();
                     result.insert(u.clone(), (v.clone(), *w, *label));
                     return result;
                 }
             }
-            return HashMapWithViewPlus::new();
+            return HashMap::new();
         }
 
         // Divide and conquer.
@@ -730,20 +688,18 @@ pub mod BoruvkaMtEph {
         let bridges2 = bridges;
         let flips2 = coin_flips;
 
-        let f1 = move || -> (r: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
+        let f1 = move || -> (r: HashMap<V, (V, WrappedF64, usize)>)
             requires
                 start <= mid, mid <= verts1@.len(),
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
         {
             filter_tail_to_head_mt(verts1, bridges1, flips1, start, mid)
         };
 
-        let f2 = move || -> (r: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
+        let f2 = move || -> (r: HashMap<V, (V, WrappedF64, usize)>)
             requires
                 mid <= end, end <= verts2@.len(),
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
         {
             filter_tail_to_head_mt(verts2, bridges2, flips2, mid, end)
         };
@@ -751,20 +707,13 @@ pub mod BoruvkaMtEph {
         let Pair(mut merged, right) = crate::ParaPair!(f1, f2);
 
         // Merge right into merged.
-        let mut it = right.iter();
-        let ghost it_seq = it@.1;
-        loop
+        for kv in it: right.iter()
             invariant
-                it@.0 <= it@.1.len(),
-                it_seq == it@.1,
-            decreases it_seq.len() - it@.0,
+                obeys_key_model::<V>(),
         {
-            if let Some((k, entry)) = it.next() {
-                let (v, w, label) = entry;
-                merged.insert(k.clone(), (v.clone(), *w, *label));
-            } else {
-                break;
-            }
+            let (k, entry) = kv;
+            let (v, w, label) = entry;
+            merged.insert(k.clone(), (v.clone(), *w, *label));
         }
         merged
     }
@@ -786,7 +735,6 @@ pub mod BoruvkaMtEph {
     ) -> (mst: SetStEph<usize>)
         requires
             obeys_key_model::<V>(),
-            obeys_feq_view_injective::<V>(),
             mst_labels.spec_setsteph_wf(),
             spec_all_weights_finite_seq(edges_vec@),
             SetStEph::<V>::spec_valid_key_type(),
@@ -800,7 +748,6 @@ pub mod BoruvkaMtEph {
         loop
             invariant
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
                 mst_labels.spec_setsteph_wf(),
                 spec_all_weights_finite_seq(edges_vec@),
                 SetStEph::<V>::spec_valid_key_type(),
@@ -821,21 +768,12 @@ pub mod BoruvkaMtEph {
 
             // Collect partition keys into Vec via iterator.
             let mut partition_keys: Vec<V> = Vec::new();
+            for kv in pit: partition.iter()
+                invariant
+                    obeys_key_model::<V>(),
             {
-                let mut pit = partition.iter();
-                let ghost pit_seq = pit@.1;
-                loop
-                    invariant
-                        pit@.0 <= pit@.1.len(),
-                        pit_seq == pit@.1,
-                    decreases pit_seq.len() - pit@.0,
-                {
-                    if let Some((k, _)) = pit.next() {
-                        partition_keys.push(k.clone());
-                    } else {
-                        break;
-                    }
-                }
+                let (k, _) = kv;
+                partition_keys.push(k.clone());
             }
 
             // Parallel MST label collection: O(n) work, O(log n) span.
@@ -859,39 +797,18 @@ pub mod BoruvkaMtEph {
             // Build all_vertices Vec: remaining + partition keys.
             let mut all_vertices: Vec<V> = Vec::new();
             let mut remaining_vec: Vec<V> = Vec::new();
+            for v in rit: remaining_vertices.iter()
             {
-                let mut rit = remaining_vertices.iter();
-                let ghost rit_seq = rit@.1;
-                loop
-                    invariant
-                        iter_invariant(&rit),
-                        rit_seq == rit@.1,
-                    decreases rit_seq.len() - rit@.0,
-                {
-                    if let Some(v) = rit.next() {
-                        all_vertices.push(v.clone());
-                        remaining_vec.push(v.clone());
-                    } else {
-                        break;
-                    }
-                }
+                all_vertices.push(v.clone());
+                remaining_vec.push(v.clone());
             }
             // Add partition keys to all_vertices via partition_arc iterator.
+            for kv in pit2: partition_arc.iter()
+                invariant
+                    obeys_key_model::<V>(),
             {
-                let mut pit2 = partition_arc.iter();
-                let ghost pit2_seq = pit2@.1;
-                loop
-                    invariant
-                        pit2@.0 <= pit2@.1.len(),
-                        pit2_seq == pit2@.1,
-                    decreases pit2_seq.len() - pit2@.0,
-                {
-                    if let Some((k, _)) = pit2.next() {
-                        all_vertices.push(k.clone());
-                    } else {
-                        break;
-                    }
-                }
+                let (k, _) = kv;
+                all_vertices.push(k.clone());
             }
 
             // Parallel partition map construction: O(n) work, O(log n) span.
@@ -917,7 +834,7 @@ pub mod BoruvkaMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(log m) — parallel divide-and-conquer via ParaPair!.
     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
-        partition: Arc<HashMapWithViewPlus<V, V>>,
+        partition: Arc<HashMap<V, V>>,
         start: usize,
         end: usize,
     ) -> (rerouted: Vec<LabeledEdge<V>>)
@@ -925,7 +842,6 @@ pub mod BoruvkaMtEph {
             start <= end, end <= edges@.len(),
             spec_all_weights_finite_seq(edges@),
             obeys_key_model::<V>(),
-            obeys_feq_view_injective::<V>(),
         ensures
             spec_all_weights_finite_seq(rerouted@),
         decreases end - start,
@@ -967,7 +883,6 @@ pub mod BoruvkaMtEph {
                 start <= mid, mid <= edges1@.len(),
                 spec_all_weights_finite_seq(edges1@),
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
             ensures
                 spec_all_weights_finite_seq(r@),
         {
@@ -979,7 +894,6 @@ pub mod BoruvkaMtEph {
                 mid <= end, end <= edges2@.len(),
                 spec_all_weights_finite_seq(edges2@),
                 obeys_key_model::<V>(),
-                obeys_feq_view_injective::<V>(),
             ensures
                 spec_all_weights_finite_seq(r@),
         {
@@ -1018,51 +932,34 @@ pub mod BoruvkaMtEph {
             vertices.spec_setsteph_wf(),
             edges.spec_setsteph_wf(),
             obeys_key_model::<V>(),
-            obeys_feq_view_injective::<V>(),
             SetStEph::<V>::spec_valid_key_type(),
             SetStEph::<usize>::spec_valid_key_type(),
         ensures mst.spec_setsteph_wf(),
     {
         // Collect vertices into Vec.
         let mut vertices_vec: Vec<V> = Vec::new();
-        let mut vit = vertices.iter();
-        let ghost vseq = vit@.1;
-        loop
-            invariant
-                iter_invariant(&vit),
-                vseq == vit@.1,
-            decreases vseq.len() - vit@.0,
+        for v in vit: vertices.iter()
         {
-            if let Some(v) = vit.next() {
-                vertices_vec.push(v.clone());
-            } else {
-                break;
-            }
+            vertices_vec.push(v.clone());
         }
 
         // Collect edges into Vec.
         let mut edges_vec: Vec<LabeledEdge<V>> = Vec::new();
-        let mut eit = edges.iter();
-        let ghost eseq = eit@.1;
-        loop
+        let eit0 = edges.iter();
+        let ghost eseq = into_iter_hash_keys(eit0);
+        for e in eit: eit0
             invariant
-                iter_invariant(&eit),
-                eseq == eit@.1,
+                eit.seq().unref() == eseq,
                 spec_all_weights_finite_seq(edges_vec@),
                 forall|j: int| 0 <= j < eseq.len() ==> edges@.contains(#[trigger] eseq[j]@),
                 spec_all_weights_finite(edges@),
-            decreases eseq.len() - eit@.0,
         {
-            if let Some(e) = eit.next() {
-                // e is from edges@, so its weight is finite.
-                // Veracity: NEEDED assert
-                assert(edges@.contains(eseq[eit@.0 - 1]@));
-                // Veracity: NEEDED assert (speed hint)
-                assert((*e).2.spec_is_finite());
-                edges_vec.push(*e);
-            } else {
-                break;
-            }
+            // e is from edges@, so its weight is finite.
+            // Veracity: NEEDED assert
+            assert(edges@.contains(eseq[eit.index()]@));
+            // Veracity: NEEDED assert (speed hint)
+            assert((*e).2.spec_is_finite());
+            edges_vec.push(*e);
         }
 
         boruvka_mst_mt(vertices_vec, edges_vec, SetStEph::empty(), seed, 0)
@@ -1085,22 +982,13 @@ pub mod BoruvkaMtEph {
             return zero_dist();
         }
         let mut total = zero_dist();
-        let mut it = edges.iter();
-        let ghost iter_seq = it@.1;
-        loop
+        for edge in it: edges.iter()
             invariant
-                iter_invariant(&it),
-                iter_seq == it@.1,
                 mst_labels.spec_setsteph_wf(),
-            decreases iter_seq.len() - it@.0,
         {
-            if let Some(edge) = it.next() {
-                let LabeledEdge(_, _, w, label) = edge;
-                if mst_labels.mem(label) {
-                    total = total.dist_add(w);
-                }
-            } else {
-                break;
+            let LabeledEdge(_, _, w, label) = edge;
+            if mst_labels.mem(label) {
+                total = total.dist_add(w);
             }
         }
         total

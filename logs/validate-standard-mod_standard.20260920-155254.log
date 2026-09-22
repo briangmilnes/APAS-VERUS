@@ -1,0 +1,5 @@
+Standard: mod_standard (deps: nodeps; extra: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/ptt_mod_standard.rs)
+Harness root: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/harness-mod_standard/lib.rs
+Starting verification at 15:52:54
+verification results:: 18 verified, 0 errors
+Elapsed: 1s

@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap05/SetStEph.rs:941:9
+    |
+941 |         fn clone(&self) -> (clone: Self)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap05/SetMtEph.rs:1205:9
+     |
+1205 |         fn clone(&self) -> (clone: Self)
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 748 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 810MB, peak z3 RSS: 3802MB, min free: 23481MB
+Sampled CPU Usage: rust_verify: 5s, z3 children: 2s

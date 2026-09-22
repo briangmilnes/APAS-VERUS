@@ -1,0 +1,812 @@
+src/Chap05/SetStEph.rs:219	from_vec	APAS (Ch05 Def 5.1): Work O(|v|), Span O(1)
+src/Chap05/SetStEph.rs:220	from_vec	Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel. Iterates vec, O(1) hash insert each.
+src/Chap05/SetStEph.rs:225	iter	APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetStEph.rs:226	iter	Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator handle.
+src/Chap05/SetStEph.rs:237	to_seq	Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, clones each element.
+src/Chap05/SetStEph.rs:244	empty	APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetStEph.rs:245	empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Allocates empty hash set.
+src/Chap05/SetStEph.rs:250	singleton	APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetStEph.rs:251	singleton	Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. One allocation + one insert.
+src/Chap05/SetStEph.rs:256	size	APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetStEph.rs:257	size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set len().
+src/Chap05/SetStEph.rs:262	mem	APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetStEph.rs:263	mem	Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set contains().
+src/Chap05/SetStEph.rs:268	insert	APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetStEph.rs:269	insert	Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set insert(), amortized.
+src/Chap05/SetStEph.rs:277	union	APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
+src/Chap05/SetStEph.rs:278	union	Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel. Clone one, iterate other, insert all.
+src/Chap05/SetStEph.rs:286	disjoint_union	APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
+src/Chap05/SetStEph.rs:287	disjoint_union	Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel. Same as union, disjointness is a precondition only.
+src/Chap05/SetStEph.rs:298	intersection	APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
+src/Chap05/SetStEph.rs:299	intersection	Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — ACCEPTED DIFFERENCE: St sequential + only iterates self (not both). APAS parallel.
+src/Chap05/SetStEph.rs:306	elt_cross_set	Code review (Claude Opus 4.6): Work O(|s2|), Span O(|s2|) — iterates s2, creates one pair per element.
+src/Chap05/SetStEph.rs:316	cartesian_product	APAS (Ch05 Def 5.1): Work O(|a| × |b|), Span O(1)
+src/Chap05/SetStEph.rs:317	cartesian_product	Code review (Claude Opus 4.6): Work O(|a| × |b|), Span O(|a| × |b|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+src/Chap05/SetStEph.rs:327	all_nonempty	Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) size check each.
+src/Chap05/SetStEph.rs:335	partition_on_elt	Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) membership check each.
+src/Chap05/SetStEph.rs:349	partition	APAS (Ch05 Def 5.1): Work O(|a| × |parts|), Span O(1)
+src/Chap05/SetStEph.rs:350	partition	Code review (Claude Opus 4.6): Work O(|a| × |parts|), Span O(|a| × |parts|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel. Outer loop over |a|, inner partition_on_elt scans |parts| with O(1) hash lookups.
+src/Chap05/SetStEph.rs:368	split	APAS (Ch05 Def 5.1): Work O(|self|), Span O(1)
+src/Chap05/SetStEph.rs:369	split	Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — agrees on work. Iterates set, O(1) insert each.
+src/Chap05/SetStEph.rs:386	choose	APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetStEph.rs:387	choose	Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator, takes first.
+src/Chap05/SetStEph.rs:410	from_vec	Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — iterates vec, O(1) hash insert each.
+src/Chap05/SetStEph.rs:436	to_seq	Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, clones each element.
+src/Chap05/SetStEph.rs:455	empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
+src/Chap05/SetStEph.rs:460	singleton	Code review (Claude Opus 4.6): Work O(1), Span O(1) — one allocation + one insert.
+src/Chap05/SetStEph.rs:471	size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set len().
+src/Chap05/SetStEph.rs:479	mem	Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set contains().
+src/Chap05/SetStEph.rs:485	insert	Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set insert(), amortized.
+src/Chap05/SetStEph.rs:495	union	Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — clone self + iterate s2, insert all.
+src/Chap05/SetStEph.rs:518	disjoint_union	Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — iterates both sets, insert all.
+src/Chap05/SetStEph.rs:571	intersection	Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — iterates self, O(1) hash lookup in s2 each.
+src/Chap05/SetStEph.rs:600	cartesian_product	Code review (Claude Opus 4.6): Work O(|a| x |b|), Span O(|a| x |b|) — iterates self, calls elt_cross_set (O(|b|)) + union for each.
+src/Chap05/SetStEph.rs:629	elt_cross_set	Code review (Claude Opus 4.6): Work O(|s2|), Span O(|s2|) — iterates s2, creates one pair per element.
+src/Chap05/SetStEph.rs:662	all_nonempty	Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) size check each.
+src/Chap05/SetStEph.rs:700	partition_on_elt	Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) membership check each.
+src/Chap05/SetStEph.rs:767	partition	Code review (Claude Opus 4.6): Work O(|a| x |parts|), Span O(|a| x |parts|) — iterates self, calls partition_on_elt (O(|parts|)) each.
+src/Chap05/SetStEph.rs:818	split	Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, O(1) insert each.
+src/Chap05/SetStEph.rs:861	choose	Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates iterator, takes first element.
+src/Chap05/SetMtEph.rs:231	from_vec	APAS (Ch05 Def 5.1): Work O(|v|), Span O(1)
+src/Chap05/SetMtEph.rs:232	from_vec	Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — sequential loop, not parallel. Span == Work.
+src/Chap05/SetMtEph.rs:237	iter	APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetMtEph.rs:238	iter	Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator handle.
+src/Chap05/SetMtEph.rs:249	to_seq	Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, clones each element.
+src/Chap05/SetMtEph.rs:256	empty	APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetMtEph.rs:257	empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Allocates empty hash set.
+src/Chap05/SetMtEph.rs:262	singleton	APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetMtEph.rs:263	singleton	Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. One allocation + one insert.
+src/Chap05/SetMtEph.rs:268	size	APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetMtEph.rs:269	size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set len().
+src/Chap05/SetMtEph.rs:274	mem	APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetMtEph.rs:275	mem	Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set contains().
+src/Chap05/SetMtEph.rs:280	insert	APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetMtEph.rs:281	insert	Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set insert(), amortized.
+src/Chap05/SetMtEph.rs:289	union	APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
+src/Chap05/SetMtEph.rs:290	union	Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — sequential loop, not parallel. Span == Work.
+src/Chap05/SetMtEph.rs:298	disjoint_union	APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
+src/Chap05/SetMtEph.rs:299	disjoint_union	Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — sequential loop, not parallel. Span == Work.
+src/Chap05/SetMtEph.rs:310	intersection	APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
+src/Chap05/SetMtEph.rs:311	intersection	Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — iterates self only, O(1) hash lookup in s2 each. No parallelism.
+src/Chap05/SetMtEph.rs:318	elt_cross_set	Code review (Claude Opus 4.6): Work O(|s2|), Span O(|s2|) — sequential loop, creates one pair per element.
+src/Chap05/SetMtEph.rs:328	cartesian_product	APAS (Ch05 Def 5.1): Work O(|a| × |b|), Span O(|b|)
+src/Chap05/SetMtEph.rs:329	cartesian_product	Code review (Claude Opus 4.6): Work O(|a| × |b|), Span O(|a| × |b|) — spawns |a| parallel elt_cross_set tasks (each O(|b|)), but join phase is sequential disjoint_union over |a| results of size |b|. Sequential join dominates span.
+src/Chap05/SetMtEph.rs:340	all_nonempty	Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) size check each.
+src/Chap05/SetMtEph.rs:348	partition_on_elt	Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) membership check each.
+src/Chap05/SetMtEph.rs:362	partition	APAS (Ch05 Def 5.1): Work O(|a| × |parts|), Span O(1)
+src/Chap05/SetMtEph.rs:363	partition	Code review (Claude Opus 4.6): Work O(|a| × |parts|), Span O(|a| × |parts|) — sequential loop, not parallel. Span == Work.
+src/Chap05/SetMtEph.rs:381	split	APAS (Ch05 Def 5.1): Work O(|self|), Span O(1)
+src/Chap05/SetMtEph.rs:382	split	Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — sequential loop, not parallel. Span == Work.
+src/Chap05/SetMtEph.rs:398	choose	APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+src/Chap05/SetMtEph.rs:399	choose	Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator, takes first.
+src/Chap05/SetMtEph.rs:422	from_vec	Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — iterates vec, O(1) hash insert each.
+src/Chap05/SetMtEph.rs:448	to_seq	Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, clones each element.
+src/Chap05/SetMtEph.rs:467	empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
+src/Chap05/SetMtEph.rs:472	singleton	Code review (Claude Opus 4.6): Work O(1), Span O(1) — one allocation + one insert.
+src/Chap05/SetMtEph.rs:483	size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set len().
+src/Chap05/SetMtEph.rs:491	mem	Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set contains().
+src/Chap05/SetMtEph.rs:497	insert	Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set insert(), amortized.
+src/Chap05/SetMtEph.rs:507	union	Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — clone self + iterate s2, insert all. No parallelism.
+src/Chap05/SetMtEph.rs:529	disjoint_union	Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — iterates both sets, insert all. No parallelism.
+src/Chap05/SetMtEph.rs:579	intersection	Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — iterates self, O(1) hash lookup in s2 each. No parallelism.
+src/Chap05/SetMtEph.rs:607	elt_cross_set	Code review (Claude Opus 4.6): Work O(|s2|), Span O(|s2|) — iterates s2, creates one pair per element.
+src/Chap05/SetMtEph.rs:637	cartesian_product	Code review (Claude Opus 4.6): Work O(|a| x |b|), Span O(|a| x |b|) — spawns |a| parallel elt_cross_set tasks (each O(|b|)), but sequential disjoint_union join phase dominates span.
+src/Chap05/SetMtEph.rs:791	all_nonempty	Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) size check each.
+src/Chap05/SetMtEph.rs:829	partition_on_elt	Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) membership check each.
+src/Chap05/SetMtEph.rs:896	partition	Code review (Claude Opus 4.6): Work O(|a| x |parts|), Span O(|a| x |parts|) — iterates self, calls partition_on_elt (O(|parts|)) each. No parallelism.
+src/Chap05/SetMtEph.rs:947	split	Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, O(1) insert each. No parallelism.
+src/Chap05/SetMtEph.rs:990	choose	Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates iterator, takes first element.
+src/Chap05/SetMtEph.rs:1087	empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates empty set under RwLock.
+src/Chap05/SetMtEph.rs:1092	size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires read lock, delegates to size().
+src/Chap05/SetMtEph.rs:1096	mem	Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires read lock, delegates to mem().
+src/Chap05/SetMtEph.rs:1100	insert	Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires write lock, delegates to insert().
+src/Chap05/SetMtEph.rs:1106	choose	Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires read lock, delegates to choose().
+src/Chap05/SetMtEph.rs:1129	empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates empty set under RwLock.
+src/Chap05/SetMtEph.rs:1139	size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires read lock, delegates to size().
+src/Chap05/SetMtEph.rs:1150	mem	Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires read lock, delegates to mem().
+src/Chap05/SetMtEph.rs:1161	insert	Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires write lock, delegates to insert().
+src/Chap05/SetMtEph.rs:1173	choose	Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires read lock, delegates to choose().
+src/Chap17/MathSeq.rs:122	new	Code review (Claude Opus 4.6): O(n) — Vec allocation + clone fill.
+src/Chap17/MathSeq.rs:128	set	Code review (Claude Opus 4.6): O(1) — direct index write.
+src/Chap17/MathSeq.rs:137	length	Code review (Claude Opus 4.6): O(1).
+src/Chap17/MathSeq.rs:141	nth	Code review (Claude Opus 4.6): O(1) — direct index read.
+src/Chap17/MathSeq.rs:146	empty	Code review (Claude Opus 4.6): O(1).
+src/Chap17/MathSeq.rs:150	singleton	Code review (Claude Opus 4.6): O(1).
+src/Chap17/MathSeq.rs:156	add_last	Code review (Claude Opus 4.6): amortized O(1) — Vec::push.
+src/Chap17/MathSeq.rs:163	delete_last	Code review (Claude Opus 4.6): O(1) — Vec::pop.
+src/Chap17/MathSeq.rs:172	is_empty	Code review (Claude Opus 4.6): O(1).
+src/Chap17/MathSeq.rs:176	is_singleton	Code review (Claude Opus 4.6): O(1).
+src/Chap17/MathSeq.rs:180	from_vec	Code review (Claude Opus 4.6): O(1) — move, no copy.
+src/Chap17/MathSeq.rs:184	with_len	Code review (Claude Opus 4.6): O(n) — delegates to new.
+src/Chap17/MathSeq.rs:190	subseq	Code review (Claude Opus 4.6): O(1) — returns slice reference.
+src/Chap17/MathSeq.rs:200	subseq_copy	Code review (Claude Opus 4.6): O(length) — copies subrange.
+src/Chap17/MathSeq.rs:208	domain	Code review (Claude Opus 4.6): O(n) — builds index vector.
+src/Chap17/MathSeq.rs:214	range	Code review (Claude Opus 4.6): O(n) expected — hash set dedup.
+src/Chap17/MathSeq.rs:221	multiset_range	Code review (Claude Opus 4.6): O(n) expected — hash map counting, two passes.
+src/Chap17/MathSeq.rs:230	iter	Code review (Claude Opus 4.6): O(1) — returns iterator wrapper.
+src/Chap17/MathSeq.rs:263	new	Code review (Claude Opus 4.6): Work O(n), Span O(n) — allocates and fills Vec of length n.
+src/Chap17/MathSeq.rs:270	set	Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
+src/Chap17/MathSeq.rs:281	length	Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec len.
+src/Chap17/MathSeq.rs:287	nth	Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
+src/Chap17/MathSeq.rs:293	empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty Vec allocation.
+src/Chap17/MathSeq.rs:299	singleton	Code review (Claude Opus 4.6): Work O(1), Span O(1) — single-element Vec.
+src/Chap17/MathSeq.rs:305	add_last	Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — Vec push.
+src/Chap17/MathSeq.rs:311	delete_last	Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec pop.
+src/Chap17/MathSeq.rs:317	is_empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) — length check.
+src/Chap17/MathSeq.rs:323	is_singleton	Code review (Claude Opus 4.6): Work O(1), Span O(1) — length check.
+src/Chap17/MathSeq.rs:329	from_vec	Code review (Claude Opus 4.6): Work O(1), Span O(1) — moves ownership, no copy.
+src/Chap17/MathSeq.rs:335	with_len	Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to new().
+src/Chap17/MathSeq.rs:341	subseq	Code review (Claude Opus 4.6): Work O(1), Span O(1) — slice_subrange returns a view, no copy.
+src/Chap17/MathSeq.rs:351	subseq_copy	Code review (Claude Opus 4.6): Work O(k), Span O(k) — copies k = length elements from slice.
+src/Chap17/MathSeq.rs:361	domain	Code review (Claude Opus 4.6): Work O(n), Span O(n) — builds Vec of indices 0..n.
+src/Chap17/MathSeq.rs:380	range	Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass deduplicating with HashSet.
+src/Chap17/MathSeq.rs:434	multiset_range	Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass counting with HashMap + second pass emitting pairs.
+src/Chap17/MathSeq.rs:617	iter_mut	Code review (Claude Opus 4.6): O(1) — returns iterator wrapper.
+src/Chap49/MinEditDistStEph.rs:97	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- allocate empty structures.
+src/Chap49/MinEditDistStEph.rs:105	from_sequences	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequences into struct.
+src/Chap49/MinEditDistStEph.rs:112	min_edit_distance	APAS (Ch49 Alg 49.5): Work O(|S| * |T|), Span O(|S| + |T|)
+src/Chap49/MinEditDistStEph.rs:113	min_edit_distance	Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|·|T|) — ACCEPTED DIFFERENCE: sequential DP table fill, APAS Span O(|S|+|T|) assumes parallel
+src/Chap49/MinEditDistStEph.rs:121	source	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return reference.
+src/Chap49/MinEditDistStEph.rs:126	target	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return reference.
+src/Chap49/MinEditDistStEph.rs:131	set_source	Code review (Claude Opus 4.6): Work O(n), Span O(n) -- array set O(1) plus memo clear O(n).
+src/Chap49/MinEditDistStEph.rs:139	set_target	Code review (Claude Opus 4.6): Work O(n), Span O(n) -- array set O(1) plus memo clear O(n).
+src/Chap49/MinEditDistStEph.rs:147	clear_memo	Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clear hash map.
+src/Chap49/MinEditDistStEph.rs:154	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length.
+src/Chap49/MinEditDistStEph.rs:162	min_edit_distance_rec	APAS (Ch49 ref): Work O(|S|*|T|), Span O(|S|+|T|)
+src/Chap49/MinEditDistStEph.rs:163	min_edit_distance_rec	Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) — ACCEPTED DIFFERENCE: sequential recursive memoized, Span = Work; APAS Span O(|S|+|T|) assumes parallel diagonal
+src/Chap49/MinEditDistStEph.rs:218	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+src/Chap49/MinEditDistStEph.rs:232	from_sequences	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
+src/Chap49/MinEditDistStEph.rs:243	min_edit_distance	Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) — memoized recursive DP; St sequential.
+src/Chap49/MinEditDistStEph.rs:253	source	Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+src/Chap49/MinEditDistStEph.rs:256	target	Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+src/Chap49/MinEditDistStEph.rs:259	set_source	Code review (Claude Opus 4.6): Work O(n), Span O(n) — array set O(1) plus memo clear O(n).
+src/Chap49/MinEditDistStEph.rs:265	set_target	Code review (Claude Opus 4.6): Work O(n), Span O(n) — array set O(1) plus memo clear O(n).
+src/Chap49/MinEditDistStEph.rs:271	clear_memo	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clear hash map.
+src/Chap49/MinEditDistStEph.rs:274	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
+src/Chap49/MinEditDistStEph.rs:301	source_mut	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return mutable reference.
+src/Chap49/MinEditDistStEph.rs:305	target_mut	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return mutable reference.
+src/Chap49/MinEditDistStPer.rs:97	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistStPer.rs:105	from_sequences	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistStPer.rs:112	min_edit_distance	APAS (Ch49 Alg 49.5): Work O(|S| * |T|), Span O(|S| + |T|)
+src/Chap49/MinEditDistStPer.rs:113	min_edit_distance	Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|·|T|) — ACCEPTED DIFFERENCE: sequential DP table fill, APAS Span O(|S|+|T|) assumes parallel
+src/Chap49/MinEditDistStPer.rs:118	source	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistStPer.rs:123	target	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistStPer.rs:128	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistStPer.rs:136	min_edit_distance_rec	APAS (Ch49 ref): Work O(|S|×|T|), Span O(|S|+|T|)
+src/Chap49/MinEditDistStPer.rs:137	min_edit_distance_rec	Code review (Claude Opus 4.6): Work O(|S|×|T|), Span O(|S|×|T|) — ACCEPTED DIFFERENCE: sequential recursive memoized, Span = Work; APAS Span O(|S|+|T|) assumes parallel diagonal
+src/Chap49/MinEditDistStPer.rs:192	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+src/Chap49/MinEditDistStPer.rs:206	from_sequences	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
+src/Chap49/MinEditDistStPer.rs:218	min_edit_distance	Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) — clones + memoized recursive DP; St sequential.
+src/Chap49/MinEditDistStPer.rs:233	source	Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+src/Chap49/MinEditDistStPer.rs:236	target	Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+src/Chap49/MinEditDistStPer.rs:239	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
+src/Chap49/MinEditDistMtEph.rs:102	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistMtEph.rs:113	from_sequences	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistMtEph.rs:121	min_edit_distance	APAS (Ch49 Alg 49.5): Work O(|S| * |T|), Span O(|S| + |T|)
+src/Chap49/MinEditDistMtEph.rs:122	min_edit_distance	Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|+|T|) — parallel recursive memoized with join; matches APAS
+src/Chap49/MinEditDistMtEph.rs:132	source	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistMtEph.rs:137	target	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistMtEph.rs:142	set_source	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap49/MinEditDistMtEph.rs:152	set_target	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap49/MinEditDistMtEph.rs:162	clear_memo	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap49/MinEditDistMtEph.rs:170	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistMtEph.rs:178	new_arc_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
+src/Chap49/MinEditDistMtEph.rs:189	clone_arc_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
+src/Chap49/MinEditDistMtEph.rs:200	min_edit_distance_rec	APAS (Ch49 ref): Work O(|S|×|T|), Span O(|S|+|T|)
+src/Chap49/MinEditDistMtEph.rs:201	min_edit_distance_rec	Code review (Claude Opus 4.6): Work O(|S|×|T|), Span O(|S|+|T|)
+src/Chap49/MinEditDistMtEph.rs:320	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+src/Chap49/MinEditDistMtEph.rs:334	from_sequences	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
+src/Chap49/MinEditDistMtEph.rs:345	min_edit_distance	Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|+|T|) — memoized recursive DP with parallel join; Mt parallel.
+src/Chap49/MinEditDistMtEph.rs:360	source	Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+src/Chap49/MinEditDistMtEph.rs:363	target	Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+src/Chap49/MinEditDistMtEph.rs:366	set_source	Code review (Claude Opus 4.6): Work O(n), Span O(n) — field write O(1) plus memo clear O(n).
+src/Chap49/MinEditDistMtEph.rs:374	set_target	Code review (Claude Opus 4.6): Work O(n), Span O(n) — field write O(1) plus memo clear O(n).
+src/Chap49/MinEditDistMtEph.rs:382	clear_memo	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clear hash map under lock.
+src/Chap49/MinEditDistMtEph.rs:389	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — read lock plus return cached size.
+src/Chap49/MinEditDistMtEph.rs:430	source_mut	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistMtEph.rs:434	target_mut	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistMtPer.rs:100	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistMtPer.rs:111	from_sequences	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistMtPer.rs:119	min_edit_distance	APAS (Ch49 Alg 49.5): Work O(|S| * |T|), Span O(|S| + |T|)
+src/Chap49/MinEditDistMtPer.rs:120	min_edit_distance	Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|+|T|) — parallel recursive memoized with join; matches APAS
+src/Chap49/MinEditDistMtPer.rs:127	source	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistMtPer.rs:132	target	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistMtPer.rs:137	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/MinEditDistMtPer.rs:145	new_arc_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
+src/Chap49/MinEditDistMtPer.rs:156	clone_arc_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
+src/Chap49/MinEditDistMtPer.rs:167	min_edit_distance_rec	APAS (Ch49 ref): Work O(|S|×|T|), Span O(|S|+|T|)
+src/Chap49/MinEditDistMtPer.rs:168	min_edit_distance_rec	Code review (Claude Opus 4.6): Work O(|S|×|T|), Span O(|S|+|T|)
+src/Chap49/MinEditDistMtPer.rs:284	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+src/Chap49/MinEditDistMtPer.rs:298	from_sequences	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
+src/Chap49/MinEditDistMtPer.rs:309	min_edit_distance	Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|+|T|) — clones + memoized recursive DP with parallel join; Mt parallel.
+src/Chap49/MinEditDistMtPer.rs:325	source	Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+src/Chap49/MinEditDistMtPer.rs:328	target	Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+src/Chap49/MinEditDistMtPer.rs:331	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — read lock plus return cached size.
+src/Chap49/SubsetSumStEph.rs:87	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- allocate empty structures.
+src/Chap49/SubsetSumStEph.rs:95	from_multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move multiset into struct.
+src/Chap49/SubsetSumStEph.rs:100	subset_sum	APAS (Ch49 Alg 49.2): Work O(k * |S|), Span O(|S|)
+src/Chap49/SubsetSumStEph.rs:101	subset_sum	Code review (Claude Opus 4.6): Work O(k·|S|), Span O(k·|S|) — ACCEPTED DIFFERENCE: sequential DP table fill, APAS Span O(|S|) assumes parallel
+src/Chap49/SubsetSumStEph.rs:108	multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return reference.
+src/Chap49/SubsetSumStEph.rs:113	set	Code review (Claude Opus 4.6): Work O(n), Span O(n) -- array set O(1) plus memo clear O(n).
+src/Chap49/SubsetSumStEph.rs:119	clear_memo	Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clear hash map.
+src/Chap49/SubsetSumStEph.rs:124	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length.
+src/Chap49/SubsetSumStEph.rs:132	subset_sum_rec	APAS (Ch49 ref): Work O(k*|S|), Span O(|S|)
+src/Chap49/SubsetSumStEph.rs:133	subset_sum_rec	Code review (Claude Opus 4.6): Work O(k*|S|), Span O(k*|S|) — ACCEPTED DIFFERENCE: sequential recursive memoized, Span = Work; APAS Span O(|S|) assumes parallel
+src/Chap49/SubsetSumStEph.rs:171	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+src/Chap49/SubsetSumStEph.rs:184	from_multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
+src/Chap49/SubsetSumStEph.rs:194	subset_sum	Code review (Claude Opus 4.6): Work O(k*|S|), Span O(k*|S|) — memoized recursive DP; St sequential.
+src/Chap49/SubsetSumStEph.rs:209	multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+src/Chap49/SubsetSumStEph.rs:212	set	Code review (Claude Opus 4.6): Work O(n), Span O(n) — array set O(1) plus memo clear O(n).
+src/Chap49/SubsetSumStEph.rs:218	clear_memo	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clear hash map.
+src/Chap49/SubsetSumStEph.rs:221	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
+src/Chap49/SubsetSumStEph.rs:247	multiset_mut	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return mutable reference.
+src/Chap49/SubsetSumStPer.rs:87	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/SubsetSumStPer.rs:95	from_multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/SubsetSumStPer.rs:100	subset_sum	APAS (Ch49 Alg 49.2): Work O(k * |S|), Span O(|S|)
+src/Chap49/SubsetSumStPer.rs:101	subset_sum	Code review (Claude Opus 4.6): Work O(k·|S|), Span O(k·|S|) — ACCEPTED DIFFERENCE: sequential DP table fill, APAS Span O(|S|) assumes parallel
+src/Chap49/SubsetSumStPer.rs:107	multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/SubsetSumStPer.rs:112	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/SubsetSumStPer.rs:120	subset_sum_rec	APAS (Ch49 ref): Work O(k×|S|), Span O(|S|)
+src/Chap49/SubsetSumStPer.rs:121	subset_sum_rec	Code review (Claude Opus 4.6): Work O(k×|S|), Span O(k×|S|) — ACCEPTED DIFFERENCE: sequential recursive memoized, Span = Work; APAS Span O(|S|) assumes parallel
+src/Chap49/SubsetSumStPer.rs:159	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+src/Chap49/SubsetSumStPer.rs:172	from_multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
+src/Chap49/SubsetSumStPer.rs:182	subset_sum	Code review (Claude Opus 4.6): Work O(k*|S|), Span O(k*|S|) — clones + memoized recursive DP; St sequential.
+src/Chap49/SubsetSumStPer.rs:202	multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+src/Chap49/SubsetSumStPer.rs:205	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
+src/Chap49/SubsetSumMtEph.rs:95	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/SubsetSumMtEph.rs:105	from_multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/SubsetSumMtEph.rs:112	subset_sum	APAS (Ch49 Alg 49.2): Work O(k * |S|), Span O(|S|)
+src/Chap49/SubsetSumMtEph.rs:113	subset_sum	Code review (Claude Opus 4.6): Work O(k·|S|), Span O(|S|) — parallel recursive memoized with join; matches APAS
+src/Chap49/SubsetSumMtEph.rs:120	multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/SubsetSumMtEph.rs:125	set	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap49/SubsetSumMtEph.rs:133	clear_memo	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap49/SubsetSumMtEph.rs:139	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/SubsetSumMtEph.rs:147	new_arc_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
+src/Chap49/SubsetSumMtEph.rs:157	clone_arc_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
+src/Chap49/SubsetSumMtEph.rs:168	subset_sum_rec	APAS (Ch49 ref): Work O(k×|S|), Span O(|S|)
+src/Chap49/SubsetSumMtEph.rs:169	subset_sum_rec	Code review (Claude Opus 4.6): Work O(k×|S|), Span O(|S|)
+src/Chap49/SubsetSumMtEph.rs:260	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+src/Chap49/SubsetSumMtEph.rs:273	from_multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
+src/Chap49/SubsetSumMtEph.rs:283	subset_sum	Code review (Claude Opus 4.6): Work O(k*|S|), Span O(|S|) — memoized recursive DP with parallel join; Mt parallel.
+src/Chap49/SubsetSumMtEph.rs:302	multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+src/Chap49/SubsetSumMtEph.rs:305	set	Code review (Claude Opus 4.6): Work O(n), Span O(n) — array set O(1) plus memo clear O(n).
+src/Chap49/SubsetSumMtEph.rs:313	clear_memo	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clear hash map under lock.
+src/Chap49/SubsetSumMtEph.rs:320	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — read lock plus return cached size.
+src/Chap49/SubsetSumMtEph.rs:363	multiset_mut	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/SubsetSumMtPer.rs:93	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/SubsetSumMtPer.rs:103	from_multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/SubsetSumMtPer.rs:110	subset_sum	APAS (Ch49 Alg 49.2): Work O(k * |S|), Span O(|S|)
+src/Chap49/SubsetSumMtPer.rs:111	subset_sum	Code review (Claude Opus 4.6): Work O(k·|S|), Span O(|S|) — parallel recursive memoized with join; matches APAS
+src/Chap49/SubsetSumMtPer.rs:117	multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/SubsetSumMtPer.rs:122	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap49/SubsetSumMtPer.rs:130	new_arc_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
+src/Chap49/SubsetSumMtPer.rs:140	clone_arc_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
+src/Chap49/SubsetSumMtPer.rs:151	subset_sum_rec	APAS (Ch49 ref): Work O(k×|S|), Span O(|S|)
+src/Chap49/SubsetSumMtPer.rs:152	subset_sum_rec	Code review (Claude Opus 4.6): Work O(k×|S|), Span O(|S|)
+src/Chap49/SubsetSumMtPer.rs:243	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+src/Chap49/SubsetSumMtPer.rs:256	from_multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
+src/Chap49/SubsetSumMtPer.rs:266	subset_sum	Code review (Claude Opus 4.6): Work O(k*|S|), Span O(|S|) — clones + memoized recursive DP with parallel join; Mt parallel.
+src/Chap49/SubsetSumMtPer.rs:285	multiset	Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+src/Chap49/SubsetSumMtPer.rs:288	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — read lock plus return cached size.
+src/Chap50/MatrixChainStEph.rs:175	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:182	from_dimensions	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:189	from_dim_pairs	Code review (Claude Opus 4.6): Work O(n), Span O(n) -- copies dim_pairs into Vec<MatrixDim>
+src/Chap50/MatrixChainStEph.rs:196	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) -- memoized DP, n^2 subproblems each O(n)
+src/Chap50/MatrixChainStEph.rs:207	dimensions	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:211	num_matrices	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:215	set_dimension	Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clears memo HashMap
+src/Chap50/MatrixChainStEph.rs:223	update_dimension	Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clears memo HashMap
+src/Chap50/MatrixChainStEph.rs:232	clear_memo	Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clears memo HashMap
+src/Chap50/MatrixChainStEph.rs:239	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:243	multiply_cost	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:254	matrix_chain_rec	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) -- memoized DP, n^2 subproblems each O(n)
+src/Chap50/MatrixChainStEph.rs:279	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:294	from_dimensions	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:309	from_dim_pairs	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/MatrixChainStEph.rs:337	multiply_cost	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:347	matrix_chain_rec	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
+src/Chap50/MatrixChainStEph.rs:399	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
+src/Chap50/MatrixChainStEph.rs:411	dimensions	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:416	num_matrices	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:421	set_dimension	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/MatrixChainStEph.rs:427	update_dimension	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/MatrixChainStEph.rs:433	clear_memo	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/MatrixChainStEph.rs:436	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:505	into_iter	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:506	into_iter	Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
+src/Chap50/MatrixChainStEph.rs:514	into_iter	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:515	into_iter	Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
+src/Chap50/MatrixChainStEph.rs:522	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:523	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+src/Chap50/MatrixChainStEph.rs:540	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:541	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+src/Chap50/MatrixChainStEph.rs:556	into_iter	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/MatrixChainStEph.rs:557	into_iter	Code review (Claude Opus 4.6): Work O(1), Span O(1) — move Vec into iterator
+src/Chap50/MatrixChainStPer.rs:174	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:181	from_dimensions	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:188	from_dim_pairs	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/MatrixChainStPer.rs:195	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
+src/Chap50/MatrixChainStPer.rs:205	dimensions	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:209	num_matrices	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:213	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:217	multiply_cost	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:228	matrix_chain_rec	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
+src/Chap50/MatrixChainStPer.rs:253	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:268	from_dimensions	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:283	from_dim_pairs	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/MatrixChainStPer.rs:311	multiply_cost	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:321	matrix_chain_rec	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
+src/Chap50/MatrixChainStPer.rs:374	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
+src/Chap50/MatrixChainStPer.rs:386	dimensions	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:391	num_matrices	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:396	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:450	into_iter	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:451	into_iter	Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
+src/Chap50/MatrixChainStPer.rs:458	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:459	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+src/Chap50/MatrixChainStPer.rs:476	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:477	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+src/Chap50/MatrixChainStPer.rs:492	into_iter	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/MatrixChainStPer.rs:493	into_iter	Code review (Claude Opus 4.6): Work O(1), Span O(1) — move Vec into iterator
+src/Chap50/MatrixChainMtEph.rs:162	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Arc<RwLock> wrappers
+src/Chap50/MatrixChainMtEph.rs:166	from_dimensions	Code review (Claude Opus 4.6): Work O(n), Span O(n) — wrap dimensions in Arc<RwLock>, n = dimensions.len()
+src/Chap50/MatrixChainMtEph.rs:170	from_dim_pairs	Code review (Claude Opus 4.6): Work O(n), Span O(n) — convert pairs to MatrixDim vec, n = dim_pairs.len()
+src/Chap50/MatrixChainMtEph.rs:174	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — memoized DP over n matrices, sequential loop
+src/Chap50/MatrixChainMtEph.rs:187	dimensions	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
+src/Chap50/MatrixChainMtEph.rs:192	set_dimension	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone dims, rebuild struct with new Arc<RwLock>
+src/Chap50/MatrixChainMtEph.rs:199	update_dimension	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone dims, rebuild struct with new Arc<RwLock>
+src/Chap50/MatrixChainMtEph.rs:207	num_matrices	Code review (Claude Opus 4.6): Work O(1), Span O(1) — read Vec length under read lock
+src/Chap50/MatrixChainMtEph.rs:212	clear_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate new empty RwLock for memo
+src/Chap50/MatrixChainMtEph.rs:217	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — read memo length under read lock
+src/Chap50/MatrixChainMtEph.rs:220	multiply_cost	Code review (Claude Opus 4.6): Work O(1), Span O(1) — three array lookups and two multiplications
+src/Chap50/MatrixChainMtEph.rs:232	matrix_chain_rec	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — memoized DP, n^2 subproblems each O(n) split scan
+src/Chap50/MatrixChainMtEph.rs:244	parallel_min_reduction	Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential linear scan for minimum
+src/Chap50/MatrixChainMtEph.rs:280	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Arc<RwLock> wrappers
+src/Chap50/MatrixChainMtEph.rs:291	from_dimensions	Code review (Claude Opus 4.6): Work O(n), Span O(n) — wrap dimensions in Arc<RwLock>, n = dimensions.len()
+src/Chap50/MatrixChainMtEph.rs:304	from_dim_pairs	Code review (Claude Opus 4.6): Work O(n), Span O(n) — convert pairs to MatrixDim vec, n = dim_pairs.len()
+src/Chap50/MatrixChainMtEph.rs:330	multiply_cost	Code review (Claude Opus 4.6): Work O(1), Span O(1) — three array lookups and two multiplications under read lock
+src/Chap50/MatrixChainMtEph.rs:350	parallel_min_reduction	Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential linear scan for minimum
+src/Chap50/MatrixChainMtEph.rs:370	matrix_chain_rec	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — memoized DP, n^2 subproblems each O(n) split scan
+src/Chap50/MatrixChainMtEph.rs:473	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — clear memo then run memoized DP
+src/Chap50/MatrixChainMtEph.rs:491	dimensions	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
+src/Chap50/MatrixChainMtEph.rs:503	set_dimension	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone dims, rebuild struct with new Arc<RwLock>
+src/Chap50/MatrixChainMtEph.rs:521	update_dimension	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone dims, rebuild struct with new Arc<RwLock>
+src/Chap50/MatrixChainMtEph.rs:540	num_matrices	Code review (Claude Opus 4.6): Work O(1), Span O(1) — read Vec length under read lock
+src/Chap50/MatrixChainMtEph.rs:553	clear_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate new empty RwLock for memo
+src/Chap50/MatrixChainMtEph.rs:562	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — read memo length under read lock
+src/Chap50/MatrixChainMtEph.rs:663	into_iter	APAS (Ch50 ref): Work O(n), Span O(n)
+src/Chap50/MatrixChainMtEph.rs:664	into_iter	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
+src/Chap50/MatrixChainMtEph.rs:677	into_iter	APAS (Ch50 ref): Work O(n), Span O(n)
+src/Chap50/MatrixChainMtEph.rs:678	into_iter	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
+src/Chap50/MatrixChainMtEph.rs:690	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/MatrixChainMtEph.rs:691	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+src/Chap50/MatrixChainMtEph.rs:722	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/MatrixChainMtEph.rs:723	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers under read locks
+src/Chap50/MatrixChainMtEph.rs:742	into_iter	APAS (Ch50 ref): Work O(n), Span O(n)
+src/Chap50/MatrixChainMtEph.rs:743	into_iter	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec from Arc<RwLock>
+src/Chap50/MatrixChainMtPer.rs:161	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Arc and Arc<RwLock>
+src/Chap50/MatrixChainMtPer.rs:165	from_dimensions	Code review (Claude Opus 4.6): Work O(n), Span O(n) — wrap dimensions in Arc, n = dimensions.len()
+src/Chap50/MatrixChainMtPer.rs:169	from_dim_pairs	Code review (Claude Opus 4.6): Work O(n), Span O(n) — convert pairs to MatrixDim vec, n = dim_pairs.len()
+src/Chap50/MatrixChainMtPer.rs:173	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — clear memo then run memoized DP
+src/Chap50/MatrixChainMtPer.rs:184	dimensions	Code review (Claude Opus 4.6): Work O(1), Span O(1) — return reference to Arc field
+src/Chap50/MatrixChainMtPer.rs:188	num_matrices	Code review (Claude Opus 4.6): Work O(1), Span O(1) — read Vec length through Arc deref
+src/Chap50/MatrixChainMtPer.rs:192	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — read memo length under read lock
+src/Chap50/MatrixChainMtPer.rs:195	multiply_cost	Code review (Claude Opus 4.6): Work O(1), Span O(1) — three array lookups and two multiplications
+src/Chap50/MatrixChainMtPer.rs:206	matrix_chain_rec	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — memoized DP, n^2 subproblems each O(n) split scan
+src/Chap50/MatrixChainMtPer.rs:218	parallel_min_reduction	Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential linear scan for minimum
+src/Chap50/MatrixChainMtPer.rs:252	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Arc and Arc<RwLock>
+src/Chap50/MatrixChainMtPer.rs:262	from_dimensions	Code review (Claude Opus 4.6): Work O(n), Span O(n) — wrap dimensions in Arc, n = dimensions.len()
+src/Chap50/MatrixChainMtPer.rs:273	from_dim_pairs	Code review (Claude Opus 4.6): Work O(n), Span O(n) — convert pairs to MatrixDim vec, n = dim_pairs.len()
+src/Chap50/MatrixChainMtPer.rs:298	multiply_cost	Code review (Claude Opus 4.6): Work O(1), Span O(1) — three array lookups and two multiplications via Arc deref
+src/Chap50/MatrixChainMtPer.rs:308	parallel_min_reduction	Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential linear scan for minimum
+src/Chap50/MatrixChainMtPer.rs:328	matrix_chain_rec	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — memoized DP, n^2 subproblems each O(n) split scan
+src/Chap50/MatrixChainMtPer.rs:431	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — clear memo then run memoized DP
+src/Chap50/MatrixChainMtPer.rs:449	dimensions	Code review (Claude Opus 4.6): Work O(1), Span O(1) — return reference to Arc field
+src/Chap50/MatrixChainMtPer.rs:452	num_matrices	Code review (Claude Opus 4.6): Work O(1), Span O(1) — read Vec length through Arc deref
+src/Chap50/MatrixChainMtPer.rs:458	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — read memo length under read lock
+src/Chap50/MatrixChainMtPer.rs:538	into_iter	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/MatrixChainMtPer.rs:539	into_iter	Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter over Arc<Vec>
+src/Chap50/MatrixChainMtPer.rs:546	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/MatrixChainMtPer.rs:547	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+src/Chap50/MatrixChainMtPer.rs:578	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/MatrixChainMtPer.rs:579	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+src/Chap50/MatrixChainMtPer.rs:597	into_iter	APAS (Ch50 ref): Work O(n), Span O(n)
+src/Chap50/MatrixChainMtPer.rs:598	into_iter	Code review (Claude Opus 4.6): Work O(n), Span O(n) — unwrap or clone Vec from Arc
+src/Chap50/OptBinSearchTreeStEph.rs:98	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:104	from_keys_probs	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/OptBinSearchTreeStEph.rs:111	from_key_probs	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:117	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
+src/Chap50/OptBinSearchTreeStEph.rs:120	keys	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:124	set_key_prob	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:131	update_prob	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:138	num_keys	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:142	clear_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:148	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:157	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:167	from_keys_probs	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/OptBinSearchTreeStEph.rs:191	from_key_probs	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:200	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
+src/Chap50/OptBinSearchTreeStEph.rs:212	keys	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:215	set_key_prob	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:221	update_prob	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:228	num_keys	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:231	clear_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:234	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:243	obst_rec_st_eph	APAS (Ch50 Alg 50.2): Work O(n^3), Span O(n lg n)
+src/Chap50/OptBinSearchTreeStEph.rs:244	obst_rec_st_eph	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — ACCEPTED DIFFERENCE: sequential DP table fill, APAS Span O(n lg n) assumes parallel
+src/Chap50/OptBinSearchTreeStEph.rs:358	into_iter	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:359	into_iter	Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
+src/Chap50/OptBinSearchTreeStEph.rs:367	into_iter	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:368	into_iter	Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
+src/Chap50/OptBinSearchTreeStEph.rs:375	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:376	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format key and probability
+src/Chap50/OptBinSearchTreeStEph.rs:393	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:394	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+src/Chap50/OptBinSearchTreeStEph.rs:409	into_iter	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStEph.rs:410	into_iter	Code review (Claude Opus 4.6): Work O(1), Span O(1) — move Vec into iterator
+src/Chap50/OptBinSearchTreeStPer.rs:98	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStPer.rs:104	from_keys_probs	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/OptBinSearchTreeStPer.rs:111	from_key_probs	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStPer.rs:117	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
+src/Chap50/OptBinSearchTreeStPer.rs:120	keys	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStPer.rs:124	num_keys	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStPer.rs:128	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStPer.rs:137	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStPer.rs:147	from_keys_probs	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/OptBinSearchTreeStPer.rs:172	from_key_probs	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStPer.rs:181	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
+src/Chap50/OptBinSearchTreeStPer.rs:194	keys	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStPer.rs:197	num_keys	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStPer.rs:200	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStPer.rs:209	obst_rec_st_per	APAS (Ch50 Alg 50.2): Work O(n^3), Span O(n lg n)
+src/Chap50/OptBinSearchTreeStPer.rs:210	obst_rec_st_per	Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — ACCEPTED DIFFERENCE: sequential DP table fill, APAS Span O(n lg n) assumes parallel
+src/Chap50/OptBinSearchTreeStPer.rs:324	into_iter	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStPer.rs:325	into_iter	Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
+src/Chap50/OptBinSearchTreeStPer.rs:332	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStPer.rs:333	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format key and probability
+src/Chap50/OptBinSearchTreeStPer.rs:350	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStPer.rs:351	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+src/Chap50/OptBinSearchTreeStPer.rs:366	into_iter	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeStPer.rs:367	into_iter	Code review (Claude Opus 4.6): Work O(1), Span O(1) — move Vec into iterator
+src/Chap50/OptBinSearchTreeMtEph.rs:100	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeMtEph.rs:104	from_keys_probs	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/OptBinSearchTreeMtEph.rs:109	from_key_probs	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/OptBinSearchTreeMtEph.rs:113	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n lg n)
+src/Chap50/OptBinSearchTreeMtEph.rs:117	keys	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/OptBinSearchTreeMtEph.rs:122	set_key_prob	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/OptBinSearchTreeMtEph.rs:129	update_prob	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/OptBinSearchTreeMtEph.rs:136	num_keys	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeMtEph.rs:141	clear_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeMtEph.rs:146	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeMtEph.rs:153	obst_rec	APAS (Ch50 Alg 50.2): Work O(n^3), Span O(n lg n)
+src/Chap50/OptBinSearchTreeMtEph.rs:154	obst_rec	Code review (Claude Opus 4.6): Work O(n^3), Span O(n lg n) — parallel min reduction over split points via join, O(1) prefix sum lookup
+src/Chap50/OptBinSearchTreeMtEph.rs:209	parallel_min_split_cost	Code review (Claude Opus 4.6): Work O(l), Span O(lg l)
+src/Chap50/OptBinSearchTreeMtEph.rs:299	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Vec, two Arc<RwLock> wrappers
+src/Chap50/OptBinSearchTreeMtEph.rs:310	from_keys_probs	Code review (Claude Opus 4.6): Work O(n), Span O(n) — iterate keys/probs to build KeyProb vec
+src/Chap50/OptBinSearchTreeMtEph.rs:334	from_key_probs	Code review (Claude Opus 4.6): Work O(1), Span O(1) — wrap existing vec in Arc<RwLock>
+src/Chap50/OptBinSearchTreeMtEph.rs:347	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n lg n) — precomputes prefix sums, calls obst_rec with parallel min reduction
+src/Chap50/OptBinSearchTreeMtEph.rs:391	keys	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
+src/Chap50/OptBinSearchTreeMtEph.rs:403	set_key_prob	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone keys vec, update one element, rebuild Arc<RwLock>
+src/Chap50/OptBinSearchTreeMtEph.rs:424	update_prob	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone keys vec, update one probability, rebuild Arc<RwLock>
+src/Chap50/OptBinSearchTreeMtEph.rs:445	num_keys	Code review (Claude Opus 4.6): Work O(1), Span O(1) — read lock, return Vec len
+src/Chap50/OptBinSearchTreeMtEph.rs:456	clear_memo	Code review (Claude Opus 4.6): Work O(m), Span O(m) — clear memo hash map with m entries under write lock
+src/Chap50/OptBinSearchTreeMtEph.rs:465	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — read lock, return hash map len
+src/Chap50/OptBinSearchTreeMtEph.rs:586	into_iter	APAS (Ch50 ref): Work O(n), Span O(n)
+src/Chap50/OptBinSearchTreeMtEph.rs:587	into_iter	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
+src/Chap50/OptBinSearchTreeMtEph.rs:600	into_iter	APAS (Ch50 ref): Work O(n), Span O(n)
+src/Chap50/OptBinSearchTreeMtEph.rs:601	into_iter	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
+src/Chap50/OptBinSearchTreeMtEph.rs:619	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeMtEph.rs:620	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format key and probability
+src/Chap50/OptBinSearchTreeMtEph.rs:655	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeMtEph.rs:656	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers under read locks
+src/Chap50/OptBinSearchTreeMtEph.rs:672	into_iter	APAS (Ch50 ref): Work O(n), Span O(n)
+src/Chap50/OptBinSearchTreeMtEph.rs:673	into_iter	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec from Arc<RwLock>
+src/Chap50/OptBinSearchTreeMtPer.rs:90	new	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeMtPer.rs:94	from_keys_probs	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap50/OptBinSearchTreeMtPer.rs:99	from_key_probs	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeMtPer.rs:103	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n lg n)
+src/Chap50/OptBinSearchTreeMtPer.rs:107	keys	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeMtPer.rs:111	num_keys	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeMtPer.rs:115	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeMtPer.rs:122	obst_rec	APAS (Ch50 Alg 50.2): Work O(n^3), Span O(n lg n)
+src/Chap50/OptBinSearchTreeMtPer.rs:123	obst_rec	Code review (Claude Opus 4.6): Work O(n^3), Span O(n lg n) — parallel min reduction over split points via join, O(1) prefix sum lookup
+src/Chap50/OptBinSearchTreeMtPer.rs:178	parallel_min_split_cost	Code review (Claude Opus 4.6): Work O(l), Span O(lg l)
+src/Chap50/OptBinSearchTreeMtPer.rs:266	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Vec, wrap in Arc + Arc<RwLock>
+src/Chap50/OptBinSearchTreeMtPer.rs:276	from_keys_probs	Code review (Claude Opus 4.6): Work O(n), Span O(n) — iterate keys/probs to build KeyProb vec
+src/Chap50/OptBinSearchTreeMtPer.rs:299	from_key_probs	Code review (Claude Opus 4.6): Work O(1), Span O(1) — wrap existing vec in Arc
+src/Chap50/OptBinSearchTreeMtPer.rs:308	optimal_cost	Code review (Claude Opus 4.6): Work O(n^3), Span O(n lg n) — precomputes prefix sums, calls obst_rec with parallel min reduction
+src/Chap50/OptBinSearchTreeMtPer.rs:344	keys	Code review (Claude Opus 4.6): Work O(1), Span O(1) — return reference to Arc field
+src/Chap50/OptBinSearchTreeMtPer.rs:347	num_keys	Code review (Claude Opus 4.6): Work O(1), Span O(1) — deref Arc, return Vec len
+src/Chap50/OptBinSearchTreeMtPer.rs:353	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — read lock, return hash map len
+src/Chap50/OptBinSearchTreeMtPer.rs:444	into_iter	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeMtPer.rs:445	into_iter	Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter over Arc<Vec>
+src/Chap50/OptBinSearchTreeMtPer.rs:458	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeMtPer.rs:459	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format key and probability
+src/Chap50/OptBinSearchTreeMtPer.rs:484	fmt	APAS (Ch50 ref): Work O(1), Span O(1)
+src/Chap50/OptBinSearchTreeMtPer.rs:485	fmt	Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+src/Chap50/OptBinSearchTreeMtPer.rs:498	into_iter	APAS (Ch50 ref): Work O(n), Span O(n)
+src/Chap50/OptBinSearchTreeMtPer.rs:499	into_iter	Code review (Claude Opus 4.6): Work O(n), Span O(n) — unwrap or clone Vec from Arc
+src/Chap51/TopDownDPStEph.rs:77	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequences into struct.
+src/Chap51/TopDownDPStEph.rs:86	s_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length.
+src/Chap51/TopDownDPStEph.rs:91	t_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length.
+src/Chap51/TopDownDPStEph.rs:96	is_empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- two length checks.
+src/Chap51/TopDownDPStEph.rs:101	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return hash map size.
+src/Chap51/TopDownDPStEph.rs:106	is_memoized	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- hash map contains_key.
+src/Chap51/TopDownDPStEph.rs:111	get_memoized	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- hash map lookup.
+src/Chap51/TopDownDPStEph.rs:121	insert_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- hash map insert.
+src/Chap51/TopDownDPStEph.rs:129	clear_memo	Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clear hash map.
+src/Chap51/TopDownDPStEph.rs:137	set_s	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequence.
+src/Chap51/TopDownDPStEph.rs:145	set_t	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequence.
+src/Chap51/TopDownDPStEph.rs:153	med_memoized	APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|+|T|) (Algorithm 51.4)
+src/Chap51/TopDownDPStEph.rs:154	med_memoized	Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo.
+src/Chap51/TopDownDPStEph.rs:168	med_recursive	APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|+|T|) (medOne from Algorithm 51.4)
+src/Chap51/TopDownDPStEph.rs:169	med_recursive	Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo.
+src/Chap51/TopDownDPStEph.rs:214	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+src/Chap51/TopDownDPStEph.rs:225	s_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+src/Chap51/TopDownDPStEph.rs:227	t_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+src/Chap51/TopDownDPStEph.rs:230	is_empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
+src/Chap51/TopDownDPStEph.rs:237	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
+src/Chap51/TopDownDPStEph.rs:244	is_memoized	Code review (Claude Opus 4.6): Work O(1), Span O(1) — checks memo entry.
+src/Chap51/TopDownDPStEph.rs:250	get_memoized	Code review (Claude Opus 4.6): Work O(1), Span O(1) — memo table lookup.
+src/Chap51/TopDownDPStEph.rs:259	insert_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1) — memo table insert.
+src/Chap51/TopDownDPStEph.rs:265	clear_memo	Code review (Claude Opus 4.6): Work O(n), Span O(n) — clears memo table where n is entries.
+src/Chap51/TopDownDPStEph.rs:270	set_s	Code review (Claude Opus 4.6): Work O(n), Span O(n) — field write + memo clear where n is memo entries.
+src/Chap51/TopDownDPStEph.rs:276	set_t	Code review (Claude Opus 4.6): Work O(n), Span O(n) — field write + memo clear where n is memo entries.
+src/Chap51/TopDownDPStEph.rs:283	med_memoized	Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — top-down DP with memoization; St sequential.
+src/Chap51/TopDownDPStEph.rs:292	med_recursive	Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — memoized recursion filling n×m table; St sequential.
+src/Chap51/TopDownDPStPer.rs:77	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+src/Chap51/TopDownDPStPer.rs:86	s_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+src/Chap51/TopDownDPStPer.rs:91	t_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+src/Chap51/TopDownDPStPer.rs:96	is_empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
+src/Chap51/TopDownDPStPer.rs:101	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
+src/Chap51/TopDownDPStPer.rs:106	is_memoized	Code review (Claude Opus 4.6): Work O(1), Span O(1) — checks memo entry.
+src/Chap51/TopDownDPStPer.rs:111	get_memoized	Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash map lookup.
+src/Chap51/TopDownDPStPer.rs:121	with_memo_table	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct reconstruction with new memo.
+src/Chap51/TopDownDPStPer.rs:127	clear_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct reconstruction with empty memo.
+src/Chap51/TopDownDPStPer.rs:134	med_memoized	Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — top-down DP with memoization; St sequential.
+src/Chap51/TopDownDPStPer.rs:141	med_recursive	Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — memoized recursion filling n*m table; St sequential.
+src/Chap51/TopDownDPStPer.rs:186	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+src/Chap51/TopDownDPStPer.rs:198	s_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+src/Chap51/TopDownDPStPer.rs:200	t_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+src/Chap51/TopDownDPStPer.rs:203	is_empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
+src/Chap51/TopDownDPStPer.rs:210	memo_size	Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
+src/Chap51/TopDownDPStPer.rs:217	is_memoized	Code review (Claude Opus 4.6): Work O(1), Span O(1) — checks memo entry.
+src/Chap51/TopDownDPStPer.rs:223	get_memoized	Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash map lookup.
+src/Chap51/TopDownDPStPer.rs:232	with_memo_table	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct reconstruction with new memo.
+src/Chap51/TopDownDPStPer.rs:237	clear_memo	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct reconstruction with empty memo.
+src/Chap51/TopDownDPStPer.rs:250	med_memoized	Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — top-down DP with memoization; St sequential.
+src/Chap51/TopDownDPStPer.rs:262	med_recursive	Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — memoized recursion filling n*m table; St sequential.
+src/Chap51/TopDownDPMtEph.rs:87	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+src/Chap51/TopDownDPMtEph.rs:92	s_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+src/Chap51/TopDownDPMtEph.rs:94	t_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+src/Chap51/TopDownDPMtEph.rs:97	is_empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
+src/Chap51/TopDownDPMtEph.rs:104	set_s	Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write.
+src/Chap51/TopDownDPMtEph.rs:106	set_t	Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write.
+src/Chap51/TopDownDPMtEph.rs:110	med_memoized_concurrent	Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
+src/Chap51/TopDownDPMtEph.rs:122	med_memoized_parallel	Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — fork-join on delete/insert subproblems; Mt parallel.
+src/Chap51/TopDownDPMtEph.rs:161	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequences into struct.
+src/Chap51/TopDownDPMtEph.rs:170	s_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length.
+src/Chap51/TopDownDPMtEph.rs:175	t_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length.
+src/Chap51/TopDownDPMtEph.rs:180	is_empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- two length checks.
+src/Chap51/TopDownDPMtEph.rs:185	set_s	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequence.
+src/Chap51/TopDownDPMtEph.rs:193	set_t	Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequence.
+src/Chap51/TopDownDPMtEph.rs:201	med_memoized_concurrent	APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|*|T|) (sequential memo threading)
+src/Chap51/TopDownDPMtEph.rs:202	med_memoized_concurrent	Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential memoized recursion.
+src/Chap51/TopDownDPMtEph.rs:216	med_memoized_parallel	APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|+|T|) (parallel subproblem exploration)
+src/Chap51/TopDownDPMtEph.rs:217	med_memoized_parallel	Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|+|T|) -- fork-join on branches.
+src/Chap51/TopDownDPMtEph.rs:236	med_recursive_sequential	APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|*|T|) (Algorithm 51.4, sequential)
+src/Chap51/TopDownDPMtEph.rs:237	med_recursive_sequential	Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo.
+src/Chap51/TopDownDPMtEph.rs:317	med_recursive_parallel	APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|+|T|) (parallel subproblem exploration)
+src/Chap51/TopDownDPMtEph.rs:318	med_recursive_parallel	Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|+|T|) -- fork-join on delete/insert.
+src/Chap51/TopDownDPMtPer.rs:87	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+src/Chap51/TopDownDPMtPer.rs:92	s_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+src/Chap51/TopDownDPMtPer.rs:94	t_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+src/Chap51/TopDownDPMtPer.rs:97	is_empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
+src/Chap51/TopDownDPMtPer.rs:105	med_memoized_concurrent	Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
+src/Chap51/TopDownDPMtPer.rs:117	med_memoized_parallel	Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — fork-join on delete/insert subproblems; Mt parallel.
+src/Chap51/TopDownDPMtPer.rs:155	new	Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+src/Chap51/TopDownDPMtPer.rs:164	s_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+src/Chap51/TopDownDPMtPer.rs:169	t_length	Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+src/Chap51/TopDownDPMtPer.rs:174	is_empty	Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
+src/Chap51/TopDownDPMtPer.rs:179	med_memoized_concurrent	Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
+src/Chap51/TopDownDPMtPer.rs:186	med_memoized_parallel	Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — fork-join on delete/insert subproblems; Mt parallel.
+src/Chap51/TopDownDPMtPer.rs:198	med_recursive_sequential	Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential recursion with memo.
+src/Chap51/TopDownDPMtPer.rs:278	med_recursive_parallel	Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — fork-join on delete/insert.
+src/Chap61/EdgeContractionStEph.rs:68	edge_contract	APAS (Ch61 Alg 61.6): Work O(n), Span O(lg^2 n)
+src/Chap61/EdgeContractionStEph.rs:69	edge_contract	Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — ACCEPTED DIFFERENCE: sequential loops over matching + vertices + edges; APAS Alg 61.6 is full recursive contraction
+src/Chap61/EdgeContractionStEph.rs:78	contract_round	Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — greedy matching + contraction; St sequential.
+src/Chap61/EdgeContractionStEph.rs:92	edge_contract	APAS (Ch61 Alg 61.6): Work O(n), Span O(lg^2 n)
+src/Chap61/EdgeContractionStEph.rs:93	edge_contract	Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — ACCEPTED DIFFERENCE: sequential loops over matching + vertices + edges; APAS Alg 61.6 is full recursive contraction
+src/Chap61/EdgeContractionStEph.rs:182	contract_round	APAS (Ch61 Alg 61.6): Work O(|V| + |E|), Span O(|V| + |E|)
+src/Chap61/EdgeContractionStEph.rs:183	contract_round	Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|)
+src/Chap61/EdgeContractionStEph.rs:184	contract_round	Code review (Claude Opus 4.6): Work Θ(|V| + |E|), Span Θ(|V| + |E|) — agrees with APAS
+src/Chap61/EdgeContractionMtEph.rs:59	edge_contract_mt	Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(lg |V|) — parallel vertex-to-block mapping + edge rebuilding.
+src/Chap61/EdgeContractionMtEph.rs:68	contract_round_mt	Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(lg |V|) — parallel matching + contraction in one round.
+src/Chap61/EdgeContractionMtEph.rs:85	edge_contract_mt	APAS (Ch61 Alg 61.6): Work O(|V| + |E|), Span O(lg |V|)
+src/Chap61/EdgeContractionMtEph.rs:86	edge_contract_mt	Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(lg |V|)
+src/Chap61/EdgeContractionMtEph.rs:87	edge_contract_mt	Code review (Claude Opus 4.6): Work Θ(|V| + |E|), Span Θ(|V| + |E|) — Phases 1-2 are sequential loops;
+src/Chap61/EdgeContractionMtEph.rs:148	build_edges_parallel	Code review (Claude Opus 4.6): Work Θ(|E|), Span Θ(lg |E|) — genuine divide-and-conquer parallelism
+src/Chap61/EdgeContractionMtEph.rs:233	contract_round_mt	APAS (Ch61 Alg 61.6): Work O(|V| + |E|), Span O(lg |V|)
+src/Chap61/EdgeContractionMtEph.rs:234	contract_round_mt	Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(lg |V|)
+src/Chap61/EdgeContractionMtEph.rs:235	contract_round_mt	Code review (Claude Opus 4.6): Work Θ(|E|^2), Span Θ(|E|) — dominated by parallel_matching_mt's
+src/Chap61/VertexMatchingStEph.rs:57	greedy_matching	Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — single pass over edges; St sequential.
+src/Chap61/VertexMatchingStEph.rs:63	parallel_matching_st	Code review (Claude Opus 4.6): Work O(|E|^2), Span O(|E|^2) — coin flip + per-edge scan of all edges; St sequential.
+src/Chap61/VertexMatchingStEph.rs:73	greedy_matching	APAS (Ch61 Alg 61.4): Work O(|E|), Span O(|E|)
+src/Chap61/VertexMatchingStEph.rs:74	greedy_matching	Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|)
+src/Chap61/VertexMatchingStEph.rs:75	greedy_matching	Code review (Claude Opus 4.6): Work Θ(|E|), Span Θ(|E|) — agrees with APAS
+src/Chap61/VertexMatchingStEph.rs:111	parallel_matching_st	Code review (Claude Opus 4.6): matches APAS
+src/Chap61/VertexMatchingStEph.rs:112	parallel_matching_st	Code review (Claude Opus 4.6): Work Θ(|E|²), Span Θ(|E|²)
+src/Chap61/VertexMatchingMtEph.rs:59	parallel_matching_mt	Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |V|) — parallel coin flip + parallel edge selection.
+src/Chap61/VertexMatchingMtEph.rs:74	parallel_matching_mt	APAS (Ch61 Alg 61.4): Work O(|E|), Span O(lg |V|)
+src/Chap61/VertexMatchingMtEph.rs:75	parallel_matching_mt	Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |V|)
+src/Chap61/VertexMatchingMtEph.rs:76	parallel_matching_mt	Code review (Claude Opus 4.6): Work Θ(|E|^2), Span Θ(|E|) — coin flip phase is sequential (RNG),
+src/Chap61/VertexMatchingMtEph.rs:112	flip_coins_parallel	APAS (Ch61 Alg 61.4): Work O(|E|), Span O(1) — each coin is independent
+src/Chap61/VertexMatchingMtEph.rs:113	flip_coins_parallel	Code review (Claude Opus 4.6): Work O(|E|), Span O(1)
+src/Chap61/VertexMatchingMtEph.rs:114	flip_coins_parallel	Code review (Claude Opus 4.6): Work Θ(|E|), Span Θ(|E|) — RNG is sequential, no actual parallelism
+src/Chap61/VertexMatchingMtEph.rs:145	select_edges_parallel	APAS (Ch61 Alg 61.4): Work O(|E|), Span O(lg |V|) — each edge checks only incident edges
+src/Chap61/VertexMatchingMtEph.rs:146	select_edges_parallel	Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |V|)
+src/Chap61/VertexMatchingMtEph.rs:147	select_edges_parallel	Code review (Claude Opus 4.6): Work Θ(|E|^2), Span Θ(lg |E| + |E|) — should_select_edge scans all |E| edges
+src/Chap61/VertexMatchingMtEph.rs:180	select_edges_recursive	Code review (Claude Opus 4.6): Work Θ(k * |E|), Span Θ(lg k + |E|) — each base case calls should_select_edge which is Θ(|E|)
+src/Chap61/VertexMatchingMtEph.rs:228	should_select_edge	APAS (Ch61 Alg 61.4): Work O(degree(u) + degree(v)), Span O(degree(u) + degree(v)) — checks only incident edges
+src/Chap61/VertexMatchingMtEph.rs:229	should_select_edge	Code review (Claude Opus 4.6): Work O(degree(u) + degree(v)), Span O(degree(u) + degree(v))
+src/Chap61/VertexMatchingMtEph.rs:230	should_select_edge	Code review (Claude Opus 4.6): Work Θ(|E|), Span Θ(|E|) — iterates all edges, not just incident ones
+src/Chap62/StarPartitionStEph.rs:89	sequential_star_partition	Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — single pass over vertices + edges; St sequential.
+src/Chap62/StarPartitionStEph.rs:99	sequential_star_partition	APAS (Ch62 Thm 62.1): Work O(n + m), Span O(n + m)
+src/Chap62/StarPartitionStEph.rs:100	sequential_star_partition	Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m)
+src/Chap62/StarPartitionStEph.rs:101	sequential_star_partition	Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) — agrees with APAS.
+src/Chap62/StarPartitionMtEph.rs:114	parallel_star_partition	APAS (Ch62 Thm 62.1): Work O(n + m), Span O(lg n)
+src/Chap62/StarPartitionMtEph.rs:115	parallel_star_partition	Code review (Claude Opus 4.6): Work O((n + m) lg(n + m)), Span O(lg(n + m)) — all 6 loops parallel D&C
+src/Chap62/StarPartitionMtEph.rs:130	hash_coin	Code review (Claude Opus 4.6): Work O(1), Span O(1) — single hash computation.
+src/Chap62/StarPartitionMtEph.rs:144	hash_coin_flips_mt	Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join over n vertices; Mt parallel.
+src/Chap62/StarPartitionMtEph.rs:268	build_th_edges_mt	Code review (Claude Opus 4.6): Work O(m), Span O(lg m) — D&C fork-join over m edges; Mt parallel.
+src/Chap62/StarPartitionMtEph.rs:441	build_p_vec_mt	Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join over n vertices; Mt parallel.
+src/Chap62/StarPartitionMtEph.rs:548	build_vertex_to_index_mt	Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg n) — D&C fork-join + sequential merge of hashmaps; Mt parallel.
+src/Chap62/StarPartitionMtEph.rs:729	build_satellite_map_mt	Code review (Claude Opus 4.6): Work O(m lg m), Span O(lg m) — D&C fork-join + sequential merge of hashmaps; Mt parallel.
+src/Chap62/StarPartitionMtEph.rs:948	build_p_vec_with_inject_mt	Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join over n vertices; Mt parallel.
+src/Chap62/StarPartitionMtEph.rs:1211	build_partition_map_mt	Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg n) — D&C fork-join + sequential merge of hashmaps; Mt parallel.
+src/Chap62/StarPartitionMtEph.rs:1419	build_centers_mt	Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join filtering self-pointing vertices; Mt parallel.
+src/Chap62/StarPartitionMtEph.rs:1517	parallel_star_partition	APAS (Ch62 Thm 62.1): Work O(n + m), Span O(lg n)
+src/Chap62/StarPartitionMtEph.rs:1518	parallel_star_partition	Code review (Claude Opus 4.6): Work O((n + m) lg(n + m)), Span O(lg(n + m)) — all 6 loops parallel D&C
+src/Chap62/StarContractionStEph.rs:72	star_contract	APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
+src/Chap62/StarContractionStEph.rs:73	star_contract	Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — ACCEPTED DIFFERENCE: sequential recursive contraction, span = work
+src/Chap62/StarContractionStEph.rs:96	contract_to_vertices	Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — recursive star contraction halving vertices; St sequential.
+src/Chap62/StarContractionStEph.rs:107	star_contract_fuel	Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — recursive: O(n + m) per level × O(lg n) levels; St sequential.
+src/Chap62/StarContractionStEph.rs:188	star_contract	APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
+src/Chap62/StarContractionStEph.rs:189	star_contract	Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — ACCEPTED DIFFERENCE: sequential recursive contraction, span = work
+src/Chap62/StarContractionStEph.rs:238	build_quotient_graph	Code review (Claude Opus 4.6): matches APAS
+src/Chap62/StarContractionStEph.rs:239	build_quotient_graph	Code review (Claude Opus 4.6): Work O(m), Span O(m) — sequential loop over all edges.
+src/Chap62/StarContractionStEph.rs:344	contract_to_vertices	APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O((n + m) lg n)
+src/Chap62/StarContractionStEph.rs:345	contract_to_vertices	Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n); delegates to star_contract
+src/Chap62/StarContractionStEph.rs:346	contract_to_vertices	Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — agrees with APAS.
+src/Chap62/StarContractionMtEph.rs:93	star_contract_mt	Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n) — recursive: O(n + m) work per level, O(lg n) span per level × O(lg n) levels; Mt parallel.
+src/Chap62/StarContractionMtEph.rs:116	contract_to_vertices_mt	Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n) — delegates to star_contract_mt; Mt parallel.
+src/Chap62/StarContractionMtEph.rs:127	star_contract_mt_fuel	Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n) — recursive: O(n + m) work per level, O(lg n) span per level × O(lg n) levels; Mt parallel.
+src/Chap62/StarContractionMtEph.rs:207	star_contract_mt	APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
+src/Chap62/StarContractionMtEph.rs:208	star_contract_mt	Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n); parallel star_partition + quotient build
+src/Chap62/StarContractionMtEph.rs:209	star_contract_mt	Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(n lg n) — star_partition has O(n + lg m) span (loops 2, 3 parallel); quotient build O(lg m) via ParaPair.
+src/Chap62/StarContractionMtEph.rs:259	build_quotient_graph_parallel	Code review (Claude Opus 4.6): matches APAS
+src/Chap62/StarContractionMtEph.rs:260	build_quotient_graph_parallel	Code review (Claude Opus 4.6): Work O(m), Span O(lg m) — delegates to route_edges_parallel which uses ParaPair fork-join.
+src/Chap62/StarContractionMtEph.rs:327	route_edges_parallel	Code review (Claude Opus 4.6): matches APAS
+src/Chap62/StarContractionMtEph.rs:328	route_edges_parallel	Code review (Claude Opus 4.6): Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.
+src/Chap62/StarContractionMtEph.rs:437	contract_to_vertices_mt	APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
+src/Chap62/StarContractionMtEph.rs:438	contract_to_vertices_mt	Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n); delegates to star_contract_mt
+src/Chap62/StarContractionMtEph.rs:439	contract_to_vertices_mt	Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — delegates to star_contract_mt which has sequential partition.
+src/Chap63/ConnectivityStEph.rs:72	count_components	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star contraction; St sequential.
+src/Chap63/ConnectivityStEph.rs:78	connected_components	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star contraction; St sequential.
+src/Chap63/ConnectivityStEph.rs:84	count_components_hof	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — star_contract with base/expand closures; St sequential.
+src/Chap63/ConnectivityStEph.rs:90	connected_components_hof	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — star_contract with base/expand closures; St sequential.
+src/Chap63/ConnectivityStEph.rs:103	count_components	APAS (Ch63 Ex 63.3): Work O((n+m) lg n), Span O((n+m) lg n) (edge-set representation)
+src/Chap63/ConnectivityStEph.rs:104	count_components	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n); delegates to star contraction
+src/Chap63/ConnectivityStEph.rs:105	count_components	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS
+src/Chap63/ConnectivityStEph.rs:127	connected_components	APAS (Ch63 Ex 63.4): Work O((n+m) lg n), Span O((n+m) lg n) (edge-set representation)
+src/Chap63/ConnectivityStEph.rs:128	connected_components	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n); delegates to star contraction
+src/Chap63/ConnectivityStEph.rs:129	connected_components	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS
+src/Chap63/ConnectivityStEph.rs:149	build_quotient_edges	Code review (Claude Opus 4.6): Work O(m), Span O(m) — single pass over edges
+src/Chap63/ConnectivityStEph.rs:200	count_components_hof	APAS (Ch63 Alg 63.2): Work O((n+m) lg n), Span O((n+m) lg n)
+src/Chap63/ConnectivityStEph.rs:201	count_components_hof	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n); delegates to star_contract
+src/Chap63/ConnectivityStEph.rs:202	count_components_hof	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
+src/Chap63/ConnectivityStEph.rs:223	connected_components_hof	APAS (Ch63 Alg 63.3): Work O((n+m) lg n), Span O((n+m) lg n)
+src/Chap63/ConnectivityStEph.rs:224	connected_components_hof	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n); delegates to star_contract
+src/Chap63/ConnectivityStEph.rs:225	connected_components_hof	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
+src/Chap63/ConnectivityMtEph.rs:77	count_components_mt	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — delegates to star_contract_mt; Mt parallel.
+src/Chap63/ConnectivityMtEph.rs:83	connected_components_mt	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — delegates to star_contract_mt; Mt parallel.
+src/Chap63/ConnectivityMtEph.rs:92	count_components_hof	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — star_contract_mt with base/expand closures; Mt parallel.
+src/Chap63/ConnectivityMtEph.rs:98	connected_components_hof	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — star_contract_mt with base/expand closures; Mt parallel.
+src/Chap63/ConnectivityMtEph.rs:114	count_components_mt	APAS (Ch63 Ex 63.3): Work O((n+m) lg n), Span O(lg² n) (edge-set, parallel)
+src/Chap63/ConnectivityMtEph.rs:115	count_components_mt	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n); parallel star contraction
+src/Chap63/ConnectivityMtEph.rs:116	count_components_mt	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt
+src/Chap63/ConnectivityMtEph.rs:138	connected_components_mt	APAS (Ch63 Ex 63.4): Work O((n+m) lg n), Span O(lg² n) (edge-set, parallel)
+src/Chap63/ConnectivityMtEph.rs:139	connected_components_mt	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n); parallel star contraction
+src/Chap63/ConnectivityMtEph.rs:140	connected_components_mt	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(n lg n) — delegates to star_contract_mt
+src/Chap63/ConnectivityMtEph.rs:163	compose_maps_parallel	Code review (Claude Opus 4.6): Work O(|P|), Span O(|P|) — currently sequential despite "parallel" name
+src/Chap63/ConnectivityMtEph.rs:202	count_components_hof	APAS (Ch63 Alg 63.2): Work O((n+m) lg n), Span O(lg^2 n) (parallel)
+src/Chap63/ConnectivityMtEph.rs:203	count_components_hof	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n); parallel star contraction
+src/Chap63/ConnectivityMtEph.rs:204	count_components_hof	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt (inherits merge bottleneck)
+src/Chap63/ConnectivityMtEph.rs:223	connected_components_hof	APAS (Ch63 Alg 63.3): Work O((n+m) lg n), Span O(lg^2 n) (parallel)
+src/Chap63/ConnectivityMtEph.rs:224	connected_components_hof	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n); parallel star contraction
+src/Chap63/ConnectivityMtEph.rs:225	connected_components_hof	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(n lg n) — delegates to star_contract_mt (inherits compose bottleneck)
+src/Chap64/SpanTreeStEph.rs:65	spanning_tree_star_contraction	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract; St sequential.
+src/Chap64/SpanTreeStEph.rs:71	verify_spanning_tree	Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — connectivity check + edge count; St sequential.
+src/Chap64/SpanTreeStEph.rs:81	spanning_tree_star_contraction	APAS (Ch64 Ex 64.2): Work O((n+m) lg n), Span O((n+m) lg n)
+src/Chap64/SpanTreeStEph.rs:82	spanning_tree_star_contraction	Code review (Claude Opus 4.6): Work O((n+m)
+src/Chap64/SpanTreeStEph.rs:83	spanning_tree_star_contraction	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS.
+src/Chap64/SpanTreeStEph.rs:175	verify_spanning_tree	Code review (Claude Opus 4.6): Work O(|V| + |E_tree|), Span O(|V| + |E_tree|) — N/A, Verus-specific scaffolding
+src/Chap64/SpanTreeMtEph.rs:66	spanning_tree_star_contraction_mt	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — delegates to star_contract_mt; Mt parallel.
+src/Chap64/SpanTreeMtEph.rs:74	verify_spanning_tree	Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — connectivity check + edge count; sequential despite Mt module.
+src/Chap64/SpanTreeMtEph.rs:84	spanning_tree_star_contraction_mt	APAS (Ch64 Ex 64.2): Work O((n+m) lg n), Span O(lg² n)
+src/Chap64/SpanTreeMtEph.rs:85	spanning_tree_star_contraction_mt	Code review (Claude Opus 4.6): Work O((n+m)
+src/Chap64/SpanTreeMtEph.rs:86	spanning_tree_star_contraction_mt	Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — expand closure
+src/Chap64/SpanTreeMtEph.rs:181	verify_spanning_tree	Code review (Claude Opus 4.6): Work O(|V| + |E_tree|), Span O(|E_tree|).
+src/Chap64/TSPApproxStEph.rs:64	euler_tour	Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — DFS traversal of tree; St sequential.
+src/Chap64/TSPApproxStEph.rs:77	shortcut_tour	Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — single pass removing duplicates; St sequential.
+src/Chap64/TSPApproxStEph.rs:82	tour_weight	Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — single pass summing edge weights; St sequential.
+src/Chap64/TSPApproxStEph.rs:93	approx_metric_tsp	Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — euler tour + shortcut + weight; St sequential. MST cost dominates overall.
+src/Chap64/TSPApproxStEph.rs:110	vec_contains_pair	Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan over vec; St sequential.
+src/Chap64/TSPApproxStEph.rs:133	euler_tour	APAS (Ch64 Sec 4): Work O(n), Span O(n)
+src/Chap64/TSPApproxStEph.rs:134	euler_tour	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap64/TSPApproxStEph.rs:135	euler_tour	Code review (Claude Opus 4.6): Work O(n), Span O(n) — DFS is inherently sequential.
+src/Chap64/TSPApproxStEph.rs:165	euler_tour_dfs	Code review (Claude Opus 4.6): Work O(n * m_tree), Span O(n * m_tree) — for each vertex,
+src/Chap64/TSPApproxStEph.rs:256	shortcut_tour	APAS (Ch64 Sec 4): Work O(n), Span O(n)
+src/Chap64/TSPApproxStEph.rs:257	shortcut_tour	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap64/TSPApproxStEph.rs:258	shortcut_tour	Code review (Claude Opus 4.6): Work O(n), Span O(n) — agrees with APAS.
+src/Chap64/TSPApproxStEph.rs:305	tour_weight	APAS (Ch64 Sec 4): Work O(n), Span O(n)
+src/Chap64/TSPApproxStEph.rs:306	tour_weight	Code review (Claude Opus 4.6): Work O(n), Span O(n)
+src/Chap64/TSPApproxStEph.rs:307	tour_weight	Code review (Claude Opus 4.6): Work O(n), Span O(n) — agrees with APAS.
+src/Chap64/TSPApproxStEph.rs:347	get_neighbors	Code review (Claude Opus 4.6): Work O(m), Span O(m) — delegates to ng().
+src/Chap64/TSPApproxStEph.rs:357	get_edge_weight	Code review (Claude Opus 4.6): Work O(m), Span O(m) — delegates to get_edge_label().
+src/Chap64/TSPApproxStEph.rs:386	approx_metric_tsp	APAS (Ch64 Sec 4): Work O(n+m), Span O(n+m)
+src/Chap64/TSPApproxStEph.rs:387	approx_metric_tsp	Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
+src/Chap64/TSPApproxStEph.rs:388	approx_metric_tsp	Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — agrees with APAS.
+src/Chap65/PrimStEph.rs:91	prim_mst	Code review (Claude Opus 4.6): Work O(m log n), Span O(m log n) — priority queue with n extract-min + m decrease-key; St sequential.
+src/Chap65/PrimStEph.rs:101	mst_weight	Code review (Claude Opus 4.6): Work O(m), Span O(m) — iterates over all MST edges; St sequential.
+src/Chap65/PrimStEph.rs:249	pq_entry_new	Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)
+src/Chap65/PrimStEph.rs:268	prim_mst	APAS (Ch65 Alg 65.1): Work O(m lg n), Span O(m lg n)
+src/Chap65/PrimStEph.rs:269	prim_mst	Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n)
+src/Chap65/PrimStEph.rs:270	prim_mst	Code review (Claude Opus 4.6): Work O(m^2 lg n), Span O(m^2 lg n) — the APAS bound assumes
+src/Chap65/PrimStEph.rs:467	mst_weight	Code review (Claude Opus 4.6): matches APAS
+src/Chap65/PrimStEph.rs:468	mst_weight	Code review (Claude Opus 4.6): Work O(|MST|), Span O(|MST|) — linear scan over MST edges
+src/Chap65/PrimStEph.rs:523	cmp	Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)
+src/Chap65/PrimStEph.rs:532	partial_cmp	Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)
+src/Chap66/BoruvkaStEph.rs:98	coin_flip	Code review (Claude Opus 4.6): Work O(1), Span O(1) — single XOR + mask.
+src/Chap66/BoruvkaStEph.rs:125	vertex_bridges	Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — single pass over edges; St sequential.
+src/Chap66/BoruvkaStEph.rs:136	bridge_star_partition	Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — single pass over vertices with coin flips; St sequential.
+src/Chap66/BoruvkaStEph.rs:150	boruvka_mst	APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
+src/Chap66/BoruvkaStEph.rs:151	boruvka_mst	Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — ACCEPTED DIFFERENCE: sequential, span = work
+src/Chap66/BoruvkaStEph.rs:171	boruvka_mst_with_seed	APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
+src/Chap66/BoruvkaStEph.rs:172	boruvka_mst_with_seed	Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^3 n)
+src/Chap66/BoruvkaStEph.rs:173	boruvka_mst_with_seed	APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
+src/Chap66/BoruvkaStEph.rs:174	boruvka_mst_with_seed	Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — ACCEPTED DIFFERENCE: sequential, span = work
+src/Chap66/BoruvkaStEph.rs:192	mst_weight	Code review (Claude Opus 4.6): Work O(m), Span O(m) — iterates over edges filtering by labels; St sequential.
+src/Chap66/BoruvkaStEph.rs:211	vertex_bridges	APAS (Ch66 Alg 66.3): Work O(m), Span O(log m)
+src/Chap66/BoruvkaStEph.rs:212	vertex_bridges	Code review (Claude Opus 4.6): Work O(m) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+src/Chap66/BoruvkaStEph.rs:272	bridge_star_partition	APAS (Ch66 Alg 66.3): Work O(n), Span O(log n)
+src/Chap66/BoruvkaStEph.rs:273	bridge_star_partition	Code review (Claude Opus 4.6): Work O(n) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+src/Chap66/BoruvkaStEph.rs:344	boruvka_mst	APAS (Ch66 Alg 66.3): Work O(m log n), Span O(log^2 n)
+src/Chap66/BoruvkaStEph.rs:345	boruvka_mst	Code review (Claude Opus 4.6): Work O(m log n) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+src/Chap66/BoruvkaStEph.rs:440	boruvka_mst_with_seed	APAS (Ch66 Alg 66.3): Work O(m log n), Span O(log^2 n)
+src/Chap66/BoruvkaStEph.rs:441	boruvka_mst_with_seed	Code review (Claude Opus 4.6): Work O(m log n) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+src/Chap66/BoruvkaMtEph.rs:79	vertex_bridges_mt	Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |E|) — D&C fork-join over edges; Mt parallel.
+src/Chap66/BoruvkaMtEph.rs:94	bridge_star_partition_mt	Code review (Claude Opus 4.6): Work O(|V|), Span O(lg |V|) — parallel coin flips + partition map; Mt parallel.
+src/Chap66/BoruvkaMtEph.rs:108	boruvka_mst_mt	APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
+src/Chap66/BoruvkaMtEph.rs:109	boruvka_mst_mt	Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaMtEph.rs:126	boruvka_mst_mt_with_seed	APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
+src/Chap66/BoruvkaMtEph.rs:127	boruvka_mst_mt_with_seed	Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaMtEph.rs:144	mst_weight	Code review (Claude Opus 4.6): Work O(m), Span O(m) — iterates over edges filtering by labels; sequential despite Mt module.
+src/Chap66/BoruvkaMtEph.rs:189	hash_coin	Code review (Claude Opus 4.6): Work O(1), Span O(1) — single hash computation.
+src/Chap66/BoruvkaMtEph.rs:204	hash_coin_flips_mt	Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join over n vertices; Mt parallel.
+src/Chap66/BoruvkaMtEph.rs:266	compute_remaining_mt	Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join filtering vertices; Mt parallel.
+src/Chap66/BoruvkaMtEph.rs:334	collect_mst_labels_mt	Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join extracting labels; Mt parallel.
+src/Chap66/BoruvkaMtEph.rs:402	build_partition_map_mt	Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join building partition map; Mt parallel.
+src/Chap66/BoruvkaMtEph.rs:472	vertex_bridges_mt	APAS (Ch66 Alg 66.3): Work O(m), Span O(log m)
+src/Chap66/BoruvkaMtEph.rs:473	vertex_bridges_mt	Code review (Claude Opus 4.6): Work O(m), Span O(log m)
+src/Chap66/BoruvkaMtEph.rs:474	vertex_bridges_mt	Code review (Claude Opus 4.6): Work O(m), Span O(log m) — agrees with APAS; parallel divide-and-conquer via ParaPair!.
+src/Chap66/BoruvkaMtEph.rs:579	bridge_star_partition_mt	APAS (Ch66 Alg 66.3): Work O(n), Span O(log n)
+src/Chap66/BoruvkaMtEph.rs:580	bridge_star_partition_mt	Code review (Claude Opus 4.6): Work O(n), Span O(log n)
+src/Chap66/BoruvkaMtEph.rs:581	bridge_star_partition_mt	Code review (Claude Opus 4.6): Work O(n), Span O(log n) — coin flips, filter, and remaining all O(log n) via ParaPair!.
+src/Chap66/BoruvkaMtEph.rs:639	filter_tail_to_head_mt	Code review (Claude Opus 4.6): Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.
+src/Chap66/BoruvkaMtEph.rs:725	boruvka_mst_mt	APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
+src/Chap66/BoruvkaMtEph.rs:726	boruvka_mst_mt	Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaMtEph.rs:833	reroute_edges_mt	Code review (Claude Opus 4.6): Work O(m), Span O(log m) — parallel divide-and-conquer via ParaPair!.
+src/Chap66/BoruvkaMtEph.rs:922	boruvka_mst_mt_with_seed	APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
+src/Chap66/BoruvkaMtEph.rs:923	boruvka_mst_mt_with_seed	Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaMtEph.rs:969	mst_weight	Code review (Claude Opus 4.6): Work O(m), Span O(m) — sequential scan of edges.

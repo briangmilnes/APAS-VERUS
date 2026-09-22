@@ -1,0 +1,30 @@
+Mode: full
+error[E0407]: method `initial_value_relation` is not a member of trait `IteratorSpecImpl`
+   --> src/standards/prophetic_iterators_standard.rs:174:19
+    |
+174 |           open spec fn initial_value_relation(&self, init: &Self) -> bool {
+    |  ___________________^
+175 | |             &&& IteratorSpec::remaining(init) == IteratorSpec::remaining(self)
+176 | |             &&& init.elts() == self.elts()
+177 | |         }
+    | |_________^ not a member of trait `IteratorSpecImpl`
+
+error[E0425]: cannot find value `axiom_spec_slice_iter` in module `vstd::std_specs::slice`
+  --> src/standards/prophetic_iterators_standard.rs:65:43
+   |
+65 |     broadcast use vstd::std_specs::slice::axiom_spec_slice_iter;
+   |                                           ^^^^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::slice`
+
+error[E0425]: cannot find value `axiom_spec_into_iter` in module `vstd::std_specs::vec`
+   --> src/standards/prophetic_iterators_standard.rs:291:49
+    |
+291 |             broadcast use vstd::std_specs::vec::axiom_spec_into_iter;
+    |                                                 ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::vec`
+
+error: aborting due to 3 previous errors
+
+Some errors have detailed explanations: E0407, E0425.
+For more information about an error, try `rustc --explain E0407`.
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 836MB, peak z3 RSS: 0MB, min free: 27918MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s

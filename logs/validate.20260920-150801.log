@@ -1,0 +1,1352 @@
+Mode: full
+error[E0432]: unresolved import `vstd::relations::injective_on`
+  --> src/Chap53/PQMinStPer.rs:41:9
+   |
+41 |     use vstd::relations::injective_on;
+   |         ^^^^^^^^^^^^^^^^^------------
+   |                          |
+   |                          no `injective_on` in `relations`
+   |
+help: a similar name exists in the module
+   |
+41 -     use vstd::relations::injective_on;
+41 +     use vstd::relations::injective;
+   |
+
+error[E0407]: method `initial_value_relation` is not a member of trait `IteratorSpecImpl`
+   --> src/standards/prophetic_iterators_standard.rs:174:19
+    |
+174 |           open spec fn initial_value_relation(&self, init: &Self) -> bool {
+    |  ___________________^
+175 | |             &&& IteratorSpec::remaining(init) == IteratorSpec::remaining(self)
+176 | |             &&& init.elts() == self.elts()
+177 | |         }
+    | |_________^ not a member of trait `IteratorSpecImpl`
+
+error[E0425]: cannot find value `axiom_spec_slice_iter` in module `vstd::std_specs::slice`
+  --> src/standards/prophetic_iterators_standard.rs:65:43
+   |
+65 |     broadcast use vstd::std_specs::slice::axiom_spec_slice_iter;
+   |                                           ^^^^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::slice`
+
+error[E0425]: cannot find value `axiom_spec_into_iter` in module `vstd::std_specs::vec`
+   --> src/standards/prophetic_iterators_standard.rs:291:49
+    |
+291 |             broadcast use vstd::std_specs::vec::axiom_spec_into_iter;
+    |                                                 ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::vec`
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:462:26
+    |
+462 |         vstd::set::fold::lemma_fold_empty::<nat, nat>(0nat, f);
+    |                          ^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:640:0
+    |
+    = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+    |
+462 -         vstd::set::fold::lemma_fold_empty::<nat, nat>(0nat, f);
+462 +         vstd::set::fold::lemma_iset_empty::<nat, nat>(0nat, f);
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_empty;
+    |
+help: if you import `lemma_fold_empty`, refer to it directly
+    |
+462 -         vstd::set::fold::lemma_fold_empty::<nat, nat>(0nat, f);
+462 +         lemma_fold_empty::<nat, nat>(0nat, f);
+    |
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+   --> src/vstdplus/seq_set.rs:485:24
+    |
+485 |         vstd::seq_lib::seq_to_set_is_finite(prefix);
+    |                        ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:486:26
+    |
+486 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_insert;
+    |
+help: if you import `lemma_fold_insert`, refer to it directly
+    |
+486 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+486 +         lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:754:26
+    |
+754 |         vstd::set::fold::lemma_fold_empty::<(A, B, u32), nat>(0nat, f);
+    |                          ^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:640:0
+    |
+    = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+    |
+754 -         vstd::set::fold::lemma_fold_empty::<(A, B, u32), nat>(0nat, f);
+754 +         vstd::set::fold::lemma_iset_empty::<(A, B, u32), nat>(0nat, f);
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_empty;
+    |
+help: if you import `lemma_fold_empty`, refer to it directly
+    |
+754 -         vstd::set::fold::lemma_fold_empty::<(A, B, u32), nat>(0nat, f);
+754 +         lemma_fold_empty::<(A, B, u32), nat>(0nat, f);
+    |
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+   --> src/vstdplus/seq_set.rs:779:24
+    |
+779 |         vstd::seq_lib::seq_to_set_is_finite(prefix);
+    |                        ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:780:26
+    |
+780 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_insert;
+    |
+help: if you import `lemma_fold_insert`, refer to it directly
+    |
+780 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+780 +         lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:897:26
+    |
+897 |         vstd::set::fold::lemma_fold_empty::<(A, B, u8), nat>(0nat, f);
+    |                          ^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:640:0
+    |
+    = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+    |
+897 -         vstd::set::fold::lemma_fold_empty::<(A, B, u8), nat>(0nat, f);
+897 +         vstd::set::fold::lemma_iset_empty::<(A, B, u8), nat>(0nat, f);
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_empty;
+    |
+help: if you import `lemma_fold_empty`, refer to it directly
+    |
+897 -         vstd::set::fold::lemma_fold_empty::<(A, B, u8), nat>(0nat, f);
+897 +         lemma_fold_empty::<(A, B, u8), nat>(0nat, f);
+    |
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+   --> src/vstdplus/seq_set.rs:905:24
+    |
+905 |         vstd::seq_lib::seq_to_set_is_finite(prefix);
+    |                        ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:906:26
+    |
+906 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_insert;
+    |
+help: if you import `lemma_fold_insert`, refer to it directly
+    |
+906 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+906 +         lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:936:26
+    |
+936 |         vstd::set::fold::lemma_fold_empty::<(A, B, u16), nat>(0nat, f);
+    |                          ^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:640:0
+    |
+    = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+    |
+936 -         vstd::set::fold::lemma_fold_empty::<(A, B, u16), nat>(0nat, f);
+936 +         vstd::set::fold::lemma_iset_empty::<(A, B, u16), nat>(0nat, f);
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_empty;
+    |
+help: if you import `lemma_fold_empty`, refer to it directly
+    |
+936 -         vstd::set::fold::lemma_fold_empty::<(A, B, u16), nat>(0nat, f);
+936 +         lemma_fold_empty::<(A, B, u16), nat>(0nat, f);
+    |
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+   --> src/vstdplus/seq_set.rs:944:24
+    |
+944 |         vstd::seq_lib::seq_to_set_is_finite(prefix);
+    |                        ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:945:26
+    |
+945 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_insert;
+    |
+help: if you import `lemma_fold_insert`, refer to it directly
+    |
+945 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+945 +         lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:976:26
+    |
+976 |         vstd::set::fold::lemma_fold_empty::<(A, B, u64), nat>(0nat, f);
+    |                          ^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:640:0
+    |
+    = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+    |
+976 -         vstd::set::fold::lemma_fold_empty::<(A, B, u64), nat>(0nat, f);
+976 +         vstd::set::fold::lemma_iset_empty::<(A, B, u64), nat>(0nat, f);
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_empty;
+    |
+help: if you import `lemma_fold_empty`, refer to it directly
+    |
+976 -         vstd::set::fold::lemma_fold_empty::<(A, B, u64), nat>(0nat, f);
+976 +         lemma_fold_empty::<(A, B, u64), nat>(0nat, f);
+    |
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+   --> src/vstdplus/seq_set.rs:984:24
+    |
+984 |         vstd::seq_lib::seq_to_set_is_finite(prefix);
+    |                        ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+   --> src/vstdplus/seq_set.rs:985:26
+    |
+985 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+    |
+help: consider importing this function
+    |
+ 12 + use vstd::iset::fold::lemma_fold_insert;
+    |
+help: if you import `lemma_fold_insert`, refer to it directly
+    |
+985 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+985 +         lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+    |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1015:26
+     |
+1015 |         vstd::set::fold::lemma_fold_empty::<(A, B, u128), nat>(0nat, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1015 -         vstd::set::fold::lemma_fold_empty::<(A, B, u128), nat>(0nat, f);
+1015 +         vstd::set::fold::lemma_iset_empty::<(A, B, u128), nat>(0nat, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1015 -         vstd::set::fold::lemma_fold_empty::<(A, B, u128), nat>(0nat, f);
+1015 +         lemma_fold_empty::<(A, B, u128), nat>(0nat, f);
+     |
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+    --> src/vstdplus/seq_set.rs:1023:24
+     |
+1023 |         vstd::seq_lib::seq_to_set_is_finite(prefix);
+     |                        ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1024:26
+     |
+1024 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1024 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+1024 +         lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+     |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1054:26
+     |
+1054 |         vstd::set::fold::lemma_fold_empty::<(A, B, usize), nat>(0nat, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1054 -         vstd::set::fold::lemma_fold_empty::<(A, B, usize), nat>(0nat, f);
+1054 +         vstd::set::fold::lemma_iset_empty::<(A, B, usize), nat>(0nat, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1054 -         vstd::set::fold::lemma_fold_empty::<(A, B, usize), nat>(0nat, f);
+1054 +         lemma_fold_empty::<(A, B, usize), nat>(0nat, f);
+     |
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+    --> src/vstdplus/seq_set.rs:1062:24
+     |
+1062 |         vstd::seq_lib::seq_to_set_is_finite(prefix);
+     |                        ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1063:26
+     |
+1063 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1063 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+1063 +         lemma_fold_insert(prefix.to_set(), 0nat, f, last);
+     |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1086:26
+     |
+1086 |         vstd::set::fold::lemma_fold_empty::<(A, B, i8), int>(0int, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1086 -         vstd::set::fold::lemma_fold_empty::<(A, B, i8), int>(0int, f);
+1086 +         vstd::set::fold::lemma_iset_empty::<(A, B, i8), int>(0int, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1086 -         vstd::set::fold::lemma_fold_empty::<(A, B, i8), int>(0int, f);
+1086 +         lemma_fold_empty::<(A, B, i8), int>(0int, f);
+     |
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+    --> src/vstdplus/seq_set.rs:1094:24
+     |
+1094 |         vstd::seq_lib::seq_to_set_is_finite(prefix);
+     |                        ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1095:26
+     |
+1095 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1095 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+1095 +         lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1119:26
+     |
+1119 |         vstd::set::fold::lemma_fold_empty::<(A, B, i16), int>(0int, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1119 -         vstd::set::fold::lemma_fold_empty::<(A, B, i16), int>(0int, f);
+1119 +         vstd::set::fold::lemma_iset_empty::<(A, B, i16), int>(0int, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1119 -         vstd::set::fold::lemma_fold_empty::<(A, B, i16), int>(0int, f);
+1119 +         lemma_fold_empty::<(A, B, i16), int>(0int, f);
+     |
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+    --> src/vstdplus/seq_set.rs:1127:24
+     |
+1127 |         vstd::seq_lib::seq_to_set_is_finite(prefix);
+     |                        ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1128:26
+     |
+1128 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1128 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+1128 +         lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1151:26
+     |
+1151 |         vstd::set::fold::lemma_fold_empty::<(A, B, i32), int>(0int, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1151 -         vstd::set::fold::lemma_fold_empty::<(A, B, i32), int>(0int, f);
+1151 +         vstd::set::fold::lemma_iset_empty::<(A, B, i32), int>(0int, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1151 -         vstd::set::fold::lemma_fold_empty::<(A, B, i32), int>(0int, f);
+1151 +         lemma_fold_empty::<(A, B, i32), int>(0int, f);
+     |
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+    --> src/vstdplus/seq_set.rs:1159:24
+     |
+1159 |         vstd::seq_lib::seq_to_set_is_finite(prefix);
+     |                        ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1160:26
+     |
+1160 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1160 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+1160 +         lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1183:26
+     |
+1183 |         vstd::set::fold::lemma_fold_empty::<(A, B, i64), int>(0int, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1183 -         vstd::set::fold::lemma_fold_empty::<(A, B, i64), int>(0int, f);
+1183 +         vstd::set::fold::lemma_iset_empty::<(A, B, i64), int>(0int, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1183 -         vstd::set::fold::lemma_fold_empty::<(A, B, i64), int>(0int, f);
+1183 +         lemma_fold_empty::<(A, B, i64), int>(0int, f);
+     |
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+    --> src/vstdplus/seq_set.rs:1191:24
+     |
+1191 |         vstd::seq_lib::seq_to_set_is_finite(prefix);
+     |                        ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1192:26
+     |
+1192 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1192 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+1192 +         lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1215:26
+     |
+1215 |         vstd::set::fold::lemma_fold_empty::<(A, B, i128), int>(0int, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1215 -         vstd::set::fold::lemma_fold_empty::<(A, B, i128), int>(0int, f);
+1215 +         vstd::set::fold::lemma_iset_empty::<(A, B, i128), int>(0int, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1215 -         vstd::set::fold::lemma_fold_empty::<(A, B, i128), int>(0int, f);
+1215 +         lemma_fold_empty::<(A, B, i128), int>(0int, f);
+     |
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+    --> src/vstdplus/seq_set.rs:1223:24
+     |
+1223 |         vstd::seq_lib::seq_to_set_is_finite(prefix);
+     |                        ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1224:26
+     |
+1224 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1224 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+1224 +         lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |
+
+error[E0425]: cannot find function `lemma_fold_empty` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1247:26
+     |
+1247 |         vstd::set::fold::lemma_fold_empty::<(A, B, isize), int>(0int, f);
+     |                          ^^^^^^^^^^^^^^^^
+     |
+    --> iset.rs:640:0
+     |
+     = note: similarly named function `lemma_iset_empty` defined here
+help: a function with a similar name exists
+     |
+1247 -         vstd::set::fold::lemma_fold_empty::<(A, B, isize), int>(0int, f);
+1247 +         vstd::set::fold::lemma_iset_empty::<(A, B, isize), int>(0int, f);
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_empty;
+     |
+help: if you import `lemma_fold_empty`, refer to it directly
+     |
+1247 -         vstd::set::fold::lemma_fold_empty::<(A, B, isize), int>(0int, f);
+1247 +         lemma_fold_empty::<(A, B, isize), int>(0int, f);
+     |
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+    --> src/vstdplus/seq_set.rs:1255:24
+     |
+1255 |         vstd::seq_lib::seq_to_set_is_finite(prefix);
+     |                        ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `lemma_fold_insert` in module `vstd::set::fold`
+    --> src/vstdplus/seq_set.rs:1256:26
+     |
+1256 |         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |                          ^^^^^^^^^^^^^^^^^ not found in `vstd::set::fold`
+     |
+help: consider importing this function
+     |
+  12 + use vstd::iset::fold::lemma_fold_insert;
+     |
+help: if you import `lemma_fold_insert`, refer to it directly
+     |
+1256 -         vstd::set::fold::lemma_fold_insert(prefix.to_set(), 0int, f, last);
+1256 +         lemma_fold_insert(prefix.to_set(), 0int, f, last);
+     |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/vstdplus/hash_map_with_view_plus.rs:43:26
+   |
+43 | broadcast use vstd::map::group_map_axioms;
+   |                          ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+43 - broadcast use vstd::map::group_map_axioms;
+43 + broadcast use vstd::map::group_map_lemmas;
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap05/MappingStEph.rs:74:20
+   |
+74 |         vstd::map::group_map_axioms,
+   |                    ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+74 -         vstd::map::group_map_axioms,
+74 +         vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find function `axiom_set_new` in module `vstd::set`
+   --> src/Chap06/LabDirGraphStEph.rs:341:40
+    |
+341 | ...                   vstd::set::axiom_set_new(pred, (from_view, to_view));
+    |                                  ^^^^^^^^^^^^^ not found in `vstd::set`
+
+error[E0425]: cannot find value `group_slice_axioms` in module `vstd::std_specs::slice`
+  --> src/Chap18/ArraySeqMtEphSlice.rs:61:33
+   |
+61 |         vstd::std_specs::slice::group_slice_axioms,
+   |                                 ^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::slice`
+   |
+help: consider importing this function
+   |
+33 +     use vstd::slice::group_slice_axioms;
+   |
+help: if you import `group_slice_axioms`, refer to it directly
+   |
+61 -         vstd::std_specs::slice::group_slice_axioms,
+61 +         group_slice_axioms,
+   |
+
+error[E0425]: cannot find value `group_slice_axioms` in module `vstd::std_specs::slice`
+  --> src/Chap19/ArraySeqMtEphSlice.rs:61:33
+   |
+61 |         vstd::std_specs::slice::group_slice_axioms,
+   |                                 ^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::slice`
+   |
+help: consider importing this function
+   |
+33 +     use vstd::slice::group_slice_axioms;
+   |
+help: if you import `group_slice_axioms`, refer to it directly
+   |
+61 -         vstd::std_specs::slice::group_slice_axioms,
+61 +         group_slice_axioms,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap40/BSTKeyValueStEph.rs:61:32
+   |
+61 |     broadcast use { vstd::map::group_map_axioms, vstd::map_lib::group_map_union, vstd::set::group_set_lemmas };
+   |                                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+61 -     broadcast use { vstd::map::group_map_axioms, vstd::map_lib::group_map_union, vstd::set::group_set_lemmas };
+61 +     broadcast use { vstd::map::group_map_lemmas, vstd::map_lib::group_map_union, vstd::set::group_set_lemmas };
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap41/OrdKeyMap.rs:57:20
+   |
+57 |         vstd::map::group_map_axioms,
+   |                    ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+57 -         vstd::map::group_map_axioms,
+57 +         vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find function `injective_on` in module `vstd::relations`
+   --> src/Chap41/OrdKeyMap.rs:202:33
+    |
+202 |         assert(vstd::relations::injective_on(proj, s)) by {
+    |                                 ^^^^^^^^^^^^
+    |
+   --> relations.rs:11:0
+    |
+    = note: similarly named function `injective` defined here
+help: a function with a similar name exists
+    |
+202 -         assert(vstd::relations::injective_on(proj, s)) by {
+202 +         assert(vstd::relations::injective(proj, s)) by {
+    |
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+   --> src/Chap41/ArraySetStEph.rs:612:32
+    |
+612 |                 vstd::seq_lib::seq_to_set_is_finite(filtered.elements@);
+    |                                ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+   --> src/Chap41/ArraySetStEph.rs:698:32
+    |
+698 |                 vstd::seq_lib::seq_to_set_is_finite(common.elements@);
+    |                                ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+   --> src/Chap41/ArraySetStEph.rs:781:32
+    |
+781 |                 vstd::seq_lib::seq_to_set_is_finite(remaining.elements@);
+    |                                ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+   --> src/Chap41/ArraySetStEph.rs:906:32
+    |
+906 |                 vstd::seq_lib::seq_to_set_is_finite(combined.elements@);
+    |                                ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+   --> src/Chap41/ArraySetStEph.rs:984:32
+    |
+984 |                 vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+    |                                ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+    --> src/Chap41/ArraySetStEph.rs:1045:36
+     |
+1045 |                     vstd::seq_lib::seq_to_set_is_finite(self.elements@);
+     |                                    ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+   --> src/Chap41/AVLTreeSetMtEph.rs:277:32
+    |
+277 |                 vstd::seq_lib::seq_to_set_is_finite(views);
+    |                                ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+   --> src/Chap41/AVLTreeSetMtEph.rs:406:32
+    |
+406 |                 vstd::seq_lib::seq_to_set_is_finite(seq@);
+    |                                ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find function `seq_to_set_is_finite` in module `vstd::seq_lib`
+   --> src/Chap41/AVLTreeSetMtPer.rs:290:32
+    |
+290 |                 vstd::seq_lib::seq_to_set_is_finite(views);
+    |                                ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::seq_lib`
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap42/TableSpecsAndLemmas.rs:21:16
+   |
+21 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+21 -     vstd::map::group_map_axioms,
+21 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap42/TableStEph.rs:62:16
+   |
+62 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+62 -     vstd::map::group_map_axioms,
+62 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap42/TableStPer.rs:61:20
+   |
+61 |         vstd::map::group_map_axioms,
+   |                    ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+61 -         vstd::map::group_map_axioms,
+61 +         vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap42/TableMtEph.rs:61:16
+   |
+61 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+61 -     vstd::map::group_map_axioms,
+61 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap43/OrderedSpecsAndLemmas.rs:27:16
+   |
+27 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+27 -     vstd::map::group_map_axioms,
+27 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find function `injective_on` in module `vstd::relations`
+   --> src/Chap43/OrderedSpecsAndLemmas.rs:144:33
+    |
+144 |         assert(vstd::relations::injective_on(proj, s)) by {
+    |                                 ^^^^^^^^^^^^
+    |
+   --> relations.rs:11:0
+    |
+    = note: similarly named function `injective` defined here
+help: a function with a similar name exists
+    |
+144 -         assert(vstd::relations::injective_on(proj, s)) by {
+144 +         assert(vstd::relations::injective(proj, s)) by {
+    |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap43/OrderedTableStEph.rs:58:16
+   |
+58 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+58 -     vstd::map::group_map_axioms,
+58 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap43/OrderedTableMtEph.rs:59:16
+   |
+59 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+59 -     vstd::map::group_map_axioms,
+59 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap43/AugOrderedTableStEph.rs:54:16
+   |
+54 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+54 -     vstd::map::group_map_axioms,
+54 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap43/AugOrderedTableMtEph.rs:65:16
+   |
+65 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+65 -     vstd::map::group_map_axioms,
+65 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap43/OrderedTableStPer.rs:60:16
+   |
+60 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+60 -     vstd::map::group_map_axioms,
+60 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap43/AugOrderedTableStPer.rs:55:16
+   |
+55 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+55 -     vstd::map::group_map_axioms,
+55 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap43/OrderedTableMtPer.rs:53:20
+   |
+53 |         vstd::map::group_map_axioms,
+   |                    ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+53 -         vstd::map::group_map_axioms,
+53 +         vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find function `axiom_set_insert_finite` in module `vstd::set`
+   --> src/Chap44/DocumentIndex.rs:222:32
+    |
+222 |                     vstd::set::axiom_set_insert_finite(old_gds, doc_id@);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:797:0
+    |
+    = note: similarly named function `lemma_iset_insert_finite` defined here
+help: a function with a similar name exists
+    |
+222 -                     vstd::set::axiom_set_insert_finite(old_gds, doc_id@);
+222 +                     vstd::set::lemma_iset_insert_finite(old_gds, doc_id@);
+    |
+
+error[E0425]: cannot find function `axiom_set_insert_len` in module `vstd::set`
+   --> src/Chap44/DocumentIndex.rs:223:32
+    |
+223 |                     vstd::set::axiom_set_insert_len(old_gds, doc_id@);
+    |                                ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> set.rs:504:0
+    |
+    = note: similarly named function `lemma_set_insert_len` defined here
+help: a function with a similar name exists
+    |
+223 -                     vstd::set::axiom_set_insert_len(old_gds, doc_id@);
+223 +                     vstd::set::lemma_set_insert_len(old_gds, doc_id@);
+    |
+
+error[E0425]: cannot find function `axiom_set_insert_len` in module `vstd::set`
+   --> src/Chap44/DocumentIndex.rs:283:44
+    |
+283 | ...                   vstd::set::axiom_set_insert_len(
+    |                                  ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> set.rs:504:0
+    |
+    = note: similarly named function `lemma_set_insert_len` defined here
+help: a function with a similar name exists
+    |
+283 -                                 vstd::set::axiom_set_insert_len(
+283 +                                 vstd::set::lemma_set_insert_len(
+    |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap50/MatrixChainStEph.rs:58:16
+   |
+58 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+58 -     vstd::map::group_map_axioms,
+58 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap50/MatrixChainStPer.rs:57:16
+   |
+57 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+57 -     vstd::map::group_map_axioms,
+57 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap50/MatrixChainMtEph.rs:67:16
+   |
+67 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+67 -     vstd::map::group_map_axioms,
+67 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap50/MatrixChainMtPer.rs:66:16
+   |
+66 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+66 -     vstd::map::group_map_axioms,
+66 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap50/OptBinSearchTreeStEph.rs:56:16
+   |
+56 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+56 -     vstd::map::group_map_axioms,
+56 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap50/OptBinSearchTreeStPer.rs:56:16
+   |
+56 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+56 -     vstd::map::group_map_axioms,
+56 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap50/OptBinSearchTreeMtEph.rs:68:16
+   |
+68 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+68 -     vstd::map::group_map_axioms,
+68 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap50/OptBinSearchTreeMtPer.rs:66:16
+   |
+66 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+66 -     vstd::map::group_map_axioms,
+66 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap51/SeqSpecsAndLemmas.rs:25:20
+   |
+25 |         vstd::map::group_map_axioms,
+   |                    ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+25 -         vstd::map::group_map_axioms,
+25 +         vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap51/TopDownDPStEph.rs:51:20
+   |
+51 |         vstd::map::group_map_axioms,
+   |                    ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+51 -         vstd::map::group_map_axioms,
+51 +         vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap51/TopDownDPStPer.rs:51:20
+   |
+51 |         vstd::map::group_map_axioms,
+   |                    ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+51 -         vstd::map::group_map_axioms,
+51 +         vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap51/TopDownDPMtEph.rs:56:20
+   |
+56 |         vstd::map::group_map_axioms,
+   |                    ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+56 -         vstd::map::group_map_axioms,
+56 +         vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap51/TopDownDPMtPer.rs:56:20
+   |
+56 |         vstd::map::group_map_axioms,
+   |                    ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+56 -         vstd::map::group_map_axioms,
+56 +         vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap52/AdjTableGraphSpecsAndLemmas.rs:37:16
+   |
+37 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+37 -     vstd::map::group_map_axioms,
+37 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap52/AdjTableGraphStEph.rs:54:16
+   |
+54 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+54 -     vstd::map::group_map_axioms,
+54 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap52/AdjTableGraphStPer.rs:58:16
+   |
+58 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+58 -     vstd::map::group_map_axioms,
+58 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find value `group_map_axioms` in module `vstd::map`
+  --> src/Chap52/AdjTableGraphMtPer.rs:51:16
+   |
+51 |     vstd::map::group_map_axioms,
+   |                ^^^^^^^^^^^^^^^^
+   |
+  --> map.rs:335:0
+  ::: map.rs:348:1
+   |
+   = note: similarly named function `group_map_lemmas` defined here
+help: a function with a similar name exists
+   |
+51 -     vstd::map::group_map_axioms,
+51 +     vstd::map::group_map_lemmas,
+   |
+
+error[E0425]: cannot find function `lemma_set_union_finite_iff` in module `vstd::set_lib`
+   --> src/Chap65/PrimStEph.rs:295:28
+    |
+295 |             vstd::set_lib::lemma_set_union_finite_iff(DA_fwd, DA_rev);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> iset.rs:862:0
+    |
+    = note: similarly named function `lemma_iset_union_finite` defined here
+help: a function with a similar name exists
+    |
+295 -             vstd::set_lib::lemma_set_union_finite_iff(DA_fwd, DA_rev);
+295 +             vstd::set_lib::lemma_iset_union_finite(DA_fwd, DA_rev);
+    |
+
+error: aborting due to 94 previous errors
+
+Some errors have detailed explanations: E0407, E0425, E0432.
+For more information about an error, try `rustc --explain E0407`.
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 871MB, peak z3 RSS: 0MB, min free: 27947MB
+Sampled CPU Usage: rust_verify: 14s, z3 children: 0s

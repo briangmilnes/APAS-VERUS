@@ -1,0 +1,15 @@
+Experiment: src/experiments/prophetic_iter_custom_struct.rs
+Verus:   Version: 0.2026.09.13.671956e
+error[E0407]: method `initial_value_relation` is not a member of trait `IteratorSpecImpl`
+   --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_iter_custom_struct.rs:107:15
+    |
+107 |       open spec fn initial_value_relation(&self, init: &Self) -> bool {
+    |  _______________^
+108 | |         &&& IteratorSpec::remaining(init) == IteratorSpec::remaining(self)
+109 | |         &&& init.elts() == self.elts()
+110 | |     }
+    | |_____^ not a member of trait `IteratorSpecImpl`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0407`.

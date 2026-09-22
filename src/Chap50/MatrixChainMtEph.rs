@@ -4,7 +4,7 @@
 //! Chapter 50: Matrix Chain Multiplication - ephemeral, multi-threaded.
 //!
 //! Memoized top-down DP with parallel min reduction.
-//! Uses Arc<RwLock<HashMapWithViewPlus>> for the memo table.
+//! Uses Arc<RwLock<HashMap>> for the memo table.
 
 
 //  Table of Contents
@@ -39,6 +39,7 @@ pub mod MatrixChainMtEph {
 
     //		Section 2. imports
 
+    use std::collections::HashMap;
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::sync::Arc;
     use std::vec::IntoIter;
@@ -48,8 +49,6 @@ pub mod MatrixChainMtEph {
 
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Types::Types::*;
-    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
     use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
@@ -64,7 +63,7 @@ pub mod MatrixChainMtEph {
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     crate::Types::Types::group_Pair_axioms,
-    vstd::map::group_map_axioms,
+    vstd::map::group_map_lemmas,
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,
@@ -130,9 +129,9 @@ broadcast use {
             }
     }
 
-    pub open spec fn spec_memo_correct(dims: Seq<MatrixDim>, memo: Map<(usize, usize), usize>) -> bool {
-        forall|a: usize, b: usize| #[trigger] memo.contains_key((a, b)) ==>
-            memo[(a, b)] as nat == spec_chain_cost(dims, a as int, b as int, a as int)
+    pub open spec fn spec_memo_correct(dims: Seq<MatrixDim>, memo: Map<Pair<usize, usize>, usize>) -> bool {
+        forall|a: usize, b: usize| #[trigger] memo.contains_key(Pair(a, b)) ==>
+            memo[Pair(a, b)] as nat == spec_chain_cost(dims, a as int, b as int, a as int)
     }
 
     pub open spec fn spec_chain_cost(dims: Seq<MatrixDim>, i: int, j: int, k: int) -> nat
@@ -255,7 +254,7 @@ broadcast use {
 
     pub struct MatrixChainMtEphS {
         pub dimensions: Arc<RwLock<Vec<MatrixDim>, MatrixChainMtEphDimInv>>,
-        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MatrixChainMtEphMemoInv>>,
+        pub memo: Arc<RwLock<HashMap<Pair<usize, usize>, usize>, MatrixChainMtEphMemoInv>>,
         pub ghost_dimensions: Ghost<Seq<MatrixDim>>,
     }
 
@@ -283,8 +282,8 @@ broadcast use {
             // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                dimensions: new_arc_rwlock(Vec::new(), Ghost(MatrixChainMtEphDimInv { expected_dims: Seq::empty() })),
-                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: Seq::empty() })),
+                dimensions: Arc::new(RwLock::new(Vec::new(), Ghost(MatrixChainMtEphDimInv { expected_dims: Seq::empty() }))),
+                memo: Arc::new(RwLock::new(HashMap::new(), Ghost(MatrixChainMtEphMemoInv { dims: Seq::empty() }))),
                 ghost_dimensions: Ghost(Seq::empty()),
             }
         }
@@ -296,8 +295,8 @@ broadcast use {
             let _len = dimensions.len();
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                dimensions: new_arc_rwlock(dimensions, Ghost(MatrixChainMtEphDimInv { expected_dims: gd })),
-                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: gd })),
+                dimensions: Arc::new(RwLock::new(dimensions, Ghost(MatrixChainMtEphDimInv { expected_dims: gd }))),
+                memo: Arc::new(RwLock::new(HashMap::new(), Ghost(MatrixChainMtEphMemoInv { dims: gd }))),
                 ghost_dimensions: Ghost(gd),
             }
         }
@@ -322,8 +321,8 @@ broadcast use {
             let ghost gd = dimensions@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                dimensions: new_arc_rwlock(dimensions, Ghost(MatrixChainMtEphDimInv { expected_dims: gd })),
-                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: gd })),
+                dimensions: Arc::new(RwLock::new(dimensions, Ghost(MatrixChainMtEphDimInv { expected_dims: gd }))),
+                memo: Arc::new(RwLock::new(HashMap::new(), Ghost(MatrixChainMtEphMemoInv { dims: gd }))),
                 ghost_dimensions: Ghost(gd),
             }
         }
@@ -372,6 +371,8 @@ broadcast use {
         fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize)
             decreases j - i,
         {
+            // The vstd `get`/`insert` postconditions hold under the Pair key model.
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             // Memo lookup.
             {
                 let rwlock = arc_deref(&self.memo);
@@ -398,13 +399,13 @@ broadcast use {
                 memo.insert(Pair(i, j), 0usize);
                 proof {
                     // Veracity: NEEDED assert
-                    assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
+                    assert forall|a: usize, b: usize| #[trigger] memo@.contains_key(Pair(a, b))
                     implies
-                        memo@[(a, b)] as nat == spec_chain_cost(self@.dimensions, a as int, b as int, a as int)
+                        memo@[Pair(a, b)] as nat == spec_chain_cost(self@.dimensions, a as int, b as int, a as int)
                     by {
                         if a == i && b == j {
                         } else {
-// Veracity: UNNEEDED assert                             assert(pre_insert.contains_key((a, b)));
+// Veracity: UNNEEDED assert                             assert(pre_insert.contains_key(Pair(a, b)));
                         }
                     };
                 }
@@ -454,14 +455,14 @@ broadcast use {
             memo.insert(Pair(i, j), best);
             proof {
                 // Veracity: NEEDED assert
-                assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
+                assert forall|a: usize, b: usize| #[trigger] memo@.contains_key(Pair(a, b))
                 implies
-                    memo@[(a, b)] as nat == spec_chain_cost(gdims, a as int, b as int, a as int)
+                    memo@[Pair(a, b)] as nat == spec_chain_cost(gdims, a as int, b as int, a as int)
                 by {
                     if a == i && b == j {
                     } else {
                         // Veracity: NEEDED assert (speed hint)
-                        assert(pre_insert.contains_key((a, b)));
+                        assert(pre_insert.contains_key(Pair(a, b)));
                     }
                 };
             }
@@ -479,10 +480,10 @@ broadcast use {
 
             // Rebuild memo with correct dims reference.
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
-            self.memo = new_arc_rwlock(
-                HashMapWithViewPlus::new(),
+            self.memo = Arc::new(RwLock::new(
+                HashMap::new(),
                 Ghost(MatrixChainMtEphMemoInv { dims: self.ghost_dimensions@ }),
-            );
+            ));
 
             self.matrix_chain_rec(0, n - 1)
         }
@@ -511,8 +512,8 @@ broadcast use {
             let ghost new_ghost = dims@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             *self = MatrixChainMtEphS {
-                dimensions: new_arc_rwlock(dims, Ghost(MatrixChainMtEphDimInv { expected_dims: new_ghost })),
-                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: new_ghost })),
+                dimensions: Arc::new(RwLock::new(dims, Ghost(MatrixChainMtEphDimInv { expected_dims: new_ghost }))),
+                memo: Arc::new(RwLock::new(HashMap::new(), Ghost(MatrixChainMtEphMemoInv { dims: new_ghost }))),
                 ghost_dimensions: Ghost(new_ghost),
             };
         }
@@ -530,8 +531,8 @@ broadcast use {
             let ghost new_ghost = dims@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             *self = MatrixChainMtEphS {
-                dimensions: new_arc_rwlock(dims, Ghost(MatrixChainMtEphDimInv { expected_dims: new_ghost })),
-                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(MatrixChainMtEphMemoInv { dims: new_ghost })),
+                dimensions: Arc::new(RwLock::new(dims, Ghost(MatrixChainMtEphDimInv { expected_dims: new_ghost }))),
+                memo: Arc::new(RwLock::new(HashMap::new(), Ghost(MatrixChainMtEphMemoInv { dims: new_ghost }))),
                 ghost_dimensions: Ghost(new_ghost),
             };
         }
@@ -552,10 +553,10 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate new empty RwLock for memo
         fn clear_memo(&mut self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
-            self.memo = new_arc_rwlock(
-                HashMapWithViewPlus::new(),
+            self.memo = Arc::new(RwLock::new(
+                HashMap::new(),
                 Ghost(MatrixChainMtEphMemoInv { dims: self.ghost_dimensions@ }),
-            );
+            ));
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — read memo length under read lock
@@ -587,10 +588,9 @@ broadcast use {
     //		Section 11c. top level coarse locking
 
 
-    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for MatrixChainMtEphMemoInv {
-        open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
-            &&& v@.dom().finite()
-            &&& spec_memo_correct(self.dims, v@)
+    impl RwLockPredicate<HashMap<Pair<usize, usize>, usize>> for MatrixChainMtEphMemoInv {
+        open spec fn inv(self, v: HashMap<Pair<usize, usize>, usize>) -> bool {
+            spec_memo_correct(self.dims, v@)
         }
     }
 

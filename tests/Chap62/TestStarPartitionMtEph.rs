@@ -2,7 +2,6 @@
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Chapter 62: Star Partition - Multi-threaded Ephemeral Tests
 
-use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 use apas_verus::Chap05::SetStEph::SetStEph::*;
 use apas_verus::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
 use apas_verus::Chap62::StarPartitionMtEph::StarPartitionMtEph::*;

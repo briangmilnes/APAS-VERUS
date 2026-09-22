@@ -1,205 +1,228 @@
-//! Proof tests for standards::iterators_standard iterators.
+//! Proof tests for standards::iterators_standard (delegated iteration under
+//! the verus 0.2026.09.13 prophetic iterator model).
 //!
-//! Loop patterns tested (see docs/APAS-VERUSIterators.rs):
-//!   - loop-borrow-iter:   `loop { ... a.iter() ... }`
-//!   - loop-borrow-into:   `loop { ... (&a).into_iter() ... }`
-//!   - loop-consume:       `loop { ... a.into_iter() ... }`
-//!   - for-borrow-iter:    `for x in iter: a.iter()`
-//!   - for-borrow-into:    `for x in iter: (&a).into_iter()`
-//!   - for-consume:        `for x in iter: a.into_iter()`
+//! Loop patterns tested:
+//!   - loop-borrow-iter:   `loop` over `a.iter()` on its own `next()`
+//!   - loop-borrow-into:   `loop` over `(&a).into_iter()` on its own `next()`
+//!   - loop-consume:       `loop` over `a.into_iter()` on its own `next()`
+//!   - for-borrow-iter:    `for x in it: a.iter()`
+//!   - for-borrow-into:    `for x in it: (&a).into_iter()`
+//!   - for-consume:        `for x in it: a.into_iter()`
 
 #[macro_use]
 #[path = "../common/mod.rs"]
 mod common;
 use common::*;
 
-// loop-borrow-iter: Manual iteration with loop + a.iter()
+// loop-borrow-iter
 test_verify_one_file! {
     #[test] iterators_standard_loop_borrow_iter verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::standards::iterators_standard::iterators_standard::*;
 
         fn test_loop_borrow_iter() {
             let a: ExampleS<u64> = ExampleS::new(3, 42);
-
-            let mut it: ExampleIter<u64> = a.iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            #[verifier::loop_isolation(false)]
+            let ghost orig: Seq<u64> = a@;
+            let mut collected: Vec<u64> = Vec::new();
+            let mut it: std::slice::Iter<'_, u64> = a.iter();
+            let ghost mut pos: int = 0;
             loop
                 invariant
-                    items =~= iter_seq.take(it@.0 as int),
-                    iter_invariant(&it),
-                    iter_seq == it@.1,
-                    it@.0 <= iter_seq.len(),
-                decreases iter_seq.len() - it@.0,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= orig.len(),
+                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
+                    collected.len() == pos,
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == orig[i],
+                decreases IteratorSpec::decrease(&it)->0,
             {
-                if let Some(x) = it.next() {
-                    proof { items = items.push(*x); }
-                } else {
-                    break;
+                let ghost old_pos = pos;
+                match it.next() {
+                    Some(x) => {
+                        proof {
+                            pos = pos + 1;
+                            assert(orig[old_pos] == *x);
+                        }
+                        collected.push(*x);
+                    },
+                    None => {
+                        assert(pos == orig.len());
+                        assert(collected@ =~= orig);
+                        break;
+                    },
                 }
             }
-
-            assert(it@.0 == iter_seq.len());
-            assert(items =~= iter_seq);
         }
     } => Ok(())
 }
 
-// loop-borrow-into: Manual iteration via (&a).into_iter()
+// loop-borrow-into
 test_verify_one_file! {
     #[test] iterators_standard_loop_borrow_into verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::standards::iterators_standard::iterators_standard::*;
 
         fn test_loop_borrow_into() {
             let a: ExampleS<u64> = ExampleS::new(3, 55);
-
-            let mut it: ExampleIter<u64> = (&a).into_iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            #[verifier::loop_isolation(false)]
+            let ghost orig: Seq<u64> = a@;
+            let mut collected: Vec<u64> = Vec::new();
+            let mut it: std::slice::Iter<'_, u64> = (&a).into_iter();
+            let ghost mut pos: int = 0;
             loop
                 invariant
-                    items =~= iter_seq.take(it@.0 as int),
-                    iter_invariant(&it),
-                    iter_seq == it@.1,
-                    it@.0 <= iter_seq.len(),
-                decreases iter_seq.len() - it@.0,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= orig.len(),
+                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
+                    collected.len() == pos,
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == orig[i],
+                decreases IteratorSpec::decrease(&it)->0,
             {
-                if let Some(x) = it.next() {
-                    proof { items = items.push(*x); }
-                } else {
-                    break;
+                let ghost old_pos = pos;
+                match it.next() {
+                    Some(x) => {
+                        proof {
+                            pos = pos + 1;
+                            assert(orig[old_pos] == *x);
+                        }
+                        collected.push(*x);
+                    },
+                    None => {
+                        assert(pos == orig.len());
+                        assert(collected@ =~= orig);
+                        break;
+                    },
                 }
             }
-
-            assert(it@.0 == iter_seq.len());
-            assert(items =~= iter_seq);
         }
     } => Ok(())
 }
 
-// loop-consume: Manual consuming iteration via a.into_iter()
+// loop-consume
 test_verify_one_file! {
     #[test] iterators_standard_loop_consume verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::standards::iterators_standard::iterators_standard::*;
 
         fn test_loop_consume() {
             let a: ExampleS<u64> = ExampleS::new(3, 33);
-            let ghost orig_seq: Seq<u64> = a.seq@;
-
-            let mut it = a.into_iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            assert(iter_seq == orig_seq);
-
-            #[verifier::loop_isolation(false)]
+            let ghost orig: Seq<u64> = a@;
+            let mut collected: Vec<u64> = Vec::new();
+            let mut it: std::vec::IntoIter<u64> = a.into_iter();
+            let ghost mut pos: int = 0;
             loop
                 invariant
-                    items =~= iter_seq.take(it@.0 as int),
-                    iter_seq == it@.1,
-                    0 <= it@.0 <= iter_seq.len(),
-                decreases iter_seq.len() - it@.0,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= orig.len(),
+                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> #[trigger] IteratorSpec::remaining(&it)[i] == orig[pos + i],
+                    collected.len() == pos,
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == orig[i],
+                decreases IteratorSpec::decrease(&it)->0,
             {
-                if let Some(x) = it.next() {
-                    proof { items = items.push(x); }
-                } else {
-                    break;
+                let ghost old_pos = pos;
+                match it.next() {
+                    Some(x) => {
+                        proof {
+                            pos = pos + 1;
+                            assert(orig[old_pos] == x);
+                        }
+                        collected.push(x);
+                    },
+                    None => {
+                        assert(pos == orig.len());
+                        assert(collected@ =~= orig);
+                        break;
+                    },
                 }
             }
-
-            assert(it@.0 == iter_seq.len());
-            assert(items =~= iter_seq);
         }
     } => Ok(())
 }
 
-// for-borrow-iter: `for x in iter: a.iter()`
+// for-borrow-iter
 test_verify_one_file! {
     #[test] iterators_standard_for_borrow_iter verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::standards::iterators_standard::iterators_standard::*;
 
         fn test_for_borrow_iter() {
             let a: ExampleS<u64> = ExampleS::new(3, 99);
-
-            let it: ExampleIter<u64> = a.iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            for x in iter: it
+            let ghost orig: Seq<u64> = a@;
+            let mut collected: Vec<u64> = Vec::new();
+            for x in it: a.iter()
                 invariant
-                    iter.elements == iter_seq,
-                    items =~= iter_seq.take(iter.pos),
-                    iter.pos <= iter_seq.len(),
+                    it.seq() == orig.as_ref(),
+                    collected.len() == it.index(),
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == *it.seq()[i],
             {
-                proof { items = items.push(*x); }
+                collected.push(*x);
             }
-
-            assert(items =~= iter_seq);
+            assert(collected@ =~= orig);
         }
     } => Ok(())
 }
 
-// for-borrow-into: `for x in iter: (&a).into_iter()`
+// for-borrow-into
 test_verify_one_file! {
     #[test] iterators_standard_for_borrow_into verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::standards::iterators_standard::iterators_standard::*;
 
         fn test_for_borrow_into() {
             let a: ExampleS<u64> = ExampleS::new(3, 77);
-
-            let it: ExampleIter<u64> = (&a).into_iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            for x in iter: it
+            let ghost orig: Seq<u64> = a@;
+            let mut collected: Vec<u64> = Vec::new();
+            for x in it: (&a).into_iter()
                 invariant
-                    iter.elements == iter_seq,
-                    items =~= iter_seq.take(iter.pos),
-                    iter.pos <= iter_seq.len(),
+                    it.seq() == orig.as_ref(),
+                    collected.len() == it.index(),
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == *it.seq()[i],
             {
-                proof { items = items.push(*x); }
+                collected.push(*x);
             }
-
-            assert(items =~= iter_seq);
+            assert(collected@ =~= orig);
         }
     } => Ok(())
 }
 
-// for-consume: `for x in iter: a.into_iter()`
+// for-consume
 test_verify_one_file! {
     #[test] iterators_standard_for_consume verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::standards::iterators_standard::iterators_standard::*;
 
         fn test_for_consume() {
             let a: ExampleS<u64> = ExampleS::new(3, 66);
-            let ghost orig_seq: Seq<u64> = a.seq@;
-
-            let it = a.into_iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            assert(iter_seq == orig_seq);
-
-            for x in iter: it
+            let ghost orig: Seq<u64> = a@;
+            let mut collected: Vec<u64> = Vec::new();
+            for x in it: a.into_iter()
                 invariant
-                    iter.elements == iter_seq,
-                    items =~= iter_seq.take(iter.pos),
-                    iter.pos <= iter_seq.len(),
+                    it.seq() == orig,
+                    collected.len() == it.index(),
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == it.seq()[i],
             {
-                proof { items = items.push(x); }
+                collected.push(x);
             }
-
-            assert(items =~= iter_seq);
+            assert(collected@ =~= orig);
         }
     } => Ok(())
 }

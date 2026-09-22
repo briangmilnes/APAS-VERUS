@@ -1,0 +1,12 @@
+Standard: finite_sets_standard (deps: nodeps; extra: none)
+Harness root: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/harness-finite_sets_standard/lib.rs
+Starting verification at 15:37:46
+error: only one module-level `broadcast use` allowed for each module
+  --> /home/milnes/projects/APAS-VERUS/src/standards/finite_sets_standard.rs:66:5
+   |
+66 |     broadcast use vstd::iset::group_iset_lemmas;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s

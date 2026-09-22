@@ -35,8 +35,7 @@ pub mod MinEditDistMtPer {
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use std::collections::HashMap;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
@@ -75,6 +74,12 @@ pub mod MinEditDistMtPer {
             let insert_cost = spec_med(s, t, i, (j - 1) as nat);
             1 + if delete_cost <= insert_cost { delete_cost } else { insert_cost }
         }
+    }
+
+    /// Every memo entry at key (i, j) stores a value <= i + j: the lock invariant.
+    pub open spec fn spec_memo_bounded(memo_view: Map<Pair<usize, usize>, usize>) -> bool {
+        forall|k: Pair<usize, usize>| #[trigger] memo_view.contains_key(k) ==>
+            (memo_view[k] as int) <= (k.0 + k.1) as int
     }
 
     //		Section 8a. traits
@@ -139,23 +144,23 @@ pub mod MinEditDistMtPer {
     /// Create Arc-wrapped memo lock.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     fn new_arc_memo(
-        val: HashMapWithViewPlus<Pair<usize, usize>, usize>,
-    ) -> (memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>)
-        requires val@.dom().finite(),
+        val: HashMap<Pair<usize, usize>, usize>,
+    ) -> (memo: Arc<RwLock<HashMap<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>)
+        requires spec_memo_bounded(val@),
         ensures memo.pred() == MinEditDistMtPerMemoInv,
     {
-        new_arc_rwlock(val, Ghost(MinEditDistMtPerMemoInv))
+        Arc::new(RwLock::new(val, Ghost(MinEditDistMtPerMemoInv)))
     }
 
     /// Clone Arc memo (reference count increment).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     fn clone_arc_memo<T: MtVal>(
         s: &MinEditDistMtPerS<T>,
-    ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>)
+    ) -> (cloned: Arc<RwLock<HashMap<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>)
         requires s.memo.pred() == MinEditDistMtPerMemoInv,
         ensures cloned.pred() == s.memo.pred(),
     {
-        clone_arc_rwlock(&s.memo)
+        s.memo.clone()
     }
 
     /// Recursive memoized parallel minimum edit distance solver.
@@ -164,7 +169,7 @@ pub mod MinEditDistMtPer {
     fn min_edit_distance_rec<T: MtVal>(
         source: &ArraySeqMtPerS<T>,
         target: &ArraySeqMtPerS<T>,
-        memo: &Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>,
+        memo: &Arc<RwLock<HashMap<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>,
         i: usize,
         j: usize,
     ) -> (dist: usize)
@@ -177,6 +182,8 @@ pub mod MinEditDistMtPer {
             dist <= i + j,
         decreases i + j,
     {
+        // The vstd `get`/`insert` postconditions hold under the Pair key model.
+        proof { let _ = Pair_feq_trigger::<usize, usize>(); }
         // Memo lookup.
         {
             let rwlock = arc_deref(memo);
@@ -206,10 +213,10 @@ pub mod MinEditDistMtPer {
             } else {
                 let source1 = source.clone();
                 let target1 = target.clone();
-                let memo1 = clone_arc_rwlock(memo);
+                let memo1 = memo.clone();
                 let source2 = source.clone();
                 let target2 = target.clone();
-                let memo2 = clone_arc_rwlock(memo);
+                let memo2 = memo.clone();
 
                 let f1 = move || -> (r: usize)
                     requires
@@ -259,7 +266,7 @@ pub mod MinEditDistMtPer {
     pub struct MinEditDistMtPerS<T: MtVal> {
         pub source: ArraySeqMtPerS<T>,
         pub target: ArraySeqMtPerS<T>,
-        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>,
+        pub memo: Arc<RwLock<HashMap<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>,
     }
 
     //		Section 9b. impls
@@ -284,7 +291,7 @@ pub mod MinEditDistMtPer {
             Self {
                 source: ArraySeqMtPerS::new(0, T::default()),
                 target: ArraySeqMtPerS::new(0, T::default()),
-                memo: new_arc_memo(HashMapWithViewPlus::new()),
+                memo: new_arc_memo(HashMap::new()),
             }
         }
 
@@ -295,7 +302,7 @@ pub mod MinEditDistMtPer {
             Self {
                 source,
                 target,
-                memo: new_arc_memo(HashMapWithViewPlus::new()),
+                memo: new_arc_memo(HashMap::new()),
             }
         }
 
@@ -333,9 +340,9 @@ pub mod MinEditDistMtPer {
     //		Section 11a. top level coarse locking
 
 
-    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for MinEditDistMtPerMemoInv {
-        open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
-            v@.dom().finite()
+    impl RwLockPredicate<HashMap<Pair<usize, usize>, usize>> for MinEditDistMtPerMemoInv {
+        open spec fn inv(self, v: HashMap<Pair<usize, usize>, usize>) -> bool {
+            spec_memo_bounded(v@)
         }
     }
 

@@ -1,139 +1,219 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 
-//! Using HashMap Standard: verified alternatives to std::collections::HashMap.
+//! Using HashMap Standard: `std::collections::HashMap` and `HashSet` under
+//! vstd 0.2026.09.13.
 //!
-//! `std::collections::HashMap` is an unverified external type. Verus cannot reason about
-//! its operations (get, insert, contains_key, values, etc.). Functions that use HashMap
-//! directly cannot be verified and must remain external_body or cfg-gated.
+//! vstd `std_specs/hash.rs` specifies both types: `new`, `with_capacity`,
+//! `len`, `is_empty`, `get`, `insert`, `remove`, `contains_key`/`contains`,
+//! `clear`, `iter`, `keys`, `values`, and `HashMap::clone`, with the views
+//! `Map<K, V>` and `Set<K>`. `src/vstdplus/hash_specs_plus.rs` adds the three
+//! it lacks: `HashSet::clone`, and `PartialEq::eq` for both. APAS's wrappers
+//! `HashMapWithViewPlus` and `HashSetWithViewPlus` were deleted in r209
+//! (`docs/HashMigration.md`); use the std types directly, as below.
 //!
-//! APAS-VERUS provides verified alternatives. Use them instead.
+//! The recipe (`docs/HashSpecsMigration.md` §3.1), each step marked in the
+//! example:
 //!
-//! Replacement types (in order of preference):
-//!
-//! 1. `HashMapWithViewPlus<K, V>` (from `vstdplus::hash_map_with_view_plus`)
-//!    - Drop-in replacement for HashMap with Verus specs.
-//!    - View type: `Map<K::V, V>` — connects to vstd Map reasoning.
-//!    - Supports: new, get, insert, remove, contains_key, len, is_empty, clear, iter.
-//!    - Implements Clone, PartialEq, Eq.
-//!    - Has full iterator support (loop and for patterns).
-//!    - Requires: `K: View + Eq + Hash`, `obeys_key_model::<K>()`.
-//!    - Best for: vertex-to-vertex mappings, partition maps, label maps.
-//!
-//! 2. `MappingStEph<A, B>` (from `Chap05::MappingStEph`)
-//!    - Set-based mapping (set of pairs).
-//!    - View type: `Set<(A::V, B::V)>`.
-//!    - Heavier abstraction, better for when you need set-theoretic reasoning.
-//!    - Best for: when the algorithm spec is naturally set-of-pairs.
-//!
-//! 3. `SetStEph<(K, V)>` (from `Chap05::SetStEph`)
-//!    - Lightweight: just a set of key-value pairs.
-//!    - No direct key lookup (must iterate to find).
-//!    - Best for: small collections where O(n) lookup is acceptable.
-//!
-//! Pattern: Replace HashMap with HashMapWithViewPlus.
-//!
-//!   BAD — unverifiable:
-//!
-//!     #[cfg(not(verus_keep_ghost))]
-//!     use std::collections::HashMap;
-//!
-//!     #[verifier::external_body]
-//!     fn build_partition(vertices: &SetStEph<V>) -> HashMap<V, V> {
-//!         let mut map = HashMap::new();
-//!         for v in vertices.iter() { map.insert(v.clone(), v.clone()); }
-//!         map
-//!     }
-//!
-//!   GOOD — verifiable:
-//!
-//!     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
-//!
-//!     fn build_partition(vertices: &SetStEph<V>) -> (map: HashMapWithViewPlus<V, V>)
-//!         requires vertices.spec_setsteph_wf(), obeys_key_model::<V>(),
-//!         ensures map@.dom() =~= vertices@,
-//!     {
-//!         let mut map = HashMapWithViewPlus::new();
-//!         for v in vertices.iter()
-//!             invariant obeys_key_model::<V>(), ...
-//!         {
-//!             map.insert(v.clone(), v.clone());
-//!         }
-//!         map
-//!     }
+//! 1. Field type: `HashMap<K, V>` or `HashSet<K>`, never a wrapper.
+//! 2. View: the raw view, `Map<K, V>` or `Set<K>`. A module whose view must
+//!    be `Map<K::V, V::V>` uses `self.table.deep_view()` with
+//!    `vstd::std_specs::hash::lemma_hashmap_deepview_properties` under
+//!    `injective(|k: K| k.deep_view())`; a set view `Set<K::V>` is
+//!    `self.elements@.map(|k: K| k@)` (see `src/Chap05/SetStEph.rs`).
+//! 3. Preconditions: `obeys_key_model::<K>()`, folded into the module's wf
+//!    and required by constructors. `group_hash_axioms` proves it for every
+//!    primitive type and `Box` of one, and proves
+//!    `builds_valid_hashers::<RandomState>()`. A user-defined key type states
+//!    it once at the top level. The raw view needs no `obeys_feq_*`; view
+//!    injectivity belongs only to a mapped view (step 2).
+//! 4. Iteration: delegated. `iter()` returns `hash_map::Iter` (or
+//!    `hash_set::Iter`) and restates vstd's postconditions; loops reason
+//!    through `it.seq()` and `it.index()` as in
+//!    `src/standards/iterators_standard.rs`.
+//! 5. Broadcast: `vstd::std_specs::hash::group_hash_axioms`.
 //!
 //! For Mt (multi-threaded) modules:
 //!
-//!   BAD — Arc<HashMap> for sharing across ParaPair! closures:
+//!   BAD — `Arc<HashMap>` for sharing across `ParaPair!` closures, or cloning
+//!   the map into each closure arm: an O(n) copy at every fork defeats the
+//!   parallelism.
 //!
-//!     use std::sync::Arc;
-//!     use std::collections::HashMap;
-//!     let shared = Arc::new(partition_map);
-//!     ParaPair!(move || use_map(&shared.clone()), move || use_map(&shared.clone()))
+//!   GOOD — top-level `RwLock` (`toplevel_coarse_rwlocks_for_mt_modules.rs`).
+//!   The map lives inside the module's locked inner struct; fork-join closures
+//!   acquire a read guard. No `Arc`, no clone, O(1) sharing.
 //!
-//!   BAD — cloning the map into each closure arm. Cloning an O(n) map at every fork
-//!   defeats the purpose of parallelism:
-//!
-//!     let map_left = partition_map.clone();   // O(n) copy!
-//!     let map_right = partition_map.clone();  // O(n) copy!
-//!     join(move || use_map(&map_left), move || use_map(&map_right));
-//!
-//!   GOOD — top-level RwLock (standard Mt pattern from
-//!   toplevel_coarse_rwlocks_for_mt_modules.rs). The map lives inside the module's
-//!   locked inner struct. Fork-join closures acquire a read guard to access the map.
-//!   No Arc, no clone, O(1) sharing:
-//!
-//!     // Inside the Mt module struct:
-//!     pub struct FooMtEphInner<V> {
-//!         partition: HashMapWithViewPlus<V, V>,
-//!         ...
-//!     }
-//!     // Closures take &self (read guard) and access self.inner.partition.
-//!
-//!   See `toplevel_coarse_rwlocks_for_mt_modules.rs` for the full pattern.
+//! Mt modules in Chap43 and later may prefer `OrderedTableMtEph` (Chap43,
+//! BST-backed through `BSTParaMtEph`) when the table is built or merged in
+//! parallel: O(lg n) lookup instead of O(1), but O(lg² n) build span instead
+//! of O(n). Keep `HashMap` when the table is built once and read many times,
+//! when O(1) lookup is part of the work bound, or before Chap43.
 //!
 //! What NOT to do:
-//!   - Do NOT use `std::collections::HashMap` in function bodies that should be verified.
-//!   - Do NOT cfg-gate a function just because it uses HashMap.
-//!   - Do NOT wrap HashMap in Arc for fork-join sharing — use top-level RwLock instead.
-//!   - Do NOT clone maps into closure arms — O(n) per fork is unacceptable.
-//!   - Do NOT use HashMap::values(), HashMap::keys(), or HashMap::iter() — these return
-//!     unverified iterators. Use HashMapWithViewPlus::iter() which has Verus specs.
+//!   - Do NOT cfg-gate a function because it uses `HashMap`; it is specified.
+//!   - Do NOT wrap `HashMap` in `Arc` for fork-join sharing; use a top-level
+//!     `RwLock`.
+//!   - Do NOT clone maps into closure arms.
+//!   - Do NOT write `obeys_feq_view_injective::<K>()` as a precondition for
+//!     the raw view; it was the wrapper's requirement, not vstd's.
 //!
-//! ## Mt modules in Chap43+ should prefer OrderedTableMtEph
+//! All Rust primitives implement `View` (identity, `vstd/view.rs`) and are
+//! `StT`, so `HashMap<V, usize>` and `HashMap<V, bool>` are ordinary.
 //!
-//! `HashMapWithViewPlus` is unordered and sequential. `OrderedTableMtEph` (Chap43)
-//! is BST-backed (via BSTParaMtEph from Chap38) and inherits parallel operations:
-//! parallel build via tabulate, parallel union/intersect/difference via ParaPair!.
-//!
-//! For Mt modules in chapters AFTER Chap43, prefer `OrderedTableMtEph` over
-//! `HashMapWithViewPlus` when:
-//! - The map is used in a parallel context (fork-join, D&C)
-//! - Parallel build or parallel merge would improve span
-//! - The key type supports `Ord` (required for BST ordering)
-//!
-//! Trade-off: O(1) hash lookup → O(lg n) tree lookup. But parallel build
-//! (O(lg² n) span) vs sequential HashMap build (O(n) span) often outweighs
-//! the per-lookup cost.
-//!
-//! Keep `HashMapWithViewPlus` when:
-//! - The map is built once and only read (no parallel build benefit)
-//! - O(1) lookup is critical to the work bound
-//! - The chapter is before Chap43 (can't use a later chapter's data structure)
-//!
-//! ## All Rust primitives implement View (and therefore StT)
-//!
-//! `usize`, `bool`, `u8`..`u128`, `i8`..`i128`, `isize`, `char` all have identity
-//! `View` impls in vstd (`vstd/view.rs:264-292`): `View::V = Self`, `view(&self) = *self`.
-//! They also satisfy `Eq + Clone + Display + Debug + Sized`, so they are `StT`.
-//!
-//! This means `OrderedTableMtEph<V, usize>` and `OrderedTableMtEph<V, bool>` are
-//! valid — do NOT assume primitives are excluded from verified collection types.
-//! Tuples of View types also implement View (`vstd/view.rs:297`), so
-//! `OrderedTableMtEph<(usize, usize), T>` works if `(usize, usize): Ord`.
-//!
-//! See: `src/vstdplus/hash_map_with_view_plus.rs` for the implementation.
-//! See: `src/Chap43/OrderedTableMtEph.rs` for the parallel ordered table.
-//! See: `src/standards/arc_usage_standard.rs` for when Arc is actually needed.
+//! References:
+//! - `~/projects/verus/source/vstd/std_specs/hash.rs` (the specifications).
+//! - `src/vstdplus/hash_specs_plus.rs` (clone and eq).
+//! - `src/experiments/vstd_hash_map_derived.rs`, `vstd_hash_set_derived.rs`
+//!   (one fn per method, each postcondition derived).
+//! - `src/standards/arc_usage_standard.rs` (when `Arc` is needed).
 
-pub mod using_hashmap_standard {}
+pub mod using_hashmap_standard {
+
+    use std::collections::hash_map;
+    use std::collections::HashMap;
+    use std::hash::Hash;
+
+    use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
+
+    verus! {
+
+    // 3. broadcast use — step 5.
+    broadcast use group_hash_axioms;
+
+    // 4. type definitions — step 1: the field is the std type.
+
+    /// A table of counts keyed by `K`.
+    #[verifier::reject_recursive_types(K)]
+    pub struct CountTable<K: Eq + Hash> {
+        pub counts: HashMap<K, u64>,
+    }
+
+    // 5. view impls — step 2: the raw view.
+
+    impl<K: Eq + Hash> View for CountTable<K> {
+        type V = Map<K, u64>;
+
+        open spec fn view(&self) -> Map<K, u64> {
+            self.counts@
+        }
+    }
+
+    // 8. traits
+
+    pub trait CountTableTrait<K: Eq + Hash>: Sized + View<V = Map<K, u64>> {
+        /// Step 3: the key model is the module's well-formedness.
+        spec fn spec_counttable_wf(&self) -> bool;
+
+        fn new() -> (t: Self)
+            requires
+                obeys_key_model::<K>(),
+            ensures
+                t.spec_counttable_wf(),
+                t@ == Map::<K, u64>::empty(),
+        ;
+
+        fn count(&self, k: &K) -> (n: u64)
+            requires
+                self.spec_counttable_wf(),
+            ensures
+                n == if self@.contains_key(*k) { self@[*k] } else { 0 },
+        ;
+
+        fn bump(&mut self, k: K)
+            requires
+                old(self).spec_counttable_wf(),
+                old(self)@.contains_key(k) ==> old(self)@[k] < u64::MAX,
+            ensures
+                self.spec_counttable_wf(),
+                self@ == old(self)@.insert(
+                    k,
+                    if old(self)@.contains_key(k) { (old(self)@[k] + 1) as u64 } else { 1 },
+                ),
+        ;
+
+        /// Step 4: delegated iteration, vstd's `HashMap::iter` postconditions
+        /// restated over the module's view.
+        fn iter(&self) -> (it: hash_map::Iter<'_, K, u64>)
+            requires
+                self.spec_counttable_wf(),
+            ensures
+                IteratorSpec::remaining(&it).len() == self@.len(),
+                IteratorSpec::remaining(&it).unref().to_set() == self@.kv_pairs(),
+                IteratorSpec::remaining(&it).no_duplicates(),
+                into_iter(it) == IteratorSpec::remaining(&it).unref(),
+                IteratorSpec::decrease(&it) is Some,
+        ;
+
+        fn size(&self) -> (n: usize)
+            requires
+                self.spec_counttable_wf(),
+            ensures
+                n == self@.len(),
+        ;
+    }
+
+    // 9. impls
+
+    impl<K: Eq + Hash> CountTableTrait<K> for CountTable<K> {
+        open spec fn spec_counttable_wf(&self) -> bool {
+            obeys_key_model::<K>()
+        }
+
+        fn new() -> (t: Self) {
+            CountTable { counts: HashMap::new() }
+        }
+
+        fn count(&self, k: &K) -> (n: u64) {
+            match self.counts.get(k) {
+                Some(n) => *n,
+                None => 0,
+            }
+        }
+
+        fn bump(&mut self, k: K) {
+            let n = self.count(&k);
+            let _previous = self.counts.insert(k, n + 1);
+        }
+
+        fn iter(&self) -> (it: hash_map::Iter<'_, K, u64>) {
+            self.counts.iter()
+        }
+
+        // A for-loop over the delegated iterator: the invariant names `it.seq()`
+        // and `it.index()`; termination comes from `decrease is Some`. The
+        // exec `len()` bounds the count by `usize`.
+        fn size(&self) -> (n: usize) {
+            let len = self.counts.len();
+            let mut n: usize = 0;
+            for kv in it: self.counts.iter()
+                invariant
+                    obeys_key_model::<K>(),
+                    it.seq().len() == self@.len(),
+                    len == self@.len(),
+                    n == it.index(),
+            {
+                n = n + 1;
+            }
+            n
+        }
+    }
+
+    } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl<K: Eq + Hash + std::fmt::Debug> std::fmt::Debug for CountTable<K> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "CountTable({:?})", self.counts)
+        }
+    }
+    impl<K: Eq + Hash> std::fmt::Display for CountTable<K> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "CountTable(len={})", self.counts.len())
+        }
+    }
+}

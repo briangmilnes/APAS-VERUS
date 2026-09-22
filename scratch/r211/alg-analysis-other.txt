@@ -1,0 +1,79 @@
+src/Chap66/BoruvkaStEph.rs:99:    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single XOR + mask.
+src/Chap66/BoruvkaStEph.rs:126:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — single pass over edges; St sequential.
+src/Chap66/BoruvkaStEph.rs:137:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — single pass over vertices with coin flips; St sequential.
+src/Chap66/BoruvkaStEph.rs:151:        /// - Alg Analysis: APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
+src/Chap66/BoruvkaStEph.rs:152:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — ACCEPTED DIFFERENCE: sequential, span = work
+src/Chap66/BoruvkaStEph.rs:172:        /// - Alg Analysis: APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
+src/Chap66/BoruvkaStEph.rs:173:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^3 n)
+src/Chap66/BoruvkaStEph.rs:174:        /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
+src/Chap66/BoruvkaStEph.rs:175:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — ACCEPTED DIFFERENCE: sequential, span = work
+src/Chap66/BoruvkaStEph.rs:193:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — iterates over edges filtering by labels; St sequential.
+src/Chap66/BoruvkaStEph.rs:212:        /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m), Span O(log m)
+src/Chap66/BoruvkaStEph.rs:213:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+src/Chap66/BoruvkaStEph.rs:273:        /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(n), Span O(log n)
+src/Chap66/BoruvkaStEph.rs:274:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+src/Chap66/BoruvkaStEph.rs:345:        /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m log n), Span O(log^2 n)
+src/Chap66/BoruvkaStEph.rs:346:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log n) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+src/Chap66/BoruvkaStEph.rs:441:        /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m log n), Span O(log^2 n)
+src/Chap66/BoruvkaStEph.rs:442:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log n) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+src/Chap17/MathSeq.rs:123:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) — Vec allocation + clone fill.
+src/Chap17/MathSeq.rs:129:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — direct index write.
+src/Chap17/MathSeq.rs:138:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
+src/Chap17/MathSeq.rs:142:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — direct index read.
+src/Chap17/MathSeq.rs:147:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
+src/Chap17/MathSeq.rs:151:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
+src/Chap17/MathSeq.rs:157:            /// - Alg Analysis: Code review (Claude Opus 4.6): amortized O(1) — Vec::push.
+src/Chap17/MathSeq.rs:164:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — Vec::pop.
+src/Chap17/MathSeq.rs:173:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
+src/Chap17/MathSeq.rs:177:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
+src/Chap17/MathSeq.rs:181:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — move, no copy.
+src/Chap17/MathSeq.rs:185:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) — delegates to new.
+src/Chap17/MathSeq.rs:191:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — returns slice reference.
+src/Chap17/MathSeq.rs:201:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(length) — copies subrange.
+src/Chap17/MathSeq.rs:209:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) — builds index vector.
+src/Chap17/MathSeq.rs:215:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) expected — hash set dedup.
+src/Chap17/MathSeq.rs:222:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) expected — hash map counting, two passes.
+src/Chap17/MathSeq.rs:231:            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — returns iterator wrapper.
+src/Chap17/MathSeq.rs:264:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — allocates and fills Vec of length n.
+src/Chap17/MathSeq.rs:271:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
+src/Chap17/MathSeq.rs:282:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec len.
+src/Chap17/MathSeq.rs:288:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
+src/Chap17/MathSeq.rs:294:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty Vec allocation.
+src/Chap17/MathSeq.rs:300:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single-element Vec.
+src/Chap17/MathSeq.rs:306:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — Vec push.
+src/Chap17/MathSeq.rs:312:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec pop.
+src/Chap17/MathSeq.rs:318:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length check.
+src/Chap17/MathSeq.rs:324:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length check.
+src/Chap17/MathSeq.rs:330:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — moves ownership, no copy.
+src/Chap17/MathSeq.rs:336:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to new().
+src/Chap17/MathSeq.rs:342:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — slice_subrange returns a view, no copy.
+src/Chap17/MathSeq.rs:352:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — copies k = length elements from slice.
+src/Chap17/MathSeq.rs:362:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — builds Vec of indices 0..n.
+src/Chap17/MathSeq.rs:381:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass deduplicating with HashSet.
+src/Chap17/MathSeq.rs:435:            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass counting with HashMap + second pass emitting pairs.
+src/Chap17/MathSeq.rs:618:        /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — returns iterator wrapper.
+src/Chap66/BoruvkaMtEph.rs:80:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |E|) — D&C fork-join over edges; Mt parallel.
+src/Chap66/BoruvkaMtEph.rs:95:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(lg |V|) — parallel coin flips + partition map; Mt parallel.
+src/Chap66/BoruvkaMtEph.rs:109:        /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
+src/Chap66/BoruvkaMtEph.rs:110:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaMtEph.rs:127:        /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
+src/Chap66/BoruvkaMtEph.rs:128:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaMtEph.rs:145:        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — iterates over edges filtering by labels; sequential despite Mt module.
+src/Chap66/BoruvkaMtEph.rs:190:    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single hash computation.
+src/Chap66/BoruvkaMtEph.rs:205:    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join over n vertices; Mt parallel.
+src/Chap66/BoruvkaMtEph.rs:267:    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join filtering vertices; Mt parallel.
+src/Chap66/BoruvkaMtEph.rs:335:    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join extracting labels; Mt parallel.
+src/Chap66/BoruvkaMtEph.rs:403:    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join building partition map; Mt parallel.
+src/Chap66/BoruvkaMtEph.rs:473:    /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m), Span O(log m)
+src/Chap66/BoruvkaMtEph.rs:474:    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(log m)
+src/Chap66/BoruvkaMtEph.rs:475:    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(log m) — agrees with APAS; parallel divide-and-conquer via ParaPair!.
+src/Chap66/BoruvkaMtEph.rs:580:    /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(n), Span O(log n)
+src/Chap66/BoruvkaMtEph.rs:581:    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
+src/Chap66/BoruvkaMtEph.rs:582:    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n) — coin flips, filter, and remaining all O(log n) via ParaPair!.
+src/Chap66/BoruvkaMtEph.rs:640:    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.
+src/Chap66/BoruvkaMtEph.rs:726:    /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
+src/Chap66/BoruvkaMtEph.rs:727:    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaMtEph.rs:834:    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(log m) — parallel divide-and-conquer via ParaPair!.
+src/Chap66/BoruvkaMtEph.rs:923:    /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
+src/Chap66/BoruvkaMtEph.rs:924:    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaMtEph.rs:970:    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — sequential scan of edges.

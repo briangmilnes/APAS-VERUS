@@ -1,0 +1,92 @@
+Mode: isolate
+Isolate: including Chap30 Chap02 Chap50
+error: postcondition not satisfied
+   --> src/Chap50/OptBinSearchTreeStEph.rs:149:21
+    |
+149 |             ensures count == self@.memo.len();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+234 |         fn memo_size(&self) -> (count: usize) { self.memo.len() }
+    |                                                 --------------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+%return == old(self).view().memo.len() 
+
+error: postcondition not satisfied
+   --> src/Chap50/OptBinSearchTreeStPer.rs:129:21
+    |
+129 |             ensures count == self@.memo.len();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+200 |         fn memo_size(&self) -> (count: usize) { self.memo.len() }
+    |                                                 --------------- at the end of the function body
+
+note: 
+
+%return == old(self).view().memo.len() 
+
+error: postcondition not satisfied
+   --> src/Chap50/MatrixChainStPer.rs:214:21
+    |
+214 |             ensures n == self@.memo.len();
+    |                     ^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+398 |         { self.memo.len() }
+    |           --------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap50/MatrixChainStPer.rs:397:21
+    |
+397 |             ensures n == self@.memo.len(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+398 |         { self.memo.len() }
+    |           --------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap50/MatrixChainStPer.rs:214:21
+    |
+214 |             ensures n == self@.memo.len();
+    |                     ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+n == old(self).view().memo.len() ✘
+n == old(self).view().memo.len() ✔
+
+error: postcondition not satisfied
+   --> src/Chap50/MatrixChainStEph.rs:240:21
+    |
+240 |             ensures n == self@.memo.len();
+    |                     ^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+438 |         { self.memo.len() }
+    |           --------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap50/MatrixChainStEph.rs:437:21
+    |
+437 |             ensures n == self@.memo.len(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+438 |         { self.memo.len() }
+    |           --------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap50/MatrixChainStEph.rs:240:21
+    |
+240 |             ensures n == self@.memo.len();
+    |                     ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+n == old(self).view().memo.len() ✘
+n == old(self).view().memo.len() ✔
+
+verification results:: 752 verified, 4 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 741MB, peak z3 RSS: 232MB, min free: 27289MB
+Sampled CPU Usage: rust_verify: 2s, z3 children: 0s

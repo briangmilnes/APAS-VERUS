@@ -29,6 +29,10 @@ pub mod DirGraphStEph {
     use std::hash::Hash;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::into_iter_hash_keys;
     use crate::Types::Types::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::SetLit;
@@ -36,7 +40,7 @@ pub mod DirGraphStEph {
     use crate::vstdplus::feq::feq::feq;
     use crate::vstdplus::seq_set::*;
 
-verus! 
+verus!
 {
 
 
@@ -53,8 +57,7 @@ verus!
         crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_Pair_axioms,
         crate::Types::Types::group_Edge_axioms,
-        crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
-        vstd::set::group_set_axioms,
+        vstd::set::group_set_lemmas,
     };
 
     //		Section 4. type definitions
@@ -83,11 +86,11 @@ verus!
 
         open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V>
             recommends spec_graphview_wf(self@), self@.V.contains(v)
-        { Set::new(|w: V::V| self@.A.contains((v, w))) }
+        { self@.V.filter(|w: V::V| self@.A.contains((v, w))) }
 
         open spec fn spec_n_minus(&self, v: V::V) -> Set<V::V>
             recommends spec_graphview_wf(self@), self@.V.contains(v)
-        { Set::new(|u: V::V| self@.A.contains((u, v))) }
+        { self@.V.filter(|u: V::V| self@.A.contains((u, v))) }
 
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V>
             recommends spec_graphview_wf(self@), self@.V.contains(v)
@@ -100,19 +103,19 @@ verus!
         open spec fn spec_n_plus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V>
             recommends spec_graphview_wf(self@), vertices <= self@.V
         {
-            Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_plus(u).contains(w))
+            self@.V.filter(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_plus(u).contains(w))
         }
 
         open spec fn spec_n_minus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V>
             recommends spec_graphview_wf(self@), vertices <= self@.V
         {
-            Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_minus(u).contains(w))
+            self@.V.filter(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_minus(u).contains(w))
         }
 
         open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V>
             recommends spec_graphview_wf(self@), vertices <= self@.V
         {
-            Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
+            self@.V.filter(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
@@ -233,16 +236,26 @@ verus!
     impl<V: StT + Hash> DirGraphStEph<V> {
         /// Returns an iterator over the vertices
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        pub fn iter_vertices(&self) -> (it: SetStEphIter<'_, V>)
+        pub fn iter_vertices(&self) -> (it: std::collections::hash_set::Iter<'_, V>)
             requires valid_key_type_Edge::<V>(),
-            ensures true,
+            ensures
+                IteratorSpec::remaining(&it).unref().map(|i: int, k: V| k@).to_set() == self@.V,
+                IteratorSpec::remaining(&it).unref().no_duplicates(),
+                IteratorSpec::remaining(&it).len() == self@.V.len(),
+                into_iter_hash_keys(it) == IteratorSpec::remaining(&it).unref(),
+                IteratorSpec::decrease(&it) is Some,
        { self.V.iter() }
 
         /// Returns an iterator over the arcs
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        pub fn iter_arcs(&self) -> (it: SetStEphIter<'_, Edge<V>>)
+        pub fn iter_arcs(&self) -> (it: std::collections::hash_set::Iter<'_, Edge<V>>)
             requires valid_key_type_Edge::<V>(),
-            ensures true,
+            ensures
+                IteratorSpec::remaining(&it).unref().map(|i: int, e: Edge<V>| e@).to_set() == self@.A,
+                IteratorSpec::remaining(&it).unref().no_duplicates(),
+                IteratorSpec::remaining(&it).len() == self@.A.len(),
+                into_iter_hash_keys(it) == IteratorSpec::remaining(&it).unref(),
+                IteratorSpec::decrease(&it) is Some,
         { self.A.iter() }
     }
 
@@ -287,9 +300,11 @@ verus!
             ensures neighbors@ == self.spec_ng_of_vertices(vertices@)
         {
             let mut neighbors: SetStEph<V> = SetStEph::empty();
-            let mut it = vertices.iter();
-            let ghost u_seq = it@.1;
+            let u_iter = vertices.iter();
+            let ghost u_seq = into_iter_hash_keys(u_iter);
             let ghost vertices_view = vertices@;
+            let mut it = u_iter;
+            let ghost mut pos: int = 0;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
@@ -297,14 +312,19 @@ verus!
                     spec_graphview_wf(self@),
                     vertices_view <= self@.V,
                     valid_key_type_Edge::<V>(),
-                    it@.0 <= u_seq.len(),
-                    it@.1 == u_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= u_seq.len(),
+                    IteratorSpec::remaining(&it).len() == u_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == u_seq[pos + i],
                     u_seq.map(|i: int, v: V| v@).to_set() == vertices_view,
-                    neighbors@ == Set::new(|w: V::V| exists |i: int|
+                    forall |w: V::V| #[trigger] neighbors@.contains(w) <==> exists |i: int|
                         #![trigger u_seq[i]]
-                        0 <= i < it@.0 && self.spec_ng(u_seq[i]@).contains(w)),
-                    decreases u_seq.len() - it@.0,
+                        0 <= i < pos &&self.spec_ng(u_seq[i]@).contains(w),
+                    decreases IteratorSpec::decrease(&it)->0,
             {
+                let ghost old_pos = pos;
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
@@ -328,6 +348,7 @@ verus!
                                     lemma_map_to_set_contains_index(u_seq, u);
                                 }
                             }
+                            assert(neighbors@ =~= self.spec_ng_of_vertices(vertices_view));
                         }
                         return neighbors;
                     },
@@ -335,7 +356,8 @@ verus!
                         // Veracity: NEEDED proof block
                         // Veracity: NEEDED proof block
                         proof {
-                            lemma_seq_index_in_map_to_set(u_seq, it@.0 - 1);
+                            pos = pos + 1;
+                            lemma_seq_index_in_map_to_set(u_seq, old_pos);
                         }
                         let ng_u = self.ng(u);
                         neighbors = neighbors.union(&ng_u);
@@ -349,23 +371,30 @@ verus!
             ensures out_neighbors@ == self.spec_n_plus(v@)
         {
             let mut out: SetStEph<V> = SetStEph::empty();
-            let mut it = self.A.iter();
-            let ghost arcs_seq = it@.1;
+            let arcs_iter = self.A.iter();
+            let ghost arcs_seq = into_iter_hash_keys(arcs_iter);
             let ghost v_view = v@;
             let ghost arcs_view = self@.A;
+            let mut it = arcs_iter;
+            let ghost mut pos: int = 0;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type_Edge::<V>(),
-                    it@.0 <= arcs_seq.len(),
-                    it@.1 == arcs_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= arcs_seq.len(),
+                    IteratorSpec::remaining(&it).len() == arcs_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == arcs_seq[pos + i],
                     arcs_seq.map(|i: int, e: Edge<V>| e@).to_set() == arcs_view,
-                    out@ == Set::new(|w: V::V| exists |i: int|
+                    forall |w: V::V| #[trigger] out@.contains(w) <==> exists |i: int|
                         #![trigger arcs_seq[i]]
-                        0 <= i < it@.0 && arcs_seq[i]@.0 == v_view && arcs_seq[i]@.1 == w),
-                    decreases arcs_seq.len() - it@.0,
+                        0 <= i < pos &&arcs_seq[i]@.0 == v_view && arcs_seq[i]@.1 == w,
+                    decreases IteratorSpec::decrease(&it)->0,
             {
+                let ghost old_pos = pos;
                 match it.next() {
                     // Veracity: NEEDED proof block
                     None => {
@@ -388,10 +417,12 @@ verus!
                                     lemma_map_to_set_contains_index(arcs_seq, (v_view, w));
                                 }
                             }
+                            assert(out@ =~= self.spec_n_plus(v_view));
                         }
                         return out;
                     },
                     Some(edge) => {
+                        proof { pos = pos + 1; assert(arcs_seq[old_pos] == *edge); }
                         let x = &edge.0;
                         let y = edge.1.clone_plus();
                         if feq(x, v) {
@@ -407,23 +438,30 @@ verus!
             ensures in_neighbors@ == self.spec_n_minus(v@)
         {
             let mut inn: SetStEph<V> = SetStEph::empty();
-            let mut it = self.A.iter();
-            let ghost arcs_seq = it@.1;
+            let arcs_iter = self.A.iter();
+            let ghost arcs_seq = into_iter_hash_keys(arcs_iter);
             let ghost v_view = v@;
             let ghost arcs_view = self@.A;
+            let mut it = arcs_iter;
+            let ghost mut pos: int = 0;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type_Edge::<V>(),
-                    it@.0 <= arcs_seq.len(),
-                    it@.1 == arcs_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= arcs_seq.len(),
+                    IteratorSpec::remaining(&it).len() == arcs_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == arcs_seq[pos + i],
                     arcs_seq.map(|i: int, e: Edge<V>| e@).to_set() == arcs_view,
-                    inn@ == Set::new(|u: V::V| exists |i: int|
+                    forall |u: V::V| #[trigger] inn@.contains(u) <==> exists |i: int|
                         #![trigger arcs_seq[i]]
-                        0 <= i < it@.0 && arcs_seq[i]@.1 == v_view && arcs_seq[i]@.0 == u),
-                    decreases arcs_seq.len() - it@.0,
+                        0 <= i < pos &&arcs_seq[i]@.1 == v_view && arcs_seq[i]@.0 == u,
+                    decreases IteratorSpec::decrease(&it)->0,
             {
+                let ghost old_pos = pos;
                 // Veracity: NEEDED proof block
                 match it.next() {
                     None => {
@@ -446,10 +484,12 @@ verus!
                                     lemma_map_to_set_contains_index(arcs_seq, (u, v_view));
                                 }
                             }
+                            assert(inn@ =~= self.spec_n_minus(v_view));
                         }
                         return inn;
                     },
                     Some(edge) => {
+                        proof { pos = pos + 1; assert(arcs_seq[old_pos] == *edge); }
                         let x = edge.0.clone_plus();
                         let y = &edge.1;
                         if feq(y, v) {
@@ -465,9 +505,11 @@ verus!
             ensures out_neighbors@ == self.spec_n_plus_of_vertices(vertices@)
         {
             let mut out_neighbors: SetStEph<V> = SetStEph::empty();
-            let mut it = vertices.iter();
-            let ghost u_seq = it@.1;
+            let u_iter = vertices.iter();
+            let ghost u_seq = into_iter_hash_keys(u_iter);
             let ghost vertices_view = vertices@;
+            let mut it = u_iter;
+            let ghost mut pos: int = 0;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
@@ -475,15 +517,20 @@ verus!
                     spec_graphview_wf(self@),
                     vertices_view <= self@.V,
                     valid_key_type_Edge::<V>(),
-                    it@.0 <= u_seq.len(),
-                    it@.1 == u_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= u_seq.len(),
+                    IteratorSpec::remaining(&it).len() == u_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == u_seq[pos + i],
                     u_seq.map(|i: int, v: V| v@).to_set() == vertices_view,
-                    out_neighbors@ == Set::new(|w: V::V| exists |i: int|
+                    forall |w: V::V| #[trigger] out_neighbors@.contains(w) <==> exists |i: int|
                         #![trigger u_seq[i]]
-                        0 <= i < it@.0 && self.spec_n_plus(u_seq[i]@).contains(w)),
-                    decreases u_seq.len() - it@.0,
+                        0 <= i < pos &&self.spec_n_plus(u_seq[i]@).contains(w),
+                    decreases IteratorSpec::decrease(&it)->0,
             // Veracity: NEEDED proof block
             {
+                let ghost old_pos = pos;
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
@@ -506,6 +553,7 @@ verus!
                                     lemma_map_to_set_contains_index(u_seq, u);
                                 }
                             }
+                            assert(out_neighbors@ =~= self.spec_n_plus_of_vertices(vertices_view));
                         // Veracity: NEEDED proof block
                         }
                         return out_neighbors;
@@ -513,7 +561,8 @@ verus!
                     Some(u) => {
                         // Veracity: NEEDED proof block
                         proof {
-                            lemma_seq_index_in_map_to_set(u_seq, it@.0 - 1);
+                            pos = pos + 1;
+                            lemma_seq_index_in_map_to_set(u_seq, old_pos);
                         }
                         let plus_u = self.n_plus(u);
                         out_neighbors = out_neighbors.union(&plus_u);
@@ -527,9 +576,11 @@ verus!
             ensures in_neighbors@ == self.spec_n_minus_of_vertices(vertices@)
         {
             let mut in_neighbors: SetStEph<V> = SetStEph::empty();
-            let mut it = vertices.iter();
-            let ghost u_seq = it@.1;
+            let u_iter = vertices.iter();
+            let ghost u_seq = into_iter_hash_keys(u_iter);
             let ghost vertices_view = vertices@;
+            let mut it = u_iter;
+            let ghost mut pos: int = 0;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
@@ -537,15 +588,20 @@ verus!
                     spec_graphview_wf(self@),
                     vertices_view <= self@.V,
                     valid_key_type_Edge::<V>(),
-                    it@.0 <= u_seq.len(),
-                    it@.1 == u_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= u_seq.len(),
+                    IteratorSpec::remaining(&it).len() == u_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == u_seq[pos + i],
                     u_seq.map(|i: int, v: V| v@).to_set() == vertices_view,
-                    in_neighbors@ == Set::new(|w: V::V| exists |i: int|
+                    forall |w: V::V| #[trigger] in_neighbors@.contains(w) <==> exists |i: int|
                         #![trigger u_seq[i]]
                         // Veracity: NEEDED proof block
-                        0 <= i < it@.0 && self.spec_n_minus(u_seq[i]@).contains(w)),
-                    decreases u_seq.len() - it@.0,
+                        0 <= i < pos &&self.spec_n_minus(u_seq[i]@).contains(w),
+                    decreases IteratorSpec::decrease(&it)->0,
             {
+                let ghost old_pos = pos;
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
@@ -569,13 +625,15 @@ verus!
                                 // Veracity: NEEDED proof block
                                 }
                             }
+                            assert(in_neighbors@ =~= self.spec_n_minus_of_vertices(vertices_view));
                         }
                         return in_neighbors;
                     },
                     Some(u) => {
                         // Veracity: NEEDED proof block
                         proof {
-                            lemma_seq_index_in_map_to_set(u_seq, it@.0 - 1);
+                            pos = pos + 1;
+                            lemma_seq_index_in_map_to_set(u_seq, old_pos);
                         }
                         let minus_u = self.n_minus(u);
                         in_neighbors = in_neighbors.union(&minus_u);
@@ -606,121 +664,23 @@ verus!
     //		Section 10. iterators
 
 
-    /// Iterator wrapper for DirGraphStEph vertex iteration.
-    #[verifier::reject_recursive_types(V)]
-    pub struct DirGraphStEphIter<'a, V: StT + Hash> {
-        pub inner: SetStEphIter<'a, V>,
-    }
-
-    impl<'a, V: StT + Hash> View for DirGraphStEphIter<'a, V> {
-        type V = (int, Seq<V>);
-        open spec fn view(&self) -> (int, Seq<V>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant<'a, V: StT + Hash>(it: &DirGraphStEphIter<'a, V>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<'a, V: StT + Hash> std::iter::Iterator for DirGraphStEphIter<'a, V> {
-        type Item = &'a V;
-
-        fn next(&mut self) -> (next: Option<&'a V>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(V)]
-    pub struct DirGraphStEphGhostIterator<'a, V: StT + Hash> {
-        pub pos: int,
-        pub elements: Seq<V>,
-        pub phantom: core::marker::PhantomData<&'a V>,
-    }
-
-    impl<'a, V: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for DirGraphStEphIter<'a, V> {
-        type GhostIter = DirGraphStEphGhostIterator<'a, V>;
-
-        open spec fn ghost_iter(&self) -> DirGraphStEphGhostIterator<'a, V> {
-            DirGraphStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, V: StT + Hash> vstd::pervasive::ForLoopGhostIterator for DirGraphStEphGhostIterator<'a, V> {
-        type ExecIter = DirGraphStEphIter<'a, V>;
-        type Item = V;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &DirGraphStEphIter<'a, V>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<V> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(self.elements[self.pos])
-            } else {
-                None
-            }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &DirGraphStEphIter<'a, V>) -> DirGraphStEphGhostIterator<'a, V> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    impl<'a, V: StT + Hash> View for DirGraphStEphGhostIterator<'a, V> {
-        type V = Seq<V>;
-
-        open spec fn view(&self) -> Seq<V> {
-            self.elements.take(self.pos)
-        }
-    }
-
+    // Delegated iteration over the vertices: the std hash-set iterator that vstd
+    // specifies. An impl of an external trait method may not add `requires`, so
+    // the contract is conditional on the vertex set's well-formedness.
     impl<'a, V: StT + Hash> std::iter::IntoIterator for &'a DirGraphStEph<V> {
         type Item = &'a V;
-        type IntoIter = DirGraphStEphIter<'a, V>;
+        type IntoIter = std::collections::hash_set::Iter<'a, V>;
         fn into_iter(self) -> (it: Self::IntoIter)
-            requires valid_key_type::<V>()
             ensures
-                it@.0 == 0int,
-                it@.1.map(|i: int, k: V| k@).to_set() == self@.V,
-                it@.1.no_duplicates(),
-                iter_invariant(&it),
+                self.V.spec_setsteph_wf() ==> {
+                    &&& IteratorSpec::remaining(&it).unref().map(|i: int, k: V| k@).to_set() == self@.V
+                    &&& IteratorSpec::remaining(&it).unref().no_duplicates()
+                    &&& IteratorSpec::remaining(&it).len() == self@.V.len()
+                    &&& into_iter_hash_keys(it) == IteratorSpec::remaining(&it).unref()
+                    &&& IteratorSpec::decrease(&it) is Some
+                },
         {
-            DirGraphStEphIter { inner: self.vertices().iter() }
+            (&self.V).into_iter()
         }
     }
 
@@ -797,21 +757,5 @@ verus!
 
     impl<V: StT + Hash> Display for DirGraphStEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} A={:?}", self.V, self.A) }
-    }
-
-    impl<'a, V: StT + Hash> Debug for DirGraphStEphIter<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphStEphIter") }
-    }
-
-    impl<'a, V: StT + Hash> Display for DirGraphStEphIter<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphStEphIter") }
-    }
-
-    impl<'a, V: StT + Hash> Debug for DirGraphStEphGhostIterator<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphStEphGhostIterator") }
-    }
-
-    impl<'a, V: StT + Hash> Display for DirGraphStEphGhostIterator<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphStEphGhostIterator") }
     }
 }

@@ -33,8 +33,12 @@ pub mod PrimStEph {
     use crate::Types::Types::*;
 
     use std::cmp::Ordering;
+    use std::collections::HashSet;
     use crate::vstdplus::total_order::total_order::TotalOrder;
-    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::{HashSetWithViewPlus, HashSetWithViewPlusTrait};
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::hash_specs_plus::hash_specs_plus::set_key_view;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::into_iter_hash_keys;
     use std::fmt::{Display, Formatter};
     use std::fmt::Result as FmtResult;
     use std::hash::Hash;
@@ -62,7 +66,9 @@ pub mod PrimStEph {
     broadcast use {
         crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
-        vstd::set::group_set_axioms,
+        crate::vstdplus::hash_specs_plus::hash_specs_plus::group_key_view_lemmas,
+        vstd::set::group_set_lemmas,
+        vstd::std_specs::hash::group_hash_axioms,
     };
 
     //		Section 4a. type definitions
@@ -292,14 +298,13 @@ pub mod PrimStEph {
         proof {
             graph@.A.lemma_map_finite(|e: (V::V, V::V, u64)| (e.0, e.1));
             graph@.A.lemma_map_finite(|e: (V::V, V::V, u64)| (e.1, e.0));
-            vstd::set_lib::lemma_set_union_finite_iff(DA_fwd, DA_rev);
             vstd::set_lib::lemma_map_size_bound(graph@.A, DA_fwd, |e: (V::V, V::V, u64)| (e.0, e.1));
             vstd::set_lib::lemma_map_size_bound(graph@.A, DA_rev, |e: (V::V, V::V, u64)| (e.1, e.0));
             vstd::set_lib::lemma_len_union(DA_fwd, DA_rev);
         }
 
         let mut mst_edges = SetLit![];
-        let mut visited = HashSetWithViewPlus::<V>::new();
+        let mut visited = HashSet::<V>::new();
         // Trigger broadcast axioms for feq on PQEntry<V> and V.
         proof {
             assert(obeys_feq_full_trigger::<PQEntry<V>>());
@@ -329,9 +334,8 @@ pub mod PrimStEph {
                 used_pairs.finite(),
                 used_pairs.len() as int == 2 * m as int - remaining_budget,
                 mst_edges.spec_setsteph_wf(),
-                visited@.finite(),
                 forall |e: (V::V, V::V)| #[trigger] used_pairs.contains(e) ==>
-                    visited@.contains(e.0),
+                    set_key_view(visited@).contains(e.0),
         {
             // pq@.len() <= 2*m + 1, so pq@.len() * 2 <= (2*m+1)*2 = 4*m+2 <= 4*m+4 <= usize::MAX.
 
@@ -369,15 +373,16 @@ pub mod PrimStEph {
 
                 // neighbors.spec_setsteph_wf() already ensured by ng() postcondition.
 
-                let mut it = neighbors.iter();
+                let it = neighbors.iter();
+                let ghost ng_seq = into_iter_hash_keys(it);
 
                 // Every element in ng(u) is a directed adjacency pair (u@, v@) in DA.
                 // Veracity: NEEDED proof block
                 proof {
-                    assert forall |j: int| 0 <= j < it@.1.len()
-                        implies DA.contains((u@, (#[trigger] it@.1[j])@))
+                    assert forall |j: int| 0 <= j < ng_seq.len()
+                        implies DA.contains((u@, (#[trigger] ng_seq[j])@))
                     by {
-                        let w: V::V = it@.1[j]@;
+                        let w: V::V = ng_seq[j]@;
                         // w is in neighbors@ == spec_ng(u@), so there exists l with edge in A.
                         let l = choose |l: u64|
                             graph@.A.contains((u@, w, l)) || graph@.A.contains((w, u@, l));
@@ -392,7 +397,7 @@ pub mod PrimStEph {
                 }
 
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-                loop
+                for v in vit: it
                     invariant
                         spec_labgraphview_wf(graph@),
                         valid_key_type_LabEdge::<V, u64>(),
@@ -407,53 +412,48 @@ pub mod PrimStEph {
                         used_pairs.subset_of(DA),
                         used_pairs.finite(),
                         used_pairs.len() as int == 2 * m as int - remaining_budget,
-                        it@.0 <= it@.1.len(),
-                        it@.1.no_duplicates(),
+                        vit.seq().unref() == ng_seq,
+                        ng_seq.no_duplicates(),
                         mst_edges.spec_setsteph_wf(),
-                        visited@.contains(u@),
-                        visited@.finite(),
+                        set_key_view(visited@).contains(u@),
                         forall |e: (V::V, V::V)| #[trigger] used_pairs.contains(e) ==>
-                            visited@.contains(e.0),
-                        forall |j: int| 0 <= j < it@.1.len() ==>
-                            DA.contains((u@, (#[trigger] it@.1[j])@)),
+                            set_key_view(visited@).contains(e.0),
+                        forall |j: int| 0 <= j < ng_seq.len() ==>
+                            DA.contains((u@, (#[trigger] ng_seq[j])@)),
                         forall |e: (V::V, V::V)| #[trigger] used_pairs.contains(e) ==>
-                            (e.0 != u@ || (exists |j: int| 0 <= j < it@.0 &&
-                                #[trigger] it@.1[j]@ == e.1)),
+                            (e.0 != u@ || (exists |j: int| 0 <= j < vit.index() &&
+                                #[trigger] ng_seq[j]@ == e.1)),
                 {
-                    match it.next() {
-                        None => break,
-                        Some(v) => {
-                            // Veracity: NEEDED proof block
-                            proof {
-                                // Current element is at position it@.0 - 1 (after next() advanced).
-                                let ghost pos = (it@.0 - 1) as int;
-                                let new_pair: (V::V, V::V) = (u@, v@);
+                    // Veracity: NEEDED proof block
+                    proof {
+                        // The current element is ng_seq[vit.index()].
+                        let ghost pos = vit.index();
+                        assert(ng_seq[pos] == *v);
+                        let new_pair: (V::V, V::V) = (u@, v@);
 
-                                // Prove new_pair is NOT in used_pairs.
-                                // Inner invariant: any (u@, y) in used_pairs has y at some j < pos.
-                                // v@ = it@.1[pos]@. By view injectivity + no_duplicates, contradiction.
-                                assert(obeys_feq_full_trigger::<V>());
-                                lemma_reveal_view_injective::<V>();
-                                if used_pairs.contains(new_pair) {
-                                    let j = choose |j: int| 0 <= j < pos &&
-                                        #[trigger] it@.1[j]@ == v@;
-                                    // view injectivity: it@.1[j]@ == it@.1[pos]@ ==> it@.1[j] == it@.1[pos]
-                                    // no_duplicates: j != pos ==> it@.1[j] != it@.1[pos]
-                                    assert(false);
-                                }
+                        // Prove new_pair is NOT in used_pairs.
+                        // Inner invariant: any (u@, y) in used_pairs has y at some j < pos.
+                        // v@ = ng_seq[pos]@. By view injectivity + no_duplicates, contradiction.
+                        assert(obeys_feq_full_trigger::<V>());
+                        lemma_reveal_view_injective::<V>();
+                        if used_pairs.contains(new_pair) {
+                            let j = choose |j: int| 0 <= j < pos &&
+                                #[trigger] ng_seq[j]@ == v@;
+                            // view injectivity: ng_seq[j]@ == ng_seq[pos]@ ==> ng_seq[j] == ng_seq[pos]
+                            // no_duplicates: j != pos ==> ng_seq[j] != ng_seq[pos]
+                            assert(false);
+                        }
 
-                                let new_used = used_pairs.insert(new_pair);
-                                vstd::set_lib::lemma_len_subset(new_used, DA);
-                                used_pairs = new_used;
-                                remaining_budget = remaining_budget - 1;
-                            }
+                        let new_used = used_pairs.insert(new_pair);
+                        vstd::set_lib::lemma_len_subset(new_used, DA);
+                        used_pairs = new_used;
+                        remaining_budget = remaining_budget - 1;
+                    }
 
-                            if !visited.contains(v) {
-                                // get_edge_label returns Some since v ∈ ng(u).
-                                if let Some(weight) = graph.get_edge_label(&u, v) {
-                                    pq = pq.insert(pq_entry_new(*weight, v.clone(), Some(u.clone())));
-                                }
-                            }
+                    if !visited.contains(v) {
+                        // get_edge_label returns Some since v ∈ ng(u).
+                        if let Some(weight) = graph.get_edge_label(&u, v) {
+                            pq = pq.insert(pq_entry_new(*weight, v.clone(), Some(u.clone())));
                         }
                     }
                 }
@@ -475,24 +475,15 @@ pub mod PrimStEph {
             return 0u64;
         }
         let mut total: u64 = 0;
-        let mut it = mst_edges.iter();
-        let ghost le_seq = it@.1;
-        loop
+        for edge in mst_edges.iter()
             invariant
-                it@.0 <= le_seq.len(),
-                it@.1 == le_seq,
                 mst_edges@.len() > 0,
-            decreases le_seq.len() - it@.0,
         {
-            match it.next() {
-                None => return total,
-                Some(edge) => {
-                    if edge.2 <= u64::MAX - total {
-                        total = total + edge.2;
-                    }
-                },
+            if edge.2 <= u64::MAX - total {
+                total = total + edge.2;
             }
         }
+        total
     }
 
     //		Section 12b. derive impls in verus!

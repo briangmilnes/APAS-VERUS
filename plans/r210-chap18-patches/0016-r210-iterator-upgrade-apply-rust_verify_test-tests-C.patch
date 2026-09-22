@@ -1,0 +1,297 @@
+From 598938ac81d9a5fa4278f97e5633ada87bf7c9ea Mon Sep 17 00:00:00 2001
+From: "Brian G. Milnes" <briangmilnes@gmail.com>
+Date: Mon, 21 Sep 2026 11:28:03 -0700
+Subject: [PATCH 16/16] r210 iterator-upgrade --apply:
+ rust_verify_test/tests/Chap18/ProveArraySeqMtPer.rs
+
+Rewritten by iterator-upgrade (CSTs processes/iterator-upgrade) from the
+old wrapper iterator model to the Verus 0.2026.09.13 prophetic model.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+---
+ .../tests/Chap18/ProveArraySeqMtPer.rs        | 182 +++++++++---------
+ 1 file changed, 87 insertions(+), 95 deletions(-)
+
+diff --git a/rust_verify_test/tests/Chap18/ProveArraySeqMtPer.rs b/rust_verify_test/tests/Chap18/ProveArraySeqMtPer.rs
+index 08b18f5..6c115ec 100644
+--- a/rust_verify_test/tests/Chap18/ProveArraySeqMtPer.rs
++++ b/rust_verify_test/tests/Chap18/ProveArraySeqMtPer.rs
+@@ -17,35 +17,35 @@ use common::*;
+ test_verify_one_file! {
+     #[test] arrayseqmtper_loop_loop verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
+         
+         fn test_loop_loop() {
+             let a: ArraySeqMtPerS<u64> = ArraySeqMtPerS::new(3, 42);
+             
+-            let mut it: ArraySeqMtPerIter<u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-            
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: VerusForLoopWrapper<std::slice::Iter<'_, u64>> =
++                VerusForLoopWrapper::new(a.iter());
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    it.wf(),
++                    IteratorSpec::obeys_prophetic_iter_laws(&it.iter),
++                    IteratorSpec::decrease(&it.iter) is Some,
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
++                decreases IteratorSpec::decrease(&it.iter)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof {
+-                        items = items.push(*x);
+-                    }
+-                } else {
+-                    break;
++                match it.next() {
++                    Some(x) => { collected.push(*x); },
++                    None => {
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-            
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -54,27 +54,24 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqmtper_for_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
+ 
+         fn test_for_iter() {
+             let a: ArraySeqMtPerS<u64> = ArraySeqMtPerS::new(3, 99);
+ 
+-            let it: ArraySeqMtPerIter<u64> = a.iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: a.iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof {
+-                    items = items.push(*x);
+-                }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+@@ -83,33 +80,35 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqmtper_loop_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
+ 
+         fn test_loop_borrow_into() {
+             let a: ArraySeqMtPerS<u64> = ArraySeqMtPerS::new(3, 55);
+ 
+-            let mut it: ArraySeqMtPerIter<u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: VerusForLoopWrapper<std::slice::Iter<'_, u64>> =
++                VerusForLoopWrapper::new((&a).into_iter());
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    it.wf(),
++                    IteratorSpec::obeys_prophetic_iter_laws(&it.iter),
++                    IteratorSpec::decrease(&it.iter) is Some,
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
++                decreases IteratorSpec::decrease(&it.iter)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof { items = items.push(*x); }
+-                } else {
+-                    break;
++                match it.next() {
++                    Some(x) => { collected.push(*x); },
++                    None => {
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -118,25 +117,24 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqmtper_for_borrow_into verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
+ 
+         fn test_for_borrow_into() {
+             let a: ArraySeqMtPerS<u64> = ArraySeqMtPerS::new(3, 77);
+ 
+-            let it: ArraySeqMtPerIter<u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: (&a).into_iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig.as_ref(),
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == *it.seq()[i],
+             {
+-                proof { items = items.push(*x); }
++                collected.push(*x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+@@ -145,35 +143,34 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqmtper_loop_consume verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
+ 
+         fn test_loop_consume() {
+             let a: ArraySeqMtPerS<u64> = ArraySeqMtPerS::new(3, 33);
+-            let ghost orig_seq: Seq<u64> = a.seq@;
+-
+-            let mut it = a.into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            assert(iter_seq == orig_seq);
+-
+-            #[verifier::loop_isolation(false)]
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: VerusForLoopWrapper<std::vec::IntoIter<u64>> =
++                VerusForLoopWrapper::new(a.into_iter());
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_seq == it@.1,
+-                    0 <= it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    it.wf(),
++                    IteratorSpec::obeys_prophetic_iter_laws(&it.iter),
++                    IteratorSpec::decrease(&it.iter) is Some,
++                    it.seq() == orig,
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == it.seq()[i],
++                decreases IteratorSpec::decrease(&it.iter)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof { items = items.push(x); }
+-                } else {
+-                    break;
++                match it.next() {
++                    Some(x) => { collected.push(x); },
++                    None => {
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+@@ -182,28 +179,23 @@ test_verify_one_file! {
+ test_verify_one_file! {
+     #[test] arrayseqmtper_for_consume verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
+ 
+         fn test_for_consume() {
+             let a: ArraySeqMtPerS<u64> = ArraySeqMtPerS::new(3, 66);
+-            let ghost orig_seq: Seq<u64> = a.seq@;
+-
+-            let it = a.into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            assert(iter_seq == orig_seq);
+-
+-            for x in iter: it
++            let ghost orig: Seq<u64> = a.seq@;
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: a.into_iter()
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig,
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == it.seq()[i],
+             {
+-                proof { items = items.push(x); }
++                collected.push(x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+-- 
+2.53.0
+

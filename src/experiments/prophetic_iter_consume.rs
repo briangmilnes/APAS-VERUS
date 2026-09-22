@@ -15,6 +15,9 @@
 //!  - manual `loop { match it.next() }` (loop-consume)
 //!
 //! RESULT: SUCCEEDS — 7 verified, 0 errors (verus 0.2026.05.21, standalone).
+//! RESULT: FAILS — E0425 `axiom_spec_into_iter` removed from vstd; also declares
+//!         `initial_value_relation`, removed by #2739 (verus 0.2026.09.13.671956e).
+//! DATE: 2026-09-20. LOG: logs/validate-experiment-prophetic_iter_consume.20260920-160426.log
 //! Finding: a Vec-backed collection exposes consuming iteration by returning
 //! `std::vec::IntoIter` directly; `for x in coll` and a manual loop-consume
 //! both verify.

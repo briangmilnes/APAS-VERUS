@@ -29,6 +29,8 @@ pub mod mod_standard {
     use std::fmt::{Debug, Display, Formatter};
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
 
     verus! {
 
@@ -36,18 +38,6 @@ pub mod mod_standard {
     #[verifier::reject_recursive_types(T)]
     pub struct ExampleS<T> {
         pub seq: Vec<T>,
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct ExampleIter<'a, T> {
-        pub inner: std::slice::Iter<'a, T>,
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct ExampleGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
     }
 
     // 5. view impls
@@ -60,30 +50,10 @@ pub mod mod_standard {
         }
     }
 
-    impl<'a, T> View for ExampleIter<'a, T> {
-        type V = (int, Seq<T>);
-
-        open spec fn view(&self) -> (int, Seq<T>) {
-            self.inner@
-        }
-    }
-
-    impl<'a, T> View for ExampleGhostIterator<'a, T> {
-        type V = Seq<T>;
-
-        open spec fn view(&self) -> Seq<T> {
-            self.elements.take(self.pos)
-        }
-    }
-
     // 6. spec fns
     /// Well-formedness predicate (named spec_<module>_wf per convention).
     pub open spec fn spec_modstandard_wf<T>(s: &ExampleS<T>) -> bool {
         s@.len() >= 0
-    }
-
-    pub open spec fn iter_invariant<'a, T>(it: &ExampleIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
     }
 
     // 8. traits
@@ -127,104 +97,33 @@ pub mod mod_standard {
         }
     }
 
+    // Delegated iteration: the collection returns the std slice iterator that
+    // vstd already specifies. Postconditions per iterators_standard.rs.
     impl<T> ExampleS<T> {
-        pub fn iter(&self) -> (it: ExampleIter<'_, T>)
+        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
-                iter_invariant(&it),
+                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
-            ExampleIter { inner: self.seq.iter() }
+            self.seq.iter()
         }
     }
 
     // 10. iterators
 
-    impl<'a, T> std::iter::Iterator for ExampleIter<'a, T> {
-        type Item = &'a T;
-
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures
-                ({
-                    let (old_index, old_seq) = old(self)@;
-                    match next {
-                        None => {
-                            &&& self@ == old(self)@
-                            &&& old_index >= old_seq.len()
-                        },
-                        Some(element) => {
-                            let (new_index, new_seq) = self@;
-                            &&& 0 <= old_index < old_seq.len()
-                            &&& new_seq == old_seq
-                            &&& new_index == old_index + 1
-                            &&& element == old_seq[old_index]
-                        },
-                    }
-                }),
-        {
-            self.inner.next()
-        }
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ExampleIter<'a, T> {
-        type GhostIter = ExampleGhostIterator<'a, T>;
-
-        open spec fn ghost_iter(&self) -> ExampleGhostIterator<'a, T> {
-            ExampleGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ExampleGhostIterator<'a, T> {
-        type ExecIter = ExampleIter<'a, T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &ExampleIter<'a, T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(self.elements[self.pos])
-            } else {
-                None
-            }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &ExampleIter<'a, T>) -> ExampleGhostIterator<'a, T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
     impl<'a, T> std::iter::IntoIterator for &'a ExampleS<T> {
         type Item = &'a T;
 
-        type IntoIter = ExampleIter<'a, T>;
+        type IntoIter = std::slice::Iter<'a, T>;
 
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
-                iter_invariant(&it),
+                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
-            ExampleIter { inner: self.seq.iter() }
+            self.seq.iter()
         }
     }
 
@@ -235,8 +134,9 @@ pub mod mod_standard {
 
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
-                it@.0 == 0,
-                it@.1 == self.seq@,
+                IteratorSpec::remaining(&it) == self.seq@,
+                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
+                IteratorSpec::decrease(&it) is Some,
         {
             self.seq.into_iter()
         }
@@ -263,27 +163,4 @@ pub mod mod_standard {
         }
     }
 
-    impl<'a, T: Debug> Debug for ExampleIter<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "ExampleIter({:?})", self.inner)
-        }
-    }
-
-    impl<'a, T> Display for ExampleIter<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "ExampleIter")
-        }
-    }
-
-    impl<'a, T> Debug for ExampleGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "ExampleGhostIterator")
-        }
-    }
-
-    impl<'a, T> Display for ExampleGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "ExampleGhostIterator")
-        }
-    }
 } // pub mod mod_standard

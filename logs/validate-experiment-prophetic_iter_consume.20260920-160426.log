@@ -1,0 +1,11 @@
+Experiment: src/experiments/prophetic_iter_consume.rs
+Verus:   Version: 0.2026.09.13.671956e
+error[E0425]: cannot find value `axiom_spec_into_iter` in module `vstd::std_specs::vec`
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_iter_consume.rs:44:45
+   |
+44 |         broadcast use vstd::std_specs::vec::axiom_spec_into_iter;
+   |                                             ^^^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::vec`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.

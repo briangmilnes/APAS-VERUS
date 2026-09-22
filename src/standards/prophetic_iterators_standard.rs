@@ -2,15 +2,18 @@
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 
 //! Prophetic Iterator Standard: how to implement verified iterators in
-//! APAS-VERUS under the verus 0.2026.05.21 iterator model (verus PR #2163,
-//! "prophetic sequence encoding").
+//! APAS-VERUS under the verus 0.2026.09.13 iterator model (introduced by
+//! verus PR #2163, "prophetic sequence encoding"; `initial_value_relation`
+//! removed by PR #2739).
 //!
-//! This standard replaces the obsolete `iterators_standard.rs`, which was
-//! written for the pre-#2163 `ForLoopGhostIterator` model. The old 10-component
-//! pattern — custom `XxxIter` struct, `(int, Seq)` view, `XxxGhostIterator`,
-//! `ForLoopGhostIteratorNew`/`ForLoopGhostIterator` impls — is gone. The new
-//! model specifies iterators with the `IteratorSpec` external-trait extension
-//! and drives `for` loops with `VerusForLoopWrapper`.
+//! This standard replaces the pre-#2163 `ForLoopGhostIterator` model. The old
+//! 10-component pattern — custom `XxxIter` struct, `(int, Seq)` view,
+//! `XxxGhostIterator`, `ForLoopGhostIteratorNew`/`ForLoopGhostIterator` impls —
+//! is gone. The current model specifies iterators with the `IteratorSpec`
+//! external-trait extension; the `verus!` macro drives `for` loops through
+//! vstd's `VerusForLoopWrapper`, and a manual `loop` runs on the iterator's
+//! own `next()`. `iterators_standard.rs` shows the delegated style on its
+//! own, with the loop idioms written out.
 //!
 //! Two iteration styles, both shown below.
 //!
@@ -23,15 +26,31 @@
 //!
 //! Custom iteration — implement `IteratorSpecImpl` from scratch.
 //! A collection with no slice underneath (e.g. a tree, traversed in order)
-//! supplies its own iterator type and implements all six `IteratorSpecImpl`
-//! spec functions by hand. See `struct CountIter` below.
+//! supplies its own iterator type and implements all five `IteratorSpecImpl`
+//! spec functions by hand: `obeys_prophetic_iter_laws`, `remaining`
+//! (prophetic), `will_return_none` (prophetic), `decrease`, `peek`.
+//! See `struct CountIter` below.
 //!
-//! For-loop callers reference `it.index()` (items consumed) and `it.seq()`
-//! (the prophetic full sequence). `it` is NOT in scope after the loop; verus
-//! exports the invariant with the iterator's `when_used_as_spec` value
-//! substituted. A manual `loop` drives termination with the non-prophetic
-//! `IteratorSpec::decrease(&it.iter)->0` — `it.seq()` is prophetic and may not
-//! appear in `decreases` — and must draw its conclusion before `break`.
+//! Constructor postconditions (the guide's triple, `examples/guide/iterators.rs`):
+//!   1. `IteratorSpec::remaining(&it) == <the source contents>`;
+//!   2. the same sequence tied to the non-prophetic contents that `peek` reads
+//!      (`it.elts()` for a custom iterator, vstd's `into_iter_elts(it)` for a
+//!      std iterator);
+//!   3. `IteratorSpec::decrease(&it) is Some`, so a `for` loop proves
+//!      termination without an explicit `decreases`.
+//!
+//! For-loop callers reference `it.index()` (items consumed), `it.seq()`
+//! (the prophetic full sequence) and `it.history()` (items consumed so far).
+//! `it` is NOT in scope after the loop; verus exports the invariant with the
+//! iterator's `when_used_as_spec` value substituted. A manual `loop` calls
+//! the iterator's own `next()`, keeps a ghost counter `pos` of items consumed
+//! with the index-wise invariants over `IteratorSpec::remaining(&it)` shown
+//! in `iterators_standard.rs`, drives termination with the non-prophetic
+//! `IteratorSpec::decrease(&it)->0` — `remaining()` is prophetic and may not
+//! appear in `decreases` — and must draw its conclusion before `break`. It
+//! does not use `VerusForLoopWrapper`, which vstd declares only under
+//! `verus_keep_ghost` and which therefore does not compile under `cargo`
+//! (experiment: src/experiments/prophetic_manual_loop_next.rs).
 //!
 //! Loop forms exercised by the PTT (`Proveprophetic_iterators_standard.rs`):
 //!   for-borrow-iter · for-borrow-into · for-consume · loop-borrow · loop-consume
@@ -57,12 +76,12 @@ pub mod prophetic_iterators_standard {
 
     // 2. imports
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::iter::*;
 
     verus! {
 
     // 3. broadcast use
-    broadcast use vstd::std_specs::slice::axiom_spec_slice_iter;
 
     // Custom iteration: a from-scratch iterator. CountIter yields the owned values
     // start, start+1, ..., end-1. It wraps no std iterator, so every
@@ -96,7 +115,8 @@ pub mod prophetic_iterators_standard {
         }
 
         // The full creation-time sequence. Stable across `next()` — only `cur`
-        // moves — so it anchors `peek` and `initial_value_relation`.
+        // moves — so it anchors `peek`, and the constructor ties `remaining()`
+        // to it.
         pub closed spec fn elts(self) -> Seq<u64> {
             Seq::new((self.end - self.start) as nat, |i: int| (self.start + i) as u64)
         }
@@ -116,6 +136,8 @@ pub mod prophetic_iterators_standard {
     // The `ensures` states `remaining()` explicitly. `remaining()` is a closed
     // spec fn, so a caller in another module cannot unfold it — the contract
     // must hand the sequence over directly, exactly as `<[T]>::iter` does.
+    // The `elts()` clause is the guide's second postcondition: it ties the
+    // prophetic sequence to the stable contents that `peek` is defined over.
     #[verifier::when_used_as_spec(count_iter_spec)]
     pub fn count_iter(start: u64, end: u64) -> (it: CountIter)
         requires
@@ -124,8 +146,8 @@ pub mod prophetic_iterators_standard {
             it == count_iter_spec(start, end),
             IteratorSpec::remaining(&it)
                 == Seq::new((end - start) as nat, |i: int| (start + i) as u64),
+            IteratorSpec::remaining(&it) == it.elts(),
             IteratorSpec::decrease(&it) is Some,
-            IteratorSpec::initial_value_relation(&it, &it),
     {
         CountIter { start, cur: start, end }
     }
@@ -147,7 +169,9 @@ pub mod prophetic_iterators_standard {
         }
     }
 
-    // The six-function prophetic specification.
+    // The five-function prophetic specification. Spec-only, so it exists
+    // only under Verus (the same gate as PartialEqSpecImpl).
+    #[cfg(verus_keep_ghost)]
     impl IteratorSpecImpl for CountIter {
         // CountIter always terminates and applies no fallible closure.
         open spec fn obeys_prophetic_iter_laws(&self) -> bool {
@@ -167,13 +191,6 @@ pub mod prophetic_iterators_standard {
         // Non-prophetic termination metric — usable in a manual `decreases`.
         closed spec fn decrease(&self) -> Option<nat> {
             Some((self.end - self.cur) as nat)
-        }
-
-        // Relates a live iterator to the value it was created from.
-        #[verifier::prophetic]
-        open spec fn initial_value_relation(&self, init: &Self) -> bool {
-            &&& IteratorSpec::remaining(init) == IteratorSpec::remaining(self)
-            &&& init.elts() == self.elts()
         }
 
         // A guess at the index-th item, drawn from the stable `elts()`.
@@ -213,12 +230,13 @@ pub mod prophetic_iterators_standard {
     pub trait ExampleTrait<T>: Sized + View<V = Seq<T>> {
         // Borrowing iterator entry point. The `ensures` pins the iterator's
         // prophetic `remaining()` to the collection contents, so a `for` loop
-        // invariant can name `self.seq@` through `it.seq()`.
+        // invariant can name `self.seq@` through `it.seq()`. The middle clause
+        // is vstd's non-prophetic contents function, which `peek` reads.
         fn iter(&self) -> (it: std::slice::Iter<'_, T>)
             ensures
                 IteratorSpec::remaining(&it) == self@.as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self@,
                 IteratorSpec::decrease(&it) is Some,
-                IteratorSpec::initial_value_relation(&it, &it),
         ;
 
         fn new(length: usize, init: T) -> (s: Self) where T: Copy
@@ -268,8 +286,8 @@ pub mod prophetic_iterators_standard {
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
                 IteratorSpec::remaining(&it) == self.seq@.as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
                 IteratorSpec::decrease(&it) is Some,
-                IteratorSpec::initial_value_relation(&it, &it),
         {
             self.seq.iter()
         }
@@ -285,10 +303,9 @@ pub mod prophetic_iterators_standard {
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
                 IteratorSpec::remaining(&it) == self.seq@,
+                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
                 IteratorSpec::decrease(&it) is Some,
-                IteratorSpec::initial_value_relation(&it, &it),
         {
-            broadcast use vstd::std_specs::vec::axiom_spec_into_iter;
             self.seq.into_iter()
         }
     }

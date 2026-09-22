@@ -41,15 +41,18 @@ pub mod SetMtEph {
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
     use crate::vstdplus::accept::accept;
 
-verus! 
+verus!
 {
 
 
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::Hash;
+    use std::collections::HashSet;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     #[cfg(verus_keep_ghost)]
     use {
-        vstd::std_specs::hash::obeys_key_model,
+        vstd::std_specs::hash::{obeys_key_model, into_iter_hash_keys},
         vstd::std_specs::clone::*,
         vstd::std_specs::cmp::PartialEqSpecImpl,
         vstd::pervasive::strictly_cloned,
@@ -59,9 +62,8 @@ verus!
     use crate::vstdplus::seq_set::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
-    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
-    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
-    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusIter;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::hash_specs_plus::hash_specs_plus::lemma_hash_set_clone_eq;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
 
@@ -70,7 +72,7 @@ verus!
 
     broadcast use {
         // Set groups
-        vstd::set::group_set_axioms,
+        vstd::set::group_set_lemmas,
         vstd::set_lib::group_set_lib_default,
         vstd::set_lib::group_set_properties,
         // Seq groups
@@ -82,9 +84,9 @@ verus!
         vstd::laws_eq::group_laws_eq,
         vstd::laws_cmp::group_laws_cmp,
         // Our groups
-        crate::vstdplus::feq::feq::group_feq_axioms, 
+        crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_Pair_axioms,
-        crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
+        vstd::std_specs::hash::group_hash_axioms,
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
@@ -92,14 +94,14 @@ verus!
 
 
     #[verifier::reject_recursive_types(T)]
-    pub struct SetMtEph<T: StT + Hash> { pub elements: HashSetWithViewPlus<T> }
+    pub struct SetMtEph<T: StT + Hash> { pub elements: HashSet<T> }
 
     //		Section 5a. view impls
 
 
     impl<T: StT + Hash> View for SetMtEph<T> {
         type V = Set<<T as View>::V>;
-        open spec fn view(&self) -> Self::V { self.elements@ }
+        open spec fn view(&self) -> Self::V { self.elements@.map(|x: T| x@) }
     }
 
     //		Section 6a. spec fns
@@ -113,7 +115,7 @@ verus!
     /// Generic wf for non-Self types (Verus cycle workaround).
     /// See `src/standards/spec_wf_standard.rs`.
     pub open spec fn spec_setmteph_wf_generic<V: StT + Hash>(s: &SetMtEph<V>) -> bool {
-        s@.finite() && valid_key_type::<V>()
+        valid_key_type::<V>()
     }
 
     //		Section 7a. proof fns/broadcast groups
@@ -122,7 +124,6 @@ verus!
     /// Singleton choose: if len == 1 and contains(a), then choose() == a.
     pub broadcast proof fn lemma_singleton_choose<A>(s: Set<A>, a: A)
         requires
-            s.finite(),
             s.len() == 1,
             #[trigger] s.contains(a),
         ensures
@@ -135,6 +136,91 @@ verus!
         lemma_singleton_choose,
     }
 
+    // The view set is the raw hash set mapped through View. These lemmas cross
+    // that map: membership, insertion, the empty set, and length.
+
+    /// The view of a raw element is in the viewed set.
+    pub proof fn lemma_viewed_contains<T: StT + Hash>(s: Set<T>, x: T)
+        requires
+            s.contains(x),
+        ensures
+            s.map(|k: T| k@).contains(x@),
+    {
+    }
+
+    /// Under view injectivity, the viewed set holds `x@` exactly when the raw set holds `x`.
+    pub proof fn lemma_viewed_mem<T: StT + Hash>(s: Set<T>, x: T)
+        requires
+            obeys_feq_full::<T>(),
+        ensures
+            s.map(|k: T| k@).contains(x@) <==> s.contains(x),
+    {
+        if s.map(|k: T| k@).contains(x@) {
+            let a = choose|a: T| #[trigger] s.contains(a) && x@ == a@;
+            lemma_reveal_view_injective::<T>();
+            assert(a == x);
+        }
+    }
+
+    /// Inserting a raw element inserts its view.
+    pub proof fn lemma_viewed_insert<T: StT + Hash>(s: Set<T>, x: T)
+        ensures
+            s.insert(x).map(|k: T| k@) == s.map(|k: T| k@).insert(x@),
+    {
+        s.lemma_set_map_insert_commute(x, |k: T| k@);
+    }
+
+    /// The empty raw set views to the empty set.
+    pub proof fn lemma_viewed_empty<T: StT + Hash>()
+        ensures
+            Set::<T>::empty().map(|k: T| k@) == Set::<<T as View>::V>::empty(),
+    {
+        assert(Set::<T>::empty().map(|k: T| k@) =~= Set::<<T as View>::V>::empty());
+    }
+
+    /// Under view injectivity, viewing preserves the length.
+    pub proof fn lemma_viewed_len<T: StT + Hash>(s: Set<T>)
+        requires
+            obeys_feq_full::<T>(),
+        ensures
+            s.map(|k: T| k@).len() == s.len(),
+    {
+        lemma_reveal_view_injective::<T>();
+        assert(s.injective_on(|k: T| k@));
+        vstd::set_lib::lemma_map_size(s, s.map(|k: T| k@), |k: T| k@);
+    }
+
+    /// The facts `HashSet::iter` gives about its key sequence, lifted through the view map.
+    pub proof fn lemma_iter_keys_view<T: StT + Hash>(s: &SetMtEph<T>, keys: Seq<T>)
+        requires
+            obeys_feq_full::<T>(),
+            keys.to_set() == s.elements@,
+            keys.no_duplicates(),
+            keys.len() == s.elements@.len(),
+        ensures
+            keys.map(|i: int, k: T| k@).to_set() == s@,
+            keys.len() == s@.len(),
+            forall |j: int| 0 <= j < keys.len() ==> s@.contains(#[trigger] keys[j]@),
+    {
+        // Every key's view is in the set view, and every set-view element is some key's view.
+        assert forall |k: T| #![trigger keys.contains(k), s@.contains(k@)] keys.contains(k)
+            implies s@.contains(k@) by {
+            lemma_viewed_contains(s.elements@, k);
+        };
+        assert forall |kv: T::V| #[trigger] s@.contains(kv)
+            implies exists|k: T| #![trigger keys.contains(k)] keys.contains(k) && k@ == kv by {
+            let a = choose|a: T| s.elements@.contains(a) && kv == a@;
+            assert(keys.to_set().contains(a));
+            assert(keys.contains(a));
+        };
+        lemma_seq_map_to_set_equality(keys, s@);
+        lemma_viewed_len(s.elements@);
+        assert forall |j: int| 0 <= j < keys.len() implies s@.contains(#[trigger] keys[j]@) by {
+            assert(keys.contains(keys[j]));
+            lemma_viewed_contains(s.elements@, keys[j]);
+        };
+    }
+
     //		Section 8a. traits
 
 
@@ -142,11 +228,6 @@ verus!
 
         spec fn spec_setmteph_wf(&self) -> bool;
         spec fn spec_valid_key_type() -> bool;
-
-        /// A set is finite.
-        open spec fn spec_finite(&self) -> bool {
-            self@.finite()
-        }
 
         /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|v|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — sequential loop, not parallel. Span == Work.
@@ -156,14 +237,15 @@ verus!
 
         /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator handle.
-        fn iter<'a>(&'a self) -> (it: SetMtEphIter<'a, T>)
+        fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, T>)
             requires self.spec_setmteph_wf()
             ensures
-                it@.0 == 0int,
-                it@.1.map(|i: int, k: T| k@).to_set() == self@,
-                it@.1.no_duplicates(),
-                forall |j: int| 0 <= j < it@.1.len() ==> self@.contains(#[trigger] it@.1[j]@),
-                iter_invariant(&it);
+                IteratorSpec::remaining(&it).unref().map(|i: int, k: T| k@).to_set() == self@,
+                IteratorSpec::remaining(&it).unref().no_duplicates(),
+                IteratorSpec::remaining(&it).len() == self@.len(),
+                forall |j: int| 0 <= j < IteratorSpec::remaining(&it).len() ==> self@.contains(#[trigger] IteratorSpec::remaining(&it).unref()[j]@),
+                into_iter_hash_keys(it) == IteratorSpec::remaining(&it).unref(),
+                IteratorSpec::decrease(&it) is Some;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, clones each element.
         fn to_seq(&self) -> (seq: Vec<T>)
@@ -330,7 +412,7 @@ verus!
     impl<T: StT + Hash> SetMtEphTrait<T> for SetMtEph<T> {
 
         open spec fn spec_setmteph_wf(&self) -> bool {
-            self@.finite() && valid_key_type::<T>()
+            valid_key_type::<T>()
             && obeys_feq_full::<T>()
         }
 
@@ -346,48 +428,37 @@ verus!
             for x in iter: v
                 invariant
                     valid_key_type::<T>(),
-                    iter.elements == v_seq,
-                    s@ == v_seq.take(iter.pos).map(|idx: int, t: T| t@).to_set(),
+                    iter.seq() == v_seq,
+                    s@ == v_seq.take(iter.index()).map(|idx: int, t: T| t@).to_set(),
             {
                 // Veracity: NEEDED proof block
-                proof { lemma_take_one_more_extends_the_seq_set_with_view(v_seq, iter.pos); }
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(v_seq, iter.index()); }
                 let x_clone: T = x.clone_plus();
                 let _ = s.insert(x_clone);
             }
             s
         }
 
-        fn iter<'a>(&'a self) -> (it: SetMtEphIter<'a, T>) {
-            let inner = self.elements.iter();
+        fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, T>) {
+            let it = self.elements.iter();
             // Veracity: NEEDED proof block
-            proof {
-                lemma_seq_map_to_set_equality(inner@.1, self@);
-                // Derive element-wise membership from HashSetWithViewPlus iter postcondition.
-                // Veracity: NEEDED assert
-                assert forall |j: int| 0 <= j < inner@.1.len()
-                    implies self@.contains(#[trigger] inner@.1[j]@)
-                by {
-                    // Veracity: NEEDED assert
-                    assert(inner@.1.contains(inner@.1[j]));
-                };
-            }
-            SetMtEphIter { inner }
+            proof { lemma_iter_keys_view(self, into_iter_hash_keys(it)); }
+            it
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, clones each element.
         fn to_seq(&self) -> (seq: Vec<T>) {
             let mut seq: Vec<T> = Vec::new();
-            let it: SetMtEphIter<T> = self.iter();
-            let ghost iter_seq: Seq<T> = it@.1;
+            let it = self.iter();
+            let ghost iter_seq: Seq<T> = into_iter_hash_keys(it);
 
             for x in iter: it
                 invariant
                     valid_key_type::<T>(),
-                    iter.elements == iter_seq,
-                    iter.pos <= iter_seq.len(),
+                    iter.seq().unref() == iter_seq,
                     iter_seq.map(|_i: int, k: T| k@).to_set() == self@,
                     iter_seq.no_duplicates(),
-                    seq@ == iter_seq.take(iter.pos),
+                    seq@ == iter_seq.take(iter.index()),
             {
                 seq.push(x.clone_plus());
             }
@@ -396,45 +467,61 @@ verus!
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
         fn empty() -> SetMtEph<T> {
-         SetMtEph { elements: HashSetWithViewPlus::new() } }
+            proof { lemma_viewed_empty::<T>(); }
+            SetMtEph { elements: HashSet::new() } }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — one allocation + one insert.
         fn singleton(x: T) -> (s: SetMtEph<T>) {
-            let mut s = HashSetWithViewPlus::new();
+            let mut s = HashSet::new();
             let _ = s.insert(x);
+            proof {
+                lemma_viewed_empty::<T>();
+                lemma_viewed_insert(Set::<T>::empty(), x);
+            }
             SetMtEph { elements: s }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set len().
         fn size(&self) -> (size: usize)
             ensures size == self@.len()
-        { self.elements.len() }
+        {
+            proof { lemma_viewed_len(self.elements@); }
+            self.elements.len()
+        }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set contains().
-        fn mem(&self, x: &T) -> (contains: bool) { self.elements.contains(x) }
+        fn mem(&self, x: &T) -> (contains: bool) {
+            proof { lemma_viewed_mem(self.elements@, *x); }
+            self.elements.contains(x)
+        }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set insert(), amortized.
         fn insert(&mut self, x: T) -> (inserted: bool)
-        { self.elements.insert(x) }
+        {
+            proof {
+                lemma_viewed_insert(self.elements@, x);
+                lemma_viewed_mem(self.elements@, x);
+            }
+            self.elements.insert(x)
+        }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — clone self + iterate s2, insert all. No parallelism.
         fn union(&self, s2: &Self) -> (union: SetMtEph<T>)
         {
             let mut union: SetMtEph<T> = self.clone_plus();
-            let it: SetMtEphIter<T> = s2.iter();
+            let it = s2.iter();
             let ghost s1_view: Set<T::V> = self@;
-            let ghost s2_seq: Seq<T> = it@.1;
+            let ghost s2_seq: Seq<T> = into_iter_hash_keys(it);
 
             for x in iter: it
                 invariant
                     valid_key_type::<T>(),
-                    iter.elements == s2_seq,
-                    iter.pos <= s2_seq.len(),
+                    iter.seq().unref() == s2_seq,
                     s2_seq.map(|i: int, k: T| k@).to_set() == s2@,
-                    union@ == s1_view.union(s2_seq.take(iter.pos).map(|i: int, k: T| k@).to_set()),
+                    union@ == s1_view.union(s2_seq.take(iter.index()).map(|i: int, k: T| k@).to_set()),
             {
                 // Veracity: NEEDED proof block
-                proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.pos); }
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.index()); }
                 let _ = union.insert(x.clone_plus());
             }
             union
@@ -444,42 +531,41 @@ verus!
         fn disjoint_union(&self, s2: &Self) -> (union: SetMtEph<T>)
         {
             let capacity = self.size().saturating_add(s2.size());
-            let mut union: SetMtEph<T> = SetMtEph { 
-                elements: HashSetWithViewPlus::with_capacity(capacity) 
+            let mut union: SetMtEph<T> = SetMtEph {
+                elements: HashSet::with_capacity(capacity)
             };
+            proof { lemma_viewed_empty::<T>(); }
 
-            let it1: SetMtEphIter<T> = self.iter();
-            let ghost it1_seq: Seq<T> = it1@.1;
+            let it1 = self.iter();
+            let ghost it1_seq: Seq<T> = into_iter_hash_keys(it1);
 
             for x in iter1: it1
                 invariant
                     valid_key_type::<T>(),
-                    iter1.elements == it1_seq,
-                    iter1.pos <= it1_seq.len(),
+                    iter1.seq().unref() == it1_seq,
                     it1_seq.map(|i: int, k: T| k@).to_set() == self@,
-                    union@ == it1_seq.take(iter1.pos).map(|i: int, k: T| k@).to_set(),
+                    union@ == it1_seq.take(iter1.index()).map(|i: int, k: T| k@).to_set(),
             {
                 // Veracity: NEEDED proof block
-                proof { lemma_take_one_more_extends_the_seq_set_with_view(it1_seq, iter1.pos); }
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(it1_seq, iter1.index()); }
                 let _ = union.insert(x.clone_plus());
             }
 
-            let it2: SetMtEphIter<T> = s2.iter();
-            let ghost it2_seq: Seq<T> = it2@.1;
+            let it2 = s2.iter();
+            let ghost it2_seq: Seq<T> = into_iter_hash_keys(it2);
             let ghost s1_view: Set<T::V> = self@;
             let ghost s2_view: Set<T::V> = s2@;
 
             for x in iter2: it2
                 invariant
                     valid_key_type::<T>(),
-                    iter2.elements == it2_seq,
-                    iter2.pos <= it2_seq.len(),
+                    iter2.seq().unref() == it2_seq,
                     it2_seq.map(|i: int, k: T| k@).to_set() == s2_view,
                     s1_view.disjoint(s2_view),
-                    union@ == s1_view.union(it2_seq.take(iter2.pos).map(|i: int, k: T| k@).to_set()),
+                    union@ == s1_view.union(it2_seq.take(iter2.index()).map(|i: int, k: T| k@).to_set()),
             {
                 // Veracity: NEEDED proof block
-                proof { lemma_take_one_more_extends_the_seq_set_with_view(it2_seq, iter2.pos); }
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(it2_seq, iter2.index()); }
                 let _ = union.insert(x.clone_plus());
             }
 
@@ -495,26 +581,25 @@ verus!
         fn intersection(&self, s2: &Self) -> (intersection: SetMtEph<T>)
         {
             let mut intersection: SetMtEph<T> = SetMtEph::empty();
-            let it: SetMtEphIter<T> = self.iter();
+            let it = self.iter();
             let ghost s1_view: Set<T::V> = self@;
             let ghost s2_view: Set<T::V> = s2@;
-            let ghost s1_seq: Seq<T> = it@.1;
+            let ghost s1_seq: Seq<T> = into_iter_hash_keys(it);
 
             for s1mem in iter: it
                 invariant
                     valid_key_type::<T>(),
-                    iter.elements == s1_seq,
-                    iter.pos <= s1_seq.len(),
+                    iter.seq().unref() == s1_seq,
                     s1_seq.map(|i: int, k: T| k@).to_set() == s1_view,
                     s2_view == s2@,
-                    intersection@ == s1_seq.take(iter.pos).map(|i: int, k: T| k@).to_set().intersect(s2_view),
+                    intersection@ == s1_seq.take(iter.index()).map(|i: int, k: T| k@).to_set().intersect(s2_view),
             {
                 // Veracity: NEEDED proof block
-                proof { lemma_take_one_more_intersect(s1_seq, s2_view, iter.pos); }
+                proof { lemma_take_one_more_intersect(s1_seq, s2_view, iter.index()); }
 
                 if s2.mem(s1mem) {
                     let _ = intersection.insert(s1mem.clone_plus());
-                } 
+                }
             }
 
             intersection
@@ -524,8 +609,8 @@ verus!
         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)
         {
             let mut product: SetMtEph<Pair<T, U>> = SetMtEph::empty();
-            let it: SetMtEphIter<U> = s2.iter();
-            let ghost s2_seq: Seq<U> = it@.1;
+            let it = s2.iter();
+            let ghost s2_seq: Seq<U> = into_iter_hash_keys(it);
             let ghost s2_view: Set<U::V> = s2@;
             let ghost a_view: T::V = a@;
 
@@ -535,15 +620,15 @@ verus!
                     valid_key_type::<U>(),
                     valid_key_type::<Pair<T, U>>(),
                     a_view == a@,
-                    iter.elements == s2_seq,
+                    iter.seq().unref() == s2_seq,
                     s2_seq.map(|i: int, k: U| k@).to_set() == s2_view,
                     forall |av: T::V, bv: U::V|
                       #![trigger product@.contains((av, bv))]
                        product@.contains((av, bv)) <==>
-                       (av == a_view && s2_seq.take(iter.pos).map(|i: int, k: U| k@).to_set().contains(bv)),
+                       (av == a_view && s2_seq.take(iter.index()).map(|i: int, k: U| k@).to_set().contains(bv)),
             {
                 // Veracity: NEEDED proof block
-                proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.pos); }
+                proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.index()); }
                 let _ = product.insert(Pair(a.clone_plus(), b.clone_plus()));
             }
 
@@ -558,8 +643,10 @@ verus!
             let ghost s2_view = s2@;
 
             // Phase 1: Spawn one task per element in s1
-            let mut it = self.iter();
-            let ghost it_seq = it@.1;
+            let s1_iter = self.iter();
+            let ghost it_seq = into_iter_hash_keys(s1_iter);
+            let mut it = s1_iter;
+            let ghost mut pos: int = 0;
             let mut handles: Vec<TaskState<SetMtEph<Pair<T, U>>>> = Vec::new();
             let ghost mut spawned_views: Seq<T::V> = Seq::empty();
 
@@ -569,25 +656,29 @@ verus!
                     valid_key_type::<T>(),
                     valid_key_type::<U>(),
                     valid_key_type::<Pair<T, U>>(),
-                    it@.1 == it_seq,
-                    it@.0 <= it_seq.len(),
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= it_seq.len(),
+                    IteratorSpec::remaining(&it).len() == it_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == it_seq[pos + i],
                     it_seq.map(|_i: int, k: T| k@).to_set() == s1_view,
                     it_seq.no_duplicates(),
                     s2@ == s2_view,
                     handles@.len() == spawned_views.len(),
-                    spawned_views.len() == it@.0,
+                    spawned_views.len() == pos,
                     forall |i: int| #![trigger spawned_views[i]] 0 <= i < spawned_views.len() ==> spawned_views[i] == it_seq[i]@,
                     // Track what each handle's predicate implies (the thread's ensures)
                     forall |i: int, ret: SetMtEph<Pair<T, U>>| (#[trigger] handles@[i].predicate(ret) && 0 <= i < handles@.len()) ==> (
-                        ret@.finite() &&
                         forall |av: T::V, bv: U::V| #[trigger] ret@.contains((av, bv)) <==> (av == spawned_views[i] && s2_view.contains(bv))
                     ),
-                decreases it_seq.len() - it@.0,
+                decreases IteratorSpec::decrease(&it)->0,
             {
                 match it.next() {
                     Some(a) => {
+                        proof { pos = pos + 1; }
                         let ghost a_view = a@;
-                        let ghost idx = it@.0 - 1;
+                        let ghost idx = pos - 1;
 
                         // Clone for the task
                         let a_clone = a.clone_plus();
@@ -605,7 +696,6 @@ verus!
                                     valid_key_type::<U>(),
                                     valid_key_type::<Pair<T, U>>(),
                                 ensures
-                                    r@.finite(),
                                     forall |av: T::V, bv: U::V| r@.contains((av, bv)) <==> (av == a_clone@ && s2_clone@.contains(bv)),
                             {
                                 Self::elt_cross_set(&a_clone, &s2_clone)
@@ -637,16 +727,13 @@ verus!
                     spawned_views.len() == n,
                     it_seq.no_duplicates(),
                     forall |j: int| #![trigger spawned_views[j]] 0 <= j < n ==> spawned_views[j] == it_seq[j]@,
-                    product@.finite(),
-                    joined_views.finite(),
                     // joined_views contains the elements we've processed (from the back)
                     forall |j: int| #![trigger spawned_views[j]] handles@.len() <= j < n ==> joined_views.contains(spawned_views[j]),
-                    forall |v: T::V| joined_views.contains(v) ==> 
+                    forall |v: T::V| joined_views.contains(v) ==>
                         exists |j: int| handles@.len() <= j < n && v == spawned_views[j],
                     forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (joined_views.contains(av) && s2_view.contains(bv)),
                     // Track what each handle's predicate implies (the thread's ensures)
                     forall |i: int, ret: SetMtEph<Pair<T, U>>| (#[trigger] handles@[i].predicate(ret) && 0 <= i < handles@.len()) ==> (
-                        ret@.finite() &&
                         forall |av: T::V, bv: U::V| #[trigger] ret@.contains((av, bv)) <==> (av == spawned_views[i] && s2_view.contains(bv))
                     ),
                 decreases handles@.len(),
@@ -664,8 +751,7 @@ verus!
                 // Veracity: NEEDED proof block
                 proof {
                     // From wait's ensures: handle.predicate(thread_result)
-                    // From spawn loop invariant: handle.predicate(ret) ==> (ret@.finite() && forall av, bv: ...)
-                    // Therefore: thread_result@.finite() && forall av, bv: ret@.contains((av, bv)) <==> ...
+                    // From spawn loop invariant: handle.predicate(ret) ==> (forall av, bv: ...)
 
                     // Prove a_view is not in the joined_views.
                     // Veracity: NEEDED assert
@@ -710,24 +796,30 @@ verus!
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) size check each.
         fn all_nonempty(parts: &SetMtEph<SetMtEph<T>>) -> bool {
             let parts_iter       =  parts.iter();
-            let mut parts_it     = parts_iter;
-            let ghost parts_seq  = parts_it@.1;
+            let ghost parts_seq  = into_iter_hash_keys(parts_iter);
             let ghost parts_view = parts@;
+            let mut parts_it     = parts_iter;
+            let ghost mut parts_pos: int = 0;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type::<T>(),
                     valid_key_type::<SetMtEph<T>>(),
-                    parts_it@.0 <= parts_seq.len(),
-                    parts_it@.1 == parts_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&parts_it),
+                    IteratorSpec::decrease(&parts_it) is Some,
+                    0 <= parts_pos <= parts_seq.len(),
+                    IteratorSpec::remaining(&parts_it).len() == parts_seq.len() - parts_pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&parts_it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&parts_it)[i]) == parts_seq[parts_pos + i],
                     parts_seq.map(|i: int, k: SetMtEph<T>| k@).to_set() == parts_view,
-                    forall |i: int| #![trigger parts_seq[i]] 0 <= i < parts_it@.0 ==> parts_seq[i]@.len() != 0,
-                decreases parts_seq.len() - parts_it@.0,
+                    forall |i: int| #![trigger parts_seq[i]] 0 <= i < parts_pos ==> parts_seq[i]@.len() != 0,
+                decreases IteratorSpec::decrease(&parts_it)->0,
             {
-                let ghost old_pos = parts_it@.0;
+                let ghost old_pos = parts_pos;
                 match parts_it.next() {
                     Some(subset) => {
+                        proof { parts_pos = parts_pos + 1; }
                         if subset.size() == 0 {
                             // Veracity: NEEDED proof block
                             proof {
@@ -746,10 +838,11 @@ verus!
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) membership check each.
         fn partition_on_elt(x: &T, parts: &SetMtEph<SetMtEph<T>>) -> bool {
             let parts_iter = parts.iter();
-            let mut parts_it = parts_iter;
-            let ghost parts_seq = parts_it@.1;
+            let ghost parts_seq = into_iter_hash_keys(parts_iter);
             let ghost parts_view = parts@;
             let ghost x_view = x@;
+            let mut parts_it = parts_iter;
+            let ghost mut parts_pos: int = 0;
             let mut count: usize = 0;
             let ghost mut found_index: Option<int> = None;
 
@@ -758,21 +851,26 @@ verus!
                 invariant
                     valid_key_type::<T>(),
                     valid_key_type::<SetMtEph<T>>(),
-                    parts_it@.0 <= parts_seq.len(),
-                    parts_it@.1 == parts_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&parts_it),
+                    IteratorSpec::decrease(&parts_it) is Some,
+                    0 <= parts_pos <= parts_seq.len(),
+                    IteratorSpec::remaining(&parts_it).len() == parts_seq.len() - parts_pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&parts_it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&parts_it)[i]) == parts_seq[parts_pos + i],
                     parts_seq.map(|i: int, k: SetMtEph<T>| k@).to_set() == parts_view,
                     count <= 1,
                     match found_index {
-                        Some(idx) => 0 <= idx < parts_it@.0 && parts_seq[idx]@.contains(x_view) && count == 1,
+                        Some(idx) => 0 <= idx < parts_pos && parts_seq[idx]@.contains(x_view) && count == 1,
                         None => count == 0,
                     },
-                    forall |i: int| #![trigger parts_seq[i]] 0 <= i < parts_it@.0 && parts_seq[i]@.contains(x_view) ==> 
+                    forall |i: int| #![trigger parts_seq[i]] 0 <= i < parts_pos && parts_seq[i]@.contains(x_view) ==>
                         found_index == Some(i),
-                decreases parts_seq.len() - parts_it@.0,
+                decreases IteratorSpec::decrease(&parts_it)->0,
             {
-                let ghost old_pos = parts_it@.0;
+                let ghost old_pos = parts_pos;
                 match parts_it.next() {
                     Some(subset) => {
+                        proof { parts_pos = parts_pos + 1; }
                         if subset.mem(x) {
                             let ghost prev_found_index = found_index;
                             count = count + 1;
@@ -816,32 +914,38 @@ verus!
             }
 
             let s1_iter = self.iter();
-            let mut s1_it = s1_iter;
-            let ghost s1_seq = s1_it@.1;
+            let ghost s1_seq = into_iter_hash_keys(s1_iter);
             let ghost s1_view = self@;
             let ghost parts_view = parts@;
+            let mut s1_it = s1_iter;
+            let ghost mut s1_pos: int = 0;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type::<T>(),
                     valid_key_type::<SetMtEph<T>>(),
-                    s1_it@.0 <= s1_seq.len(),
-                    s1_it@.1 == s1_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&s1_it),
+                    IteratorSpec::decrease(&s1_it) is Some,
+                    0 <= s1_pos <= s1_seq.len(),
+                    IteratorSpec::remaining(&s1_it).len() == s1_seq.len() - s1_pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&s1_it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&s1_it)[i]) == s1_seq[s1_pos + i],
                     s1_seq.map(|i: int, k: T| k@).to_set() == s1_view,
-                    forall |i: int| #![trigger s1_seq[i]] 0 <= i < s1_it@.0 ==> {
+                    forall |i: int| #![trigger s1_seq[i]] 0 <= i < s1_pos ==> {
                         let x_view = s1_seq[i]@;
                         (exists |s: Set<T::V>| #![trigger parts_view.contains(s)] parts_view.contains(s) && s.contains(x_view)) &&
-                        (forall |s1: Set<T::V>, s2: Set<T::V>| 
+                        (forall |s1: Set<T::V>, s2: Set<T::V>|
                             #![trigger parts_view.contains(s1), parts_view.contains(s2)]
                             parts_view.contains(s1) && s1.contains(x_view) &&
                             parts_view.contains(s2) && s2.contains(x_view) ==> s1 == s2)
                     },
-                decreases s1_seq.len() - s1_it@.0,
+                decreases IteratorSpec::decrease(&s1_it)->0,
             {
-                let ghost old_pos = s1_it@.0;
+                let ghost old_pos = s1_pos;
                 match s1_it.next() {
                     Some(x) => {
+                        proof { s1_pos = s1_pos + 1; }
                         if !Self::partition_on_elt(x, parts) {
                             // Veracity: NEEDED proof block
                             proof {
@@ -862,30 +966,28 @@ verus!
             let mut first : SetMtEph<T> = SetMtEph::empty();
             let mut second: SetMtEph<T> = SetMtEph::empty();
             let it = self.iter();
-            let ghost iter_seq = it@.1;
+            let ghost iter_seq = into_iter_hash_keys(it);
             let ghost self_view = self@;
 
             for x in iter: it
                 invariant
                     valid_key_type::<T>(),
-                    iter.elements == iter_seq,
+                    iter.seq().unref() == iter_seq,
                     iter_seq.map(|_i: int, k: T| k@).to_set() == self_view,
                     iter_seq.no_duplicates(),
-                    first@.finite(),
-                    second@.finite(),
                     first@.disjoint(second@),
-                    first@.union(second@) == iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set(),
-                    first@.len() == if iter.pos <= n { iter.pos } else { n as int },
-                    second@.len() == if iter.pos <= n { 0 } else { iter.pos - n },
+                    first@.union(second@) == iter_seq.take(iter.index()).map(|_i: int, k: T| k@).to_set(),
+                    first@.len() == if iter.index() <= n { iter.index() } else { n as int },
+                    second@.len() == if iter.index() <= n { 0 } else { iter.index() - n },
             {
                 // Veracity: NEEDED proof block
                 proof {
-                    lemma_take_one_more_extends_the_seq_set_with_view(iter_seq, iter.pos);
+                    lemma_take_one_more_extends_the_seq_set_with_view(iter_seq, iter.index());
                     // Veracity: NEEDED assert
-                    assert(!iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@)) by {
+                    assert(!iter_seq.take(iter.index()).map(|_i: int, k: T| k@).to_set().contains(x@)) by {
                         lemma_reveal_view_injective::<T>();
-                        if iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@) {
-                            let mapped = iter_seq.take(iter.pos).map(|_i: int, k: T| k@);
+                        if iter_seq.take(iter.index()).map(|_i: int, k: T| k@).to_set().contains(x@) {
+                            let mapped = iter_seq.take(iter.index()).map(|_i: int, k: T| k@);
                             let j = mapped.lemma_contains_to_index(x@);
                         }
                     };
@@ -905,13 +1007,13 @@ verus!
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates iterator, takes first element.
         fn choose(&self) -> (element: T) {
             let mut it = self.elements.iter();
-            let ghost s: Seq<T> = it@.1;
+            let ghost s: Seq<T> = into_iter_hash_keys(it);
 
-            // iter() ensures: s.contains(k) ==> self@.contains(k@)
-            // And self@.len() > 0 implies s.len() > 0 (bijection)
             // Veracity: NEEDED proof block
             proof {
                 // s.len() > 0 because self@.len() > 0 and iter ensures bijection
+                lemma_viewed_len(self.elements@);
+                assert(IteratorSpec::remaining(&it).len() > 0);
             }
 
             let opt = it.next();
@@ -923,8 +1025,10 @@ verus!
                 // Since 0 < s.len(), s.contains(element_ref)
                 // Veracity: NEEDED assert
                 assert(s.contains(*element_ref)) by {
+                    assert(s[0] == *element_ref);
                 }
                 // From iter ensures: s.contains(k) ==> self@.contains(k@)
+                lemma_viewed_contains(self.elements@, *element_ref);
             }
 
             let result = element_ref.clone_plus();
@@ -939,120 +1043,31 @@ verus!
     //		Section 10a. iterators
 
 
-    /// Iterator wrapper to hide std::collections::hash_set::Iter.
-    #[verifier::reject_recursive_types(T)]
-    pub struct SetMtEphIter<'a, T: StT + Hash> {
-        pub inner: HashSetWithViewPlusIter<'a, T>,
-    }
-
-    impl<'a, T: StT + Hash> View for SetMtEphIter<'a, T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant<'a, T: StT + Hash>(it: &SetMtEphIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<'a, T: StT + Hash> std::iter::Iterator for SetMtEphIter<'a, T> {
-        type Item = &'a T;
-
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support (for-iter patterns).
-    #[verifier::reject_recursive_types(T)]
-    pub struct SetMtEphGhostIterator<'a, T: StT + Hash> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
-    impl<'a, T: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for SetMtEphIter<'a, T> {
-        type GhostIter = SetMtEphGhostIterator<'a, T>;
-
-        open spec fn ghost_iter(&self) -> SetMtEphGhostIterator<'a, T> {
-            SetMtEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, T: StT + Hash> vstd::pervasive::ForLoopGhostIterator for SetMtEphGhostIterator<'a, T> {
-        type ExecIter = SetMtEphIter<'a, T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &SetMtEphIter<'a, T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(self.elements[self.pos])
-            } else {
-                None
-            }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &SetMtEphIter<'a, T>) -> SetMtEphGhostIterator<'a, T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    impl<'a, T: StT + Hash> View for SetMtEphGhostIterator<'a, T> {
-        type V = Seq<T>;
-
-        open spec fn view(&self) -> Seq<T> {
-            self.elements.take(self.pos)
-        }
-    }
-
+    // Delegated iteration: `iter()` returns the std hash-set iterator that vstd
+    // specifies. The prophetic sequence is tied to the set view through
+    // `into_iter_hash_keys`, the non-prophetic contents `peek` reads. An impl
+    // of an external trait method may not add `requires`, so the contract is
+    // conditional on well-formedness instead.
     impl<'a, T: StT + Hash> std::iter::IntoIterator for &'a SetMtEph<T> {
         type Item = &'a T;
-        type IntoIter = SetMtEphIter<'a, T>;
+        type IntoIter = std::collections::hash_set::Iter<'a, T>;
         fn into_iter(self) -> (it: Self::IntoIter)
-            requires self.spec_setmteph_wf()
             ensures
-                it@.0 == 0int,
-                it@.1.map(|i: int, k: T| k@).to_set() == self@,
-                it@.1.no_duplicates(),
+                self.spec_setmteph_wf() ==> {
+                    &&& IteratorSpec::remaining(&it).unref().map(|i: int, k: T| k@).to_set() == self@
+                    &&& IteratorSpec::remaining(&it).unref().no_duplicates()
+                    &&& IteratorSpec::remaining(&it).len() == self@.len()
+                    &&& into_iter_hash_keys(it) == IteratorSpec::remaining(&it).unref()
+                    &&& IteratorSpec::decrease(&it) is Some
+                },
         {
-            self.iter()
+            let it = self.elements.iter();
+            proof {
+                if self.spec_setmteph_wf() {
+                    lemma_iter_keys_view(self, into_iter_hash_keys(it));
+                }
+            }
+            it
         }
     }
 
@@ -1089,7 +1104,7 @@ verus!
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates empty set under RwLock.
         fn empty() -> (s: Self)
             requires valid_key_type::<T>()
-            ensures s@.finite(), s@ == Set::<<T as View>::V>::empty();
+            ensures s@ == Set::<<T as View>::V>::empty();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires read lock, delegates to size().
         fn size(&self) -> (size: usize)
@@ -1102,7 +1117,6 @@ verus!
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires write lock, delegates to insert().
         fn insert(&mut self, x: T) -> (inserted: std::result::Result<bool, ()>)
             ensures
-                self@.finite(),
                 self@ == old(self)@.insert(x@),
                 inserted is Ok ==> inserted.unwrap() == !old(self)@.contains(x@);
 
@@ -1116,9 +1130,11 @@ verus!
 
 
     impl<T: StT + Hash> LockedSetMtEph<T> {
+        // The ghost shadow carried `finite()`, which is true by type at 09.13;
+        // no invariant on the shadow remains.
         #[verifier::type_invariant]
         spec fn wf(self) -> bool {
-            self.ghost_locked_set@.finite()
+            true
         }
 
         pub closed spec fn spec_ghost_locked_set(self) -> Set<<T as View>::V> {
@@ -1188,7 +1204,7 @@ verus!
 
     impl<T: StT + Hash> RwLockPredicate<SetMtEph<T>> for SetMtEphInv {
         open spec fn inv(self, v: SetMtEph<T>) -> bool {
-            v@.finite() && valid_key_type::<T>()
+            valid_key_type::<T>()
         }
     }
 
@@ -1204,12 +1220,28 @@ verus!
 
     impl<T: StT + Hash> Clone for SetMtEph<T> {
         fn clone(&self) -> (clone: Self)
-            ensures clone@.finite(), clone@ == self@
-        { SetMtEph { elements: self.elements.clone() } }
+            ensures clone@ == self@
+        {
+            let elements = self.elements.clone();
+            proof { lemma_hash_set_clone_eq(self.elements@, elements@); }
+            SetMtEph { elements }
+        }
     }
 
     impl<T: StT + Hash> std::hash::Hash for SetMtEph<T> {
-        fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.elements.hash(state); }
+        // The body and the trust boundary that `HashSetWithViewPlus::hash` had:
+        // `std::collections::HashSet` implements no `Hash`, and Verus 0.2026.09.13
+        // does not support calling `core::hash::Hash::hash` on a generic `T`.
+        #[verifier::external_body]
+        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+            let mut it = self.elements.iter();
+            loop {
+                match it.next() {
+                    Some(key) => { key.hash(state); },
+                    None => { break; },
+                }
+            }
+        }
     }
 
     impl<T: StT + Hash> Eq for SetMtEph<T> {}
@@ -1253,30 +1285,6 @@ verus!
     impl<T: StT + Hash> std::fmt::Debug for SetMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
             write!(f, "SetMtEph({})", self.elements.len())
-        }
-    }
-
-    impl<'a, T: StT + Hash> std::fmt::Debug for SetMtEphIter<'a, T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-            write!(f, "SetMtEphIter")
-        }
-    }
-
-    impl<'a, T: StT + Hash> std::fmt::Display for SetMtEphIter<'a, T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-            write!(f, "SetMtEphIter")
-        }
-    }
-
-    impl<'a, T: StT + Hash> std::fmt::Debug for SetMtEphGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-            write!(f, "SetMtEphGhostIterator")
-        }
-    }
-
-    impl<'a, T: StT + Hash> std::fmt::Display for SetMtEphGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-            write!(f, "SetMtEphGhostIterator")
         }
     }
 

@@ -1,0 +1,214 @@
+From 2fa1c7ae3c2bd848e4dd5018d25eb2ddb4504c63 Mon Sep 17 00:00:00 2001
+From: "Brian G. Milnes" <briangmilnes@gmail.com>
+Date: Mon, 21 Sep 2026 15:29:59 -0700
+Subject: [PATCH 09/16] r211 iterator-upgrade --apply: src/Chap18/ArraySeq.rs
+
+---
+ src/Chap18/ArraySeq.rs | 158 ++++-------------------------------------
+ 1 file changed, 15 insertions(+), 143 deletions(-)
+
+diff --git a/src/Chap18/ArraySeq.rs b/src/Chap18/ArraySeq.rs
+index 316ec7f..cc4b783 100644
+--- a/src/Chap18/ArraySeq.rs
++++ b/src/Chap18/ArraySeq.rs
+@@ -31,6 +31,8 @@ pub mod ArraySeq {
+     use std::vec::IntoIter;
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+     pub use crate::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::*;
+ 
+     verus!
+@@ -1506,13 +1508,13 @@ pub mod ArraySeq {
+         {}
+ 
+         /// Returns custom ArraySeqIter following Chap05 pattern.
+-        pub fn iter(&self) -> (it: ArraySeqIter<'_, T>)
++        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            ArraySeqIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+@@ -1523,123 +1525,16 @@ pub mod ArraySeq {
+ 
+     //		Section 10. iterators
+ 
+-
+-    /// Inner is private; closed view() can access it but external code cannot see it.
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqIter<'a, T> {
+-        pub inner: std::slice::Iter<'a, T>, 
+-    }
+-
+-    /// Ghost iterator for ForLoopGhostIterator support (for-iter, for-borrow patterns).
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqGhostIterator<'a, T> {
+-        pub pos: int,
+-        pub elements: Seq<T>,
+-        pub phantom: core::marker::PhantomData<&'a T>,
+-    }
+-
+-    impl<'a, T> View for ArraySeqIter<'a, T> {
+-        type V = (int, Seq<T>);
+-        open spec fn view(&self) -> (int, Seq<T>) {
+-            self.inner@
+-        }
+-    }
+-
+-    impl<'a, T> View for ArraySeqGhostIterator<'a, T> {
+-        type V = Seq<T>;
+-
+-        open spec fn view(&self) -> Seq<T> {
+-            self.elements.take(self.pos)
+-        }
+-    }
+-
+-    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqIter<'a, T>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<'a, T> std::iter::Iterator for ArraySeqIter<'a, T> {
+-        type Item = &'a T;
+-
+-        // Relies on vstd's assume_specification for slice::Iter::next.
+-        fn next(&mut self) -> (next: Option<&'a T>)
+-            ensures ({
+-                let (old_index, old_seq) = old(self)@;
+-                match next {
+-                    None => {
+-                        &&& self@ == old(self)@
+-                        &&& old_index >= old_seq.len()
+-                    },
+-                    Some(element) => {
+-                        let (new_index, new_seq) = self@;
+-                        &&& 0 <= old_index < old_seq.len()
+-                        &&& new_seq == old_seq
+-                        &&& new_index == old_index + 1
+-                        &&& element == old_seq[old_index]
+-                    },
+-                }
+-            })
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqIter<'a, T> {
+-        type GhostIter = ArraySeqGhostIterator<'a, T>;
+-
+-        open spec fn ghost_iter(&self) -> ArraySeqGhostIterator<'a, T> {
+-            ArraySeqGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ArraySeqGhostIterator<'a, T> {
+-        type ExecIter = ArraySeqIter<'a, T>;
+-        type Item = T;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &ArraySeqIter<'a, T>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<T> {
+-            if 0 <= self.pos < self.elements.len() {
+-                Some(self.elements[self.pos])
+-            } else {
+-                None
+-            }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &ArraySeqIter<'a, T>) -> ArraySeqGhostIterator<'a, T> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqS<T> {
+         type Item = &'a T;
+-        type IntoIter = ArraySeqIter<'a, T>;
++        type IntoIter = std::slice::Iter<'a, T>;
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            ArraySeqIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+@@ -1648,8 +1543,9 @@ pub mod ArraySeq {
+         type IntoIter = IntoIter<T>;
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
++                IteratorSpec::remaining(&it) == self.seq@,
++                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+             self.seq.into_iter()
+         }
+@@ -1717,28 +1613,4 @@ pub mod ArraySeq {
+             write!(f, "]")
+         }
+     }
+-
+-    impl<'a, T: Debug> Debug for ArraySeqIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqIter({:?})", self.inner)
+-        }
+-    }
+-
+-    impl<'a, T> Display for ArraySeqIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqIter")
+-        }
+-    }
+-
+-    impl<'a, T> Debug for ArraySeqGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqGhostIterator")
+-        }
+-    }
+-
+-    impl<'a, T> Display for ArraySeqGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqGhostIterator")
+-        }
+-    }
+ }
+-- 
+2.53.0
+

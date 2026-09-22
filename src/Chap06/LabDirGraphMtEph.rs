@@ -41,6 +41,10 @@ pub mod LabDirGraphMtEph {
     use std::hash::Hash;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::into_iter_hash_keys;
     use crate::Types::Types::*;
     use crate::Concurrency::Concurrency::*;
     use crate::Chap05::SetStEph::SetStEph::*;
@@ -64,7 +68,7 @@ pub mod LabDirGraphMtEph {
 
 
     broadcast use {
-        vstd::set::group_set_axioms,
+        vstd::set::group_set_lemmas,
         crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_LabEdge_axioms,
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
@@ -106,15 +110,11 @@ pub mod LabDirGraphMtEph {
     {
         spec fn spec_labdirgraphmteph_wf(&self) -> bool;
 
-        open spec fn spec_finite(&self) -> bool {
-            self@.V.finite() && self@.A.finite()
-        }
-
         open spec fn spec_vertices(&self) -> Set<V::V> { self@.V }
         open spec fn spec_labeled_arcs(&self) -> Set<(V::V, V::V, L::V)> { self@.A }
 
         open spec fn spec_arcs(&self) -> Set<(V::V, V::V)> {
-            Set::new(|e: (V::V, V::V)| exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l)))
+            self@.A.map(|e: (V::V, V::V, L::V)| (e.0, e.1))
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
@@ -132,8 +132,6 @@ pub mod LabDirGraphMtEph {
         fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: Self)
             requires
                 valid_key_type_for_lab_graph::<V, L>(),
-                vertices@.finite(),
-                labeled_arcs@.finite(),
                 forall |u: V::V, w: V::V, l: L::V|
                     #[trigger] labeled_arcs@.contains((u, w, l)) ==> vertices@.contains(u) && vertices@.contains(w),
             ensures
@@ -156,7 +154,7 @@ pub mod LabDirGraphMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential map
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>)
             requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>(), valid_key_type_Edge::<V>()
-            ensures arcs@.finite(), arcs@ == self.spec_arcs();
+            ensures arcs@ == self.spec_arcs();
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -190,29 +188,29 @@ pub mod LabDirGraphMtEph {
         open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V>
             recommends spec_labgraphview_wf(self@), self@.V.contains(v)
         {
-            Set::new(|w: V::V| exists |l: L::V| self@.A.contains((v, w, l)))
+            self@.V.filter(|w: V::V| exists |l: L::V| #![trigger self@.A.contains((v, w, l))] self@.A.contains((v, w, l)))
         }
 
-        open spec fn spec_n_plus_from_set(&self, v: V::V, subarcs: Set<(V::V, V::V, L::V)>) -> Set<V::V> 
-            recommends 
+        open spec fn spec_n_plus_from_set(&self, v: V::V, subarcs: Set<(V::V, V::V, L::V)>) -> Set<V::V>
+            recommends
                 spec_labgraphview_wf(self@),
                 subarcs <= self@.A,
         {
-            Set::new(|w: V::V| exists |l: L::V| subarcs.contains((v, w, l)))
+            self@.V.filter(|w: V::V| exists |l: L::V| #![trigger subarcs.contains((v, w, l))] subarcs.contains((v, w, l)))
         }
 
         open spec fn spec_n_minus(&self, v: V::V) -> Set<V::V>
             recommends spec_labgraphview_wf(self@), self@.V.contains(v)
         {
-            Set::new(|u: V::V| exists |l: L::V| self@.A.contains((u, v, l)))
+            self@.V.filter(|u: V::V| exists |l: L::V| #![trigger self@.A.contains((u, v, l))] self@.A.contains((u, v, l)))
         }
 
-        open spec fn spec_n_minus_from_set(&self, v: V::V, subarcs: Set<(V::V, V::V, L::V)>) -> Set<V::V> 
-            recommends 
+        open spec fn spec_n_minus_from_set(&self, v: V::V, subarcs: Set<(V::V, V::V, L::V)>) -> Set<V::V>
+            recommends
                 spec_labgraphview_wf(self@),
                 subarcs <= self@.A,
         {
-            Set::new(|u: V::V| exists |l: L::V| subarcs.contains((u, v, l)))
+            self@.V.filter(|u: V::V| exists |l: L::V| #![trigger subarcs.contains((u, v, l))] subarcs.contains((u, v, l)))
         }
 
         /// out-neighbors
@@ -225,7 +223,6 @@ pub mod LabDirGraphMtEph {
                 self@.V.contains(v@),
             ensures
                 n_plus.spec_setsteph_wf(),
-                n_plus@.finite(),
                 n_plus@ == self.spec_n_plus(v@),
                 n_plus@ <= self@.V;
 
@@ -239,7 +236,6 @@ pub mod LabDirGraphMtEph {
                 self@.V.contains(v@),
             ensures
                 n_minus.spec_setsteph_wf(),
-                n_minus@.finite(),
                 n_minus@ == self.spec_n_minus(v@),
                 n_minus@ <= self@.V;
 
@@ -304,9 +300,11 @@ pub mod LabDirGraphMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>) {
             let mut arcs: SetStEph<Edge<V>> = SetStEph::empty();
-            let mut it = self.labeled_arcs.iter();
-            let ghost la_seq = it@.1;
+            let la_iter = self.labeled_arcs.iter();
+            let ghost la_seq = into_iter_hash_keys(la_iter);
             let ghost la_view = self@.A;
+            let mut it = la_iter;
+            let ghost mut pos: int = 0;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
@@ -314,13 +312,18 @@ pub mod LabDirGraphMtEph {
                     valid_key_type_LabEdge::<V, L>(),
                     valid_key_type_Edge::<V>(),
                     arcs.spec_setsteph_wf(),
-                    it@.0 <= la_seq.len(),
-                    it@.1 == la_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= la_seq.len(),
+                    IteratorSpec::remaining(&it).len() == la_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == la_seq[pos + i],
                     la_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == la_view,
-                    arcs@ == Set::new(|e: (V::V, V::V)|
-                        exists |i: int| #![trigger la_seq[i]] 0 <= i < it@.0 && la_seq[i]@.0 == e.0 && la_seq[i]@.1 == e.1),
-                decreases la_seq.len() - it@.0,
+                    forall |e: (V::V, V::V)| #[trigger] arcs@.contains(e) <==>
+                        exists |i: int| #![trigger la_seq[i]] 0 <= i < pos && la_seq[i]@.0 == e.0 && la_seq[i]@.1 == e.1,
+                decreases IteratorSpec::decrease(&it)->0,
             {
+                let ghost old_pos = pos;
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
@@ -328,27 +331,29 @@ pub mod LabDirGraphMtEph {
                         proof {
                             // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
-                            assert forall |e: (V::V, V::V)| #[trigger] arcs@.contains(e) implies 
-                                (exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l))) by {
+                            assert forall |e: (V::V, V::V)| #[trigger] arcs@.contains(e) implies
+                                self.spec_arcs().contains(e) by {
                                 if arcs@.contains(e) {
                                     let i = choose |i: int| #![trigger la_seq[i]] 0 <= i < la_seq.len() && la_seq[i]@.0 == e.0 && la_seq[i]@.1 == e.1;
                                     lemma_seq_index_in_map_to_set(la_seq, i);
+                                    assert(la_view.contains(la_seq[i]@));
                                 }
                             }
                             // Veracity: NEEDED assert
                             // Veracity: NEEDED assert
-                            assert forall |e: (V::V, V::V)|
-                                (exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l))) implies
+                            assert forall |e: (V::V, V::V)| #[trigger] self.spec_arcs().contains(e) implies
                                 arcs@.contains(e) by {
-                                if exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l)) {
-                                    let l = choose |l: L::V| #![trigger la_view.contains((e.0, e.1, l))] la_view.contains((e.0, e.1, l));
-                                    lemma_map_to_set_contains_index(la_seq, (e.0, e.1, l));
+                                if self.spec_arcs().contains(e) {
+                                    let a = choose |a: (V::V, V::V, L::V)| #[trigger] la_view.contains(a) && e == (a.0, a.1);
+                                    lemma_map_to_set_contains_index(la_seq, a);
                                 }
                             }
+                            assert(arcs@ =~= self.spec_arcs());
                         }
                         return arcs;
                     },
                     Some(labeled_arc) => {
+                        proof { pos = pos + 1; assert(la_seq[old_pos] == *labeled_arc); }
                         let _ = arcs.insert(Edge(labeled_arc.0.clone_plus(), labeled_arc.1.clone_plus()));
                     },
                 }
@@ -356,48 +361,75 @@ pub mod LabDirGraphMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn add_vertex(&mut self, v: V) { let _ = self.vertices.insert(v); }
+        fn add_vertex(&mut self, v: V) {
+            let _ = self.vertices.insert(v);
+            proof {
+                assert forall |u: V::V, w: V::V, l: L::V| #[trigger] self@.A.contains((u, w, l))
+                    implies self@.V.contains(u) && self@.V.contains(w) by {
+                    assert(old(self)@.A.contains((u, w, l)));
+                }
+            }
+        }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_labeled_arc(&mut self, from: V, to: V, label: L) {
             let _ = self.vertices.insert(from.clone_plus());
             let _ = self.vertices.insert(to.clone_plus());
             let _ = self.labeled_arcs.insert(LabEdge(from, to, label));
+            proof {
+                assert forall |u: V::V, w: V::V, l: L::V| #[trigger] self@.A.contains((u, w, l))
+                    implies self@.V.contains(u) && self@.V.contains(w) by {
+                    if old(self)@.A.contains((u, w, l)) {
+                        assert(old(self)@.V.contains(u) && old(self)@.V.contains(w));
+                    }
+                }
+            }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>) {
-            let mut it = self.labeled_arcs.iter();
-            let ghost la_seq = it@.1;
+            let la_iter = self.labeled_arcs.iter();
+            let ghost la_seq = into_iter_hash_keys(la_iter);
             let ghost la_view = self@.A;
             let ghost from_view = from@;
             let ghost to_view = to@;
+            let mut it = la_iter;
+            let ghost mut pos: int = 0;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type_LabEdge::<V, L>(),
-                    it@.0 <= la_seq.len(),
-                    it@.1 == la_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= la_seq.len(),
+                    IteratorSpec::remaining(&it).len() == la_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == la_seq[pos + i],
                     la_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == la_view,
-                    forall |i: int| #![trigger la_seq[i]] 0 <= i < it@.0 ==> !(la_seq[i]@.0 == from_view && la_seq[i]@.1 == to_view),
-                decreases la_seq.len() - it@.0,
+                    forall |i: int| #![trigger la_seq[i]] 0 <= i < pos ==> !(la_seq[i]@.0 == from_view && la_seq[i]@.1 == to_view),
+                decreases IteratorSpec::decrease(&it)->0,
             {
+                let ghost old_pos = pos;
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
                         // Veracity: NEEDED proof block
                         proof {
+                            if exists |l: L::V| #![trigger la_view.contains((from_view, to_view, l))] la_view.contains((from_view, to_view, l)) {
+                                let l = choose |l: L::V| #![trigger la_view.contains((from_view, to_view, l))] la_view.contains((from_view, to_view, l));
+                                lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
+                            }
                         }
                         return None;
                     },
                     Some(labeled_arc) => {
+                        proof { pos = pos + 1; assert(la_seq[old_pos] == *labeled_arc); }
                         // Veracity: NEEDED proof block
                         if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
                             // Veracity: NEEDED proof block
                             proof {
-                                let idx = it@.0 - 1;
-                                lemma_seq_index_in_map_to_set(la_seq, idx);
+                                lemma_seq_index_in_map_to_set(la_seq, old_pos);
                             }
                             return Some(&labeled_arc.2);
                         }
@@ -408,37 +440,48 @@ pub mod LabDirGraphMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
         fn has_arc(&self, from: &V, to: &V) -> (b: bool) {
-            let mut it = self.labeled_arcs.iter();
-            let ghost la_seq = it@.1;
+            let la_iter = self.labeled_arcs.iter();
+            let ghost la_seq = into_iter_hash_keys(la_iter);
             let ghost la_view = self@.A;
             let ghost from_view = from@;
             let ghost to_view = to@;
+            let mut it = la_iter;
+            let ghost mut pos: int = 0;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
                     valid_key_type_LabEdge::<V, L>(),
-                    it@.0 <= la_seq.len(),
-                    it@.1 == la_seq,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= la_seq.len(),
+                    IteratorSpec::remaining(&it).len() == la_seq.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == la_seq[pos + i],
                     la_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == la_view,
-                    forall |i: int| #![trigger la_seq[i]] 0 <= i < it@.0 ==> !(la_seq[i]@.0 == from_view && la_seq[i]@.1 == to_view),
-                decreases la_seq.len() - it@.0,
+                    forall |i: int| #![trigger la_seq[i]] 0 <= i < pos ==> !(la_seq[i]@.0 == from_view && la_seq[i]@.1 == to_view),
+                decreases IteratorSpec::decrease(&it)->0,
             {
+                let ghost old_pos = pos;
                 // Veracity: NEEDED proof block
                 match it.next() {
                     None => {
                         // Veracity: NEEDED proof block
                         proof {
+                            if exists |l: L::V| #![trigger la_view.contains((from_view, to_view, l))] la_view.contains((from_view, to_view, l)) {
+                                let l = choose |l: L::V| #![trigger la_view.contains((from_view, to_view, l))] la_view.contains((from_view, to_view, l));
+                                lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
+                            }
                         }
                         return false;
                     // Veracity: NEEDED proof block
                     },
                     Some(labeled_arc) => {
+                        proof { pos = pos + 1; assert(la_seq[old_pos] == *labeled_arc); }
                         if feq(&labeled_arc.0, from) && feq(&labeled_arc.1, to) {
                             // Veracity: NEEDED proof block
                             proof {
-                                let idx = it@.0 - 1;
-                                lemma_seq_index_in_map_to_set(la_seq, idx);
+                                lemma_seq_index_in_map_to_set(la_seq, old_pos);
                             }
                             return true;
                         }
@@ -643,121 +686,23 @@ pub mod LabDirGraphMtEph {
     //		Section 10a. iterators
 
 
-    /// Iterator wrapper for LabDirGraphMtEph vertex iteration.
-    #[verifier::reject_recursive_types(V)]
-    pub struct LabDirGraphMtEphIter<'a, V: StTInMtT + Hash + 'static> {
-        pub inner: SetStEphIter<'a, V>,
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> View for LabDirGraphMtEphIter<'a, V> {
-        type V = (int, Seq<V>);
-        open spec fn view(&self) -> (int, Seq<V>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant<'a, V: StTInMtT + Hash + 'static>(it: &LabDirGraphMtEphIter<'a, V>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> std::iter::Iterator for LabDirGraphMtEphIter<'a, V> {
-        type Item = &'a V;
-
-        fn next(&mut self) -> (next: Option<&'a V>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(V)]
-    pub struct LabDirGraphMtEphGhostIterator<'a, V: StTInMtT + Hash + 'static> {
-        pub pos: int,
-        pub elements: Seq<V>,
-        pub phantom: core::marker::PhantomData<&'a V>,
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> vstd::pervasive::ForLoopGhostIteratorNew for LabDirGraphMtEphIter<'a, V> {
-        type GhostIter = LabDirGraphMtEphGhostIterator<'a, V>;
-
-        open spec fn ghost_iter(&self) -> LabDirGraphMtEphGhostIterator<'a, V> {
-            LabDirGraphMtEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> vstd::pervasive::ForLoopGhostIterator for LabDirGraphMtEphGhostIterator<'a, V> {
-        type ExecIter = LabDirGraphMtEphIter<'a, V>;
-        type Item = V;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &LabDirGraphMtEphIter<'a, V>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<V> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(self.elements[self.pos])
-            } else {
-                None
-            }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &LabDirGraphMtEphIter<'a, V>) -> LabDirGraphMtEphGhostIterator<'a, V> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> View for LabDirGraphMtEphGhostIterator<'a, V> {
-        type V = Seq<V>;
-
-        open spec fn view(&self) -> Seq<V> {
-            self.elements.take(self.pos)
-        }
-    }
-
+    // Delegated iteration over the vertices: the std hash-set iterator that vstd
+    // specifies. An impl of an external trait method may not add `requires`, so
+    // the contract is conditional on the vertex set's well-formedness.
     impl<'a, V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> std::iter::IntoIterator for &'a LabDirGraphMtEph<V, L> {
         type Item = &'a V;
-        type IntoIter = LabDirGraphMtEphIter<'a, V>;
+        type IntoIter = std::collections::hash_set::Iter<'a, V>;
         fn into_iter(self) -> (it: Self::IntoIter)
-            requires valid_key_type::<V>(), spec_labgraphview_wf(self@)
             ensures
-                it@.0 == 0int,
-                it@.1.map(|i: int, k: V| k@).to_set() == self@.V,
-                it@.1.no_duplicates(),
-                iter_invariant(&it),
+                self.vertices.spec_setsteph_wf() ==> {
+                    &&& IteratorSpec::remaining(&it).unref().map(|i: int, k: V| k@).to_set() == self@.V
+                    &&& IteratorSpec::remaining(&it).unref().no_duplicates()
+                    &&& IteratorSpec::remaining(&it).len() == self@.V.len()
+                    &&& into_iter_hash_keys(it) == IteratorSpec::remaining(&it).unref()
+                    &&& IteratorSpec::decrease(&it) is Some
+                },
         {
-            LabDirGraphMtEphIter { inner: self.vertices().iter() }
+            (&self.vertices).into_iter()
         }
     }
 
@@ -794,18 +739,16 @@ pub mod LabDirGraphMtEph {
 
         open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V>
             recommends spec_labgraphview_wf(self@), self@.V.contains(v)
-        { Set::new(|w: V::V| exists |l: L::V| #![trigger self@.A.contains((v, w, l))] self@.A.contains((v, w, l))) }
+        { self@.V.filter(|w: V::V| exists |l: L::V| #![trigger self@.A.contains((v, w, l))] self@.A.contains((v, w, l))) }
 
         open spec fn spec_n_minus(&self, v: V::V) -> Set<V::V>
             recommends spec_labgraphview_wf(self@), self@.V.contains(v)
-        { Set::new(|u: V::V| exists |l: L::V| #![trigger self@.A.contains((u, v, l))] self@.A.contains((u, v, l))) }
+        { self@.V.filter(|u: V::V| exists |l: L::V| #![trigger self@.A.contains((u, v, l))] self@.A.contains((u, v, l))) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn new(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (s: Self)
             requires
                 valid_key_type_for_lab_graph::<V, L>(),
-                vertices@.finite(),
-                labeled_arcs@.finite(),
                 forall |u: V::V, w: V::V, l: L::V|
                     #[trigger] labeled_arcs@.contains((u, w, l)) ==> vertices@.contains(u) && vertices@.contains(w),
             ensures
@@ -988,22 +931,6 @@ pub mod LabDirGraphMtEph {
                 self.vertices, self.labeled_arcs
             )
         }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> Debug for LabDirGraphMtEphIter<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabDirGraphMtEphIter") }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> Display for LabDirGraphMtEphIter<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabDirGraphMtEphIter") }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> Debug for LabDirGraphMtEphGhostIterator<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabDirGraphMtEphGhostIterator") }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> Display for LabDirGraphMtEphGhostIterator<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabDirGraphMtEphGhostIterator") }
     }
 
     //		Section 14b. derive impls outside verus!

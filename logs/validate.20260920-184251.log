@@ -1,0 +1,307 @@
+Mode: isolate
+Isolate: including Chap02
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+  --> src/Types.rs:82:18
+   |
+82 |         &&& gv.V.finite()
+   |                  ^^^^^^
+   |
+   = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+  --> src/Types.rs:83:18
+   |
+83 |         &&& gv.A.finite()
+   |                  ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Types.rs:105:18
+    |
+105 |         &&& gv.V.finite()
+    |                  ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Types.rs:106:18
+    |
+106 |         &&& gv.A.finite()
+    |                  ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/vstdplus/seq_set.rs:491:11
+    |
+491 |         s.finite(),
+    |           ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/vstdplus/seq_set.rs:524:11
+    |
+524 |         s.finite(),
+    |           ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/vstdplus/seq_set.rs:712:11
+    |
+712 |         s.finite(),
+    |           ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/vstdplus/seq_set.rs:785:11
+    |
+785 |         s.finite(),
+    |           ^^^^^^
+
+error: postcondition not satisfied
+   --> src/vstdplus/seq_set.rs:455:9
+    |
+455 |           spec_nat_seq_sum(seq) == spec_nat_set_sum(seq.to_set()),
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+460 | /     if seq.len() == 0 {
+461 | |         assert(seq.to_set() =~= Set::empty());
+462 | |         vstd::iset::fold::lemma_fold_empty::<nat, nat>(0nat, f);
+463 | |     } else {
+...   |
+485 | |         vstd::iset::fold::lemma_fold_insert(prefix.to_set().to_iset(),0nat, f, last);
+486 | |     }
+    | |_____- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+spec_nat_seq_sum(old(seq)) == spec_nat_set_sum(old(seq).to_set()) 
+
+error: postcondition not satisfied
+   --> src/vstdplus/seq_set.rs:746:9
+    |
+746 |           spec_weighted_seq_sum(seq) == spec_weighted_set_sum(seq.to_set()),
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+751 | /     if seq.len() == 0 {
+752 | |         assert(seq.to_set() =~= Set::empty());
+753 | |         vstd::iset::fold::lemma_fold_empty::<(A, B, u32), nat>(0nat, f);
+754 | |     } else {
+...   |
+778 | |         vstd::iset::fold::lemma_fold_insert(prefix.to_set().to_iset(),0nat, f, last);
+779 | |     }
+    | |_____- at the end of the function body
+
+note: 
+
+spec_weighted_seq_sum(old(seq)) == spec_weighted_set_sum(old(seq).to_set()) 
+
+error: postcondition not satisfied
+   --> src/vstdplus/seq_set.rs:889:13
+    |
+889 |       ensures spec_weighted_seq_sum_u8(seq) == spec_weighted_set_sum_u8(seq.to_set()),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+893 | /     if seq.len() == 0 {
+894 | |         assert(seq.to_set() =~= Set::empty());
+895 | |         vstd::iset::fold::lemma_fold_empty::<(A, B, u8), nat>(0nat, f);
+896 | |     } else {
+...   |
+903 | |         vstd::iset::fold::lemma_fold_insert(prefix.to_set().to_iset(),0nat, f, last);
+904 | |     }
+    | |_____- at the end of the function body
+
+note: 
+
+spec_weighted_seq_sum_u8(old(seq)) == spec_weighted_set_sum_u8(old(seq).to_set()) 
+
+error: postcondition not satisfied
+   --> src/vstdplus/seq_set.rs:927:13
+    |
+927 |       ensures spec_weighted_seq_sum_u16(seq) == spec_weighted_set_sum_u16(seq.to_set()),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+931 | /     if seq.len() == 0 {
+932 | |         assert(seq.to_set() =~= Set::empty());
+933 | |         vstd::iset::fold::lemma_fold_empty::<(A, B, u16), nat>(0nat, f);
+934 | |     } else {
+...   |
+941 | |         vstd::iset::fold::lemma_fold_insert(prefix.to_set().to_iset(),0nat, f, last);
+942 | |     }
+    | |_____- at the end of the function body
+
+note: 
+
+spec_weighted_seq_sum_u16(old(seq)) == spec_weighted_set_sum_u16(old(seq).to_set()) 
+
+error: postcondition not satisfied
+   --> src/vstdplus/seq_set.rs:966:13
+    |
+966 |       ensures spec_weighted_seq_sum_u64(seq) == spec_weighted_set_sum_u64(seq.to_set()),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+970 | /     if seq.len() == 0 {
+971 | |         assert(seq.to_set() =~= Set::empty());
+972 | |         vstd::iset::fold::lemma_fold_empty::<(A, B, u64), nat>(0nat, f);
+973 | |     } else {
+...   |
+980 | |         vstd::iset::fold::lemma_fold_insert(prefix.to_set().to_iset(),0nat, f, last);
+981 | |     }
+    | |_____- at the end of the function body
+
+note: 
+
+spec_weighted_seq_sum_u64(old(seq)) == spec_weighted_set_sum_u64(old(seq).to_set()) 
+
+error: postcondition not satisfied
+    --> src/vstdplus/seq_set.rs:1004:13
+     |
+1004 |       ensures spec_weighted_seq_sum_u128(seq) == spec_weighted_set_sum_u128(seq.to_set()),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1008 | /     if seq.len() == 0 {
+1009 | |         assert(seq.to_set() =~= Set::empty());
+1010 | |         vstd::iset::fold::lemma_fold_empty::<(A, B, u128), nat>(0nat, f);
+1011 | |     } else {
+...    |
+1018 | |         vstd::iset::fold::lemma_fold_insert(prefix.to_set().to_iset(),0nat, f, last);
+1019 | |     }
+     | |_____- at the end of the function body
+
+note: 
+
+spec_weighted_seq_sum_u128(old(seq)) == spec_weighted_set_sum_u128(old(seq).to_set()) 
+
+error: postcondition not satisfied
+    --> src/vstdplus/seq_set.rs:1042:13
+     |
+1042 |       ensures spec_weighted_seq_sum_usize(seq) == spec_weighted_set_sum_usize(seq.to_set()),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1046 | /     if seq.len() == 0 {
+1047 | |         assert(seq.to_set() =~= Set::empty());
+1048 | |         vstd::iset::fold::lemma_fold_empty::<(A, B, usize), nat>(0nat, f);
+1049 | |     } else {
+...    |
+1056 | |         vstd::iset::fold::lemma_fold_insert(prefix.to_set().to_iset(),0nat, f, last);
+1057 | |     }
+     | |_____- at the end of the function body
+
+note: 
+
+spec_weighted_seq_sum_usize(old(seq)) == spec_weighted_set_sum_usize(old(seq).to_set()) 
+
+error: postcondition not satisfied
+    --> src/vstdplus/seq_set.rs:1073:13
+     |
+1073 |       ensures spec_signed_weighted_seq_sum_i8(seq) == spec_signed_weighted_set_sum_i8(seq.to_set()),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1077 | /     if seq.len() == 0 {
+1078 | |         assert(seq.to_set() =~= Set::empty());
+1079 | |         vstd::iset::fold::lemma_fold_empty::<(A, B, i8), int>(0int, f);
+1080 | |     } else {
+...    |
+1087 | |         vstd::iset::fold::lemma_fold_insert(prefix.to_set().to_iset(),0int, f, last);
+1088 | |     }
+     | |_____- at the end of the function body
+
+note: 
+
+spec_signed_weighted_seq_sum_i8(old(seq)) == spec_signed_weighted_set_sum_i8(old(seq).to_set()) 
+
+error: postcondition not satisfied
+    --> src/vstdplus/seq_set.rs:1105:13
+     |
+1105 |       ensures spec_signed_weighted_seq_sum_i16(seq) == spec_signed_weighted_set_sum_i16(seq.to_set()),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1109 | /     if seq.len() == 0 {
+1110 | |         assert(seq.to_set() =~= Set::empty());
+1111 | |         vstd::iset::fold::lemma_fold_empty::<(A, B, i16), int>(0int, f);
+1112 | |     } else {
+...    |
+1119 | |         vstd::iset::fold::lemma_fold_insert(prefix.to_set().to_iset(),0int, f, last);
+1120 | |     }
+     | |_____- at the end of the function body
+
+note: 
+
+spec_signed_weighted_seq_sum_i16(old(seq)) == spec_signed_weighted_set_sum_i16(old(seq).to_set()) 
+
+error: postcondition not satisfied
+    --> src/vstdplus/seq_set.rs:1136:13
+     |
+1136 |       ensures spec_signed_weighted_seq_sum(seq) == spec_signed_weighted_set_sum(seq.to_set()),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1140 | /     if seq.len() == 0 {
+1141 | |         assert(seq.to_set() =~= Set::empty());
+1142 | |         vstd::iset::fold::lemma_fold_empty::<(A, B, i32), int>(0int, f);
+1143 | |     } else {
+...    |
+1150 | |         vstd::iset::fold::lemma_fold_insert(prefix.to_set().to_iset(),0int, f, last);
+1151 | |     }
+     | |_____- at the end of the function body
+
+note: 
+
+spec_signed_weighted_seq_sum(old(seq)) == spec_signed_weighted_set_sum(old(seq).to_set()) 
+
+error: postcondition not satisfied
+    --> src/vstdplus/seq_set.rs:1167:13
+     |
+1167 |       ensures spec_signed_weighted_seq_sum_i64(seq) == spec_signed_weighted_set_sum_i64(seq.to_set()),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1171 | /     if seq.len() == 0 {
+1172 | |         assert(seq.to_set() =~= Set::empty());
+1173 | |         vstd::iset::fold::lemma_fold_empty::<(A, B, i64), int>(0int, f);
+1174 | |     } else {
+...    |
+1181 | |         vstd::iset::fold::lemma_fold_insert(prefix.to_set().to_iset(),0int, f, last);
+1182 | |     }
+     | |_____- at the end of the function body
+
+note: 
+
+spec_signed_weighted_seq_sum_i64(old(seq)) == spec_signed_weighted_set_sum_i64(old(seq).to_set()) 
+
+error: postcondition not satisfied
+    --> src/vstdplus/seq_set.rs:1198:13
+     |
+1198 |       ensures spec_signed_weighted_seq_sum_i128(seq) == spec_signed_weighted_set_sum_i128(seq.to_set()),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1202 | /     if seq.len() == 0 {
+1203 | |         assert(seq.to_set() =~= Set::empty());
+1204 | |         vstd::iset::fold::lemma_fold_empty::<(A, B, i128), int>(0int, f);
+1205 | |     } else {
+...    |
+1212 | |         vstd::iset::fold::lemma_fold_insert(prefix.to_set().to_iset(),0int, f, last);
+1213 | |     }
+     | |_____- at the end of the function body
+
+note: 
+
+spec_signed_weighted_seq_sum_i128(old(seq)) == spec_signed_weighted_set_sum_i128(old(seq).to_set()) 
+
+error: postcondition not satisfied
+    --> src/vstdplus/seq_set.rs:1229:13
+     |
+1229 |       ensures spec_signed_weighted_seq_sum_isize(seq) == spec_signed_weighted_set_sum_isize(seq.to_set()),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1233 | /     if seq.len() == 0 {
+1234 | |         assert(seq.to_set() =~= Set::empty());
+1235 | |         vstd::iset::fold::lemma_fold_empty::<(A, B, isize), int>(0int, f);
+1236 | |     } else {
+...    |
+1243 | |         vstd::iset::fold::lemma_fold_insert(prefix.to_set().to_iset(),0int, f, last);
+1244 | |     }
+     | |_____- at the end of the function body
+
+note: 
+
+spec_signed_weighted_seq_sum_isize(old(seq)) == spec_signed_weighted_set_sum_isize(old(seq).to_set()) 
+
+verification results:: 690 verified, 13 errors
+error: aborting due to 13 previous errors; 8 warnings emitted
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 656MB, peak z3 RSS: 55MB, min free: 27430MB
+Sampled CPU Usage: rust_verify: 3s, z3 children: 1s

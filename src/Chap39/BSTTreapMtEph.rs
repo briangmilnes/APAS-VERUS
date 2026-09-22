@@ -58,7 +58,7 @@ pub mod BSTTreapMtEph {
     //		Section 3. broadcast use
 
 
-    broadcast use vstd::set::group_set_axioms;
+    broadcast use vstd::set::group_set_lemmas;
 
     //		Section 4a. type definitions
 

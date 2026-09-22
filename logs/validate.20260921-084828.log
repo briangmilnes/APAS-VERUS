@@ -1,0 +1,212 @@
+Mode: isolate
+Isolate: including Chap49 Chap18 Chap19 Chap02
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap18/ArraySeq.rs:1544:23
+     |
+1544 |             self.inner@
+     |                       ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeq.rs:1651:19
+     |
+1651 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeq.rs:1652:19
+     |
+1652 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+   --> src/Chap18/ArraySeqStPer.rs:933:63
+    |
+933 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqStPer.rs:1053:19
+     |
+1053 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqStPer.rs:1054:19
+     |
+1054 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+   --> src/Chap18/ArraySeqStEph.rs:952:63
+    |
+952 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqStEph.rs:1058:19
+     |
+1058 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqStEph.rs:1059:19
+     |
+1059 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+   --> src/Chap18/LinkedListStPer.rs:765:63
+    |
+765 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap18/LinkedListStPer.rs:869:19
+    |
+869 |                 it@.0 == 0,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap18/LinkedListStPer.rs:870:19
+    |
+870 |                 it@.1 == self.seq@,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+   --> src/Chap18/LinkedListStEph.rs:783:63
+    |
+783 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap18/LinkedListStEph.rs:887:19
+    |
+887 |                 it@.0 == 0,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> src/Chap18/LinkedListStEph.rs:888:19
+    |
+888 |                 it@.1 == self.seq@,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap18/ArraySeqMtEph.rs:1430:63
+     |
+1430 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqMtEph.rs:1536:19
+     |
+1536 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqMtEph.rs:1537:19
+     |
+1537 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1559:63
+     |
+1559 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap18/ArraySeqMtPer.rs:1743:63
+     |
+1743 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqMtPer.rs:1850:19
+     |
+1850 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap18/ArraySeqMtPer.rs:1851:19
+     |
+1851 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap19/ArraySeqStPer.rs:1035:63
+     |
+1035 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqStPer.rs:1144:19
+     |
+1144 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqStPer.rs:1145:19
+     |
+1145 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap19/ArraySeqStEph.rs:1033:63
+     |
+1033 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqStEph.rs:1142:19
+     |
+1142 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqStEph.rs:1143:19
+     |
+1143 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqMtEph.rs:1562:25
+     |
+1562 |                     iter@.0 == j as int,
+     |                         ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqMtEph.rs:1563:25
+     |
+1563 |                     iter@.1 == b_view,
+     |                         ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap19/ArraySeqMtEph.rs:1587:63
+     |
+1587 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqMtEph.rs:1694:19
+     |
+1694 |                 it@.0 == 0,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+    --> src/Chap19/ArraySeqMtEph.rs:1695:19
+     |
+1695 |                 it@.1 == self.seq@,
+     |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1588:63
+     |
+1588 |         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+     |                                                               ^ method not found in `std::slice::Iter<'a, T>`
+
+error: aborting due to 34 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 534MB, peak z3 RSS: 0MB, min free: 27714MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

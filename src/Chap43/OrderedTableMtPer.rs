@@ -50,7 +50,7 @@ pub mod OrderedTableMtPer {
 
     broadcast use {
         crate::vstdplus::feq::feq::group_feq_axioms,
-        vstd::map::group_map_axioms,
+        vstd::map::group_map_lemmas,
     };
 
     //		Section 4a. type definitions

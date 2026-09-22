@@ -25,8 +25,9 @@ pub mod KruskalStEph {
 
     use vstd::prelude::*;
     use crate::Chap05::SetStEph::SetStEph::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap05::SetStEph::SetStEph::iter_invariant;
+    // r209: `iter_invariant` was deleted with the old iterator model (r208); the name has no other use here.
+    // #[cfg(verus_keep_ghost)]
+    // use crate::Chap05::SetStEph::SetStEph::iter_invariant;
     use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
     use crate::Types::Types::*;
     use std::hash::Hash;

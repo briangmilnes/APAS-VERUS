@@ -72,7 +72,7 @@
 //!
 //! References:
 //! - src/standards/spec_wf_standard.rs (do not put capacity in wf).
-//! - src/standards/finite_sets_standard.rs (finiteness IS in wf; capacity is not).
+//! - src/standards/finite_sets_standard.rs (finiteness is by type; capacity is not in wf).
 //! - src/Chap37/AVLTreeSeqStEph.rs (correct: `values@.len() < usize::MAX` in requires).
 //! - src/Chap41/AVLTreeSetStEph.rs (WRONG: `assume(new_vec@.len() < usize::MAX)` in body).
 

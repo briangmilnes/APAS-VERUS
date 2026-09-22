@@ -9,12 +9,16 @@
 //!
 //! ## Why PTTs for iterators?
 //!
-//! Iterator verification involves 10 interlocking components (see `iterators_standard.rs`).
-//! A PTT confirms that callers can actually use the iterator — that the `ensures` from
-//! `iter()`, `next()`, `ForLoopGhostIteratorNew`, and `ForLoopGhostIterator` compose
-//! correctly across all loop forms. Without PTTs, an iterator can verify internally but
-//! be unusable in practice (e.g., missing ghost iterator fields, wrong `iter_invariant`
-//! shape, `next()` ensures that don't connect to `for` loop ghost state).
+//! Under the verus 0.2026.09.13 prophetic iterator model (see
+//! `iterators_standard.rs` and `prophetic_iterators_standard.rs`) a collection's
+//! `iter()` carries three postconditions (`IteratorSpec::remaining`, the
+//! non-prophetic contents `peek` reads, `IteratorSpec::decrease is Some`), and a
+//! custom iterator type implements the five `IteratorSpecImpl` spec fns. A PTT
+//! confirms that callers can actually use the iterator — that those
+//! postconditions and vstd's `Iterator::next` contract compose across every loop
+//! form. Without PTTs, an iterator can verify internally but be unusable in
+//! practice (a missing `decrease is Some`, a `remaining` not tied to the
+//! collection's view, a constructor `ensures` shape that blocks `next`).
 //!
 //! ## The 6 required patterns
 //!
@@ -22,12 +26,12 @@
 //!
 //! | # | Pattern | Syntax | What it tests |
 //! |---|---------|--------|---------------|
-//! | 1 | loop-borrow-iter | `loop { ... a.iter() ... }` | Manual loop with `iter()` + `next()` |
-//! | 2 | loop-borrow-into | `loop { ... (&a).into_iter() ... }` | Manual loop via `IntoIterator` for `&Self` |
-//! | 3 | for-borrow-iter | `for x in iter: a.iter()` | Verus `for` loop with `iter()` |
-//! | 4 | for-borrow-into | `for x in iter: (&a).into_iter()` | Verus `for` loop via `IntoIterator` |
-//! | 5 | loop-consume | `loop { ... a.into_iter() ... }` | Manual consuming iteration |
-//! | 6 | for-consume | `for x in iter: a.into_iter()` | Verus `for` consuming iteration |
+//! | 1 | loop-borrow-iter | `let mut it = a.iter();` + `loop { match it.next() }` | Manual loop with `iter()` + `next()` |
+//! | 2 | loop-borrow-into | `let mut it = (&a).into_iter();` + `loop` | Manual loop via `IntoIterator` for `&Self` |
+//! | 3 | for-borrow-iter | `for x in it: a.iter()` | Verus `for` loop with `iter()` |
+//! | 4 | for-borrow-into | `for x in it: (&a).into_iter()` | Verus `for` loop via `IntoIterator` |
+//! | 5 | loop-consume | `let mut it = a.into_iter();` + `loop` | Manual consuming iteration |
+//! | 6 | for-consume | `for x in it: a.into_iter()` | Verus `for` consuming iteration |
 //!
 //! Patterns 5-6 (consuming) are only required if the collection implements
 //! `IntoIterator for Self` (not just `IntoIterator for &Self`).
@@ -62,37 +66,59 @@
 //!
 //! ## Template: loop-borrow-iter
 //!
+//! The manual loop runs on the iterator's own `next()` (its contract is the
+//! `IteratorSpec` one in vstd/std_specs/iter.rs), not on `VerusForLoopWrapper`,
+//! which vstd declares only under `verus_keep_ghost` and which does not
+//! compile under `cargo` (src/experiments/prophetic_manual_loop_next.rs). A
+//! ghost counter `pos` holds the number of items consumed; the two clauses
+//! over `IteratorSpec::remaining(&it)` are the wrapper's `wf_inner`, written
+//! out. The loop measures termination with the iterator's non-prophetic
+//! `IteratorSpec::decrease(&it)->0`, and draws its conclusion before `break`,
+//! because the prophetic `remaining()` equality does not survive the break
+//! and may not appear in `decreases`.
+//!
 //! ```rust
 //! test_verify_one_file! {
 //!     #[test] modulename_loop_borrow_iter verus_code! {
 //!         use vstd::prelude::*;
+//!         use vstd::std_specs::iter::*;
 //!         use apas_verus::ChapNN::ModuleName::ModuleName::*;
 //!
 //!         fn test_loop_borrow_iter() {
 //!             let a: ModuleS<u64> = ModuleS::new(/* constructor args */);
-//!
-//!             let mut it: ModuleIter<u64> = a.iter();
-//!             let ghost iter_seq: Seq<u64> = it@.1;
-//!             let ghost mut items: Seq<u64> = Seq::empty();
-//!
-//!             #[verifier::loop_isolation(false)]
+//!             let ghost orig: Seq<u64> = a@;
+//!             let mut collected: Vec<u64> = Vec::new();
+//!             let mut it: std::slice::Iter<'_, u64> = a.iter();
+//!             let ghost mut pos: int = 0;
 //!             loop
 //!                 invariant
-//!                     items =~= iter_seq.take(it@.0 as int),
-//!                     iter_invariant(&it),
-//!                     iter_seq == it@.1,
-//!                     it@.0 <= iter_seq.len(),
-//!                 decreases iter_seq.len() - it@.0,
+//!                     IteratorSpec::obeys_prophetic_iter_laws(&it),
+//!                     IteratorSpec::decrease(&it) is Some,
+//!                     0 <= pos <= orig.len(),
+//!                     IteratorSpec::remaining(&it).len() == orig.len() - pos,
+//!                     forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+//!                         ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == orig[pos + i],
+//!                     collected.len() == pos,
+//!                     forall|i: int| 0 <= i < collected.len()
+//!                         ==> #[trigger] collected@[i] == orig[i],
+//!                 decreases IteratorSpec::decrease(&it)->0,
 //!             {
-//!                 if let Some(x) = it.next() {
-//!                     proof { items = items.push(*x); }
-//!                 } else {
-//!                     break;
+//!                 let ghost old_pos = pos;
+//!                 match it.next() {
+//!                     Some(x) => {
+//!                         proof {
+//!                             pos = pos + 1;
+//!                             assert(orig[old_pos] == *x);
+//!                         }
+//!                         collected.push(*x);
+//!                     },
+//!                     None => {
+//!                         assert(pos == orig.len());
+//!                         assert(collected@ =~= orig);
+//!                         break;
+//!                     },
 //!                 }
 //!             }
-//!
-//!             assert(it@.0 == iter_seq.len());
-//!             assert(items =~= iter_seq);
 //!         }
 //!     } => Ok(())
 //! }
@@ -100,50 +126,62 @@
 //!
 //! ## Template: for-borrow-iter
 //!
+//! The `for` loop names its wrapper (`it`) and reasons through `it.index()`
+//! and the prophetic `it.seq()`. `it` is out of scope after the loop; the
+//! post-loop assertion follows from `it.index() == it.seq().len()`.
+//!
 //! ```rust
 //! test_verify_one_file! {
 //!     #[test] modulename_for_borrow_iter verus_code! {
 //!         use vstd::prelude::*;
+//!         use vstd::std_specs::iter::*;
 //!         use apas_verus::ChapNN::ModuleName::ModuleName::*;
 //!
 //!         fn test_for_borrow_iter() {
 //!             let a: ModuleS<u64> = ModuleS::new(/* constructor args */);
-//!
-//!             let it: ModuleIter<u64> = a.iter();
-//!             let ghost iter_seq: Seq<u64> = it@.1;
-//!             let ghost mut items: Seq<u64> = Seq::empty();
-//!
-//!             for x in iter: it
+//!             let ghost orig: Seq<u64> = a@;
+//!             let mut collected: Vec<u64> = Vec::new();
+//!             for x in it: a.iter()
 //!                 invariant
-//!                     iter.elements == iter_seq,
-//!                     items =~= iter_seq.take(iter.pos),
-//!                     iter.pos <= iter_seq.len(),
+//!                     it.seq() == orig.as_ref(),
+//!                     collected.len() == it.index(),
+//!                     forall|i: int| 0 <= i < collected.len()
+//!                         ==> #[trigger] collected@[i] == *it.seq()[i],
 //!             {
-//!                 proof { items = items.push(*x); }
+//!                 collected.push(*x);
 //!             }
-//!
-//!             assert(items =~= iter_seq);
+//!             assert(collected@ =~= orig);
 //!         }
 //!     } => Ok(())
 //! }
 //! ```
 //!
+//! Consuming variants (`loop-consume`, `for-consume`) use `a.into_iter()`,
+//! `std::vec::IntoIter<u64>`, `it.seq() == orig` (no `.as_ref()`), and no
+//! deref: `it.seq()[i]` in a `for` loop, `IteratorSpec::remaining(&it)[i] ==
+//! orig[pos + i]` and `orig[old_pos] == x` in a manual loop; they push `x`
+//! rather than `*x`.
+//!
 //! ## Adapting for Mt variants
 //!
 //! Mt iterators operate on a locked snapshot. The PTT constructs the Mt struct,
 //! then calls `iter()` which returns an iterator over the locked inner data.
-//! The ghost state and loop invariants are the same — the Mt wrapper is transparent
-//! to the iterator protocol. The only differences:
+//! The loop invariants are the same — the Mt wrapper is transparent to the
+//! iterator contract. The only differences:
 //! - Import path includes the Mt module.
 //! - Constructor may require `Arc`/lock setup.
-//! - Iterator type name includes Mt variant suffix.
+//! - The returned std iterator type (`std::slice::Iter` over a snapshot, or
+//!   `std::vec::IntoIter` over a flattened copy) is the type of `it` in the
+//!   manual loop's `let mut it: ... = a.iter();`.
 //!
 //! ## Adapting for tree/set collections
 //!
 //! Tree-backed collections (AVLTreeSeq, BSTSet*, OrderedSet, OrderedTable) iterate
-//! over an in-order traversal. The `iter_seq` is the tree's linearized sequence,
-//! not a Vec backing store. The patterns are identical — only the constructor and
-//! types change.
+//! over an in-order traversal. `orig` is the tree's linearized sequence, not a
+//! Vec backing store. The patterns are identical — only the constructor and
+//! types change. A custom iterator type (the three lazy AVLTreeSeq iterators)
+//! implements `IteratorSpecImpl` per `prophetic_iterators_standard.rs`; its
+//! PTT names the custom type as the type of `it` in the manual loop.
 //!
 //! ## Coverage inventory
 //!
@@ -202,5 +240,7 @@
 //! | 22 | 43 | OrderedTableMtEph | No PTT file |
 
 // This file does not compile — it is a standard reference document only.
-// The compilable iterator examples are in iterators_standard.rs.
-// The compilable PTT examples are in rust_verify_test/tests/standards/Proveiterators_standard.rs.
+// The compilable iterator examples are in iterators_standard.rs (delegated),
+// prophetic_iterators_standard.rs (custom) and wrapping_iterators_standard.rs.
+// The compilable PTT examples are in rust_verify_test/tests/standards/
+// Proveiterators_standard.rs and Proveprophetic_iterators_standard.rs.

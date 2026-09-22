@@ -4,7 +4,7 @@
 //! Chapter 50: Matrix Chain Multiplication - ephemeral, single-threaded.
 //!
 //! Memoized top-down DP for optimal matrix chain parenthesization.
-//! Uses HashMapWithViewPlus for the memo table.
+//! Uses HashMap for the memo table.
 
 
 //  Table of Contents
@@ -41,7 +41,7 @@ pub mod MatrixChainStEph {
     use vstd::prelude::*;
 
     use crate::Types::Types::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use std::collections::HashMap;
     use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
@@ -55,10 +55,11 @@ pub mod MatrixChainStEph {
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     crate::Types::Types::group_Pair_axioms,
-    vstd::map::group_map_axioms,
+    vstd::map::group_map_lemmas,
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,
+    vstd::std_specs::hash::group_hash_axioms,
 };
 
     //		Section 4a. type definitions
@@ -86,7 +87,7 @@ broadcast use {
 
     pub ghost struct MatrixChainStEphV {
         pub dimensions: Seq<MatrixDim>,
-        pub memo: Map<(usize, usize), usize>,
+        pub memo: Map<Pair<usize, usize>, usize>,
     }
 
     //		Section 4c. type definitions
@@ -94,7 +95,7 @@ broadcast use {
 
     pub struct MatrixChainStEphS {
         pub dimensions: Vec<MatrixDim>,
-        pub memo: HashMapWithViewPlus<Pair<usize, usize>, usize>,
+        pub memo: HashMap<Pair<usize, usize>, usize>,
     }
 
     //		Section 5c. view impls
@@ -139,9 +140,9 @@ broadcast use {
     }
 
     /// Every memo entry holds the correct optimal cost.
-    pub open spec fn spec_memo_correct(dims: Seq<MatrixDim>, memo: Map<(usize, usize), usize>) -> bool {
-        forall|a: usize, b: usize| #[trigger] memo.contains_key((a, b)) ==>
-            memo[(a, b)] as nat == spec_chain_cost(dims, a as int, b as int, a as int)
+    pub open spec fn spec_memo_correct(dims: Seq<MatrixDim>, memo: Map<Pair<usize, usize>, usize>) -> bool {
+        forall|a: usize, b: usize| #[trigger] memo.contains_key(Pair(a, b)) ==>
+            memo[Pair(a, b)] as nat == spec_chain_cost(dims, a as int, b as int, a as int)
     }
 
     /// Optimal parenthesization cost for matrices i..=j, considering splits from k onward.
@@ -175,21 +176,21 @@ broadcast use {
         fn new() -> (mc: Self)
             ensures
                 mc@.dimensions.len() == 0,
-                mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc@.memo =~= Map::<Pair<usize, usize>, usize>::empty(),
                 mc.spec_matrixchainsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)
             ensures
                 mc@.dimensions =~= dimensions@,
-                mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc@.memo =~= Map::<Pair<usize, usize>, usize>::empty(),
                 mc.spec_matrixchainsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- copies dim_pairs into Vec<MatrixDim>
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
             ensures
                 mc@.dimensions.len() == dim_pairs@.len(),
-                mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc@.memo =~= Map::<Pair<usize, usize>, usize>::empty(),
                 mc.spec_matrixchainsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) -- memoized DP, n^2 subproblems each O(n)
@@ -216,7 +217,7 @@ broadcast use {
             requires index < old(self)@.dimensions.len(),
             ensures
                 self@.dimensions =~= old(self)@.dimensions.update(index as int, dim),
-                self@.memo =~= Map::<(usize, usize), usize>::empty(),
+                self@.memo =~= Map::<Pair<usize, usize>, usize>::empty(),
                 self.spec_matrixchainsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clears memo HashMap
@@ -225,14 +226,14 @@ broadcast use {
             ensures
                 self@.dimensions =~= old(self)@.dimensions.update(
                     index as int, MatrixDim { rows, cols }),
-                self@.memo =~= Map::<(usize, usize), usize>::empty(),
+                self@.memo =~= Map::<Pair<usize, usize>, usize>::empty(),
                 self.spec_matrixchainsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clears memo HashMap
         fn clear_memo(&mut self)
             ensures
                 self@.dimensions =~= old(self)@.dimensions,
-                self@.memo =~= Map::<(usize, usize), usize>::empty(),
+                self@.memo =~= Map::<Pair<usize, usize>, usize>::empty(),
                 self.spec_matrixchainsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -260,8 +261,8 @@ broadcast use {
                 spec_memo_correct(old(self)@.dimensions, old(self)@.memo),
             ensures
                 self@.dimensions =~= old(self)@.dimensions,
-                self@.memo.contains_key((i, j)),
-                self@.memo[(i, j)] == cost,
+                self@.memo.contains_key(Pair(i, j)),
+                self@.memo[Pair(i, j)] == cost,
                 cost as nat == spec_chain_cost(old(self)@.dimensions, i as int, j as int, i as int),
                 spec_memo_correct(self@.dimensions, self@.memo),
             decreases j - i;
@@ -279,14 +280,14 @@ broadcast use {
         fn new() -> (mc: Self)
             ensures
                 mc@.dimensions.len() == 0,
-                mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc@.memo =~= Map::<Pair<usize, usize>, usize>::empty(),
                 mc.spec_matrixchainsteph_wf(),
         {
             // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 dimensions: Vec::new(),
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             }
         }
 
@@ -294,14 +295,14 @@ broadcast use {
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)
             ensures
                 mc@.dimensions =~= dimensions@,
-                mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc@.memo =~= Map::<Pair<usize, usize>, usize>::empty(),
                 mc.spec_matrixchainsteph_wf(),
         // Veracity: NEEDED proof block
         {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 dimensions,
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             }
         }
 
@@ -309,7 +310,7 @@ broadcast use {
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
             ensures
                 mc@.dimensions.len() == dim_pairs@.len(),
-                mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc@.memo =~= Map::<Pair<usize, usize>, usize>::empty(),
 // Veracity: UNNEEDED proof block                 mc.spec_matrixchainsteph_wf(),
         {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -329,7 +330,7 @@ broadcast use {
             }
             Self {
                 dimensions,
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             }
         }
 
@@ -347,6 +348,8 @@ broadcast use {
         fn matrix_chain_rec(&mut self, i: usize, j: usize) -> (cost: usize)
             decreases j - i,
         {
+            // The vstd `get`/`insert` postconditions hold under the Pair key model.
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             if let Some(cached) = self.memo.get(&Pair(i, j)) {
                 return *cached;
             }
@@ -433,7 +436,11 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (n: usize)
             ensures n == self@.memo.len(),
-        { self.memo.len() }
+        {
+            // The vstd `len` axiom holds under the Pair key model.
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
+            self.memo.len()
+        }
     }
 
     //		Section 12c. derive impls in verus!

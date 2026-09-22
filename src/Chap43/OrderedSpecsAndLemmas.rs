@@ -24,8 +24,8 @@ pub mod OrderedSpecsAndLemmas {
     verus! {
 
 broadcast use {
-    vstd::map::group_map_axioms,
-    vstd::set::group_set_axioms,
+    vstd::map::group_map_lemmas,
+    vstd::set::group_set_lemmas,
 };
 
     //		Section 6. spec fns
@@ -141,7 +141,7 @@ broadcast use {
         };
         // proj is injective on s when keys are unique: distinct pairs have distinct keys.
         // Veracity: NEEDED assert
-        assert(vstd::relations::injective_on(proj, s)) by {
+        assert(s.injective_on(proj)) by {
             // Veracity: NEEDED assert
             assert forall|x1: (KV, VV), x2: (KV, VV)|
                 s.contains(x1) && s.contains(x2) && #[trigger] proj(x1) == #[trigger] proj(x2)

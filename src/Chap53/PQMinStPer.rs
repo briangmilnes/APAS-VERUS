@@ -37,8 +37,6 @@ pub mod PQMinStPer {
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
-    #[cfg(verus_keep_ghost)]
-    use vstd::relations::injective_on;
 
     verus! 
 {

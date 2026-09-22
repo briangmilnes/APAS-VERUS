@@ -1,0 +1,141 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: function body check: Resource limit (rlimit) exceeded
+    --> src/Chap05/SetMtEph.rs:1205:9
+     |
+1205 |         fn clone(&self) -> (clone: Self)
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Z3 4.16.0
+note: Analyzing prover log for (profile rerun) lib::Chap05::SetMtEph::SetMtEph::SetMtEph::clone ...
+
+Z3 4.16.0
+note: Analyzing prover log for (profile rerun) lib::Chap05::SetStEph::SetStEph::SetStEph::clone ...
+
+note: Log analysis complete for (profile rerun) lib::Chap05::SetMtEph::SetMtEph::SetMtEph::clone
+
+note: Log analysis complete for (profile rerun) lib::Chap05::SetStEph::SetStEph::SetStEph::clone
+
+note: Profile statistics for lib::Chap05::SetMtEph::SetMtEph::SetMtEph::clone
+
+note: Observed 368,153 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 29615646004 (Instantiated 65,537 times - 17% of the total, cost 451892) top 1 of 8 user-level quantifiers.
+      
+  --> src/vstdplus/hash_specs_plus.rs:81:26
+   |
+81 |               forall|k: K| #[trigger] other@.contains(k)
+   |  _____________-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+82 | |                 <==> exists|k0: K| #[trigger] this@.contains(k0) && cloned(k0, k),
+   | |_________________________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 25061360082 (Instantiated 65,542 times - 17% of the total, cost 382371) top 2 of 8 user-level quantifiers.
+      
+  --> src/vstdplus/hash_specs_plus.rs:81:26
+   |
+81 |               forall|k: K| #[trigger] other@.contains(k)
+   |  _____________-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+82 | |                 <==> exists|k0: K| #[trigger] this@.contains(k0) && cloned(k0, k),
+   | |_________________________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 14049835024 (Instantiated 118,532 times - 32% of the total, cost 118532) top 3 of 8 user-level quantifiers.
+      
+   --> src/vstdplus/feq.rs:135:29
+    |
+134 |     pub broadcast proof fn axiom_cloned_implies_eq<T: Eq + Clone + Sized>(x: &T, y: T)
+    |     ---------------------------------------------------------------------------------- Triggers selected for this quantifier
+135 |         requires #[trigger] cloned(*x, y), obeys_feq_clone::<T>()
+    |                             ^^^^^^^^^^^^^
+
+note: Cost * Instantiations: 14049123841 (Instantiated 118,529 times - 32% of the total, cost 118529) top 4 of 8 user-level quantifiers.
+      
+   --> src/vstdplus/feq.rs:143:29
+    |
+142 |     pub broadcast proof fn axiom_cloned_implies_eq_owned<T: Eq + Clone + Sized>(x: T, y: T)
+    |     --------------------------------------------------------------------------------------- Triggers selected for this quantifier
+143 |         requires #[trigger] cloned(x, y), obeys_feq_clone::<T>()
+    |                             ^^^^^^^^^^^^
+
+note: Cost * Instantiations: 23182 (Instantiated 1 times - 0% of the total, cost 23182) top 5 of 8 user-level quantifiers.
+      
+  --> src/vstdplus/hash_specs_plus.rs:76:5
+   |
+76 | /     pub assume_specification<K: Clone, S: Clone, A: std::alloc::Allocator + Clone>[
+77 | |         <HashSet<K, S, A> as Clone>::clone
+78 | |     ](this: &HashSet<K, S, A>) -> (other: HashSet<K, S, A>)
+   | |__________________________________________________________^ Triggers selected for this quantifier
+
+note: Cost * Instantiations: 168 (Instantiated 7 times - 0% of the total, cost 24) top 6 of 8 user-level quantifiers.
+      
+ --> set_lib.rs:1233:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 16 (Instantiated 4 times - 0% of the total, cost 4) top 7 of 8 user-level quantifiers.
+      
+ --> set.rs:533:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1 (Instantiated 1 times - 0% of the total, cost 1) top 8 of 8 user-level quantifiers.
+      
+ --> set.rs:262:0
+  |
+  = note: Triggers selected for this quantifier
+
+error: function body check: Resource limit (rlimit) exceeded
+   --> src/Chap05/SetStEph.rs:941:9
+    |
+941 |         fn clone(&self) -> (clone: Self)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Profile statistics for lib::Chap05::SetStEph::SetStEph::SetStEph::clone
+
+note: Cost * Instantiations: 29617453572 (Instantiated 65,541 times - 17% of the total, cost 451892) top 1 of 8 user-level quantifiers.
+      
+  --> src/vstdplus/hash_specs_plus.rs:81:26
+   |
+81 |               forall|k: K| #[trigger] other@.contains(k)
+   |  _____________-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+82 | |                 <==> exists|k0: K| #[trigger] this@.contains(k0) && cloned(k0, k),
+   | |_________________________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 25060846629 (Instantiated 65,541 times - 17% of the total, cost 382369) top 2 of 8 user-level quantifiers.
+      
+  --> src/vstdplus/hash_specs_plus.rs:81:26
+   |
+81 |               forall|k: K| #[trigger] other@.contains(k)
+   |  _____________-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+82 | |                 <==> exists|k0: K| #[trigger] this@.contains(k0) && cloned(k0, k),
+   | |_________________________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 14049360900 (Instantiated 118,530 times - 32% of the total, cost 118530) top 3 of 8 user-level quantifiers.
+      
+   --> src/vstdplus/feq.rs:143:29
+    |
+142 |     pub broadcast proof fn axiom_cloned_implies_eq_owned<T: Eq + Clone + Sized>(x: T, y: T)
+    |     --------------------------------------------------------------------------------------- Triggers selected for this quantifier
+143 |         requires #[trigger] cloned(x, y), obeys_feq_clone::<T>()
+    |                             ^^^^^^^^^^^^
+
+note: Cost * Instantiations: 14049123841 (Instantiated 118,529 times - 32% of the total, cost 118529) top 4 of 8 user-level quantifiers.
+      
+   --> src/vstdplus/feq.rs:135:29
+    |
+134 |     pub broadcast proof fn axiom_cloned_implies_eq<T: Eq + Clone + Sized>(x: &T, y: T)
+    |     ---------------------------------------------------------------------------------- Triggers selected for this quantifier
+135 |         requires #[trigger] cloned(*x, y), obeys_feq_clone::<T>()
+    |                             ^^^^^^^^^^^^^
+
+note: Cost * Instantiations: 9 (Instantiated 3 times - 0% of the total, cost 3) top 7 of 8 user-level quantifiers.
+      
+ --> set.rs:533:0
+  |
+  = note: Triggers selected for this quantifier
+
+verification results:: 748 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 3221MB, peak z3 RSS: 7471MB, min free: 17664MB
+Sampled CPU Usage: rust_verify: 14s, z3 children: 18s

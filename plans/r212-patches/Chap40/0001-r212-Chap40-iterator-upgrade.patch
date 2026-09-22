@@ -1,0 +1,1052 @@
+diff --git a/rust_verify_test/tests/Chap40/ProveBSTKeyValueStEph.rs b/rust_verify_test/tests/Chap40/ProveBSTKeyValueStEph.rs
+index 2e2b77b..5deb72c 100644
+--- a/rust_verify_test/tests/Chap40/ProveBSTKeyValueStEph.rs
++++ b/rust_verify_test/tests/Chap40/ProveBSTKeyValueStEph.rs
+@@ -1,11 +1,12 @@
+ //! Proof tests for BSTKeyValueStEph iterators.
+ //!
+ //! Loop patterns tested (see docs/APAS-VERUSIterators.rs):
+-//!   - loop-borrow-into:   `loop { ... (&a).into_iter() ... }`
+-//!   - for-borrow-into:    `for x in iter: (&a).into_iter()`
++//!   - loop-borrow-iter:   `loop { ... a.iter() ... }`
++//!   - for-borrow-iter:    `for x in iter: a.iter()`
+ //!
+-//! BSTKeyValueStEph uses snapshot-based iteration yielding owned keys (K values).
+-//! Only IntoIterator is implemented (no separate .iter() method).
++//! BSTKeyValueStEph uses snapshot-based iteration yielding owned keys (K
++//! values) through `iter()`; its `IntoIterator for &BSTKeyValueStEph` is
++//! commented out (r212 form C).
+ //! Note: BSTKeyValueStEphLit! uses hashing — construct with new() instead.
+ 
+ #[macro_use]
+@@ -13,64 +14,77 @@
+ mod common;
+ use common::*;
+ 
+-// loop-borrow-into: Manual iteration via (&a).into_iter()
++// loop-borrow-iter: Manual iteration via a.iter()
+ test_verify_one_file! {
+-    #[test] bstkeyvaluesteph_loop_borrow_into verus_code! {
++    #[test] bstkeyvaluesteph_loop_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap40::BSTKeyValueStEph::BSTKeyValueStEph::*;
+ 
+-        fn test_loop_borrow_into() {
++        fn test_loop_borrow_iter() {
+             let a: BSTKeyValueStEph<u64, u64> = BSTKeyValueStEph::new();
+ 
+-            let mut it: BSTKeyValueStEphIter<u64, u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let it0 = a.iter();
++            let ghost orig: Seq<u64> = vstd::std_specs::vec::into_iter_elts(it0);
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::vec::IntoIter<u64> = it0;
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant_bstkeyvaluesteph(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> #[trigger] IteratorSpec::remaining(&it)[i] == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof { items = items.push(x); }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == x);
++                        }
++                        collected.push(x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+ 
+-// for-borrow-into: `for x in iter: (&a).into_iter()`
++// for-borrow-iter: `for x in iter: a.iter()`
+ test_verify_one_file! {
+-    #[test] bstkeyvaluesteph_for_borrow_into verus_code! {
++    #[test] bstkeyvaluesteph_for_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap40::BSTKeyValueStEph::BSTKeyValueStEph::*;
+ 
+-        fn test_for_borrow_into() {
++        fn test_for_borrow_iter() {
+             let a: BSTKeyValueStEph<u64, u64> = BSTKeyValueStEph::new();
+ 
+-            let it: BSTKeyValueStEphIter<u64, u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let it0 = a.iter();
++            let ghost orig: Seq<u64> = vstd::std_specs::vec::into_iter_elts(it0);
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: it0
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig,
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == it.seq()[i],
+             {
+-                proof { items = items.push(x); }
++                collected.push(x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+diff --git a/rust_verify_test/tests/Chap40/ProveBSTReducedStEph.rs b/rust_verify_test/tests/Chap40/ProveBSTReducedStEph.rs
+index 1d49a14..88b1c06 100644
+--- a/rust_verify_test/tests/Chap40/ProveBSTReducedStEph.rs
++++ b/rust_verify_test/tests/Chap40/ProveBSTReducedStEph.rs
+@@ -1,11 +1,12 @@
+ //! Proof tests for BSTReducedStEph iterators.
+ //!
+ //! Loop patterns tested (see docs/APAS-VERUSIterators.rs):
+-//!   - loop-borrow-into:   `loop { ... (&a).into_iter() ... }`
+-//!   - for-borrow-into:    `for x in iter: (&a).into_iter()`
++//!   - loop-borrow-iter:   `loop { ... a.iter() ... }`
++//!   - for-borrow-iter:    `for x in iter: a.iter()`
+ //!
+-//! BSTReducedStEph uses snapshot-based iteration yielding owned keys (K values).
+-//! Only IntoIterator is implemented (no separate .iter() method).
++//! BSTReducedStEph uses snapshot-based iteration yielding owned keys (K
++//! values) through `iter()`; its `IntoIterator for &BSTReducedStEph` is
++//! commented out (r212 form C).
+ //! Note: BSTReducedStEphLit! uses hashing — construct with new() instead.
+ //! Uses BSTCountStEph<u64, u64> (= BSTReducedStEph<u64, u64, usize, CountOp<u64>>).
+ 
+@@ -14,64 +15,77 @@
+ mod common;
+ use common::*;
+ 
+-// loop-borrow-into: Manual iteration via (&a).into_iter()
++// loop-borrow-iter: Manual iteration via a.iter()
+ test_verify_one_file! {
+-    #[test] bstreducedsteph_loop_borrow_into verus_code! {
++    #[test] bstreducedsteph_loop_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap40::BSTReducedStEph::BSTReducedStEph::*;
+ 
+-        fn test_loop_borrow_into() {
++        fn test_loop_borrow_iter() {
+             let a: BSTCountStEph<u64, u64> = BSTCountStEph::new();
+ 
+-            let mut it: BSTReducedStEphIter<u64, u64, usize, CountOp<u64>> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let it0 = a.iter();
++            let ghost orig: Seq<u64> = vstd::std_specs::vec::into_iter_elts(it0);
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::vec::IntoIter<u64> = it0;
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant_bstreducedsteph(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> #[trigger] IteratorSpec::remaining(&it)[i] == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof { items = items.push(x); }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == x);
++                        }
++                        collected.push(x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+ 
+-// for-borrow-into: `for x in iter: (&a).into_iter()`
++// for-borrow-iter: `for x in iter: a.iter()`
+ test_verify_one_file! {
+-    #[test] bstreducedsteph_for_borrow_into verus_code! {
++    #[test] bstreducedsteph_for_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap40::BSTReducedStEph::BSTReducedStEph::*;
+ 
+-        fn test_for_borrow_into() {
++        fn test_for_borrow_iter() {
+             let a: BSTCountStEph<u64, u64> = BSTCountStEph::new();
+ 
+-            let it: BSTReducedStEphIter<u64, u64, usize, CountOp<u64>> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let it0 = a.iter();
++            let ghost orig: Seq<u64> = vstd::std_specs::vec::into_iter_elts(it0);
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: it0
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig,
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == it.seq()[i],
+             {
+-                proof { items = items.push(x); }
++                collected.push(x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+diff --git a/rust_verify_test/tests/Chap40/ProveBSTSizeStEph.rs b/rust_verify_test/tests/Chap40/ProveBSTSizeStEph.rs
+index 17ca3e3..2768914 100644
+--- a/rust_verify_test/tests/Chap40/ProveBSTSizeStEph.rs
++++ b/rust_verify_test/tests/Chap40/ProveBSTSizeStEph.rs
+@@ -1,11 +1,12 @@
+ //! Proof tests for BSTSizeStEph iterators.
+ //!
+ //! Loop patterns tested (see docs/APAS-VERUSIterators.rs):
+-//!   - loop-borrow-into:   `loop { ... (&a).into_iter() ... }`
+-//!   - for-borrow-into:    `for x in iter: (&a).into_iter()`
++//!   - loop-borrow-iter:   `loop { ... a.iter() ... }`
++//!   - for-borrow-iter:    `for x in iter: a.iter()`
+ //!
+-//! BSTSizeStEph uses snapshot-based iteration (owned T values).
+-//! Only IntoIterator is implemented (no separate .iter() method).
++//! BSTSizeStEph uses snapshot-based iteration (owned T values) through
++//! `iter()`; its `IntoIterator for &BSTSizeStEph` is commented out (r212
++//! form C).
+ //! Note: BSTSizeStEphLit! uses hashing — construct with new() instead.
+ 
+ #[macro_use]
+@@ -13,64 +14,77 @@
+ mod common;
+ use common::*;
+ 
+-// loop-borrow-into: Manual iteration via (&a).into_iter()
++// loop-borrow-iter: Manual iteration via a.iter()
+ test_verify_one_file! {
+-    #[test] bstsizesteph_loop_borrow_into verus_code! {
++    #[test] bstsizesteph_loop_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap40::BSTSizeStEph::BSTSizeStEph::*;
+ 
+-        fn test_loop_borrow_into() {
++        fn test_loop_borrow_iter() {
+             let a: BSTSizeStEph<u64> = BSTSizeStEph::new();
+ 
+-            let mut it: BSTSizeStEphIter<u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            #[verifier::loop_isolation(false)]
++            let it0 = a.iter();
++            let ghost orig: Seq<u64> = vstd::std_specs::vec::into_iter_elts(it0);
++            let mut collected: Vec<u64> = Vec::new();
++            let mut it: std::vec::IntoIter<u64> = it0;
++            let ghost mut pos: int = 0;
+             loop
+                 invariant
+-                    items =~= iter_seq.take(it@.0 as int),
+-                    iter_invariant_bstsizesteph(&it),
+-                    iter_seq == it@.1,
+-                    it@.0 <= iter_seq.len(),
+-                decreases iter_seq.len() - it@.0,
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
++                    0 <= pos <= orig.len(),
++                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
++                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                        ==> #[trigger] IteratorSpec::remaining(&it)[i] == orig[pos + i],
++                    collected.len() == pos,
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == orig[i],
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+-                if let Some(x) = it.next() {
+-                    proof { items = items.push(x); }
+-                } else {
+-                    break;
++                let ghost old_pos = pos;
++                match it.next() {
++                    Some(x) => {
++                        proof {
++                            pos = pos + 1;
++                            assert(orig[old_pos] == x);
++                        }
++                        collected.push(x);
++                    },
++                    None => {
++                        assert(pos == orig.len());
++                        assert(collected@ =~= orig);
++                        break;
++                    },
+                 }
+             }
+-
+-            assert(it@.0 == iter_seq.len());
+-            assert(items =~= iter_seq);
+         }
+     } => Ok(())
+ }
+ 
+-// for-borrow-into: `for x in iter: (&a).into_iter()`
++// for-borrow-iter: `for x in iter: a.iter()`
+ test_verify_one_file! {
+-    #[test] bstsizesteph_for_borrow_into verus_code! {
++    #[test] bstsizesteph_for_borrow_iter verus_code! {
+         use vstd::prelude::*;
++        use vstd::std_specs::iter::*;
+         use apas_verus::Chap40::BSTSizeStEph::BSTSizeStEph::*;
+ 
+-        fn test_for_borrow_into() {
++        fn test_for_borrow_iter() {
+             let a: BSTSizeStEph<u64> = BSTSizeStEph::new();
+ 
+-            let it: BSTSizeStEphIter<u64> = (&a).into_iter();
+-            let ghost iter_seq: Seq<u64> = it@.1;
+-            let ghost mut items: Seq<u64> = Seq::empty();
+-
+-            for x in iter: it
++            let it0 = a.iter();
++            let ghost orig: Seq<u64> = vstd::std_specs::vec::into_iter_elts(it0);
++            let mut collected: Vec<u64> = Vec::new();
++            for x in it: it0
+                 invariant
+-                    iter.elements == iter_seq,
+-                    items =~= iter_seq.take(iter.pos),
+-                    iter.pos <= iter_seq.len(),
++                    it.seq() == orig,
++                    collected.len() == it.index(),
++                    forall|i: int| 0 <= i < collected.len()
++                        ==> #[trigger] collected@[i] == it.seq()[i],
+             {
+-                proof { items = items.push(x); }
++                collected.push(x);
+             }
+-
+-            assert(items =~= iter_seq);
++            assert(collected@ =~= orig);
+         }
+     } => Ok(())
+ }
+diff --git a/src/Chap40/BSTKeyValueStEph.rs b/src/Chap40/BSTKeyValueStEph.rs
+index 71de9a1..be5446f 100644
+--- a/src/Chap40/BSTKeyValueStEph.rs
++++ b/src/Chap40/BSTKeyValueStEph.rs
+@@ -38,11 +38,12 @@ pub mod BSTKeyValueStEph {
+     //		Section 2. imports
+ 
+     use std::fmt;
+-    use std::vec::IntoIter;
+ 
+     use core::cmp::Ordering;
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+ 
+     #[cfg(verus_keep_ghost)]
+     use vstd::std_specs::cmp::PartialEqSpecImpl;
+@@ -1469,104 +1470,11 @@ pub mod BSTKeyValueStEph {
+ 
+     //		Section 10b. iterators — BSTKeyValueStEph
+ 
+-    /// Snapshot key iterator over BSTKeyValueStEph — collects keys via in-order traversal,
+-    /// then yields owned K values from the captured Vec.
+-    #[verifier::reject_recursive_types(K)]
+-    pub struct BSTKeyValueStEphIter<K: StT + Ord, V: StT> {
+-        pub inner: IntoIter<K>,
+-        pub phantom: core::marker::PhantomData<V>,
+-    }
+-
+-    impl<K: StT + Ord, V: StT> View for BSTKeyValueStEphIter<K, V> {
+-        type V = (int, Seq<K>);
+-        open spec fn view(&self) -> (int, Seq<K>) { self.inner@ }
+-    }
+-
+-    pub open spec fn iter_invariant_bstkeyvaluesteph<K: StT + Ord, V: StT>(it: &BSTKeyValueStEphIter<K, V>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<K: StT + Ord, V: StT> std::iter::Iterator for BSTKeyValueStEphIter<K, V> {
+-        type Item = K;
+-
+-        fn next(&mut self) -> (next: Option<K>)
+-            ensures
+-                ({
+-                    let (old_index, old_seq) = old(self)@;
+-                    match next {
+-                        None => {
+-                            &&& self@ == old(self)@
+-                            &&& old_index >= old_seq.len()
+-                        },
+-                        Some(element) => {
+-                            let (new_index, new_seq) = self@;
+-                            &&& 0 <= old_index < old_seq.len()
+-                            &&& new_seq == old_seq
+-                            &&& new_index == old_index + 1
+-                            &&& element == old_seq[old_index]
+-                        },
+-                    }
+-                }),
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    /// Ghost iterator for for-loop support over BSTKeyValueStEphIter.
+-    #[verifier::reject_recursive_types(K)]
+-    pub struct BSTKeyValueStEphGhostIterator<K: StT + Ord, V: StT> {
+-        pub pos: int,
+-        pub elements: Seq<K>,
+-        pub phantom: core::marker::PhantomData<V>,
+-    }
+-
+-    impl<K: StT + Ord, V: StT> View for BSTKeyValueStEphGhostIterator<K, V> {
+-        type V = Seq<K>;
+-        open spec fn view(&self) -> Seq<K> { self.elements.take(self.pos) }
+-    }
+-
+-    impl<K: StT + Ord, V: StT> vstd::pervasive::ForLoopGhostIteratorNew for BSTKeyValueStEphIter<K, V> {
+-        type GhostIter = BSTKeyValueStEphGhostIterator<K, V>;
+-        open spec fn ghost_iter(&self) -> BSTKeyValueStEphGhostIterator<K, V> {
+-            BSTKeyValueStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+-        }
+-    }
+-
+-    impl<K: StT + Ord, V: StT> vstd::pervasive::ForLoopGhostIterator for BSTKeyValueStEphGhostIterator<K, V> {
+-        type ExecIter = BSTKeyValueStEphIter<K, V>;
+-        type Item = K;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &BSTKeyValueStEphIter<K, V>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<K> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &BSTKeyValueStEphIter<K, V>) -> BSTKeyValueStEphGhostIterator<K, V> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
++    // r212 form C: this `IntoIterator` impl required `requires self.spec_bstkeyvaluesteph_wf()`, which
++    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
++    // can establish; use `iter()`, which keeps the requires
++    // (src/experiments/intoiter_form_c_no_impl.rs).
++    /*
+     impl<'a, K: StT + Ord + TotalOrder, V: StT> std::iter::IntoIterator for &'a BSTKeyValueStEph<K, V> {
+         type Item = K;
+         type IntoIter = BSTKeyValueStEphIter<K, V>;
+@@ -1581,6 +1489,22 @@ pub mod BSTKeyValueStEph {
+             BSTKeyValueStEphIter { inner: ks.seq.into_iter(), phantom: core::marker::PhantomData }
+         }
+     }
++    */
++
++    impl<K: StT + Ord + TotalOrder, V: StT> BSTKeyValueStEph<K, V> {
++        /// Returns a snapshot iterator over the keys in ascending order.
++        /// - Alg Analysis: Code review (Claude Fable 5.1): Work O(n), Span O(n) — in-order key collection.
++        pub fn iter(&self) -> (it: std::vec::IntoIter<K>)
++            requires self.spec_bstkeyvaluesteph_wf(),
++            ensures
++                IteratorSpec::remaining(&it).len() == self.spec_size(),
++                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
++                IteratorSpec::decrease(&it) is Some,
++        {
++            let ks = self.keys();
++            ks.seq.into_iter()
++        }
++    }
+ 
+     //		Section 12a. derive impls in verus!
+ 
+@@ -1720,28 +1644,4 @@ pub mod BSTKeyValueStEph {
+     }
+ 
+     //		Section 14d. derive impls outside verus!
+-
+-    impl<K: StT + Ord, V: StT> fmt::Debug for BSTKeyValueStEphIter<K, V> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "BSTKeyValueStEphIter")
+-        }
+-    }
+-
+-    impl<K: StT + Ord, V: StT> fmt::Display for BSTKeyValueStEphIter<K, V> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "BSTKeyValueStEphIter")
+-        }
+-    }
+-
+-    impl<K: StT + Ord, V: StT> fmt::Debug for BSTKeyValueStEphGhostIterator<K, V> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "BSTKeyValueStEphGhostIterator")
+-        }
+-    }
+-
+-    impl<K: StT + Ord, V: StT> fmt::Display for BSTKeyValueStEphGhostIterator<K, V> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "BSTKeyValueStEphGhostIterator")
+-        }
+-    }
+ }
+diff --git a/src/Chap40/BSTReducedStEph.rs b/src/Chap40/BSTReducedStEph.rs
+index 5191c48..385a6a8 100644
+--- a/src/Chap40/BSTReducedStEph.rs
++++ b/src/Chap40/BSTReducedStEph.rs
+@@ -47,9 +47,10 @@ pub mod BSTReducedStEph {
+     use std::fmt;
+     use std::marker::PhantomData;
+     use std::ops::Add;
+-    use std::vec::IntoIter;
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+ 
+     #[cfg(verus_keep_ghost)]
+     use vstd::std_specs::cmp::PartialEqSpecImpl;
+@@ -1140,6 +1141,12 @@ pub mod BSTReducedStEph {
+                             // Veracity: NEEDED proof block
+                             proof {
+                                 reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
++                                // r212: verus 0.2026.09.13 needs the content split stated
++                                // here too, as the Less branch does.
++                                assert(Lnk::spec_content_link(link) =~=
++                                    Lnk::spec_content_link(&node.left)
++                                        .union_prefer_right(Lnk::spec_content_link(&node.right))
++                                        .insert(node.key, node.value));
+                                 if Lnk::spec_content_link(link).contains_key(*key) {
+                                 }
+                             }
+@@ -1594,104 +1601,11 @@ pub mod BSTReducedStEph {
+ 
+     //		Section 10d. iterators — BSTReducedStEph
+ 
+-    /// Snapshot key iterator over BSTReducedStEph — collects keys via keys() traversal,
+-    /// then yields owned K values from the captured Vec.
+-    #[verifier::reject_recursive_types(K)]
+-    pub struct BSTReducedStEphIter<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> {
+-        pub inner: IntoIter<K>,
+-        pub phantom: PhantomData<(V, R, Op)>,
+-    }
+-
+-    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> View for BSTReducedStEphIter<K, V, R, Op> {
+-        type V = (int, Seq<K>);
+-        open spec fn view(&self) -> (int, Seq<K>) { self.inner@ }
+-    }
+-
+-    pub open spec fn iter_invariant_bstreducedsteph<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>(it: &BSTReducedStEphIter<K, V, R, Op>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> std::iter::Iterator for BSTReducedStEphIter<K, V, R, Op> {
+-        type Item = K;
+-
+-        fn next(&mut self) -> (next: Option<K>)
+-            ensures
+-                ({
+-                    let (old_index, old_seq) = old(self)@;
+-                    match next {
+-                        None => {
+-                            &&& self@ == old(self)@
+-                            &&& old_index >= old_seq.len()
+-                        },
+-                        Some(element) => {
+-                            let (new_index, new_seq) = self@;
+-                            &&& 0 <= old_index < old_seq.len()
+-                            &&& new_seq == old_seq
+-                            &&& new_index == old_index + 1
+-                            &&& element == old_seq[old_index]
+-                        },
+-                    }
+-                }),
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    /// Ghost iterator for for-loop support over BSTReducedStEphIter.
+-    #[verifier::reject_recursive_types(K)]
+-    pub struct BSTReducedStEphGhostIterator<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> {
+-        pub pos: int,
+-        pub elements: Seq<K>,
+-        pub phantom: PhantomData<(V, R, Op)>,
+-    }
+-
+-    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> View for BSTReducedStEphGhostIterator<K, V, R, Op> {
+-        type V = Seq<K>;
+-        open spec fn view(&self) -> Seq<K> { self.elements.take(self.pos) }
+-    }
+-
+-    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> vstd::pervasive::ForLoopGhostIteratorNew for BSTReducedStEphIter<K, V, R, Op> {
+-        type GhostIter = BSTReducedStEphGhostIterator<K, V, R, Op>;
+-        open spec fn ghost_iter(&self) -> BSTReducedStEphGhostIterator<K, V, R, Op> {
+-            BSTReducedStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: PhantomData }
+-        }
+-    }
+-
+-    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> vstd::pervasive::ForLoopGhostIterator for BSTReducedStEphGhostIterator<K, V, R, Op> {
+-        type ExecIter = BSTReducedStEphIter<K, V, R, Op>;
+-        type Item = K;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &BSTReducedStEphIter<K, V, R, Op>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<K> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &BSTReducedStEphIter<K, V, R, Op>) -> BSTReducedStEphGhostIterator<K, V, R, Op> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
++    // r212 form C: this `IntoIterator` impl required `requires self.spec_bstreducedsteph_wf()`, which
++    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
++    // can establish; use `iter()`, which keeps the requires
++    // (src/experiments/intoiter_form_c_no_impl.rs).
++    /*
+     impl<'a, K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> std::iter::IntoIterator for &'a BSTReducedStEph<K, V, R, Op> {
+         type Item = K;
+         type IntoIter = BSTReducedStEphIter<K, V, R, Op>;
+@@ -1706,6 +1620,22 @@ pub mod BSTReducedStEph {
+             BSTReducedStEphIter { inner: ks.seq.into_iter(), phantom: PhantomData }
+         }
+     }
++    */
++
++    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> BSTReducedStEph<K, V, R, Op> {
++        /// Returns a snapshot iterator over the keys in ascending order.
++        /// - Alg Analysis: Code review (Claude Fable 5.1): Work O(n), Span O(n) — in-order key collection.
++        pub fn iter(&self) -> (it: std::vec::IntoIter<K>)
++            requires self.spec_bstreducedsteph_wf(),
++            ensures
++                IteratorSpec::remaining(&it).len() == self.spec_size(),
++                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
++                IteratorSpec::decrease(&it) is Some,
++        {
++            let ks = self.keys();
++            ks.seq.into_iter()
++        }
++    }
+ 
+     //		Section 12a. derive impls in verus!
+ 
+@@ -1892,28 +1822,4 @@ pub mod BSTReducedStEph {
+     }
+ 
+     //		Section 14f. derive impls outside verus!
+-
+-    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> fmt::Debug for BSTReducedStEphIter<K, V, R, Op> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "BSTReducedStEphIter")
+-        }
+-    }
+-
+-    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> fmt::Display for BSTReducedStEphIter<K, V, R, Op> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "BSTReducedStEphIter")
+-        }
+-    }
+-
+-    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> fmt::Debug for BSTReducedStEphGhostIterator<K, V, R, Op> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "BSTReducedStEphGhostIterator")
+-        }
+-    }
+-
+-    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> fmt::Display for BSTReducedStEphGhostIterator<K, V, R, Op> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "BSTReducedStEphGhostIterator")
+-        }
+-    }
+ }
+diff --git a/src/Chap40/BSTSizeStEph.rs b/src/Chap40/BSTSizeStEph.rs
+index f4a4f11..2331342 100644
+--- a/src/Chap40/BSTSizeStEph.rs
++++ b/src/Chap40/BSTSizeStEph.rs
+@@ -36,9 +36,10 @@ pub mod BSTSizeStEph {
+     //		Section 2. imports
+ 
+     use std::fmt;
+-    use std::vec::IntoIter;
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+ 
+     verus! 
+ {
+@@ -990,6 +991,12 @@ pub mod BSTSizeStEph {
+                             proof {
+                                 reveal(vstd::laws_cmp::obeys_cmp_ord);
+                                 reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
++                                // r212: verus 0.2026.09.13 needs the content split stated
++                                // here too, as the Less branch does.
++                                assert(Lnk::spec_content_link(link) =~=
++                                    Lnk::spec_content_link(&node.left)
++                                        .union(Lnk::spec_content_link(&node.right))
++                                        .insert(node.key));
+                                 if found.is_some() {
+                                 }
+                                 // Completeness: target not in left (left < key, target > key).
+@@ -1453,102 +1460,11 @@ pub mod BSTSizeStEph {
+ 
+     //		Section 10b. iterators — BSTSizeStEph
+ 
+-    /// Snapshot iterator over BSTSizeStEph — collects elements via in_order traversal,
+-    /// then yields owned T values from the captured Vec.
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct BSTSizeStEphIter<T: StT + Ord> {
+-        pub inner: IntoIter<T>,
+-    }
+-
+-    impl<T: StT + Ord> View for BSTSizeStEphIter<T> {
+-        type V = (int, Seq<T>);
+-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+-    }
+-
+-    pub open spec fn iter_invariant_bstsizesteph<T: StT + Ord>(it: &BSTSizeStEphIter<T>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<T: StT + Ord> std::iter::Iterator for BSTSizeStEphIter<T> {
+-        type Item = T;
+-
+-        fn next(&mut self) -> (next: Option<T>)
+-            ensures
+-                ({
+-                    let (old_index, old_seq) = old(self)@;
+-                    match next {
+-                        None => {
+-                            &&& self@ == old(self)@
+-                            &&& old_index >= old_seq.len()
+-                        },
+-                        Some(element) => {
+-                            let (new_index, new_seq) = self@;
+-                            &&& 0 <= old_index < old_seq.len()
+-                            &&& new_seq == old_seq
+-                            &&& new_index == old_index + 1
+-                            &&& element == old_seq[old_index]
+-                        },
+-                    }
+-                }),
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    /// Ghost iterator for for-loop support over BSTSizeStEphIter.
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct BSTSizeStEphGhostIterator<T: StT + Ord> {
+-        pub pos: int,
+-        pub elements: Seq<T>,
+-    }
+-
+-    impl<T: StT + Ord> View for BSTSizeStEphGhostIterator<T> {
+-        type V = Seq<T>;
+-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+-    }
+-
+-    impl<T: StT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for BSTSizeStEphIter<T> {
+-        type GhostIter = BSTSizeStEphGhostIterator<T>;
+-        open spec fn ghost_iter(&self) -> BSTSizeStEphGhostIterator<T> {
+-            BSTSizeStEphGhostIterator { pos: self@.0, elements: self@.1 }
+-        }
+-    }
+-
+-    impl<T: StT + Ord> vstd::pervasive::ForLoopGhostIterator for BSTSizeStEphGhostIterator<T> {
+-        type ExecIter = BSTSizeStEphIter<T>;
+-        type Item = T;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &BSTSizeStEphIter<T>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<T> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &BSTSizeStEphIter<T>) -> BSTSizeStEphGhostIterator<T> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
++    // r212 form C: this `IntoIterator` impl required `requires self.spec_bstsizesteph_wf()`, which
++    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
++    // can establish; use `iter()`, which keeps the requires
++    // (src/experiments/intoiter_form_c_no_impl.rs).
++    /*
+     impl<'a, T: StT + Ord> std::iter::IntoIterator for &'a BSTSizeStEph<T> {
+         type Item = T;
+         type IntoIter = BSTSizeStEphIter<T>;
+@@ -1563,6 +1479,22 @@ pub mod BSTSizeStEph {
+             BSTSizeStEphIter { inner: in_ord.seq.into_iter() }
+         }
+     }
++    */
++
++    impl<T: StT + Ord> BSTSizeStEph<T> {
++        /// Returns a snapshot iterator over the tree elements in ascending key order.
++        /// - Alg Analysis: Code review (Claude Fable 5.1): Work O(n), Span O(n) — in-order traversal.
++        pub fn iter(&self) -> (it: std::vec::IntoIter<T>)
++            requires self.spec_bstsizesteph_wf(),
++            ensures
++                IteratorSpec::remaining(&it).len() == self.spec_size(),
++                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
++                IteratorSpec::decrease(&it) is Some,
++        {
++            let in_ord = self.in_order();
++            in_ord.seq.into_iter()
++        }
++    }
+ 
+     //		Section 12a. derive impls in verus!
+ 
+@@ -1699,28 +1631,4 @@ pub mod BSTSizeStEph {
+     }
+ 
+     //		Section 14d. derive impls outside verus!
+-
+-    impl<T: StT + Ord + fmt::Debug> fmt::Debug for BSTSizeStEphIter<T> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "BSTSizeStEphIter")
+-        }
+-    }
+-
+-    impl<T: StT + Ord + fmt::Display> fmt::Display for BSTSizeStEphIter<T> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "BSTSizeStEphIter")
+-        }
+-    }
+-
+-    impl<T: StT + Ord + fmt::Debug> fmt::Debug for BSTSizeStEphGhostIterator<T> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "BSTSizeStEphGhostIterator")
+-        }
+-    }
+-
+-    impl<T: StT + Ord + fmt::Display> fmt::Display for BSTSizeStEphGhostIterator<T> {
+-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+-            write!(f, "BSTSizeStEphGhostIterator")
+-        }
+-    }
+ }
+diff --git a/tests/Chap40/TestBSTKeyValueStEph.rs b/tests/Chap40/TestBSTKeyValueStEph.rs
+index 42558a2..63ab63c 100644
+--- a/tests/Chap40/TestBSTKeyValueStEph.rs
++++ b/tests/Chap40/TestBSTKeyValueStEph.rs
+@@ -294,7 +294,7 @@ fn test_into_iter_collects_keys() {
+     bst.insert(5, 50, rand_priority());
+     bst.insert(3, 30, rand_priority());
+     bst.insert(7, 70, rand_priority());
+-    let collected: Vec<i32> = (&bst).into_iter().collect();
++    let collected: Vec<i32> = bst.iter().collect();
+     let mut sorted = collected.clone();
+     sorted.sort();
+     assert_eq!(sorted, vec![3, 5, 7]);
+@@ -303,7 +303,7 @@ fn test_into_iter_collects_keys() {
+ #[test]
+ fn test_into_iter_empty() {
+     let bst: BSTreeKeyValue<i32, i32> = BSTreeKeyValue::new();
+-    let collected: Vec<i32> = (&bst).into_iter().collect();
++    let collected: Vec<i32> = bst.iter().collect();
+     assert!(collected.is_empty());
+ }
+ 
+@@ -314,7 +314,7 @@ fn test_into_iter_for_loop() {
+     bst.insert(20, 200, rand_priority());
+     bst.insert(30, 300, rand_priority());
+     let mut sum = 0i32;
+-    for k in &bst {
++    for k in bst.iter() {
+         sum += k;
+     }
+     assert_eq!(sum, 60);
+diff --git a/tests/Chap40/TestBSTReducedStEph.rs b/tests/Chap40/TestBSTReducedStEph.rs
+index b1486c4..acd7278 100644
+--- a/tests/Chap40/TestBSTReducedStEph.rs
++++ b/tests/Chap40/TestBSTReducedStEph.rs
+@@ -428,7 +428,7 @@ fn test_into_iter_collects_keys() {
+     bst.insert(5, 50, rand_priority());
+     bst.insert(3, 30, rand_priority());
+     bst.insert(7, 70, rand_priority());
+-    let collected: Vec<i32> = (&bst).into_iter().collect();
++    let collected: Vec<i32> = bst.iter().collect();
+     let mut sorted = collected.clone();
+     sorted.sort();
+     assert_eq!(sorted, vec![3, 5, 7]);
+@@ -437,7 +437,7 @@ fn test_into_iter_collects_keys() {
+ #[test]
+ fn test_into_iter_empty() {
+     let bst: BSTSumStEph<i32, i32> = BSTreeReduced::new();
+-    let collected: Vec<i32> = (&bst).into_iter().collect();
++    let collected: Vec<i32> = bst.iter().collect();
+     assert!(collected.is_empty());
+ }
+ 
+@@ -448,7 +448,7 @@ fn test_into_iter_for_loop() {
+     bst.insert(20, 200, rand_priority());
+     bst.insert(30, 300, rand_priority());
+     let mut sum = 0i32;
+-    for k in &bst {
++    for k in bst.iter() {
+         sum += k;
+     }
+     assert_eq!(sum, 60);
+diff --git a/tests/Chap40/TestBSTSizeStEph.rs b/tests/Chap40/TestBSTSizeStEph.rs
+index 6e2bc8e..3e9a15e 100644
+--- a/tests/Chap40/TestBSTSizeStEph.rs
++++ b/tests/Chap40/TestBSTSizeStEph.rs
+@@ -206,7 +206,7 @@ fn test_into_iter_collects_all_elements() {
+     tree.insert(7, rand_priority());
+     tree.insert(1, rand_priority());
+     tree.insert(9, rand_priority());
+-    let collected: Vec<i32> = (&tree).into_iter().collect();
++    let collected: Vec<i32> = tree.iter().collect();
+     let mut sorted = collected.clone();
+     sorted.sort();
+     assert_eq!(sorted, vec![1, 3, 5, 7, 9]);
+@@ -215,7 +215,7 @@ fn test_into_iter_collects_all_elements() {
+ #[test]
+ fn test_into_iter_empty() {
+     let tree: BSTSizeStEph<i32> = BSTreeSize::new();
+-    let collected: Vec<i32> = (&tree).into_iter().collect();
++    let collected: Vec<i32> = tree.iter().collect();
+     assert!(collected.is_empty());
+ }
+ 
+@@ -226,7 +226,7 @@ fn test_into_iter_for_loop() {
+     tree.insert(20, rand_priority());
+     tree.insert(30, rand_priority());
+     let mut sum = 0i32;
+-    for v in &tree {
++    for v in tree.iter() {
+         sum += v;
+     }
+     assert_eq!(sum, 60);

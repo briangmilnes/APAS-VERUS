@@ -51,7 +51,7 @@ pub mod AugOrderedTableStEph {
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
-    vstd::map::group_map_axioms,
+    vstd::map::group_map_lemmas,
 };
 
     //		Section 4. type definitions

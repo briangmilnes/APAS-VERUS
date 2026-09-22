@@ -40,8 +40,9 @@ pub mod ArraySetStEph {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
+    // r209: `lemma_push_not_contains_to_set` is vstd's `Seq::lemma_push_to_set_commute` (seq_lib.rs:2242), which needs no precondition.
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::seq_set::{lemma_push_not_contains_to_set, lemma_seq_index_in_map_to_set};
+    use crate::vstdplus::seq_set::lemma_seq_index_in_map_to_set;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_feq_clone, lemma_cloned_view_eq, lemma_seq_map_cloned_view_eq};
@@ -54,7 +55,7 @@ pub mod ArraySetStEph {
 
 
     broadcast use {
-        vstd::set::group_set_axioms,
+        vstd::set::group_set_lemmas,
         vstd::seq::group_seq_axioms,
         vstd::seq_lib::group_seq_lib_default,
         vstd::seq_lib::group_seq_properties,
@@ -105,7 +106,7 @@ pub mod ArraySetStEph {
             if head == v {
             } else {
                 vstd::seq_lib::seq_to_set_distributes_over_add(seq![head], tail.filter(pred));
-                lemma_push_not_contains_to_set(tail.filter(pred), head);
+                tail.filter(pred).lemma_push_to_set_commute(head);
             }
         }
     }
@@ -172,7 +173,7 @@ pub mod ArraySetStEph {
             reveal(Seq::filter);
             if set.contains(head) {
                 vstd::seq_lib::seq_to_set_distributes_over_add(seq![head], tail.filter(pred));
-                lemma_push_not_contains_to_set(tail.filter(pred), head);
+                tail.filter(pred).lemma_push_to_set_commute(head);
             } else {
             }
         }
@@ -196,7 +197,7 @@ pub mod ArraySetStEph {
             reveal(Seq::filter);
             if !set.contains(head) {
                 vstd::seq_lib::seq_to_set_distributes_over_add(seq![head], tail.filter(pred));
-                lemma_push_not_contains_to_set(tail.filter(pred), head);
+                tail.filter(pred).lemma_push_to_set_commute(head);
             } else {
             }
         }
@@ -609,7 +610,6 @@ pub mod ArraySetStEph {
                     };
                 };
                 // subset_of: rv_views.to_set() ⊆ old_view.to_set() = self@
-                vstd::seq_lib::seq_to_set_is_finite(filtered.elements@);
                 // spec_arraysetsteph_wf
                 // spec_pred direction
                 // completeness direction
@@ -695,7 +695,6 @@ pub mod ArraySetStEph {
                 lemma_filter_to_set_intersect(self.elements@, other@);
                 lemma_filter_preserves_no_dups(self.elements@,
                     |e: <T as View>::V| other_set.contains(e));
-                vstd::seq_lib::seq_to_set_is_finite(common.elements@);
             }
             common
         }
@@ -778,7 +777,6 @@ pub mod ArraySetStEph {
                 lemma_filter_to_set_difference(self.elements@, other@);
                 lemma_filter_preserves_no_dups(self.elements@,
                     |e: <T as View>::V| !other_set.contains(e));
-                vstd::seq_lib::seq_to_set_is_finite(remaining.elements@);
             }
             remaining
         }
@@ -903,7 +901,6 @@ pub mod ArraySetStEph {
                 // no_duplicates: self_view has no dups, filtered other has no dups,
                 // and they're disjoint (filtered other excludes self@).
                 lemma_filter_preserves_no_dups(other_view, filt);
-                vstd::seq_lib::seq_to_set_is_finite(combined.elements@);
                 // Prove no_duplicates for the concatenation.
             }
             combined
@@ -981,7 +978,6 @@ pub mod ArraySetStEph {
                     };
                 };
                 lemma_filter_remove(old(self).elements@, x@);
-                vstd::seq_lib::seq_to_set_is_finite(self.elements@);
                 lemma_filter_preserves_no_dups(old(self).elements@, filt);
             }
         }
@@ -1040,9 +1036,8 @@ pub mod ArraySetStEph {
                             assert(self.elements.spec_index(j) == new_vec@[j]);
                         };
                     };
-                    lemma_push_not_contains_to_set(old(self).elements@, x@);
+                    old(self).elements@.lemma_push_to_set_commute(x@);
                     lemma_push_preserves_no_dups(old(self).elements@, x@);
-                    vstd::seq_lib::seq_to_set_is_finite(self.elements@);
                 }
             }
             // Veracity: NEEDED proof block

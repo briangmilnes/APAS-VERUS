@@ -1,0 +1,227 @@
+diff --git a/src/Chap59/JohnsonMtEphF64.rs b/src/Chap59/JohnsonMtEphF64.rs
+index 1147621..8b2a6a3 100644
+--- a/src/Chap59/JohnsonMtEphF64.rs
++++ b/src/Chap59/JohnsonMtEphF64.rs
+@@ -315,12 +315,12 @@ pub mod JohnsonMtEphF64 {
+         let mut edges = SetStEph::<WeightedEdge<usize, WrappedF64>>::empty();
+         let arcs = graph.labeled_arcs();
+         let it = arcs.iter();
+-        let ghost arcs_seq = it@.1;
++        let ghost arcs_seq = vstd::std_specs::hash::into_iter_hash_keys(it);
+ 
+         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+         for labeled_edge in iter: it
+             invariant
+-                iter.elements == arcs_seq,
++                iter.seq().unref() == arcs_seq,
+                 arcs_seq.map(|i: int, e: LabEdge<usize, WrappedF64>| e@).to_set() =~= graph@.A,
+                 edges.spec_setsteph_wf(),
+                 vertices.spec_setsteph_wf(),
+@@ -415,16 +415,16 @@ pub mod JohnsonMtEphF64 {
+         let mut reweighted_edges = SetStEph::<WeightedEdge<usize, WrappedF64>>::empty();
+         let arcs = graph.labeled_arcs();
+         let it = arcs.iter();
+-        let ghost arcs_seq = it@.1;
++        let ghost arcs_seq = vstd::std_specs::hash::into_iter_hash_keys(it);
+ 
+         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+         for labeled_edge in iter: it
+             invariant
+-                iter.elements == arcs_seq,
+-                iter.pos <= arcs_seq.len(),
++                iter.seq().unref() == arcs_seq,
++                iter.index() <= arcs_seq.len(),
+                 arcs_seq.map(|i: int, e: LabEdge<usize, WrappedF64>| e@).to_set() =~= graph@.A,
+                 reweighted_edges.spec_setsteph_wf(),
+-                reweighted_edges@.len() <= iter.pos as nat,
++                reweighted_edges@.len() <= iter.index() as nat,
+                 vertices.spec_setsteph_wf(),
+                 vertices@.len() == n as nat,
+                 forall|k: usize| vertices@.contains(k) <==> k < n,
+diff --git a/src/Chap59/JohnsonMtEphI64.rs b/src/Chap59/JohnsonMtEphI64.rs
+index f451acf..408767a 100644
+--- a/src/Chap59/JohnsonMtEphI64.rs
++++ b/src/Chap59/JohnsonMtEphI64.rs
+@@ -305,12 +305,12 @@ pub mod JohnsonMtEphI64 {
+         let mut edges = SetStEph::<WeightedEdge<usize, i128>>::empty();
+         let arcs = graph.labeled_arcs();
+         let it = arcs.iter();
+-        let ghost arcs_seq = it@.1;
++        let ghost arcs_seq = vstd::std_specs::hash::into_iter_hash_keys(it);
+ 
+         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+         for labeled_edge in iter: it
+             invariant
+-                iter.elements == arcs_seq,
++                iter.seq().unref() == arcs_seq,
+                 arcs_seq.map(|i: int, e: LabEdge<usize, i128>| e@).to_set() =~= graph@.A,
+                 edges.spec_setsteph_wf(),
+                 vertices.spec_setsteph_wf(),
+@@ -404,16 +404,16 @@ pub mod JohnsonMtEphI64 {
+         let mut reweighted_edges = SetStEph::<WeightedEdge<usize, i128>>::empty();
+         let arcs = graph.labeled_arcs();
+         let it = arcs.iter();
+-        let ghost arcs_seq = it@.1;
++        let ghost arcs_seq = vstd::std_specs::hash::into_iter_hash_keys(it);
+ 
+         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+         for labeled_edge in iter: it
+             invariant
+-                iter.elements == arcs_seq,
+-                iter.pos <= arcs_seq.len(),
++                iter.seq().unref() == arcs_seq,
++                iter.index() <= arcs_seq.len(),
+                 arcs_seq.map(|i: int, e: LabEdge<usize, i128>| e@).to_set() =~= graph@.A,
+                 reweighted_edges.spec_setsteph_wf(),
+-                reweighted_edges@.len() <= iter.pos as nat,
++                reweighted_edges@.len() <= iter.index() as nat,
+                 vertices.spec_setsteph_wf(),
+                 vertices@.len() == n as nat,
+                 forall|k: usize| vertices@.contains(k) <==> k < n,
+diff --git a/src/Chap59/JohnsonStEphF64.rs b/src/Chap59/JohnsonStEphF64.rs
+index c481d08..56c5a12 100644
+--- a/src/Chap59/JohnsonStEphF64.rs
++++ b/src/Chap59/JohnsonStEphF64.rs
+@@ -28,6 +28,8 @@ pub mod JohnsonStEphF64 {
+     //		Section 2. imports
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+ 
+     use crate::Chap05::SetStEph::SetStEph::*;
+     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
+@@ -192,11 +194,12 @@ pub mod JohnsonStEphF64 {
+                     valid_key_type_WeightedEdge::<usize, WrappedF64>(),
+                     u < n,
+                     forall|v: usize| graph@.V.contains(v) <==> v < n,
+-                    it@.0 <= it@.1.len(),
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
+                     forall|a: usize, b: usize, w: f64|
+                         #[trigger] edges@.contains((a, b, w)) ==>
+                         vertices@.contains(a) && vertices@.contains(b),
+-                decreases it@.1.len() - it@.0,
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+                 match it.next() {
+                     None => break,
+@@ -269,7 +272,10 @@ pub mod JohnsonStEphF64 {
+         // Iterate over all arcs directly.
+         let arcs = graph.labeled_arcs();
+         let mut it = arcs.iter();
+-        let ghost arcs_seq = it@.1;
++        // r212: the prophetic model keeps the consumed count in a ghost `pos`
++        // and the creation-time contents in `arcs_seq` (docs/IteratorMigrationStudy.md §6).
++        let ghost arcs_seq = vstd::std_specs::hash::into_iter_hash_keys(it);
++        let ghost mut pos: int = 0;
+ 
+         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+         loop
+@@ -284,19 +290,24 @@ pub mod JohnsonStEphF64 {
+                 forall|v: usize| graph@.V.contains(v) <==> v < n,
+                 n > 0,
+                 n < usize::MAX,
+-                it@.0 <= it@.1.len(),
+-                it@.1 == arcs_seq,
++                IteratorSpec::obeys_prophetic_iter_laws(&it),
++                IteratorSpec::decrease(&it) is Some,
++                0 <= pos <= arcs_seq.len(),
++                IteratorSpec::remaining(&it).len() == arcs_seq.len() - pos,
++                forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                    ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == arcs_seq[pos + i],
+                 arcs_seq.map(|i: int, k: LabEdge<usize, WrappedF64>| k@).to_set() =~= graph@.A,
+                 arcs_seq.no_duplicates(),
+-                edges@.len() <= it@.0,
++                edges@.len() <= pos,
+                 forall|a: usize, b: usize, w: f64|
+                     #[trigger] edges@.contains((a, b, w)) ==>
+                     vertices@.contains(a) && vertices@.contains(b),
+-            decreases arcs_seq.len() - it@.0,
++            decreases IteratorSpec::decrease(&it)->0,
+         {
+             match it.next() {
+                 None => break,
+                 Some(arc) => {
++                    proof { pos = pos + 1; }
+                     let from = arc.0;
+                     let to = arc.1;
+                     let weight = arc.2;
+diff --git a/src/Chap59/JohnsonStEphI64.rs b/src/Chap59/JohnsonStEphI64.rs
+index cd6554a..f6d93cd 100644
+--- a/src/Chap59/JohnsonStEphI64.rs
++++ b/src/Chap59/JohnsonStEphI64.rs
+@@ -28,6 +28,8 @@ pub mod JohnsonStEphI64 {
+     //		Section 2. imports
+ 
+     use vstd::prelude::*;
++    #[cfg(verus_keep_ghost)]
++    use vstd::std_specs::iter::*;
+ 
+     use crate::Chap05::SetStEph::SetStEph::*;
+     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
+@@ -196,11 +198,12 @@ pub mod JohnsonStEphI64 {
+                     valid_key_type_WeightedEdge::<usize, i128>(),
+                     u < n,
+                     forall|v: usize| graph@.V.contains(v) <==> v < n,
+-                    it@.0 <= it@.1.len(),
++                    IteratorSpec::obeys_prophetic_iter_laws(&it),
++                    IteratorSpec::decrease(&it) is Some,
+                     forall|a: usize, b: usize, w: i128|
+                         #[trigger] edges@.contains((a, b, w)) ==>
+                         vertices@.contains(a) && vertices@.contains(b),
+-                decreases it@.1.len() - it@.0,
++                decreases IteratorSpec::decrease(&it)->0,
+             {
+                 match it.next() {
+                     None => break,
+@@ -271,7 +274,10 @@ pub mod JohnsonStEphI64 {
+         // Iterate over all arcs directly (avoids sum-of-degrees lemma).
+         let arcs = graph.labeled_arcs();
+         let mut it = arcs.iter();
+-        let ghost arcs_seq = it@.1;
++        // r212: the prophetic model keeps the consumed count in a ghost `pos`
++        // and the creation-time contents in `arcs_seq` (docs/IteratorMigrationStudy.md §6).
++        let ghost arcs_seq = vstd::std_specs::hash::into_iter_hash_keys(it);
++        let ghost mut pos: int = 0;
+ 
+         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+         loop
+@@ -286,19 +292,24 @@ pub mod JohnsonStEphI64 {
+                 forall|v: usize| graph@.V.contains(v) <==> v < n,
+                 n > 0,
+                 n < usize::MAX,
+-                it@.0 <= it@.1.len(),
+-                it@.1 == arcs_seq,
++                IteratorSpec::obeys_prophetic_iter_laws(&it),
++                IteratorSpec::decrease(&it) is Some,
++                0 <= pos <= arcs_seq.len(),
++                IteratorSpec::remaining(&it).len() == arcs_seq.len() - pos,
++                forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
++                    ==> *(#[trigger] IteratorSpec::remaining(&it)[i]) == arcs_seq[pos + i],
+                 arcs_seq.map(|i: int, k: LabEdge<usize, i128>| k@).to_set() =~= graph@.A,
+                 arcs_seq.no_duplicates(),
+-                edges@.len() <= it@.0,
++                edges@.len() <= pos,
+                 forall|a: usize, b: usize, w: i128|
+                     #[trigger] edges@.contains((a, b, w)) ==>
+                     vertices@.contains(a) && vertices@.contains(b),
+-            decreases arcs_seq.len() - it@.0,
++            decreases IteratorSpec::decrease(&it)->0,
+         {
+             match it.next() {
+                 None => break,
+                 Some(arc) => {
++                    proof { pos = pos + 1; }
+                     let from = arc.0;
+                     let to = arc.1;
+                     let weight = arc.2;
+@@ -314,7 +325,7 @@ pub mod JohnsonStEphI64 {
+         // Veracity: NEEDED proof block
+         proof {
+             // Prove edges@.len() <= graph@.A.len():
+-            // At loop exit: edges@.len() <= it@.0 == arcs_seq.len().
++            // At loop exit: edges@.len() <= pos <= arcs_seq.len().
+             // The view function on LabEdge<usize, i128> is injective (identity).
+             let view_fn = |k: LabEdge<usize, i128>| k@;
+             // Veracity: NEEDED assert

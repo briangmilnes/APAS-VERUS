@@ -1,0 +1,42 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: trait method implementation cannot declare requires clauses; these can only be inherited from the trait declaration
+   --> src/Chap05/SetStEph.rs:898:9
+    |
+898 |         fn into_iter(self) -> (it: Self::IntoIter)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: trait method implementation cannot declare requires clauses; these can only be inherited from the trait declaration
+    --> src/Chap05/SetMtEph.rs:1025:9
+     |
+1025 |         fn into_iter(self) -> (it: Self::IntoIter)
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: trait method implementation cannot declare requires clauses; these can only be inherited from the trait declaration
+   --> src/Chap05/RelationStEph.rs:265:9
+    |
+265 |         fn into_iter(self) -> (it: Self::IntoIter)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: trait method implementation cannot declare requires clauses; these can only be inherited from the trait declaration
+   --> src/Chap05/MappingStEph.rs:563:9
+    |
+563 |         fn into_iter(self) -> (it: Self::IntoIter)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: `core::hash::Hash::hash` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+    --> src/Chap05/SetStEph.rs:936:36
+     |
+ 936 |                     Some(key) => { key.hash(state); },
+     |                                    ^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap05/SetMtEph.rs:1200:36
+     |
+1200 |                     Some(key) => { key.hash(state); },
+     |                                    ---------------
+
+error: aborting due to 5 previous errors
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 28042MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

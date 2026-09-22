@@ -1,0 +1,17 @@
+Experiment: src/experiments/prophetic_iter_slice_direct.rs
+Verus:   Version: 0.2026.09.13.671956e
+error[E0425]: cannot find value `axiom_spec_slice_iter` in module `vstd::std_specs::slice`
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_iter_slice_direct.rs:42:47
+   |
+42 |         broadcast use vstd::std_specs::slice::axiom_spec_slice_iter;
+   |                                               ^^^^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::slice`
+
+error[E0425]: cannot find value `axiom_spec_slice_iter` in module `vstd::std_specs::slice`
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_iter_slice_direct.rs:59:47
+   |
+59 |         broadcast use vstd::std_specs::slice::axiom_spec_slice_iter;
+   |                                               ^^^^^^^^^^^^^^^^^^^^^ not found in `vstd::std_specs::slice`
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.

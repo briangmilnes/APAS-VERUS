@@ -1,0 +1,213 @@
+From f536e81ef1583a9b5f5cbea019bf01c4ca9f44f7 Mon Sep 17 00:00:00 2001
+From: "Brian G. Milnes" <briangmilnes@gmail.com>
+Date: Mon, 21 Sep 2026 11:28:03 -0700
+Subject: [PATCH 02/16] r210 iterator-upgrade --apply:
+ src/Chap18/ArraySeqStPer.rs
+
+Rewritten by iterator-upgrade (CSTs processes/iterator-upgrade) from the
+old wrapper iterator model to the Verus 0.2026.09.13 prophetic model.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+---
+ src/Chap18/ArraySeqStPer.rs | 149 ++++--------------------------------
+ 1 file changed, 14 insertions(+), 135 deletions(-)
+
+diff --git a/src/Chap18/ArraySeqStPer.rs b/src/Chap18/ArraySeqStPer.rs
+index ecbae16..b4c0877 100644
+--- a/src/Chap18/ArraySeqStPer.rs
++++ b/src/Chap18/ArraySeqStPer.rs
+@@ -32,6 +32,7 @@ pub mod ArraySeqStPer {
+     use std::vec::IntoIter;
+ 
+     use vstd::prelude::*;
++    use vstd::std_specs::iter::*;
+     pub use crate::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::*;
+ 
+     verus!
+@@ -910,117 +911,18 @@ pub mod ArraySeqStPer {
+         {}
+ 
+         /// Returns an iterator over the sequence elements.
+-        pub fn iter(&self) -> (it: ArraySeqStPerIter<'_, T>)
++        pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            ArraySeqStPerIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+     //		Section 10. iterators
+ 
+-
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqStPerIter<'a, T> {
+-        pub inner: std::slice::Iter<'a, T>,
+-    }
+-
+-    impl<'a, T> View for ArraySeqStPerIter<'a, T> {
+-        type V = (int, Seq<T>);
+-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+-    }
+-
+-    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqStPerIter<'a, T>) -> bool {
+-        0 <= it@.0 <= it@.1.len()
+-    }
+-
+-    impl<'a, T> std::iter::Iterator for ArraySeqStPerIter<'a, T> {
+-        type Item = &'a T;
+-
+-        // Relies on vstd's assume_specification for slice::Iter::next.
+-        fn next(&mut self) -> (next: Option<&'a T>)
+-            ensures ({
+-                let (old_index, old_seq) = old(self)@;
+-                match next {
+-                    None => {
+-                        &&& self@ == old(self)@
+-                        &&& old_index >= old_seq.len()
+-                    },
+-                    Some(element) => {
+-                        let (new_index, new_seq) = self@;
+-                        &&& 0 <= old_index < old_seq.len()
+-                        &&& new_seq == old_seq
+-                        &&& new_index == old_index + 1
+-                        &&& element == old_seq[old_index]
+-                    },
+-                }
+-            })
+-        {
+-            self.inner.next()
+-        }
+-    }
+-
+-    /// Ghost iterator for ForLoopGhostIterator support (for-iter, for-borrow patterns).
+-    #[verifier::reject_recursive_types(T)]
+-    pub struct ArraySeqStPerGhostIterator<'a, T> {
+-        pub pos: int,
+-        pub elements: Seq<T>,
+-        pub phantom: core::marker::PhantomData<&'a T>,
+-    }
+-
+-    impl<'a, T> View for ArraySeqStPerGhostIterator<'a, T> {
+-        type V = Seq<T>;
+-
+-        open spec fn view(&self) -> Seq<T> {
+-            self.elements.take(self.pos)
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqStPerIter<'a, T> {
+-        type GhostIter = ArraySeqStPerGhostIterator<'a, T>;
+-        open spec fn ghost_iter(&self) -> ArraySeqStPerGhostIterator<'a, T> {
+-            ArraySeqStPerGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+-        }
+-    }
+-
+-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ArraySeqStPerGhostIterator<'a, T> {
+-        type ExecIter = ArraySeqStPerIter<'a, T>;
+-        type Item = T;
+-        type Decrease = int;
+-
+-        open spec fn exec_invariant(&self, exec_iter: &ArraySeqStPerIter<'a, T>) -> bool {
+-            &&& self.pos == exec_iter@.0
+-            &&& self.elements == exec_iter@.1
+-        }
+-
+-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+-            init matches Some(init) ==> {
+-                &&& init.pos == 0
+-                &&& init.elements == self.elements
+-                &&& 0 <= self.pos <= self.elements.len()
+-            }
+-        }
+-
+-        open spec fn ghost_ensures(&self) -> bool {
+-            self.pos == self.elements.len()
+-        }
+-
+-        open spec fn ghost_decrease(&self) -> Option<int> {
+-            Some(self.elements.len() - self.pos)
+-        }
+-
+-        open spec fn ghost_peek_next(&self) -> Option<T> {
+-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+-        }
+-
+-        open spec fn ghost_advance(&self, _exec_iter: &ArraySeqStPerIter<'a, T>) -> ArraySeqStPerGhostIterator<'a, T> {
+-            Self { pos: self.pos + 1, ..*self }
+-        }
+-    }
+-
+     //		Section 12. derive impls in verus!
+ 
+ 
+@@ -1034,14 +936,14 @@ pub mod ArraySeqStPer {
+ 
+     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStPerS<T> {
+         type Item = &'a T;
+-        type IntoIter = ArraySeqStPerIter<'a, T>;
++        type IntoIter = std::slice::Iter<'a, T>;
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
+-                iter_invariant(&it),
++                IteratorSpec::remaining(&it) == self.seq@.as_ref(),
++                vstd::std_specs::slice::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+-            ArraySeqStPerIter { inner: self.seq.iter() }
++            self.seq.iter()
+         }
+     }
+ 
+@@ -1050,8 +952,9 @@ pub mod ArraySeqStPer {
+         type IntoIter = IntoIter<T>;
+         fn into_iter(self) -> (it: Self::IntoIter)
+             ensures
+-                it@.0 == 0,
+-                it@.1 == self.seq@,
++                IteratorSpec::remaining(&it) == self.seq@,
++                vstd::std_specs::vec::into_iter_elts(it) == self.seq@,
++                IteratorSpec::decrease(&it) is Some,
+         {
+             self.seq.into_iter()
+         }
+@@ -1103,28 +1006,4 @@ pub mod ArraySeqStPer {
+         }
+     }
+ 
+-    impl<'a, T: Debug> Debug for ArraySeqStPerIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqStPerIter({:?})", self.inner)
+-        }
+-    }
+-
+-    impl<'a, T> Display for ArraySeqStPerIter<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqStPerIter")
+-        }
+-    }
+-
+-    impl<'a, T> Debug for ArraySeqStPerGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqStPerGhostIterator")
+-        }
+-    }
+-
+-    impl<'a, T> Display for ArraySeqStPerGhostIterator<'a, T> {
+-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+-            write!(f, "ArraySeqStPerGhostIterator")
+-        }
+-    }
+-
+ }
+-- 
+2.53.0
+

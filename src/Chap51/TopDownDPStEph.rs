@@ -5,7 +5,7 @@
 //! Top-Down Dynamic Programming - Ephemeral Single-Threaded Implementation
 //!
 //! This module implements the top-down (memoization) approach to dynamic programming
-//! using HashMapWithViewPlus with in-place mutations for efficient subproblem caching.
+//! using HashMap with in-place mutations for efficient subproblem caching.
 
 //  Table of Contents
 //	Section 1. module
@@ -32,6 +32,7 @@ pub mod TopDownDPStEph {
     //		Section 12. derive impls in verus!
     //		Section 14. derive impls outside verus!
 
+    use std::collections::HashMap;
     use std::fmt::{Formatter, Debug, Display};
 
     use vstd::prelude::*;
@@ -40,7 +41,6 @@ pub mod TopDownDPStEph {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap51::SeqSpecsAndLemmas::SeqSpecsAndLemmas::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::accept::accept;
 
     verus! {
@@ -48,15 +48,16 @@ pub mod TopDownDPStEph {
 
     broadcast use {
         crate::Types::Types::group_Pair_axioms,
-        vstd::map::group_map_axioms,
+        vstd::map::group_map_lemmas,
         vstd::seq::group_seq_axioms,
+        vstd::std_specs::hash::group_hash_axioms,
     };
 
 
     pub struct TopDownDPStEphS {
         pub seq_s: ArraySeqStEphS<char>,
         pub seq_t: ArraySeqStEphS<char>,
-        pub memo_table: HashMapWithViewPlus<Pair<usize, usize>, usize>,
+        pub memo_table: HashMap<Pair<usize, usize>, usize>,
     }
 
 
@@ -65,7 +66,7 @@ pub mod TopDownDPStEph {
         spec fn spec_t(&self) -> Seq<char>;
         spec fn spec_s_len(&self) -> nat;
         spec fn spec_t_len(&self) -> nat;
-        spec fn spec_memo(&self) -> Map<(usize, usize), usize>;
+        spec fn spec_memo(&self) -> Map<Pair<usize, usize>, usize>;
         spec fn spec_med(&self, i: nat, j: nat) -> nat;
         spec fn spec_memo_correct(&self) -> bool;
         spec fn spec_topdowndpsteph_wf(&self) -> bool;
@@ -105,16 +106,16 @@ pub mod TopDownDPStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- hash map contains_key.
         fn is_memoized(&self, i: usize, j: usize) -> (memoized: bool)
             requires self.spec_topdowndpsteph_wf(),
-            ensures memoized == self.spec_memo().contains_key((i, j));
+            ensures memoized == self.spec_memo().contains_key(Pair(i, j));
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- hash map lookup.
         fn get_memoized(&self, i: usize, j: usize) -> (val: Option<usize>)
             requires self.spec_topdowndpsteph_wf(),
             ensures
                 match val {
-                    Some(v) => self.spec_memo().contains_key((i, j))
-                        && v == self.spec_memo()[(i, j)],
-                    None => !self.spec_memo().contains_key((i, j)),
+                    Some(v) => self.spec_memo().contains_key(Pair(i, j))
+                        && v == self.spec_memo()[Pair(i, j)],
+                    None => !self.spec_memo().contains_key(Pair(i, j)),
                 };
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- hash map insert.
@@ -123,7 +124,7 @@ pub mod TopDownDPStEph {
             ensures
                 self.spec_s() == old(self).spec_s(),
                 self.spec_t() == old(self).spec_t(),
-                self.spec_memo() == old(self).spec_memo().insert((i, j), value);
+                self.spec_memo() == old(self).spec_memo().insert(Pair(i, j), value);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clear hash map.
         fn clear_memo(&mut self)
@@ -131,7 +132,7 @@ pub mod TopDownDPStEph {
                 self.spec_topdowndpsteph_wf(),
                 self.spec_s() == old(self).spec_s(),
                 self.spec_t() == old(self).spec_t(),
-                self.spec_memo() == Map::<(usize, usize), usize>::empty();
+                self.spec_memo() == Map::<Pair<usize, usize>, usize>::empty();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequence.
         fn set_s(&mut self, s: ArraySeqStEphS<char>)
@@ -189,11 +190,11 @@ pub mod TopDownDPStEph {
         open spec fn spec_s_len(&self) -> nat { self.seq_s.spec_len() }
         open spec fn spec_t_len(&self) -> nat { self.seq_t.spec_len() }
 
-        open spec fn spec_memo(&self) -> Map<(usize, usize), usize> { self.memo_table@ }
+        open spec fn spec_memo(&self) -> Map<Pair<usize, usize>, usize> { self.memo_table@ }
 
         open spec fn spec_memo_correct(&self) -> bool {
-            forall|a: usize, b: usize| self.spec_memo().contains_key((a, b)) ==>
-                self.spec_memo()[(a, b)] as nat == #[trigger] self.spec_med(a as nat, b as nat)
+            forall|a: usize, b: usize| self.spec_memo().contains_key(Pair(a, b)) ==>
+                self.spec_memo()[Pair(a, b)] as nat == #[trigger] self.spec_med(a as nat, b as nat)
         }
 
         open spec fn spec_topdowndpsteph_wf(&self) -> bool {
@@ -218,7 +219,7 @@ pub mod TopDownDPStEph {
             TopDownDPStEphS {
                 seq_s: s,
                 seq_t: t,
-                memo_table: HashMapWithViewPlus::new(),
+                memo_table: HashMap::new(),
             }
         }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
@@ -234,15 +235,21 @@ pub mod TopDownDPStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
-        fn memo_size(&self) -> (size: usize) { self.memo_table.len() }
+        fn memo_size(&self) -> (size: usize) {
+            // The vstd `len` axiom holds under the Pair key model.
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
+            self.memo_table.len()
+        }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — checks memo entry.
         fn is_memoized(&self, i: usize, j: usize) -> (memoized: bool) {
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             self.memo_table.contains_key(&Pair(i, j))
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — memo table lookup.
         fn get_memoized(&self, i: usize, j: usize) -> (val: Option<usize>) {
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             match self.memo_table.get(&Pair(i, j)) {
                 Some(v) => Some(*v),
                 None => None,
@@ -251,6 +258,7 @@ pub mod TopDownDPStEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — memo table insert.
         fn insert_memo(&mut self, i: usize, j: usize, value: usize) {
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             self.memo_table.insert(Pair(i, j), value);
         }
 
@@ -285,6 +293,8 @@ pub mod TopDownDPStEph {
         fn med_recursive(&mut self, i: usize, j: usize) -> (distance: usize)
             decreases i + j,
         {
+            // The vstd `get`/`insert` postconditions hold under the Pair key model.
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             // Check memo cache.
             match self.memo_table.get(&Pair(i, j)) {
                 Some(v) => { return *v; }
@@ -326,9 +336,9 @@ pub mod TopDownDPStEph {
             proof {
                 // Veracity: NEEDED assert
                 // Veracity: NEEDED assert
-                assert forall|a: usize, b: usize| pre_memo.contains_key((a, b))
+                assert forall|a: usize, b: usize| pre_memo.contains_key(Pair(a, b))
                 implies
-                    pre_memo[(a, b)] as nat == #[trigger] spec_med_fn(s, t, a as nat, b as nat)
+                    pre_memo[Pair(a, b)] as nat == #[trigger] spec_med_fn(s, t, a as nat, b as nat)
                 by {
                     // Veracity: NEEDED assert
                     // Veracity: NEEDED assert
@@ -338,12 +348,12 @@ pub mod TopDownDPStEph {
             self.memo_table.insert(Pair(i, j), result);
             // Veracity: NEEDED assert
             // Veracity: NEEDED assert
-            assert forall|a: usize, b: usize| self.spec_memo().contains_key((a, b))
+            assert forall|a: usize, b: usize| self.spec_memo().contains_key(Pair(a, b))
             implies
-                self.spec_memo()[(a, b)] as nat == #[trigger] self.spec_med(a as nat, b as nat)
+                self.spec_memo()[Pair(a, b)] as nat == #[trigger] self.spec_med(a as nat, b as nat)
             by {
                 if a == i && b == j {
-                } else if pre_memo.contains_key((a, b)) {
+                } else if pre_memo.contains_key(Pair(a, b)) {
                 }
             };
             result
@@ -408,7 +418,7 @@ pub mod TopDownDPStEph {
             f.debug_struct("TopDownDPStEphS")
                 .field("seq_s", &self.seq_s)
                 .field("seq_t", &self.seq_t)
-                .field("memo_table", &self.memo_table.inner)
+                .field("memo_table", &self.memo_table)
                 .finish()
         }
     }

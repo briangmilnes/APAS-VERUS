@@ -41,6 +41,10 @@ pub mod UnDirGraphMtEph {
     use std::hash::Hash;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::into_iter_hash_keys;
     use crate::Types::Types::*;
     use crate::Concurrency::Concurrency::*;
     use crate::Chap05::SetStEph::SetStEph::*;
@@ -66,7 +70,7 @@ pub mod UnDirGraphMtEph {
 
 
     broadcast use {
-        vstd::set::group_set_axioms,
+        vstd::set::group_set_lemmas,
         crate::vstdplus::feq::feq::group_feq_axioms,
         crate::Types::Types::group_Edge_axioms,
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
@@ -120,13 +124,13 @@ pub mod UnDirGraphMtEph {
                 spec_graphview_wf(self@),
                 subedges <= self@.A,
         {
-            Set::new(|w: V::V| subedges.contains((v, w)) || subedges.contains((w, v)))
+            self@.V.filter(|w: V::V| subedges.contains((v, w)) || subedges.contains((w, v)))
         }
 
         open spec fn spec_ng_of_vertices_from_set(&self, subverts: Set<V::V>) -> Set<V::V> 
             recommends spec_graphview_wf(self@), subverts <= self@.V
         {
-            Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_ng(u).contains(w))
+            self@.V.filter(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_ng(u).contains(w))
         }
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -143,8 +147,6 @@ pub mod UnDirGraphMtEph {
         fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: Self)
             requires
                 valid_key_type_for_graph::<V>(),
-                V@.finite(),
-                E@.finite(),
                 forall |u: V::V, w: V::V|
                     #[trigger] E@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),
             ensures
@@ -187,8 +189,8 @@ pub mod UnDirGraphMtEph {
 
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V> 
             recommends spec_graphview_wf(self@), self@.V.contains(v)
-        { 
-            Set::new(|w: V::V| self@.A.contains((v, w)) || self@.A.contains((w, v)))
+        {
+            self@.V.filter(|w: V::V| self@.A.contains((v, w)) || self@.A.contains((w, v)))
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|E|), Span O(log |E|) — parallel
@@ -206,7 +208,7 @@ pub mod UnDirGraphMtEph {
         open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V> 
             recommends spec_graphview_wf(self@), vertices <= self@.V
         {
-            Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
+            self@.V.filter(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|u_set| × |E|), Span O(log |u_set| + log |E|) — parallel
@@ -455,121 +457,23 @@ pub mod UnDirGraphMtEph {
     //		Section 10a. iterators
 
 
-    /// Iterator wrapper for UnDirGraphMtEph vertex iteration.
-    #[verifier::reject_recursive_types(V)]
-    pub struct UnDirGraphMtEphIter<'a, V: StTInMtT + Hash + 'static> {
-        pub inner: SetStEphIter<'a, V>,
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> View for UnDirGraphMtEphIter<'a, V> {
-        type V = (int, Seq<V>);
-        open spec fn view(&self) -> (int, Seq<V>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant<'a, V: StTInMtT + Hash + 'static>(it: &UnDirGraphMtEphIter<'a, V>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> std::iter::Iterator for UnDirGraphMtEphIter<'a, V> {
-        type Item = &'a V;
-
-        fn next(&mut self) -> (next: Option<&'a V>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(V)]
-    pub struct UnDirGraphMtEphGhostIterator<'a, V: StTInMtT + Hash + 'static> {
-        pub pos: int,
-        pub elements: Seq<V>,
-        pub phantom: core::marker::PhantomData<&'a V>,
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> vstd::pervasive::ForLoopGhostIteratorNew for UnDirGraphMtEphIter<'a, V> {
-        type GhostIter = UnDirGraphMtEphGhostIterator<'a, V>;
-
-        open spec fn ghost_iter(&self) -> UnDirGraphMtEphGhostIterator<'a, V> {
-            UnDirGraphMtEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> vstd::pervasive::ForLoopGhostIterator for UnDirGraphMtEphGhostIterator<'a, V> {
-        type ExecIter = UnDirGraphMtEphIter<'a, V>;
-        type Item = V;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &UnDirGraphMtEphIter<'a, V>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<V> {
-            if 0 <= self.pos < self.elements.len() {
-                Some(self.elements[self.pos])
-            } else {
-                None
-            }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &UnDirGraphMtEphIter<'a, V>) -> UnDirGraphMtEphGhostIterator<'a, V> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> View for UnDirGraphMtEphGhostIterator<'a, V> {
-        type V = Seq<V>;
-
-        open spec fn view(&self) -> Seq<V> {
-            self.elements.take(self.pos)
-        }
-    }
-
+    // Delegated iteration over the vertices: the std hash-set iterator that vstd
+    // specifies. An impl of an external trait method may not add `requires`, so
+    // the contract is conditional on the vertex set's well-formedness.
     impl<'a, V: StTInMtT + Hash + 'static> std::iter::IntoIterator for &'a UnDirGraphMtEph<V> {
         type Item = &'a V;
-        type IntoIter = UnDirGraphMtEphIter<'a, V>;
+        type IntoIter = std::collections::hash_set::Iter<'a, V>;
         fn into_iter(self) -> (it: Self::IntoIter)
-            requires valid_key_type::<V>(), spec_graphview_wf(self@)
             ensures
-                it@.0 == 0int,
-                it@.1.map(|i: int, k: V| k@).to_set() == self@.V,
-                it@.1.no_duplicates(),
-                iter_invariant(&it),
+                self.V.spec_setsteph_wf() ==> {
+                    &&& IteratorSpec::remaining(&it).unref().map(|i: int, k: V| k@).to_set() == self@.V
+                    &&& IteratorSpec::remaining(&it).unref().no_duplicates()
+                    &&& IteratorSpec::remaining(&it).len() == self@.V.len()
+                    &&& into_iter_hash_keys(it) == IteratorSpec::remaining(&it).unref()
+                    &&& IteratorSpec::decrease(&it) is Some
+                },
         {
-            UnDirGraphMtEphIter { inner: self.vertices().iter() }
+            (&self.V).into_iter()
         }
     }
 
@@ -603,18 +507,16 @@ pub mod UnDirGraphMtEph {
 
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V>
             recommends spec_graphview_wf(self@), self@.V.contains(v)
-        { Set::new(|w: V::V| self@.A.contains((v, w)) || self@.A.contains((w, v))) }
+        { self@.V.filter(|w: V::V| self@.A.contains((v, w)) || self@.A.contains((w, v))) }
 
         open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V>
             recommends spec_graphview_wf(self@), vertices <= self@.V
-        { Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w)) }
+        { self@.V.filter(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w)) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn new(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (s: Self)
             requires
                 valid_key_type_for_graph::<V>(),
-                V@.finite(),
-                E@.finite(),
                 forall |u: V::V, w: V::V|
                     #[trigger] E@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),
             ensures
@@ -866,22 +768,6 @@ pub mod UnDirGraphMtEph {
 
     impl<V: StTInMtT + Hash + 'static> Display for UnDirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} E={:?}", self.V, self.E) }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> Debug for UnDirGraphMtEphIter<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphMtEphIter") }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> Display for UnDirGraphMtEphIter<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphMtEphIter") }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> Debug for UnDirGraphMtEphGhostIterator<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphMtEphGhostIterator") }
-    }
-
-    impl<'a, V: StTInMtT + Hash + 'static> Display for UnDirGraphMtEphGhostIterator<'a, V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphMtEphGhostIterator") }
     }
 
     //		Section 14b. derive impls outside verus!

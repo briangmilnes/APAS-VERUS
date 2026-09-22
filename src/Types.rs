@@ -60,7 +60,7 @@ broadcast use {
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,
-    vstd::set::group_set_axioms,
+    vstd::set::group_set_lemmas,
     vstd::set_lib::group_set_lib_default,
 };
 
@@ -77,10 +77,8 @@ broadcast use {
     //		Section 6a. spec fns
 
 
-    /// Well-formedness for unlabeled graph views: finite sets and arc endpoints in V.
+    /// Well-formedness for unlabeled graph views: arc endpoints in V.
     pub open spec fn spec_graphview_wf<V>(gv: GraphView<V>) -> bool {
-        &&& gv.V.finite()
-        &&& gv.A.finite()
         &&& forall |u: V, w: V|
                 #[trigger] gv.A.contains((u, w)) ==>
                     gv.V.contains(u) && gv.V.contains(w)
@@ -100,10 +98,8 @@ broadcast use {
     //		Section 6b. spec fns
 
 
-    /// Well-formedness for labeled graph views: finite sets and arc endpoints in V.
+    /// Well-formedness for labeled graph views: arc endpoints in V.
     pub open spec fn spec_labgraphview_wf<V, L>(gv: LabGraphView<V, L>) -> bool {
-        &&& gv.V.finite()
-        &&& gv.A.finite()
         &&& forall |u: V, w: V, l: L|
                 #[trigger] gv.A.contains((u, w, l)) ==>
                     gv.V.contains(u) && gv.V.contains(w)

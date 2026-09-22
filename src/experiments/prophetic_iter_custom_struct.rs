@@ -16,6 +16,9 @@
 //!  - `impl IteratorSpecImpl` — 6 spec fns, prophetic `remaining()`
 //!
 //! RESULT: SUCCEEDS — 6 verified, 0 errors (verus 0.2026.05.21, standalone).
+//! RESULT: FAILS — E0407 `initial_value_relation` is not a member of
+//!         `IteratorSpecImpl`, removed by #2739 (verus 0.2026.09.13.671956e).
+//! DATE: 2026-09-20. LOG: logs/validate-experiment-prophetic_iter_custom_struct.20260920-160425.log
 //! Finding: a from-scratch iterator needs private fields (a `type_invariant`
 //! struct forbids crate-public ones), a `closed` constructor behind an `open`
 //! spec ctor, and `next()` proves the prophetic postconditions with no asserts.

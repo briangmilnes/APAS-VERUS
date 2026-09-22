@@ -68,7 +68,7 @@ pub mod BSTParaStEph {
 
 
     broadcast use {
-        vstd::set::group_set_axioms,
+        vstd::set::group_set_lemmas,
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 

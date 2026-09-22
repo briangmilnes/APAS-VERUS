@@ -26,6 +26,7 @@ pub mod TSPApproxStEph {
 
     use vstd::prelude::*;
 
+    use std::collections::HashSet;
     use std::hash::Hash;
     use crate::vstdplus::float::float::{WrappedF64, zero_dist};
     use crate::Chap05::SetStEph::SetStEph::*;
@@ -33,7 +34,6 @@ pub mod TSPApproxStEph {
     use crate::Types::Types::*;
 
     use crate::vstdplus::clone_plus::clone_plus::*;
-    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::{HashSetWithViewPlus, HashSetWithViewPlusTrait};
     #[cfg(not(verus_keep_ghost))]
     use std::vec::Vec;
     #[cfg(not(verus_keep_ghost))]
@@ -189,16 +189,9 @@ pub mod TSPApproxStEph {
         // Collect neighbors into Vec via iterator.
         let neighbors = get_neighbors(graph, current);
         let mut ng_vec: Vec<V> = Vec::new();
-        let mut ng_it = neighbors.iter();
-        loop
-            invariant
-                ng_it@.0 <= ng_it@.1.len(),
-            decreases ng_it@.1.len() - ng_it@.0,
+        for n in neighbors.iter()
         {
-            match ng_it.next() {
-                None => break,
-                Some(n) => ng_vec.push(n.clone()),
-            }
+            ng_vec.push(n.clone());
         }
 
         // Visit all neighbors connected by tree edges.
@@ -231,21 +224,15 @@ pub mod TSPApproxStEph {
                 if !vec_contains_pair(visited_edges, &edge_key) {
                     // Check if edge exists in tree_edges.
                     let mut edge_found = false;
-                    let mut te_it = tree_edges.iter();
-                    loop
-                        invariant te_it@.0 <= te_it@.1.len(),
-                        decreases te_it@.1.len() - te_it@.0,
+                    for te in tree_edges.iter()
+                        invariant
+                            tree_edges.spec_setsteph_wf(),
                     {
-                        match te_it.next() {
-                            None => break,
-                            Some(te) => {
-                                let u = &te.0;
-                                let v = &te.1;
-                                if (*u == *current && *v == *neighbor) || (*u == *neighbor && *v == *current) {
-                                    edge_found = true;
-                                    break;
-                                }
-                            }
+                        let u = &te.0;
+                        let v = &te.1;
+                        if (*u == *current && *v == *neighbor) || (*u == *neighbor && *v == *current) {
+                            edge_found = true;
+                            break;
                         }
                     }
 
@@ -284,7 +271,7 @@ pub mod TSPApproxStEph {
         }
 
         let mut shortcut: Vec<V> = Vec::new();
-        let mut visited = HashSetWithViewPlus::<V>::new();
+        let mut visited = HashSet::<V>::new();
 
         let mut i: usize = 0;
         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]

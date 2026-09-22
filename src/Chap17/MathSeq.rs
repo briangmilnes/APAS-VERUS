@@ -29,6 +29,7 @@ pub mod MathSeq {
 
     //		Section 2. imports
 
+    use std::collections::HashSet;
     use std::fmt::{Debug, Display, Formatter};
     use std::hash::Hash;
     use std::slice::{Iter, IterMut};
@@ -36,13 +37,14 @@ pub mod MathSeq {
 
     use vstd::prelude::*;
     use vstd::hash_map::HashMapWithView;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
 
     use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
-    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::*;
     use crate::vstdplus::seq_set::*;
     use crate::vstdplus::accept::accept;
     use vstd::slice::slice_subrange;
@@ -60,7 +62,7 @@ pub mod MathSeq {
             // Vec
             vstd::std_specs::vec::group_vec_axioms,
             // Set groups
-            vstd::set::group_set_axioms,
+            vstd::set::group_set_lemmas,
             vstd::set_lib::group_set_lib_default,
             vstd::set_lib::group_set_properties,
             // Seq groups
@@ -68,12 +70,10 @@ pub mod MathSeq {
             vstd::prelude::Seq::group_seq_extra,
             vstd::seq_lib::group_seq_lib_default,
             vstd::seq_lib::group_seq_properties,
-            // HashMap
-            vstd::std_specs::hash::axiom_random_state_builds_valid_hashers,
-            vstd::std_specs::hash::axiom_contains_deref_key,
+            // HashMap and HashSet
+            vstd::std_specs::hash::group_hash_axioms,
             // Our groups
             crate::vstdplus::feq::feq::group_feq_axioms,
-            crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
         vstd::seq_lib::group_to_multiset_ensures,
         };
 
@@ -229,11 +229,11 @@ pub mod MathSeq {
 
             /// Borrow iterator over the sequence elements.
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — returns iterator wrapper.
-            fn iter(&self) -> (it: MathSeqIter<'_, T>)
+            fn iter(&self) -> (it: Iter<'_, T>)
                 ensures
-                    it@.0 == 0,
-                    it@.1 == self.spec_seq(),
-                    iter_invariant(&it);
+                    IteratorSpec::remaining(&it) == self.spec_seq().as_ref(),
+                    vstd::std_specs::slice::into_iter_elts(it) == self.spec_seq(),
+                    IteratorSpec::decrease(&it) is Some;
         }
 
     //		Section 9. impls
@@ -381,7 +381,7 @@ pub mod MathSeq {
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass deduplicating with HashSet.
             fn range(&self) -> (range: Vec<T>)
             {
-                let mut seen: HashSetWithViewPlus<T> = HashSetWithViewPlus::new();
+                let mut seen: HashSet<T> = HashSet::new();
                 let mut out: Vec<T> = Vec::new();
                 let mut i: usize = 0;
                 while i < self.data.len()
@@ -390,63 +390,38 @@ pub mod MathSeq {
                     out@.len() <= i,
                     out@.no_duplicates(),
                     valid_key_type::<T>(),
-                    seen@.finite(),
-                    forall|v: T::V| seen@.contains(v) <==> out@.map(|_j: int, t: T| t@).contains(v),
+                    forall|v: T| #[trigger] seen@.contains(v) <==> out@.contains(v),
                     decreases self.data.len() - i,
                 {
                     let x = self.data[i].clone();
                     let not_seen = !seen.contains(&x);
                     if not_seen {
-                        // Veracity: NEEDED proof block
-                        // Veracity: NEEDED proof block
-                        proof {
-
-                            lemma_map_not_contains_implies_all_ne(out@, x@);
-
-
-                            vstd::seq_lib::lemma_no_dup_in_concat(out@, seq![x]);
-                        }
-                        let ghost old_seen = seen@;
                         let ghost old_out = out@;
-                        let ghost old_out_mapped = old_out.map(|_j: int, t: T| t@);
-                        let x_clone = x.clone();
-                        // Veracity: NEEDED proof block
                         // Veracity: NEEDED proof block
                         proof {
-                            lemma_cloned_view_eq(x, x_clone);
+                            assert(!old_out.contains(x));
+                            assert(forall|j: int| 0 <= j < old_out.len() ==> #[trigger] old_out[j] != x);
+                            vstd::seq_lib::lemma_no_dup_in_concat(old_out, seq![x]);
                         }
-                        seen.insert(x_clone);
+                        let x_clone = x.clone();
+                        // The feq broadcast turns `cloned` into equality under `valid_key_type`.
                         // Veracity: NEEDED proof block
+                        proof { assert(cloned(x, x_clone)); }
+                        seen.insert(x_clone);
                         out.push(x);
                         // Veracity: NEEDED proof block
                         proof {
-
-                            let f = |t: T| t@;
-                            old_out.lemma_push_map_commute(f, x);
-                            let new_mapped = out@.map_values(f);
-                            // Veracity: NEEDED assert
-                            // Veracity: NEEDED assert
-                            assert(out@.map(|_j: int, t: T| t@) =~= new_mapped);
-
-                            // Veracity: NEEDED assert
-                            // Veracity: NEEDED assert
-                            assert forall|v: T::V| seen@.contains(v) <==> out@.map(|_j: int, t: T| t@).contains(v) by {
-                                if v == x@ {
-                                } else {
-                                    if old_out_mapped.contains(v) {
-                                        let wit = choose|i: int| 0 <= i < old_out_mapped.len() && old_out_mapped[i] == v;
-                                        // Veracity: NEEDED assert
-                                        // Veracity: NEEDED assert
-                                        assert(new_mapped[wit] == v);
-                                    }
-                                    if new_mapped.contains(v) {
-                                        let wit = choose|i: int| 0 <= i < new_mapped.len() && new_mapped[i] == v;
-                                        if wit < old_out_mapped.len() {
-                                            // Veracity: NEEDED assert
-                                            // Veracity: NEEDED assert
-                                            assert(old_out_mapped[wit] == v);
-                                        } else {
-                                        }
+                            assert(out@ =~= old_out + seq![x]);
+                            assert forall|v: T| #[trigger] seen@.contains(v) <==> out@.contains(v) by {
+                                if v == x {
+                                    assert(out@[old_out.len() as int] == x);
+                                } else if old_out.contains(v) {
+                                    let j = choose|j: int| 0 <= j < old_out.len() && old_out[j] == v;
+                                    assert(out@[j] == v);
+                                } else if out@.contains(v) {
+                                    let j = choose|j: int| 0 <= j < out@.len() && out@[j] == v;
+                                    if j < old_out.len() {
+                                        assert(old_out[j] == v);
                                     }
                                 }
                             }
@@ -545,123 +520,28 @@ pub mod MathSeq {
                 range
             }
 
-            fn iter(&self) -> (it: MathSeqIter<'_, T>)
-                ensures
-                    it@.0 == 0,
-                    it@.1 == self.data@,
-                    iter_invariant(&it),
+            fn iter(&self) -> (it: Iter<'_, T>)
             {
-                MathSeqIter { inner: self.data.iter() }
+                self.data.iter()
             }
         }
 
     //		Section 10. iterators
 
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct MathSeqIter<'a, T> {
-        pub inner: std::slice::Iter<'a, T>,
-    }
-
-    impl<'a, T> View for MathSeqIter<'a, T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(T)]
-    pub struct MathSeqGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
-    impl<'a, T> View for MathSeqGhostIterator<'a, T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    pub open spec fn iter_invariant<'a, T>(it: &MathSeqIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<'a, T> std::iter::Iterator for MathSeqIter<'a, T> {
-        type Item = &'a T;
-
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for MathSeqIter<'a, T> {
-        type GhostIter = MathSeqGhostIterator<'a, T>;
-        open spec fn ghost_iter(&self) -> MathSeqGhostIterator<'a, T> {
-            MathSeqGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for MathSeqGhostIterator<'a, T> {
-        type ExecIter = MathSeqIter<'a, T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &MathSeqIter<'a, T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &MathSeqIter<'a, T>) -> MathSeqGhostIterator<'a, T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
+    // Delegated iteration (iterators_standard.rs): the Vec-backed sequence
+    // returns the std iterators that vstd specifies.
 
     impl<'a, T: StT> std::iter::IntoIterator for &'a MathSeqS<T> {
         type Item = &'a T;
-        type IntoIter = MathSeqIter<'a, T>;
+        type IntoIter = Iter<'a, T>;
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
-                it@.0 == 0,
-                it@.1 == self.data@,
-                iter_invariant(&it),
+                IteratorSpec::remaining(&it) == self.data@.as_ref(),
+                vstd::std_specs::slice::into_iter_elts(it) == self.data@,
+                IteratorSpec::decrease(&it) is Some,
         {
-            MathSeqIter { inner: self.data.iter() }
+            self.data.iter()
         }
     }
 
@@ -670,8 +550,9 @@ pub mod MathSeq {
         type IntoIter = IntoIter<T>;
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
-                it@.0 == 0,
-                it@.1 == self.data@,
+                IteratorSpec::remaining(&it) == self.data@,
+                vstd::std_specs::vec::into_iter_elts(it) == self.data@,
+                IteratorSpec::decrease(&it) is Some,
         {
             self.data.into_iter()
         }
@@ -771,27 +652,4 @@ pub mod MathSeq {
         }
     }
 
-    impl<'a, T: Debug> Debug for MathSeqIter<'a, T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(f, "MathSeqIter({:?})", self.inner)
-        }
-    }
-
-    impl<'a, T> Display for MathSeqIter<'a, T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(f, "MathSeqIter")
-        }
-    }
-
-    impl<'a, T> Debug for MathSeqGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(f, "MathSeqGhostIterator")
-        }
-    }
-
-    impl<'a, T> Display for MathSeqGhostIterator<'a, T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(f, "MathSeqGhostIterator")
-        }
-    }
 }

@@ -1,0 +1,83 @@
+File: src/experiments/prophetic_manual_loop_next.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-prophetic_manual_loop_next/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 14:58:24
+error: invariant not satisfied at end of loop body
+   --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_manual_loop_next.rs:124:17
+    |
+124 |                 0 <= pos <= orig.len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_manual_loop_next.rs:135:32
+    |
+135 |                         assert(orig[old_pos] == *x);
+    |                                ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_manual_loop_next.rs:136:32
+    |
+136 |                         assert(IteratorSpec::remaining(&it).unref() =~= orig.skip(pos));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_manual_loop_next.rs:141:28
+    |
+141 |                     assert(pos == orig.len());
+    |                            ^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+pos == orig.len() 
+
+note: recommendation not met
+   --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_manual_loop_next.rs:135:32
+    |
+135 |                         assert(orig[old_pos] == *x);
+    |                                ^^^^^^^^^^^^^
+    |
+   --> seq.rs:972:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_manual_loop_next.rs:152:13
+    |
+152 |             all_nonzero == forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] a.seq@[i] != 0,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+180 |                     return true;
+    |                     ----------- at this exit
+
+error: postcondition not satisfied
+   --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_manual_loop_next.rs:152:13
+    |
+152 |             all_nonzero == forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] a.seq@[i] != 0,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+176 |                         return false;
+    |                         ------------ at this exit
+
+note: diagnostics via expansion
+   --> /home/milnes/projects/APAS-VERUS/src/experiments/prophetic_manual_loop_next.rs:152:69
+    |
+152 |             all_nonzero == forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] a.seq@[i] != 0,
+    |                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+all_nonzero == (forall |i| (let tmp%% = 0 in let tmp%% = i in let tmp%% = old(a).seq.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==> !(old(a).seq.view().index(i) == 0)))
+|   all_nonzero ==>
+|       forall |i|
+|           let tmp%% = 0 in let tmp%% = i in let tmp%% = old(a).seq.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+|               !(old(a).seq.view().index(i) == 0) ✘
+|   (forall |i| (let tmp%% = 0 in let tmp%% = i in let tmp%% = old(a).seq.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==> !(old(a).seq.view().index(i) == 0))) ==>
+|       all_nonzero ✔
++---
+
+verification results:: 10 verified, 2 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 1s

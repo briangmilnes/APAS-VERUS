@@ -1,0 +1,33 @@
+Standard: partial_eq_eq_clone_standard (deps: deps; extra: none)
+Harness root: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/harness-partial_eq_eq_clone_standard/lib.rs
+Starting verification at 15:53:02
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+  --> /home/milnes/projects/APAS-VERUS/src/Types.rs:82:18
+   |
+82 |         &&& gv.V.finite()
+   |                  ^^^^^^
+   |
+   = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+  --> /home/milnes/projects/APAS-VERUS/src/Types.rs:83:18
+   |
+83 |         &&& gv.A.finite()
+   |                  ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> /home/milnes/projects/APAS-VERUS/src/Types.rs:105:18
+    |
+105 |         &&& gv.V.finite()
+    |                  ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> /home/milnes/projects/APAS-VERUS/src/Types.rs:106:18
+    |
+106 |         &&& gv.A.finite()
+    |                  ^^^^^^
+
+verification results:: 181 verified, 0 errors
+warning: 4 warnings emitted
+
+Elapsed: 1s

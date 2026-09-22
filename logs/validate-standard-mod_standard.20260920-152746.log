@@ -1,0 +1,25 @@
+Standard: mod_standard (deps: none)
+Harness root: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/harness-mod_standard/lib.rs
+Starting verification at 15:27:46
+error[E0599]: no method named `view` found for struct `std::slice::Iter<'a, T>` in the current scope
+  --> /home/milnes/projects/APAS-VERUS/src/standards/mod_standard.rs:67:23
+   |
+67 |             self.inner@
+   |                       ^ method not found in `std::slice::Iter<'a, T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> /home/milnes/projects/APAS-VERUS/src/standards/mod_standard.rs:238:19
+    |
+238 |                 it@.0 == 0,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error[E0599]: no method named `view` found for struct `std::vec::IntoIter<T, A>` in the current scope
+   --> /home/milnes/projects/APAS-VERUS/src/standards/mod_standard.rs:239:19
+    |
+239 |                 it@.1 == self.seq@,
+    |                   ^ method not found in `std::vec::IntoIter<T>`
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 0s

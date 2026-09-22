@@ -1,0 +1,21 @@
+Standard: finite_sets_standard (deps: none)
+Harness root: /tmp/claude-1000/-home-milnes-projects-APAS-VERUS/61aa884e-5b0c-4f05-a65d-ce9376f5ad91/scratchpad/harness-finite_sets_standard/lib.rs
+Starting verification at 15:27:44
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> /home/milnes/projects/APAS-VERUS/src/standards/finite_sets_standard.rs:121:19
+    |
+121 |             self@.finite()
+    |                   ^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> /home/milnes/projects/APAS-VERUS/src/standards/finite_sets_standard.rs:126:23
+    |
+126 |             assert(s@.finite());
+    |                       ^^^^^^
+
+verification results:: 3 verified, 0 errors
+warning: 2 warnings emitted
+
+Elapsed: 1s

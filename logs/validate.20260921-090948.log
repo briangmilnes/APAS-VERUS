@@ -1,0 +1,174 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+note: automatically chose triggers for this expression:
+   --> src/vstdplus/hash_specs_plus.rs:124:22
+    |
+124 |             let k0 = choose|k0: K| m.dom().contains(k0) && k@ == k0@;
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/vstdplus/hash_specs_plus.rs:124:66
+    |
+124 |             let k0 = choose|k0: K| m.dom().contains(k0) && k@ == k0@;
+    |                                                                  ^^^
+
+note: automatically chose triggers for this expression:
+   --> src/vstdplus/hash_specs_plus.rs:144:26
+    |
+144 |                 let k0 = choose|k0: K| m2.dom().contains(k0) && kv == k0@;
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/vstdplus/hash_specs_plus.rs:144:71
+    |
+144 |                 let k0 = choose|k0: K| m2.dom().contains(k0) && kv == k0@;
+    |                                                                       ^^^
+
+note: automatically chose triggers for this expression:
+   --> src/vstdplus/hash_specs_plus.rs:148:26
+    |
+148 |                 let k0 = choose|k0: K| m.dom().contains(k0) && kv == k0@;
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/vstdplus/hash_specs_plus.rs:148:70
+    |
+148 |                 let k0 = choose|k0: K| m.dom().contains(k0) && kv == k0@;
+    |                                                                      ^^^
+
+note: automatically chose triggers for this expression:
+   --> src/vstdplus/hash_specs_plus.rs:156:26
+    |
+156 |                 let kw = choose|kw: K| m2.dom().contains(kw) && kv == kw@;
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/vstdplus/hash_specs_plus.rs:156:71
+    |
+156 |                 let kw = choose|kw: K| m2.dom().contains(kw) && kv == kw@;
+    |                                                                       ^^^
+
+note: automatically chose triggers for this expression:
+   --> src/vstdplus/hash_specs_plus.rs:153:9
+    |
+153 |         assert forall|kv: K::V| lhs.contains_key(kv) implies lhs[kv] == rhs[kv] by {
+    |         ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/vstdplus/hash_specs_plus.rs:153:62
+    |
+153 |         assert forall|kv: K::V| lhs.contains_key(kv) implies lhs[kv] == rhs[kv] by {
+    |                                                              ^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/vstdplus/hash_specs_plus.rs:153:73
+    |
+153 |         assert forall|kv: K::V| lhs.contains_key(kv) implies lhs[kv] == rhs[kv] by {
+    |                                                                         ^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/vstdplus/hash_specs_plus.rs:254:26
+    |
+254 |                 let k0 = choose|k0: K| Set::<K>::empty().contains(k0) && kv == k0@;
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/vstdplus/hash_specs_plus.rs:254:80
+    |
+254 |                 let k0 = choose|k0: K| Set::<K>::empty().contains(k0) && kv == k0@;
+    |                                                                                ^^^
+
+note: automatically chose triggers for this expression:
+   --> src/vstdplus/hash_specs_plus.rs:189:22
+    |
+189 |             let k0 = choose|k0: K| m.dom().contains(k0) && kv == k0@;
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/vstdplus/hash_specs_plus.rs:189:66
+    |
+189 |             let k0 = choose|k0: K| m.dom().contains(k0) && kv == k0@;
+    |                                                                  ^^^
+
+note: automatically chose triggers for this expression:
+   --> src/vstdplus/hash_specs_plus.rs:271:26
+    |
+271 |                 let k0 = choose|k0: K| s.contains(k0) && kv == k0@;
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/vstdplus/hash_specs_plus.rs:271:64
+    |
+271 |                 let k0 = choose|k0: K| s.contains(k0) && kv == k0@;
+    |                                                                ^^^
+
+note: automatically chose triggers for this expression:
+   --> src/vstdplus/hash_specs_plus.rs:269:9
+    |
+269 |         assert forall|kv: K::V| set_key_view(s).contains(kv) == s.map(f).contains(kv) by {
+    |         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/vstdplus/hash_specs_plus.rs:269:33
+    |
+269 |         assert forall|kv: K::V| set_key_view(s).contains(kv) == s.map(f).contains(kv) by {
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/vstdplus/hash_specs_plus.rs:221:22
+    |
+221 |             let k0 = choose|k0: K| s.contains(k0) && k@ == k0@;
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/vstdplus/hash_specs_plus.rs:221:60
+    |
+221 |             let k0 = choose|k0: K| s.contains(k0) && k@ == k0@;
+    |                                                            ^^^
+
+note: automatically chose triggers for this expression:
+   --> src/vstdplus/hash_specs_plus.rs:237:26
+    |
+237 |                 let k0 = choose|k0: K| s.insert(k).contains(k0) && kv == k0@;
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/vstdplus/hash_specs_plus.rs:237:74
+    |
+237 |                 let k0 = choose|k0: K| s.insert(k).contains(k0) && kv == k0@;
+    |                                                                          ^^^
+
+note: automatically chose triggers for this expression:
+   --> src/vstdplus/hash_specs_plus.rs:240:26
+    |
+240 |                 let k0 = choose|k0: K| s.contains(k0) && kv == k0@;
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/vstdplus/hash_specs_plus.rs:240:64
+    |
+240 |                 let k0 = choose|k0: K| s.contains(k0) && kv == k0@;
+    |                                                                ^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/vstdplus/hash_specs_plus.rs:240:26
+    |
+240 |                 let k0 = choose|k0: K| s.contains(k0) && kv == k0@;
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 759 verified, 0 errors
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 673MB, peak z3 RSS: 36MB, min free: 27481MB
+Sampled CPU Usage: rust_verify: 2s, z3 children: 0s

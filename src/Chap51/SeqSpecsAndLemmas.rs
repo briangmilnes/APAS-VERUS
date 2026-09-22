@@ -15,6 +15,8 @@ pub mod SeqSpecsAndLemmas {
 
     use vstd::prelude::*;
 
+    use crate::Types::Types::Pair;
+
     verus! {
 
     //		Section 3. broadcast use
@@ -22,7 +24,7 @@ pub mod SeqSpecsAndLemmas {
 
     broadcast use {
         vstd::seq::group_seq_axioms,
-        vstd::map::group_map_axioms,
+        vstd::map::group_map_lemmas,
     };
 
     //		Section 6. spec fns
@@ -49,12 +51,12 @@ pub mod SeqSpecsAndLemmas {
 
     /// Memo correctness: every cached value equals the spec.
     pub open spec fn spec_memo_correct(
-        memo: Map<(usize, usize), usize>,
+        memo: Map<Pair<usize, usize>, usize>,
         s: Seq<char>,
         t: Seq<char>,
     ) -> bool {
-        forall|a: usize, b: usize| #[trigger] memo.contains_key((a, b)) ==>
-            memo[(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
+        forall|a: usize, b: usize| #[trigger] memo.contains_key(Pair(a, b)) ==>
+            memo[Pair(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
     }
 
     //		Section 7. proof fns/broadcast groups

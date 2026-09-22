@@ -28,7 +28,7 @@ pub mod SubsetSumStEph {
 
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use std::collections::HashMap;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
     use crate::ArraySeqStEphSLit;
@@ -51,7 +51,7 @@ pub mod SubsetSumStEph {
     #[verifier::reject_recursive_types(T)]
     pub struct SubsetSumStEphS<T: StT> {
         pub multiset: ArraySeqStEphS<T>,
-        pub memo: HashMapWithViewPlus<Pair<usize, i32>, bool>,
+        pub memo: HashMap<Pair<usize, i32>, bool>,
     }
 
     //		Section 6. spec fns
@@ -177,7 +177,7 @@ pub mod SubsetSumStEph {
             proof { let _ = Pair_feq_trigger::<usize, i32>(); }
             Self {
                 multiset: ArraySeqStEphS::new(0, T::default()),
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             }
         }
 
@@ -187,7 +187,7 @@ pub mod SubsetSumStEph {
             proof { let _ = Pair_feq_trigger::<usize, i32>(); }
             Self {
                 multiset,
-                memo: HashMapWithViewPlus::new(),
+                memo: HashMap::new(),
             }
         }
 
@@ -256,7 +256,7 @@ pub mod SubsetSumStEph {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             f.debug_struct("SubsetSumStEphS")
                 .field("multiset", &self.multiset)
-                .field("memo", &self.memo.inner)
+                .field("memo", &self.memo)
                 .finish()
         }
     }
@@ -267,7 +267,7 @@ pub mod SubsetSumStEph {
                 f,
                 "SubsetSumStEph(multiset: {}, memo_entries: {})",
                 self.multiset,
-                self.memo.inner.len()
+                self.memo.len()
             )
         }
     }
