@@ -1,0 +1,28 @@
+r212 PTT for Chap17 (isolate: Chap17); tests: ProveMathSeq prove_MathSeq_iters
+Starting PTT at 07:25:39
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 0.64s
+     Running tests/Chap17/ProveMathSeq.rs (target/release/build/rust_verify_test/4978df2c61c0bad4/out/ProveMathSeq-4978df2c61c0bad4)
+
+running 6 tests
+test mathseq_for_borrow_into ... ok
+test mathseq_for_borrow_iter ... ok
+test mathseq_loop_borrow_into ... ok
+test mathseq_loop_consume ... ok
+test mathseq_loop_borrow_iter ... ok
+test mathseq_for_consume ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s
+
+     Running tests/Chap17/prove_MathSeq_iters.rs (target/release/build/rust_verify_test/885506e4c2290e80/out/prove_MathSeq_iters-885506e4c2290e80)
+
+running 3 tests
+test mathseq_iter_consuming ... ok
+test mathseq_iter_nested ... ok
+test mathseq_iter_range ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.58s
+
+cargo test rc: 0
+Elapsed: 4s

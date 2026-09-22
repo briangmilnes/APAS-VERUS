@@ -28,7 +28,7 @@ file, or listed at the end.
 | 4 | 06 | 1037 | 0 | 0 | 275 pass | not registered | 8c5300b01 |
 | 5 | 11 | 651 | 0 | 0 | 40 pass | none | 58e3ecf69 |
 | 6 | 12 | 635 | 0 | 0 | 40 pass | none | 571ed7e81 |
-| 7 | 17 | 645 | 0 | 0 | 40 pass | 2 of 9 (1) | 8c46d30bd |
+| 7 | 17 | 645 | 0 | 0 | 40 pass | 9 pass (r214) | 8c46d30bd |
 | 8 | 18 | 1003 | 0 | 0 | 170 pass | 38 pass | 99d1a9fa7 |
 | 9 | 19 | 824 | 0 | 0 | 156 pass | 23 pass | 7ac57e5c8 |
 | 10 | 21 | 1262 | 0 | 0 | 46 pass | none | 0a048df27 |
@@ -67,8 +67,9 @@ file, or listed at the end.
 | 43 | 65 | 2531 | 0 | 0 | 55 pass | none | r214 Chap65 |
 | 44 | 66 | 805 | 0 | 0 | 40 pass | none | 4aeec3055 |
 
-Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
-and do not compile; see the chapter section.
+Notes: the r213 PTT failures (Chap05, Chap17) and the unregistered Chap06
+PTTs were on the pre-09.13 iterator model; r214 migrated them (see
+"Follow-up (r214)" at the end).
 
 ## Chapter sections
 
@@ -885,3 +886,14 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   `scripts/validate-standard.sh ... ptt` covers only `src/standards/`, so the
   chapter PTTs ran through the real `rust_verify_test` harness with
   `scratch/r212-ptt.sh Chap05`.
+
+### Chap17 PTTs (now passing)
+
+- `ProveMathSeq.rs` (6 tests) used `MathSeqIter`, `iter_invariant` and `it@`.
+  MathSeq delegates to `std::slice::Iter` and `std::vec::IntoIter` over
+  `data`, so the file was rebuilt from the passing Chap18
+  `ProveArraySeqStEph.rs` (the `iterator_ptt_standard.rs` templates, all six
+  patterns) with `orig = a.data@`.
+- `prove_MathSeq_iters.rs`: `mathseq_iter_range` used the old range wrapper
+  field `iter.cur`; it now reads `it.index() <= len`.
+- Result: 2 files, 9 of 9 pass (`logs/ptt-Chap17.20260922-072539.log`).

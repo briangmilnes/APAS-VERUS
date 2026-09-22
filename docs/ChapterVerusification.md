@@ -51,7 +51,7 @@ calls, removed chapter by chapter as each is migrated.
 | 4 | 06 | 05 | 0 | r213: 1037 verified, 0 err, 0 warn; RTT 275 pass | `validate.20260922-050731.log` |
 | 5 | 11 | 02 | 0 | r213: 651 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-050801.log` |
 | 6 | 12 | 02 | 0 | r213: 635 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-050809.log` |
-| 7 | 17 | — | 0 | r213: 645 verified, 0 err, 0 warn; RTT 40 pass; PTT 2/9 | `validate.20260922-050830.log` |
+| 7 | 17 | — | 0 | r213: 645 verified, 0 err, 0 warn; RTT 40 pass; r214 PTT 9 pass | `validate.20260922-050830.log` |
 | 8 | 18 | 02 | 0 | r213: 1003 verified, 0 err, 0 warn; RTT 170, PTT 38 pass | `validate.20260922-050912.log` |
 | 9 | 19 | 02 | 0 | r213: 824 verified, 0 err, 0 warn; RTT 156, PTT 23 pass | `validate.20260922-051000.log` |
 | 10 | 21 | 18, 19 | 0 | r213: 1262 verified, 0 err, 0 warn; RTT 46 pass | `validate.20260922-051054.log` |
