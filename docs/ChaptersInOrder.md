@@ -54,6 +54,7 @@ file, or listed at the end.
 | 30 | 51 | 1333 | 0 | 0 | 109 pass | none | r213 Chap51 |
 | 31 | 52 | 2943 | 0 | 0 | 148 pass | none | r213 Chap52 |
 | 32 | 53 | 2246 | 0 | 0 | 46 pass | none | r213 Chap53 |
+| 33 | 54 | 1277 | 0 | 0 | 53 pass | 8 pass | r213 Chap54 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -594,3 +595,19 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   (`logs/validate.20260922-062132.log`).
 - RTT: 5 targets, 46 tests pass (`logs/rtt.20260922-062156.log`).
 - PTT: none registered.
+
+### Chap54
+
+- Start and end: 1277 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-062218.log`). No source edit; no `finite()`
+  sites; `iterator-upgrade` found no site.
+- RTT: 4 targets, 53 tests pass (`logs/rtt.20260922-062241.log`).
+- PTT: `ProveBFSStEph.rs` and `ProveBFSMtEph.rs` iterated the BFS orders
+  with the removed `ArraySeqStEphIter`/`ArraySeqMtEphIter` and
+  `iter_invariant` (8 failures, `logs/ptt-Chap54.20260922-062241.log`). The
+  eight tests were rewritten by hand on the prophetic `std::slice::Iter`
+  model (loop: `obeys_prophetic_iter_laws`, `remaining(&it).len()` count
+  invariant, `decreases decrease(&it)->0`; for: `it.seq() ==
+  orig.as_ref()`, `count == it.index()`), keeping each test's claim that
+  the count equals `tree.order.spec_len()`. 2 files, 8 tests pass
+  (`logs/ptt-Chap54.20260922-062353.log`).

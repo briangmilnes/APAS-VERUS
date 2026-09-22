@@ -16,6 +16,7 @@ use common::*;
 test_verify_one_file! {
     #[test] chap54_bfsmteph_top_down_loop verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
         use apas_verus::Chap54::BFSMtEph::BFSMtEph::*;
 
@@ -29,28 +30,30 @@ test_verify_one_file! {
             let tree = BFSMtEph::bfs_tree(graph, source);
             let td = tree.top_down_order();
 
-            let mut it: ArraySeqMtEphIter<usize> = td.iter();
-            let ghost iter_seq: Seq<usize> = it@.1;
+            let it0 = td.iter();
+            let ghost orig: Seq<usize> = vstd::std_specs::slice::into_iter_elts(it0);
+            let mut it: std::slice::Iter<'_, usize> = it0;
             let ghost mut count: int = 0;
 
-            #[verifier::loop_isolation(false)]
             loop
                 invariant
-                    count == it@.0,
-                    iter_invariant(&it),
-                    iter_seq == it@.1,
-                    it@.0 <= iter_seq.len(),
-                    iter_seq.len() == tree.order.spec_len(),
-                decreases iter_seq.len() - it@.0,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= count <= orig.len(),
+                    IteratorSpec::remaining(&it).len() == orig.len() - count,
+                    orig.len() == tree.order.spec_len(),
+                decreases IteratorSpec::decrease(&it)->0,
             {
-                if let Some(v) = it.next() {
-                    proof { count = count + 1; }
-                } else {
-                    break;
+                match it.next() {
+                    Some(v) => {
+                        proof { count = count + 1; }
+                    },
+                    None => {
+                        assert(count == orig.len());
+                        break;
+                    },
                 }
             }
-
-            assert(count == iter_seq.len());
         }
     } => Ok(())
 }
@@ -59,6 +62,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] chap54_bfsmteph_bottom_up_loop verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
         use apas_verus::Chap54::BFSMtEph::BFSMtEph::*;
 
@@ -73,28 +77,30 @@ test_verify_one_file! {
             let _n = tree.order.length();
             let bu = tree.bottom_up_order();
 
-            let mut it: ArraySeqMtEphIter<usize> = bu.iter();
-            let ghost iter_seq: Seq<usize> = it@.1;
+            let it0 = bu.iter();
+            let ghost orig: Seq<usize> = vstd::std_specs::slice::into_iter_elts(it0);
+            let mut it: std::slice::Iter<'_, usize> = it0;
             let ghost mut count: int = 0;
 
-            #[verifier::loop_isolation(false)]
             loop
                 invariant
-                    count == it@.0,
-                    iter_invariant(&it),
-                    iter_seq == it@.1,
-                    it@.0 <= iter_seq.len(),
-                    iter_seq.len() == tree.order.spec_len(),
-                decreases iter_seq.len() - it@.0,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= count <= orig.len(),
+                    IteratorSpec::remaining(&it).len() == orig.len() - count,
+                    orig.len() == tree.order.spec_len(),
+                decreases IteratorSpec::decrease(&it)->0,
             {
-                if let Some(v) = it.next() {
-                    proof { count = count + 1; }
-                } else {
-                    break;
+                match it.next() {
+                    Some(v) => {
+                        proof { count = count + 1; }
+                    },
+                    None => {
+                        assert(count == orig.len());
+                        break;
+                    },
                 }
             }
-
-            assert(count == iter_seq.len());
         }
     } => Ok(())
 }
@@ -103,6 +109,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] chap54_bfsmteph_top_down_for verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
         use apas_verus::Chap54::BFSMtEph::BFSMtEph::*;
 
@@ -116,21 +123,20 @@ test_verify_one_file! {
             let tree = BFSMtEph::bfs_tree(graph, source);
             let td = tree.top_down_order();
 
-            let it: ArraySeqMtEphIter<usize> = td.iter();
-            let ghost iter_seq: Seq<usize> = it@.1;
+            let it0 = td.iter();
+            let ghost orig: Seq<usize> = vstd::std_specs::slice::into_iter_elts(it0);
             let ghost mut count: int = 0;
 
-            for v in iter: it
+            for v in it: it0
                 invariant
-                    count == iter.pos,
-                    iter.elements == iter_seq,
-                    iter.pos <= iter_seq.len(),
-                    iter_seq.len() == tree.order.spec_len(),
+                    it.seq() == orig.as_ref(),
+                    count == it.index(),
+                    orig.len() == tree.order.spec_len(),
             {
                 proof { count = count + 1; }
             }
 
-            assert(count == iter_seq.len());
+            assert(count == orig.len());
         }
     } => Ok(())
 }
@@ -139,6 +145,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] chap54_bfsmteph_bottom_up_for verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
         use apas_verus::Chap54::BFSMtEph::BFSMtEph::*;
 
@@ -153,21 +160,20 @@ test_verify_one_file! {
             let _n = tree.order.length();
             let bu = tree.bottom_up_order();
 
-            let it: ArraySeqMtEphIter<usize> = bu.iter();
-            let ghost iter_seq: Seq<usize> = it@.1;
+            let it0 = bu.iter();
+            let ghost orig: Seq<usize> = vstd::std_specs::slice::into_iter_elts(it0);
             let ghost mut count: int = 0;
 
-            for v in iter: it
+            for v in it: it0
                 invariant
-                    count == iter.pos,
-                    iter.elements == iter_seq,
-                    iter.pos <= iter_seq.len(),
-                    iter_seq.len() == tree.order.spec_len(),
+                    it.seq() == orig.as_ref(),
+                    count == it.index(),
+                    orig.len() == tree.order.spec_len(),
             {
                 proof { count = count + 1; }
             }
 
-            assert(count == iter_seq.len());
+            assert(count == orig.len());
         }
     } => Ok(())
 }

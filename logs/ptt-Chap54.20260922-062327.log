@@ -1,0 +1,174 @@
+r212 PTT for Chap54 (isolate: Chap18 Chap19 Chap02 Chap54); tests: ProveBFSStEph ProveBFSMtEph
+Starting PTT at 06:23:27
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 0.62s
+     Running tests/Chap54/ProveBFSMtEph.rs (target/release/build/rust_verify_test/b0a6bdac686c8dad/out/ProveBFSMtEph-b0a6bdac686c8dad)
+
+running 4 tests
+test chap54_bfsmteph_top_down_loop ... FAILED
+test chap54_bfsmteph_top_down_for ... FAILED
+test chap54_bfsmteph_bottom_up_for ... FAILED
+test chap54_bfsmteph_bottom_up_loop ... FAILED
+
+failures:
+
+---- chap54_bfsmteph_top_down_loop stdout ----
+error[E0425]: cannot find type `ArraySeqMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/b0a6bdac686c8dad/test_inputs/ProveBFSMtEph-b0a6bdac686c8dad-chap54_bfsmteph_top_down_loop/test.rs:29:17
+   |
+29 |     let mut it: ArraySeqMtEphIter<usize> = td.iter();
+   |                 ^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap19/ArraySeqMtEph.rs:78:4
+   |
+   = note: similarly named struct `ArraySeqMtEphS` defined here
+help: a struct with a similar name exists
+   |
+29 -     let mut it: ArraySeqMtEphIter<usize> = td.iter();
+29 +     let mut it: ArraySeqMtEphS<usize> = td.iter();
+   |
+
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/b0a6bdac686c8dad/test_inputs/ProveBFSMtEph-b0a6bdac686c8dad-chap54_bfsmteph_top_down_loop/test.rs:37:13
+   |
+37 |             iter_invariant(&it),
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/b0a6bdac686c8dad/test_inputs/ProveBFSMtEph-b0a6bdac686c8dad-chap54_bfsmteph_top_down_loop
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/b0a6bdac686c8dad/test_inputs/ProveBFSMtEph-b0a6bdac686c8dad-chap54_bfsmteph_top_down_loop/test.rs
+
+
+thread 'chap54_bfsmteph_top_down_loop' (2455568) panicked at tests/Chap54/ProveBFSMtEph.rs:16:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- chap54_bfsmteph_top_down_for stdout ----
+error[E0425]: cannot find type `ArraySeqMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/b0a6bdac686c8dad/test_inputs/ProveBFSMtEph-b0a6bdac686c8dad-chap54_bfsmteph_top_down_for/test.rs:29:13
+   |
+29 |     let it: ArraySeqMtEphIter<usize> = td.iter();
+   |             ^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap19/ArraySeqMtEph.rs:78:4
+   |
+   = note: similarly named struct `ArraySeqMtEphS` defined here
+help: a struct with a similar name exists
+   |
+29 -     let it: ArraySeqMtEphIter<usize> = td.iter();
+29 +     let it: ArraySeqMtEphS<usize> = td.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/b0a6bdac686c8dad/test_inputs/ProveBFSMtEph-b0a6bdac686c8dad-chap54_bfsmteph_top_down_for
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/b0a6bdac686c8dad/test_inputs/ProveBFSMtEph-b0a6bdac686c8dad-chap54_bfsmteph_top_down_for/test.rs
+
+
+thread 'chap54_bfsmteph_top_down_for' (2455567) panicked at tests/Chap54/ProveBFSMtEph.rs:103:1:
+Err(_) does not match $result
+
+---- chap54_bfsmteph_bottom_up_for stdout ----
+error[E0425]: cannot find type `ArraySeqMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/b0a6bdac686c8dad/test_inputs/ProveBFSMtEph-b0a6bdac686c8dad-chap54_bfsmteph_bottom_up_for/test.rs:30:13
+   |
+30 |     let it: ArraySeqMtEphIter<usize> = bu.iter();
+   |             ^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap19/ArraySeqMtEph.rs:78:4
+   |
+   = note: similarly named struct `ArraySeqMtEphS` defined here
+help: a struct with a similar name exists
+   |
+30 -     let it: ArraySeqMtEphIter<usize> = bu.iter();
+30 +     let it: ArraySeqMtEphS<usize> = bu.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/b0a6bdac686c8dad/test_inputs/ProveBFSMtEph-b0a6bdac686c8dad-chap54_bfsmteph_bottom_up_for
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/b0a6bdac686c8dad/test_inputs/ProveBFSMtEph-b0a6bdac686c8dad-chap54_bfsmteph_bottom_up_for/test.rs
+
+
+thread 'chap54_bfsmteph_bottom_up_for' (2455565) panicked at tests/Chap54/ProveBFSMtEph.rs:139:1:
+Err(_) does not match $result
+
+---- chap54_bfsmteph_bottom_up_loop stdout ----
+error[E0425]: cannot find type `ArraySeqMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/b0a6bdac686c8dad/test_inputs/ProveBFSMtEph-b0a6bdac686c8dad-chap54_bfsmteph_bottom_up_loop/test.rs:30:17
+   |
+30 |     let mut it: ArraySeqMtEphIter<usize> = bu.iter();
+   |                 ^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap19/ArraySeqMtEph.rs:78:4
+   |
+   = note: similarly named struct `ArraySeqMtEphS` defined here
+help: a struct with a similar name exists
+   |
+30 -     let mut it: ArraySeqMtEphIter<usize> = bu.iter();
+30 +     let mut it: ArraySeqMtEphS<usize> = bu.iter();
+   |
+
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/b0a6bdac686c8dad/test_inputs/ProveBFSMtEph-b0a6bdac686c8dad-chap54_bfsmteph_bottom_up_loop/test.rs:38:13
+   |
+38 |             iter_invariant(&it),
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/b0a6bdac686c8dad/test_inputs/ProveBFSMtEph-b0a6bdac686c8dad-chap54_bfsmteph_bottom_up_loop
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/b0a6bdac686c8dad/test_inputs/ProveBFSMtEph-b0a6bdac686c8dad-chap54_bfsmteph_bottom_up_loop/test.rs
+
+
+thread 'chap54_bfsmteph_bottom_up_loop' (2455566) panicked at tests/Chap54/ProveBFSMtEph.rs:59:1:
+Err(_) does not match $result
+
+
+failures:
+    chap54_bfsmteph_bottom_up_for
+    chap54_bfsmteph_bottom_up_loop
+    chap54_bfsmteph_top_down_for
+    chap54_bfsmteph_top_down_loop
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+error: test failed, to rerun pass `--test ProveBFSMtEph`
+     Running tests/Chap54/ProveBFSStEph.rs (target/release/build/rust_verify_test/aeea6974fb12a865/out/ProveBFSStEph-aeea6974fb12a865)
+
+running 4 tests
+test chap54_bfssteph_top_down_loop ... ok
+test chap54_bfssteph_bottom_up_loop ... ok
+test chap54_bfssteph_bottom_up_for ... ok
+test chap54_bfssteph_top_down_for ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.59s
+
+error: 1 target failed:
+    `--test ProveBFSMtEph`
+cargo test rc: 101
+Elapsed: 6s

@@ -1,0 +1,119 @@
+r212 RTT for Chap54: cargo test --release on 4 targets: TestBFSMtEph TestBFSMtPer TestBFSStEph TestBFSStPer
+Starting RTT at 06:22:30
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.15s
+     Running tests/Chap54/TestBFSMtEph.rs (target/release/deps/TestBFSMtEph-5e6a927d70b65277)
+
+running 13 tests
+test test_cycle ... ok
+test test_line_graph ... ok
+test test_tree_bottom_up_iteration ... ok
+test test_tree_single_vertex ... ok
+test test_tree_line_graph ... ok
+test test_tree_unreachable ... ok
+test test_single_vertex ... ok
+test test_self_loop ... ok
+test test_tree_top_down_iteration ... ok
+test test_unreachable ... ok
+test test_star_graph ... ok
+test test_tree_dag ... ok
+test test_dag ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap54/TestBFSMtPer.rs (target/release/deps/TestBFSMtPer-2339c9e1205e47a5)
+
+running 10 tests
+test test_cycle ... ok
+test test_line_graph ... ok
+test test_single_vertex ... ok
+test test_tree_line_graph ... ok
+test test_tree_single_vertex ... ok
+test test_tree_bottom_up_iteration ... ok
+test test_tree_unreachable ... ok
+test test_tree_top_down_iteration ... ok
+test test_unreachable ... ok
+test test_dag ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap54/TestBFSStEph.rs (target/release/deps/TestBFSStEph-52d63dc83069816b)
+
+running 17 tests
+test test_bfs_cycle ... ok
+test test_bfs_from_middle ... ok
+test test_complete_graph_distances ... ok
+test test_complete_graph ... ok
+test test_cycle ... ok
+test test_dag ... ok
+test test_line_graph ... ok
+test test_self_loop ... ok
+test test_single_vertex ... ok
+test test_star_graph ... ok
+test test_tree_bottom_up_iteration ... ok
+test test_tree_dag ... ok
+test test_tree_line_graph ... ok
+test test_tree_single_vertex ... ok
+test test_tree_top_down_iteration ... ok
+test test_tree_unreachable ... ok
+test test_unreachable ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap54/TestBFSStPer.rs (target/release/deps/TestBFSStPer-6caccb5d6003dfb2)
+
+running 13 tests
+test test_bfs_from_middle ... ok
+test test_cycle ... ok
+test test_line_graph ... ok
+test test_dag ... ok
+test test_single_vertex ... ok
+test test_self_loop ... ok
+test test_star_graph ... ok
+test test_tree_bottom_up_iteration ... ok
+test test_tree_line_graph ... ok
+test test_tree_single_vertex ... ok
+test test_tree_top_down_iteration ... ok
+test test_tree_unreachable ... ok
+test test_unreachable ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 0s

@@ -1,0 +1,27 @@
+r212 PTT for Chap54 (isolate: Chap18 Chap19 Chap02 Chap54); tests: ProveBFSStEph ProveBFSMtEph
+Starting PTT at 06:23:53
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 0.63s
+     Running tests/Chap54/ProveBFSMtEph.rs (target/release/build/rust_verify_test/b0a6bdac686c8dad/out/ProveBFSMtEph-b0a6bdac686c8dad)
+
+running 4 tests
+test chap54_bfsmteph_bottom_up_loop ... ok
+test chap54_bfsmteph_bottom_up_for ... ok
+test chap54_bfsmteph_top_down_loop ... ok
+test chap54_bfsmteph_top_down_for ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.61s
+
+     Running tests/Chap54/ProveBFSStEph.rs (target/release/build/rust_verify_test/aeea6974fb12a865/out/ProveBFSStEph-aeea6974fb12a865)
+
+running 4 tests
+test chap54_bfssteph_bottom_up_loop ... ok
+test chap54_bfssteph_top_down_for ... ok
+test chap54_bfssteph_top_down_loop ... ok
+test chap54_bfssteph_bottom_up_for ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.57s
+
+cargo test rc: 0
+Elapsed: 8s
