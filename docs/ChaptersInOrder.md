@@ -45,6 +45,7 @@ file, or listed at the end.
 | 21 | 40 | 1180 | 0 | 0 | 54 pass | 6 pass | r213 Chap40 |
 | 22 | 41 | 2188 | 0 | 0 | 250 pass | 10 pass | r213 Chap41 |
 | 23 | 42 | 2312 | 0 | 0 | 66 pass | 10 pass | r213 Chap42 |
+| 24 | 43 | 2686 | 0 | 0 | 279 pass | 14 pass | r213 Chap43 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -421,3 +422,57 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   (`logs/validate.20260922-055734.log`).
 - RTT: 4 targets, 66 tests pass (`logs/rtt.20260922-055909.log`).
 - PTT: 3 files, 10 tests pass (`logs/ptt-Chap42.20260922-055910.log`).
+
+### Chap43
+
+- Start: did not compile (`logs/validate.20260922-060637.log`, taken after
+  the iterator and `finite()` edits; before them `Map::new(pred, f)` in
+  `spec_pair_set_to_map`, 367 deprecated `finite()` sites and the removed
+  `Set::lemma_map_finite` stopped the build).
+- Edit class 3, iterator migration: `iterator-upgrade --apply --into-iter c`
+  over the 12 files (110 sites): `OrderedSet*` and `OrderedTable*` `iter()`
+  now return `std::vec::IntoIter` with the prophetic triple (plus the kept
+  length conjunct), `IntoIterator for &Self` impls are form C. By hand:
+  `OrderedTableMtEph::iter` returns `snapshot.into_iter()` (it built the
+  old iterator struct over the same snapshot); the three `AugOrderedTable*`
+  `iter` wrappers get the new signature and ensures, their `IntoIterator`
+  impls form C; `OrderedTableMtPer`'s custom `OrderedTableMtPerIter` wrapper
+  over the removed `OrderedTableStPerIter` is commented out (section 10b
+  note) and `iter()` returns the St iterator. PTTs: the tool left
+  `ProveOrderedSetStEph/StPer`, `ProveOrderedTableStEph/StPer/MtEph/MtPer`
+  on the old model; their loop/for-borrow-iter tests were rewritten on the
+  new model by hand and `ProveOrderedTableMtPer`'s two into-iter tests
+  commented out as form C.
+- Edit class 4, finite-by-type API: `spec_pair_set_to_map`
+  (`OrderedSpecsAndLemmas.rs`) is now `Map::new(s.map(|p| p.0), ...)`, with
+  the broadcast lemma `lemma_pair_set_to_map_dom_contains` (same as Chap41's)
+  in the module-level `broadcast use` of `OrderedTableStEph.rs` and
+  `OrderedTableStPer.rs`, fn-level in `lemma_set_to_map_insert` and
+  `lemma_pair_set_to_map_len`, called in `lemma_map_contains_pair_in_set`.
+  Four asserts earlier marked "Veracity: UNNEEDED" are restored
+  (`OrderedTableStEph` restrict/subtract proofs, `OrderedTableStPer`
+  subtract loop) and one added in `OrderedTableStPer::map`: without the
+  definitional domain they now carry the `sorted@.contains` trigger.
+  Explicit `#[trigger]` added on three quantifiers Verus now flags
+  (`OrderedSetStEph`/`StPer` `to_seq` proofs,
+  `lemma_sorted_keys_pairwise_distinct`).
+- Edit class 1 and 2, `finite()` removal (all 367 sites): conjuncts deleted
+  from `requires`/`ensures`/invariants; `ensures` clauses whose only
+  conjunct was `finite()` deleted (about 60 trait and impl fns, mostly in
+  the `AugOrderedTable*` files, whose trait specs were finite-only); empty
+  `requires` of `AugOrderedTableMtEph::reduce_val` and its two closures
+  deleted. Wf and type-invariant predicates: `spec_orderedtablemtper_wf` now
+  `true`; `OrderedSetMtEph` type invariant `true`; finite conjunct dropped
+  from `spec_orderedtablemteph_wf`, `spec_orderedsetmteph_wf`,
+  `spec_augorderedtablemteph_wf` and the `OrderedTableMtPer` type invariant.
+  BYPASSED: `lemma_pair_set_to_map_dom_finite`, 30 calls removed. Holes
+  removed: three `assume(self@.dom().finite())` (`OrderedTableMtEph`
+  `domain`, `reduce`, `collect`) and one `accept(view.dom().finite())`
+  (`OrderedTableMtEph::clone`).
+- Exec cost: `OrderedTableMtEph::iter` still copies the O(n) snapshot and
+  now wraps it with `Vec::into_iter` (O(1)) instead of a struct literal. No
+  other exec change; no Alg Analysis line changed.
+- End: 2686 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-060943.log`).
+- RTT: 11 targets, 279 tests pass (`logs/rtt.20260922-061245.log`).
+- PTT: 7 files, 14 tests pass (`logs/ptt-Chap43.20260922-061251.log`).

@@ -28,6 +28,8 @@ pub mod AugOrderedTableStEph {
     use std::fmt::{Debug, Display, Formatter, Result};
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Chap42::TableStEph::TableStEph::*;
@@ -108,7 +110,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- delegates to OrderedTableStEph.size
         fn size(&self) -> (count: usize)
             requires self.spec_augorderedtablesteph_wf(),
-            ensures count == self@.dom().len(), self@.dom().finite();
+            ensures count == self@.dom().len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- constructs empty base table + stores reducer
@@ -136,8 +138,7 @@ broadcast use {
                 view_ord_consistent::<Pair<K, V>>(),
                 spec_pair_key_determines_order::<K, V>(),
                 vstd::laws_cmp::obeys_cmp::<K>(),
-                view_ord_consistent::<K>(),
-            ensures tree@.dom().finite();
+                view_ord_consistent::<K>(),;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.find (linear scan)
@@ -163,7 +164,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- compares size to 0
         fn is_empty(&self) -> (is_empty: bool)
             requires self.spec_augorderedtablesteph_wf(),
-            ensures is_empty == self@.dom().is_empty(), self@.dom().finite();
+            ensures is_empty == self@.dom().is_empty();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.insert (linear dup check)
@@ -179,8 +180,7 @@ broadcast use {
                 forall|key: K::V| key != k@ && #[trigger] old(self)@.contains_key(key) ==> self@[key] == old(self)@[key],
                 !old(self)@.contains_key(k@) ==> self@[k@] == v@,
                 old(self)@.contains_key(k@) ==> (exists|old_v: V, r: V|
-                    old_v@ == old(self)@[k@] && combine.ensures((&old_v, &v), r) && self@[k@] == r@),
-                self@.dom().finite();
+                    old_v@ == old(self)@[k@] && combine.ensures((&old_v, &v), r) && self@[k@] == r@),;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.delete (linear scan)
@@ -188,14 +188,13 @@ broadcast use {
             requires
                 old(self).spec_augorderedtablesteph_wf(),
                 obeys_feq_clone::<Pair<K, V>>(),
-                obeys_view_eq::<K>(),
-            ensures self@.dom().finite();
+                obeys_view_eq::<K>(),;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.domain
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             requires self.spec_augorderedtablesteph_wf(), obeys_feq_clone::<K>()
-            ensures domain@ =~= self@.dom(), self@.dom().finite();
+            ensures domain@ =~= self@.dom();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n^2), Span Θ(n^2) -- delegates to OrderedTableStEph.tabulate (sequential insert loop)
@@ -225,7 +224,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- delegates to OrderedTableStEph.map (collect + rebuild)
         fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> (mapped: Self)
             requires self.spec_augorderedtablesteph_wf(), forall|k: &K, v: &V| f.requires((k, v)), obeys_feq_clone::<Pair<K, V>>()
-            ensures mapped@.dom() =~= self@.dom(), mapped@.dom().finite();
+            ensures mapped@.dom() =~= self@.dom();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- delegates to OrderedTableStEph.filter (collect + filter + rebuild)
@@ -238,14 +237,12 @@ broadcast use {
                 filtered@.dom().subset_of(self@.dom()),
                 forall|k: K::V| #[trigger] filtered@.contains_key(k) ==> filtered@[k] == self@[k],
                 forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
-                    ==> #[trigger] filtered@.dom().contains(k),
-                filtered@.dom().finite();
+                    ==> #[trigger] filtered@.dom().contains(k),;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.reduce (linear fold)
         fn reduce<R, G: Fn(R, &K, &V) -> R>(&self, init: R, f: G) -> (reduced: R)
-            requires self.spec_augorderedtablesteph_wf(), forall|r: R, k: &K, v: &V| f.requires((r, k, v))
-            ensures self@.dom().finite();
+            requires self.spec_augorderedtablesteph_wf(), forall|r: R, k: &K, v: &V| f.requires((r, k, v));
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- delegates to OrderedTableStEph.intersection (linear scan)
@@ -262,8 +259,7 @@ broadcast use {
                     (exists|v1: V, v2: V, r: V|
                         v1@ == old(self)@[k] && v2@ == other@[k]
                         && f.ensures((&v1, &v2), r)
-                        && self@[k] == r@),
-                self@.dom().finite();
+                        && self@[k] == r@),;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- delegates to OrderedTableStEph.union (linear merge)
@@ -285,8 +281,7 @@ broadcast use {
                     (exists|v1: V, v2: V, r: V|
                         v1@ == old(self)@[k] && v2@ == other@[k]
                         && f.ensures((&v1, &v2), r)
-                        && self@[k] == r@),
-                self@.dom().finite();
+                        && self@[k] == r@),;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- delegates to OrderedTableStEph.difference (linear scan)
@@ -294,8 +289,7 @@ broadcast use {
             requires old(self).spec_augorderedtablesteph_wf(), other.spec_augorderedtablesteph_wf(),obeys_view_eq::<K>()
             ensures
                 self@.dom() =~= old(self)@.dom().difference(other@.dom()),
-                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
-                self@.dom().finite();
+                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
@@ -303,8 +297,7 @@ broadcast use {
             requires old(self).spec_augorderedtablesteph_wf()
             ensures
                 self@.dom() =~= old(self)@.dom().intersect(keys@),
-                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
-                self@.dom().finite();
+                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
@@ -312,14 +305,13 @@ broadcast use {
             requires old(self).spec_augorderedtablesteph_wf()
             ensures
                 self@.dom() =~= old(self)@.dom().difference(keys@),
-                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
-                self@.dom().finite();
+                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects entries and sorts by key
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             requires self.spec_augorderedtablesteph_wf()
-            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len();
+            ensures collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects then returns first element
@@ -327,7 +319,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_augorderedtablesteph_wf()
             ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
@@ -338,7 +329,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_augorderedtablesteph_wf()
             ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
@@ -349,7 +339,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_augorderedtablesteph_wf()
             ensures
-                self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
@@ -360,7 +349,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_augorderedtablesteph_wf()
             ensures
-                self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
@@ -371,10 +359,6 @@ broadcast use {
             where Self: Sized,
             requires old(self).spec_augorderedtablesteph_wf(), obeys_view_eq::<K>(),
             ensures
-                self@.dom().finite(),
-                old(self)@.dom().finite(),
-                split.0@.dom().finite(),
-                split.2@.dom().finite(),
                 split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],
                 split.1 matches None ==> !old(self)@.contains_key(k@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
@@ -388,15 +372,13 @@ broadcast use {
                 obeys_view_eq::<K>(),
                 old(self)@.dom().len() + other@.dom().len() < usize::MAX,
             ensures
-                self@.dom() =~= old(self)@.dom().union(other@.dom()),
-                self@.dom().finite();
+                self@.dom() =~= old(self)@.dom().union(other@.dom()),;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n + m), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + m), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects then filters by range
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             requires self.spec_augorderedtablesteph_wf(),
             ensures
-                range@.dom().finite(),
                 range@.dom().subset_of(self@.dom());
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
@@ -405,7 +387,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_augorderedtablesteph_wf(), obeys_view_eq::<K>(),
             ensures
-                self@.dom().finite(),
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
@@ -415,7 +396,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_augorderedtablesteph_wf(), obeys_view_eq::<K>(),
             ensures
-                self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,
                 selected matches Some(k) ==> self@.dom().contains(k@),
                 selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
@@ -426,23 +406,17 @@ broadcast use {
             where Self: Sized,
             requires old(self).spec_augorderedtablesteph_wf(),
             ensures
-                self@.dom().finite(),
-                old(self)@.dom().finite(),
-                split.0@.dom().finite(),
-                split.1@.dom().finite(),
                 split.0@.dom().subset_of(old(self)@.dom()),
                 split.1@.dom().subset_of(old(self)@.dom());
         /// - Alg Analysis: APAS (Ch43 Def 43.3): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn reduce_val(&self) -> (reduced: V)
-            requires self.spec_augorderedtablesteph_wf(),
-            ensures self@.dom().finite();
+            requires self.spec_augorderedtablesteph_wf(),;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- get_key_range + calculate_reduction
         fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
-            requires self.spec_augorderedtablesteph_wf(),
-            ensures self@.dom().finite();
+            requires self.spec_augorderedtablesteph_wf(),;
     }
 
     //		Section 9. impls
@@ -461,7 +435,6 @@ broadcast use {
         requires
             forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
             base.spec_orderedtablesteph_wf(),
-        ensures base@.dom().finite(),
     {
         let pairs = base.collect();
         let sz = pairs.length();
@@ -499,7 +472,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
-            ensures count == self@.dom().len(), self@.dom().finite()
+            ensures count == self@.dom().len()
         {
             // Veracity: NEEDED proof block
             proof { lemma_aug_view(self); }
@@ -524,7 +497,6 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
-            ensures tree@.dom().finite()
         {
             let base = OrderedTableStEph::singleton(k, v.clone());
             let r = Self {
@@ -562,12 +534,11 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (is_empty: bool)
-            ensures is_empty == self@.dom().is_empty(), self@.dom().finite()
+            ensures is_empty == self@.dom().is_empty()
         {
             // Veracity: NEEDED proof block
             proof {
                 lemma_aug_view(self);
-                lemma_pair_set_to_map_dom_finite(self.base_table.tree.inner@);
             }
             self.base_table.is_empty()
         }
@@ -585,7 +556,6 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- base delete O(n) + recalculate O(n)
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
-            ensures self@.dom().finite()
         {
             let reducer = &self.reducer;
             let identity = &self.identity;
@@ -656,7 +626,6 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table reduce
         fn reduce<R, G: Fn(R, &K, &V) -> R>(&self, init: R, f: G) -> (reduced: R)
-            ensures self@.dom().finite()
         {
             // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
@@ -720,7 +689,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table collect
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len()
+            ensures collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len()
         {
             // Veracity: NEEDED proof block (speed hint)
             proof { lemma_aug_view(self); }
@@ -731,7 +700,6 @@ broadcast use {
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
             ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t),
@@ -745,7 +713,6 @@ broadcast use {
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
             ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v),
@@ -759,7 +726,6 @@ broadcast use {
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             ensures
-                self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
@@ -773,7 +739,6 @@ broadcast use {
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             ensures
-                self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
@@ -786,10 +751,6 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- base split_key + two recalculations
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             ensures
-                self@.dom().finite(),
-                old(self)@.dom().finite(),
-                split.0@.dom().finite(),
-                split.2@.dom().finite(),
                 split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],
                 split.1 matches None ==> !old(self)@.contains_key(k@),
         {
@@ -848,7 +809,6 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- base get_key_range + recalculate
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures
-                range@.dom().finite(),
                 range@.dom().subset_of(self@.dom()),
         {
             let new_base = self.base_table.get_key_range(k1, k2);
@@ -872,7 +832,6 @@ broadcast use {
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             ensures
-                self@.dom().finite(),
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len(),
         {
@@ -885,7 +844,6 @@ broadcast use {
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
             ensures
-                self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,
                 selected matches Some(k) ==> self@.dom().contains(k@),
                 selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int,
@@ -898,10 +856,6 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- base split_rank_key + two recalculations
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             ensures
-                self@.dom().finite(),
-                old(self)@.dom().finite(),
-                split.0@.dom().finite(),
-                split.1@.dom().finite(),
                 split.0@.dom().subset_of(old(self)@.dom()),
                 split.1@.dom().subset_of(old(self)@.dom()),
         {
@@ -937,26 +891,22 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- returns cached reduction clone
         fn reduce_val(&self) -> (reduced: V)
-            ensures self@.dom().finite()
         {
             // Veracity: NEEDED proof block
             proof {
                 lemma_aug_view(self);
-                // wf chain: aug_wf → orderedtable_wf → bst_wf → tree@.finite().
-                lemma_pair_set_to_map_dom_finite(self.base_table.tree.inner@);
+                // wf chain: aug_wf → orderedtable_wf → bst_wf.
             }
             self.cached_reduction.clone()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- get_key_range + cached clone
         fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
-            ensures self@.dom().finite()
         {
             // Veracity: NEEDED proof block
             proof {
                 lemma_aug_view(self);
-                // wf chain: aug_wf → orderedtable_wf → bst_wf → tree@.finite().
-                lemma_pair_set_to_map_dom_finite(self.base_table.tree.inner@);
+                // wf chain: aug_wf → orderedtable_wf → bst_wf.
             }
             let range_table = self.get_key_range(k1, k2);
             range_table.cached_reduction.clone()
@@ -966,12 +916,12 @@ broadcast use {
 
     impl<K: StT + Ord + TotalOrder, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> AugOrderedTableStEph<K, V, F> {
         /// Returns an iterator over the table entries via the base ordered table.
-        pub fn iter(&self) -> (it: OrderedTableStEphIter<K, V>)
+        pub fn iter(&self) -> (it: std::vec::IntoIter<Pair<K, V>>)
             requires self.spec_augorderedtablesteph_wf()
             ensures
-                it@.0 == 0,
-                it@.1.len() == self.base_table.tree.inner@.len(),
-                iter_invariant(&it),
+                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
+                IteratorSpec::decrease(&it) is Some,
+                vstd::std_specs::vec::into_iter_elts(it).len() == self.base_table.tree.inner@.len(),
         {
             self.base_table.iter()
         }
@@ -980,6 +930,11 @@ broadcast use {
     //		Section 10. iterators
 
 
+    // r213 form C: this `IntoIterator` impl required `requires self.spec_augorderedtablesteph_wf()`,
+    // which verus 0.2026.09.13 rejects on an external trait's impl and no exec check
+    // can establish; use `iter()`, which keeps the requires
+    // (src/experiments/intoiter_form_c_no_impl.rs).
+    /*
     impl<'a, K: StT + Ord + TotalOrder, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> std::iter::IntoIterator for &'a AugOrderedTableStEph<K, V, F> {
         type Item = Pair<K, V>;
         type IntoIter = OrderedTableStEphIter<K, V>;
@@ -993,6 +948,7 @@ broadcast use {
             self.base_table.iter()
         }
     }
+    */
 
     //		Section 12. derive impls in verus!
 

@@ -30,6 +30,8 @@ pub mod OrderedSetMtEph {
     use std::cmp::Ordering::{Less, Greater};
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     use vstd::rwlock::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
@@ -71,7 +73,7 @@ pub mod OrderedSetMtEph {
     // Helper: construct Mt wrapper from St set (used by split/get_range/split_rank/from_seq).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- wraps inner in RwLock
     fn from_st<T: MtKey + TotalOrder + 'static>(inner: OrderedSetStEph<T>) -> (s: OrderedSetMtEph<T>)
-        requires inner.spec_orderedsetsteph_wf(), inner@.finite()
+        requires inner.spec_orderedsetsteph_wf()
         ensures s@ == inner@, s.spec_orderedsetmteph_wf()
     {
         let ghost view = inner@;
@@ -113,7 +115,7 @@ pub mod OrderedSetMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- acquires read lock, delegates to StEph.size
         fn size(&self) -> (count: usize)
             requires self.spec_orderedsetmteph_wf(),
-            ensures count == self@.len(), self@.finite();
+            ensures count == self@.len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- constructs empty StEph + RwLock
@@ -141,12 +143,12 @@ pub mod OrderedSetMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.insert (BST insert)
         fn insert(&mut self, x: T)
             requires old(self)@.len() + 1 < usize::MAX as nat,
-            ensures self@ == old(self)@.insert(x@), self@.finite();
+            ensures self@ == old(self)@.insert(x@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.delete (BST delete)
         fn delete(&mut self, x: &T)
-            ensures self@ == old(self)@.remove(x@), self@.finite();
+            ensures self@ == old(self)@.remove(x@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph.filter
@@ -159,14 +161,13 @@ pub mod OrderedSetMtEph {
                 old(self).spec_orderedsetmteph_wf(),
                 forall|t: &T| #[trigger] f.requires((t,)),
                 forall|x: T, keep: bool|
-                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),
-            ensures self@.finite();
+                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.intersection (sequential)
         fn intersection(&mut self, other: &Self)
             requires old(self).spec_orderedsetmteph_wf(), other.spec_orderedsetmteph_wf(),
-            ensures self@ == old(self)@.intersect(other@), self@.finite();
+            ensures self@ == old(self)@.intersect(other@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.union (sequential)
@@ -175,20 +176,19 @@ pub mod OrderedSetMtEph {
                 old(self).spec_orderedsetmteph_wf(),
                 other.spec_orderedsetmteph_wf(),
                 old(self)@.len() + other@.len() < usize::MAX as nat,
-            ensures self@ == old(self)@.union(other@), self@.finite();
+            ensures self@ == old(self)@.union(other@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.difference (sequential)
         fn difference(&mut self, other: &Self)
             requires old(self).spec_orderedsetmteph_wf(), other.spec_orderedsetmteph_wf(),
-            ensures self@ == old(self)@.difference(other@), self@.finite();
+            ensures self@ == old(self)@.difference(other@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph.to_seq
         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
-                self@.finite(),
                 seq@.to_set() =~= self@,
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
@@ -198,8 +198,7 @@ pub mod OrderedSetMtEph {
             requires
                 seq.spec_len() < usize::MAX as int,
                 vstd::laws_cmp::obeys_cmp::<T>(),
-                view_ord_consistent::<T>(),
-            ensures constructed@.finite();
+                view_ord_consistent::<T>(),;
 
         // Ordering operations (ADT 43.1)
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
@@ -207,7 +206,6 @@ pub mod OrderedSetMtEph {
         fn first(&self) -> (first: Option<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
-                self@.finite(),
                 self@.len() == 0 <==> first matches None,
                 first matches Some(v) ==> self@.contains(v@),
                 first matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==>
@@ -217,7 +215,6 @@ pub mod OrderedSetMtEph {
         fn last(&self) -> (last: Option<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
-                self@.finite(),
                 self@.len() == 0 <==> last matches None,
                 last matches Some(v) ==> self@.contains(v@),
                 last matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==>
@@ -227,7 +224,6 @@ pub mod OrderedSetMtEph {
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
-                self@.finite(),
                 predecessor matches Some(v) ==> self@.contains(v@),
                 predecessor matches Some(v) ==> v.cmp_spec(k) == Less,
                 predecessor matches Some(v) ==> forall|t: T|
@@ -238,7 +234,6 @@ pub mod OrderedSetMtEph {
         fn next(&self, k: &T) -> (successor: Option<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
-                self@.finite(),
                 successor matches Some(v) ==> self@.contains(v@),
                 successor matches Some(v) ==> v.cmp_spec(k) == Greater,
                 successor matches Some(v) ==> forall|t: T|
@@ -250,37 +245,32 @@ pub mod OrderedSetMtEph {
             where Self: Sized
             requires
                 old(self).spec_orderedsetmteph_wf(),
-                old(self)@.len() + 1 < usize::MAX as nat,
-            ensures self@.finite();
+                old(self)@.len() + 1 < usize::MAX as nat,;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn join(&mut self, other: Self)
             requires
                 old(self).spec_orderedsetmteph_wf(),
                 other.spec_orderedsetmteph_wf(),
-                old(self)@.len() + other@.len() < usize::MAX as nat,
-            ensures self@.finite();
+                old(self)@.len() + other@.len() < usize::MAX as nat,;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn get_range(&self, k1: &T, k2: &T) -> (range: Result<Self, ()>)
             requires
                 self.spec_orderedsetmteph_wf(),
             ensures
-                self@.finite(),
                 range matches Ok(r) ==> r.spec_orderedsetmteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn rank(&self, k: &T) -> (rank: usize)
             requires self.spec_orderedsetmteph_wf(),
             ensures
-                self@.finite(),
                 rank <= self@.len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn select(&self, i: usize) -> (selected: Option<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
-                self@.finite(),
                 i >= self@.len() ==> selected matches None,
                 selected matches Some(v) ==> self@.contains(v@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
@@ -289,12 +279,13 @@ pub mod OrderedSetMtEph {
             where Self: Sized
             requires
                 old(self).spec_orderedsetmteph_wf(),
-                old(self)@.len() + 1 < usize::MAX as nat,
-            ensures self@.finite();
+                old(self)@.len() + 1 < usize::MAX as nat,;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn iter(&self) -> (it: OrderedSetMtEphIter<T>)
+        fn iter(&self) -> (it: std::vec::IntoIter<T>)
             requires self.spec_orderedsetmteph_wf()
-            ensures it@.0 == 0, iter_invariant_orderedsetmteph(&it);
+            ensures
+                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
+                IteratorSpec::decrease(&it) is Some;
     }
 
     //		Section 9b. impls
@@ -303,7 +294,7 @@ pub mod OrderedSetMtEph {
     impl<T: MtKey + TotalOrder + 'static> OrderedSetMtEph<T> {
         #[verifier::type_invariant]
         spec fn wf(self) -> bool {
-            self.ghost_locked_set@.finite()
+            true
         }
 
         pub closed spec fn spec_ghost_locked_set(self) -> Set<<T as View>::V> {
@@ -314,8 +305,7 @@ pub mod OrderedSetMtEph {
 
     impl<T: MtKey + TotalOrder + 'static> OrderedSetMtEphTrait<T> for OrderedSetMtEph<T> {
         open spec fn spec_orderedsetmteph_wf(&self) -> bool {
-            self@.finite()
-            && obeys_feq_full::<T>()
+            obeys_feq_full::<T>()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
@@ -505,7 +495,6 @@ pub mod OrderedSetMtEph {
             while i < len
                 invariant
                     inner.spec_orderedsetsteph_wf(),
-                    inner@.finite(),
                     inner@.len() <= i as nat,
                     i <= len,
                     len as int == seq.spec_len(),
@@ -678,118 +667,19 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn iter(&self) -> OrderedSetMtEphIter<T> {
+        fn iter(&self) -> std::vec::IntoIter<T> {
             let seq = self.to_seq();
-            OrderedSetMtEphIter { snapshot: seq.seq, pos: 0 }
+            seq.seq.into_iter()
         }
     }
 
     //		Section 10b. iterators — OrderedSetMtEph
 
-    /// Snapshot iterator over OrderedSetMtEph elements in ascending order.
-    #[verifier::reject_recursive_types(T)]
-    pub struct OrderedSetMtEphIter<T: MtKey + TotalOrder + 'static> {
-        pub snapshot: Vec<T>,
-        pub pos: usize,
-    }
-
-    impl<T: MtKey + TotalOrder + 'static> View for OrderedSetMtEphIter<T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) {
-            (self.pos as int, self.snapshot@)
-        }
-    }
-
-    pub open spec fn iter_invariant_orderedsetmteph<T: MtKey + TotalOrder + 'static>(it: &OrderedSetMtEphIter<T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<T: MtKey + TotalOrder + 'static> std::iter::Iterator for OrderedSetMtEphIter<T> {
-        type Item = T;
-        fn next(&mut self) -> (next: Option<T>)
-            ensures
-                ({
-                    let (old_index, old_seq) = old(self)@;
-                    match next {
-                        None => {
-                            &&& self@ == old(self)@
-                            &&& old_index >= old_seq.len()
-                        },
-                        Some(element) => {
-                            let (new_index, new_seq) = self@;
-                            &&& 0 <= old_index < old_seq.len()
-                            &&& new_seq == old_seq
-                            &&& new_index == old_index + 1
-                            &&& element == old_seq[old_index]
-                        },
-                    }
-                }),
-        {
-            if self.pos >= self.snapshot.len() {
-                None
-            } else {
-                let item = self.snapshot[self.pos].clone();
-                self.pos = self.pos + 1;
-                proof { accept(item == old(self)@.1[old(self)@.0]); }
-                Some(item)
-            }
-        }
-    }
-
-    /// Ghost iterator for for-loop support over OrderedSetMtEphIter.
-    #[verifier::reject_recursive_types(T)]
-    pub struct OrderedSetMtEphGhostIterator<T: MtKey + TotalOrder + 'static> {
-        pub pos: int,
-        pub elements: Seq<T>,
-    }
-
-    impl<T: MtKey + TotalOrder + 'static> View for OrderedSetMtEphGhostIterator<T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    impl<T: MtKey + TotalOrder + 'static> vstd::pervasive::ForLoopGhostIteratorNew for OrderedSetMtEphIter<T> {
-        type GhostIter = OrderedSetMtEphGhostIterator<T>;
-        open spec fn ghost_iter(&self) -> OrderedSetMtEphGhostIterator<T> {
-            OrderedSetMtEphGhostIterator { pos: self@.0, elements: self@.1 }
-        }
-    }
-
-    impl<T: MtKey + TotalOrder + 'static> vstd::pervasive::ForLoopGhostIterator for OrderedSetMtEphGhostIterator<T> {
-        type ExecIter = OrderedSetMtEphIter<T>;
-        type Item = T;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &OrderedSetMtEphIter<T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &OrderedSetMtEphIter<T>) -> OrderedSetMtEphGhostIterator<T> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
+    // r212 form C: this `IntoIterator` impl required `requires self.spec_orderedsetmteph_wf()`, which
+    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
+    // can establish; use `iter()`, which keeps the requires
+    // (src/experiments/intoiter_form_c_no_impl.rs).
+    /*
     impl<'a, T: MtKey + TotalOrder + 'static> std::iter::IntoIterator for &'a OrderedSetMtEph<T> {
         type Item = T;
         type IntoIter = OrderedSetMtEphIter<T>;
@@ -800,6 +690,7 @@ pub mod OrderedSetMtEph {
             self.iter()
         }
     }
+    */
 
     //		Section 11a. top level coarse locking
 

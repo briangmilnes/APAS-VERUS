@@ -1,0 +1,63 @@
+r212 PTT for Chap43 (isolate: Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02); tests: ProveOrderedSetStEph ProveOrderedSetStPer ProveOrderedTableStEph ProveOrderedTableStPer ProveOrderedTableMtEph ProveOrderedSetMtEph ProveOrderedTableMtPer
+Starting PTT at 06:12:52
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 0.99s
+     Running tests/Chap43/ProveOrderedSetMtEph.rs (target/release/build/rust_verify_test/c302a4149f2c8121/out/ProveOrderedSetMtEph-c302a4149f2c8121)
+
+running 2 tests
+test orderedsetmteph_for_borrow_iter ... ok
+test orderedsetmteph_loop_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.77s
+
+     Running tests/Chap43/ProveOrderedSetStEph.rs (target/release/build/rust_verify_test/be247f51abfdc127/out/ProveOrderedSetStEph-be247f51abfdc127)
+
+running 2 tests
+test chap43_orderedsetsteph_loop_borrow_iter ... ok
+test chap43_orderedsetsteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s
+
+     Running tests/Chap43/ProveOrderedSetStPer.rs (target/release/build/rust_verify_test/fa65be074b125552/out/ProveOrderedSetStPer-fa65be074b125552)
+
+running 2 tests
+test chap43_orderedsetstper_for_borrow_iter ... ok
+test chap43_orderedsetstper_loop_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+
+     Running tests/Chap43/ProveOrderedTableMtEph.rs (target/release/build/rust_verify_test/eeb5459ecfc40a42/out/ProveOrderedTableMtEph-eeb5459ecfc40a42)
+
+running 2 tests
+test chap43_orderedtablemteph_loop_borrow_iter ... ok
+test chap43_orderedtablemteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s
+
+     Running tests/Chap43/ProveOrderedTableMtPer.rs (target/release/build/rust_verify_test/11e88225e0509802/out/ProveOrderedTableMtPer-11e88225e0509802)
+
+running 2 tests
+test orderedtablemtper_for_borrow_iter ... ok
+test orderedtablemtper_loop_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.74s
+
+     Running tests/Chap43/ProveOrderedTableStEph.rs (target/release/build/rust_verify_test/d3076d05b920c166/out/ProveOrderedTableStEph-d3076d05b920c166)
+
+running 2 tests
+test chap43_orderedtablesteph_loop_borrow_iter ... ok
+test chap43_orderedtablesteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.79s
+
+     Running tests/Chap43/ProveOrderedTableStPer.rs (target/release/build/rust_verify_test/3ca9c95706d64332/out/ProveOrderedTableStPer-3ca9c95706d64332)
+
+running 2 tests
+test chap43_orderedtablestper_loop_borrow_iter ... ok
+test chap43_orderedtablestper_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+
+cargo test rc: 0
+Elapsed: 21s

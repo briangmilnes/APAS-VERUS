@@ -1,0 +1,597 @@
+r212 PTT for Chap43 (isolate: Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02); tests: ProveOrderedSetStEph ProveOrderedSetStPer ProveOrderedTableStEph ProveOrderedTableStPer ProveOrderedTableMtEph ProveOrderedSetMtEph ProveOrderedTableMtPer
+Starting PTT at 06:10:22
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 1.21s
+     Running tests/Chap43/ProveOrderedSetMtEph.rs (target/release/build/rust_verify_test/c302a4149f2c8121/out/ProveOrderedSetMtEph-c302a4149f2c8121)
+
+running 2 tests
+test orderedsetmteph_for_borrow_iter ... ok
+test orderedsetmteph_loop_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s
+
+     Running tests/Chap43/ProveOrderedSetStEph.rs (target/release/build/rust_verify_test/be247f51abfdc127/out/ProveOrderedSetStEph-be247f51abfdc127)
+
+running 2 tests
+test chap43_orderedsetsteph_for_borrow_iter ... FAILED
+test chap43_orderedsetsteph_loop_borrow_iter ... FAILED
+
+failures:
+
+---- chap43_orderedsetsteph_for_borrow_iter stdout ----
+error[E0425]: cannot find type `OrderedSetStEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/be247f51abfdc127/test_inputs/ProveOrderedSetStEph-be247f51abfdc127-chap43_orderedsetsteph_for_borrow_iter/test.rs:27:13
+   |
+27 |     let it: OrderedSetStEphIter<u64> = s.iter();
+   |             ^^^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap43/OrderedSetStEph.rs:66:4
+   |
+   = note: similarly named struct `OrderedSetStEph` defined here
+help: a struct with a similar name exists
+   |
+27 -     let it: OrderedSetStEphIter<u64> = s.iter();
+27 +     let it: OrderedSetStEph<u64> = s.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/be247f51abfdc127/test_inputs/ProveOrderedSetStEph-be247f51abfdc127-chap43_orderedsetsteph_for_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/be247f51abfdc127/test_inputs/ProveOrderedSetStEph-be247f51abfdc127-chap43_orderedsetsteph_for_borrow_iter/test.rs
+
+
+thread 'chap43_orderedsetsteph_for_borrow_iter' (2432593) panicked at tests/Chap43/ProveOrderedSetStEph.rs:101:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- chap43_orderedsetsteph_loop_borrow_iter stdout ----
+error[E0425]: cannot find type `OrderedSetStEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/be247f51abfdc127/test_inputs/ProveOrderedSetStEph-be247f51abfdc127-chap43_orderedsetsteph_loop_borrow_iter/test.rs:27:17
+   |
+27 |     let mut it: OrderedSetStEphIter<u64> = s.iter();
+   |                 ^^^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap43/OrderedSetStEph.rs:66:4
+   |
+   = note: similarly named struct `OrderedSetStEph` defined here
+help: a struct with a similar name exists
+   |
+27 -     let mut it: OrderedSetStEphIter<u64> = s.iter();
+27 +     let mut it: OrderedSetStEph<u64> = s.iter();
+   |
+
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/be247f51abfdc127/test_inputs/ProveOrderedSetStEph-be247f51abfdc127-chap43_orderedsetsteph_loop_borrow_iter/test.rs:35:13
+   |
+35 |             iter_invariant(&it),
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/be247f51abfdc127/test_inputs/ProveOrderedSetStEph-be247f51abfdc127-chap43_orderedsetsteph_loop_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/be247f51abfdc127/test_inputs/ProveOrderedSetStEph-be247f51abfdc127-chap43_orderedsetsteph_loop_borrow_iter/test.rs
+
+
+thread 'chap43_orderedsetsteph_loop_borrow_iter' (2432594) panicked at tests/Chap43/ProveOrderedSetStEph.rs:15:1:
+Err(_) does not match $result
+
+
+failures:
+    chap43_orderedsetsteph_for_borrow_iter
+    chap43_orderedsetsteph_loop_borrow_iter
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+error: test failed, to rerun pass `--test ProveOrderedSetStEph`
+     Running tests/Chap43/ProveOrderedSetStPer.rs (target/release/build/rust_verify_test/fa65be074b125552/out/ProveOrderedSetStPer-fa65be074b125552)
+
+running 2 tests
+test chap43_orderedsetstper_for_borrow_iter ... FAILED
+test chap43_orderedsetstper_loop_borrow_iter ... FAILED
+
+failures:
+
+---- chap43_orderedsetstper_for_borrow_iter stdout ----
+error[E0425]: cannot find type `OrderedSetStPerIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/fa65be074b125552/test_inputs/ProveOrderedSetStPer-fa65be074b125552-chap43_orderedsetstper_for_borrow_iter/test.rs:27:13
+   |
+27 |     let it: OrderedSetStPerIter<u64> = s.iter();
+   |             ^^^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap43/OrderedSetStPer.rs:68:4
+   |
+   = note: similarly named struct `OrderedSetStPer` defined here
+help: a struct with a similar name exists
+   |
+27 -     let it: OrderedSetStPerIter<u64> = s.iter();
+27 +     let it: OrderedSetStPer<u64> = s.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/fa65be074b125552/test_inputs/ProveOrderedSetStPer-fa65be074b125552-chap43_orderedsetstper_for_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/fa65be074b125552/test_inputs/ProveOrderedSetStPer-fa65be074b125552-chap43_orderedsetstper_for_borrow_iter/test.rs
+
+
+thread 'chap43_orderedsetstper_for_borrow_iter' (2432636) panicked at tests/Chap43/ProveOrderedSetStPer.rs:57:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- chap43_orderedsetstper_loop_borrow_iter stdout ----
+error[E0425]: cannot find type `OrderedSetStPerIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/fa65be074b125552/test_inputs/ProveOrderedSetStPer-fa65be074b125552-chap43_orderedsetstper_loop_borrow_iter/test.rs:27:17
+   |
+27 |     let mut it: OrderedSetStPerIter<u64> = s.iter();
+   |                 ^^^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap43/OrderedSetStPer.rs:68:4
+   |
+   = note: similarly named struct `OrderedSetStPer` defined here
+help: a struct with a similar name exists
+   |
+27 -     let mut it: OrderedSetStPerIter<u64> = s.iter();
+27 +     let mut it: OrderedSetStPer<u64> = s.iter();
+   |
+
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/fa65be074b125552/test_inputs/ProveOrderedSetStPer-fa65be074b125552-chap43_orderedsetstper_loop_borrow_iter/test.rs:35:13
+   |
+35 |             iter_invariant(&it),
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/fa65be074b125552/test_inputs/ProveOrderedSetStPer-fa65be074b125552-chap43_orderedsetstper_loop_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/fa65be074b125552/test_inputs/ProveOrderedSetStPer-fa65be074b125552-chap43_orderedsetstper_loop_borrow_iter/test.rs
+
+
+thread 'chap43_orderedsetstper_loop_borrow_iter' (2432637) panicked at tests/Chap43/ProveOrderedSetStPer.rs:16:1:
+Err(_) does not match $result
+
+
+failures:
+    chap43_orderedsetstper_for_borrow_iter
+    chap43_orderedsetstper_loop_borrow_iter
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+error: test failed, to rerun pass `--test ProveOrderedSetStPer`
+     Running tests/Chap43/ProveOrderedTableMtEph.rs (target/release/build/rust_verify_test/eeb5459ecfc40a42/out/ProveOrderedTableMtEph-eeb5459ecfc40a42)
+
+running 2 tests
+test chap43_orderedtablemteph_for_borrow_iter ... FAILED
+test chap43_orderedtablemteph_loop_borrow_iter ... FAILED
+
+failures:
+
+---- chap43_orderedtablemteph_for_borrow_iter stdout ----
+error[E0425]: cannot find type `OrderedTableMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/eeb5459ecfc40a42/test_inputs/ProveOrderedTableMtEph-eeb5459ecfc40a42-chap43_orderedtablemteph_for_borrow_iter/test.rs:31:13
+   |
+31 |     let it: OrderedTableMtEphIter<u64, u64> = t.iter();
+   |             ^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap43/OrderedTableMtEph.rs:67:4
+   |
+   = note: similarly named struct `OrderedTableMtEphInv` defined here
+help: a struct with a similar name exists
+   |
+31 -     let it: OrderedTableMtEphIter<u64, u64> = t.iter();
+31 +     let it: OrderedTableMtEphInv<u64, u64> = t.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/eeb5459ecfc40a42/test_inputs/ProveOrderedTableMtEph-eeb5459ecfc40a42-chap43_orderedtablemteph_for_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/eeb5459ecfc40a42/test_inputs/ProveOrderedTableMtEph-eeb5459ecfc40a42-chap43_orderedtablemteph_for_borrow_iter/test.rs
+
+
+thread 'chap43_orderedtablemteph_for_borrow_iter' (2432679) panicked at tests/Chap43/ProveOrderedTableMtEph.rs:109:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- chap43_orderedtablemteph_loop_borrow_iter stdout ----
+error[E0425]: cannot find type `OrderedTableMtEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/eeb5459ecfc40a42/test_inputs/ProveOrderedTableMtEph-eeb5459ecfc40a42-chap43_orderedtablemteph_loop_borrow_iter/test.rs:31:17
+   |
+31 |     let mut it: OrderedTableMtEphIter<u64, u64> = t.iter();
+   |                 ^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap43/OrderedTableMtEph.rs:67:4
+   |
+   = note: similarly named struct `OrderedTableMtEphInv` defined here
+help: a struct with a similar name exists
+   |
+31 -     let mut it: OrderedTableMtEphIter<u64, u64> = t.iter();
+31 +     let mut it: OrderedTableMtEphInv<u64, u64> = t.iter();
+   |
+
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/eeb5459ecfc40a42/test_inputs/ProveOrderedTableMtEph-eeb5459ecfc40a42-chap43_orderedtablemteph_loop_borrow_iter/test.rs:39:13
+   |
+39 |             iter_invariant(&it),
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/eeb5459ecfc40a42/test_inputs/ProveOrderedTableMtEph-eeb5459ecfc40a42-chap43_orderedtablemteph_loop_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/eeb5459ecfc40a42/test_inputs/ProveOrderedTableMtEph-eeb5459ecfc40a42-chap43_orderedtablemteph_loop_borrow_iter/test.rs
+
+
+thread 'chap43_orderedtablemteph_loop_borrow_iter' (2432680) panicked at tests/Chap43/ProveOrderedTableMtEph.rs:15:1:
+Err(_) does not match $result
+
+
+failures:
+    chap43_orderedtablemteph_for_borrow_iter
+    chap43_orderedtablemteph_loop_borrow_iter
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+error: test failed, to rerun pass `--test ProveOrderedTableMtEph`
+     Running tests/Chap43/ProveOrderedTableMtPer.rs (target/release/build/rust_verify_test/11e88225e0509802/out/ProveOrderedTableMtPer-11e88225e0509802)
+
+running 4 tests
+test orderedtablemtper_for_borrow_iter ... FAILED
+test orderedtablemtper_loop_borrow_into ... FAILED
+test orderedtablemtper_loop_borrow_iter ... FAILED
+test orderedtablemtper_for_borrow_into ... FAILED
+
+failures:
+
+---- orderedtablemtper_for_borrow_iter stdout ----
+error[E0425]: cannot find type `OrderedTableMtPerIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/11e88225e0509802/test_inputs/ProveOrderedTableMtPer-11e88225e0509802-orderedtablemtper_for_borrow_iter/test.rs:33:13
+   |
+33 |     let it: OrderedTableMtPerIter<u64, u64> = t.iter();
+   |             ^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap43/OrderedTableMtPer.rs:63:4
+   |
+   = note: similarly named struct `OrderedTableMtPerInv` defined here
+help: a struct with a similar name exists
+   |
+33 -     let it: OrderedTableMtPerIter<u64, u64> = t.iter();
+33 +     let it: OrderedTableMtPerInv<u64, u64> = t.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/11e88225e0509802/test_inputs/ProveOrderedTableMtPer-11e88225e0509802-orderedtablemtper_for_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/11e88225e0509802/test_inputs/ProveOrderedTableMtPer-11e88225e0509802-orderedtablemtper_for_borrow_iter/test.rs
+
+
+thread 'orderedtablemtper_for_borrow_iter' (2432723) panicked at tests/Chap43/ProveOrderedTableMtPer.rs:109:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- orderedtablemtper_loop_borrow_into stdout ----
+error[E0425]: cannot find type `OrderedTableMtPerIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/11e88225e0509802/test_inputs/ProveOrderedTableMtPer-11e88225e0509802-orderedtablemtper_loop_borrow_into/test.rs:33:17
+   |
+33 |     let mut it: OrderedTableMtPerIter<u64, u64> = (&t).into_iter();
+   |                 ^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap43/OrderedTableMtPer.rs:63:4
+   |
+   = note: similarly named struct `OrderedTableMtPerInv` defined here
+help: a struct with a similar name exists
+   |
+33 -     let mut it: OrderedTableMtPerIter<u64, u64> = (&t).into_iter();
+33 +     let mut it: OrderedTableMtPerInv<u64, u64> = (&t).into_iter();
+   |
+
+
+error[E0425]: cannot find function `iter_invariant_orderedtablemtper` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/11e88225e0509802/test_inputs/ProveOrderedTableMtPer-11e88225e0509802-orderedtablemtper_loop_borrow_into/test.rs:41:13
+   |
+41 |             iter_invariant_orderedtablemtper(&it),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/11e88225e0509802/test_inputs/ProveOrderedTableMtPer-11e88225e0509802-orderedtablemtper_loop_borrow_into
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/11e88225e0509802/test_inputs/ProveOrderedTableMtPer-11e88225e0509802-orderedtablemtper_loop_borrow_into/test.rs
+
+
+thread 'orderedtablemtper_loop_borrow_into' (2432724) panicked at tests/Chap43/ProveOrderedTableMtPer.rs:62:1:
+Err(_) does not match $result
+
+---- orderedtablemtper_loop_borrow_iter stdout ----
+error[E0425]: cannot find type `OrderedTableMtPerIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/11e88225e0509802/test_inputs/ProveOrderedTableMtPer-11e88225e0509802-orderedtablemtper_loop_borrow_iter/test.rs:33:17
+   |
+33 |     let mut it: OrderedTableMtPerIter<u64, u64> = t.iter();
+   |                 ^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap43/OrderedTableMtPer.rs:63:4
+   |
+   = note: similarly named struct `OrderedTableMtPerInv` defined here
+help: a struct with a similar name exists
+   |
+33 -     let mut it: OrderedTableMtPerIter<u64, u64> = t.iter();
+33 +     let mut it: OrderedTableMtPerInv<u64, u64> = t.iter();
+   |
+
+
+error[E0425]: cannot find function `iter_invariant_orderedtablemtper` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/11e88225e0509802/test_inputs/ProveOrderedTableMtPer-11e88225e0509802-orderedtablemtper_loop_borrow_iter/test.rs:41:13
+   |
+41 |             iter_invariant_orderedtablemtper(&it),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/11e88225e0509802/test_inputs/ProveOrderedTableMtPer-11e88225e0509802-orderedtablemtper_loop_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/11e88225e0509802/test_inputs/ProveOrderedTableMtPer-11e88225e0509802-orderedtablemtper_loop_borrow_iter/test.rs
+
+
+thread 'orderedtablemtper_loop_borrow_iter' (2432725) panicked at tests/Chap43/ProveOrderedTableMtPer.rs:15:1:
+Err(_) does not match $result
+
+---- orderedtablemtper_for_borrow_into stdout ----
+error[E0425]: cannot find type `OrderedTableMtPerIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/11e88225e0509802/test_inputs/ProveOrderedTableMtPer-11e88225e0509802-orderedtablemtper_for_borrow_into/test.rs:33:13
+   |
+33 |     let it: OrderedTableMtPerIter<u64, u64> = (&t).into_iter();
+   |             ^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap43/OrderedTableMtPer.rs:63:4
+   |
+   = note: similarly named struct `OrderedTableMtPerInv` defined here
+help: a struct with a similar name exists
+   |
+33 -     let it: OrderedTableMtPerIter<u64, u64> = (&t).into_iter();
+33 +     let it: OrderedTableMtPerInv<u64, u64> = (&t).into_iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/11e88225e0509802/test_inputs/ProveOrderedTableMtPer-11e88225e0509802-orderedtablemtper_for_borrow_into
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/11e88225e0509802/test_inputs/ProveOrderedTableMtPer-11e88225e0509802-orderedtablemtper_for_borrow_into/test.rs
+
+
+thread 'orderedtablemtper_for_borrow_into' (2432722) panicked at tests/Chap43/ProveOrderedTableMtPer.rs:148:1:
+Err(_) does not match $result
+
+
+failures:
+    orderedtablemtper_for_borrow_into
+    orderedtablemtper_for_borrow_iter
+    orderedtablemtper_loop_borrow_into
+    orderedtablemtper_loop_borrow_iter
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+error: test failed, to rerun pass `--test ProveOrderedTableMtPer`
+     Running tests/Chap43/ProveOrderedTableStEph.rs (target/release/build/rust_verify_test/d3076d05b920c166/out/ProveOrderedTableStEph-d3076d05b920c166)
+
+running 2 tests
+test chap43_orderedtablesteph_loop_borrow_iter ... FAILED
+test chap43_orderedtablesteph_for_borrow_iter ... FAILED
+
+failures:
+
+---- chap43_orderedtablesteph_loop_borrow_iter stdout ----
+error[E0425]: cannot find type `OrderedTableStEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/d3076d05b920c166/test_inputs/ProveOrderedTableStEph-d3076d05b920c166-chap43_orderedtablesteph_loop_borrow_iter/test.rs:36:17
+   |
+36 |     let mut it: OrderedTableStEphIter<u64, u64> = t.iter();
+   |                 ^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap43/OrderedTableStEph.rs:69:4
+   |
+   = note: similarly named struct `OrderedTableStEph` defined here
+help: a struct with a similar name exists
+   |
+36 -     let mut it: OrderedTableStEphIter<u64, u64> = t.iter();
+36 +     let mut it: OrderedTableStEph<u64, u64> = t.iter();
+   |
+
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/d3076d05b920c166/test_inputs/ProveOrderedTableStEph-d3076d05b920c166-chap43_orderedtablesteph_loop_borrow_iter/test.rs:44:13
+   |
+44 |             iter_invariant(&it),
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/d3076d05b920c166/test_inputs/ProveOrderedTableStEph-d3076d05b920c166-chap43_orderedtablesteph_loop_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/d3076d05b920c166/test_inputs/ProveOrderedTableStEph-d3076d05b920c166-chap43_orderedtablesteph_loop_borrow_iter/test.rs
+
+
+thread 'chap43_orderedtablesteph_loop_borrow_iter' (2432808) panicked at tests/Chap43/ProveOrderedTableStEph.rs:15:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- chap43_orderedtablesteph_for_borrow_iter stdout ----
+error[E0425]: cannot find type `OrderedTableStEphIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/d3076d05b920c166/test_inputs/ProveOrderedTableStEph-d3076d05b920c166-chap43_orderedtablesteph_for_borrow_iter/test.rs:36:13
+   |
+36 |     let it: OrderedTableStEphIter<u64, u64> = t.iter();
+   |             ^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap43/OrderedTableStEph.rs:69:4
+   |
+   = note: similarly named struct `OrderedTableStEph` defined here
+help: a struct with a similar name exists
+   |
+36 -     let it: OrderedTableStEphIter<u64, u64> = t.iter();
+36 +     let it: OrderedTableStEph<u64, u64> = t.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/d3076d05b920c166/test_inputs/ProveOrderedTableStEph-d3076d05b920c166-chap43_orderedtablesteph_for_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/d3076d05b920c166/test_inputs/ProveOrderedTableStEph-d3076d05b920c166-chap43_orderedtablesteph_for_borrow_iter/test.rs
+
+
+thread 'chap43_orderedtablesteph_for_borrow_iter' (2432807) panicked at tests/Chap43/ProveOrderedTableStEph.rs:119:1:
+Err(_) does not match $result
+
+
+failures:
+    chap43_orderedtablesteph_for_borrow_iter
+    chap43_orderedtablesteph_loop_borrow_iter
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+error: test failed, to rerun pass `--test ProveOrderedTableStEph`
+     Running tests/Chap43/ProveOrderedTableStPer.rs (target/release/build/rust_verify_test/3ca9c95706d64332/out/ProveOrderedTableStPer-3ca9c95706d64332)
+
+running 2 tests
+test chap43_orderedtablestper_for_borrow_iter ... FAILED
+test chap43_orderedtablestper_loop_borrow_iter ... FAILED
+
+failures:
+
+---- chap43_orderedtablestper_for_borrow_iter stdout ----
+error[E0425]: cannot find type `OrderedTableStPerIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/3ca9c95706d64332/test_inputs/ProveOrderedTableStPer-3ca9c95706d64332-chap43_orderedtablestper_for_borrow_iter/test.rs:36:13
+   |
+36 |     let it: OrderedTableStPerIter<u64, u64> = t.iter();
+   |             ^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap43/OrderedTableStPer.rs:71:4
+   |
+   = note: similarly named struct `OrderedTableStPer` defined here
+help: a struct with a similar name exists
+   |
+36 -     let it: OrderedTableStPerIter<u64, u64> = t.iter();
+36 +     let it: OrderedTableStPer<u64, u64> = t.iter();
+   |
+
+
+error: aborting due to 1 previous error
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/3ca9c95706d64332/test_inputs/ProveOrderedTableStPer-3ca9c95706d64332-chap43_orderedtablestper_for_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/3ca9c95706d64332/test_inputs/ProveOrderedTableStPer-3ca9c95706d64332-chap43_orderedtablestper_for_borrow_iter/test.rs
+
+
+thread 'chap43_orderedtablestper_for_borrow_iter' (2432850) panicked at tests/Chap43/ProveOrderedTableStPer.rs:119:1:
+Err(_) does not match $result
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- chap43_orderedtablestper_loop_borrow_iter stdout ----
+error[E0425]: cannot find type `OrderedTableStPerIter` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/3ca9c95706d64332/test_inputs/ProveOrderedTableStPer-3ca9c95706d64332-chap43_orderedtablestper_loop_borrow_iter/test.rs:36:17
+   |
+36 |     let mut it: OrderedTableStPerIter<u64, u64> = t.iter();
+   |                 ^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> src/Chap43/OrderedTableStPer.rs:71:4
+   |
+   = note: similarly named struct `OrderedTableStPer` defined here
+help: a struct with a similar name exists
+   |
+36 -     let mut it: OrderedTableStPerIter<u64, u64> = t.iter();
+36 +     let mut it: OrderedTableStPer<u64, u64> = t.iter();
+   |
+
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+  --> /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/3ca9c95706d64332/test_inputs/ProveOrderedTableStPer-3ca9c95706d64332-chap43_orderedtablestper_loop_borrow_iter/test.rs:44:13
+   |
+44 |             iter_invariant(&it),
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+
+error: aborting due to 2 previous errors
+
+
+For more information about this error, try `rustc --explain E0425`.
+
+the input directory is /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/3ca9c95706d64332/test_inputs/ProveOrderedTableStPer-3ca9c95706d64332-chap43_orderedtablestper_loop_borrow_iter
+rerun this test with:
+verus --crate-type=lib  /home/milnes/projects/APAS-VERUS/rust_verify_test/target/release/build/rust_verify_test/3ca9c95706d64332/test_inputs/ProveOrderedTableStPer-3ca9c95706d64332-chap43_orderedtablestper_loop_borrow_iter/test.rs
+
+
+thread 'chap43_orderedtablestper_loop_borrow_iter' (2432851) panicked at tests/Chap43/ProveOrderedTableStPer.rs:15:1:
+Err(_) does not match $result
+
+
+failures:
+    chap43_orderedtablestper_for_borrow_iter
+    chap43_orderedtablestper_loop_borrow_iter
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+error: test failed, to rerun pass `--test ProveOrderedTableStPer`
+error: 6 targets failed:
+    `--test ProveOrderedSetStEph`
+    `--test ProveOrderedSetStPer`
+    `--test ProveOrderedTableMtEph`
+    `--test ProveOrderedTableMtPer`
+    `--test ProveOrderedTableStEph`
+    `--test ProveOrderedTableStPer`
+cargo test rc: 101
+Elapsed: 17s

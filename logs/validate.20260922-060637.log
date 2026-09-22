@@ -1,0 +1,202 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error[E0422]: cannot find struct, variant or union type `OrderedTableMtEphIter` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:812:13
+    |
+ 67 |     pub struct OrderedTableMtEphInv;
+    |     -------------------------------- similarly named struct `OrderedTableMtEphInv` defined here
+...
+812 |             OrderedTableMtEphIter { snapshot, pos: 0, _phantom: core::marker::PhantomData }
+    |             ^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+812 -             OrderedTableMtEphIter { snapshot, pos: 0, _phantom: core::marker::PhantomData }
+812 +             OrderedTableMtEphInv { snapshot, pos: 0, _phantom: core::marker::PhantomData }
+    |
+
+error[E0425]: cannot find type `OrderedTableStEphIter` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:917:36
+    |
+917 |         pub fn iter(&self) -> (it: OrderedTableStEphIter<K, V>)
+    |                                    ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:68:5
+    |
+ 68 |     pub struct OrderedTableStEph<K: StT + Ord + TotalOrder, V: StT + Ord> {
+    |     --------------------------------------------------------------------- similarly named struct `OrderedTableStEph` defined here
+    |
+help: a struct with a similar name exists
+    |
+917 -         pub fn iter(&self) -> (it: OrderedTableStEphIter<K, V>)
+917 +         pub fn iter(&self) -> (it: OrderedTableStEph<K, V>)
+    |
+
+error[E0425]: cannot find type `OrderedTableStEphIter` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:933:25
+    |
+933 |         type IntoIter = OrderedTableStEphIter<K, V>;
+    |                         ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:68:5
+    |
+ 68 |     pub struct OrderedTableStEph<K: StT + Ord + TotalOrder, V: StT + Ord> {
+    |     --------------------------------------------------------------------- similarly named struct `OrderedTableStEph` defined here
+    |
+help: a struct with a similar name exists
+    |
+933 -         type IntoIter = OrderedTableStEphIter<K, V>;
+933 +         type IntoIter = OrderedTableStEph<K, V>;
+    |
+
+error[E0425]: cannot find type `OrderedTableMtEphIter` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:377:39
+    |
+377 |         fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+    |                                       ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtEph.rs:67:5
+    |
+ 67 |     pub struct OrderedTableMtEphInv;
+    |     -------------------------------- similarly named struct `OrderedTableMtEphInv` defined here
+    |
+help: a struct with a similar name exists
+    |
+377 -         fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+377 +         fn iter<'a>(&'a self) -> (it: OrderedTableMtEphInv<'a, K, V>)
+    |
+
+error[E0425]: cannot find type `OrderedTableMtEphIter` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:865:39
+    |
+865 |         fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+    |                                       ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtEph.rs:67:5
+    |
+ 67 |     pub struct OrderedTableMtEphInv;
+    |     -------------------------------- similarly named struct `OrderedTableMtEphInv` defined here
+    |
+help: a struct with a similar name exists
+    |
+865 -         fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+865 +         fn iter<'a>(&'a self) -> (it: OrderedTableMtEphInv<'a, K, V>)
+    |
+
+error[E0425]: cannot find type `OrderedTableMtEphIter` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:876:25
+    |
+876 |         type IntoIter = OrderedTableMtEphIter<'a, K, V>;
+    |                         ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtEph.rs:67:5
+    |
+ 67 |     pub struct OrderedTableMtEphInv;
+    |     -------------------------------- similarly named struct `OrderedTableMtEphInv` defined here
+    |
+help: a struct with a similar name exists
+    |
+876 -         type IntoIter = OrderedTableMtEphIter<'a, K, V>;
+876 +         type IntoIter = OrderedTableMtEphInv<'a, K, V>;
+    |
+
+error[E0425]: cannot find type `OrderedTableMtEphIter` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:878:36
+    |
+878 |         fn into_iter(self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+    |                                    ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtEph.rs:67:5
+    |
+ 67 |     pub struct OrderedTableMtEphInv;
+    |     -------------------------------- similarly named struct `OrderedTableMtEphInv` defined here
+    |
+help: a struct with a similar name exists
+    |
+878 -         fn into_iter(self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+878 +         fn into_iter(self) -> (it: OrderedTableMtEphInv<'a, K, V>)
+    |
+
+error[E0425]: cannot find type `OrderedTableStPerIter` in this scope
+   --> src/Chap43/AugOrderedTableStPer.rs:988:36
+    |
+988 |         pub fn iter(&self) -> (it: OrderedTableStPerIter<K, V>)
+    |                                    ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:70:5
+    |
+ 70 |     pub struct OrderedTableStPer<K: StT + Ord + TotalOrder, V: StT + Ord> {
+    |     --------------------------------------------------------------------- similarly named struct `OrderedTableStPer` defined here
+    |
+help: a struct with a similar name exists
+    |
+988 -         pub fn iter(&self) -> (it: OrderedTableStPerIter<K, V>)
+988 +         pub fn iter(&self) -> (it: OrderedTableStPer<K, V>)
+    |
+
+error[E0425]: cannot find type `OrderedTableStPerIter` in this scope
+    --> src/Chap43/AugOrderedTableStPer.rs:1004:25
+     |
+1004 |         type IntoIter = OrderedTableStPerIter<K, V>;
+     |                         ^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedTableStPer.rs:70:5
+     |
+  70 |     pub struct OrderedTableStPer<K: StT + Ord + TotalOrder, V: StT + Ord> {
+     |     --------------------------------------------------------------------- similarly named struct `OrderedTableStPer` defined here
+     |
+help: a struct with a similar name exists
+     |
+1004 -         type IntoIter = OrderedTableStPerIter<K, V>;
+1004 +         type IntoIter = OrderedTableStPer<K, V>;
+     |
+
+error[E0425]: cannot find type `OrderedTableStPerIter` in this scope
+   --> src/Chap43/OrderedTableMtPer.rs:766:20
+    |
+766 |         pub inner: OrderedTableStPerIter<K, V>,
+    |                    ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:922:17
+    |
+922 |                 iter_invariant(&it),
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:939:17
+    |
+939 |                 iter_invariant(&it),
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:381:17
+    |
+381 |                 iter_invariant(&it);
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:882:17
+    |
+882 |                 iter_invariant(&it),
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+   --> src/Chap43/AugOrderedTableStPer.rs:993:17
+    |
+993 |                 iter_invariant(&it),
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+    --> src/Chap43/AugOrderedTableStPer.rs:1011:17
+     |
+1011 |                 iter_invariant(&it),
+     |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 16 previous errors
+
+Some errors have detailed explanations: E0422, E0425.
+For more information about an error, try `rustc --explain E0422`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 438MB, peak z3 RSS: 0MB, min free: 25986MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

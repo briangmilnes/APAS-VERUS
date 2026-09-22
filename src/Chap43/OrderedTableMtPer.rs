@@ -28,6 +28,8 @@ pub mod OrderedTableMtPer {
     //		Section 2. imports
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     use vstd::rwlock::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap43::OrderedSetMtEph::OrderedSetMtEph::*;
@@ -76,7 +78,6 @@ pub mod OrderedTableMtPer {
         let ghost view = inner@;
         // Veracity: NEEDED proof block
         proof {
-            lemma_pair_set_to_map_dom_finite(inner.tree.inner@);
         }
         OrderedTableMtPer {
             locked_table: RwLock::new(inner, Ghost(OrderedTableMtPerInv { expected_view: view })),
@@ -115,7 +116,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- acquires read lock, delegates to StPer.size
         fn size(&self) -> (count: usize)
             requires self.spec_orderedtablemtper_wf(),
-            ensures count == self@.dom().len(), self@.dom().finite();
+            ensures count == self@.dom().len();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -191,8 +192,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.domain
         fn domain(&self) -> (domain: OrderedSetMtEph<K>)
-            requires self.spec_orderedtablemtper_wf(), obeys_feq_clone::<K>()
-            ensures self@.dom().finite();
+            requires self.spec_orderedtablemtper_wf(), obeys_feq_clone::<K>();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
@@ -212,8 +212,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.filter
         fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (filtered: Self)
-            requires forall|p: &Pair<K, V>| f.requires((p,))
-            ensures filtered@.dom().finite();
+            requires forall|p: &Pair<K, V>| f.requires((p,));
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
@@ -222,7 +221,6 @@ pub mod OrderedTableMtPer {
             where K: TotalOrder
             requires self.spec_orderedtablemtper_wf()
             ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
@@ -234,7 +232,6 @@ pub mod OrderedTableMtPer {
             where K: TotalOrder
             requires self.spec_orderedtablemtper_wf()
             ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
@@ -246,7 +243,6 @@ pub mod OrderedTableMtPer {
             where K: TotalOrder
             requires self.spec_orderedtablemtper_wf()
             ensures
-                self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
@@ -258,7 +254,6 @@ pub mod OrderedTableMtPer {
             where K: TotalOrder
             requires self.spec_orderedtablemtper_wf()
             ensures
-                self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
@@ -268,8 +263,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + partition)
         fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
-            requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
-            ensures self@.dom().finite();
+            requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
@@ -280,15 +274,13 @@ pub mod OrderedTableMtPer {
                 other.spec_orderedtablemtper_wf(),
                 obeys_feq_clone::<K>(),
                 obeys_view_eq::<K>(),
-                self@.dom().len() + other@.dom().len() < usize::MAX,
-            ensures joined@.dom().finite();
+                self@.dom().len() + other@.dom().len() < usize::MAX,;
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n + m), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + m), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + filter)
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
-            requires self.spec_orderedtablemtper_wf()
-            ensures range@.dom().finite();
+            requires self.spec_orderedtablemtper_wf();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
@@ -297,7 +289,6 @@ pub mod OrderedTableMtPer {
             where K: TotalOrder
             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
             ensures
-                self@.dom().finite(),
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
 
@@ -308,7 +299,6 @@ pub mod OrderedTableMtPer {
             where K: TotalOrder
             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
             ensures
-                self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,
                 selected matches Some(k) ==> self@.dom().contains(k@),
                 selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
@@ -318,13 +308,14 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + partition)
         fn split_rank_key(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
-            requires self.spec_orderedtablemtper_wf()
-            ensures self@.dom().finite();
+            requires self.spec_orderedtablemtper_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- acquires read lock, calls StPer iter, releases lock
-        fn iter(&self) -> (it: OrderedTableMtPerIter<K, V>)
+        fn iter(&self) -> (it: std::vec::IntoIter<Pair<K, V>>)
             requires self.spec_orderedtablemtper_wf()
-            ensures it@.0 == 0, iter_invariant_orderedtablemtper(&it);
+            ensures
+                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
+                IteratorSpec::decrease(&it) is Some;
     }
 
     //		Section 9b. impls
@@ -333,8 +324,7 @@ pub mod OrderedTableMtPer {
     impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPer<K, V> {
         #[verifier::type_invariant]
         spec fn inv(self) -> bool {
-            self.ghost_locked_table@.dom().finite()
-            && self.locked_table.pred().expected_view == self.ghost_locked_table@
+            self.locked_table.pred().expected_view == self.ghost_locked_table@
         }
 
         pub closed spec fn spec_ghost_locked_table(self) -> Map<K::V, V::V> {
@@ -345,7 +335,7 @@ pub mod OrderedTableMtPer {
 
     impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
         open spec fn spec_orderedtablemtper_wf(&self) -> bool {
-            self@.dom().finite()
+            true
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
@@ -491,7 +481,6 @@ pub mod OrderedTableMtPer {
                     i <= len,
                     len as nat == entries.spec_seq().len(),
                     len < usize::MAX,
-                    result@.finite(),
                     result@.len() <= i as nat,
                 decreases len - i,
             // Veracity: NEEDED proof block
@@ -574,7 +563,6 @@ pub mod OrderedTableMtPer {
                 invariant
                     entries.spec_avltreeseqstper_wf(),
                     result.spec_orderedtablestper_wf(),
-                    result@.dom().finite(),
                     result@.dom().len() <= i as nat,
                     i <= len,
                     len as nat == entries.spec_seq().len(),
@@ -754,19 +742,26 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- acquires read lock, snapshots via StPer iter, releases lock
-        fn iter(&self) -> (it: OrderedTableMtPerIter<K, V>) {
+        fn iter(&self) -> (it: std::vec::IntoIter<Pair<K, V>>) {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             proof { assert(inner.spec_orderedtablestper_wf()); }
             let st_iter = inner.iter();
             read_handle.release_read();
-            OrderedTableMtPerIter { inner: st_iter }
+            st_iter
         }
     }
 
     //		Section 10b. iterators
 
+    // r213: `OrderedTableStPer::iter` now returns the prophetic
+    // `std::vec::IntoIter<Pair<K, V>>` (iterator-upgrade), so the
+    // `OrderedTableMtPerIter` wrapper over the removed `OrderedTableStPerIter`
+    // is replaced by that iterator; `iter()` returns it directly. The
+    // `IntoIterator` impl is form C (its `requires` cannot be checked on an
+    // external trait's impl; src/experiments/intoiter_form_c_no_impl.rs).
+    /*
 
     pub open spec fn iter_invariant_orderedtablemtper<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static>(
         it: &OrderedTableMtPerIter<K, V>
@@ -812,61 +807,6 @@ pub mod OrderedTableMtPer {
         }
     }
 
-    /// Ghost iterator for for-loop support over OrderedTableMtPerIter.
-    #[verifier::reject_recursive_types(K)]
-    #[verifier::reject_recursive_types(V)]
-    pub struct OrderedTableMtPerGhostIterator<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> {
-        pub pos: int,
-        pub elements: Seq<Pair<K, V>>,
-    }
-
-    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPerGhostIterator<K, V> {
-        type V = Seq<Pair<K, V>>;
-        open spec fn view(&self) -> Seq<Pair<K, V>> { self.elements.take(self.pos) }
-    }
-
-    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> vstd::pervasive::ForLoopGhostIteratorNew for OrderedTableMtPerIter<K, V> {
-        type GhostIter = OrderedTableMtPerGhostIterator<K, V>;
-        open spec fn ghost_iter(&self) -> OrderedTableMtPerGhostIterator<K, V> {
-            OrderedTableMtPerGhostIterator { pos: self@.0, elements: self@.1 }
-        }
-    }
-
-    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> vstd::pervasive::ForLoopGhostIterator for OrderedTableMtPerGhostIterator<K, V> {
-        type ExecIter = OrderedTableMtPerIter<K, V>;
-        type Item = Pair<K, V>;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &OrderedTableMtPerIter<K, V>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &OrderedTableMtPerIter<K, V>) -> OrderedTableMtPerGhostIterator<K, V> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
     impl<'a, K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> std::iter::IntoIterator for &'a OrderedTableMtPer<K, V> {
         type Item = Pair<K, V>;
         type IntoIter = OrderedTableMtPerIter<K, V>;
@@ -877,6 +817,7 @@ pub mod OrderedTableMtPer {
             self.iter()
         }
     }
+    */
 
     //		Section 11a. top level coarse locking
 

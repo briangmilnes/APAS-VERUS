@@ -1,0 +1,387 @@
+r212 RTT for Chap43: cargo test --release on 11 targets: TestAugOrderedTableMtEph TestAugOrderedTableStEph TestAugOrderedTableStPer TestExample43_1 TestOrderedSetMtEph TestOrderedSetStEph TestOrderedSetStPer TestOrderedTableMtEph TestOrderedTableMtPer TestOrderedTableStEph TestOrderedTableStPer
+Starting RTT at 06:10:14
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 7.62s
+     Running tests/Chap43/TestAugOrderedTableMtEph.rs (target/release/deps/TestAugOrderedTableMtEph-e92a9fdee336d3fe)
+
+running 31 tests
+test test_collect_operation ... ok
+test test_delete_nonexistent ... ok
+test test_difference_operation ... ok
+test test_display_and_debug_multithreaded ... ok
+test test_delete_operation ... ok
+test test_insert_and_reduce_val ... ok
+test test_domain_operation ... ok
+test test_filter_operation_multithreaded ... ok
+test test_get_key_range ... ok
+test test_intersection_operation_multithreaded ... ok
+test test_empty_table ... ok
+test test_key_navigation ... ok
+test test_macro_construction_multithreaded ... ok
+test test_map_operation_multithreaded ... ok
+test test_ordering_operations_multithreaded ... ok
+test test_reduce_operation_multithreaded ... ok
+test test_rank_and_select ... ok
+test test_singleton_table ... ok
+test test_split_rank_key ... ok
+test test_string_concatenation_multithreaded ... ok
+test test_union_operation_multithreaded ... ok
+test test_subtract_operation ... ok
+test test_sum_reducer_multithreaded ... ok
+test test_tabulate_operation ... ok
+test test_restrict_operation ... ok
+test test_split_and_join_multithreaded ... ok
+test test_thread_safety_basic ... ok
+test test_complex_multithreaded_scenario ... ok
+test test_concurrent_reads ... ok
+test test_qadsan_multithreaded_scenario ... ok
+test test_parallel_range_reduction ... ok
+
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/Chap43/TestAugOrderedTableStEph.rs (target/release/deps/TestAugOrderedTableStEph-e186df396d494c72)
+
+running 30 tests
+test test_delete_nonexistent ... ok
+test test_delete_and_reduce_val ... ok
+test test_collect_operation ... ok
+test test_difference_operation ... ok
+test test_display_and_debug ... ok
+test test_domain_operation ... ok
+test test_empty_table ... ok
+test test_filter_operation ... ok
+test test_insert_and_reduce_val ... ok
+test test_intersection_operation ... ok
+test test_macro_construction ... ok
+test test_key_navigation ... ok
+test test_map_operation ... ok
+test test_min_reducer ... ok
+test test_mutable_operations ... ok
+test test_get_key_range ... ok
+test test_ordering_operations ... ok
+test test_rank_and_select ... ok
+test test_range_operations ... ok
+test test_singleton_table ... ok
+test test_reduce_operation ... ok
+test test_split_and_join ... ok
+test test_qadsan_stock_scenario ... ok
+test test_split_rank_key ... ok
+test test_string_concatenation_reducer ... ok
+test test_union_operation ... ok
+test test_restrict_operation ... ok
+test test_subtract_operation ... ok
+test test_tabulate_operation ... ok
+test test_complex_qadsan_scenario ... ok
+
+test result: ok. 30 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/Chap43/TestAugOrderedTableStPer.rs (target/release/deps/TestAugOrderedTableStPer-baee471059ef42e2)
+
+running 26 tests
+test test_collect_operation ... ok
+test test_delete_and_reduce_val ... ok
+test test_difference_operation ... ok
+test test_domain_operation ... ok
+test test_filter_operation ... ok
+test test_empty_table ... ok
+test test_delete_nonexistent ... ok
+test test_display_and_debug ... ok
+test test_insert_and_reduce_val ... ok
+test test_intersection_operation ... ok
+test test_macro_construction ... ok
+test test_get_key_range ... ok
+test test_map_operation ... ok
+test test_max_reducer ... ok
+test test_ordering_operations ... ok
+test test_singleton_table ... ok
+test test_split_and_join ... ok
+test test_restrict_operation ... ok
+test test_range_operations ... ok
+test test_split_rank_key ... ok
+test test_string_concatenation_reducer ... ok
+test test_tabulate_operation ... ok
+test test_union_operation ... ok
+test test_tramlaw_sales_scenario ... ok
+test test_subtract_operation ... ok
+test test_complex_tramlaw_scenario ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/Chap43/TestExample43_1.rs (target/release/deps/TestExample43_1-e2bbc707e51bf5bf)
+
+running 2 tests
+test test_run_integer_example ... ok
+test test_run_example43_1 ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap43/TestOrderedSetMtEph.rs (target/release/deps/TestOrderedSetMtEph-8bc852a9b7c547c6)
+
+running 23 tests
+test test_delete ... ok
+test test_difference ... ok
+test test_empty ... ok
+test test_ephemeral_semantics ... ok
+test test_filter ... ok
+test test_first_and_last ... ok
+test test_get_range ... ok
+test test_insert_and_find ... ok
+test test_intersection ... ok
+test test_join ... ok
+test test_next ... ok
+test test_ordered_set_mt_eph_lit_macro ... ok
+test test_previous ... ok
+test test_rank ... ok
+test test_singleton ... ok
+test test_select ... ok
+test test_split ... ok
+test test_split_rank ... ok
+test test_string_ordering ... ok
+test test_union ... ok
+test test_thread_safety ... ok
+test test_parallel_operations ... ok
+test test_large_dataset_performance ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap43/TestOrderedSetStEph.rs (target/release/deps/TestOrderedSetStEph-1b4649751a7fed84)
+
+running 21 tests
+test test_delete ... ok
+test test_difference ... ok
+test test_empty ... ok
+test test_ephemeral_semantics ... ok
+test test_first_and_last ... ok
+test test_filter ... ok
+test test_from_sorted_elements ... ok
+test test_get_range ... ok
+test test_insert_and_find ... ok
+test test_intersection ... ok
+test test_join ... ok
+test test_ordered_set_st_eph_lit_macro ... ok
+test test_next ... ok
+test test_previous ... ok
+test test_rank ... ok
+test test_select ... ok
+test test_singleton ... ok
+test test_split ... ok
+test test_split_rank ... ok
+test test_string_ordering ... ok
+test test_union ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap43/TestOrderedSetStPer.rs (target/release/deps/TestOrderedSetStPer-3715d07697877d65)
+
+running 21 tests
+test test_delete ... ok
+test test_empty ... ok
+test test_difference ... ok
+test test_first_and_last ... ok
+test test_filter ... ok
+test test_from_sorted_elements ... ok
+test test_get_range ... ok
+test test_insert_and_find ... ok
+test test_intersection ... ok
+test test_join ... ok
+test test_next ... ok
+test test_ordered_set_st_per_lit_macro ... ok
+test test_persistence ... ok
+test test_previous ... ok
+test test_rank ... ok
+test test_select ... ok
+test test_singleton ... ok
+test test_split ... ok
+test test_split_rank ... ok
+test test_string_ordering ... ok
+test test_union ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap43/TestOrderedTableMtEph.rs (target/release/deps/TestOrderedTableMtEph-91c07ce7cea32381)
+
+running 40 tests
+test test_delete_nonexistent ... ok
+test test_ordered_table_mt_eph_clone ... ok
+test test_ordered_table_mt_eph_collect ... ok
+test test_ordered_table_mt_eph_delete ... ok
+test test_ordered_table_mt_eph_difference ... ok
+test test_ordered_table_mt_eph_difference_empty ... ok
+test test_ordered_table_mt_eph_domain ... ok
+test test_ordered_table_mt_eph_domain_empty ... ok
+test test_ordered_table_mt_eph_empty_operations ... ok
+test test_ordered_table_mt_eph_ephemeral_semantics ... ok
+test test_ordered_table_mt_eph_find ... ok
+test test_ordered_table_mt_eph_first_key ... ok
+test test_ordered_table_mt_eph_from_sorted_entries ... ok
+test test_ordered_table_mt_eph_insert_and_lookup ... ok
+test test_ordered_table_mt_eph_get_key_range ... ok
+test test_ordered_table_mt_eph_intersection ... ok
+test test_ordered_table_mt_eph_intersection_disjoint ... ok
+test test_ordered_table_mt_eph_join_key ... ok
+test test_ordered_table_mt_eph_last_key ... ok
+test test_ordered_table_mt_eph_new ... ok
+test test_ordered_table_mt_eph_next_key ... ok
+test test_ordered_table_mt_eph_previous_key ... ok
+test test_ordered_table_mt_eph_rank_key ... ok
+test test_ordered_table_mt_eph_reduce_empty ... ok
+test test_ordered_table_mt_eph_reduce_sum ... ok
+test test_ordered_table_mt_eph_restrict ... ok
+test test_ordered_table_mt_eph_restrict_empty_keys ... ok
+test test_ordered_table_mt_eph_select_key ... ok
+test test_ordered_table_mt_eph_singleton ... ok
+test test_ordered_table_mt_eph_split_key ... ok
+test test_ordered_table_mt_eph_split_rank_key ... ok
+test test_ordered_table_mt_eph_subtract ... ok
+test test_ordered_table_mt_eph_subtract_empty_keys ... ok
+test test_ordered_table_mt_eph_tabulate_empty ... ok
+test test_ordered_table_mt_eph_tabulate ... ok
+test test_ordered_table_mt_eph_union ... ok
+test test_ordered_table_mt_eph_union_empty ... ok
+test test_ordered_table_mt_eph_thread_safety ... ok
+test test_ordered_table_mt_eph_parallel_operations ... ok
+test test_ordered_table_mt_eph_large_dataset_parallel ... ok
+
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/Chap43/TestOrderedTableMtPer.rs (target/release/deps/TestOrderedTableMtPer-08a4f590076ca7d0)
+
+running 14 tests
+test test_ordered_table_mt_per_domain ... ok
+test test_ordered_table_mt_per_delete ... ok
+test test_ordered_table_mt_per_first_last_key ... ok
+test test_ordered_table_mt_per_new ... ok
+test test_ordered_table_mt_per_join_key ... ok
+test test_ordered_table_mt_per_insert_and_find ... ok
+test test_ordered_table_mt_per_persistence ... ok
+test test_ordered_table_mt_per_get_key_range ... ok
+test test_ordered_table_mt_per_previous_next_key ... ok
+test test_ordered_table_mt_per_singleton ... ok
+test test_ordered_table_mt_per_rank_select_key ... ok
+test test_ordered_table_mt_per_split_key ... ok
+test test_ordered_table_mt_per_split_rank_key ... ok
+test test_ordered_table_mt_per_filter ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap43/TestOrderedTableStEph.rs (target/release/deps/TestOrderedTableStEph-1cbe557ff0230f89)
+
+running 41 tests
+test test_delete_nonexistent ... ok
+test test_ordered_table_st_eph_clone ... ok
+test test_ordered_table_st_eph_delete ... ok
+test test_ordered_table_st_eph_collect ... ok
+test test_ordered_table_st_eph_difference ... ok
+test test_ordered_table_st_eph_difference_empty ... ok
+test test_ordered_table_st_eph_domain ... ok
+test test_ordered_table_st_eph_domain_empty ... ok
+test test_ordered_table_st_eph_empty_operations ... ok
+test test_ordered_table_st_eph_ephemeral_semantics ... ok
+test test_ordered_table_st_eph_filter ... ok
+test test_ordered_table_st_eph_find ... ok
+test test_ordered_table_st_eph_first_key ... ok
+test test_ordered_table_st_eph_from_sorted_entries ... ok
+test test_ordered_table_st_eph_get_key_range ... ok
+test test_ordered_table_st_eph_insert_and_lookup ... ok
+test test_ordered_table_st_eph_intersection ... ok
+test test_ordered_table_st_eph_intersection_disjoint ... ok
+test test_ordered_table_st_eph_join_key ... ok
+test test_ordered_table_st_eph_last_key ... ok
+test test_ordered_table_st_eph_map ... ok
+test test_ordered_table_st_eph_new ... ok
+test test_ordered_table_st_eph_next_key ... ok
+test test_ordered_table_st_eph_previous_key ... ok
+test test_ordered_table_st_eph_rank_key ... ok
+test test_ordered_table_st_eph_reduce ... ok
+test test_ordered_table_st_eph_reduce_empty ... ok
+test test_ordered_table_st_eph_reduce_sum ... ok
+test test_ordered_table_st_eph_restrict ... ok
+test test_ordered_table_st_eph_restrict_empty_keys ... ok
+test test_ordered_table_st_eph_select_key ... ok
+test test_ordered_table_st_eph_singleton ... ok
+test test_ordered_table_st_eph_split_key ... ok
+test test_ordered_table_st_eph_split_rank_key ... ok
+test test_ordered_table_st_eph_subtract_empty_keys ... ok
+test test_ordered_table_st_eph_subtract ... ok
+test test_ordered_table_st_eph_tabulate ... ok
+test test_ordered_table_st_eph_tabulate_empty ... ok
+test test_ordered_table_st_eph_union ... ok
+test test_ordered_table_st_eph_union_empty ... ok
+test test_ordered_table_st_eph_large_dataset ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/Chap43/TestOrderedTableStPer.rs (target/release/deps/TestOrderedTableStPer-f98b522ccd5cafdd)
+
+running 30 tests
+test test_delete ... ok
+test test_collect ... ok
+test test_difference ... ok
+test test_delete_nonexistent ... ok
+test test_empty_operations ... ok
+test test_first_key_and_last_key ... ok
+test test_domain ... ok
+test test_insert_and_find ... ok
+test test_get_key_range ... ok
+test test_insert_duplicate_key ... ok
+test test_filter ... ok
+test test_empty ... ok
+test test_intersection ... ok
+test test_join_key ... ok
+test test_map ... ok
+test test_next_key ... ok
+test test_ordered_table_st_per_lit_macro ... ok
+test test_persistence ... ok
+test test_previous_key ... ok
+test test_rank_key ... ok
+test test_restrict ... ok
+test test_select_key ... ok
+test test_singleton ... ok
+test test_split_key ... ok
+test test_string_key_ordering ... ok
+test test_split_rank_key ... ok
+test test_subtract ... ok
+test test_tabulate ... ok
+test test_union ... ok
+test test_large_dataset ... ok
+
+test result: ok. 30 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+cargo test rc: 0
+Elapsed: 8s

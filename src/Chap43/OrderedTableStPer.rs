@@ -27,7 +27,6 @@ pub mod OrderedTableStPer {
     //		Section 2. imports
 
     use std::cmp::Ordering::Equal;
-    use std::vec::IntoIter;
 
     use crate::Chap38::BSTParaStEph::BSTParaStEph::*;
     use crate::Chap41::OrdKeyMap::OrdKeyMap::{OrdKeyMap, OrdKeyMapTrait};
@@ -38,6 +37,8 @@ pub mod OrderedTableStPer {
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
@@ -59,6 +60,7 @@ broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::map::group_map_lemmas,
     vstd::set::group_set_lemmas,
+    crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::lemma_pair_set_to_map_dom_contains,
 };
 
     //		Section 4. type definitions
@@ -93,7 +95,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
             requires self.spec_orderedtablestper_wf(),
-            ensures count == self@.dom().len(), self@.dom().finite();
+            ensures count == self@.dom().len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (table: Self)
@@ -171,7 +173,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn domain(&self) -> (keys: ArraySetStEph<K>)
             requires self.spec_orderedtablestper_wf(), obeys_feq_clone::<K>()
-            ensures keys@ =~= self@.dom(), self@.dom().finite();
+            ensures keys@ =~= self@.dom();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (table: Self)
@@ -282,14 +284,13 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
             requires self.spec_orderedtablestper_wf(),
-            ensures self@.dom().finite(), sorted_entries.spec_avltreeseqstper_wf(), sorted_entries@.len() == self@.dom().len();
+            ensures sorted_entries.spec_avltreeseqstper_wf(), sorted_entries@.len() == self@.dom().len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn first_key(&self) -> (key: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
             ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
                 key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
@@ -299,7 +300,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
             ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
                 key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
@@ -309,7 +309,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
             ensures
-                self@.dom().finite(),
                 key matches Some(pk) ==> self@.dom().contains(pk@),
                 key matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 key matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
@@ -319,7 +318,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
             ensures
-                self@.dom().finite(),
                 key matches Some(nk) ==> self@.dom().contains(nk@),
                 key matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 key matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
@@ -331,7 +329,6 @@ broadcast use {
                 self.spec_orderedtablestper_wf(),
                 obeys_view_eq::<K>(),
             ensures
-                self@.dom().finite(),
                 parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
                 parts.1 matches None ==> !self@.contains_key(k@),
                 !parts.0@.dom().contains(k@),
@@ -371,7 +368,6 @@ broadcast use {
                 self.spec_orderedtablestper_wf(),
                 obeys_view_eq::<K>(),
             ensures
-                self@.dom().finite(),
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
@@ -382,7 +378,6 @@ broadcast use {
                 self.spec_orderedtablestper_wf(),
                 obeys_view_eq::<K>(),
             ensures
-                self@.dom().finite(),
                 i >= self@.dom().len() ==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
                 key matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
@@ -393,7 +388,6 @@ broadcast use {
             requires
                 self.spec_orderedtablestper_wf(),
             ensures
-                self@.dom().finite(),
                 parts.0@.dom().subset_of(self@.dom()),
                 parts.1@.dom().subset_of(self@.dom()),
                 parts.0@.dom().disjoint(parts.1@.dom()),
@@ -429,7 +423,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
             ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
                 key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
@@ -438,7 +431,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
             ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
                 key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
@@ -447,7 +439,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
             ensures
-                self@.dom().finite(),
                 key matches Some(pk) ==> self@.dom().contains(pk@),
                 key matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 key matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
@@ -456,7 +447,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
             ensures
-                self@.dom().finite(),
                 key matches Some(nk) ==> self@.dom().contains(nk@),
                 key matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 key matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
@@ -467,7 +457,6 @@ broadcast use {
                 self.spec_orderedtablestper_wf(),
                 obeys_view_eq::<K>(),
             ensures
-                self@.dom().finite(),
                 parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
                 parts.1 matches None ==> !self@.contains_key(k@),
                 !parts.0@.dom().contains(k@),
@@ -493,7 +482,6 @@ broadcast use {
                 self.spec_orderedtablestper_wf(),
                 obeys_view_eq::<K>(),
             ensures
-                self@.dom().finite(),
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + n BST inserts
@@ -502,7 +490,6 @@ broadcast use {
             requires
                 self.spec_orderedtablestper_wf(),
             ensures
-                self@.dom().finite(),
                 parts.0@.dom().subset_of(self@.dom()),
                 parts.1@.dom().subset_of(self@.dom()),
                 parts.0@.dom().disjoint(parts.1@.dom()),
@@ -754,8 +741,6 @@ broadcast use {
             }
             let mapped = OrderedTableStPer { tree: OrdKeyMap { inner: new_tree } };
             proof {
-                lemma_pair_set_to_map_dom_finite(new_tree@);
-                lemma_pair_set_to_map_dom_finite(self.tree.inner@);
                 // Veracity: NEEDED assert (speed hint)
                 assert(mapped@.dom() =~= self@.dom()) by {
                     // Veracity: NEEDED assert
@@ -765,6 +750,7 @@ broadcast use {
                         lemma_map_contains_pair_in_set(new_tree@, key);
                         let v: V::V = choose|v: V::V| new_tree@.contains((key, v));
                         let j = choose|j: int| 0 <= j < i as int && (key, v).0 == (#[trigger] sorted@[j]).0;
+                        assert(sorted@.contains(sorted@[j]));
                         // Veracity: NEEDED assert (speed hint)
                         assert(self.tree.inner@.contains(sorted@[j]));
                         lemma_pair_in_set_map_contains(self.tree.inner@, sorted@[j].0, sorted@[j].1);
@@ -859,7 +845,6 @@ broadcast use {
                 invariant
                     self.spec_orderedtablestper_wf(),
                     obeys_feq_full::<Pair<K, V>>(),
-                    keys@.finite(),
                     self.tree.inner@ == old_tree,
                     len as nat == sorted@.len(),
                     sorted@.len() == old_tree.len(),
@@ -919,8 +904,6 @@ broadcast use {
             }
             let table = OrderedTableStPer { tree: OrdKeyMap { inner: new_tree } };
             proof {
-                lemma_pair_set_to_map_dom_finite(new_tree@);
-                lemma_pair_set_to_map_dom_finite(old_tree);
                 // Veracity: NEEDED assert (speed hint)
                 assert(table@.dom() =~= self@.dom().intersect(keys@)) by {
                     // Veracity: NEEDED assert
@@ -975,7 +958,6 @@ broadcast use {
                 invariant
                     self.spec_orderedtablestper_wf(),
                     obeys_feq_full::<Pair<K, V>>(),
-                    keys@.finite(),
                     self.tree.inner@ == old_tree,
                     len as nat == sorted@.len(),
                     sorted@.len() == old_tree.len(),
@@ -1025,16 +1007,14 @@ broadcast use {
                         assert(new_tree@.len() <= i as nat + 1);
 // Veracity: UNNEEDED assert                         assert(new_tree@.len() < usize::MAX as nat);
                         lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, sorted@[i as int].1);
-// Veracity: UNNEEDED assert                         assert(sorted@.contains(sorted@[i as int])) by { assert(sorted@[i as int] == sorted@[i as int]); };
-// Veracity: UNNEEDED assert                         assert(old_tree.contains(sorted@[i as int]));
+                        assert(sorted@.contains(sorted@[i as int]));
+                        assert(old_tree.contains(sorted@[i as int]));
                     }
                 }
                 i = i + 1;
             }
             let table = OrderedTableStPer { tree: OrdKeyMap { inner: new_tree } };
             proof {
-                lemma_pair_set_to_map_dom_finite(new_tree@);
-                lemma_pair_set_to_map_dom_finite(old_tree);
                 // Veracity: NEEDED assert (speed hint)
                 assert(table@.dom() =~= self@.dom().difference(keys@)) by {
                     // Veracity: NEEDED assert
@@ -1079,7 +1059,6 @@ broadcast use {
             let entries = self.tree.collect();
             proof {
                 // entries@.len() == self@.dom().len(), and inner tree has < usize::MAX elements.
-                lemma_pair_set_to_map_dom_finite(self.tree.inner@);
                 lemma_pair_set_to_map_len(self.tree.inner@);
             }
             AVLTreeSeqStPerS::from_vec(entries)
@@ -1154,7 +1133,6 @@ broadcast use {
         fn split_key_iter(&self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
         {
-            proof { lemma_pair_set_to_map_dom_finite(self.tree.inner@); }
             let (left, mid, right) = self.tree.split(k);
             (OrderedTableStPer { tree: left }, mid, OrderedTableStPer { tree: right })
         }
@@ -1233,16 +1211,16 @@ broadcast use {
 
     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStPer<K, V> {
         /// Returns an iterator over the table entries via in-order traversal.
-        pub fn iter(&self) -> (it: OrderedTableStPerIter<K, V>)
+        pub fn iter(&self) -> (it: std::vec::IntoIter<Pair<K, V>>)
             requires
                 self.spec_orderedtablestper_wf(),
             ensures
-                it@.0 == 0,
-                it@.1.len() == self.tree.inner@.len(),
-                iter_invariant(&it),
+                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
+                IteratorSpec::decrease(&it) is Some,
+                vstd::std_specs::vec::into_iter_elts(it).len() == self.tree.inner@.len(),
         {
             let sorted = self.tree.inner.in_order();
-            OrderedTableStPerIter { inner: sorted.seq.into_iter() }
+            sorted.seq.into_iter()
         }
     }
 
@@ -1266,7 +1244,6 @@ broadcast use {
             forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
                 ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,
         ensures
-            table@.dom().finite(),
             table.spec_orderedtablestper_wf(),
     {
         proof {
@@ -1383,108 +1360,16 @@ broadcast use {
             i = i + 1;
         }
         let table = OrderedTableStPer { tree: OrdKeyMap { inner: tree } };
-        proof { lemma_pair_set_to_map_dom_finite(tree@); }
         table
     }
 
     //		Section 10. iterators
 
-
-    #[verifier::reject_recursive_types(K)]
-    #[verifier::reject_recursive_types(V)]
-    pub struct OrderedTableStPerIter<K: StT + Ord + TotalOrder, V: StT + Ord> {
-        pub inner: IntoIter<Pair<K, V>>,
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> View for OrderedTableStPerIter<K, V> {
-        type V = (int, Seq<Pair<K, V>>);
-        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant<K: StT + Ord + TotalOrder, V: StT + Ord>(it: &OrderedTableStPerIter<K, V>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> std::iter::Iterator for OrderedTableStPerIter<K, V> {
-        type Item = Pair<K, V>;
-
-        fn next(&mut self) -> (next: Option<Pair<K, V>>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(K)]
-    #[verifier::reject_recursive_types(V)]
-    pub struct OrderedTableStPerGhostIterator<K: StT + Ord + TotalOrder, V: StT + Ord> {
-        pub pos: int,
-        pub elements: Seq<Pair<K, V>>,
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> View for OrderedTableStPerGhostIterator<K, V> {
-        type V = Seq<Pair<K, V>>;
-        open spec fn view(&self) -> Seq<Pair<K, V>> { self.elements.take(self.pos) }
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for OrderedTableStPerIter<K, V> {
-        type GhostIter = OrderedTableStPerGhostIterator<K, V>;
-        open spec fn ghost_iter(&self) -> OrderedTableStPerGhostIterator<K, V> {
-            OrderedTableStPerGhostIterator { pos: self@.0, elements: self@.1 }
-        }
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> vstd::pervasive::ForLoopGhostIterator for OrderedTableStPerGhostIterator<K, V> {
-        type ExecIter = OrderedTableStPerIter<K, V>;
-        type Item = Pair<K, V>;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &OrderedTableStPerIter<K, V>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &OrderedTableStPerIter<K, V>) -> OrderedTableStPerGhostIterator<K, V> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
+    // r212 form C: this `IntoIterator` impl required `requires self.spec_orderedtablestper_wf()`, which
+    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
+    // can establish; use `iter()`, which keeps the requires
+    // (src/experiments/intoiter_form_c_no_impl.rs).
+    /*
     impl<'a, K: StT + Ord + TotalOrder, V: StT + Ord> std::iter::IntoIterator for &'a OrderedTableStPer<K, V> {
         type Item = Pair<K, V>;
         type IntoIter = OrderedTableStPerIter<K, V>;
@@ -1499,6 +1384,7 @@ broadcast use {
             self.iter()
         }
     }
+    */
 
     //		Section 12. derive impls in verus!
 
@@ -1564,30 +1450,6 @@ broadcast use {
     impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Display for OrderedTableStPer<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableStPer(size: {})", self.size())
-        }
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Debug for OrderedTableStPerIter<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("OrderedTableStPerIter").finish()
-        }
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Display for OrderedTableStPerIter<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedTableStPerIter")
-        }
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Debug for OrderedTableStPerGhostIterator<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedTableStPerGhostIterator")
-        }
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Display for OrderedTableStPerGhostIterator<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedTableStPerGhostIterator")
         }
     }
 }

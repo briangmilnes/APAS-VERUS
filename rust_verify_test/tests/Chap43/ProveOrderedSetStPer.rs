@@ -16,6 +16,7 @@ use common::*;
 test_verify_one_file! {
     #[test] chap43_orderedsetstper_loop_borrow_iter verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap43::OrderedSetStPer::OrderedSetStPer::*;
         use vstd::laws_cmp::obeys_cmp;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
@@ -27,28 +28,40 @@ test_verify_one_file! {
             let s = s.insert(2u64);
             let s = s.insert(3u64);
 
-            let mut it: OrderedSetStPerIter<u64> = s.iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            #[verifier::loop_isolation(false)]
+            let it0 = s.iter();
+            let ghost orig: Seq<u64> = vstd::std_specs::vec::into_iter_elts(it0);
+            let mut collected: Vec<u64> = Vec::new();
+            let mut it: std::vec::IntoIter<u64> = it0;
+            let ghost mut pos: int = 0;
             loop
                 invariant
-                    items =~= iter_seq.take(it@.0 as int),
-                    iter_invariant(&it),
-                    iter_seq == it@.1,
-                    it@.0 <= iter_seq.len(),
-                decreases iter_seq.len() - it@.0,
+                    IteratorSpec::obeys_prophetic_iter_laws(&it),
+                    IteratorSpec::decrease(&it) is Some,
+                    0 <= pos <= orig.len(),
+                    IteratorSpec::remaining(&it).len() == orig.len() - pos,
+                    forall|i: int| 0 <= i < IteratorSpec::remaining(&it).len()
+                        ==> #[trigger] IteratorSpec::remaining(&it)[i] == orig[pos + i],
+                    collected.len() == pos,
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == orig[i],
+                decreases IteratorSpec::decrease(&it)->0,
             {
-                if let Some(x) = it.next() {
-                    proof { items = items.push(x); }
-                } else {
-                    break;
+                let ghost old_pos = pos;
+                match it.next() {
+                    Some(x) => {
+                        proof {
+                            pos = pos + 1;
+                            assert(orig[old_pos] == x);
+                        }
+                        collected.push(x);
+                    },
+                    None => {
+                        assert(pos == orig.len());
+                        assert(collected@ =~= orig);
+                        break;
+                    },
                 }
             }
-
-            assert(it@.0 == iter_seq.len());
-            assert(items =~= iter_seq);
         }
     } => Ok(())
 }
@@ -57,6 +70,7 @@ test_verify_one_file! {
 test_verify_one_file! {
     #[test] chap43_orderedsetstper_for_borrow_iter verus_code! {
         use vstd::prelude::*;
+        use vstd::std_specs::iter::*;
         use apas_verus::Chap43::OrderedSetStPer::OrderedSetStPer::*;
         use vstd::laws_cmp::obeys_cmp;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
@@ -68,20 +82,19 @@ test_verify_one_file! {
             let s = s.insert(2u64);
             let s = s.insert(3u64);
 
-            let it: OrderedSetStPerIter<u64> = s.iter();
-            let ghost iter_seq: Seq<u64> = it@.1;
-            let ghost mut items: Seq<u64> = Seq::empty();
-
-            for x in iter: it
+            let it0 = s.iter();
+            let ghost orig: Seq<u64> = vstd::std_specs::vec::into_iter_elts(it0);
+            let mut collected: Vec<u64> = Vec::new();
+            for x in it: it0
                 invariant
-                    iter.elements == iter_seq,
-                    items =~= iter_seq.take(iter.pos),
-                    iter.pos <= iter_seq.len(),
+                    it.seq() == orig,
+                    collected.len() == it.index(),
+                    forall|i: int| 0 <= i < collected.len()
+                        ==> #[trigger] collected@[i] == it.seq()[i],
             {
-                proof { items = items.push(x); }
+                collected.push(x);
             }
-
-            assert(items =~= iter_seq);
+            assert(collected@ =~= orig);
         }
     } => Ok(())
 }

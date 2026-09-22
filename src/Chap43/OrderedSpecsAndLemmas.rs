@@ -35,7 +35,7 @@ broadcast use {
     /// With key uniqueness, each key maps to a unique value via `choose`.
     pub open spec fn spec_pair_set_to_map<KV, VV>(s: Set<(KV, VV)>) -> Map<KV, VV> {
         Map::new(
-            |k: KV| exists|v: VV| s.contains((k, v)),
+            s.map(|p: (KV, VV)| p.0),
             |k: KV| choose|v: VV| s.contains((k, v)),
         )
     }
@@ -88,34 +88,57 @@ broadcast use {
         };
     }
 
-    /// The domain of spec_pair_set_to_map is finite when the source set is finite.
-    pub proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
-        requires s.finite()
-        ensures spec_pair_set_to_map(s).dom().finite()
+    /// Domain membership of `spec_pair_set_to_map`: the domain is the image of
+    /// the pair set under the first projection, so a key is in it iff some
+    /// pair with that key is in the set. This is the statement the pre-09.13
+    /// `Map::new(|k| exists|v| s.contains((k, v)), ..)` gave by definition.
+    pub broadcast proof fn lemma_pair_set_to_map_dom_contains<KV, VV>(s: Set<(KV, VV)>, k: KV)
+        ensures
+            #[trigger] spec_pair_set_to_map(s).dom().contains(k) <==> exists|v: VV| s.contains((k, v)),
     {
-        let dom_set = spec_pair_set_to_map(s).dom();
-        let proj = |p: (KV, VV)| -> KV { p.0 };
-        let proj_set = s.map(proj);
-        // dom_set ⊆ proj_set.
-        // Veracity: NEEDED assert
-        assert forall|k: KV| dom_set.contains(k)
-            implies #[trigger] proj_set.contains(k)
-        by {
-            let v: VV = choose|v: VV| s.contains((k, v));
-            // Veracity: NEEDED assert (speed hint)
+        broadcast use vstd::set_lib::group_set_lib_default;
+        if spec_pair_set_to_map(s).dom().contains(k) {
+            let p = choose|p: (KV, VV)| #[trigger] s.contains(p) && k == p.0;
+            assert(s.contains((k, p.1)));
+        }
+        if exists|v: VV| s.contains((k, v)) {
+            let v = choose|v: VV| s.contains((k, v));
             assert(s.contains((k, v)));
-// Veracity: UNNEEDED assert             assert(proj((k, v)) == k);
-        };
-        s.lemma_map_finite(proj);
-        vstd::set_lib::lemma_len_subset(dom_set, proj_set);
+        }
     }
+
+    // BYPASSED (r213): the lemma's only postcondition was
+    // `spec_pair_set_to_map(s).dom().finite()`, `true` for every `Set` at verus
+    // 0.2026.09.13 (and `vstd` no longer has `Set::lemma_map_finite`); its calls
+    // in Chap43 are removed.
+    // /// The domain of spec_pair_set_to_map is finite when the source set is finite.
+    // pub proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
+    //     requires s.finite()
+    //     ensures spec_pair_set_to_map(s).dom().finite()
+    // {
+    //     let dom_set = spec_pair_set_to_map(s).dom();
+    //     let proj = |p: (KV, VV)| -> KV { p.0 };
+    //     let proj_set = s.map(proj);
+    //     // dom_set ⊆ proj_set.
+    //     // Veracity: NEEDED assert
+    //     assert forall|k: KV| dom_set.contains(k)
+    //         implies #[trigger] proj_set.contains(k)
+    //     by {
+    //         let v: VV = choose|v: VV| s.contains((k, v));
+    //         // Veracity: NEEDED assert (speed hint)
+    //         assert(s.contains((k, v)));
+    // // Veracity: UNNEEDED assert             assert(proj((k, v)) == k);
+    //     };
+    //     s.lemma_map_finite(proj);
+    //     vstd::set_lib::lemma_len_subset(dom_set, proj_set);
+    // }
 
     /// The domain length equals the set length when keys are unique.
     pub(crate) proof fn lemma_pair_set_to_map_len<KV, VV>(s: Set<(KV, VV)>)
-        requires s.finite(), spec_key_unique_pairs_set(s)
+        requires spec_key_unique_pairs_set(s)
         ensures spec_pair_set_to_map(s).dom().len() == s.len()
     {
-        lemma_pair_set_to_map_dom_finite(s);
+        broadcast use lemma_pair_set_to_map_dom_contains;
         let dom_set = spec_pair_set_to_map(s).dom();
         let proj = |p: (KV, VV)| -> KV { p.0 };
         let proj_set = s.map(proj);
@@ -179,7 +202,7 @@ broadcast use {
         requires spec_pair_set_to_map(s).contains_key(k)
         ensures exists|v: VV| s.contains((k, v))
     {
-        // Follows directly from the domain definition.
+        lemma_pair_set_to_map_dom_contains(s, k);
     }
 
     /// Key uniqueness is preserved by set insert when the key is fresh.
@@ -218,9 +241,8 @@ broadcast use {
         sorted: Seq<(KV, VV)>,
     )
         requires
-            tree.finite(),
             spec_key_unique_pairs_set(tree),
-            forall|v: (KV, VV)| tree.contains(v) <==> sorted.contains(v),
+            forall|v: (KV, VV)| tree.contains(v) <==> #[trigger] sorted.contains(v),
             sorted.len() == tree.len(),
         ensures
             sorted.no_duplicates(),
@@ -282,6 +304,7 @@ broadcast use {
             spec_pair_set_to_map(s.insert((k, v)))
                 =~= spec_pair_set_to_map(s).insert(k, v),
     {
+        broadcast use lemma_pair_set_to_map_dom_contains;
         let old_m = spec_pair_set_to_map(s);
         let new_s = s.insert((k, v));
         let new_m = spec_pair_set_to_map(new_s);

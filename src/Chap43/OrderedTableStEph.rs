@@ -27,7 +27,6 @@ pub mod OrderedTableStEph {
     //		Section 2. imports
 
     use std::cmp::Ordering::Equal;
-    use std::vec::IntoIter;
 
     use crate::Chap38::BSTParaStEph::BSTParaStEph::*;
     use crate::Chap41::OrdKeyMap::OrdKeyMap::{OrdKeyMap, OrdKeyMapTrait};
@@ -39,6 +38,8 @@ pub mod OrderedTableStEph {
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
@@ -57,6 +58,7 @@ broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::map::group_map_lemmas,
     vstd::set::group_set_lemmas,
+    crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::lemma_pair_set_to_map_dom_contains,
 };
 
     //		Section 4. type definitions
@@ -91,7 +93,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- agrees with APAS
         fn size(&self) -> (count: usize)
             requires self.spec_orderedtablesteph_wf(),
-            ensures count == self@.dom().len(), self@.dom().finite();
+            ensures count == self@.dom().len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- agrees with APAS
@@ -118,7 +120,7 @@ broadcast use {
                 spec_pair_key_determines_order::<K, V>(),
                 vstd::laws_cmp::obeys_cmp::<K>(),
                 view_ord_consistent::<K>(),
-            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablesteph_wf();
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree.spec_orderedtablesteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- recursive BST descent
@@ -161,7 +163,6 @@ broadcast use {
                 !old(self)@.contains_key(k@) ==> self@[k@] == v@,
                 old(self)@.contains_key(k@) ==> (exists|old_v: V, r: V|
                     old_v@ == old(self)@[k@] && combine.ensures((&old_v, &v), r) && self@[k@] == r@),
-                self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
@@ -171,13 +172,13 @@ broadcast use {
                 old(self).spec_orderedtablesteph_wf(),
                 obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
-            ensures self@ == old(self)@.remove(k@), self@.dom().finite(), self.spec_orderedtablesteph_wf();
+            ensures self@ == old(self)@.remove(k@), self.spec_orderedtablesteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- collects keys from in_order
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             requires self.spec_orderedtablesteph_wf(), obeys_feq_clone::<K>()
-            ensures domain@ =~= self@.dom(), self@.dom().finite();
+            ensures domain@ =~= self@.dom();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- inserts keys one by one
@@ -200,8 +201,7 @@ broadcast use {
                 forall|k: K::V| #[trigger] tabulated@.contains_key(k) ==>
                     (exists|key_arg: K, result: V|
                         key_arg@ == k && f.ensures((&key_arg,), result)
-                        && tabulated@[k] == result@),
-                tabulated@.dom().finite();
+                        && tabulated@[k] == result@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects, maps, rebuilds
@@ -210,7 +210,7 @@ broadcast use {
                 self.spec_orderedtablesteph_wf(),
                 forall|k: &K, v: &V| f.requires((k, v)),
                 obeys_feq_clone::<Pair<K, V>>(),
-            ensures mapped@.dom() =~= self@.dom(), mapped@.dom().finite(), mapped.spec_orderedtablesteph_wf();
+            ensures mapped@.dom() =~= self@.dom(), mapped.spec_orderedtablesteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects, filters, rebuilds
@@ -229,14 +229,12 @@ broadcast use {
                 forall|k: K::V| #[trigger] filtered@.contains_key(k) ==> filtered@[k] == self@[k],
                 forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
                     ==> #[trigger] filtered@.dom().contains(k),
-                filtered@.dom().finite(),
                 filtered.spec_orderedtablesteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- iterates all entries
         fn reduce<R, F: Fn(R, &K, &V) -> R>(&self, init: R, f: F) -> (reduced: R)
-            requires self.spec_orderedtablesteph_wf(), forall|r: R, k: &K, v: &V| f.requires((r, k, v))
-            ensures self@.dom().finite();
+            requires self.spec_orderedtablesteph_wf(), forall|r: R, k: &K, v: &V| f.requires((r, k, v));
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- iterative merge
@@ -254,7 +252,6 @@ broadcast use {
                         v1@ == old(self)@[k] && v2@ == other@[k]
                         && f.ensures((&v1, &v2), r)
                         && self@[k] == r@),
-                self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
@@ -278,7 +275,6 @@ broadcast use {
                         v1@ == old(self)@[k] && v2@ == other@[k]
                         && f.ensures((&v1, &v2), r)
                         && self@[k] == r@),
-                self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
@@ -288,7 +284,6 @@ broadcast use {
             ensures
                 self@.dom() =~= old(self)@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
-                self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
@@ -298,7 +293,6 @@ broadcast use {
             ensures
                 self@.dom() =~= old(self)@.dom().intersect(keys@),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
-                self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
@@ -308,14 +302,13 @@ broadcast use {
             ensures
                 self@.dom() =~= old(self)@.dom().difference(keys@),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
-                self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- collects from in_order
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             requires self.spec_orderedtablesteph_wf()
-            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len();
+            ensures collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- recursive BST min
@@ -323,7 +316,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()
             ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
@@ -333,7 +325,6 @@ broadcast use {
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
@@ -343,7 +334,6 @@ broadcast use {
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
-                self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
@@ -353,7 +343,6 @@ broadcast use {
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
-                self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
@@ -366,10 +355,6 @@ broadcast use {
                 old(self).spec_orderedtablesteph_wf(),
                 obeys_view_eq::<K>(),
             ensures
-                self@.dom().finite(),
-                old(self)@.dom().finite(),
-                split.0@.dom().finite(),
-                split.2@.dom().finite(),
                 split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],
                 split.1 matches None ==> !old(self)@.contains_key(k@),
                 !split.0@.dom().contains(k@),
@@ -392,7 +377,6 @@ broadcast use {
                 old(self)@.dom().len() + other@.dom().len() < usize::MAX,
             ensures
                 self@.dom() =~= old(self)@.dom().union(other@.dom()),
-                self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n + m) where m = output size, Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + m)
@@ -401,7 +385,6 @@ broadcast use {
             requires
                 self.spec_orderedtablesteph_wf(),
             ensures
-                range@.dom().finite(),
                 range@.dom().subset_of(self@.dom()),
                 forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],
                 range.spec_orderedtablesteph_wf();
@@ -414,7 +397,6 @@ broadcast use {
                 self.spec_orderedtablesteph_wf(),
                 obeys_view_eq::<K>(),
             ensures
-                self@.dom().finite(),
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
@@ -426,7 +408,6 @@ broadcast use {
                 self.spec_orderedtablesteph_wf(),
                 obeys_view_eq::<K>(),
             ensures
-                self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,
                 selected matches Some(k) ==> self@.dom().contains(k@),
                 selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
@@ -438,10 +419,6 @@ broadcast use {
             requires
                 old(self).spec_orderedtablesteph_wf(),
             ensures
-                self@.dom().finite(),
-                old(self)@.dom().finite(),
-                split.0@.dom().finite(),
-                split.1@.dom().finite(),
                 split.0@.dom().subset_of(old(self)@.dom()),
                 split.1@.dom().subset_of(old(self)@.dom()),
                 split.0@.dom().disjoint(split.1@.dom()),
@@ -472,7 +449,6 @@ broadcast use {
                 !old(self)@.contains_key(k@) ==> self@[k@] == v@,
                 old(self)@.contains_key(k@) ==> (exists|old_v: V, r: V|
                     old_v@ == old(self)@[k@] && combine.ensures((&old_v, &v), r) && self@[k@] == r@),
-                self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
         /// Iterative alternative to `delete`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to delete
@@ -481,13 +457,12 @@ broadcast use {
                 old(self).spec_orderedtablesteph_wf(),
                 obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
-            ensures self@ == old(self)@.remove(k@), self@.dom().finite(), self.spec_orderedtablesteph_wf();
+            ensures self@ == old(self)@.remove(k@), self.spec_orderedtablesteph_wf();
         /// Iterative alternative to `first_key`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST min_key
         fn first_key_iter(&self) -> (first: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
@@ -496,7 +471,6 @@ broadcast use {
         fn last_key_iter(&self) -> (last: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
@@ -505,7 +479,6 @@ broadcast use {
         fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
-                self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
@@ -514,7 +487,6 @@ broadcast use {
         fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
-                self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
@@ -526,10 +498,6 @@ broadcast use {
                 old(self).spec_orderedtablesteph_wf(),
                 obeys_view_eq::<K>(),
             ensures
-                self@.dom().finite(),
-                old(self)@.dom().finite(),
-                split.0@.dom().finite(),
-                split.2@.dom().finite(),
                 split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],
                 split.1 matches None ==> !old(self)@.contains_key(k@),
                 !split.0@.dom().contains(k@),
@@ -546,7 +514,6 @@ broadcast use {
             requires
                 self.spec_orderedtablesteph_wf(),
             ensures
-                range@.dom().finite(),
                 range@.dom().subset_of(self@.dom()),
                 forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],
                 range.spec_orderedtablesteph_wf();
@@ -558,7 +525,6 @@ broadcast use {
                 self.spec_orderedtablesteph_wf(),
                 obeys_view_eq::<K>(),
             ensures
-                self@.dom().finite(),
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// Iterative alternative to `split_rank_key`.
@@ -568,10 +534,6 @@ broadcast use {
             requires
                 old(self).spec_orderedtablesteph_wf(),
             ensures
-                self@.dom().finite(),
-                old(self)@.dom().finite(),
-                split.0@.dom().finite(),
-                split.1@.dom().finite(),
                 split.0@.dom().subset_of(old(self)@.dom()),
                 split.1@.dom().subset_of(old(self)@.dom()),
                 split.0@.dom().disjoint(split.1@.dom()),
@@ -598,7 +560,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
-            ensures count == self@.dom().len(), self@.dom().finite()
+            ensures count == self@.dom().len()
         {
             self.tree.size()
         }
@@ -612,7 +574,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(k: K, v: V) -> (tree: Self)
-            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablesteph_wf()
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree.spec_orderedtablesteph_wf()
         {
             let bst = ParamBST::singleton(Pair(k, v));
             // Veracity: NEEDED proof block
@@ -626,7 +588,6 @@ broadcast use {
                 lemma_key_unique_empty::<K::V, V::V>();
                 lemma_key_unique_insert(Set::<(K::V, V::V)>::empty(), k@, v@);
                 lemma_set_to_map_insert(Set::empty(), k@, v@);
-                lemma_pair_set_to_map_dom_finite(s);
                 // Type axioms for wf: feq via broadcast, rest from requires.
                 // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<K>());
@@ -730,7 +691,6 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + fold
         fn reduce<R, F: Fn(R, &K, &V) -> R>(&self, init: R, f: F) -> (reduced: R)
-            ensures self@.dom().finite()
         {
             let sorted = self.tree.inner.in_order();
             let len = sorted.length();
@@ -748,7 +708,6 @@ broadcast use {
                 i = i + 1;
             // Veracity: NEEDED proof block
             }
-            proof { lemma_pair_set_to_map_dom_finite(self.tree.inner@); }
             reduced
         }
 
@@ -758,7 +717,6 @@ broadcast use {
         {
             self.tree = self.tree.intersect_with(&other.tree, &f);
             proof {
-                lemma_pair_set_to_map_dom_finite(self.tree.inner@);
             }
         }
 
@@ -770,7 +728,6 @@ broadcast use {
             let combined = self.tree.union_with(&other.tree, &f);
             self.tree = combined;
             proof {
-                lemma_pair_set_to_map_dom_finite(self.tree.inner@);
                 // Bridge the "both keys" existential from OrdKeyMap ensures.
                 // OrdKeyMap::union_with ensures: for k in both old_tree@ and other.tree@,
                 // exists v1 v2 r with combine.ensures((&v1,&v2),r) && combined@[k]==r@.
@@ -1137,9 +1094,6 @@ broadcast use {
             }
             self.tree = OrdKeyMap { inner: new_tree };
             proof {
-                lemma_pair_set_to_map_dom_finite(new_tree@);
-                lemma_pair_set_to_map_dom_finite(old_tree);
-                lemma_pair_set_to_map_dom_finite(other.tree.inner@);
                 // 1. Domain: self@.dom() =~= old_map.dom().union(other_map.dom()).
 // Veracity: UNNEEDED assert                 assert(self@.dom() =~= old_map.dom().union(other_map.dom())) by {
 // Veracity: UNNEEDED assert                     // Veracity: NEEDED assert
@@ -1214,7 +1168,6 @@ broadcast use {
         {
             self.tree = self.tree.difference(&other.tree);
             // Veracity: NEEDED proof block
-            proof { lemma_pair_set_to_map_dom_finite(self.tree.inner@); }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- filter by key set membership
@@ -1237,7 +1190,6 @@ broadcast use {
                     old(self).spec_orderedtablesteph_wf(),
                     obeys_feq_full::<Pair<K, V>>(),
                     keys@ == keys_set,
-                    keys@.finite(),
                     old_map == spec_pair_set_to_map(old_tree),
                     len as nat == sorted@.len(),
                     sorted@.len() == old_tree.len(),
@@ -1301,8 +1253,6 @@ broadcast use {
             }
             self.tree = OrdKeyMap { inner: new_tree };
             proof {
-                lemma_pair_set_to_map_dom_finite(new_tree@);
-                lemma_pair_set_to_map_dom_finite(old_tree);
                 // Prove: self@.dom() =~= old_map.dom().intersect(keys_set)
                 // Veracity: NEEDED assert
                 assert(self@.dom() =~= old_map.dom().intersect(keys_set)) by {
@@ -1325,9 +1275,9 @@ broadcast use {
                     by {
                         lemma_map_contains_pair_in_set(old_tree, k);
                         let v: V::V = choose|v: V::V| old_tree.contains((k, v));
-// Veracity: UNNEEDED assert                         assert(sorted@.contains((k, v)));
+                        assert(sorted@.contains((k, v)));
                         let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (k, v);
-// Veracity: UNNEEDED assert                         assert(new_tree@.contains(sorted@[j]));
+                        assert(new_tree@.contains(sorted@[j]));
                         lemma_pair_in_set_map_contains(new_tree@, k, v);
                     };
                 };
@@ -1374,7 +1324,6 @@ broadcast use {
                     old(self).spec_orderedtablesteph_wf(),
                     obeys_feq_full::<Pair<K, V>>(),
                     keys@ == keys_set,
-                    keys@.finite(),
                     old_map == spec_pair_set_to_map(old_tree),
                     len as nat == sorted@.len(),
                     sorted@.len() == old_tree.len(),
@@ -1438,8 +1387,6 @@ broadcast use {
             }
             self.tree = OrdKeyMap { inner: new_tree };
             proof {
-                lemma_pair_set_to_map_dom_finite(new_tree@);
-                lemma_pair_set_to_map_dom_finite(old_tree);
                 // Prove: self@.dom() =~= old_map.dom().difference(keys_set)
                 // Veracity: NEEDED assert
                 assert(self@.dom() =~= old_map.dom().difference(keys_set)) by {
@@ -1463,9 +1410,9 @@ broadcast use {
                     by {
                         lemma_map_contains_pair_in_set(old_tree, k);
                         let v: V::V = choose|v: V::V| old_tree.contains((k, v));
-// Veracity: UNNEEDED assert                         assert(sorted@.contains((k, v)));
+                        assert(sorted@.contains((k, v)));
                         let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (k, v);
-// Veracity: UNNEEDED assert                         assert(new_tree@.contains(sorted@[j]));
+                        assert(new_tree@.contains(sorted@[j]));
                         lemma_pair_in_set_map_contains(new_tree@, k, v);
                     };
                 };
@@ -1492,14 +1439,12 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to OrdKeyMap::collect + from_vec
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures
-                self@.dom().finite(),
                 collected.spec_avltreeseqstper_wf(),
                 collected@.len() == self@.dom().len(),
         {
             let entries = self.tree.collect();
             proof {
                 lemma_pair_set_to_map_len(self.tree.inner@);
-                lemma_pair_set_to_map_dom_finite(self.tree.inner@);
                 // entries@.len() == self@.dom().len() == self.tree.inner@.len() < usize::MAX.
             }
             AVLTreeSeqStPerS::from_vec(entries)
@@ -1544,7 +1489,6 @@ broadcast use {
         fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             ensures
-                self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
@@ -1563,7 +1507,6 @@ broadcast use {
         fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
 // Veracity: UNNEEDED proof block             where K: TotalOrder
             ensures
-                self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
@@ -1582,7 +1525,6 @@ broadcast use {
         fn split_key_iter(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
         {
-            proof { lemma_pair_set_to_map_dom_finite(self.tree.inner@); }
             let (left_map, found_val, right_map) = self.tree.split(k);
             *self = Self::empty();
             let left_table = OrderedTableStEph { tree: left_map };
@@ -1652,16 +1594,16 @@ broadcast use {
 
     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStEph<K, V> {
         /// Returns an iterator over the table entries via in-order traversal.
-        pub fn iter(&self) -> (it: OrderedTableStEphIter<K, V>)
+        pub fn iter(&self) -> (it: std::vec::IntoIter<Pair<K, V>>)
             requires
                 self.spec_orderedtablesteph_wf(),
             ensures
-                it@.0 == 0,
-                it@.1.len() == self.tree.inner@.len(),
-                iter_invariant(&it),
+                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
+                IteratorSpec::decrease(&it) is Some,
+                vstd::std_specs::vec::into_iter_elts(it).len() == self.tree.inner@.len(),
         {
             let sorted = self.tree.inner.in_order();
-            OrderedTableStEphIter { inner: sorted.seq.into_iter() }
+            sorted.seq.into_iter()
         }
     }
 
@@ -1686,7 +1628,6 @@ broadcast use {
             forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
                 ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,
         ensures
-            table@.dom().finite(),
             table.spec_orderedtablesteph_wf(),
     {
         proof {
@@ -1781,108 +1722,16 @@ broadcast use {
             i = i + 1;
         }
         let table = OrderedTableStEph { tree: OrdKeyMap { inner: tree } };
-        proof { lemma_pair_set_to_map_dom_finite(tree@); }
         table
     }
 
     //		Section 10. iterators
 
-
-    #[verifier::reject_recursive_types(K)]
-    #[verifier::reject_recursive_types(V)]
-    pub struct OrderedTableStEphIter<K: StT + Ord + TotalOrder, V: StT + Ord> {
-        pub inner: IntoIter<Pair<K, V>>,
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> View for OrderedTableStEphIter<K, V> {
-        type V = (int, Seq<Pair<K, V>>);
-        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant<K: StT + Ord + TotalOrder, V: StT + Ord>(it: &OrderedTableStEphIter<K, V>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> std::iter::Iterator for OrderedTableStEphIter<K, V> {
-        type Item = Pair<K, V>;
-
-        fn next(&mut self) -> (next: Option<Pair<K, V>>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(K)]
-    #[verifier::reject_recursive_types(V)]
-    pub struct OrderedTableStEphGhostIterator<K: StT + Ord + TotalOrder, V: StT + Ord> {
-        pub pos: int,
-        pub elements: Seq<Pair<K, V>>,
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> View for OrderedTableStEphGhostIterator<K, V> {
-        type V = Seq<Pair<K, V>>;
-        open spec fn view(&self) -> Seq<Pair<K, V>> { self.elements.take(self.pos) }
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for OrderedTableStEphIter<K, V> {
-        type GhostIter = OrderedTableStEphGhostIterator<K, V>;
-        open spec fn ghost_iter(&self) -> OrderedTableStEphGhostIterator<K, V> {
-            OrderedTableStEphGhostIterator { pos: self@.0, elements: self@.1 }
-        }
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> vstd::pervasive::ForLoopGhostIterator for OrderedTableStEphGhostIterator<K, V> {
-        type ExecIter = OrderedTableStEphIter<K, V>;
-        type Item = Pair<K, V>;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &OrderedTableStEphIter<K, V>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &OrderedTableStEphIter<K, V>) -> OrderedTableStEphGhostIterator<K, V> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
+    // r212 form C: this `IntoIterator` impl required `requires self.spec_orderedtablesteph_wf()`, which
+    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
+    // can establish; use `iter()`, which keeps the requires
+    // (src/experiments/intoiter_form_c_no_impl.rs).
+    /*
     impl<'a, K: StT + Ord + TotalOrder, V: StT + Ord> std::iter::IntoIterator for &'a OrderedTableStEph<K, V> {
         type Item = Pair<K, V>;
         type IntoIter = OrderedTableStEphIter<K, V>;
@@ -1897,6 +1746,7 @@ broadcast use {
             self.iter()
         }
     }
+    */
 
     //		Section 12. derive impls in verus!
 
@@ -1943,30 +1793,6 @@ broadcast use {
     impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Display for OrderedTableStEph<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableStEph(size: {})", self.size())
-        }
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Debug for OrderedTableStEphIter<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("OrderedTableStEphIter").finish()
-        }
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Display for OrderedTableStEphIter<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedTableStEphIter")
-        }
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Debug for OrderedTableStEphGhostIterator<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedTableStEphGhostIterator")
-        }
-    }
-
-    impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Display for OrderedTableStEphGhostIterator<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedTableStEphGhostIterator")
         }
     }
 }

@@ -1,0 +1,181 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap43/OrderedSpecsAndLemmas.rs:330:24
+    |
+330 |                 assert(new_s.contains((key, vv)));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap43/OrderedSpecsAndLemmas.rs:350:24
+    |
+350 |                 assert(s.contains((key, cv)));
+    |                        ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+new_s.to_iset().contains((key, vv)) 
+    function is uninterpreted
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap43/OrderedSpecsAndLemmas.rs:316:45
+    |
+316 |                 let vv: VV = choose|vv: VV| new_s.contains((key, vv));
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap43/OrderedSpecsAndLemmas.rs:328:45
+    |
+328 |                 let vv: VV = choose|vv: VV| s.contains((key, vv));
+    |                                             ^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap43/OrderedSpecsAndLemmas.rs:348:45
+    |
+348 |                 let cv: VV = choose|cv: VV| new_s.contains((key, cv));
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSpecsAndLemmas.rs:203:17
+    |
+201 |     pub(crate) proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
+    |     ----------------------------------------------------------------------------------- at the end of the function body
+202 |         requires spec_pair_set_to_map(s).contains_key(k)
+203 |         ensures exists|v: VV| s.contains((k, v))
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+(exists |v| old(s).to_iset().contains((old(k), v))) 
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1280:25
+     |
+1280 |                         lemma_pair_in_set_map_contains(new_tree@, k, v);
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedSpecsAndLemmas.rs:182:13
+     |
+ 182 |             s.contains((k, v)),
+     |             ------------------ failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSpecsAndLemmas.rs:182:13
+    |
+182 |             s.contains((k, v)),
+    |             ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.to_iset().contains((k, v)) ✘
+    function is uninterpreted
+spec_key_unique_pairs_set(tmp%) ✔
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap43/OrderedTableStEph.rs:1278:48
+     |
+1278 |                         let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (k, v);
+     |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1415:25
+     |
+1415 |                         lemma_pair_in_set_map_contains(new_tree@, k, v);
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedSpecsAndLemmas.rs:182:13
+     |
+ 182 |             s.contains((k, v)),
+     |             ------------------ failed precondition
+
+note: 
+
+tmp%.to_iset().contains((k, v)) ✘
+    function is uninterpreted
+spec_key_unique_pairs_set(tmp%) ✔
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap43/OrderedTableStEph.rs:1413:48
+     |
+1413 |                         let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (k, v);
+     |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap43/OrderedTableStPer.rs:753:32
+    |
+753 |                         assert(self.tree.inner@.contains(sorted@[j]));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+self.tree.inner.view().to_iset().contains(sorted.view().index(j)) 
+    function is uninterpreted
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap43/OrderedTableStPer.rs:968:21
+    |
+968 |                     forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==> old_tree.contains(p),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedSpecsAndLemmas.rs:245:13
+    |
+245 |             forall|v: (KV, VV)| tree.contains(v) <==> sorted.contains(v),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedSpecsAndLemmas.rs:245:55
+    |
+245 |             forall|v: (KV, VV)| tree.contains(v) <==> sorted.contains(v),
+    |                                                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedSetStPer.rs:601:17
+    |
+601 |                 assert forall|v: T::V| self@.contains(v)
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedSetStPer.rs:602:29
+    |
+602 |                     implies result@.contains(v) by {
+    |                             ^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedSetStEph.rs:615:17
+    |
+615 |                 assert forall|v: T::V| self@.contains(v)
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedSetStEph.rs:616:29
+    |
+616 |                     implies result@.contains(v) by {
+    |                             ^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap43/OrderedSetStEph.rs:615:17
+    |
+615 |                 assert forall|v: T::V| self@.contains(v)
+    |                 ^^^^^^
+
+verification results:: 2680 verified, 6 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 25s
+Sampled Memory Usage: peak rust_verify RSS: 2710MB, peak z3 RSS: 306MB, min free: 23278MB
+Sampled CPU Usage: rust_verify: 41s, z3 children: 34s

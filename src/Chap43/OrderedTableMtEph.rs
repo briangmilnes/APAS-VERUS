@@ -29,6 +29,8 @@ pub mod OrderedTableMtEph {
     //		Section 2. imports
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::iter::*;
     use vstd::rwlock::*;
 
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
@@ -68,11 +70,11 @@ broadcast use {
 
     //		Section 10a. iterators
 
-
-    pub open spec fn iter_invariant<'a, K, V>(it: &OrderedTableMtEphIter<'a, K, V>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
+    // r212 form C: this `IntoIterator` impl required `requires self.spec_orderedtablemteph_wf()`, which
+    // verus 0.2026.09.13 rejects on an external trait's impl and no exec check
+    // can establish; use `iter()`, which keeps the requires
+    // (src/experiments/intoiter_form_c_no_impl.rs).
+    /*
     impl<'a, K: MtKey, V: MtVal + Ord> IntoIterator for &'a OrderedTableMtEph<K, V> {
         type Item = Pair<K, V>;
         type IntoIter = OrderedTableMtEphIter<'a, K, V>;
@@ -86,6 +88,7 @@ broadcast use {
             self.iter()
         }
     }
+    */
 
     //		Section 4b. type definitions
 
@@ -119,7 +122,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- acquires read lock, delegates to StEph.size
         fn size(&self) -> (count: usize)
             requires self.spec_orderedtablemteph_wf()
-            ensures count == self@.dom().len(), self@.dom().finite();
+            ensures count == self@.dom().len();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -143,7 +146,7 @@ broadcast use {
                 spec_pair_key_determines_order::<K, V>(),
                 vstd::laws_cmp::obeys_cmp::<K>(),
                 view_ord_consistent::<K>(),
-            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablemteph_wf();
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree.spec_orderedtablemteph_wf();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
@@ -182,8 +185,7 @@ broadcast use {
                 old(self).spec_orderedtablemteph_wf(),
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
-                obeys_feq_clone::<K>(),
-            ensures self@.dom().finite();
+                obeys_feq_clone::<K>(),;
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
@@ -192,14 +194,13 @@ broadcast use {
             requires
                 old(self).spec_orderedtablemteph_wf(),
                 obeys_view_eq::<K>(),
-            ensures self@ == old(self)@.remove(k@), self@.dom().finite();
+            ensures self@ == old(self)@.remove(k@);
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.domain
         fn domain(&self) -> (domain: ArraySetStEph<K>)
-            requires self.spec_orderedtablemteph_wf(), obeys_feq_clone::<K>()
-            ensures self@.dom().finite();
+            requires self.spec_orderedtablemteph_wf(), obeys_feq_clone::<K>();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
@@ -216,15 +217,13 @@ broadcast use {
                 spec_pair_key_determines_order::<K, V>(),
                 vstd::laws_cmp::obeys_cmp::<K>(),
                 view_ord_consistent::<K>(),
-                obeys_feq_fulls::<K, V>(),
-            ensures tabulated@.dom().finite();
+                obeys_feq_fulls::<K, V>(),;
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires read lock, delegates to StEph.map
         fn map<F: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: F) -> (mapped: Self)
-            requires forall|k: &K, v: &V| f.requires((k, v))
-            ensures mapped@.dom().finite();
+            requires forall|k: &K, v: &V| f.requires((k, v));
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
@@ -237,56 +236,49 @@ broadcast use {
             requires
                 forall|k: &K, v: &V| f.requires((k, v)),
                 forall|k: K, v: V, keep: bool|
-                    f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
-            ensures filtered@.dom().finite();
+                    f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),;
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- acquires locks, delegates to StEph.intersection
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F)
-            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
-            ensures self@.dom().finite();
+            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),;
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- acquires locks, delegates to StEph.union
         fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F)
-            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
-            ensures self@.dom().finite();
+            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),;
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- acquires locks, delegates to StEph.difference
         fn difference(&mut self, other: &Self)
-            requires old(self).spec_orderedtablemteph_wf()
-            ensures self@.dom().finite();
+            requires old(self).spec_orderedtablemteph_wf();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n * m), Span Θ(n * m) -- acquires write lock, delegates to StEph.restrict
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            requires old(self).spec_orderedtablemteph_wf()
-            ensures self@.dom().finite();
+            requires old(self).spec_orderedtablemteph_wf();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n * m), Span Θ(n * m) -- acquires write lock, delegates to StEph.subtract
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            requires old(self).spec_orderedtablemteph_wf()
-            ensures self@.dom().finite();
+            requires old(self).spec_orderedtablemteph_wf();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.reduce
         fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (reduced: R)
-            requires forall|r: R, k: &K, v: &V| f.requires((r, k, v))
-            ensures self@.dom().finite();
+            requires forall|r: R, k: &K, v: &V| f.requires((r, k, v));
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires read lock, delegates to StEph.collect
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf();
+            ensures collected.spec_avltreeseqstper_wf();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
@@ -295,7 +287,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_orderedtablemteph_wf()
             ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
@@ -307,7 +298,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_orderedtablemteph_wf()
             ensures
-                self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
@@ -319,7 +309,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_orderedtablemteph_wf()
             ensures
-                self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
@@ -331,7 +320,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_orderedtablemteph_wf()
             ensures
-                self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
@@ -341,15 +329,13 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires write lock, delegates to StEph.split_key
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
-            requires old(self).spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
-            ensures self@.dom().finite();
+            requires old(self).spec_orderedtablemteph_wf(), obeys_view_eq::<K>();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- delegates to union
         fn join_key(&mut self, other: Self)
-            requires old(self).spec_orderedtablemteph_wf()
-            ensures self@.dom().finite();
+            requires old(self).spec_orderedtablemteph_wf();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n + m), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + m), Span O(log n)
@@ -357,7 +343,6 @@ broadcast use {
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             requires self.spec_orderedtablemteph_wf(),
             ensures
-                range@.dom().finite(),
                 range@.dom().subset_of(self@.dom()),
                 forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],
                 range.spec_orderedtablemteph_wf();
@@ -369,7 +354,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
             ensures
-                self@.dom().finite(),
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
 
@@ -380,7 +364,6 @@ broadcast use {
             where K: TotalOrder
             requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
             ensures
-                self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,
                 selected matches Some(k) ==> self@.dom().contains(k@),
                 selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
@@ -390,14 +373,13 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires write lock, delegates to StEph.split_rank_key
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
-            requires old(self).spec_orderedtablemteph_wf()
-            ensures self@.dom().finite();
+            requires old(self).spec_orderedtablemteph_wf();
 
-        fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+        fn iter<'a>(&'a self) -> (it: std::vec::IntoIter<Pair<K, V>>)
             requires self.spec_orderedtablemteph_wf(),
             ensures
-                it@.0 == 0,
-                iter_invariant(&it);
+                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
+                IteratorSpec::decrease(&it) is Some;
     }
 
     //		Section 9b. impls
@@ -412,8 +394,7 @@ broadcast use {
 
     impl<K: MtKey, V: MtVal + Ord> OrderedTableMtEphTrait<K, V> for OrderedTableMtEph<K, V> {
         open spec fn spec_orderedtablemteph_wf(&self) -> bool {
-            self@.dom().finite()
-            && obeys_feq_fulls::<K, V>()
+            obeys_feq_fulls::<K, V>()
             && obeys_feq_full::<Pair<K, V>>()
         }
 
@@ -506,10 +487,6 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph domain
         fn domain(&self) -> (domain: ArraySetStEph<K>) {
-            proof {
-                assume(self@.dom().finite());
-// Veracity: UNNEEDED assert                 assert(obeys_feq_full_trigger::<K>());
-            }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             proof { assume(inner.spec_orderedtablesteph_wf()); }
@@ -651,7 +628,6 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph reduce
         fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (reduced: R) {
-            proof { assume(self@.dom().finite()); }
             // Veracity: NEEDED proof block
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -663,7 +639,6 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph collect
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>) {
-            proof { assume(self@.dom().finite()); }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let collected = inner.collect();
@@ -813,7 +788,7 @@ broadcast use {
             (from_st(left), from_st(right))
         }
 
-        fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+        fn iter<'a>(&'a self) -> (it: std::vec::IntoIter<Pair<K, V>>)
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -834,7 +809,7 @@ broadcast use {
                 i += 1;
             }
             read_handle.release_read();
-            OrderedTableMtEphIter { snapshot, pos: 0, _phantom: core::marker::PhantomData }
+            snapshot.into_iter()
         // Veracity: NEEDED proof block
         }
     }
@@ -843,8 +818,7 @@ broadcast use {
     /// Construct Mt wrapper from an St table.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- wraps inner in RwLock
     fn from_st<K: MtKey, V: MtVal + Ord>(inner: OrderedTableStEph<K, V>) -> (s: OrderedTableMtEph<K, V>)
-        requires inner@.dom().finite()
-        ensures s@ =~= inner@, s@.dom().finite(), s.spec_orderedtablemteph_wf()
+        ensures s@ =~= inner@, s.spec_orderedtablemteph_wf()
     {
         // Veracity: NEEDED assert (speed hint)
         assert(obeys_feq_full_trigger::<K>());
@@ -875,7 +849,7 @@ broadcast use {
             view_ord_consistent::<K>(),
             forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
                 ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,
-        ensures constructed@.dom().finite(), constructed.spec_orderedtablemteph_wf()
+        ensures constructed.spec_orderedtablemteph_wf()
     {
         // Veracity: NEEDED assert
         assert(obeys_feq_full_trigger::<K>());
@@ -893,112 +867,6 @@ broadcast use {
     // Entries are behind an RwLock, so the iterator collects a snapshot.
     // All iterator infrastructure uses external_body since entries cannot be
     // borrowed through the lock.
-
-    #[verifier::reject_recursive_types(K)]
-    #[verifier::reject_recursive_types(V)]
-    pub struct OrderedTableMtEphIter<'a, K, V> {
-        pub snapshot: Vec<Pair<K, V>>,
-        pub pos: usize,
-        pub _phantom: core::marker::PhantomData<&'a (K, V)>,
-    }
-
-    impl<'a, K, V> View for OrderedTableMtEphIter<'a, K, V> {
-        type V = (int, Seq<Pair<K, V>>);
-        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) {
-            (self.pos as int, self.snapshot@)
-        }
-    }
-
-    #[verifier::reject_recursive_types(K)]
-    #[verifier::reject_recursive_types(V)]
-    pub struct OrderedTableMtEphGhostIterator<'a, K, V> {
-        pub pos: int,
-        pub elements: Seq<Pair<K, V>>,
-        pub phantom: core::marker::PhantomData<&'a (K, V)>,
-    }
-
-    impl<'a, K, V> View for OrderedTableMtEphGhostIterator<'a, K, V> {
-        type V = Seq<Pair<K, V>>;
-
-        open spec fn view(&self) -> Seq<Pair<K, V>> {
-            self.elements.take(self.pos)
-        }
-    }
-
-    impl<'a, K: MtKey, V: MtVal + Ord> vstd::pervasive::ForLoopGhostIteratorNew for OrderedTableMtEphIter<'a, K, V> {
-        type GhostIter = OrderedTableMtEphGhostIterator<'a, K, V>;
-        open spec fn ghost_iter(&self) -> OrderedTableMtEphGhostIterator<'a, K, V> {
-            OrderedTableMtEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, K: MtKey, V: MtVal + Ord> vstd::pervasive::ForLoopGhostIterator for OrderedTableMtEphGhostIterator<'a, K, V> {
-        type ExecIter = OrderedTableMtEphIter<'a, K, V>;
-        type Item = Pair<K, V>;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &OrderedTableMtEphIter<'a, K, V>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &OrderedTableMtEphIter<'a, K, V>) -> OrderedTableMtEphGhostIterator<'a, K, V> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    impl<'a, K: MtKey, V: MtVal + Ord> Iterator for OrderedTableMtEphIter<'a, K, V> {
-        type Item = Pair<K, V>;
-
-        #[verifier::external_body]
-        fn next(&mut self) -> (next: Option<Pair<K, V>>)
-            ensures
-                ({
-                    let (old_index, old_seq) = old(self)@;
-                    match next {
-                        None => {
-                            &&& self@ == old(self)@
-                            &&& old_index >= old_seq.len()
-                        },
-                        Some(element) => {
-                            let (new_index, new_seq) = self@;
-                            &&& 0 <= old_index < old_seq.len()
-                            &&& new_seq == old_seq
-                            &&& new_index == old_index + 1
-                            &&& element == old_seq[old_index]
-                        },
-                    }
-                }),
-        {
-            if self.pos < self.snapshot.len() {
-                let item = self.snapshot[self.pos].clone();
-                self.pos += 1;
-                Some(item)
-            } else {
-                None
-            }
-        }
-    }
 
     //		Section 11a. top level coarse locking
 // Veracity: NEEDED proof block
@@ -1023,7 +891,6 @@ broadcast use {
             read_handle.release_read();
             let ghost view = inner@;
             proof {
-                accept(view.dom().finite());
                 accept(inner.spec_orderedtablesteph_wf());
             }
             OrderedTableMtEph {
@@ -1104,30 +971,6 @@ broadcast use {
     impl<K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableMtEph<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableMtEph(size: {})", self.size())
-        }
-    }
-
-    impl<'a, K: MtKey, V: MtVal + Ord> fmt::Debug for OrderedTableMtEphIter<'a, K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("OrderedTableMtEphIter").finish()
-        }
-    }
-
-    impl<'a, K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableMtEphIter<'a, K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedTableMtEphIter")
-        }
-    }
-
-    impl<'a, K: MtKey, V: MtVal + Ord> fmt::Debug for OrderedTableMtEphGhostIterator<'a, K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("OrderedTableMtEphGhostIterator").finish()
-        }
-    }
-
-    impl<'a, K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableMtEphGhostIterator<'a, K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedTableMtEphGhostIterator")
         }
     }
 }
