@@ -1,0 +1,114 @@
+r212 RTT for Chap27: cargo test --release on 4 targets: TestReduceContractStEph TestReduceContractMtEph TestScanContractStEph TestScanContractMtEph
+Starting RTT at 05:14:08
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.56s
+     Running tests/Chap27/TestReduceContractMtEph.rs (target/release/deps/TestReduceContractMtEph-816d022f2fa8fe16)
+
+running 12 tests
+test test_reduce_contract_parallel_empty ... ok
+test test_reduce_contract_parallel_single ... ok
+test test_reduce_contract_parallel_min ... ok
+test test_reduce_contract_parallel_odd_length ... ok
+test test_reduce_contract_parallel_three_elements ... ok
+test test_reduce_contract_parallel_two_elements ... ok
+test test_reduce_contract_parallel_even_length ... ok
+test test_reduce_contract_parallel_product ... ok
+test test_reduce_contract_parallel_sum ... ok
+test test_reduce_contract_parallel_max ... ok
+test test_reduce_contract_parallel_large ... ok
+test test_reduce_contract_parallel_power_of_2 ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap27/TestReduceContractStEph.rs (target/release/deps/TestReduceContractStEph-5dc440cc8c5beb21)
+
+running 13 tests
+test test_reduce_contract_all_same ... ok
+test test_reduce_contract_empty ... ok
+test test_reduce_contract_even_length ... ok
+test test_reduce_contract_max ... ok
+test test_reduce_contract_min ... ok
+test test_reduce_contract_large ... ok
+test test_reduce_contract_odd_length ... ok
+test test_reduce_contract_power_of_2 ... ok
+test test_reduce_contract_product ... ok
+test test_reduce_contract_single ... ok
+test test_reduce_contract_sum ... ok
+test test_reduce_contract_three_elements ... ok
+test test_reduce_contract_two_elements ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap27/TestScanContractMtEph.rs (target/release/deps/TestScanContractMtEph-45ca10ea1194e6db)
+
+running 11 tests
+test test_scan_contract_parallel_empty ... ok
+test test_scan_contract_parallel_single ... ok
+test test_scan_contract_parallel_odd_length ... ok
+test test_scan_contract_parallel_three_elements ... ok
+test test_scan_contract_parallel_all_same ... ok
+test test_scan_contract_parallel_two_elements ... ok
+test test_scan_contract_parallel_even_length ... ok
+test test_scan_contract_parallel_product ... ok
+test test_scan_contract_parallel_sum ... ok
+test test_scan_contract_parallel_large ... ok
+test test_scan_contract_parallel_power_of_2 ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap27/TestScanContractStEph.rs (target/release/deps/TestScanContractStEph-c1cf31c3df76df34)
+
+running 12 tests
+test test_scan_contract_all_same ... ok
+test test_scan_contract_empty ... ok
+test test_scan_contract_even_length ... ok
+test test_scan_contract_large ... ok
+test test_scan_contract_max ... ok
+test test_scan_contract_odd_length ... ok
+test test_scan_contract_power_of_2 ... ok
+test test_scan_contract_product ... ok
+test test_scan_contract_single ... ok
+test test_scan_contract_sum ... ok
+test test_scan_contract_three_elements ... ok
+test test_scan_contract_two_elements ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 1s
