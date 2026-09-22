@@ -1,0 +1,54 @@
+r212 PTT for Chap19 (isolate: Chap19 Chap02); tests: ProveChap19ArraySeqStEph ProveChap19ArraySeqStPer ProveChap19ArraySeqMtEph ProveChap19ArraySeqMtEphSlice
+Starting PTT at 05:10:12
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 0.84s
+     Running tests/Chap19/ProveArraySeqMtEph.rs (target/release/build/rust_verify_test/599ed89d60d8b4e0/out/ProveChap19ArraySeqMtEph-599ed89d60d8b4e0)
+
+running 6 tests
+test chap19_arrayseqmteph_for_borrow_into ... ok
+test chap19_arrayseqmteph_for_consume ... ok
+test chap19_arrayseqmteph_loop_borrow_iter ... ok
+test chap19_arrayseqmteph_for_borrow_iter ... ok
+test chap19_arrayseqmteph_loop_borrow_into ... ok
+test chap19_arrayseqmteph_loop_consume ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.72s
+
+     Running tests/Chap19/ProveArraySeqMtEphSlice.rs (target/release/build/rust_verify_test/303d47c750eef9ec/out/ProveChap19ArraySeqMtEphSlice-303d47c750eef9ec)
+
+running 5 tests
+test slice_loop_borrow_iter ... ok
+test slice_for_borrow_into ... ok
+test slice_for_borrow_iter ... ok
+test slice_iter_over_subslice ... ok
+test slice_operations ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s
+
+     Running tests/Chap19/ProveArraySeqStEph.rs (target/release/build/rust_verify_test/8c0b2638527c0a3d/out/ProveChap19ArraySeqStEph-8c0b2638527c0a3d)
+
+running 6 tests
+test chap19_arrayseqsteph_loop_consume ... ok
+test chap19_arrayseqsteph_loop_borrow_into ... ok
+test chap19_arrayseqsteph_for_borrow_into ... ok
+test chap19_arrayseqsteph_for_borrow_iter ... ok
+test chap19_arrayseqsteph_loop_borrow_iter ... ok
+test chap19_arrayseqsteph_for_consume ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.66s
+
+     Running tests/Chap19/ProveArraySeqStPer.rs (target/release/build/rust_verify_test/c53192f09de43032/out/ProveChap19ArraySeqStPer-c53192f09de43032)
+
+running 6 tests
+test chap19_arrayseqstper_loop_borrow_iter ... ok
+test chap19_arrayseqstper_loop_borrow_into ... ok
+test chap19_arrayseqstper_for_borrow_iter ... ok
+test chap19_arrayseqstper_for_consume ... ok
+test chap19_arrayseqstper_loop_consume ... ok
+test chap19_arrayseqstper_for_borrow_into ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.73s
+
+cargo test rc: 0
+Elapsed: 6s

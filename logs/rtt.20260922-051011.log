@@ -1,0 +1,222 @@
+r212 RTT for Chap19: cargo test --release on 4 targets: TestChap19ArraySeqStEph TestChap19ArraySeqStPer TestChap19ArraySeqMtEph TestChap19ArraySeqMtEphSlice
+Starting RTT at 05:10:11
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.91s
+     Running tests/Chap19/TestArraySeqMtEph.rs (target/release/deps/TestChap19ArraySeqMtEph-032f473360d476ba)
+
+running 43 tests
+test test_append ... ok
+test test_clone ... ok
+test test_debug ... ok
+test test_display ... ok
+test test_empty ... ok
+test test_filter_par_empty ... ok
+test test_filter_par_singleton_keep ... ok
+test test_filter_par_singleton_drop ... ok
+test test_for_loop ... ok
+test test_from_vec ... ok
+test test_inject ... ok
+test test_is_empty_singleton ... ok
+test test_large_sequence ... ok
+test test_map_par ... ok
+test test_map_par_medium ... ok
+test test_map_par_small ... ok
+test test_filter_par_small ... ok
+test test_reduce_par_odd_size ... ok
+test test_iter ... ok
+test test_map_par_odd_size ... ok
+test test_partial_eq ... ok
+test test_filter_par_medium ... ok
+test test_reduce_par_singleton ... ok
+test test_map_par_empty ... ok
+test test_set ... ok
+test test_singleton ... ok
+test test_reduce_par ... ok
+test test_subseq ... ok
+test test_reduce_par_small ... ok
+test test_update ... ok
+test test_flatten ... ok
+test test_new ... ok
+test test_map_par_singleton ... ok
+test test_filter_par ... ok
+test test_reduce_par_empty ... ok
+test test_tabulate ... ok
+test test_reduce_par_medium ... ok
+test test_filter_par_all_pass ... ok
+test test_filter_par_none_pass ... ok
+test test_map ... ok
+test test_filter_par_large ... ok
+test test_reduce_par_large ... ok
+test test_map_par_large ... ok
+
+test result: ok. 43 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/Chap19/TestArraySeqMtEphSlice.rs (target/release/deps/TestChap19ArraySeqMtEphSlice-3ef7a0705b3256de)
+
+running 70 tests
+test test_append_basic ... ok
+test test_append_both_empty ... ok
+test test_debug ... ok
+test test_append_empty_left ... ok
+test test_append_empty_right ... ok
+test test_empty ... ok
+test test_display ... ok
+test test_filter_empty ... ok
+test test_flatten_empty ... ok
+test test_flatten_with_empties ... ok
+test test_flatten_single ... ok
+test test_from_vec ... ok
+test test_filter_all_pass ... ok
+test test_flatten_large ... ok
+test test_flatten_multiple ... ok
+test test_filter_some_pass ... ok
+test test_filter_then_reduce ... ok
+test test_inject_empty_updates ... ok
+test test_inject_out_of_bounds_ignored ... ok
+test test_inject_single_update ... ok
+test test_is_empty_false ... ok
+test test_is_empty_true ... ok
+test test_filter_none_pass ... ok
+test test_is_singleton_false_empty ... ok
+test test_is_singleton_false_multi ... ok
+test test_is_singleton_true ... ok
+test test_iter ... ok
+test test_iter_for_loop ... ok
+test test_large_sequence ... ok
+test test_map_empty ... ok
+test test_map_singleton ... ok
+test test_map_then_reduce ... ok
+test test_ninject_basic ... ok
+test test_ninject_empty_updates ... ok
+test test_reduce_empty ... ok
+test test_map_small ... ok
+test test_reduce_singleton ... ok
+test test_reduce_small ... ok
+test test_new ... ok
+test test_scan_empty ... ok
+test test_scan_small ... ok
+test test_scan_medium ... ok
+test test_set_first ... ok
+test test_set_preserves_length ... ok
+test test_singleton ... ok
+test test_slice_empty ... ok
+test test_slice_then_reduce ... ok
+test test_subseq_copy ... ok
+test test_scan_singleton ... ok
+test test_tabulate_empty ... ok
+test test_tabulate_identity ... ok
+test test_slice_then_iter ... ok
+test test_scan_sliced ... ok
+test test_tabulate_small ... ok
+test test_tabulate_then_map ... ok
+test test_to_vec ... ok
+test test_update_basic ... ok
+test test_tabulate_singleton ... ok
+test test_inject_multiple_updates ... ok
+test test_slice_full ... ok
+test test_reduce_product ... ok
+test test_slice_basic ... ok
+test test_set_last ... ok
+test test_reduce_medium ... ok
+test test_scan_product ... ok
+test test_reduce_large ... ok
+test test_filter_large ... ok
+test test_map_large ... ok
+test test_scan_large ... ok
+test test_tabulate_large ... ok
+
+test result: ok. 70 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/Chap19/TestArraySeqStEph.rs (target/release/deps/TestChap19ArraySeqStEph-35312d051971a1f3)
+
+running 23 tests
+test test_display ... ok
+test test_append ... ok
+test test_clone ... ok
+test test_for_loop ... ok
+test test_flatten ... ok
+test test_debug ... ok
+test test_empty ... ok
+test test_for_loop_iter ... ok
+test test_from_vec ... ok
+test test_inject ... ok
+test test_is_empty_singleton ... ok
+test test_iter ... ok
+test test_large_from_vec ... ok
+test test_large_sequence ... ok
+test test_map ... ok
+test test_map_identity ... ok
+test test_new ... ok
+test test_partial_eq ... ok
+test test_set ... ok
+test test_singleton ... ok
+test test_subseq ... ok
+test test_tabulate ... ok
+test test_update ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap19/TestArraySeqStPer.rs (target/release/deps/TestChap19ArraySeqStPer-310e44d2edaa9e79)
+
+running 20 tests
+test test_display ... ok
+test test_append ... ok
+test test_debug ... ok
+test test_clone ... ok
+test test_flatten ... ok
+test test_empty ... ok
+test test_from_vec ... ok
+test test_inject ... ok
+test test_for_loop_iter ... ok
+test test_is_empty_singleton ... ok
+test test_iter ... ok
+test test_large_sequence ... ok
+test test_map ... ok
+test test_new ... ok
+test test_partial_eq ... ok
+test test_singleton ... ok
+test test_subseq ... ok
+test test_subseq_copy ... ok
+test test_tabulate ... ok
+test test_update ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 1s

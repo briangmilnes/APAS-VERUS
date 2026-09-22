@@ -29,7 +29,8 @@ file, or listed at the end.
 | 5 | 11 | 651 | 0 | 0 | 40 pass | none | 58e3ecf69 |
 | 6 | 12 | 635 | 0 | 0 | 40 pass | none | 571ed7e81 |
 | 7 | 17 | 645 | 0 | 0 | 40 pass | 2 of 9 (1) | 8c46d30bd |
-| 8 | 18 | 1003 | 0 | 0 | 170 pass | 38 pass | r213 Chap18 |
+| 8 | 18 | 1003 | 0 | 0 | 170 pass | 38 pass | 99d1a9fa7 |
+| 9 | 19 | 824 | 0 | 0 | 156 pass | 23 pass | r213 Chap19 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -123,3 +124,10 @@ and do not compile; see the chapter section.
 - RTT: 8 targets, 170 tests pass (`logs/rtt.20260922-050921.log`); the
   unused-`mut` warning is gone from the build.
 - PTT: 8 files, 38 tests pass (`logs/ptt-Chap18.20260922-050932.log`).
+
+### Chap19
+
+- Start and end: 824 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-051000.log`). No edit.
+- RTT: 4 targets, 156 tests pass (`logs/rtt.20260922-051011.log`).
+- PTT: 4 files, 23 tests pass (`logs/ptt-Chap19.20260922-051012.log`).
