@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap21 Chap02
+error: assert_nonlinear_by: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+  --> src/Chap21/Algorithm21_6.rs:52:13
+   |
+52 |             assert((a * b) % a == 0) by (nonlinear_arith) requires a >= 2;
+   |             ^^^^^^
+
+error: assert_nonlinear_by: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+  --> src/Chap21/Algorithm21_6.rs:60:13
+   |
+60 |             assert((a * b) % b == 0) by (nonlinear_arith) requires b >= 2;
+   |             ^^^^^^
+
+error: assert_nonlinear_by: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+  --> src/Chap21/Exercise21_9.rs:77:13
+   |
+77 |             assert(m % q == 0) by (nonlinear_arith)
+   |             ^^^^^^
+
+verification results:: 1262 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1200MB, peak z3 RSS: 156MB, min free: 24938MB
+Sampled CPU Usage: rust_verify: 11s, z3 children: 15s

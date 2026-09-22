@@ -74,8 +74,8 @@ pub mod Exercise21_9 {
             // q divides m because m == d0 * q means m % q == 0.
             // Veracity: NEEDED assert
             // Veracity: NEEDED assert
-            assert(m % q == 0) by (nonlinear_arith)
-                requires m == d0 * q, q >= 2;
+            vstd::arithmetic::div_mod::lemma_mod_multiples_basic(d0, q);
+            assert(m % q == 0);
         }
     }
 

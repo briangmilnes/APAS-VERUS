@@ -30,7 +30,8 @@ file, or listed at the end.
 | 6 | 12 | 635 | 0 | 0 | 40 pass | none | 571ed7e81 |
 | 7 | 17 | 645 | 0 | 0 | 40 pass | 2 of 9 (1) | 8c46d30bd |
 | 8 | 18 | 1003 | 0 | 0 | 170 pass | 38 pass | 99d1a9fa7 |
-| 9 | 19 | 824 | 0 | 0 | 156 pass | 23 pass | r213 Chap19 |
+| 9 | 19 | 824 | 0 | 0 | 156 pass | 23 pass | 7ac57e5c8 |
+| 10 | 21 | 1262 | 0 | 0 | 46 pass | none | r213 Chap21 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -131,3 +132,19 @@ and do not compile; see the chapter section.
   (`logs/validate.20260922-051000.log`). No edit.
 - RTT: 4 targets, 156 tests pass (`logs/rtt.20260922-051011.log`).
 - PTT: 4 files, 23 tests pass (`logs/ptt-Chap19.20260922-051012.log`).
+
+### Chap21
+
+- Start (first run on 09.13): 1262 verified, 3 errors, 0 warnings
+  (`logs/validate.20260922-051029.log`). All three were
+  `assert_nonlinear_by: Resource limit (rlimit) exceeded` on
+  `x % y == 0` facts under Z3 4.16: `Algorithm21_6.rs:52` and `:60`
+  (`lemma_product_not_prime`), `Exercise21_9.rs:77`.
+- Edit class: nonlinear `by (nonlinear_arith)` asserts replaced by the vstd
+  lemma `vstd::arithmetic::div_mod::lemma_mod_multiples_basic(x, m)`
+  (`(x * m) % m == 0`), plus `lemma_mul_is_commutative(a, b)` for the
+  `(a * b) % a` case. Proof only; no exec edit.
+- End: 1262 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-051054.log`).
+- RTT: 1 target, 46 tests pass (`logs/rtt.20260922-051106.log`).
+- PTT: none registered.

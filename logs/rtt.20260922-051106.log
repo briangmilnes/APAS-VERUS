@@ -1,0 +1,94 @@
+r212 RTT for Chap21: cargo test --release on 1 targets: TestChap21
+Starting RTT at 05:11:06
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 5.36s
+     Running tests/Chap21/TestChap21.rs (target/release/deps/TestChap21-8b71d8ec61722fa9)
+
+running 46 tests
+test all_contiguous_subseqs_empty ... ok
+test all_contiguous_subseqs_singleton ... ok
+test all_contiguous_subseqs_small ... ok
+test cartesian_loops_empty ... ok
+test cartesian_loops_singleton ... ok
+test cartesian_matches ... ok
+test cartesian_loops_basic ... ok
+test cartesian_tab_flat_basic ... ok
+test cartesian_tab_flat_empty_both ... ok
+test is_divisible_edge_cases ... ok
+test is_divisible_tests ... ok
+test is_even_tests ... ok
+test is_prime_boundary ... ok
+test is_prime_known_composites ... ok
+test is_prime_known_primes ... ok
+test is_vowel_tests ... ok
+test pair_even_with_vowels_basic ... ok
+test pair_even_with_vowels_no_evens ... ok
+test pair_even_with_vowels_no_vowels ... ok
+test points2d_matches_tab_flat ... ok
+test points2d_n0 ... ok
+test points2d_n1 ... ok
+test points2d_n3 ... ok
+test points2d_tab_flat_n0 ... ok
+test points2d_tab_flat_n1 ... ok
+test points2d_tab_flat_n2 ... ok
+test points2d_tab_flat_n3 ... ok
+test points2d_tab_flat_n5 ... ok
+test points3d_loops_bounds ... ok
+test points3d_loops_matches_tab_flat ... ok
+test points3d_loops_n0 ... ok
+test points3d_loops_n1 ... ok
+test points3d_loops_n3 ... ok
+test points3d_tab_flat_n0 ... ok
+test points3d_tab_flat_n1 ... ok
+test points3d_tab_flat_n3 ... ok
+test prime_sieve_n0 ... ok
+test prime_sieve_matches_primes_bf ... ok
+test prime_sieve_n10 ... ok
+test prime_sieve_n100 ... ok
+test prime_sieve_n2 ... ok
+test prime_sieve_n20 ... ok
+test primes_bf_n0 ... ok
+test primes_bf_n10 ... ok
+test primes_bf_n2 ... ok
+test primes_bf_n20 ... ok
+
+test result: ok. 46 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 6s

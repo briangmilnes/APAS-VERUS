@@ -49,7 +49,9 @@ pub mod Algorithm21_6 {
         if a * a <= c {
             // Veracity: NEEDED assert
             // Veracity: NEEDED assert
-            assert((a * b) % a == 0) by (nonlinear_arith) requires a >= 2;
+            vstd::arithmetic::mul::lemma_mul_is_commutative(a, b);
+            vstd::arithmetic::div_mod::lemma_mod_multiples_basic(b, a);
+            assert((a * b) % a == 0);
         } else {
             // Veracity: NEEDED assert
             // Veracity: NEEDED assert
@@ -57,7 +59,8 @@ pub mod Algorithm21_6 {
                 requires a * a > a * b, b >= 2, a >= 2;
             // Veracity: NEEDED assert
             // Veracity: NEEDED assert
-            assert((a * b) % b == 0) by (nonlinear_arith) requires b >= 2;
+            vstd::arithmetic::div_mod::lemma_mod_multiples_basic(a, b);
+            assert((a * b) % b == 0);
         }
     }
 
