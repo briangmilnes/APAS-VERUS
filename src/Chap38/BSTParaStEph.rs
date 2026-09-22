@@ -90,7 +90,6 @@ pub mod BSTParaStEph {
     ) -> (tree: ParamBST<T>)
         requires
             (BSTParaStEphInv::<T> { contents }).inv(val),
-            contents.finite(),
             forall|v: <T as View>::V| contents.contains(v)
                 ==> exists|t: T| t@ == v,
         ensures tree@ =~= contents,
@@ -137,7 +136,6 @@ pub mod BSTParaStEph {
         Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
     ) -> (filtered: ParamBST<T>)
         requires
-            tree@.finite(),
             forall|t: &T| predicate.requires((t,)),
             forall|x: T, keep: bool|
                 predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -145,7 +143,6 @@ pub mod BSTParaStEph {
             view_ord_consistent::<T>(),
         ensures
             filtered@.subset_of(tree@),
-            filtered@.finite(),
             forall|v: T::V| #[trigger] filtered@.contains(v)
                 ==> tree@.contains(v) && spec_pred(v),
             forall|v: T::V| tree@.contains(v) && spec_pred(v)
@@ -202,7 +199,6 @@ pub mod BSTParaStEph {
         identity: T,
     ) -> (reduced: T)
         requires
-            tree@.finite(),
             forall|a: T, b: T| op.requires((a, b)),
         ensures tree@.len() == 0 ==> reduced@ == identity@,
         decreases tree@.len(),
@@ -304,7 +300,6 @@ pub mod BSTParaStEph {
         fn singleton(key: T) -> (tree: Self)
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(key@),
-                tree@.finite(),
                 tree.spec_bstparasteph_wf();
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees with APAS.
@@ -314,8 +309,6 @@ pub mod BSTParaStEph {
                 exposed is Leaf ==> self@ =~= Set::<<T as View>::V>::empty(),
                 exposed matches Exposed::Node(l, k, r) ==> {
                     self@ =~= l@.union(r@).insert(k@)
-                    && self@.finite()
-                    && l@.finite() && r@.finite()
                     && l@.disjoint(r@)
                     && !l@.contains(k@)
                     && !r@.contains(k@)
@@ -328,8 +321,7 @@ pub mod BSTParaStEph {
         fn join_mid(exposed: Exposed<T>) -> (joined: Self)
             requires
                 exposed matches Exposed::Node(l, k, r) ==> {
-                    l@.finite() && r@.finite()
-                    && l@.disjoint(r@)
+                    l@.disjoint(r@)
                     && !l@.contains(k@)
                     && !r@.contains(k@)
                     && l@.len() + r@.len() < usize::MAX as nat
@@ -343,7 +335,6 @@ pub mod BSTParaStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — ACCEPTED DIFFERENCE: delegates to join_mid which is O(1) in parametric impl
         fn join_m(left: Self, key: T, right: Self) -> (tree: Self)
             requires
-                left@.finite(), right@.finite(),
                 left@.disjoint(right@),
                 !left@.contains(key@),
                 !right@.contains(key@),
@@ -354,11 +345,11 @@ pub mod BSTParaStEph {
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees with APAS.
         fn size(&self) -> (count: usize)
-            ensures count == self@.len(), self@.finite();
+            ensures count == self@.len();
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees with APAS.
         fn is_empty(&self) -> (empty: bool)
-            ensures empty == (self@.len() == 0), self@.finite();
+            ensures empty == (self@.len() == 0);
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg |t|), Span O(lg |t|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
         fn insert(&mut self, key: T)
@@ -396,8 +387,6 @@ pub mod BSTParaStEph {
                 view_ord_consistent::<T>(),
             ensures
                 parts.1 == self@.contains(key@),
-                parts.0@.finite(),
-                parts.2@.finite(),
                 parts.0@.union(parts.2@) =~= self@.remove(key@),
                 parts.0@.disjoint(parts.2@),
                 !parts.0@.contains(key@),
@@ -433,10 +422,9 @@ pub mod BSTParaStEph {
                 vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 self@.disjoint(other@),
-                self@.finite(), other@.finite(),
                 self@.len() + other@.len() < usize::MAX as nat,
                 forall|s: T, o: T| #![trigger self@.contains(s@), other@.contains(o@)] self@.contains(s@) && other@.contains(o@) ==> s.cmp_spec(&o) == Less,
-            ensures joined@.finite(), joined@ =~= self@.union(other@);
+            ensures joined@ =~= self@.union(other@);
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(m * lg(n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(m * lg(n/m)) — ACCEPTED DIFFERENCE: sequential recursion, no parallel split
         fn union(&self, other: &Self) -> (combined: Self)
@@ -444,21 +432,21 @@ pub mod BSTParaStEph {
                 vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
                 self@.len() + other@.len() <= usize::MAX as nat,
-            ensures combined@ == self@.union(other@), combined@.finite();
+            ensures combined@ == self@.union(other@);
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(m * lg(n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(m * lg(n/m)) — ACCEPTED DIFFERENCE: sequential recursion, no parallel split
         fn intersect(&self, other: &Self) -> (common: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
-            ensures common@ == self@.intersect(other@), common@.finite();
+            ensures common@ == self@.intersect(other@);
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(m * lg(n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(m * lg(n/m)) — ACCEPTED DIFFERENCE: sequential recursion, no parallel split
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
                 view_ord_consistent::<T>(),
-            ensures remaining@ == self@.difference(other@), remaining@.finite();
+            ensures remaining@ == self@.difference(other@);
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(Σ W(f(x))), Span O(lg |t| + max S(f(x)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ W(f(x))), Span O(n + max S(f(x))) — ACCEPTED DIFFERENCE: sequential tree traversal
         fn filter<F: Fn(&T) -> bool>(
@@ -467,7 +455,6 @@ pub mod BSTParaStEph {
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         ) -> (filtered: Self)
             requires
-                self@.finite(),
                 forall|t: &T| predicate.requires((t,)),
                 forall|x: T, keep: bool|
                     predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -475,7 +462,6 @@ pub mod BSTParaStEph {
                 view_ord_consistent::<T>(),
             ensures
                 filtered@.subset_of(self@),
-                filtered@.finite(),
                 forall|v: T::V| #[trigger] filtered@.contains(v)
                     ==> self@.contains(v) && spec_pred(v),
                 forall|v: T::V| self@.contains(v) && spec_pred(v)
@@ -485,13 +471,10 @@ pub mod BSTParaStEph {
         /// Requires `op` to be associative with identity `base`.
         fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T)
             requires
-                self@.finite(),
                 forall|a: T, b: T| op.requires((a, b)),
             ensures self@.len() == 0 ==> reduced@ == base@;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|), Span O(|t|) — helper for in_order.
         fn collect_in_order(&self, out: &mut Vec<T>)
-            requires
-                self@.finite(),
             ensures
                 out@.len() == old(out)@.len() + self@.len(),
                 forall|i: int| #![trigger out@[i]] 0 <= i < old(out)@.len() ==> out@[i] == old(out)@[i],
@@ -514,8 +497,7 @@ pub mod BSTParaStEph {
     impl<T: StT + Ord> ParamBST<T> {
         #[verifier::type_invariant]
         spec fn wf(self) -> bool {
-            self.ghost_locked_root@.finite()
-            && self.ghost_locked_root@ =~= self.locked_root.pred().contents
+            self.ghost_locked_root@ =~= self.locked_root.pred().contents
             && (forall|v: <T as View>::V| self.ghost_locked_root@.contains(v)
                 ==> exists|t: T| t@ == v)
         }
@@ -528,8 +510,7 @@ pub mod BSTParaStEph {
 
     impl<T: StT + Ord> ParamBSTTrait<T> for ParamBST<T> {
         open spec fn spec_bstparasteph_wf(&self) -> bool {
-            self@.finite()
-            && obeys_feq_full::<T>()
+            obeys_feq_full::<T>()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -545,7 +526,6 @@ pub mod BSTParaStEph {
         fn singleton(key: T) -> (tree: Self)
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(key@),
-                tree@.finite(),
                 tree.spec_bstparasteph_wf()
         {
             let left: Self = Self::new();
@@ -560,8 +540,6 @@ pub mod BSTParaStEph {
                 exposed is Leaf ==> self@ =~= Set::<<T as View>::V>::empty(),
                 exposed matches Exposed::Node(l, k, r) ==> {
                     self@ =~= l@.union(r@).insert(k@)
-                    && self@.finite()
-                    && l@.finite() && r@.finite()
                     && l@.disjoint(r@)
                     && !l@.contains(k@)
                     && !r@.contains(k@)
@@ -644,7 +622,7 @@ pub mod BSTParaStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         // Veracity: NEEDED proof block
         fn size(&self) -> (count: usize)
-            ensures count == self@.len(), self@.finite()
+            ensures count == self@.len()
         {
             // Veracity: NEEDED proof block
             proof { use_type_invariant(self); }
@@ -666,7 +644,7 @@ pub mod BSTParaStEph {
         // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool)
-            ensures empty == (self@.len() == 0), self@.finite()
+            ensures empty == (self@.len() == 0)
         { self.size() == 0 }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
@@ -1049,7 +1027,7 @@ pub mod BSTParaStEph {
         /// Algorithm 38.4 — join two trees via recursive decomposition.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn join_pair(&self, other: Self) -> (joined: Self)
-            ensures joined@.finite(), joined@ =~= self@.union(other@),
+            ensures joined@ =~= self@.union(other@),
             decreases other@.len(),
         {
             match other.expose() {
@@ -1089,7 +1067,7 @@ pub mod BSTParaStEph {
         /// Algorithm 38.6 — sequential union via divide-and-conquer on split.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
         fn union(&self, other: &Self) -> (combined: Self)
-            ensures combined@ == self@.union(other@), combined@.finite(),
+            ensures combined@ == self@.union(other@),
             decreases self@.len(),
         {
             match (self.expose(), other.expose()) {
@@ -1172,7 +1150,7 @@ pub mod BSTParaStEph {
         /// Algorithm 38.7 — sequential intersect. Keeps keys present in both trees.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
         fn intersect(&self, other: &Self) -> (common: Self)
-            ensures common@ == self@.intersect(other@), common@.finite(),
+            ensures common@ == self@.intersect(other@),
             // Veracity: NEEDED proof block
             decreases self@.len(),
         {
@@ -1320,7 +1298,7 @@ pub mod BSTParaStEph {
         /// Algorithm 38.8 — sequential difference. Keeps keys in `self` not in `other`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
         fn difference(&self, other: &Self) -> (remaining: Self)
-            ensures remaining@ == self@.difference(other@), remaining@.finite(),
+            ensures remaining@ == self@.difference(other@),
             decreases self@.len(),
         {
             match (self.expose(), other.expose()) {
@@ -1612,7 +1590,6 @@ pub mod BSTParaStEph {
                 Option::Some(box_node) => {
                     self.contents =~= (*box_node).left@.union((*box_node).right@).insert((*box_node).key@)
                     && (*box_node).size >= 1
-                    && (*box_node).left@.finite() && (*box_node).right@.finite()
                     && (*box_node).left@.disjoint((*box_node).right@)
                     && !(*box_node).left@.contains((*box_node).key@)
                     && !(*box_node).right@.contains((*box_node).key@)

@@ -1,0 +1,676 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+  --> src/Chap38/BSTParaStEph.rs:93:22
+   |
+93 |             contents.finite(),
+   |                      ^^^^^^
+   |
+   = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:140:19
+    |
+140 |             tree@.finite(),
+    |                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:148:23
+    |
+148 |             filtered@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:205:19
+    |
+205 |             tree@.finite(),
+    |                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:307:23
+    |
+307 |                 tree@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:317:30
+    |
+317 |                     && self@.finite()
+    |                              ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:318:27
+    |
+318 |                     && l@.finite() && r@.finite()
+    |                           ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:318:42
+    |
+318 |                     && l@.finite() && r@.finite()
+    |                                          ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:331:24
+    |
+331 |                     l@.finite() && r@.finite()
+    |                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:331:39
+    |
+331 |                     l@.finite() && r@.finite()
+    |                                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:346:23
+    |
+346 |                 left@.finite(), right@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:346:40
+    |
+346 |                 left@.finite(), right@.finite(),
+    |                                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:357:49
+    |
+357 |             ensures count == self@.len(), self@.finite();
+    |                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:361:56
+    |
+361 |             ensures empty == (self@.len() == 0), self@.finite();
+    |                                                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:399:26
+    |
+399 |                 parts.0@.finite(),
+    |                          ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:400:26
+    |
+400 |                 parts.2@.finite(),
+    |                          ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:436:23
+    |
+436 |                 self@.finite(), other@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:436:40
+    |
+436 |                 self@.finite(), other@.finite(),
+    |                                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:439:29
+    |
+439 |             ensures joined@.finite(), joined@ =~= self@.union(other@);
+    |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:447:65
+    |
+447 |             ensures combined@ == self@.union(other@), combined@.finite();
+    |                                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:454:65
+    |
+454 |             ensures common@ == self@.intersect(other@), common@.finite();
+    |                                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:461:72
+    |
+461 |             ensures remaining@ == self@.difference(other@), remaining@.finite();
+    |                                                                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:470:23
+    |
+470 |                 self@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:478:27
+    |
+478 |                 filtered@.finite(),
+    |                           ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:488:23
+    |
+488 |                 self@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:494:23
+    |
+494 |                 self@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:517:37
+    |
+517 |             self.ghost_locked_root@.finite()
+    |                                     ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:531:19
+    |
+531 |             self@.finite()
+    |                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:548:23
+    |
+548 |                 tree@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:563:30
+    |
+563 |                     && self@.finite()
+    |                              ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:564:27
+    |
+564 |                     && l@.finite() && r@.finite()
+    |                           ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:564:42
+    |
+564 |                     && l@.finite() && r@.finite()
+    |                                          ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:647:49
+    |
+647 |             ensures count == self@.len(), self@.finite()
+    |                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaStEph.rs:669:56
+    |
+669 |             ensures empty == (self@.len() == 0), self@.finite()
+    |                                                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaStEph.rs:1052:29
+     |
+1052 |             ensures joined@.finite(), joined@ =~= self@.union(other@),
+     |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaStEph.rs:1092:65
+     |
+1092 |             ensures combined@ == self@.union(other@), combined@.finite(),
+     |                                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaStEph.rs:1175:65
+     |
+1175 |             ensures common@ == self@.intersect(other@), common@.finite(),
+     |                                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaStEph.rs:1323:72
+     |
+1323 |             ensures remaining@ == self@.difference(other@), remaining@.finite(),
+     |                                                                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaStEph.rs:1615:42
+     |
+1615 |                     && (*box_node).left@.finite() && (*box_node).right@.finite()
+     |                                          ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaStEph.rs:1615:73
+     |
+1615 |                     && (*box_node).left@.finite() && (*box_node).right@.finite()
+     |                                                                         ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+  --> src/Chap38/BSTParaMtEph.rs:91:22
+   |
+91 |             contents.finite(),
+   |                      ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:120:20
+    |
+120 |         ensures s@.finite()
+    |                    ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:206:23
+    |
+206 |                 tree@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:216:30
+    |
+216 |                     && self@.finite()
+    |                              ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:217:27
+    |
+217 |                     && l@.finite() && r@.finite()
+    |                           ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:217:42
+    |
+217 |                     && l@.finite() && r@.finite()
+    |                                          ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:230:24
+    |
+230 |                     l@.finite() && r@.finite()
+    |                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:230:39
+    |
+230 |                     l@.finite() && r@.finite()
+    |                                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:244:49
+    |
+244 |             ensures count == self@.len(), self@.finite();
+    |                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:248:56
+    |
+248 |             ensures empty == (self@.len() == 0), self@.finite();
+    |                                                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:281:26
+    |
+281 |                 parts.0@.finite(),
+    |                          ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:282:26
+    |
+282 |                 parts.2@.finite(),
+    |                          ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:293:23
+    |
+293 |                 self@.finite(), other@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:293:40
+    |
+293 |                 self@.finite(), other@.finite(),
+    |                                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:300:29
+    |
+300 |             ensures joined@.finite(), joined@ =~= self@.union(other@);
+    |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:306:23
+    |
+306 |                 self@.finite(), right@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:306:40
+    |
+306 |                 self@.finite(), right@.finite(),
+    |                                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:313:29
+    |
+313 |             ensures joined@.finite(), joined@ =~= self@.union(right@);
+    |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:321:65
+    |
+321 |             ensures combined@ == self@.union(other@), combined@.finite();
+    |                                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:326:65
+    |
+326 |             ensures common@ == self@.intersect(other@), common@.finite();
+    |                                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:331:72
+    |
+331 |             ensures remaining@ == self@.difference(other@), remaining@.finite();
+    |                                                                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:347:27
+    |
+347 |                 filtered@.finite(),
+    |                           ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:373:23
+    |
+373 |                 left@.finite(), right@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:373:40
+    |
+373 |                 left@.finite(), right@.finite(),
+    |                                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:384:23
+    |
+384 |                 self@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:407:37
+    |
+407 |             self.ghost_locked_root@.finite()
+    |                                     ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:421:19
+    |
+421 |             self@.finite()
+    |                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:439:23
+    |
+439 |                 tree@.finite(),
+    |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:458:30
+    |
+458 |                     && self@.finite()
+    |                              ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:459:27
+    |
+459 |                     && l@.finite() && r@.finite()
+    |                           ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:459:42
+    |
+459 |                     && l@.finite() && r@.finite()
+    |                                          ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:503:49
+    |
+503 |             ensures count == self@.len(), self@.finite()
+    |                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:525:56
+    |
+525 |             ensures empty == (self@.len() == 0), self@.finite()
+    |                                                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:586:26
+    |
+586 |                 parts.0@.finite(),
+    |                          ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:587:26
+    |
+587 |                 parts.2@.finite(),
+    |                          ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:616:29
+    |
+616 |             ensures joined@.finite(), joined@ =~= self@.union(other@),
+    |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:624:29
+    |
+624 |             ensures joined@.finite(), joined@ =~= self@.union(right@),
+    |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:680:65
+    |
+680 |             ensures combined@ == self@.union(other@), combined@.finite()
+    |                                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:689:65
+    |
+689 |             ensures common@ == self@.intersect(other@), common@.finite()
+    |                                                                 ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:698:72
+    |
+698 |             ensures remaining@ == self@.difference(other@), remaining@.finite()
+    |                                                                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:820:19
+    |
+820 |             tree@.finite(),
+    |                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:822:19
+    |
+822 |             tree@.finite(),
+    |                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:827:26
+    |
+827 |                 && left@.finite()
+    |                          ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:877:19
+    |
+877 |             tree@.finite(),
+    |                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:881:22
+    |
+881 |             parts.0@.finite(),
+    |                      ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:882:22
+    |
+882 |             parts.2@.finite(),
+    |                      ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+   --> src/Chap38/BSTParaMtEph.rs:884:19
+    |
+884 |             tree@.finite(),
+    |                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1034:19
+     |
+1034 |             tree@.finite(),
+     |                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1067:19
+     |
+1067 |             tree@.finite(),
+     |                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1127:16
+     |
+1127 |             a@.finite(), b@.finite(), a@.len() + b@.len() <= usize::MAX as nat,
+     |                ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1127:29
+     |
+1127 |             a@.finite(), b@.finite(), a@.len() + b@.len() <= usize::MAX as nat,
+     |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1130:54
+     |
+1130 |         ensures combined@ == a@.union(b@), combined@.finite(),
+     |                                                      ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1161:68
+     |
+1161 |                         ensures merged@ == al@.union(bl@), merged@.finite()
+     |                                                                    ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1166:68
+     |
+1166 |                         ensures merged@ == ar@.union(br@), merged@.finite()
+     |                                                                    ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1206:16
+     |
+1206 |             a@.finite(), b@.finite(),
+     |                ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1206:29
+     |
+1206 |             a@.finite(), b@.finite(),
+     |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1209:54
+     |
+1209 |         ensures common@ == a@.intersect(b@), common@.finite(),
+     |                                                      ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1244:72
+     |
+1244 |                         ensures common@ == al@.intersect(bl@), common@.finite()
+     |                                                                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1250:72
+     |
+1250 |                         ensures common@ == ar@.intersect(br@), common@.finite()
+     |                                                                        ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1330:16
+     |
+1330 |             a@.finite(), b@.finite(),
+     |                ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1330:29
+     |
+1330 |             a@.finite(), b@.finite(),
+     |                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1333:61
+     |
+1333 |         ensures remaining@ == a@.difference(b@), remaining@.finite(),
+     |                                                             ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1368:69
+     |
+1368 |                         ensures diff@ == al@.difference(bl@), diff@.finite()
+     |                                                                     ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1374:69
+     |
+1374 |                         ensures diff@ == ar@.difference(br@), diff@.finite()
+     |                                                                     ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1459:19
+     |
+1459 |             tree@.finite(),
+     |                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1468:23
+     |
+1468 |             filtered@.finite(),
+     |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1553:23
+     |
+1553 |             filtered@.finite(),
+     |                       ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1572:19
+     |
+1572 |             tree@.finite(),
+     |                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1625:19
+     |
+1625 |             tree@.finite(),
+     |                   ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1702:42
+     |
+1702 |                     && (*box_node).left@.finite() && (*box_node).right@.finite()
+     |                                          ^^^^^^
+
+warning: use of deprecated method `vstd::set::Set::<A>::finite`: Every Set is always finite, so this is always true.
+    --> src/Chap38/BSTParaMtEph.rs:1702:73
+     |
+1702 |                     && (*box_node).left@.finite() && (*box_node).right@.finite()
+     |                                                                         ^^^^^^
+
+verification results:: 1079 verified, 0 errors
+warning: 111 warnings emitted
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 1090MB, peak z3 RSS: 274MB, min free: 24955MB
+Sampled CPU Usage: rust_verify: 9s, z3 children: 7s

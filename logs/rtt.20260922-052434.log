@@ -1,0 +1,107 @@
+r212 RTT for Chap38: cargo test --release on 2 targets: TestBSTParaMtEph TestBSTParaStEph
+Starting RTT at 05:24:34
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 5.76s
+     Running tests/Chap38/TestBSTParaMtEph.rs (target/release/deps/TestBSTParaMtEph-2c3b52e34d6163a5)
+
+running 22 tests
+test para_basic_insert_find ... ok
+test para_delete_nonexistent_key ... ok
+test para_concurrent_expose_join_mid ... ok
+test para_join_mid_expose_roundtrip ... ok
+test para_mt_clone_independence ... ok
+test para_mt_duplicate_insert ... ok
+test para_mt_in_order_sorted ... ok
+test para_mt_join_pair_disjoint ... ok
+test para_ops_on_empty_tree ... ok
+test para_intersect_and_difference ... ok
+test para_singleton ... ok
+test para_split_and_join_pair ... ok
+test para_split_nonexistent_key ... ok
+test para_filter_and_reduce ... ok
+test para_union_and_delete ... ok
+test para_filter_and_reduce_edge_cases ... ok
+test para_concurrent_set_operations ... ok
+test para_concurrent_filter_reduce ... ok
+test para_concurrent_split_join ... ok
+test para_sequential_insert_delete ... ok
+test para_union_large_balanced ... ok
+test para_intersect_and_difference_large ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/Chap38/TestBSTParaStEph.rs (target/release/deps/TestBSTParaStEph-d2afba0177d2a514)
+
+running 31 tests
+test para_clone_independence ... ok
+test para_basic_insert_find ... ok
+test para_delete_nonexistent_key ... ok
+test para_delete_all_elements ... ok
+test para_delete_root ... ok
+test para_duplicate_insert ... ok
+test para_difference_with_self ... ok
+test para_filter_all_match ... ok
+test para_filter_and_reduce ... ok
+test para_filter_none_match ... ok
+test para_intersect_and_difference ... ok
+test para_in_order_sorted ... ok
+test para_join_mid_expose_roundtrip ... ok
+test para_intersect_with_self ... ok
+test para_ops_on_empty_tree ... ok
+test para_join_pair_disjoint ... ok
+test para_reduce_product ... ok
+test para_singleton ... ok
+test para_split_and_join_pair ... ok
+test para_split_at_min_and_max ... ok
+test para_split_nonexistent_key ... ok
+test para_union_and_delete ... ok
+test para_union_with_self ... ok
+test test_into_iter_collects_all_elements ... ok
+test test_into_iter_empty ... ok
+test test_parambstlit_macro_functionality ... ok
+test test_into_iter_for_loop ... ok
+test para_filter_and_reduce_edge_cases ... ok
+test para_large_union ... ok
+test para_insert_descending_order ... ok
+test para_intersect_and_difference_large ... ok
+
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+cargo test rc: 0
+Elapsed: 6s

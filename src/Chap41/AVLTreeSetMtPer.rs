@@ -238,7 +238,6 @@ broadcast use {
     pub fn assert_avltreesetmtper_always_wf<T: StTInMtT + Ord + TotalOrder + 'static>(s: &AVLTreeSetMtPer<T>)
         ensures s.spec_avltreesetmtper_wf()
     {
-        crate::Chap38::BSTParaMtEph::BSTParaMtEph::assert_parambst_view_finite(&s.tree);
     }
 
     /// ParamBST size is stored as usize, so @.len() <= usize::MAX.
@@ -252,7 +251,6 @@ broadcast use {
             sz as nat == s@.len(),
             s@.len() <= usize::MAX as nat,
     {
-        crate::Chap38::BSTParaMtEph::BSTParaMtEph::assert_parambst_view_finite(&s.tree);
         s.size()
     }
 

@@ -40,6 +40,7 @@ file, or listed at the end.
 | 16 | 35 | 1224 | 0 | 0 | 58 pass | none | r213 Chap35 |
 | 17 | 36 | 867 | 0 | 0 | 24 pass | none | r213 Chap36 |
 | 18 | 37 | 1862 | 0 | 0 | 544 pass | 24 pass | r213 Chap37 |
+| 19 | 38 | 1078 | 0 | 0 | 53 pass | 2 pass | r213 Chap38 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -265,3 +266,35 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   (`logs/validate.20260922-051953.log`). No edit.
 - RTT: 24 targets, 544 tests pass (`logs/rtt.20260922-052010.log`).
 - PTT: 12 files, 24 tests pass (`logs/ptt-Chap37.20260922-052011.log`). `AVLTreeSeq.rs` `insert_at_link` keeps the `#[verifier::rlimit(20)]` r212 added.
+
+### Chap38
+
+- Start: 1079 verified, 0 errors, 111 warnings (all `use of deprecated
+  method vstd::set::Set::finite`), 0 trigger notes
+  (`logs/validate.20260922-052034.log`).
+- Edit class 1, `finite()` removal (Edit tool, one text pattern per call):
+  every `.finite()` conjunct deleted from `requires`, `ensures`, closure
+  `ensures`, the `Exposed::Node` implications, the type invariant `wf` and
+  `spec_bstpara{st,mt}eph_wf`, the `Node` lock-predicate, in
+  `BSTParaStEph.rs` (50 sites) and `BSTParaMtEph.rs` (49 sites). Three
+  `requires` clauses became empty and were deleted (`collect_in_order` in both
+  files, `expose_internal` and `collect_in_order_inner` in the Mt file).
+- Edit class 2, a finiteness-only fn: `assert_parambst_view_finite` in
+  `BSTParaMtEph.rs`, whose one postcondition was `s@.finite()`, is commented
+  out under a `// BYPASSED (r213):` note (not deleted); its two calls in
+  Chap41 `AVLTreeSetMtPer.rs` (`assert_avltreesetmtper_always_wf`,
+  `assert_avltreesetmtper_bounded_size`) are removed, because `cargo` builds
+  the whole library for the run-time tests. Exec cost: each removed call was
+  an O(1) ghost-only call; the callers stay O(1).
+- Edit class 3, proof hints after the removal
+  (`logs/validate.20260922-052342.log`: 1077 verified, 1 error, the
+  `join_mid` precondition in `split_inner` of `BSTParaMtEph.rs`): the `Less`
+  arm's ordering assert for `lr` and a new one for `rl` in the `Greater` arm
+  are now `assert forall ... by { assert(left@.contains(t@)); }` (resp.
+  `right@`), naming the subset step that the recursive call's `ensures`
+  gives. Proof only.
+- End: 1078 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-052403.log`); the count is one lower because the
+  bypassed fn is no longer compiled.
+- RTT: 2 targets, 53 tests pass (`logs/rtt.20260922-052434.log`).
+- PTT: 1 file, 2 tests pass (`logs/ptt-Chap38.20260922-052440.log`).

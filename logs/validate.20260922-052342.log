@@ -1,0 +1,59 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: assertion failed
+   --> src/Chap38/BSTParaMtEph.rs:906:36
+    |
+906 |   ...                   assert(forall|t: T| #[trigger] lr@.contains(t@)
+    |  ______________________________^
+907 | | ...                       ==> t.cmp_spec(&root_key) == Less);
+    | |___________________________________________________________^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:947:39
+    |
+228 | /                 exposed matches Exposed::Node(l, k, r) ==> {
+229 | |                     l@.disjoint(r@)
+230 | |                     && !l@.contains(k@)
+231 | |                     && !r@.contains(k@)
+...   |
+234 | |                     && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
+235 | |                 },
+    | |_________________- failed precondition
+...
+947 |                           let rebuilt = ParamBST::<T>::join_mid(Exposed::Node(left, root_key, rl));
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap38/BSTParaMtEph.rs:234:89
+    |
+234 |                     && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
+    |                                                                                         ^^^^^^^
+
+note: 
+
+tmp% is Node && true && true && true ==>
+    let l = tmp%.0;
+        let k = tmp%.1;
+            let r = tmp%.2;
+                l.view().disjoint(r.view()) ✔
+                !(l.view().to_iset().contains(k.view())) ✔
+                !(r.view().to_iset().contains(k.view())) ✔
+                clip(nat, l.view().len() + r.view().len()) < UnsignedMax(usize::BITS) ✔
+                forall |t|
+                    l.view().to_iset().contains(t.view()) ==>
+                        t.cmp_spec(k) == Less ✔
+                forall |t|
+                    r.view().to_iset().contains(t.view()) ==>
+                        t.cmp_spec(k) == Greater ✘
+                        |   !(t.cmp_spec(k) is Less) ✘
+                        |   !(t.cmp_spec(k) is Equal) ✔
+                        +---
+!(tmp% is Node && true && true && true) ==>
+    true ✔
+
+verification results:: 1077 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 1098MB, peak z3 RSS: 293MB, min free: 25257MB
+Sampled CPU Usage: rust_verify: 5s, z3 children: 1s

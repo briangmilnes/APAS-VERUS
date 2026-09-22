@@ -1,0 +1,35 @@
+r212 RTT for Chap38: cargo test --release on 2 targets: TestBSTParaMtEph TestBSTParaStEph
+Starting RTT at 05:24:13
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error[E0425]: cannot find function `assert_parambst_view_finite` in module `crate::Chap38::BSTParaMtEph::BSTParaMtEph`
+   --> src/Chap41/AVLTreeSetMtPer.rs:241:52
+    |
+241 |         crate::Chap38::BSTParaMtEph::BSTParaMtEph::assert_parambst_view_finite(&s.tree);
+    |                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in `crate::Chap38::BSTParaMtEph::BSTParaMtEph`
+
+error[E0425]: cannot find function `assert_parambst_view_finite` in module `crate::Chap38::BSTParaMtEph::BSTParaMtEph`
+   --> src/Chap41/AVLTreeSetMtPer.rs:255:52
+    |
+255 |         crate::Chap38::BSTParaMtEph::BSTParaMtEph::assert_parambst_view_finite(&s.tree);
+    |                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in `crate::Chap38::BSTParaMtEph::BSTParaMtEph`
+
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+For more information about this error, try `rustc --explain E0425`.
+warning: `apas-verus` (lib) generated 1 warning
+error: could not compile `apas-verus` (lib) due to 2 previous errors; 1 warning emitted
+cargo test rc: 101
+Elapsed: 5s

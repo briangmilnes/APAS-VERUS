@@ -1,0 +1,14 @@
+r212 PTT for Chap38 (isolate: Chap38 Chap18 Chap02); tests: ProveParamBSTStEph
+Starting PTT at 05:24:40
+compile rc: 0
+    Finished `release` profile [optimized] target(s) in 0.03s
+     Running tests/Chap38/ProveParamBSTStEph.rs (target/release/build/rust_verify_test/39309e6b81f08b39/out/ProveParamBSTStEph-39309e6b81f08b39)
+
+running 2 tests
+test parambststeph_loop_borrow_iter ... ok
+test parambststeph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.58s
+
+cargo test rc: 0
+Elapsed: 5s
