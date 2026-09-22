@@ -1,0 +1,146 @@
+r212 RTT for Chap23: cargo test --release on 2 targets: TestBalBinTreeStEph TestPrimTreeSeqStPer
+Starting RTT at 05:11:38
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.56s
+     Running tests/Chap23/TestBalBinTreeStEph.rs (target/release/deps/TestBalBinTreeStEph-8326448368189d61)
+
+running 26 tests
+test balbintree_clone ... ok
+test balbintree_complex_structure ... ok
+test balbintree_debug ... ok
+test balbintree_height_calculation ... ok
+test balbintree_is_leaf_check ... ok
+test balbintree_empty_leaf_operations ... ok
+test balbintree_only_left_children ... ok
+test balbintree_large_balanced_tree ... ok
+test balbintree_single_node_operations ... ok
+test balbintree_only_right_children ... ok
+test balbintree_size_calculation ... ok
+test balbintree_trait_methods ... ok
+test balbintree_traversal_consistency ... ok
+test balbintree_unbalanced_left ... ok
+test balbintree_unbalanced_right ... ok
+test inorder_and_preorder_traversals_match_definitions ... ok
+test inorder_iter_collects_correctly ... ok
+test inorder_iter_complex ... ok
+test inorder_iter_leaf_is_empty ... ok
+test inorder_iter_manual_next ... ok
+test inorder_iter_single_node ... ok
+test preorder_iter_collects_correctly ... ok
+test preorder_iter_complex ... ok
+test preorder_iter_leaf_is_empty ... ok
+test preorder_iter_manual_next ... ok
+test preorder_iter_single_node ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap23/TestPrimTreeSeqStPer.rs (target/release/deps/TestPrimTreeSeqStPer-c85da6ab70ef735f)
+
+running 66 tests
+test expose_one_returns_one ... ok
+test expose_then_join_roundtrip ... ok
+test expose_zero_returns_zero ... ok
+test expose_two_splits_sequence ... ok
+test join_two_concatenates_sequences ... ok
+test join_zero_creates_empty_sequence ... ok
+test test_append ... ok
+test test_append_empty_left ... ok
+test test_append_empty_right ... ok
+test test_as_slice ... ok
+test test_as_slice_view ... ok
+test test_clone_functionality ... ok
+test test_debug_format ... ok
+test test_drop_all ... ok
+test test_drop_none ... ok
+test test_drop_some ... ok
+test test_empty ... ok
+test test_empty_constructor ... ok
+test test_equality_comparison ... ok
+test test_filter ... ok
+test test_expose_edge_cases ... ok
+test test_filter_all ... ok
+test test_filter_none ... ok
+test test_flatten_basic ... ok
+test test_flatten_empty_outers ... ok
+test test_flatten_with_empty_inner ... ok
+test test_from_vec ... ok
+test test_from_vec_constructor ... ok
+test test_generic_expose_empty ... ok
+test test_generic_expose_one ... ok
+test test_generic_expose_two ... ok
+test test_generic_length ... ok
+test test_into_vec ... ok
+test test_into_vec_conversion ... ok
+test test_join_empty_sequences ... ok
+test test_join_mixed_sizes ... ok
+test test_join_one_variant ... ok
+test test_large_sequence_expose_join ... ok
+test test_length ... ok
+test test_length_method ... ok
+test test_map ... ok
+test test_map_to_string ... ok
+test test_nth ... ok
+test test_singleton ... ok
+test test_singleton_constructor ... ok
+test test_subseq ... ok
+test test_subseq_empty ... ok
+test test_subseq_full ... ok
+test test_tabulate ... ok
+test test_tabulate_empty ... ok
+test test_trait_as_slice ... ok
+test test_trait_empty ... ok
+test test_trait_expose_one ... ok
+test test_trait_expose_two ... ok
+test test_trait_expose_zero ... ok
+test test_trait_from_vec ... ok
+test test_trait_into_vec ... ok
+test test_trait_join_one ... ok
+test test_trait_join_two ... ok
+test test_trait_join_zero ... ok
+test test_trait_length ... ok
+test test_trait_singleton ... ok
+test test_tree_enum_equality ... ok
+test test_update ... ok
+test test_update_first ... ok
+test test_update_last ... ok
+
+test result: ok. 66 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 0s

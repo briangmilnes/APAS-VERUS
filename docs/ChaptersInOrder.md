@@ -31,7 +31,8 @@ file, or listed at the end.
 | 7 | 17 | 645 | 0 | 0 | 40 pass | 2 of 9 (1) | 8c46d30bd |
 | 8 | 18 | 1003 | 0 | 0 | 170 pass | 38 pass | 99d1a9fa7 |
 | 9 | 19 | 824 | 0 | 0 | 156 pass | 23 pass | 7ac57e5c8 |
-| 10 | 21 | 1262 | 0 | 0 | 46 pass | none | r213 Chap21 |
+| 10 | 21 | 1262 | 0 | 0 | 46 pass | none | 0a048df27 |
+| 11 | 23 | 679 | 0 | 0 | 92 pass | 17 pass | r213 Chap23 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -148,3 +149,19 @@ and do not compile; see the chapter section.
   (`logs/validate.20260922-051054.log`).
 - RTT: 1 target, 46 tests pass (`logs/rtt.20260922-051106.log`).
 - PTT: none registered.
+
+### Chap23
+
+- Start and end: 679 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-051126.log`). No edit.
+- RTT: 2 targets, 92 tests pass (`logs/rtt.20260922-051138.log`).
+- PTT: 2 files, 17 tests pass (`logs/ptt-Chap23.20260922-051138.log`).
+
+### Regression 1 (after Chap23)
+
+`scratch/r213-regress.sh` over the ten chapters committed before Chap23; every
+run 0 errors, 0 warnings, 0 trigger notes, same counts as committed:
+Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
+1037 (`051155`), Chap11 651 (`051205`), Chap12 635 (`051207`), Chap17 645
+(`051210`), Chap18 1003 (`051213`), Chap19 824 (`051218`), Chap21 1262
+(`051222`); logs `logs/validate.20260922-<time>.log`.

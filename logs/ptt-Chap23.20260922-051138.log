@@ -1,0 +1,36 @@
+r212 PTT for Chap23 (isolate: Chap23); tests: ProveBalBinTreeStEph ProvePrimTreeSeqStPer
+Starting PTT at 05:11:38
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 0.63s
+     Running tests/Chap23/ProveBalBinTreeStEph.rs (target/release/build/rust_verify_test/24da81a0d26b6e25/out/ProveBalBinTreeStEph-24da81a0d26b6e25)
+
+running 11 tests
+test balbintree_postorder_spec_match ... ok
+test balbintree_leaf_traversals_empty ... ok
+test balbintree_for_preorder ... ok
+test balbintree_loop_inorder ... ok
+test balbintree_preorder_spec_match ... ok
+test balbintree_inorder_spec_match ... ok
+test balbintree_leaf_iter_exhausted ... ok
+test balbintree_for_inorder ... ok
+test balbintree_loop_preorder ... ok
+test balbintree_for_postorder ... ok
+test balbintree_loop_postorder ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.80s
+
+     Running tests/Chap23/ProvePrimTreeSeqStPer.rs (target/release/build/rust_verify_test/9011e6819714ef8f/out/ProvePrimTreeSeqStPer-9011e6819714ef8f)
+
+running 6 tests
+test primtreeseq_loop_consume ... ok
+test primtreeseq_for_consume ... ok
+test primtreeseq_loop_borrow_into ... ok
+test primtreeseq_for_borrow_iter ... ok
+test primtreeseq_loop_borrow_iter ... ok
+test primtreeseq_for_borrow_into ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.56s
+
+cargo test rc: 0
+Elapsed: 4s
