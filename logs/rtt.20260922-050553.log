@@ -1,0 +1,98 @@
+r212 RTT for Chap03: cargo test --release on 1 targets: TestInsertionSortStEph
+Starting RTT at 05:05:53
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1340:17
+     |
+1340 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 4 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.13s
+     Running tests/Chap03/TestInsertionSortStEph.rs (target/release/deps/TestInsertionSortStEph-c26af6b0df46c600)
+
+running 40 tests
+test insertion_sort_all_same_elements ... ok
+test insertion_sort_already_sorted ... ok
+test insertion_sort_descending_10 ... ok
+test insertion_sort_alternating_pattern ... ok
+test insertion_sort_consecutive_integers ... ok
+test insertion_sort_head_is_minimum ... ok
+test insertion_sort_even_length ... ok
+test insertion_sort_handles_empty ... ok
+test insertion_sort_fibonacci_values ... ok
+test insertion_sort_interleaved_high_low ... ok
+test insertion_sort_four_elements_all_permutations ... ok
+test insertion_sort_large_values_spread ... ok
+test insertion_sort_many_duplicates ... ok
+test insertion_sort_max_values ... ok
+test insertion_sort_mod_3_pattern ... ok
+test insertion_sort_nearly_sorted ... ok
+test insertion_sort_nearly_sorted_one_swap ... ok
+test insertion_sort_odd_length ... ok
+test insertion_sort_one_distinct_rest_same ... ok
+test insertion_sort_organ_pipe ... ok
+test insertion_sort_plateau_then_drop ... ok
+test insertion_sort_powers_of_two ... ok
+test insertion_sort_preserves_length ... ok
+test insertion_sort_random_slice ... ok
+test insertion_sort_repeated_min_max ... ok
+test insertion_sort_returns_same_slice ... ok
+test insertion_sort_reverse_order ... ok
+test insertion_sort_sawtooth_pattern ... ok
+test insertion_sort_single_element ... ok
+test insertion_sort_single_repeated ... ok
+test insertion_sort_sorted_pairs ... ok
+test insertion_sort_stability_like_behavior ... ok
+test insertion_sort_tail_is_maximum ... ok
+test insertion_sort_three_elements ... ok
+test insertion_sort_two_elements ... ok
+test insertion_sort_two_elements_sorted ... ok
+test insertion_sort_with_duplicates ... ok
+test insertion_sort_with_zeros ... ok
+test insertion_sort_medium_random_stress ... ok
+test insertion_sort_large_input_stress_test ... ok
+
+test result: ok. 40 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+cargo test rc: 0
+Elapsed: 0s

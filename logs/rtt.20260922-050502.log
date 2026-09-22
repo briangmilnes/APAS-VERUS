@@ -1,0 +1,111 @@
+r212 RTT for Chap02: cargo test --release on 3 targets: test_threads_plus test_fibonacci_scheduler test_hf_scheduler
+Starting RTT at 05:05:02
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1340:17
+     |
+1340 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 4 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+    Finished `release` profile [optimized] target(s) in 7.54s
+     Running tests/Chap02/test_fibonacci_scheduler.rs (target/release/deps/test_fibonacci_scheduler-468aad90e7abb709)
+
+running 15 tests
+test test_fib_par_base_cases ... ok
+test test_fib_par_n10 ... ok
+test test_fib_par_n2 ... ok
+test test_fib_seq_base_cases ... ok
+test test_fib_seq_monotonic ... ok
+test test_fib_seq ... ok
+test test_fib_seq_n10 ... ok
+test test_fib_seq_strictly_increasing_from_n2 ... ok
+test test_fib_seq_recurrence ... ok
+test test_fib_seq_n2 ... ok
+test test_fib_par ... ok
+test test_fib_par_recurrence ... ok
+test test_fib_par_larger ... ok
+test test_fib_seq_par_agree ... ok
+test test_fib_known_large ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.73s
+
+     Running tests/Chap02/test_hf_scheduler.rs (target/release/deps/test_hf_scheduler-e369aa1440062944)
+
+running 17 tests
+test test_join_simple ... ok
+test test_join_closures_capture ... ok
+test test_spawn_join_zero_computation ... ok
+test test_spawn_wait_chained ... ok
+test test_join_returns_correct_types ... ok
+test test_spawn_join_simple ... ok
+test test_spawn_join_identity ... ok
+test test_spawn_join_nested ... ok
+test test_spawn_wait_vec_result ... ok
+test test_spawn_wait_n_tasks ... ok
+test test_join_heavy ... ok
+test test_join_large_result ... ok
+test test_spawn_join_different_types ... ok
+test test_spawn_wait_string ... ok
+test test_spawn_join_with_computation ... ok
+test test_spawn_wait_simple ... ok
+test test_spawn_wait_parallel ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/Chap02/test_threads_plus.rs (target/release/deps/test_threads_plus-eb25a669cd9c71f8)
+
+running 9 tests
+test test_single_thread_with_computation ... ok
+test test_single_thread_returns_value ... ok
+test test_thread_returns_string ... ok
+test test_is_finished_eventually_true ... ok
+test test_thread_returns_vec ... ok
+test test_two_threads_parallel ... ok
+test test_many_threads ... ok
+test test_three_threads_parallel ... ok
+test test_thread_with_sleep ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+cargo test rc: 0
+Elapsed: 14s
