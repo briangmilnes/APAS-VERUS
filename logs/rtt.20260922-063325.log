@@ -1,0 +1,94 @@
+r212 RTT for Chap63: cargo test --release on 2 targets: TestConnectivityMtEph TestConnectivityStEph
+Starting RTT at 06:33:25
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.36s
+     Running tests/Chap63/TestConnectivityMtEph.rs (target/release/deps/TestConnectivityMtEph-8e76f6e7f6902a1b)
+
+running 16 tests
+test test_connected_components_hof_mt_isolated ... ok
+test test_connected_components_mt_two_disconnected ... ok
+test test_count_components_mt_isolated ... ok
+test test_count_components_mt_single ... ok
+test test_count_components_mt_empty ... ok
+test test_count_components_mt_single_vertex ... ok
+test test_count_components_mt_path ... ok
+test test_count_components_mt_star ... ok
+test test_connected_components_mt_single ... ok
+test test_connected_components_mt_complete ... ok
+test test_count_components_mt_two_triangles ... ok
+test test_connected_components_mt_multiple ... ok
+test test_count_components_hof_mt_star ... ok
+test test_count_components_mt_multiple ... ok
+test test_connected_components_hof_mt ... ok
+test test_count_components_hof_mt ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/Chap63/TestConnectivityStEph.rs (target/release/deps/TestConnectivityStEph-7250e631691d7185)
+
+running 24 tests
+test test_connected_components_complete_graph ... ok
+test test_connected_components_hof_isolated ... ok
+test test_connected_components_hof ... ok
+test test_connected_components_isolated_vertices ... ok
+test test_connected_components_hof_single ... ok
+test test_connected_components_multiple ... ok
+test test_count_components_empty ... ok
+test test_connected_components_star_graph ... ok
+test test_connected_components_single ... ok
+test test_count_components_grid_connected ... ok
+test test_count_components_hof ... ok
+test test_count_components_hof_empty ... ok
+test test_count_components_hof_single ... ok
+test test_count_components_isolated_vertices ... ok
+test test_count_components_many_singletons ... ok
+test test_count_components_multiple ... ok
+test test_count_components_large_cycle ... ok
+test test_count_components_path_graph ... ok
+test test_count_components_single ... ok
+test test_count_components_single_vertex ... ok
+test test_count_components_star_graph ... ok
+test test_count_components_two_triangles ... ok
+test test_count_components_two_vertices_connected ... ok
+test test_count_components_two_vertices_disconnected ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 0s
