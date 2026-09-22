@@ -110,11 +110,14 @@ pub mod QuadProbFlatHashTableStEph {
         if a % 2 == 0 {
             // (a%2)*(a+1) % 2 == a*(a+1) % 2 by noop_left; and (0*(a+1)) % 2 == 0.
             vstd::arithmetic::div_mod::lemma_mul_mod_noop_left(a, a + 1, 2);
+            assert((a % 2) * (a + 1) == 0);
         } else {
             // a%2 == 1 (from mod_bound: 0 <= a%2 < 2); then (a+1)%2 == 0.
             vstd::arithmetic::div_mod::lemma_add_mod_noop(a, 1, 2);
+            assert((a + 1) % 2 == 0);
             // a*((a+1)%2) % 2 == a*(a+1) % 2 by noop_right; and a*0 % 2 == 0.
             vstd::arithmetic::div_mod::lemma_mul_mod_noop_right(a, a + 1, 2);
+            assert(a * ((a + 1) % 2) == 0);
         }
     }
 

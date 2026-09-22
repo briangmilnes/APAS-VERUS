@@ -48,6 +48,7 @@ file, or listed at the end.
 | 24 | 43 | 2686 | 0 | 0 | 279 pass | 14 pass | r213 Chap43 |
 | 25 | 44 | 2336 | 0 | 0 | 45 pass | none | r213 Chap44 |
 | 26 | 45 | 2034 | 0 | 0 | 210 pass | none | r213 Chap45 |
+| 27 | 47 | 1161 | 0 | 0 | 102 pass | none | r213 Chap47 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -505,4 +506,20 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
 - Start and end: 2034 verified, 0 errors, 0 warnings, 0 trigger notes
   (`logs/validate.20260922-061545.log`). No edit.
 - RTT: 7 targets, 210 tests pass (`logs/rtt.20260922-061606.log`).
+- PTT: none registered.
+
+### Chap47
+
+- Start: 1160 verified, 1 error, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-061622.log`): postcondition of
+  `lemma_consecutive_even` (`QuadProbFlatHashTableStEph.rs`), a nonlinear
+  `a * (a + 1) % 2 == 0` step Z3 4.16 no longer closes.
+- Edit class 5, proof repair: three intermediate asserts after the existing
+  vstd `div_mod` lemma calls (`(a % 2) * (a + 1) == 0`, `(a + 1) % 2 == 0`,
+  `a * ((a + 1) % 2) == 0`). `iterator-upgrade` found no site; no
+  `finite()` sites.
+- Exec cost: none changed.
+- End: 1161 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-061642.log`).
+- RTT: 7 targets, 102 tests pass (`logs/rtt.20260922-061654.log`).
 - PTT: none registered.
